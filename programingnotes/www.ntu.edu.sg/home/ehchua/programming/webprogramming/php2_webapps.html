@@ -1,0 +1,3135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Developing PHP/MySQL Webapps</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Developing PHP/MySQL Webapps</h1>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>PHP with MySQL Database</h3>
+
+<p>PHP provides <em>extensions</em> for interfacing with MySQL database. The PHP's MySQL-related extensions include:</p>
+<ol>
+<li>the older <code>mysql</code> extension (not recommended),</li>
+<li>the newer <code>mysqli</code> (mysql improved) extension, and</li>
+<li>the object-oriented PHP Data Object (PDO).</li>
+</ol>
+
+<p>The older <code>mysql</code> extension provides a procedural interface and is intended for use with MySQL versions earlier than 4.1.3. It does not support all the latest MySQL features. The newer <code>mysqli</code> extension (or mysql improved extension) supports features like prepared statement and transaction. It provides an <em>object-oriented interface</em> as well as a procedural interface. However, I recommend PHP Data Object (PDO) for new development, which is fully object-oriented with proper exception handling, having neater and simpler interface.</p>
+
+<h3 id="pdo">PHP Data Object (PDO) By Examples</h3>
+
+<p>Reference:</p>
+<ol>
+<li>PHP manual &quot;PHP Data Objects (PDO)&quot; @ <a href="http://www.php.net/manual/en/book.pdo.php">http://www.php.net/manual/en/book.pdo.php</a>.</li>
+</ol>
+
+<h4>Example 1: Create Database Connection, <span class="font-code">query()</span> and <span class="font-code">exec()</span></h4>
+
+<p>This example is meant for toy programs. For production, use PDO prepared statement as illustrated in Example 2 to prevent SQL injection.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87</pre>
+</td>
+<td>
+<pre>
+&lt;?php
+<span class="color-comment">/**
+ * Testing PDO MySQL Database Connection, query() and exec().
+ * For CREATE TABLE, INSERT, DELETE, UPDATE:
+ *   exec(): returns the affected rows.
+ * For SELECT:
+ *   query(): returns a result set.
+ */</span>
+<span class="color-comment">// Define the MySQL database parameters.</span>
+<span class="color-comment">// Avoid global variables (which live longer than necessary) for sensitive data.</span>
+$DB_HOST = 'localhost';<span class="color-comment"> // MySQL server hostname</span>
+$DB_PORT = '3306';     <span class="color-comment"> // MySQL server port number (default 3306)</span>
+$DB_NAME = 'test';     <span class="color-comment"> // MySQL database name</span>
+$DB_USER = 'testuser'; <span class="color-comment"> // MySQL username</span>
+$DB_PASS = 'xxxx';     <span class="color-comment"> // password</span>
+ 
+try {
+  <span class="color-comment"> // Create a PDO database connection to MySQL server, in the following syntax:</span>
+  <span class="color-comment"> //  new PDO('mysql:host=hostname;port=number;dbname=database', username, password)</span>
+   $dbConn = new PDO(&quot;mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_NAME&quot;, $DB_USER, $DB_PASS);
+   $dbConn-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);<span class="color-comment"> // Set error mode to exception</span>
+   echo 'Connected', '&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Run SQL statements</span>
+  <span class="color-comment"> // Use exec() to run a CREATE TABLE, DROP TABLE, INSERT, DELETE and UPDATE,</span>
+  <span class="color-comment"> //  which returns the affected row count.</span>
+   $rowCount = $dbConn-&gt;exec('DROP TABLE IF EXISTS `test`');
+   echo 'DROP TABLE: ', $rowCount, ' rows', '&lt;br /&gt;';
+ 
+   $rowCount = $dbConn-&gt;exec(
+         'CREATE TABLE IF NOT EXISTS `test` (
+           `id` INT AUTO_INCREMENT,
+           `name` VARCHAR(20),
+           PRIMARY KEY (`id`))');
+   echo 'CREATE TABLE: ', $rowCount, ' rows', '&lt;br /&gt;';
+ 
+   $rowCount = $dbConn-&gt;exec(&quot;INSERT INTO `test` (`id`, `name`) VALUES (1001, 'peter')&quot;);
+   echo 'INSERT INTO: ', $rowCount, ' rows', '&lt;br /&gt;';
+  <span class="color-comment"> // Use lastInsertId() to get the LAST_INSERT_ID of the AUTO_INCREMENT column.</span>
+   echo 'LAST_INSERT_ID (of the AUTO_INCREMENT column) is ', $dbConn-&gt;lastInsertId(), '&lt;br /&gt;';
+ 
+   $rowCount = $dbConn-&gt;exec(&quot;INSERT INTO `test` (`name`) VALUES ('paul'),('patrick')&quot;);
+   echo 'INSERT INTO: ', $rowCount, ' rows', '&lt;br /&gt;';
+   echo 'LAST_INSERT_ID (of the AUTO_INCREMENT column) is ', $dbConn-&gt;lastInsertId(), '&lt;br /&gt;&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Use query() to run a SELECT, which returns a resultset.</span>
+   $sql = 'SELECT * FROM `test`';
+   $resultset = $dbConn-&gt;query($sql);
+  <span class="color-comment"> // By default, resultset's row is an associative array</span>
+  <span class="color-comment"> //  indexed by BOTH column-name AND column-number (starting at 0).</span>
+   foreach ($resultset as $row) { <span class="color-comment"> // Loop thru all rows in resultset</span>
+      echo 'Retrieve via column name: id=', $row['id'], ', name=', $row['name'], '&lt;br /&gt;';
+      echo 'Retrieve via column number: id=', $row[0], ', name=', $row[1], '&lt;br /&gt;';
+      print_r($row);<span class="color-comment"> // for showing the contents of resultset's row</span>
+      echo '&lt;br /&gt;';
+   }
+   echo '&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Run again with &quot;FETCH_ASSOC&quot; option.</span>
+  <span class="color-comment"> // Resultset's row is an associative array indexed by column-name only.</span>
+   $resultset = $dbConn-&gt;query($sql, PDO::FETCH_ASSOC);
+  <span class="color-comment"> // print_r($resultset);   // A PDOStatement Object</span>
+   foreach ($resultset as $row) {
+      echo 'Retrieve via column name: id=', $row['id'], ', name=', $row['name'], '&lt;br /&gt;';
+      print_r($row);<span class="color-comment"> // for showing the contents of resultset's row</span>
+      echo '&lt;br /&gt;';
+   }
+   echo '&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Run again with &quot;FETCH_OBJ&quot; option.</span>
+  <span class="color-comment"> // Resultset's row is an object with column-names as properties.</span>
+   $resultset = $dbConn-&gt;query($sql, PDO::FETCH_OBJ);
+   foreach ($resultset as $row) {
+      echo 'Retrieve via column name: id=', $row-&gt;id, ', name=', $row-&gt;name, '&lt;br /&gt;';
+      print_r($row);<span class="color-comment"> // for showing the contents of resultset's row</span>
+      echo '&lt;br /&gt;';
+   }
+ 
+  <span class="color-comment"> // Close the database connection (optional).</span>
+   $dbConn = NULL;
+ 
+} catch (PDOException $e) {
+   $fileName = basename($e-&gt;getFile(), &quot;.php&quot;);<span class="color-comment"> // Filename that trigger the exception</span>
+   $lineNumber = $e-&gt;getLine();        <span class="color-comment"> // Line number that triggers the exception</span>
+   die(&quot;[$fileName][$lineNumber] Database error: &quot; . $e-&gt;getMessage() . '&lt;br /&gt;');
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Connected
+DROP TABLE: 0 rows
+CREATE TABLE: 0 rows
+INSERT INTO: 1 rows
+LAST_INSERT_ID (of the AUTO_INCREMENT column) is 1001
+INSERT INTO: 2 rows
+LAST_INSERT_ID (of the AUTO_INCREMENT column) is 1002
+
+Retrieve via column name: id=1001, name=peter
+Retrieve via column number: id=1001, name=peter
+Array ( [id] =&gt; 1001 [0] =&gt; 1001 [name] =&gt; peter [1] =&gt; peter )
+Retrieve via column name: id=1002, name=paul
+Retrieve via column number: id=1002, name=paul
+Array ( [id] =&gt; 1002 [0] =&gt; 1002 [name] =&gt; paul [1] =&gt; paul )
+Retrieve via column name: id=1003, name=patrick
+Retrieve via column number: id=1003, name=patrick
+Array ( [id] =&gt; 1003 [0] =&gt; 1003 [name] =&gt; patrick [1] =&gt; patrick )
+
+Retrieve via column name: id=1001, name=peter
+Array ( [id] =&gt; 1001 [name] =&gt; peter )
+Retrieve via column name: id=1002, name=paul
+Array ( [id] =&gt; 1002 [name] =&gt; paul )
+Retrieve via column name: id=1003, name=patrick
+Array ( [id] =&gt; 1003 [name] =&gt; patrick )
+
+Retrieve via column name: id=1001, name=peter
+stdClass Object ( [id] =&gt; 1001 [name] =&gt; peter )
+Retrieve via column name: id=1002, name=paul
+stdClass Object ( [id] =&gt; 1002 [name] =&gt; paul )
+Retrieve via column name: id=1003, name=patrick
+stdClass Object ( [id] =&gt; 1003 [name] =&gt; patrick )</pre>
+
+<h5>Dissecting the Program</h5>
+
+<ul>
+<li>To create a Database connection to MySQL Server:
+<pre class="color-command">
+$dbConn = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $user, $pass);</pre>
+where <code>$host</code> is the MySQL server's hostname, <code>$port</code> is the port number, <code>$dbName</code> is the default database name, <code>$user</code> and <code>$pass</code> are the username/password for an authorized MySQL user.</li>
+
+<li>The connection will be closed automatically at the end of the script. However, you could explicitly close the connection by setting it to <code>NULL</code> (which is often not necessary).
+<pre class="color-command">
+$dbConn = NULL;</pre></li>
+
+<li>Exception Handling: PDO support 3 error modes, which could be set via the <code>setAttribute()</code> function:
+<ol>
+<li><code>PDO::ERRMODE_SILENT</code> (default): you need to check for errors yourself.</li>
+<li><code>PDO::ERRMODE_WARNING</code>: issue PHP warning and continue execution.</li>
+<li><code>PDO::ERRMODE_EXCEPTION</code> (recommended): throw <code>PDOException</code>, to be handled via <code>try-catch</code> as shown in the above example. From the <code>PDOException</code> object, you can invoke the <code>getFile()</code>, <code>getLine()</code> and <code>getMessage()</code> to retrieve the full-path filename, line number, and error message where the exception is thrown.</li>
+</ol>
+</li>
+
+<li>For CREATE/DROP TABLE, INSERT, DELETE, UPDATE, invoke <code>exec()</code> function, which returns the number of affected rows.</li>
+
+<li>For SELECT, invoke <code>query()</code> function, which returns a resultset.
+<ul>
+<li><code>query($sql)</code> returns a row-array resultset indexed by both column-name and column-number (starting from 0).</li>
+<li><code>query($sql, PDO::FETCH_ASSOC)</code> returns a row-array resultset indexed by column-name only (in an associative array).</li>
+<li><code>query($sql, PDO::FETCH_OBJ)</code> returns a row-object resultset with column-names as properties.</li>
+</ul>
+</li>
+
+<li>You can use connection's <code>lastInsertId()</code> to retrieve the last insert id for the <code>AUTO_INCREMENT</code> column.</li>
+</ul>
+
+<h4>Example 2: Prepared Statements</h4>
+
+<p>Prepared statements can reasonably guard against <em>SQL injection attack</em> (<a href="http://en.wikipedia.org/wiki/SQL_injection">Wiki</a>), and are recommended in production.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108</pre>
+</td>
+<td>
+<pre>
+&lt;?php
+<span class="color-comment">/**
+ * PdoPreparedTest.php: Using PDO Prepared Statement.
+ * For CREATE TABLE, DROP TABLE, INSERT, DELETE, UPDATE:
+ *   prepare() -&gt; bindParam() -&gt; execute() -&gt; check rowCount().
+ * For SELECT:
+ *   prepare() -&gt; bindParam() -&gt; execute() -&gt; check rowCount() -&gt; fetch() a row or fetchAll() rows.
+ */</span>
+<span class="color-comment">// Define the MySQL database parameters.</span>
+<span class="color-comment">// Avoid global variables (which live longer than necessary) for sensitive data.</span>
+$DB_HOST = 'localhost';<span class="color-comment"> // MySQL server hostname</span>
+$DB_PORT = '3306';     <span class="color-comment"> // MySQL server port number (default 3306)</span>
+$DB_NAME = 'test';     <span class="color-comment"> // MySQL database name</span>
+$DB_USER = 'testuser'; <span class="color-comment"> // MySQL username</span>
+$DB_PASS = 'xxxx';     <span class="color-comment"> // password</span>
+ 
+try {
+  <span class="color-comment"> // Create a database connection to MySQL server.</span>
+   $dbConn = new PDO(&quot;mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_NAME&quot;, $DB_USER, $DB_PASS);
+   $dbConn-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);<span class="color-comment"> // Set error mode to exception</span>
+   echo 'Connected', '&lt;br /&gt;';
+ 
+   $pstmt = $dbConn-&gt;prepare('DROP TABLE IF EXISTS `test`'); <span class="color-comment"> // Create prepared statement</span>
+   $pstmt-&gt;execute(); <span class="color-comment"> // Run prepared statement</span>
+   echo 'DROP TABLE: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;';
+ 
+   $pstmt = $dbConn-&gt;prepare(
+         'CREATE TABLE IF NOT EXISTS `test` (
+            `id` INT AUTO_INCREMENT,
+            `name` VARCHAR(20),
+             PRIMARY KEY (`id`))'); <span class="color-comment"> // Create prepared statement</span>
+ 
+   $pstmt-&gt;execute(); <span class="color-comment"> // Run prepared statement</span>
+   echo 'CREATE TABLE: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Create prepared statement with named parameters in the form of :paramName</span>
+   $pstmt = $dbConn-&gt;prepare(
+         'INSERT INTO `test` (`id`, `name`) VALUES (:id, :name)');
+  <span class="color-comment"> // Bind named parameters to program variables, with the type specified.</span>
+   $pstmt-&gt;bindParam(':id', $id, PDO::PARAM_INT);
+   $pstmt-&gt;bindParam(':name', $name, PDO::PARAM_STR);
+ 
+   $id = 2001;
+   $name = 'john';
+   $pstmt-&gt;execute(); <span class="color-comment"> // Run prepared statement.</span>
+   echo 'INSERT INTO: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;';
+   echo 'LAST_INSERT_ID (of the AUTO_INCREMENT column) is ', $dbConn-&gt;lastInsertId(), '&lt;br /&gt;';
+ 
+   $id = 2002;
+   $name = &quot;jane&quot;;
+   $pstmt-&gt;execute(); <span class="color-comment"> // Run prepared statement again with different values.</span>
+   echo 'INSERT INTO: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;';
+   echo 'LAST_INSERT_ID (of the AUTO_INCREMENT column) is ', $dbConn-&gt;lastInsertId(), '&lt;br /&gt;&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Create prepared statement with positional (unnamed) parameters in the form of ?</span>
+   $pstmt = $dbConn-&gt;prepare('SELECT * FROM `test` WHERE `id` = ? AND `name` LIKE ?');
+   $pstmt-&gt;bindParam(1, $id, PDO::PARAM_INT);   <span class="color-comment"> // Positional index starts at 1</span>
+   $pstmt-&gt;bindParam(2, $name, PDO::PARAM_STR);
+   $name = 'j%';
+   $id = 2001;
+   $pstmt-&gt;execute(); <span class="color-comment"> // Run prepared statement.</span>
+   echo 'SELECT: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;';
+  <span class="color-comment"> // Fetch resultset row-by-row</span>
+  <span class="color-comment"> // By default, resultset's row is indexed by BOTH column-name AND column-number (starting at 0).</span>
+   while ($row = $pstmt-&gt;fetch()) {
+      echo 'Retrieve via column name: id=', $row['id'], ' name=', $row['name'], '&lt;br /&gt;';
+      echo 'Retrieve via column number: id=', $row[0], ' name=', $row[1], '&lt;br /&gt;';
+      print_r($row);<span class="color-comment"> // for showing the contents of resultset's row</span>
+      echo '&lt;br /&gt;';
+   }
+   echo '&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Run again with the same $name but different $id.</span>
+   $id = 2002;
+   $pstmt-&gt;execute();
+   echo 'SELECT: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;';
+  <span class="color-comment"> // Fetch entire resultset (all rows) into program buffer, with &quot;FETCH_ASSOC&quot; option.</span>
+  <span class="color-comment"> // Resultset's row is an associative array indexed by column-name only.</span>
+   $resultset = $pstmt-&gt;fetchAll(PDO::FETCH_ASSOC);
+  <span class="color-comment"> // print_r($resultset);  // all the rows in program buffer</span>
+   foreach ($resultset AS $row) { <span class="color-comment"> // Process each row in the buffer</span>
+      echo 'Retrieve via column name: id=', $row['id'], ' name=', $row['name'], '&lt;br /&gt;';
+      print_r($row);<span class="color-comment"> // for showing the contents of resultset's row</span>
+      echo '&lt;br /&gt;';
+   }
+   echo '&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Run again with the same parameter values.</span>
+   $pstmt-&gt;execute();
+   echo 'SELECT: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;';
+  <span class="color-comment"> // Fetch entire resultset (all rows) into program buffer, with &quot;FETCH_OBJ&quot; option.</span>
+  <span class="color-comment"> // Resultset's row is an object with column-names as properties.</span>
+   $resultset = $pstmt-&gt;fetchAll(PDO::FETCH_OBJ);
+   foreach ($resultset AS $row) { <span class="color-comment"> // Process each row in the buffer</span>
+      echo 'Retrieve via column name: id=', $row-&gt;id, ' name=', $row-&gt;name, '&lt;br /&gt;';
+      print_r($row);<span class="color-comment"> // for showing the contents of resultset's row</span>
+      echo '&lt;br /&gt;';
+   }
+ 
+  <span class="color-comment"> // Close the database connection  (optional).</span>
+   $dbConn = NULL;
+ 
+} catch (PDOException $e) {
+   $fileName = basename($e-&gt;getFile(), &quot;.php&quot;);<span class="color-comment"> // File that trigger the exception</span>
+   $lineNumber = $e-&gt;getLine();        <span class="color-comment"> // Line number that triggers the exception</span>
+   die(&quot;[$fileName][$lineNumber] Database error: &quot; . $e-&gt;getMessage() . '&lt;br /&gt;');
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Connected
+DROP TABLE: 0 rows
+CREATE TABLE: 0 rows
+INSERT INTO: 1 rows
+LAST_INSERT_ID (of the AUTO_INCREMENT column) is 2001
+INSERT INTO: 1 rows
+LAST_INSERT_ID (of the AUTO_INCREMENT column) is 2002
+
+SELECT: 1 rows
+Retrieve via column name: id=2001 name=john
+Retrieve via column number: id=2001 name=john
+Array ( [id] =&gt; 2001 [0] =&gt; 2001 [name] =&gt; john [1] =&gt; john )
+
+SELECT: 1 rows
+Retrieve via column name: id=2002 name=jane
+Array ( [id] =&gt; 2002 [name] =&gt; jane )
+
+SELECT: 1 rows
+Retrieve via column name: id=2002 name=jane
+stdClass Object ( [id] =&gt; 2002 [name] =&gt; jane )</pre>
+
+<h5>Dissecting the Program</h5>
+
+<ul>
+<li>To use prepared statement, the operating sequence is <code>prepare()</code>, <code>bindParam()</code> and <code>execute()</code>.</li>
+<li>You can get the affected row thru statement's <code>rowCount()</code>.</li>
+
+<li>For SELECT, invoke statement's <code>fetch()</code> or <code>fetchAll()</code> to fetch a row or the entire resultset. <code>fetchAll()</code> is more efficient, but requires more space.</li>
+
+<li>PDO supports the following types of placeholders for parameters:
+<ol>
+<li>Named Placeholders (recommended): The parameters are marked by <code>:<em>paramName</em></code>, and bound by the name using <code>bindParam(<em>placeHolderName</em>, <em>varName</em>, <em>paramType</em>)</code>, as shown in the above example.<br />
+If a named parameter is used multiple times in the SQL statement, you need to bind only once for all the occurrences. For example,<br />
+<pre class="color-example">
+$pstmt = $dbConn-&gt;prepare('SELECT * FROM `Users` WHERE `id` = :input OR `email` = :input');
+$pstmt-&gt;bindParam(':input', $idOrEmail, PDO::PARAM_STR);  <span class="color-comment">// bind both occurrences</span>
+$pstmt-&gt;execute();</pre>
+
+Instead of binding the parameters via <code>bindParam()</code>, you can also pack the actual values in an associative array and run the <code>execute($dataArray)</code>, for example,
+<pre class="color-example">
+$pstmt = $dbConn-&gt;prepare('INSERT INTO `test` (`id`, `name`) VALUES (:id, :name)');
+$dataArray = array('id' =&gt; 1001, 'name' =&gt; 'peter');  
+$pstmt-&gt;execute($dataArray);</pre>
+
+</li>
+<li>Positional (Unnamed) Placeholders: The parameters are marked by ?, and bind thru the parameter number (starting from 1), for example,
+<pre class="color-example">
+$pstmt = $dbConn-&gt;prepare('INSERT INTO `test` (`id`, `name`) VALUES (?, ?)');
+$pstmt-&gt;bindParam(1, $id,   PDO::PARAM_INT);
+$pstmt-&gt;bindParam(2, $name, PDO::PARAM_STR);
+$pstmt-&gt;execute();</pre>
+You can also pack the actual values in an array in proper sequence and run the <code>execute($dataArray)</code>, for example,
+<pre class="color-example">
+$pstmt = $dbConn-&gt;prepare('INSERT INTO `test` (`id`, `name`) VALUES (?, ?)');
+$dataArray = array(1001, 'peter');  
+$pstmt-&gt;execute($dataArray);</pre>
+</li>
+</ol>
+</li>
+
+<li>Fetch mode: You can also set the fetch mode via <code>setFetchMode()</code>, e.g.,
+<pre class="color-example">
+$pstmt-&gt;setFetchMode(PDO::FETCH_ASSOC);</pre>
+
+<ol>
+<li><code>PDO::FETCH_ASSOC</code>: returns an array indexed by column name.</li>
+<li><code>PDO::FETCH_OBJ</code>: returns an anonymous object with property names corresponding to the column names.</li>
+<li><code>PDO::FETCH_BOTH</code> (default): returns an array indexed by both column name and column number (starting from 1).</li>
+<li><code>PDO::FETCH_CLASS</code>: assign the values of columns to the corresponding properties (variables) of the given class.</li>
+</ol>
+</li>
+
+<li><code>$pstmt-&gt;numRow()</code>: returns the number of rows affected.</li>
+<li><code>$dbConn-&gt;lastInsertID()</code>: returns the last insert ID (of the <code>AUTO_INCREMENT</code> column) of the last INSERT operation.</li>
+
+<li><code>PDOException</code>: You can use <code>getFile()</code>, <code>getLine()</code>, <code>getMessage()</code> to get the filename, line number and exception error message, respectively.</li>
+
+</ul>
+
+<h4>Example 3: Test SQL Injection on Regular vs. Prepared Statements</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71</pre>
+</td>
+<td>
+<pre>
+&lt;?php
+<span class="color-comment">/**
+ * PdoSQLInjectionTest.php: Checking SQL Injection for regular and prepared statements.
+ */</span>
+<span class="color-comment">// Define the MySQL database parameters.</span>
+$DB_HOST = 'localhost';<span class="color-comment"> // MySQL server hostname</span>
+$DB_PORT = '3306';     <span class="color-comment"> // MySQL server port number (default 3306)</span>
+$DB_NAME = 'test';     <span class="color-comment"> // MySQL database name</span>
+$DB_USER = 'testuser'; <span class="color-comment"> // MySQL username</span>
+$DB_PASS = 'xxxx';     <span class="color-comment"> // password</span>
+ 
+try {
+  <span class="color-comment"> // Create a database connection to MySQL server.</span>
+   $dbConn = new PDO(&quot;mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_NAME&quot;, $DB_USER, $DB_PASS);
+   $dbConn-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);<span class="color-comment"> // Set error mode to exception</span>
+   echo 'Connected', '&lt;br /&gt;';
+ 
+   $pstmt = $dbConn-&gt;prepare('DROP TABLE IF EXISTS `test`'); <span class="color-comment"> // Create prepared statement</span>
+   $pstmt-&gt;execute(); <span class="color-comment"> // Run prepared statement</span>
+   echo 'DROP TABLE: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;';
+ 
+   $pstmt = $dbConn-&gt;prepare(
+         'CREATE TABLE IF NOT EXISTS `test` (
+            `id` INT AUTO_INCREMENT,
+            `name` VARCHAR(20),
+             PRIMARY KEY (`id`))'); <span class="color-comment"> // Create prepared statement</span>
+ 
+   $pstmt-&gt;execute(); <span class="color-comment"> // Run prepared statement</span>
+   echo 'CREATE TABLE: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Create prepared statement with named parameters in the form of :paramName</span>
+   $rowCount = $dbConn-&gt;exec(&quot;INSERT INTO `test` (`name`) VALUES ('peter'),('paul'),('patrick')&quot;);
+   echo 'INSERT INTO: ', $rowCount, ' rows', '&lt;br /&gt;&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Use regular statement without sanitizing user input.</span>
+   $nameInput = &quot;peter' OR '1'='1&quot;; <span class="color-comment"> // SQL injection</span>
+   $resultset = $dbConn-&gt;query(&quot;SELECT * FROM `test` WHERE `name` = '$nameInput'&quot;);
+  <span class="color-comment"> // Check result</span>
+   foreach ($resultset as $row) { <span class="color-comment"> // Loop thru all rows in resultset</span>
+      print_r($row);<span class="color-comment"> // Show the contents of resultset's row</span>
+      echo '&lt;br /&gt;';
+   }
+   echo '&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Sanitizing user input via quote(), which escapes special characters.</span>
+   $sanitizedNameInput = $dbConn-&gt;quote($nameInput, PDO::PARAM_STR);
+   print_r($sanitizedNameInput);
+   echo '&lt;br /&gt;';
+   $dbConn-&gt;query(&quot;SELECT * FROM `test` WHERE `name` = '$sanitizedNameInput'&quot;); <span class="color-comment"> // SQL Syntax Error!</span>
+ 
+} catch (PDOException $e) {
+   $fileName = basename($e-&gt;getFile(), &quot;.php&quot;);<span class="color-comment"> // File that trigger the exception</span>
+   $lineNumber = $e-&gt;getLine();        <span class="color-comment"> // Line number that triggers the exception</span>
+   echo &quot;[$fileName][$lineNumber] Database error: &quot; . $e-&gt;getMessage() . '&lt;br /&gt;&lt;br /&gt;';
+  <span class="color-comment"> // continue</span>
+}
+ 
+try {
+  <span class="color-comment"> // Use prepared statement to guard against SQL injection.</span>
+   $pstmt = $dbConn-&gt;prepare('SELECT * FROM `test` WHERE `name` = :name');
+   $pstmt-&gt;bindParam(':name', $nameInput, PDO::PARAM_STR); <span class="color-comment"> // Bind with unsanitized user input</span>
+   $pstmt-&gt;execute(); <span class="color-comment"> // Run prepared statement.</span>
+  <span class="color-comment"> // Check result</span>
+   echo 'SELECT: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;'; <span class="color-comment"> // 0 rows</span>
+ 
+} catch (PDOException $e) {
+   $fileName = basename($e-&gt;getFile(), &quot;.php&quot;);<span class="color-comment"> // File that trigger the exception</span>
+   $lineNumber = $e-&gt;getLine();        <span class="color-comment"> // Line number that triggers the exception</span>
+   die(&quot;[$fileName][$lineNumber] Database error: &quot; . $e-&gt;getMessage() . '&lt;br /&gt;');
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Connected
+DROP TABLE: 0 rows
+CREATE TABLE: 0 rows
+INSERT INTO: 3 rows
+
+Array ( [id] =&gt; 1 [0] =&gt; 1 [name] =&gt; peter [1] =&gt; peter )
+Array ( [id] =&gt; 2 [0] =&gt; 2 [name] =&gt; paul [1] =&gt; paul )
+Array ( [id] =&gt; 3 [0] =&gt; 3 [name] =&gt; patrick [1] =&gt; patrick )
+
+'peter\' OR \'1\'=\'1'
+[PdoSQLInjectionTest][49] Database error: SQLSTATE[42000]: Syntax error or access violation:
+1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version
+for the right syntax to use near 'peter\' OR \'1\'=\'1''' at line 1
+
+SELECT: 0 rows</pre>
+
+<h5>Dissecting the Program</h5>
+
+<ul>
+<li>The first SELECT uses regular statement which is susceptible to SQL injection.</li>
+<li>We could use PDO's <code>quote()</code> function to escape special characters to prevent SQL injection, which resulted in SQL syntax error. However, the <code>quote()</code> function is NOT recommended.</li>
+<li>Instead, it is recommended to use prepared statement, which accepts but sanitizes and confines the input to a particular parameter.</li>
+</ul>
+
+<h4>Example 4: Transaction</h4>
+
+<p>Transaction ensures the so-called ACID (Atomic, Consistency, Integrity, Durability) properties. For example, to transfer money from one bank account to another account, it typically involves two SQL UPDATE statements. What if one of the statement fails? A transaction batches a group of SQL statements. The statements either ALL succeed or NONE succeed (atomic).</p>
+
+<p>By default, MySQL statements are executing in an auto-commit mode, which commits every single statement. To enable transaction, use <code>beginTransaction()</code>, which disables the auto-commit. You can then <code>commit()</code> if all statements succeed; or <code>rollBack()</code> if any of the statement fails.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105</pre>
+</td>
+<td>
+<pre>
+&lt;?php
+<span class="color-comment">/**
+ * Testing PDO MySQL Transaction.
+ * beginTransaction() -&gt; query()/exec()/execute() -&gt; commit() or rollBack().
+ */</span>
+<span class="color-comment">// Define the MySQL database parameters.</span>
+$DB_HOST = 'localhost';<span class="color-comment"> // MySQL server hostname</span>
+$DB_PORT = '3306';     <span class="color-comment"> // MySQL server port number (default 3306)</span>
+$DB_NAME = 'test';     <span class="color-comment"> // MySQL database name</span>
+$DB_USER = 'testuser'; <span class="color-comment"> // MySQL username</span>
+$DB_PASS = 'xxxx';     <span class="color-comment"> // password</span>
+ 
+try {
+  <span class="color-comment"> // Create a database connection to MySQL server.</span>
+   $dbConn = new PDO(&quot;mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_NAME&quot;, $DB_USER, $DB_PASS);
+   $dbConn-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);<span class="color-comment"> // Set error mode to exception</span>
+   echo 'Connected', '&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Create an accounts table</span>
+   $pstmt = $dbConn-&gt;prepare('DROP TABLE IF EXISTS `accounts`');
+   $pstmt-&gt;execute();
+   echo 'DROP TABLE: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;';
+ 
+   $pstmt = $dbConn-&gt;prepare(
+         'CREATE TABLE IF NOT EXISTS `accounts` (
+            `id`      INT AUTO_INCREMENT PRIMARY KEY,
+            `name`    VARCHAR(20),
+            `balance` INT)');
+   $pstmt-&gt;execute();
+   echo 'CREATE TABLE: ', $pstmt-&gt;rowCount(), ' rows', '&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Initialize the table</span>
+   $pstmt = $dbConn-&gt;prepare(
+         'INSERT INTO `accounts` (`name`, `balance`) VALUES (:name, :balance)');
+   $pstmt-&gt;bindParam(':name', $name, PDO::PARAM_STR);
+   $pstmt-&gt;bindParam(':balance', $balance, PDO::PARAM_INT);
+ 
+   $name = 'peter';
+   $balance = 1000;
+   $pstmt-&gt;execute();
+   $name = 'paul';
+   $pstmt-&gt;execute(); <span class="color-comment"> // Same initial balance</span>
+ 
+  <span class="color-comment"> // Check the table</span>
+   $pstmt = $dbConn-&gt;prepare('SELECT * FROM `accounts`');
+   $pstmt-&gt;execute();
+   $resultset = $pstmt-&gt;fetchAll(PDO::FETCH_ASSOC);
+   foreach ($resultset AS $row) {
+      print_r($row);
+      echo '&lt;br /&gt;';
+   }
+   echo '&lt;br /&gt;';
+ 
+} catch (PDOException $e) {
+   $fileName = basename($e-&gt;getFile(), &quot;.php&quot;);<span class="color-comment"> // File that trigger the exception</span>
+   $lineNumber = $e-&gt;getLine();        <span class="color-comment"> // Line number that triggers the exception</span>
+   die(&quot;[$fileName][$lineNumber] Database error: &quot; . $e-&gt;getMessage() . '&lt;br /&gt;');
+}
+ 
+<span class="color-comment">// Use a transaction to transfer money from one account to another account.</span>
+try {
+   $dbConn-&gt;beginTransaction(); <span class="color-comment"> // Begin transaction by turning off the auto-commit mode</span>
+ 
+   $pstmt = $dbConn-&gt;prepare(
+         'UPDATE `accounts` SET `balance` = `balance` + :amount WHERE `name` = :name');
+   $pstmt-&gt;bindParam(':name', $name, PDO::PARAM_STR);
+   $pstmt-&gt;bindParam(':amount', $amount, PDO::PARAM_INT);
+ 
+   $name = 'peter';
+   $amount = -50;
+   $pstmt-&gt;execute();
+ 
+  <span class="color-comment"> // Uncomment to force an exception</span>
+  <span class="color-comment"> // throw new PDOException('test');</span>
+ 
+   $name = 'paul';
+   $amount = 50;
+   $pstmt-&gt;execute();
+ 
+  <span class="color-comment"> // Commit the transaction if both statements succeed.</span>
+   $dbConn-&gt;commit();
+  <span class="color-comment"> // Back to auto-commit mode until another beginTransaction().</span>
+ 
+} catch (PDOException $e) {
+  <span class="color-comment"> // Roll back all update if any of statement fails.</span>
+   echo 'Rolling back all updates...&lt;br /&gt;';
+   $dbConn-&gt;rollBack();
+}
+ 
+try {
+  <span class="color-comment"> // Check the table after the transaction (commit or rollBack).</span>
+   $pstmt = $dbConn-&gt;prepare('SELECT * FROM `accounts`');
+   $pstmt-&gt;execute();
+   $resultset = $pstmt-&gt;fetchAll(PDO::FETCH_ASSOC);
+   foreach ($resultset AS $row) {
+      print_r($row);
+      echo '&lt;br /&gt;';
+   }
+ 
+} catch (PDOException $e) {
+   $fileName = basename($e-&gt;getFile(), &quot;.php&quot;);<span class="color-comment"> // File that trigger the exception</span>
+   $lineNumber = $e-&gt;getLine();        <span class="color-comment"> // Line number that triggers the exception</span>
+   die(&quot;[$fileName][$lineNumber] Database error: &quot; . $e-&gt;getMessage() . '&lt;br /&gt;');
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Connected
+DROP TABLE: 0 rows
+CREATE TABLE: 0 rows
+Array ( [id] =&gt; 1 [name] =&gt; peter [balance] =&gt; 1000 )
+Array ( [id] =&gt; 2 [name] =&gt; paul [balance] =&gt; 1000 )
+
+Array ( [id] =&gt; 1 [name] =&gt; peter [balance] =&gt; 950 )
+Array ( [id] =&gt; 2 [name] =&gt; paul [balance] =&gt; 1050 )</pre>
+
+<h5>Dissecting the Program</h5>
+
+<ul>
+<li>The <code>beginTransaction()</code> method start a transaction, by disabling auto-commit.</li>
+<li>The <code>commit()</code> method commits the transaction (if all statements succeed).</li>
+<li>The <code>rollBack()</code> method, in the <code>catch</code> clause, rolls back the transaction (if any of the statements fails). No database update will be performed.</li>
+<li><code>commit()</code> and <code>rollBack()</code> also end the transaction, and return the connection to auto-commit, until another <code>beginTransaction()</code> is issued.</li>
+<li>To try the <code>rollBack()</code>, either replace the <code>commit()</code> with <code>rollBack()</code>, or issue a SQL statement that throws an exception to trigger the <code>rollBack()</code> in the <code>catch</code> clause. Observe that no record will be updated without a <code>commit()</code>.</li>
+</ul>
+
+<h4>Example 5: Stored Procedures and Functions</h4>
+
+<p>Procedure/Functions are defined in the database, instead of PHP scripts. They are typically more efficient. The drawback is the codes are separated from your PHP codes, and could be hard to maintain.</p>
+
+<p>[TODO]</p>
+
+
+<h3><span class="font-code">mysqli</span> By Examples (Deprecated)</h3>
+
+<h4>Using <span class="font-code">mysqli</span>'s <span class="font-code">query()</span></h4>
+
+<p>The steps for using <code>mysqli</code> to perform database operations are:</p>
+<ol>
+<li>Allocate a <code>mysqli</code> object, which establishes a <em>connection</em> to the database server, via
+<pre class="color-plain">
+$mysqli = new mysqli(<em>hostname</em>, <em>username</em>, <em>password</em>, <em>databaseName</em>, <em>port</em>);
+</pre></li>
+
+<li>Use the <code>mysqli</code>'s <code>query()</code> method to execute a SQL statement. For <code>SELECT</code>, <code>query()</code> returns a result set; for other queries like <code>CREATE TABLE</code> and <code>INSERT</code>, <code>query()</code> returns <code>TRUE</code> or <code>FALSE</code>. For example,
+<pre class="color-plain">
+<span class="color-comment">// query() returns TRUE/FALSE for INSERT INTO</span>
+$mysqli-&gt;query('INSERT INTO ......');
+<span class="color-comment">// query() returns a result set for SELECT</span>
+$resultSet = $mysqli-&gt;query('SELECT * FROM ......');</pre>
+</li>
+
+<li>For <code>SELECT</code> query, process the result set. The result set is kept in an object of <code>mysqli_result</code>, which contains properties and methods for operating the result set. A result set is associated with a <em>row cursor</em>, which initially pointing at the first row. The method <code>fetch_assoc()</code> fetches the current row from the result set, advanced the result set's cursor to the next row, and returns an associative array indexed by column names. The property <code>num_rows</code> stores the number of rows in the result set.
+<pre class="color-plain">
+for ($r = 0; $r &lt; $resultSet-&gt;num_rows; ++$r) {
+   <span class="color-comment">// fetch a row as associative array</span>
+   $row = $resultSet-&gt;fetch_assoc();  
+   <span class="color-comment">// Get each cell of the row as $row['<em>columnName</em>']</span>
+   ......
+}
+$resultSet-&gt;close();   <span class="color-comment">// close the result set</span></pre>
+</li>
+
+<li>Close the database connection:
+<pre class="color-plain">
+$mysqli-&gt;close();</pre>
+</li>
+
+</ol>
+
+
+<h5>Example: <span class="font-code">mysqli-&gt;query()</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93</pre>
+</td>
+<td>
+<pre>
+&lt;?php  <span class="color-comment"> // mysqli_query.php</span>
+<span class="color-comment">// Define database related constants</span>
+define('DB_HOSTNAME', 'localhost');
+define('DB_USERNAME', 'myuser');
+define('DB_PASSWORD', 'xxxx');
+define('DB_DATABASE', 'test');
+define('DB_PORT',     3306);
+ 
+<span class="color-comment">// Connect to the MySQL server and set the default database</span>
+$mysqli = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+<span class="color-comment">// Assert no error</span>
+!$mysqli-&gt;connect_errno
+      or die(&quot;Error: Failed to CONNECT: ({$mysqli-&gt;connect_errno}) {$mysqli-&gt;connect_error}&quot;);
+ 
+echo 'INFO: Connected to MySQL at ' . DB_HOSTNAME . ':' . DB_PORT . '/' . DB_DATABASE
+      . ' (' . DB_USERNAME . ')&lt;br /&gt;';
+ 
+<span class="color-comment">// Invoke query() to execute a DROP TABLE statement, which returns TRUE/FALSE</span>
+$mysqli-&gt;query('DROP TABLE IF EXISTS Coffees')
+      or die(&quot;Error: DROP TABLE failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+echo 'INFO: Table Coffees dropped&lt;br /&gt;';
+ 
+<span class="color-comment">// CREATE TABLE string</span>
+$sqlStr = &lt;&lt;&lt;_END
+CREATE TABLE Coffees (
+  id     SMALLINT UNSIGNED  NOT NULL AUTO_INCREMENT,
+  name   VARCHAR(32)        NOT NULL,
+  price  DECIMAL(5,2)       NOT NULL DEFAULT 999.99,
+  PRIMARY KEY (id),
+  INDEX (name)
+)
+_END;
+ 
+<span class="color-comment">// Invoke query() to execute a CREATE TABLE statement, which returns TRUE/FALSE</span>
+$mysqli-&gt;query($sqlStr)
+      or die(&quot;Error: CREATE TABLE failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+echo 'INFO: Table Coffees created&lt;br /&gt;';
+ 
+<span class="color-comment">// INSERT string</span>
+$sqlStr = &lt;&lt;&lt;_END
+INSERT INTO Coffees (name, price) VALUES
+  ('Espresso',      3.19),
+  ('Cappuccino',    3.29),
+  ('Caffe Latte',   3.39),
+  ('Caffe Mocha',   3.49),
+  ('Brewed Coffee', 3.59)
+_END;
+ 
+<span class="color-comment">// Invoke query() to execute an INSERT INTO statement, which returns TRUE/FALSE</span>
+$mysqli-&gt;query($sqlStr)
+      or die(&quot;Error: INSERT failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+<span class="color-comment">// Get the number of rows affected from property affected_rows</span>
+echo &quot;INFO: {$mysqli-&gt;affected_rows} row(s) inserted&quot;;
+ 
+<span class="color-comment">// Invoke query() to execute a SELECT query, which returns a buffered resultset</span>
+$resultSet = $mysqli-&gt;query('SELECT * FROM Coffees')
+      or die(&quot;Error: SELECT failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+ 
+<span class="color-comment">// Process the resultset and display in an HTML table</span>
+echo &lt;&lt;&lt;_END
+  &lt;table&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ID&lt;/th&gt;
+      &lt;th&gt;Name&lt;/th&gt;
+      &lt;th&gt;Price&lt;/th&gt;
+    &lt;/tr&gt;
+ 
+_END;
+ 
+<span class="color-comment">// Fetch each row and print table detail row</span>
+<span class="color-comment">// fetch_assoc() returns FALSE if there is no more row</span>
+while ($row = $resultSet-&gt;fetch_assoc()) {
+   echo &lt;&lt;&lt;_END
+    &lt;tr&gt;
+      &lt;td&gt;{$row['id']}&lt;/td&gt;
+      &lt;td&gt;{$row['name']}&lt;/td&gt;
+      &lt;td&gt;{$row['price']}&lt;/td&gt;
+    &lt;/tr&gt;
+ 
+_END;
+}
+ 
+echo &lt;&lt;&lt;_END
+  &lt;/table&gt;
+ 
+_END;
+ 
+$resultSet-&gt;close(); <span class="color-comment"> // Close the resultset</span>
+ 
+<span class="color-comment">// Disconnect From MySQL server</span>
+$mysqli-&gt;close();
+echo 'INFO: Connection Closed&lt;br /&gt;';
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<h5>Notes</h5>
+
+<ol>
+<li>The <code>fetch_assoc()</code> returns an associative array, containing the current row in the resultset. You can then retrieve the values of the columns via the column names. <code>fetch_assoc()</code> returns FALSE when there is no more row in the resultset.</li>
+
+<li>By default (with <code>resultMode</code> of <code>MYSQLI_STORE_RESULT</code>), running <code>query()</code> with <code>SELECT</code> statement returns a <em>buffered resultset</em>, with the number of rows of the resultset stored in property <code>num_rows</code>.  You can also use the <code>num_rows</code> to control the loop:
+ 
+<pre class="color-example">
+<span class="color-comment">// The query() returns a buffered resultset, with number of rows in num_rows.</span>
+for ($r = 0; $r &lt; $resultSet-&gt;num_rows; ++$r) {
+  <span class="color-comment"> // Fetch current row into an associative array called $row</span>
+   $row = $resultSet-&gt;fetch_assoc();
+   echo &lt;&lt;&lt;_END
+    &lt;tr&gt;
+      &lt;td&gt;{$row['id']}&lt;/td&gt;
+      &lt;td&gt;{$row['name']}&lt;/td&gt;
+      &lt;td&gt;{$row['price']}&lt;/td&gt;
+    &lt;/tr&gt;
+ 
+_END;
+}</pre></li>
+
+</ol>
+
+<h4><span class="font-code">mysqli</span>'s <span class="font-code">query()</span>, <span class="font-code">real_query()</span> and <span class="font-code">multi_query()</span></h4>
+
+<p><code>mysqli</code> provides 3 query methods: <code>query()</code>, <code>real_query()</code>, <code>multi_query()</code>.</p>
+
+<ol>
+<li><code>query()</code> is the most commonly used. For <code>SELECT</code>, <code>query()</code> combines executing SQL statement with fetching of the result set. For other SQL statement, <code>query()</code> returns <code>TRUE</code> or <code>FALSE</code>.</li>
+<li><code>real_query()</code> executes the SQL statement and returns <code>TRUE</code> or <code>FALSE</code>. For <code>SELECT</code>, it does not return the result set. You need to issue a <code>store_result()</code> to fetch and buffer the result set (or <code>use_result()</code> to initiate fetching of result set but without buffering).</li>
+<li><code>multi_query()</code> is used for executing multiple SQL statements (separated by semi-colons) without fetching the result sets. You can use <code>store_result()</code> to fetch the first result set; <code>more_results()</code> to check if there is more result set, and <code>next_result()</code> to prepare the next result set. <code>multi_query()</code> is needed for executing SQL procedure which returns more than one result set.</li></ol>
+
+<h5>Example: <span class="font-code">real_query()</span> and <span class="font-code">multi_query()</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107</pre>
+</td>
+<td>
+<pre>
+&lt;?php  <span class="color-comment"> // mysqli_real_and_multi_query.php</span>
+<span class="color-comment">// Define database related constants</span>
+define('DB_HOSTNAME', 'localhost');
+define('DB_USERNAME', 'myuser');
+define('DB_PASSWORD', 'xxxx');
+define('DB_DATABASE', 'test');
+define('DB_PORT',     3306);
+ 
+<span class="color-comment">// Connect to the MySQL server and set the default database</span>
+$mysqli = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+!$mysqli-&gt;connect_errno
+      or die(&quot;Error: Failed to CONNECT to MySQL: ({$mysqli-&gt;connect_errno}) {$mysqli-&gt;connect_error}&quot;);
+echo 'INFO: Connected to MySQL at ' . DB_HOSTNAME . ':' . DB_PORT . '/' . DB_DATABASE
+      . ' (' . DB_USERNAME . ')&lt;br /&gt;';
+ 
+<span class="color-comment">// Use query() to execute a DROP TABLE statement, which returns TRUE/FALSE</span>
+$mysqli-&gt;query('DROP TABLE IF EXISTS Coffees')
+      or die(&quot;Error: DROP TABLE Coffees failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+echo 'INFO: Table Coffees dropped&lt;br /&gt;';
+ 
+<span class="color-comment">// CREATE TABLE</span>
+$sqlStr = &lt;&lt;&lt;_END
+CREATE TABLE Coffees (
+  id     SMALLINT UNSIGNED  NOT NULL AUTO_INCREMENT,
+  name   VARCHAR(32)        NOT NULL,
+  price  DECIMAL(5,2)       NOT NULL DEFAULT 999.99,
+  PRIMARY KEY (id),
+  INDEX (name)
+)
+_END;
+ 
+<span class="color-comment">// Use query() to execute a CREATE TABLE statement, which returns TRUE/FALSE</span>
+$mysqli-&gt;query($sqlStr)
+      or die(&quot;Error: CREATE TABLE Coffees failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+echo 'INFO: Table Coffees created&lt;br /&gt;';
+ 
+<span class="color-comment">// INSERT</span>
+$sqlStr = &lt;&lt;&lt;_END
+INSERT INTO Coffees (name, price) VALUES
+  ('Espresso',      3.19),
+  ('Cappuccino',    3.29),
+  ('Caffe Latte',   3.39),
+  ('Caffe Mocha',   3.49),
+  ('Brewed Coffee', 3.59)
+_END;
+ 
+<span class="color-comment">// Use query() to execute an INSERT INTO statement, which returns TRUE/FALSE</span>
+$mysqli-&gt;query($sqlStr)
+      or die(&quot;Error: INSERT INTO Coffees failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+<span class="color-comment">// Get the number of rows affected from affected_rows</span>
+echo &quot;INFO: {$mysqli-&gt;affected_rows} row(s) inserted&quot;;
+ 
+<span class="color-comment">/*
+ * Use real_query() to execute a single SELECT query, which returns TRUE/FALSE
+ */</span>
+$mysqli-&gt;real_query('SELECT * FROM Coffees')
+      or die(&quot;Error: SELECT failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+<span class="color-comment">// real_query(), unlike query(), does not return the result set.</span>
+<span class="color-comment">// Need to use store_result() (or use_result()) to fetch the resultset</span>
+$resultSet = $mysqli-&gt;store_result()
+      or die(&quot;Error: Store resultset failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+<span class="color-comment">// Call helper function to tabulated the resultset</span>
+tabulate_resultset($resultSet);
+$resultSet-&gt;close(); <span class="color-comment"> // Close the result set</span>
+ 
+<span class="color-comment">/*
+ * Use mutli_query() to execute multiple SELECT statements, which returns TRUE/FALSE
+ */</span>
+$mysqli-&gt;multi_query('SELECT * FROM Coffees; SELECT * FROM Coffees WHERE price &gt;= 3.49')
+      or die(&quot;Error: SELECT failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+do {
+  <span class="color-comment"> // Store and process the resultset</span>
+   $resultSet = $mysqli-&gt;store_result()
+         or die(&quot;Error: Store resultset failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+   tabulate_resultset($resultSet);
+   $resultSet-&gt;close();
+} while ($mysqli-&gt;more_results() and $mysqli-&gt;next_result());
+  <span class="color-comment"> // more_results() checks if there is more resultset</span>
+  <span class="color-comment"> // next_result() prepares the next resultset for fetching</span>
+ 
+<span class="color-comment">// Disconnect From MySQL server</span>
+$mysqli-&gt;close();
+echo 'INFO: Connection Closed&lt;br /&gt;';
+ 
+<span class="color-comment">/*
+ * Helper function to tabulate resultset
+ */</span>
+function tabulate_resultset($resultSet) {
+   echo '&lt;table&gt;&lt;tr&gt;';
+  <span class="color-comment"> // Get fields' name and print table header row</span>
+   $fields = $resultSet-&gt;fetch_fields(); <span class="color-comment"> // Get all fields</span>
+   foreach ($fields as $field) {
+      echo &quot;&lt;th&gt;{$field-&gt;name}&lt;/th&gt;&quot;;
+   }
+   echo '&lt;/tr&gt;';
+ 
+  <span class="color-comment"> // Fetch each row and print table detail row</span>
+   while ($row = $resultSet-&gt;fetch_assoc()) {
+      echo '&lt;tr&gt;';
+      foreach ($row as $item) {
+         echo &quot;&lt;td&gt;$item&lt;/td&gt;&quot;;
+      }
+      echo '&lt;/tr&gt;';
+   }
+   echo '&lt;/table&gt;';
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Notes</h5>
+
+<ol>
+<li>Two methods are available for fetching the resultset after <code>real_query()</code> or <code>multi_query()</code>: <code>store_result()</code> and <code>use_result()</code>.
+<ul>
+<li><code>store_result()</code> fetches the entire resultset from the server and returns to the client, i.e., buffered. You can use properties such as <code>num_rows</code> to get the number of rows of the result set, or <code>data_seek()</code> to position the cursor.</li>
+<li><code>use_result()</code> fetches the rows one by one, i.e., unbuffered. You cannot use <code>num_rows</code> or <code>data_seek()</code>.</li>
+</ul>
+Always use <code>store_result()</code> to retrieve a buffered resultset, unless you have a good reason not to do so.</li>
+
+<li><code>resultset-&gt;close()</code> is the same as <code>resultset-&gt;free()</code> and <code>resultset-&gt;free_result().</code></li>
+
+<li>If you get this error: &quot;Commands out of sync; you can't run this command now&quot;, you need to <code>close()</code> the previous resultset, before executing another query.</li>
+
+</ol>
+
+
+<h4>Prepared Statements</h4>
+
+<p>A <em>prepared statement</em> (or <em>parameterized statement</em>) contains <em>placeholders</em> for input parameters. You can reuse the same prepared statement many times, with different inputs. Prepared statements are often pre-compiled, which are more efficient than the normal statements. They are also not susceptible to SQL injection attack. Prepared statements are, therefore, RECOMMENDED for production, over the normal statements.</p>
+
+<p>The steps in using prepared statements are:</p>
+<ol>
+  <li>Allocate a prepared statement, with placeholders indicated as <code>?</code>, via <code>prepare()</code>.</li>
+  <li>Set the inputs for the placeholders, via <code>bind_param()</code>.</li>
+  <li>Execute the prepared statement with the inputs, via <code>execute()</code>.</li>
+  <li>For <code>SELECT</code> query, retrieve the buffered result set via <code>store_result()</code>; followed by <code>bind_result()</code> to bind the columns with variables; and <code>fetch()</code> to fetch a row with columns bound to the variables.</li>
+  <li>Repeat Step 2 and 4 for another execution.</li>
+  <li>Deallocate the prepared statement, via <code>close()</code>.</li>
+</ol>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77</pre>
+</td>
+<td>
+<pre>
+&lt;?php    <span class="color-comment"> // mysqli_prepared_statement.php</span>
+<span class="color-comment">// Define database related constants</span>
+define('DB_HOSTNAME', 'localhost');
+define('DB_USERNAME', 'myuser');
+define('DB_PASSWORD', 'xxxx');
+define('DB_DATABASE', 'test');
+define('DB_PORT',     3306);
+ 
+<span class="color-comment">// Connect to the MySQL server and set the default database</span>
+$mysqli = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+!$mysqli-&gt;connect_errno
+      or die(&quot;Error: Failed to CONNECT: ({$mysqli-&gt;connect_errno}) {$mysqli-&gt;connect_error}&quot;);
+echo 'INFO: Connected to MySQL at ' . DB_HOSTNAME . ':' . DB_PORT . '/' . DB_DATABASE
+      . ' (' . DB_USERNAME . ')&lt;br /&gt;';
+ 
+<span class="color-comment">// Allocate a prepared statement with placeholders indicated by ?</span>
+$pStmt = $mysqli-&gt;prepare(&quot;SELECT id, name, price FROM Coffees WHERE price BETWEEN ? AND ?&quot;)
+      or die(&quot;Error: create prepared failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+ 
+<span class="color-comment">// Bind inputs to the placeholders</span>
+$priceLow  = 3.29;
+$priceHigh = 3.48;
+$pStmt-&gt;bind_param('dd', $priceLow, $priceHigh)  <span class="color-comment"> // 'dd': two doubles</span>
+      and $pStmt-&gt;execute()
+      and $pStmt-&gt;store_result()
+      and $pStmt-&gt;bind_result($id, $name, $price)<span class="color-comment"> // bind columns to these variables</span>
+      or die(&quot;Error: Run prepared failed: ({$pStmt-&gt;errno}) {$pStmt-&gt;error}&quot;);
+ 
+echo &lt;&lt;&lt;_END
+&lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;ID&lt;/th&gt;
+    &lt;th&gt;Name&lt;/th&gt;
+    &lt;th&gt;Price&lt;/th&gt;
+  &lt;/tr&gt;
+ 
+_END;
+ 
+while ($pStmt-&gt;fetch()) {
+   echo &lt;&lt;&lt;_END
+  &lt;tr&gt;
+    &lt;td&gt;$id&lt;/td&gt;
+    &lt;td&gt;$name&lt;/td&gt;
+    &lt;td&gt;$price&lt;/td&gt;
+  &lt;/tr&gt;
+ 
+_END;
+}
+echo '&lt;/table&gt;';
+ 
+<span class="color-comment">// Deallocate prepared statement</span>
+$pStmt-&gt;close();
+ 
+<span class="color-comment">// An INSERT INTO prepared statement</span>
+$pStmt = $mysqli-&gt;prepare(&quot;INSERT INTO Coffees (name, price) VALUES (?, ?)&quot;)
+      or die(&quot;Error: create prepared failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+ 
+$name = 'Caffe Americano';
+$price = 3.69;
+$pStmt-&gt;bind_param('sd', $name, $price)  <span class="color-comment"> // 'sd': string, double</span>
+      and $pStmt-&gt;execute()
+      or die(&quot;Error: run prepared failed: ({$pStmt-&gt;errno}) {$pStmt-&gt;error}&quot;);
+echo &quot;INFO: {$pStmt-&gt;affected_rows} row(s) inserted&lt;br /&gt;&quot;;
+ 
+<span class="color-comment">// Run the INSERT INTO prepared statement again with different inputs</span>
+$name = 'Vanilla Latte';
+$pStmt-&gt;bind_param('sd', $name, $price)  <span class="color-comment"> // 'sd': string, double</span>
+      and $pStmt-&gt;execute()
+      or die(&quot;Error: run prepared failed: ({$pStmt-&gt;errno}) {$pStmt-&gt;error}&quot;);
+echo &quot;INFO: {$pStmt-&gt;affected_rows} row(s) inserted&lt;br /&gt;&quot;;
+ 
+$pStmt-&gt;close();
+ 
+<span class="color-comment">// Disconnect From MySQL server</span>
+$mysqli-&gt;close();
+echo 'INFO: Connection Closed&lt;br /&gt;';
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Explanations:</p>
+<ol>
+<li><code>prepare(<em>sqlstr</em>)</code>: Allocate a prepared statement with the given SQL string.</li>
+<li><code>bind_parm(<em>types</em>, <em>var1</em>, <em>var2</em>, ...)</code>: The types indicate the type of variables, with <code>i</code> for integer, <code>d</code> for double, <code>s</code> for string and <code>b</code> for blog. For example, &quot;<code>sssd</code>&quot; means 3 strings followed by a double.</li>
+<li><code>execute()</code> runs the prepared statement, and set <code>affected_rows</code> for INSERT, DELETE, etc.</li>
+<li><code>store_result()</code> fetches the buffered resultset, and set property <code>num_rows</code>.</li>
+<li><code>bind_result()</code> binds the columns of the resultset with the given variables.</li>
+<li><code>fetch()</code> fetches the current row from the resultset. You can retrieve the columns via the variables bound in <code>bind_result()</code>. <code>fetch()</code> returns FALSE when there is no more row in resultset.</li>
+
+<li>The order for using prepared statement for query with resultset (such as SELECT) is <code>prepare()</code> &rArr; <code>bind_param()</code> &rArr; <code>execute()</code> &rArr; <code>store_result()</code> &rArr; <code>bind_result()</code> &rArr; <code>fetch()</code>. The <code>store_result()</code> retrieves a buffered resultset and sets the <code>num_rows</code>.</li>
+
+<li>The order for using prepared statement for query without resultset (such as INSERT, DELETE and UPDATE) is <code>prepare()</code> &rArr; <code>bind_param()</code> &rArr; <code>execute()</code>. The <code>execute()</code> sets the <code>affected_row</code>.</li>
+
+<li>All these functions return FALSE on error. Hence, they can be chained via &quot;and&quot;; with error reporting via &quot;or&quot;.</li>
+
+<li>Take note that <code>prepare()</code> reports error via <code>$mysqli</code> (<code>$mysqli-&gt;error</code> and <code>$mysqli-&gt;errno</code>); while <code>execute()</code> reports the error via the prepared statement (<code>$pStmt-&gt;error</code> and <code>$pStmt-&gt;errno</code>). However, <code>bind_param()</code> and <code>bind_result()</code> do not report error on prepared statement (RDBMS), but via the PHP.</li>
+
+<li>In <code>bind_param()</code>, you can bind a PHP's NULL to SQL's NULL with 's' flag.</li>
+
+<li>Don't use the <code>get_result()</code> function, which is not supported in many PHP platforms.</li>
+</ol>
+
+<h4>Stored Procedures and Functions</h4>
+
+<h5>Example: Stored Procedure without Resultset</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre>
+</td>
+<td>
+<pre>
+&lt;?php    <span class="color-comment"> // mysqli_procedure.php</span>
+<span class="color-comment">// Define database related constants</span>
+define('DB_HOSTNAME', 'localhost');
+define('DB_USERNAME', 'myuser');
+define('DB_PASSWORD', 'xxxx');
+define('DB_DATABASE', 'test');
+define('DB_PORT',     3306);
+ 
+<span class="color-comment">// Connect to the MySQL server and set the default database</span>
+$mysqli = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+!$mysqli-&gt;connect_errno
+      or die(&quot;Error: Failed to CONNECT: ({$mysqli-&gt;connect_errno}) {$mysqli-&gt;connect_error}&quot;);
+echo 'INFO: Connected to MySQL at ' . DB_HOSTNAME . ':' . DB_PORT . '/' . DB_DATABASE
+      . ' (' . DB_USERNAME . ')&lt;br /&gt;';
+ 
+<span class="color-comment">// A PROCEDURE with IN parameters, no result set</span>
+$mysqli-&gt;query(&quot;DROP PROCEDURE IF EXISTS addItem&quot;)
+      or die(&quot;Error: DROP PROCEDURE failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+ 
+$sqlStr = &lt;&lt;&lt;_END
+CREATE PROCEDURE addItem (IN inName VARCHAR(32), IN inPrice DECIMAL(5,2))
+BEGIN
+  INSERT INTO Coffees (name, price) VALUES (inName, inPrice);
+END
+_END;
+ 
+$mysqli-&gt;query($sqlStr)
+      or die(&quot;Error: CREATE PROCEDURE failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+ 
+<span class="color-comment">// CAll the procedure</span>
+$mysqli-&gt;query(&quot;CALL addItem('Green tea', 2.89)&quot;)
+      or die(&quot;Error: CALL failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+echo &quot;INFO: $mysqli-&gt;affected_rows row(s) inserted.&lt;br /&gt;&quot;;
+ 
+<span class="color-comment">// CAll the procedure again</span>
+$mysqli-&gt;query(&quot;CALL addItem('Yellow tea', 2.99)&quot;)
+      or die(&quot;Error: CALL failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+echo &quot;INFO: $mysqli-&gt;affected_rows row(s) inserted.&lt;br /&gt;&quot;;
+ 
+<span class="color-comment">// Disconnect From MySQL server</span>
+$mysqli-&gt;close();
+echo 'INFO: Connection Closed&lt;br /&gt;';
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Explanation [TODO]</p>
+
+<h5>Notes</h5>
+
+<ol>
+<li>We cannot use the prepared statement to run SQL procedure. (Error: This command is not supported in the prepared statement protocol yet.)</li>
+</ol>
+
+<h5>Example: Stored Procedure with Result Set</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76</pre>
+</td>
+<td>
+<pre>
+&lt;?php    <span class="color-comment"> // mysqli_procedure_resultset.php</span>
+<span class="color-comment">// Define database related constants</span>
+define('DB_HOSTNAME', 'localhost');
+define('DB_USERNAME', 'myuser');
+define('DB_PASSWORD', 'xxxx');
+define('DB_DATABASE', 'test');
+define('DB_PORT',     3306);
+ 
+<span class="color-comment">// Connect to the MySQL server and set the default database</span>
+$mysqli = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+!$mysqli-&gt;connect_errno
+      or die(&quot;Error: Failed to CONNECT: ({$mysqli-&gt;connect_errno}) {$mysqli-&gt;connect_error}&quot;);
+echo 'INFO: Connected to MySQL at ' . DB_HOSTNAME . ':' . DB_PORT . '/' . DB_DATABASE
+      . ' (' . DB_USERNAME . ')&lt;br /&gt;';
+ 
+<span class="color-comment">// A PROCEDURE with resultset</span>
+$sqlStr = &lt;&lt;&lt;_END
+CREATE PROCEDURE listItemInPriceRange (IN low DECIMAL(5,2), IN high DECIMAL(5,2))
+LANGUAGE SQL
+DETERMINISTIC
+READS SQL DATA
+SQL SECURITY INVOKER
+BEGIN
+  SELECT id, name, price FROM Coffees WHERE price BETWEEN low AND high;
+END
+_END;
+ 
+$mysqli-&gt;query(&quot;DROP PROCEDURE IF EXISTS listItemInPriceRange&quot;)
+      and $mysqli-&gt;query($sqlStr)
+      or die(&quot;Error: DROP/CREATE PROCEDURE failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+ 
+<span class="color-comment">// CALL procedure with result set</span>
+$resultSet = $mysqli-&gt;query(&quot;CALL listItemInPriceRange(1.99, 3.29)&quot;)
+      or die(&quot;Error: CALL failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+tabulate_resultset($resultSet);
+$resultSet-&gt;close();
+ 
+<span class="color-comment">// The CALL returns two resultsets?! Discard 2nd resultset before issuing another CALL.</span>
+<span class="color-comment">// Else: &quot;Commands out of sync; you can't run this command now&quot;.</span>
+$mysqli-&gt;next_result();
+ 
+<span class="color-comment">// Another call to procedure using real_query()</span>
+$mysqli-&gt;real_query(&quot;CALL listItemInPriceRange(3.29, 3.49)&quot;)
+      or die(&quot;Error: CALL failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+$resultSet = $mysqli-&gt;store_result()
+      or die(&quot;Error: Store failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+tabulate_resultset($resultSet);
+$resultSet-&gt;close();
+ 
+<span class="color-comment">// Disconnect From MySQL server</span>
+$mysqli-&gt;close();
+echo 'INFO: Connection Closed&lt;br /&gt;';
+ 
+<span class="color-comment">/*
+ * Helper function to tabulate resultset
+ */</span>
+function tabulate_resultset($resultSet) {
+   echo '&lt;table&gt;&lt;tr&gt;';
+  <span class="color-comment"> // Get fields' name and print table header row</span>
+   $fields = $resultSet-&gt;fetch_fields();
+   foreach ($fields as $field) {
+      echo &quot;&lt;th&gt;{$field-&gt;name}&lt;/th&gt;&quot;;
+   }
+   echo '&lt;/tr&gt;';
+ 
+  <span class="color-comment"> // Fetch each row and print table detail row</span>
+   while ($row = $resultSet-&gt;fetch_assoc()) {
+      echo '&lt;tr&gt;';
+      foreach ($row as $rowItem) {
+         echo &quot;&lt;td&gt;$rowItem&lt;/td&gt;&quot;;
+      }
+      echo '&lt;/tr&gt;';
+   }
+   echo '&lt;/table&gt;';
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Explanation [TODO]</p>
+
+<h5>Example: Procedure with OUT parameter</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46</pre>
+</td>
+<td>
+<pre>
+&lt;?php    <span class="color-comment"> // mysqli_procedure_outparam.php</span>
+<span class="color-comment">// Define database related constants</span>
+define('DB_HOSTNAME', 'localhost');
+define('DB_USERNAME', 'myuser');
+define('DB_PASSWORD', 'xxxx');
+define('DB_DATABASE', 'test');
+define('DB_PORT',     3306);
+ 
+<span class="color-comment">// Connect to the MySQL server and set the default database</span>
+$mysqli = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+!$mysqli-&gt;connect_errno
+      or die(&quot;Error: Failed to CONNECT: ({$mysqli-&gt;connect_errno}) {$mysqli-&gt;connect_error}&quot;);
+echo 'INFO: Connected to MySQL at ' . DB_HOSTNAME . ':' . DB_PORT . '/' . DB_DATABASE
+      . ' (' . DB_USERNAME . ')&lt;br /&gt;';
+ 
+<span class="color-comment">// A PROCEDURE with out parameter</span>
+$sqlStr = &lt;&lt;&lt;_END
+CREATE PROCEDURE getMinPrice(OUT outMinPrice DECIMAL(5,2))
+LANGUAGE SQL
+DETERMINISTIC
+READS SQL DATA
+SQL SECURITY INVOKER
+BEGIN
+  SELECT min(price) INTO outMinPrice FROM Coffees;
+END
+_END;
+ 
+$mysqli-&gt;query(&quot;DROP PROCEDURE IF EXISTS getMinPrice&quot;)
+      and $mysqli-&gt;query($sqlStr)
+      or die(&quot;Error: DROP/CREATE PROCEDURE failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+ 
+$mysqli-&gt;query(&quot;SET @minPrice = 0&quot;)
+      and $mysqli-&gt;query(&quot;CALL getMinPrice(@minPrice)&quot;)
+      or die(&quot;Error: CALL failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+ 
+$resultSet = $mysqli-&gt;query(&quot;SELECT @minPrice AS result&quot;)
+      or die(&quot;Error: SELECT failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+$row = $resultSet-&gt;fetch_assoc();
+$minPrice = $row['result'];
+echo &quot;The min price is $minPrice.&lt;br /&gt;&quot;;
+$resultSet-&gt;close();
+ 
+<span class="color-comment">// Disconnect From MySQL server</span>
+$mysqli-&gt;close();
+echo 'INFO: Connection Closed&lt;br /&gt;';
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Explanation [TODO]</p>
+
+<h5>Example: Function</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46</pre>
+</td>
+<td>
+<pre>
+&lt;?php    <span class="color-comment"> // mysqli_function.php</span>
+<span class="color-comment">// Define database related constants</span>
+define('DB_HOSTNAME', 'localhost');
+define('DB_USERNAME', 'myuser');
+define('DB_PASSWORD', 'xxxx');
+define('DB_DATABASE', 'test');
+define('DB_PORT',     3306);
+ 
+<span class="color-comment">// Connect to the MySQL server and set the default database</span>
+$mysqli = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PORT);
+!$mysqli-&gt;connect_errno
+      or die(&quot;Error: Failed to CONNECT: ({$mysqli-&gt;connect_errno}) {$mysqli-&gt;connect_error}&quot;);
+echo 'INFO: Connected to MySQL at ' . DB_HOSTNAME . ':' . DB_PORT . '/' . DB_DATABASE
+      . ' (' . DB_USERNAME . ')&lt;br /&gt;';
+ 
+<span class="color-comment">// A function with a return value</span>
+$sqlStr = &lt;&lt;&lt;_END
+CREATE FUNCTION getMaxPrice()
+  RETURNS DECIMAL(5,2)
+LANGUAGE SQL
+DETERMINISTIC
+READS SQL DATA
+SQL SECURITY INVOKER
+BEGIN
+  DECLARE maxPrice DECIMAL(5,2);
+  SELECT max(price) INTO maxPrice FROM Coffees;
+  RETURN maxPrice;
+END
+_END;
+ 
+$mysqli-&gt;query(&quot;DROP FUNCTION IF EXISTS getMaxPrice&quot;)
+      and $mysqli-&gt;query($sqlStr)
+      or die(&quot;Error: DROP/CREATE FUNCTION failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+ 
+<span class="color-comment">// Invoke function</span>
+$resultSet = $mysqli-&gt;query(&quot;SELECT getMaxPrice() AS result&quot;)
+      or die(&quot;Error: SELECT failed: ({$mysqli-&gt;errno}) {$mysqli-&gt;error}&quot;);
+$row = $resultSet-&gt;fetch_assoc();
+$maxPrice = $row['result'];
+echo &quot;The max price is $maxPrice.&lt;br /&gt;&quot;;
+$resultSet-&gt;close();
+ 
+<span class="color-comment">// Disconnect From MySQL server</span>
+$mysqli-&gt;close();
+echo 'INFO: Connection Closed&lt;br /&gt;';
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Explanation [TODO]</p>
+
+<h4>Transaction</h4>
+<p>[TODO]</p>
+
+<h3>Processing HTML Forms</h3>
+
+<h4>Handing Form Data</h4>
+<h5>PHP Pre-defined Superglobal Variables</h5>
+
+<p>PHP pre-defined a few  <em>Superglobal variables</em> - Superglobals are built-in variables that are always available in all scopes. They are associative array.</p>
+
+<ul>
+<li><span class="line-heading font-code">$_GET</span>: an associative array of GET request key-value pairs.</li>
+<li><span class="line-heading font-code">$_POST</span>: an associative array of POST request key-value pairs.</li>
+<li><span class="line-heading font-code">$_COOKIE</span>: an associative array of key-value pairs in the request cookie.</li>
+<li><span class="line-heading font-code">$_REQUEST</span>: contains GET, POST and COOKIE data from the request message</li>
+<li><span class="line-heading font-code">$_FILES</span>: uploaded files</li>
+<li><span class="line-heading font-code">$_SESSION</span>: for session management</li>
+<li>Others: <span class="line-heading font-code">$_SERVER</span>, <span class="line-heading font-code">$GLOBALS</span>, <span class="line-heading font-code">$_ENV</span>,</li>
+</ul>
+
+<p>You can retrieve form data from associate array <code>$_GET</code> (for GET method parameters) <code>$_POST</code> (for POST method parameters), or <code>$_REQUEST</code> (both GET and POST  parameters and COOKIE data). You can use the <code>isset()</code> function to check if a given element exists in an associative array.</p>
+
+<p>Always sanitize inputs from the client before using them or echoing back to prevent malicious attacks such as SQL injection and HTML injection. You can the PHP function <code>htmlentities()</code> (or <code>htmlspecialchars()</code>), which convert special characters to HTML entities (e.g., <code>&gt;</code> to <code>&amp;gt;</code>, <code>&lt;</code> to <code>&amp;lt;</code>, <code>&quot;</code> to <code>&amp;quot;</code>, <code>&amp;</code> to <code>&amp;amp;</code>).</p>
+
+<h5>Example</h5>
+<p>[TODO]</p>
+
+<h4>Uploading Files</h4>
+<p>To upload a file to the server</p>
+<ul>
+<li>On the client-side, provide an HTML <code>&lt;form&gt;</code> with attributes <code>enctype=&quot;multipart/form-data&quot;</code> and <code>method=&quot;POST&quot;</code> (attribute <code>action</code> default to the current page); and an <code>&lt;input&gt;</code> element with <code>type=&quot;file&quot;</code> which displays a text field and a browse file button and <code>name=&quot;<em>upFilename</em>&quot;</code>.</li>
+<li>Upon submitting the form, the file is uploaded to a temporary directory in the server. Information about the uploaded file is kept in the superglobal associative array <code>$_FILES['<em>upFilename</em>']</code>. You can invoke <code>move_uploaded_file(<em>tmpFile</em>, <em>newFile</em>)</code> to move the file from the <code>tmp</code> directory to the desired location.</li>
+</ul>
+
+<h5>Example</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;PHP File Upload&lt;/title&gt;&lt;/head&gt;
+ 
+&lt;body&gt;
+&lt;h2&gt;File Upload&lt;/h2&gt;
+&lt;form method='post' enctype='multipart/form-data'&gt;
+  Select File: &lt;input type='file' name='upFile' /&gt;&lt;br /&gt;
+  &lt;input type='submit' value='Upload' /&gt;
+  &lt;input type='hidden' name='max_file_size' value='4096' /&gt;
+&lt;/form&gt;
+ 
+&lt;?php  <span class="color-comment"> // file_upload.php</span>
+echo '&lt;br /&gt;&lt;p&gt;The upload_max_filesize in php.ini is ' . ini_get('upload_max_filesize') . '&lt;/p&gt;';
+echo '&lt;p&gt;The post_max_size in php.ini is ' . ini_get('post_max_size') . '&lt;/p&gt;';
+ 
+if ($_FILES) {
+   if ($_FILES['upFile']['error'] !== 0) {
+     <span class="color-comment"> // Handle upload error</span>
+      $errMsg = '';
+      switch ($_FILES['upFile']['error']) {
+         case 1: $errMsg = 'File exceeded upload_max_filesize in php.ini'; break;
+         case 2: $errMsg = 'File exceeded max_file_size in form hidden field'; break;
+                <span class="color-comment"> // max_file_size is not supported in any browser.</span>
+                <span class="color-comment"> // You should rely on upload_max_filesize (and post_max_size)</span>
+                <span class="color-comment"> // in php.ini to limit file size</span>
+         case 3: $errMsg = 'File only partially uploaded'; break;
+         case 4: $errMsg = 'No file uploaded'; break;
+         case 6: $errMsg = 'Missing temp directory'; break;
+         case 7: $errMsg = 'Failed to write to disk'; break;
+         case 8: $errMsg = 'A PHP extension stopped the file upload'; break;
+         default: $errMsg = 'Other errors?!';
+      }
+      echo &quot;$errMsg&lt;br /&gt;&quot;;
+   } else {
+     <span class="color-comment"> // Print information about the uploaded file</span>
+      echo &lt;&lt;&lt;_END
+        &lt;p&gt;&lt;strong&gt;File Uploaded&lt;/strong&gt;&lt;br /&gt;
+          The file name is {$_FILES['upFile']['name']}&lt;br /&gt;
+          The file mime-type is {$_FILES['upFile']['type']}&lt;br /&gt;
+          The file size is {$_FILES['upFile']['size']}&lt;br /&gt;
+          The file tmp-name is {$_FILES['upFile']['tmp_name']}&lt;/p&gt;
+_END;
+ 
+     <span class="color-comment"> // Move the uploaded file from tmp to desired location</span>
+      $upFilename = $_FILES['upFile']['name'];
+      $tmpFilename = $_FILES['upFile']['tmp_name'];
+     <span class="color-comment"> // Need to create an &quot;images&quot; sub-directory</span>
+      move_uploaded_file($tmpFilename, &quot;images/$upFilename&quot;);
+      echo &quot;&lt;img src='images/$upFilename' /&gt;&quot;;
+   }
+}
+?&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>$_FILES</code> associative array maintains these information about the uploaded file:</p>
+
+<ol>
+<li><span class="line-heading font-code">$_FILES['<em>upFilename</em>']['name']</span>: the filename and file type of the uploaded file, e.g., <code>myimage.jpg</code>.</li>
+
+<li><span class="line-heading font-code">$_FILES['<em>upFilename</em>']['type']</span>: the MIME type of the uploaded file, e.g., <code>image/jpeg</code>, <code>text/plain</code>, <code>text/html</code>, <code>text/xml</code>.</li>
+
+<li><span class="line-heading font-code">$_FILES['<em>upFilename</em>']['size']</span>: the size of the uploaded file.</li>
+
+<li><span class="line-heading font-code">$_FILES['<em>upFilename</em>']['tmp_name']</span>: the temporary filename stored in the server.</li>
+
+<li><span class="line-heading font-code">$_FILES['<em>upFilename</em>']['error']</span>: the error code. See the codes for the possible error codes.</li>
+</ol>
+
+<p>For security:</p>
+<ol>
+<li>You may check the MIME type of the uploaded file and process only certain file types.</li>
+<li>Check the size of the uploaded file.</li>
+<li>Do not use the uploaded filename. Instead, hardcode your filename.</li>
+<li>If you wish to use the uploaded filename, strip away all the non-alphanumeric and dot characters and possibly convert it to lower case, e.g.,
+  <pre class="color-example">
+$upFilename = strtolower(preg_replace("/[^A-Za-z0-9.]/", "", $upFilename));</pre>
+</li>
+</ol>
+
+<h5>Uploading Multiple Files with multiple <span class="font-code">&lt;input type=&quot;file&quot;&gt;</span> Elements</h5>
+
+<p>We can upload multiple files in one <code>&lt;form&gt;</code>, by providing multiple <code>&lt;input type=&quot;file&quot; name=&quot;<em>xxx</em>&quot;&gt;</code> elements with different <code>name</code>s.</p>
+
+<h5>Uploading Multiple Files with one <span class="font-code">&lt;input type=&quot;file&quot;&gt;</span> Element</h5>
+
+<p>The &lt;input&gt; element shall be as follows, where <code>[]</code> indicating multiple items.</p>
+<pre>
+&lt;input type=&quot;file&quot; name=&quot;upFile[]&quot; multiple /&gt;</pre>
+
+<p>In PHP, the <code>$_FILES['upFile']['tmp_name']</code> becomes an array, e.g.,</p>
+<pre>
+&lt;?php print_r($_FILES['upFile']['tmp_name']); ?&gt;</pre>
+
+<p>You can access each of the file via <code>$_FILES['upFile']['tmp_name'][0]</code>, <code>$_FILES['upFile']['tmp_name'][1]</code>, etc. You can use <code>count($_FILES['upFile']['tmp_name'])</code> to get the number of files uploaded.</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;PHP File Upload&lt;/title&gt;&lt;/head&gt;
+ 
+&lt;body&gt;
+&lt;h2&gt;Multiple File Upload&lt;/h2&gt;
+&lt;p&gt;Hold down the Ctrl-key or Shift-key to select multiple file.&lt;/p&gt;
+&lt;form method='post' enctype='multipart/form-data'&gt;
+  Select File: &lt;input type='file' name='upFile[]' multiple /&gt;&lt;br /&gt;
+  &lt;input type='submit' value='Upload' /&gt;
+  &lt;input type='hidden' name='max_file_size' value='4096' /&gt;
+&lt;/form&gt;
+ 
+&lt;?php  <span class="color-comment"> // file_upload.php</span>
+echo '&lt;br /&gt;&lt;p&gt;The upload_max_filesize in php.ini is ' . ini_get('upload_max_filesize') . '&lt;/p&gt;';
+echo '&lt;p&gt;The post_max_size in php.ini is ' . ini_get('post_max_size') . '&lt;/p&gt;';
+ 
+if ($_FILES) {
+   $numFiles = count($_FILES['upFile']['tmp_name']);
+   <span class="color-comment">/*
+    * Process each file uploaded
+    */</span>
+   for ($i = 0; $i &lt; $numFiles; ++$i) {
+      if ($_FILES['upFile']['error'][$i] !== 0) {
+        <span class="color-comment"> // Handle upload error</span>
+         $errMsg = '';
+         switch ($_FILES['upFile']['error'][$i]) {
+            case 1: $errMsg = 'File exceeded upload_max_filesize in php.ini'; break;
+            case 2: $errMsg = 'File exceeded max_file_size in form hidden field'; break;
+                   <span class="color-comment"> // max_file_size is not supported in any browser.</span>
+                   <span class="color-comment"> // You should rely on upload_max_filesize (and post_max_size)</span>
+                   <span class="color-comment"> // in php.ini to limit file size</span>
+            case 3: $errMsg = 'File only partially uploaded'; break;
+            case 4: $errMsg = 'No file uploaded'; break;
+            case 6: $errMsg = 'Missing temp directory'; break;
+            case 7: $errMsg = 'Failed to write to disk'; break;
+            case 8: $errMsg = 'A PHP extension stopped the file upload'; break;
+            default: $errMsg = 'Other errors?!';
+         }
+         echo &quot;$errMsg&lt;br /&gt;&quot;;
+      } else {
+        <span class="color-comment"> // Print information about the uploaded file</span>
+         echo &lt;&lt;&lt;_END
+           &lt;p&gt;&lt;strong&gt;File Uploaded&lt;/strong&gt;&lt;br /&gt;
+             The file name is {$_FILES['upFile']['name'][$i]}&lt;br /&gt;
+             The file mime-type is {$_FILES['upFile']['type'][$i]}&lt;br /&gt;
+             The file size is {$_FILES['upFile']['size'][$i]}&lt;br /&gt;
+             The file tmp-name is {$_FILES['upFile']['tmp_name'][$i]}&lt;/p&gt;
+_END;
+ 
+        <span class="color-comment"> // Move the uploaded file from tmp to desired location</span>
+         $upFilename = $_FILES['upFile']['name'][$i];
+         $tmpFilename = $_FILES['upFile']['tmp_name'][$i];
+        <span class="color-comment"> // Need to create an &quot;images&quot; sub-directory</span>
+         move_uploaded_file($tmpFilename, &quot;images/$upFilename&quot;);
+         echo &quot;&lt;img src='images/$upFilename' /&gt;&quot;;
+      }
+   }
+}
+?&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Managing Session</h3>
+
+<h4>Session</h4>
+
+<p>HTTP is a <em>stateless</em> protocol. That is, the current page has no knowledge of what have been done in the previous pages.</p>
+
+<p>PHP supports session management, via the superglobal associative array called <code>$_SESSION</code>. When a session is created, a web user is assigned a unique <code>session_id</code>. This <code>session_id</code> is propagated in all subsequent requests for that session via either cookie or URL-rewriting. PHP processor associates this <code>session_id</code> with a server-side <code>$_SESSION</code> associative array, which can be used to store session information such as username, role, and shopping cart.</p>
+
+<p>To use session:</p>
+<ol>
+<li>Start a session via <code>session_start()</code>. The <code>session_start()</code> starts a new session or resume the existing session.</li>
+<li>The superglobal associative array <code>$_SESSION</code> maintain data of the session.
+
+<ol>
+<li>You can check if a key-value pair exists via <code>isset($_SESSION['<em>key</em>'])</code>.</li>
+<li>You can set a key-value pair for this session via <code>$_SESSION['<em>key</em>'] = <em>value</em></code>.</li>
+<li>You can retrieve value of a particular key via <code>$_SESSION['<em>key</em>']</code>.</li>
+<li>You can remove a key-value pair via <code>unset($_SESSION['<em>key</em>'])</code>.</li>
+<li>You can use function <code>session_id()</code> to retrieve the session ID.</li>
+</ol>
+
+</li>
+
+<li>To terminate the session explicitly, use <code>session_write_close()</code>.</li>
+</ol>
+
+<h5>Example</h5>
+<p>This script starts a new session and maintains the access count in <code>$_SESSION['count']</code>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+</td>
+<td>
+<pre>
+&lt;?php   <span class="color-comment">// session_start.php</span>
+<span class="color-comment">// start a session or resume the existing session</span>
+session_start();
+ 
+<span class="color-comment">// Increment counter</span>
+if (!isset($_SESSION['count'])) {
+  $_SESSION['count'] = 0;
+} else {
+  $_SESSION['count']++;
+}
+echo &lt;&lt;&lt;_END
+&lt;p&gt;You have accessed this page {$_SESSION['count']} times&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;session_start.php&quot;&gt;Refresh&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;session_end.php&quot;&gt;End Session&lt;/a&gt;&lt;/p&gt;
+_END;
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>This script unsets the access count and ends the session.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre>
+</td>
+<td>
+<pre>
+&lt;?php   <span class="color-comment">// session_end.php</span>
+<span class="color-comment">// start a session or resume the existing session</span>
+session_start();
+ 
+<span class="color-comment">// Empty the session data</span>
+$_SESSION=array();
+<span class="color-comment">// Expire Cookie</span>
+if (session_id() != &quot;&quot; || isset($_COOKIE[session_name()]))
+   setcookie(session_name(), '', time()-2592000, '/');
+ 
+<span class="color-comment">// Terminate session</span>
+session_destroy();
+ 
+echo &lt;&lt;&lt;_END
+&lt;p&gt;Session Ended&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;session_start.php&quot;&gt;Start Session&lt;/a&gt;&lt;/p&gt;
+_END;
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>PHP Session Timeout</h5>
+
+<p>The maximum duration (in seconds) for PHP session timeout can be configured in &quot;<code>php.ini</code>&quot; (e.g., In Ubuntu, &quot;<code>/etc/php5/apache2/php.ini</code>&quot;):</p>
+
+<pre class="color-example">
+session.gc_maxlifetime = 1440
+<span class="color-comment"># default of 1440 seconds = 24 minutes</span></pre>
+
+<p>You can retrieve the configuration parameters during runtime via <code>ini_get()</code> function, e.g.,</p>
+
+<pre class="color-command">
+echo ini_get('session.gc_maxlifetime');</pre>
+
+<p>You can use function <code>ini_set('session.cookie_lifetime', 1200)</code> to set the lifetime of as session cookie to 1200 seconds (20 minutes).</p>
+
+<h4>Login/Logout</h4>
+<p>The procedure is:</p>
+<ol>
+<li>Authenticate the user's credential.</li>
+<li>Create a new session via <code>session_start()</code>, and place some tokens inside the session, e.g. <code>$_SESSION['isLogin'] = TRUE.</code></li>
+<li>On all the other pages, resume the session ALSO via <code>session_start()</code>, and check if <code>$_SESSION['isLogin']</code> is there, which indicates a resumed session rather than a new session.</li>
+</ol>
+
+<p>For example,</p>
+<p>[TODO]</p>
+
+<h3>Logging</h3>
+
+<p>Proper logging of information and errors is important in a production environment, for security, debugging and auditing. There are many logging plug-ins for PHP available.</p>
+
+<h5 id="kLogger">kLogger</h5>
+
+<p>A simple and lightweight logging plug-in, available at <a href="http://codefury.net/projects/klogger/">http://codefury.net/projects/klogger/</a> or <a href="https://github.com/katzgrau/KLogger">https://github.com/katzgrau/KLogger</a>. It can log various priority messages (e.g., <code>DEBUG</code>, <code>INFO</code>, <code>ERROR</code>) with time-stamp. It, however, logs only to file, which is named <code>log_YYYY_MM_DD.txt</code> under a directory which is configurable.</p>
+
+<p>To use kLogger:</p>
+
+<pre class="color-example">
+&lt;?php  <span class="color-comment">// kLogger_example.php</span>
+ 
+require_once('/path/to/kLogger.php');
+$logDir = &quot;logs&quot;;    <span class="color-comment">// The log directory</span>
+ 
+<span class="color-comment">// Set the default timezone for the timestamp in log messages</span>
+date_default_timezone_set('Asia/Singapore');
+ 
+<span class="color-comment">// Get a singleton instance of kLogger, by providing
+// the log directory name. By default, the log file is named
+// log_YYYY-MM-DD.txt under the log directory.
+// Log messages with DEBUG-level and above.
+// The levels, in order of priorities, are:
+//   EMERG, ALERT, CRIT, ERR, WARN, NOTICE, INFO, DEBUG and OFF
+// Setting at DEBUG level logs all messages with DEBUG and above.
+// Set to OFF to turn-off logging.</span>
+$log = KLogger::instance($logDir, KLogger::DEBUG);  <span class="color-comment">// Try vary the level</span>
+ 
+$log-&gt;logInfo('Info Test');
+$log-&gt;logNotice('Notice Test');
+$log-&gt;logWarn('Warn Test');
+$log-&gt;logError('Error Test');   <span class="color-comment">// ERR</span>
+$log-&gt;logFatal('Fatal Test');
+$log-&gt;logAlert('Alert Test');
+$log-&gt;logCrit('Crit test');
+$log-&gt;logEmerg('Emerg Test');
+ 
+<span class="color-comment">// Can also log arrays, objects and NULL, as second parameter</span>
+$args1 = array('a' =&gt; array('b' =&gt; 'c'), 'd');
+$args2 = NULL;
+$log-&gt;logInfo('Testing passing an array or object', $args1);
+$log-&gt;logWarn('Testing passing a NULL value', $args2);
+ 
+echo 'DONE';
+?&gt;</pre>
+
+<p>A log entry contains the timestamp, log-level and message.</p>
+
+<h3>LAMP Webapp Security</h3>
+
+<h4>Sanitize User Inputs against SQL Injection</h4>
+<p>Use prepared statements instead of regular statement, to prevent SQL injection. See PDO example 3.</p>
+
+<h4>Sanitize User Inputs against Cross-Site Scripting (XSS)</h4>
+
+<h5>Using <span class="font-code">htmlentities()</span> function</h5>
+
+<p>The <code>htmlentities($str)</code> replaces special characters with their HTML entity, e.g., <code>&amp;lt;</code> for <code>&lt;</code>, <code>&amp;gt;</code> for <code>&gt;</code>, <code>&amp;quot;</code> for <code>&quot;</code>.</p>
+
+<p>The <code>htmlentities($str, ENT_QUOTES)</code> also replaces single quote to &amp;#039;, which is recommended.</p>
+
+<p>For example,</p>
+
+<pre class="color-example">
+$str = &lt;&lt;&lt;_END
+This is a 'quoted' &quot;&lt;b&gt;string&lt;/b&gt;&quot;
+_END;
+ 
+var_dump(htmlentities($str));
+  <span class="color-comment"> // output: This is a 'quoted' &amp;quot;&amp;lt;b&amp;gt;string&amp;lt;/b&amp;gt;&amp;quot;</span>
+var_dump(htmlentities($str, ENT_QUOTES));
+  <span class="color-comment"> // output: This is a &amp;#039;quoted&amp;#039; &amp;quot;&amp;lt;b&amp;gt;string&amp;lt;/b&amp;gt;&amp;quot;</span></pre>
+ 
+<h5>Using HTMLPurifier Library</h5>
+<p>Check http://htmlpurifier.org.</p>
+
+
+
+<h4>Where and How to Store MySQL Password (and Configuration Data) used by PHP</h4>
+
+<p>To create a database connection in PHP, you need the username/password of a MySQL account (as seen in the above examples). There is no other way but to store database user credentials (most likely in plain text) in a configuration file. This is not just with PHP, but pretty much every language. But, I am certain that you are concern with the security!</p>
+
+<ol>
+<li>Save them in a configuration file called &quot;<code>DBConfig.inc.php</code>&quot; outside the web document root. That is, no direct access for the web users, but PHP scripts can include the file.<br />
+
+Use <code>.php</code> as file extension (not <code>.inc</code> or <code>.xml</code>) - so that the file is parsed by the PHP processor if it ever exposes.<br />
+
+Use <code>.inc.php</code> for all include files, and configure Apache to deny access to all <code>*.inc.php</code> by including the following directive in virtual host configuration or <code>.htaccess</code> (The directive <code>FilesMatch</code> accepts an regular expression for filename matching):
+
+<pre class="color-example">
+&lt;FilesMatch &quot;\.inc\.php$&quot;&gt;
+   Order deny,allow
+   Deny from all
+&lt;/FilesMatch&gt;</pre>
+
+[Disable directory listing for production Apache system.]
+
+</li> 
+
+<li>The file shall be readable by <code>www-data</code>, which runs the Apache (and the PHP scripts), read-write by developers; BUT NOT world-readable. That is, this file is ultimately protected by the underlying operating system. The only way that people can view the file is actually hack into the server?!</li>
+
+<li>Check for a handshaking token before delivering the include file contents, for example,
+<pre class="color-example">
+<span class="color-comment">// In config files, e.g., 'DBConfig.inc.php'</span>
+if (!empty('SECURE_INCLUDE_TOKEN')) die('Access error');
+......
+
+<span class="color-comment">// In master files</span>
+define('SECURE_INCLUDE_TOKEN', 1);
+include('DBConfig.inc.php');
+......</pre></li>
+
+<li>Do not store credentials as global variables, who live longer than necessary. In addition, do not return them directly. Instead, define them as local variables in a function which returns a PDO object upon request (the PHP scripts need a PDO connection, not the user credentials). Unset them after use. For example, [TODO]</li>
+
+<li>Define different MySQL accounts (hostname/username/password) for different roles, with least privileges. You can fine tune the privilege up to table/column-level. Restrict these accounts from only the required hostname (localhost if it is running on the same machine). Don't use these account for other purposes. Needless to say, don't use <code>root</code>.
+
+<pre class="color-example">
+CREATE USER 'user'@'localhost' identified by 'xxxx';
+GRANT SELECT, UPDATE(isActive) ON test.Users to 'user'@'localhost';
+  <span class="color-comment">// user@localhost can SELECT (all columns) from the Users table,
+  // UPDATE only isActive column, No INSERT, DELECT, etc.</span></pre>
+
+</li>
+
+<li>For highly secured systems: Store credentials in a password-protected file, in such a way that the administrator needs to enter a password to retrieve its content during start up.</li>
+</ol>
+
+<h4>Storing Users' Password in MySQL</h4>
+
+<p>References:</p>
+<ol>
+<li>http://alias.io/2010/01/store-passwords-safely-with-php-and-mysql/.</li>
+<li>http://stackoverflow.com/questions/4795385/how-do-you-use-bcrypt-for-hashing-passwords-in-php</li>
+</ol>
+
+<h5>Don't</h5>
+
+<ol>
+<li>Don't store password in plain text - obvious!</li>
+<li>Don't invent your own password security algorithm, use an established one.</li>
+<li>Don't encrypt passwords. Anyone with access to your code can find the decryption key.</li>
+<li>Simple hash don't work - because they are susceptible to dictionary attack and brute force attack. It is quite easy to make a list of millions of hashed (a rainbow table) and compare the hashes to recover the password (or one that matches the hash).</li>
+<li>Add salt to the hash, but don't use the same salt for all passwords - attacker can generate another set of rainbow tables.</li>
+<li>Don't use a weak and fast hashing algorithm such as MD5 and SHA. MD5 is even less secure than SHA, because MD5 is prone to collision, thus easier to find a match for a hash. Fast hashing algorithm is susceptible to brute force attack, as the attacker can also generate the hash dictionary fast.</li>
+</ol>
+
+<h5>Do</h5>
+
+<ol>
+<li>Use a strong hashing function like bcrypt in PHP.</li>
+<li>Use a random salt for each password.</li>
+<li>Use a slow hashing algorithm to make brute force attacks practically impossible (because the attacker also needs times to run the hashing algorithm, even worst if checking millions of hashes).</li>
+<li>For bonus points, regenerate the hash every time a users logs in, with the same password, by using different salt or different hash strength.</li>
+</ol>
+
+<h5>Using <span class="font-code">bcrypt</span> in PHP</h5>
+
+<p><code>bcrypt</code> is an hashing algorithm which uses salt, and is scalable with hardware, via a configurable number of rounds. The random salt, multiple rounds and &quot;slowness&quot; can effectively prevent dictionary and brute-force attack. <code>bcrypt</code> uses the Eksblowfish algorithm, which is a one-way hashing algorithm. You cannot retrieve the plain-text password without knowing the salt, rounds and key (password).</p>
+
+<h5>PHP 5.5 - password_hash()/password_verify()</h5>
+
+<p>PHP 5.5 introduces new functions called <code>password_hash()</code> and <code>password_verify()</code> to create and verify a <code>bcrypt</code> hash. Read the PHP manual on <code>password_hash()</code> and <code>password_verify()</code>. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Generating hash password</span>
+$options = array('cost' =&gt; 11);   <span class="color-comment">// Set the cost, use default salt</span>
+$pwHash =  password_hash('rasmuslerdorf', PASSWORD_BCRYPT, $options);
+  <span class="color-comment">// Use bcrypt hashing algorithm with salt and cost.</span>
+echo $pwHash;
+  <span class="color-comment">// The generated hash contains the algorithm, salt, and cost.</span>
+
+<span class="color-comment">// Verifying hash password</span>
+$inputPassword =  ....
+$storeHash = ....       <span class="color-comment">// Contain the algorithm, salt, and cost</span>
+if (password_verify($inputPassword, $storeHash)) {
+    echo 'valid!';
+} else {
+    echo 'Invalid!';
+}</pre>
+
+<h5>Using crypt() function</h5>
+
+<p>The <code>crypt($str, $salt)</code> takes two parameters, the input string and a salt. The salt is also used to identify the hashing algorithm. For blowfish, the salt shall be in this format: <code>$2a$dd$....</code> where <code>2a</code> specifies blowfish, dd is a two-digit cost (from 04 to 31), and .... are 22 alphanumeric characters for salt. Extra characters after the salt are ignored.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre>
+</td>
+<td>
+<pre>
+&lt;?php
+<span class="color-comment">/**
+ * Testing bcrypt password.
+ */</span>
+<span class="color-comment">// Generating Password Hash</span>
+$password = 'rasmuslerdorf';
+$cost = 10;
+ 
+<span class="color-comment">// Create a random salt</span>
+$salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), '+', '.');
+echo $salt, '&lt;br /&gt;';
+  <span class="color-comment"> // psYGmg2b5s60WDwfrawQ4g==</span>
+  <span class="color-comment"> // First 22 characters are psYGmg2b5s60WDwfrawQ4. The rest are ignored.</span>
+ 
+<span class="color-comment">// Prefix salt with blowfish header $2a$dd$.</span>
+$salt = sprintf(&quot;$2a$%02d$&quot;, $cost) . $salt;
+echo $salt, '&lt;br /&gt;';
+  <span class="color-comment"> // $2a$10$psYGmg2b5s60WDwfrawQ4...</span>
+ 
+<span class="color-comment">// Hash the password with the salt</span>
+$pwHash = crypt($password, $salt);
+echo $pwHash, '&lt;br /&gt;';
+  <span class="color-comment"> // $2a$10$psYGmg2b5s60WDwfrawQ4eThJYeC0esqWNS.KdIKZsCil3gk/BCnS</span>
+ 
+<span class="color-comment">// Verifying User Input Password</span>
+$inputPassword = 'rasmuslerdorf'; <span class="color-comment"> // Try an invalid password</span>
+$storeHash = $pwHash;
+if (crypt($inputPassword, $storeHash) === $storeHash) {
+  <span class="color-comment"> // Use the same function for verification</span>
+  <span class="color-comment"> // $storeHash has the blowfish header and 22 character salt.</span>
+   echo 'Valid!';
+} else {
+   echo 'Invalid!';
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>Sending Email</h3>
+
+<p>Use the PHP <code>mail()</code> function to send email. You can test the <code>mail()</code> without setting up a mail server by configuring <code>php.ini</code> as follows:</p>
+
+<pre class="color-command">
+$ sudo gedit /etc/php5/apache2/php.ini
+......
+[mail function]   
+sendmail_path = tee mail.out &gt; /dev/null
+......
+<span class="color-comment">// Restart Apache</span>
+$ sudo service apache2 restart
+</pre>
+
+<p>The above directs the email to the file <code>mail.out</code></p>
+
+<p>Try running the following script to send an email via the <code>mail()</code></p>
+<pre class="color-example">
+&lt;?php
+mail('test@example.com', 'the subject', 'the body', "From: noreply@nowhere.com \r\n");
+?&gt;</pre>
+
+<p>To send actual email, you need to send up a Mail Server (such as postfix). Read <a href="../howto/Ubuntu_HowTo.html#mailServer">&quot;How to set up postfix Mail Server on Ubuntu&quot;</a></p>
+
+<p>Edit <code>php.ini</code>:</p>
+<pre class="color-command">
+$ sudo gedit /etc/php5/apache2/php.ini
+......
+[mail function]   
+sendmail_path = "/usr/sbin/sendmail -t -i"
+......
+<span class="color-comment">// Restart Apache</span>
+$ sudo service apache2 restart</pre>
+
+<p>You can also leave it to the default.</p>
+
+
+<h3>A Webapp Case Study</h3>
+
+<h4>Logging in/out and User Management</h4>
+
+<h4>Shopping Cart</h4>
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>PHP mother site @ <a href="http://www.php.net">http://www.php.net</a>; &quot;PHP Manual&quot; @ <a href="http://php.net/manual/en/index.php">http://php.net/manual/en/index.php</a>; &quot;PHP Language Reference&quot; @ <a href="http://www.php.net/manual/en/langref.php">http://www.php.net/manual/en/langref.php</a>.</li>
+<li>PHP manual &quot;mysqli quick start guide&quot; @ <a href="http://www.php.net/manual/en/mysqli.quickstart.php">http://www.php.net/manual/en/mysqli.quickstart.php</a>.</li>
+<li>PHP manual &quot;PHP Data Objects (PDO)&quot; @ <a href="http://www.php.net/manual/en/book.pdo.php">http://www.php.net/manual/en/book.pdo.php</a>.</li>
+<li>PHP manual &quot;MySQL Driver and Plugin&quot; @ <a href="http://www.php.net/manual/en/set.mysqlinfo.php">http://www.php.net/manual/en/set.mysqlinfo.php</a>.</li>
+
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: PHP 5.4.9-4 (Ubuntu 13.04)<br />
+Last modified: December, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

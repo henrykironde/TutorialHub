@@ -1,0 +1,41 @@
+<!DOCtype html>
+<!-- JSCalendarSimple.html -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>JavaScript Calendar</title>
+  <link rel="stylesheet" href="JSCalendarSimple.css">
+  <script src="JSDateUtil.js"></script>
+  <script src="JSCalendarSimple.js"></script>
+</head>
+ 
+<body>
+  <h2>Calendar</h2>
+ 
+  <form id="frmCalendar">
+    <select id="selMonth">
+      <option>January</option>
+      <option>February</option>
+      <option>March</option>
+      <option>April</option>
+      <option>May</option>
+      <option>June</option>
+      <option>July</option>
+      <option>August</option>
+      <option>September</option>
+      <option>October</option>
+      <option>November</option>
+      <option>December</option>
+    </select>
+    <input type="text" id="tfYear" size="4" maxlength="4"><br><br>
+ 
+    <input type="button" id="btnPrevYear"  value=" <<  ">
+    <input type="button" id="btnPrevMonth" value="  <  ">
+    <input type="button" id="btnToday"     value="Today">
+    <input type="button" id="btnNextMonth" value="  >  ">
+    <input type="button" id="btnNextYear"  value="  >> "><br><br>
+ 
+    <table id="tableCalendar"></table>
+  </form>
+</body>
+</html>

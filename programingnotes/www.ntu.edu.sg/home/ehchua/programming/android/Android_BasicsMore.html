@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Android Basics and User Interfaces</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Android Programming</h1>
+<h2>More Basics</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Activity's Life Cycle</h3>
+
+<p>The life cycle of an activity is managed via the following <em>call-back</em> methods, defined in the <code>android.app.Activity</code> base class:</p>
+
+<img class="image-center" src="images/Android_ActivityLifeCycle.png" alt="Android Life Cycle" />
+<ul>
+<li><code>onCreate()</code>, <code>onDestroy()</code>: Called back when the <code>Activity</code> is created/destroyed.</li>
+<li><code>onStart()</code>, <code>onStop()</code>, <code>onRestart()</code>: Called back when the <code>Activity</code> is starting, stopping and re-starting.</li>
+<li><code>onPause()</code>, <code>onResume()</code>: Called when the <code>Activity</code> is leaving the foreground and back to the foreground, can be used to release resources or initialize states.</li>
+</ul>
+
+<p>Refer to Android API on <code>Activity</code> (<a href="http://developer.android.com/reference/android/app/Activity.html">http://developer.android.com/reference/android/app/Activity.html</a>) for more details.</p>
+
+<h4>Example 8: Activity's Life Cycle</h4>
+
+<p>To illustrate the activity's life cycle, create a new Android project with application name of &quot;<code>Life Cycle</code>&quot;, and package name &quot;<code>com.example.lifecycle</code>&quot;. Create a activity called &quot;<code>MainActivity</code>&quot; with layout &quot;<code>activity_main</code>&quot;.</p>
+<p>Modify the &quot;<code>MainActitivity.java</code>&quot; as follows:</p>
+
+<pre class="color-example">
+package ......;
+ 
+import ......;
+import android.util.Log;
+ 
+public class MainActivity extends ActionBarActivity {
+   <span class="color-new">private static final String TAG = &quot;MainActivity: &quot;;</span>
+ 
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_main);
+      <span class="color-new">Log.d(TAG, &quot;in onCreate()&quot;);</span>
+   }
+ 
+   <span class="color-new">@Override
+   public void onStart() {
+      super.onStart();
+      Log.d(TAG, &quot;in onStart()&quot;);
+   }
+ 
+   @Override
+   public void onRestart() {
+      super.onRestart();
+      Log.d(TAG, &quot;in onReStart()&quot;);
+   }
+ 
+   @Override
+   public void onResume() {
+      super.onResume();
+      Log.d(TAG, &quot;in onResume()&quot;);
+   }
+ 
+   @Override
+   public void onPause() {
+      super.onPause();
+      Log.d(TAG, &quot;in onPause()&quot;);
+   }
+ 
+   @Override
+   public void onStop() {
+      super.onStop();
+      Log.d(TAG, &quot;in onStop()&quot;);
+   }
+ 
+   @Override
+   public void onDestroy() {
+      super.onDestroy();
+      Log.d(TAG, &quot;in onDestroy()&quot;);
+   }</span>
+
+    ......
+    ...... 
+}</pre>
+
+<h5>&quot;LogCat&quot; &amp; DDMS</h5>
+
+<p>In the <code>MainActivity</code>, we use <code>static</code> method <code>Log.d()</code> to write a &quot;debug&quot; message to the &quot;LogCat&quot; - this is the standard way of writing log messages in Android. <code>System.out.println()</code> does not work under ADT.</p>
+
+<p>LogCat is the Android Logging Utility that allows system and applications to output logging information at various logging levels. Each log entry consists of a time stamp, a logging level (V - verbose, D - debug, I - informational, W - warning , E - error), the process ID (<code>pid</code>) from which the log came, a tag defined by the logging application itself, and the actual logging message.</p>
+
+<p>You could use the various static methods in the <code>java.Android.Log</code> class to log a message at various logging levels:</p>
+<pre class="color-syntax">
+public static void v(String <em>tag</em>, String <em>message</em>);  <span class="color-comment">// Verbose</span>
+public static void d(String <em>tag</em>, String <em>message</em>);  <span class="color-comment">// Debug</span>
+public static void i(String <em>tag</em>, String <em>message</em>);  <span class="color-comment">// Informational</span>
+public static void w(String <em>tag</em>, String <em>message</em>);  <span class="color-comment">// Warning</span>
+public static void e(String <em>tag</em>, String <em>message</em>);  <span class="color-comment">// Error</span>
+  <span class="color-comment">// where tag identifies the application</span></pre>
+
+<p>To show the LogCat panel, press &quot;Alt+6&quot; to show the &quot;Android DDMS&quot; panel. Logcat messages are displayed under &quot;Devices | Logcat&quot; tab.</p>
+
+<p>From the LogCat panel, you can select a particular logging level, or filter based on pid, tag and log level.</p>
+
+<h5>Run the App</h5>
+
+<p>Run the application, and observe the message on the &quot;LogCat&quot; panel.</p>
+
+<pre class="output">
+07-14 03:45:48.698: D/MainActivity:(752): in onCreate()
+07-14 03:45:48.698: D/MainActivity:(752): in onStart()
+07-14 03:45:48.708: D/MainActivity:(752): in onResume()</pre>
+
+<p>Click the &quot;BACK&quot; button:</p>
+
+<pre class="output">
+07-14 03:46:29.559: D/MainActivity:(752): in onPause()
+07-14 03:46:31.849: D/MainActivity:(752): in onStop()
+07-14 03:46:31.899: D/MainActivity:(752): in onDestroy()</pre>
+
+<p>Run the application again from the &quot;App Menu&quot;:</p>
+
+<pre class="output">
+07-14 03:47:24.749: D/MainActivity:(752): in onCreate()
+07-14 03:47:24.749: D/MainActivity:(752): in onStart()
+07-14 03:47:24.759: D/MainActivity:(752): in onResume()</pre>
+
+<p>Click the &quot;HOME&quot; button to send the activity to the background, then run the app from the &quot;App Menu&quot; again. Notice that <code>onDestroy()</code> is not called in this case.</p>
+
+<pre class="output">
+07-14 03:48:06.369: D/MainActivity:(752): in onPause()
+07-14 03:48:08.258: D/MainActivity:(752): in onStop()
+ 
+07-14 03:49:14.650: D/MainActivity:(752): in onReStart()
+07-14 03:49:14.650: D/MainActivity:(752): in onStart()
+07-14 03:49:14.659: D/MainActivity:(752): in onResume()</pre>
+
+<p>Click the &quot;PHONE&quot; button, and then &quot;BACK&quot;:</p>
+
+<pre class="output">
+07-14 03:51:31.829: D/MainActivity:(752): in onPause()
+07-14 03:51:36.700: D/MainActivity:(752): in onStop()
+07-14 03:51:38.308: D/MainActivity:(752): in onReStart()
+ 
+07-14 03:51:38.308: D/MainActivity:(752): in onStart()
+07-14 03:51:38.329: D/MainActivity:(752): in onResume()</pre>
+
+<p>Take note that clicking the &quot;BACK&quot; button destroys the activity, but &quot;HOME&quot; and &quot;PHONE&quot; button does not.</p>
+
+<h3>Action Bar</h3>
+<p>[TODO]</p>
+
+<h3>Using Fragments</h3>
+
+<p>[TODO]</p>
+
+<h4>Example 7: Fragment</h4>
+<p>[TODO]</p>
+
+
+<h3>Handling Input Events</h3>
+
+<p>Like most of the programming languages (such as Java), Android adopts the event-handing model to process input events. (Read &quot;<a href="../java/J4a_GUI.html#awt_event_handling">Java Event Handling</a>&quot; for the basic concepts.)</p>
+
+<p>An <code>android.view.View</code> (UI component, widget or control) can register various event-listener objects via the <code>setOnXxxListener()</code>. The event-listener object shall implement the appropriate <code>OnXxxListener</code> interface and provide the various event handling methods.</p>
+
+<pre class="color-syntax">
+public void setOnClickListener (View.OnClickListener l)
+public void setOnKeyListener (View.OnKeyListener l)
+public void setOnTouchListener (View.OnTouchListener l)
+
+public void setOnCreateContextMenuListener (View.OnCreateContextMenuListener l)
+public void setOnDragListener (View.OnDragListener l)
+public void setOnFocusChangeListener (View.OnFocusChangeListener l)
+public void setOnGenericMotionListener (View.OnGenericMotionListener l)
+public void setOnHoverListener (View.OnHoverListener l)
+public void setOnLongClickListener (View.OnLongClickListener l)
+public void setOnSystemUiVisibilityChangeListener (View.OnSystemUiVisibilityChangeListener l)</pre>
+
+<p>The <code>OnXxxListener</code>s are defined as static nested class in <code>android.view.View</code>.</p>
+
+<p>[TODO] More</p>
+
+<!--
+<h4>Click Event</h4>
+
+
+
+<h4>Key Event</h4>
+
+<h4>Touch Event</h4>
+
+<h4>Multi-Touch Event</h4>
+-->
+<h3>Handling Sensors</h3>
+
+<h4>Accelerator Sensor [TODO]</h4>
+
+<h4>Compass Sensor [TODO]</h4>
+
+<h4>GPS Sensor [TODO]</h4>
+
+
+<a class="references" href="../howto/References.html#android">Link to Android's References and Resources</a>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Android  5.0 (Lollipop), Android Studio 1.1.0<br />
+Last modified: March, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

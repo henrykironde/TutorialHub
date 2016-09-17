@@ -1,0 +1,682 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to install Ubuntu and Get Started</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>How to install and Get Started with Production Ubuntu Server 14.04</h1>
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<p>This article is meant for installing a &quot;production&quot; Ubuntu server. For Ubuntu programmers/developers, see &quot;<a href="Ubuntu_HowTo.html">Ubuntu Desktop - How-To</a>&quot;.</p>
+
+<h3>Install &quot;Production&quot; Ubuntu Server</h3>
+
+<h5>Installing Ubuntu Server</h5>
+
+<ol>
+<li>Download the Ubuntu Server installation file into a DVD or USB stick.</li>
+<li>Boot up the machine from DVD or USB (e.g., Hit F11 for the Boot menu, and choose UEFI Boot from USB. UEFI (Unified Extensible Firmware Interface) is a replacement for BIOS.</li>
+<li>Follow the instructions to install the server:
+<ol>
+<li>Select your language andlocation.</li>
+<li>In &quot;Network Configuration&quot;, choose your network card (<code>eth0</code> for the first network card). If you have an static IP number, choose &quot;Configure the network manually&quot;. Otherwise, use DHCP (which is the default) for dynamic IP.</li>
+<li>Enter your chosen &quot;hostname&quot;.</li>
+<li>Enter the &quot;username&quot; and &quot;password&quot; for the system administrator. Select &quot;no&quot; to encrypt the home directory. By default, Ubuntu creates but locks up the <code>root</code> user for security. Do not user <code>root</code> here.</li>
+<li>Set your time zone.</li>
+<li>For hard disk partition, select &quot;Use entire disk and setup LVM (Logical Volume Manager)&quot;. Select the entire disk space for LVM. The installer will create the <code>\boot</code>, <code>\swap</code> and the <code>\</code> (root) partitions on &quot;<code>sda</code>&quot; (the first disk). You can check the partitions via &quot;<code>lsblk</code>&quot; (list block devices) command or Webmin later.</li>
+<li>Leave blank for HTTP proxy information.</li>
+<li>Select &quot;No Automatic Update&quot;. We will run manual update later.</li>
+<li>For packages, select Ubuntu Server, OPEN SSH, LAMP (Lunix-Apache-MySQL-PHP), SAMBA (File and Print services for Windows clients), Mail (Local) Server, Postfix (Local) Mail Server, and PostgreSQL. Select other packages if needed.</li>
+<li>Set the root password for MySQL, if LAMP was selected.</li>
+<li>Select &quot;yes&quot; to GRUB boot loader. GRUB (GRand Unified Bootloader) is a Multiboot boot loader.</li>
+</ol>
+
+<li>Roboot the machine, and login as the system administrator you created earlier.</li>
+
+</ol>
+
+<h5>Post Installation - Updating Software</h5>
+
+<p>To apply the latest software patches:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get update</strong>
+      <span class="color-comment">// Update (Synchronize) the local package index files 
+      //   (in /etc/apt/sources.list and /etc/apt/sources.list.d directory).
+      // No actual software upgrade.</span>
+$ <strong>sudo apt-get upgrade</strong>
+      <span class="color-comment">// Run the actual software upgrade, without upgrading the version</span>.
+$ <strong>sudo apt-get dist-upgrade</strong>
+      <span class="color-comment">// Run the actual software upgrade, upgrading to new version if available.
+      // Not recommended for production system.</span></pre>
+
+<h5>Shutting Down</h5>
+<p>To shutdown the machine via a terminal (remotely thru SSH, or local system console):</p>
+
+<pre class="color-command">
+$ <strong>sudo shutdown -h now</strong>
+      <span class="color-comment">// Shutdown the machine, halt (pwoer down?) after shutdown</span>
+$ <strong>sudo shutdown -r now</strong>
+      <span class="color-comment">// Shutdown and restart</span></pre>
+
+<p>You can also shutdown the server remotely via Webmin (Goto &quot;System&quot; &rArr; &quot;Bootup and Shutdown&quot; &rArr; &quot;Shutdown System&quot; or &quot;Reboot System&quot;).</p>
+
+<h5>UPS (Uninterruptible Power Supply)</h5>
+
+<ol>
+<li>Install &quot;Dell UPS Local Node Manager&quot;.</li>
+<li>Configure via <code>http://<em>ip-addr</em>:4679</code>.</li>
+</ol>
+
+<p>[TODO]</p>
+
+<h5>NAS (Network-Attached Storage) Drives</h5>
+<p>&quot;Network-attached storage (NAS) is file-level computer data storage server connected to a computer network providing data access to a heterogeneous group of clients.&quot;</p>
+
+<p>[TODO]</p>
+
+<h5>Using Static IP Address</h5>
+
+<p>To configure your system to use a static IP address, edit the configuration file <code>/etc/network/interfaces</code>. For example, to set up static IP on the first network card (identified as <code>eth0</code>):</p>
+
+<pre class="color-example">
+<span class="color-comment"># eth0 for the first network card with static IP address</span>
+auto eth0
+iface eth0 inet <span class="color-new"><strong>static</strong></span>
+address x.x.x.x
+netmask 255.255.255.0
+gateway x.x.x.x
+dns-nameservers x.x.x.x x.x.x.x</pre>
+
+<p>To enable the network interface <code>eth0</code>:</p>
+
+<pre class="color-example">
+$ <strong>sudo ifup eth0</strong>
+      <span class="color-comment">// Network Interface Up</span></pre>
+
+<p>To disable the network interface <code>eth0</code>:</p>
+
+<pre class="color-example">
+$ <strong>sudo ifdown eth0</strong>
+      <span class="color-comment">// Network Interface Down</span></pre>
+
+<p>You can configure static IP address via webmin too. Goto &quot;Networking&quot; &rArr; &quot;Network Interfaces&quot; &rArr; Click on the network interface to be used &rArr; Select &quot;Static Configuration&quot; and enter the &quot;IP address&quot; and &quot;Netmask&quot; (<code>255.255.255.0</code>).</p>
+
+
+<h5>Configuring Logical Volume (via Webmin)</h5>
+
+<p>If you have multiple disks (physical volumes), you can configure them into a single logical volume.</p>
+
+<ol>
+<li>In &quot;Webmin&quot;, Select &quot;Hardware&quot; &rArr; &quot;Logical Volume Management&quot;.</li>
+<li>Select &quot;Physical Volumes&quot; &rArr; &quot;Add a physical volume&quot; &rArr; Select a hard disk. Start with <code>/dev/sdb</code>. Repeat this to add <code>/dev/sdc</code>, <code>/dev/sdd</code>, etc. [Hard disks are labelled as <code>/dev/sd<em>x</em></code>, where <em>x</em> is a running alphabet a, b, c... for each disk.]</li>
+<li>Select &quot;Logical Volumes&quot;  &rArr; click on the icon named &quot;root&quot; &rArr; then under &quot;Edit Logical Volume&quot; &rArr; check the button &quot;Use all free VG space&quot;  &rArr; save.</li>
+</ol>
+
+<p>All the physical volumes (hard disks) is now available under a logical volume, under root file system <code>/</code>.</p>
+
+<h3>Webmin</h3>
+
+<p>References:</p>
+<ol>
+<li>Webmin mother site @ <a href="http://www.webmin.com">http://www.webmin.com</a>.</li>
+<li>Michał Karzyński, &quot;Webmin Administrator's Cookbook&quot;, Packt Publishing, 2014.</li>
+</ol>
+
+<p><br />
+  Webmin (@ <a href="http://www.webmin.com">http://www.webmin.com</a>) provides a web-based interface for Unix System Administrator. You could configure operating system internals, such as users, disk quotas, services or configuration files, as well as modify and control apps, such as the Apache HTTP Server, PHP and MySQL. Webmin runs  its own TCP/IP server. The default TCP port number is 10000.</p>
+
+<h4>Installing Webmin</h4>
+
+<p>To install webmin:</p>
+
+<ol>
+<li>Read the instructions in <a href="http://www.webmin.com/deb.html">http://www.webmin.com/deb.html</a>. Follow the section &quot;Using the Webmin APT repository&quot;. Webmin is written in perl, which shall be automatically installed.</li>
+
+<li>login to Webmin using URL <code>https://<em>hostname</em>:10000</code>, via a web browser. You need to login with  <code>root</code> user or an account with <code>sudo</code> priviledge.</li>
+</ol>
+
+
+<h4>Webmin Configurations, Users and Groups</h4>
+
+<p>Webmin stores its configurations in directory <code>/etc/webmin</code>.</p>
+
+<h5>Webmin Users and Groups</h5>
+<p>Webmin maintains its own users and groups, different from your Unix system users/groups. Webmin's user management is complex. For example, you can choose to synchronize Webmin account and the system account, or you can separate them by creating Webmin only users/groups; you can create sub-administrators and restrict them to certain modules and configurations. To configuration Webmin users, goto &quot;Webmin&quot; &rArr; &quot;Webmin Users&quot;.</p>
+<p>By default, Webwin allows the system's <code>root</code> user and <code>sudo</code> group to login. This is sufficient for a small production environment, as Webmin is meant for the System Administrator and not for the regular users (who should use Usermin). This is configured via:</p>
+<ol>
+<li>Under &quot;Webmin&quot; &rArr; &quot;Webmin Users&quot; &rArr; a default Webmin user called <code>root</code> was created during the installation with &quot;Password&quot; option set to &quot;Unix authentication&quot;.</li>
+<li>Under &quot;Webmin&quot; &rArr; &quot;Webmin Users&quot; &rArr; &quot;Configure Unix User Authentication&quot; &rArr; Check &quot;Allow users who can run all commands via <code>sudo</code> to login as <code>root</code>&quot;. <br />
+  Webmin issues a &quot;<code>sudo su</code>&quot; command to gain <code>root</code> privilege to perform privileged operations.</li>
+</ol>
+
+<p>Webmin logs all the actions performed by users through it for auditing and security.</p>
+<ul>
+<li>You can view all the action logs via &quot;Webmin&quot; &rArr; &quot;Webmin Actions Log&quot;.</li>
+<li>You can inspect the <em>currently</em> open sessions via &quot;Webmin&quot; &rArr; &quot;Webmin Users&quot; &rArr; &quot;View Login Sessions&quot; &rArr; Select &quot;View Logs&quot; for a particular &quot;Session ID&quot;.</li>
+</ul>
+
+<h5>TCP Port Number</h5>
+<p>By default, Webmin listens at TCP port 10000 on all IP addresses of the server.  You can change the port number via &quot;Webmin&quot; &rArr; &quot;Webmin Configuration&quot; &rArr; &quot;Listen on port&quot; and &quot;Bind to IP address&quot;.</p>
+
+<h5>Time-out Inactive Webmin Sessions Automatically</h5>
+
+<p>Goto &quot;Webmin&quot; &rArr; &quot;Webmin Configuration&quot; &rArr; &quot;Authentication&quot; &rArr; Check &quot;Auto-logout&quot; and set the time-out period &rArr; &quot;Save&quot;.</p>
+
+<h4>Webmin Commonly-Used Tools and Utilities</h4>
+
+<h5>Command Shell (Others &rArr; Command Shell)</h5>
+<p>You can issue command directly via the Webmin command shell (instead of logging in via SSH).</p>
+<p>To issue multiple commands, separate the commands with semicolon (<code>;</code>). To execute command conditionally, chain the commands with the AND operator (<code>&amp;&amp;</code>).</p>
+
+<h5>File Manager (Others &rArr; File Manager)</h5>
+<p>A graphical file manager (written in Java Applet) for create/delete/modify files, directories, symlinks; and viewing text files. You can also set the file/directory permissions.</p>
+<p>Note: To run the applet, you need to add the Webmin's URL to the &quot;Exception site list&quot; under &quot;Control Panel&quot; &rArr; &quot;Java&quot;.</p>
+
+<h5>Upload and Download (Others &rArr; Upload and Download)</h5>
+<p>You can upload files from your PC (running Webmin) to the server, download files from server to PC, or download files from the web (by providing a URL) to the server. This substitutes SCP (Secure Copy).</p>
+
+<h5>Text Login (Others &rArr; Text Login) and SSH login (Others &rArr; SSH Login)</h5>
+
+<p>You can log in to the system via &quot;Text Login&quot; or &quot;SSH Login&quot;. &quot;Text Login&quot; uses a component called <code>Ajaxterm</code>, while &quot;SSH Login&quot; uses a Java applet.</p>
+
+
+
+<h4>Managing Unix  Users</h4>
+<h5>Managing Users/Groups</h5>
+
+<p>You can create/delete/Edit users and groups  via menu &quot;System&quot; &rArr; &quot;Users and Groups&quot;.</p>
+<p>You can also create users in batch, via &quot;System&quot; &rArr; &quot;Users and Groups&quot; &rArr; &quot;Run batch file&quot;.</p>
+
+<h5>Changing User's Password</h5>
+
+<p>To change a user's password, goto &quot;System&quot; &rArr; &quot;Users and Groups&quot; &rArr; Click on the desired user &rArr; Under &quot;Password&quot; &rArr; Select &quot;Normal Password&quot; &rArr; Enter the new password. Furthermore, under &quot;Password Options&quot;, you can set &quot;Force change at next login&quot;, or set the password expiry period.</p>
+<p>Webmin issues the &quot;<code>sudo password <em>username</em></code>&quot; command to update the password file <code>/etc/shadow</code>.</p>
+
+<h4>Monitoring the System</h4>
+
+<h5>Show Recent User Logins</h5>
+
+<p>Goto &quot;System&quot; &rArr; &quot;Users and Groups&quot;  &rArr; Goto the bottom of the screen, click &quot;Display Logins By&quot;. You can choose &quot;All Users&quot; or select a particular user.</p>
+<p>Webmin inspects <code>/var/log/wtmp</code>, which store the history of all logins/logouts. <code>wtmp</code> is a binary file, which works with <code>last</code> and <code>lastlog</code> commands. Similarly, <code>/var/log/btmp</code> stores the failed logins; and <code>/var/log/utmp</code> maintains the current status. For examples,</p>
+
+<pre class="color-command">
+$ <strong>last</strong>
+      <span class="color-comment">// Show all recent logins</span>
+$ <strong>last <em>username</em></strong>
+      <span class="color-comment">// Show recent logins by <em>username</em></span>
+$ <strong>lastlog</strong>
+      <span class="color-comment">// List all users with their last login</span>
+$ <strong>lastb</strong>
+      <span class="color-comment">// List all failed login captured in /var/log/btmp</span>
+$ <strong>who</strong>
+      <span class="color-comment">// List the current logined user</span></pre>
+
+<h5>View Log Files</h5>
+
+<p>Goto &quot;System&quot; &rArr; &quot;System Logs&quot;, which lists the log files available thru Webmin.</p>
+
+<h5>Adding more Log Files</h5>
+<p>To add log files of Webmin supported servers (such as Apache 2, MySQL, PostgreSQL, PHP), goto &quot;System&quot; &rArr; &quot;System Logs&quot; &rArr; &quot;Module Config&quot; &rArr; &quot;Ohter log files to show&quot; &rArr; Enter the log file name and description, e.g.,</p>
+
+<pre class="color-command">
+/var/log/apache2/access.log Apache access log
+/var/log/apache2/error.log Apache error log</pre>
+
+<h5>Triggering Email Alerts</h5>
+
+<p>Webmin can periodically check the status of your system (e.g., CPU load, disk usage) and servers (e.g., Apache, MySQL) and send you an email if one failed.</p>
+
+<p>To enable email alert: Goto &quot;Others&quot; &rArr; &quot;System and Server Status&quot; &rArr; &quot;Scheduled Monitoring&quot; &rArr; In &quot;Scheduled checking enabled&quot;, select to &quot;yes&quot; &rArr; Set &quot;Send email when&quot; to &quot;When a service goes down&quot; &rArr; ...  &rArr; &quot;Save&quot;.</p>
+
+<h5>Monitoring System Load</h5>
+<p>To monitor system load, goto &quot;Others&quot; &rArr; &quot;System and Server Status&quot; &rArr; In &quot;Add monitor of type&quot;, select &quot;Load Average&quot; and click the button &rArr; In &quot;Load average to check&quot;, select &quot;15 minute&quot; &rArr; In &quot;Maximum load average&quot;, set to the CPU cores your machine has &rArr; &quot;Create&quot;.</p>
+
+<h5>Monitor Disk Space</h5>
+
+<p>To monitor disk space, goto &quot;Others&quot; &rArr; &quot;System and Server Status&quot; &rArr;  In &quot;Add monitor of type&quot;, select &quot;Disk Space&quot; and click the button &rArr; In &quot;Filesystem to check&quot;, select <code>\</code> (<code>root</code> file system) &rArr; In &quot;Percentage of total&quot;, set to 90 percent &rArr; &quot;Create&quot;.</p>
+
+<h5>Monitoring a remote server</h5>
+
+<p>For servers such as Apache, you need to monitor from another machine, in case the entire machine fails.</p>
+
+<p>To monitor a remote HTTP server, goto &quot;Others&quot; &rArr; &quot;System and Server Status&quot; &rArr;  In &quot;Add monitor of type&quot;, select &quot;Remote HTTP Service&quot; and click the button &rArr; In &quot;URL to request&quot;, enter the URL for the remote server &rArr; &quot;Create&quot;.</p>
+<p>Similarly, to monitor whether a remote serve is up, choose &quot;Remote Ping&quot; and set &quot;Host to ping&quot; to the IP address or hostname.</p>
+
+
+<h5>Network Bandwidth Monitoring</h5>
+
+<p>Goto &quot;Network&quot; &rArr; &quot;Bandwidth Monitoring&quot; &rArr; ... [TODO]</p>
+
+<h4>Scheduling One-time/Periodic Jobs</h4>
+
+<h5>Schedule a Command to Run Once in Future (with <span class="font-code">at</span>)</h5>
+
+<p>Goto &quot;System&quot; &rArr; &quot;Scheduled Commands&quot; &rArr; In &quot;Run as user&quot;, set the user to run the script &rArr; Enter the date/time &rArr; Set the &quot;Run in directory&quot; &rArr; Enter the &quot;Command to execute&quot; &rArr; Choose &quot;Yes&quot; to &quot;Send email on completion&quot; &rArr; &quot;Create&quot;.</p>
+<p>To display the scheduled commands: goto &quot;System&quot; &rArr; &quot;Scheduled Commands&quot;. You can also cancel a scheduled command.</p>
+<p>Webmin issues the following Unix <code>at</code> commands:</p>
+
+<pre class="color-command">
+$ <strong>su <em>run-as-username</em>
+# cd <em>run-in-directory</em>
+# echo '<em>command</em>' | at -m <em>date-time</em></strong>
+      <span class="color-comment">// The at command wraps the commands into a script and stores in /var/spool/cron/atjobs/.
+      // The atd (at daemon) run the script at the specified date-time.</span></pre>
+
+<h5>Schedule a Command to run regularly (with <span class="font-code">cron</span>)</h5>
+
+<p>Goto &quot;System&quot; &rArr; &quot;Scheduled Cron Jobs&quot; &rArr; &quot;Create a new Scheduled cron job&quot; &rArr; Set the username in &quot;Execute cron job as&quot; &rArr; Set &quot;Yes&quot; to &quot;Active&quot;  &rArr; Type the command in &quot;Command&quot; &rArr; Set the scheule &rArr; &quot;Save&quot;.</p>
+<p>Webmin adds the task to <code>crontab</code> (<code>cron</code> table in <code>/var/spool/cron/crontabs</code>). The <code>cron</code> daemon then executes the task at the regular schedule.</p>
+
+<h5>Create frequently-used custom commands</h5>
+
+<p>Goto &quot;Others&quot; &rArr; &quot;Custom Commands&quot; &rArr; &quot;Create a new custom command&quot; &rArr; ...</p>
+<p>The custom command created will be displayed as a menu item.</p>
+
+<h4>Securing the System</h4>
+
+<h5>Setting up the Firewall</h5>
+
+<p><strong>Reference</strong>: &quot;IPTables How-To&quot; @ <a href="https://help.ubuntu.com/community/IptablesHowTo">https://help.ubuntu.com/community/IptablesHowTo</a>.</p>
+<p>Linux has a built-in Firewall called <code>netfilter</code>, which works via the <code>iptables</code> tool. It uses 3 so-called <em>iptables</em>:</p>
+<ol>
+<li>the <code>filter</code> table for filtering the IP packets,</li>
+<li>the <code>nat</code> table for network address translation, and</li>
+<li>the <code>mangle</code> table for modifying the IP packets.</li>
+</ol>
+
+<p>Each table contains a set of <em>chains</em>. Each chain has <em>rules</em>.</p>
+<p>For the <code>filter</code> table, there are 3 chains (of rules): <code>INPUT</code> (applied to incoming packets), <code>OUTPUT</code> (applied to the outgoing packets), and <code>FORWARD</code> (applied to incoming packets destined for another system).  You can list all the current filter rules via the following command:</p>
+
+<pre class="color-command">
+$ <strong>sudo iptables -L</strong>   <span class="color-comment">// -L to list the current filtering rules.</span>
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+      <span class="color-comment">// The filter table has 3 chains with no rules</span></pre>
+
+<p>The <code>iptables</code> tool is complex. But, we are only concerned about the incoming IP packets, i.e., the <code>INPUT</code> chain of the <code>filter</code> table. To setup  incoming packet-filtering via Webmin:</p>
+
+<ol>
+<li>Goto &quot;Webmin&quot; &rArr; &quot;Networking&quot; &rArr; &quot;Linux Firewall&quot; &rArr; Select the option &quot;Allow all traffic&quot; and check &quot;Enable firewall at boot time&quot; &rArr; &quot;Setup Firewall&quot;.</li>
+<li>Select the iptable &quot;Packet filtering (filter)&quot;. On a fresh installation, there shall be no rules under all the 3 chains: <code>INPUT</code>, <code>OUTPUT</code> and <code>FORWARD</code>.</li>
+
+<li>Add the following rules, which are necessary for proper operations of the network interface. <br />
+  Under &quot;Incoming packets (INPUT)&quot;:
+  <ol>
+<li>&quot;Add Rule&quot; &rArr; Set &quot;Action to take&quot; to &quot;Accept&quot; &rArr; For &quot;Connection states&quot;, select &quot;Equals&quot; for both &quot;Established&quot; and &quot;Related&quot; &rArr; &quot;Create&quot;. <br />
+This rule is necessary to allow incoming packets that are part of <em>an already established</em> IP connection. We will set the rules for <em>new</em> connection later. <br />
+The corresponding Unix command is:
+<pre class="color-command">
+$ <strong>sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT</strong>
+      <span class="color-comment">// -A INPUT: append this rule to the INPUT chain
+      // -m conntrack:
+      // -ctstate ESTABLISHED,RELATED: connection state
+      // -j ACCEPT: accept the packet</span></pre>
+</li>
+
+<li>&quot;Add Rule&quot; &rArr; Set &quot;Action to take&quot; to &quot;Accept&quot; &rArr; For &quot;Network protocol&quot;, select &quot;Equals&quot; for &quot;ICMP&quot; &rArr; &quot;Create&quot;.<br />
+This rule allows incoming packets for ICMP diagnostics such as <code>ping</code> and <code>traceroute</code>.</li>
+
+<li>&quot;Add Rule&quot; &rArr; Set &quot;Action to take&quot; to &quot;Accept&quot; &rArr; For &quot;Incoming interface&quot;, select &quot;Equals&quot; for &quot;lo&quot; (local) &rArr; &quot;Create&quot;. <br />
+This rule allows incoming packets for local loopback interface (or, localhost).</li>
+</ol></li>
+
+<li>Next, create rules for each of the protocol services that are permitted to access the server. This depends on your specific environment. <br />
+  Under &quot;Incoming packets (INPUT)&quot;:
+
+<ol>
+<li>To allow incoming SSH connection, which runs on TCP port 22 by default: &quot;Add Rule&quot; &rArr; Set &quot;Action to take&quot; to &quot;Accept&quot; &rArr; For &quot;Network protocol&quot;, select &quot;Equals&quot; for &quot;TCP&quot; &rArr; For &quot;Destination TCP or UDP port&quot;, select &quot;Equals&quot; and set &quot;Port(s)&quot; to 22 &rArr; For &quot;Connection states&quot;, select &quot;Equals&quot; for &quot;NEW&quot;.<br />
+The corresponding Unix command is:
+  <pre class="color-command">
+$ <strong>sudo iptables -A INPUT -p tcp --dport ssh -j ACCEPT</strong>
+      <span class="color-comment">// -A INPUT: append this rule to INPUT chain
+      // -p tcp: network protocol of tcp
+      // --dport ssh: ssh default port number (22)
+      // -j ACCEPT: accept the packet</span></pre>
+</li>
+
+<li>To allow incoming Webmin connection, which runs on TCP port 10000 by default: repeat the above, but choose port 10000.</li>
+
+<li>Similarly, you can allow incoming connection for services such as HTTP (default on TCP port 80), HTTPS (default on TCP port 443), Usermin (default on TCP port 20000) Samba (UDP Ports 137-139, TCP ports 137, 139 and 445), PhpMyAdmin (...) ...</li>  
+</ol></li>
+
+<li>Finally, set the <code>INPUT</code> chain's default policy to drop packets that don't match any rules. Select &quot;Default action&quot; to &quot;Drop&quot;, and click &quot;Set Default Action To&quot; button.</li>
+</ol>
+
+<h5>Temporarily Disabling Firewall</h5>
+
+<p>If you make a mistake in configuring firewall, it might lock you up for remote access (e.g., via SSH). You need to login thru the local system console to temporarily disable the firewall via:</p>
+
+<pre class="color-command">
+$ <strong>sudo iptables -F INPUT</strong>
+      <span class="color-comment">// Flush (remove) all rule from the INPUT chain.</span>
+$ <strong>sudo iptables -P INPUT ACCEPT</strong>
+      <span class="color-comment">// Set the default policy to ACCEPT for INPUT chain.
+      // These changes are applicable to the current session only.
+      // The configurations will be restored from the configuration files after reboot.</span></pre>
+
+<h5>Verifying Firewall Settings via Port Scanning</h5>
+
+<p>Use a Port Scanning software such as Nmap (@ <a href="http://nmap.org">http://nmap.org</a>) to scan your server. For example,</p>
+
+<pre class="color-command">
+$ <strong>nmap -sT <em>hostname</em></strong>
+      <span class="color-comment">// Scan 1000 most commonly used port numbers</span>
+$ <strong>nmap -sT -p- <em>hostname</em></strong>
+      <span class="color-comment">// Scan all ports, may take a few minutes</span>
+</pre>
+
+<p>You can issue command <code>netstat</code> to check the open server listening ports on your server (via SSH or Webmin's Command Shell):</p>
+<pre class="color-command">
+$ <strong>netstat -tulpen</strong>
+      <span class="color-comment">// -t: list TCP connections
+      // -u: list UDP connections
+      // -l: list listening (server) connections
+      // -p: show PID and program name
+      // -e: show extended information
+      // -n: display as numbers instead of names</span></pre>
+
+
+<h5>Controlling which services are started at boot and Turning of unnecessary services</h5>
+
+<p>Firstly, check the services that open network port via the following command. You can issue the command via SSH or Webmin's Command Shell.</p>
+
+<pre class="color-command">
+$ <strong>netstat -tulpen</strong>
+      <span class="color-comment">// -t: list TCP connections
+      // -u: list UDP connections
+      // -l: list listening (server) connections
+      // -p: show PID and program name
+      // -e: show extended information
+      // -n: display as numbers instead of names</span></pre>
+
+<p>To disable services at boot, goto  &quot;System&quot; &rArr; &quot;Bootup and Shutdown&quot; &rArr; Select the service  &rArr; Click &quot;Disable Now on Boot&quot;.</p>
+<p>Note: After OS boots, it starts a process called <code>init</code>, which executes the service initialization scripts under <code>/etc/init.d</code> directory.</p>
+
+<h5>Checking User Passwords</h5>
+
+<p>You can use a password cracking program such as &quot;John the Ripple&quot; (@ <a href="http://www.openwall.com/john/">http://www.openwall.com/john</a>) to periodically attempt to crack the passwords on your system via brute-force or dictionary attack.</p>
+
+<pre class="color-command">
+$ <strong>john /etc/shadow</strong>
+      <span class="color-comment">// Start password cracking</span>
+$ <strong>john -show /etc/shadow</strong>
+      <span class="color-comment">// Show the cracked password</span></pre>
+
+<p>To terminal John the Ripple, kill the process (via System &rArr; Running Processes &rArr; Get the Process ID  &rArr; Goto Process information  &rArr; Terminate the PID). John keeps the cracked password under <code>/root/.john</code> directory. Remove the directory for security.</p>
+
+<h5>Disable <span class="font-code">root</span> Login Remotely via SSH</h5>
+<p>Allowing <code>root</code> login remotely over SSH exposes your system to brute force password cracking. It is much better to disable remote <code>root</code> login, but uses another administrator account to <code>sudo</code> to root. </p>
+
+<p>To disable root login over SSH, goto Servers &rArr; SSH Server &rArr; Authentication &rArr; Allow login by root  &rArr; No.</p>
+
+<p>Webmin edits the SSH configuration file <code>/etc/ssh/sshd_config</code> by setting the <code>PermitRootLogin</code> to <code>no</code>; and restart SSH Server via &quot;<code>sudo service ssh restart</code>&quot; or &quot;<code>sudo /etc/init.d/sshd restart</code>&quot;.</p>
+
+<p>Note: By default, the <code>root</code> account password is actually locked in Ubuntu.</p>
+
+
+<h4>Managing Samba</h4>
+
+<p>Samba is a File Sharing service for Windows clients. It uses TCP ports 137, 139, 445 and UDP ports 137-139, which shall be unlock if firewall is enabled. It uses Unix services <code>nmb</code>, <code>smb</code> and <code>winbind</code>, which shall be started at boot time.</p>
+
+<h5>Configuring Samba</h5>
+<p>Firstly, check if Samba module is enable under Webmin. Goto &quot;Servers&quot; &rArr; Look for &quot;Samba Windows File Sharing&quot;. Otherwise, enable Samab module from the &quot;Un-used Modules&quot;.</p>
+<p>Next, setup the server to be visible on the network. Goto &quot;Servers&quot; &rArr; &quot;Samba Windows File Sharing&quot; &rArr; &quot;Windows Networking&quot; &rArr; Set &quot;Workgroup&quot; to <code>WORKGROUP</code> or workshop name in your organization &rArr; Set &quot;Server description&quot; to the name for which your server to be visible in the network; or &quot;<code>%h</code>&quot; for the server's default hostname.</p>
+
+<h5>Creating a Samba Share</h5>
+
+<p>First, create a special Unix pseudo (non-login) user named <code>samba</code> to own the shared directory (says <code>/srv/samba</code>): Goto &quot;System&quot; &rArr; &quot;Users and Groups&quot; &rArr; &quot;Create User&quot; &rArr; Set the &quot;Username&quot; to &quot;<code>samba</code>&quot; &rArr; Set the &quot;Real Name&quot; to &quot;Samba Share Pseudo-User&quot; &rArr; Set the &quot;Home directory&quot; to &quot;<code>/srv/samba</code>&quot; &rArr; Set the &quot;Shell&quot; to &quot;<code>/usr/sbin/nologin</code>&quot; or &quot;<code>/bin/false</code>&quot; &rArr; Set the &quot;Password&quot; to &quot;No login allow&quot; &rArr; Set the &quot;Primary group&quot; to &quot;New group with same name as user&quot; &rArr; Set &quot;Copy templaet files to home directory&quot; to &quot;No&quot; &rArr; Set &quot;Create user in other modules&quot; to &quot;No&quot;.</p>
+<p>Next, create a Samba shared network folder: Goto &quot;Servers&quot; &rArr; &quot;Samba Windows File Sharing&quot; &rArr; &quot;Create a new file share&quot; &rArr; Set the &quot;Share name&quot; to &quot;<code>SharedFolder</code>&quot; or a more appropriate name &rArr; Set the &quot;Directory to share&quot; to &quot;<code>/srv/samba</code>&quot; &rArr; Set &quot;Automatically create directory&quot; to &quot;No&quot; &rArr; Set both &quot;Available&quot; and &quot;Browseable&quot; to &quot;Yes&quot; &rArr; &quot;Create&quot;.</p>
+<p>Next, create Samba user accounts: Samba maintains it own users separate from the Unix users. To convert Unix users to Samba: Goto &quot;Convert Users&quot; &rArr; Set &quot;Unix users to convert&quot; to &quot;Only listed users or UID ranges&quot; &rArr; Browse user list to select a user &rArr; &quot;Convert Users&quot;.</p>
+<p>Finally, grant Samba users access to the shared folder: Goto &quot;Servers&quot; &rArr; &quot;Samba Windows File Sharing&quot; &rArr; Click on the name of the share. Click &quot;Security and Access Control&quot; &rArr; Set &quot;Writable&quot; to &quot;Yes&quot; &rArr; Set &quot;Read/Write users&quot; to the permitted users &rArr; &quot;Save&quot;. Click &quot;File Permissions&quot; &rArr; Set &quot;Force Unix user&quot; and &quot;Force Unix group&quot; to &quot;<code>samba</code>&quot; &rArr; &quot;Save&quot;.</p>
+
+
+<h5>Authenticating users using Microsoft's Active Directory Service</h5>
+<p>[TODO]</p>
+
+
+<h5>Sharing home directory</h5>
+
+<p>Samba creates home directory shares automatically.</p>
+<p>To share the home directory: Goto &quot;Servers&quot; &rArr; &quot;Samba Windows File Sharing&quot; &rArr; &quot;Create new shares&quot; &rArr; In &quot;Share name&quot;, select &quot;Home Directories Share&quot;. Click &quot;Security and Access Control&quot; &rArr; Set &quot;Writable&quot; to &quot;Yes&quot;. In &quot;Authentication&quot; set to &quot;revalidate user&quot;.</p>
+
+<p>[TODO]</p>
+
+<h4>Backing up the System</h4>
+
+<p>[TODO]</p>
+
+<h4>Configuring Apache HTTP Server under Webmin</h4>
+
+<p>Webmin places Apache under the &quot;Server&quot; &rArr; &quot;Apache Webserver&quot;.</p>
+<p>If Firewall is enabled, you need to permit incoming connection for HTTP (default on TCP port 80) and HTTPS (default on TCP port 443).</p>
+
+<h5>Starting/Stopping Apache Server via Wemin</h5>
+
+<p>You can start/stop Apache server via link &quot;Start Apache&quot; or &quot;Stop Apache&quot; on the top-right corner. Webmin issues commands:</p>
+
+<pre class="color-command">
+$ <strong>sudo service apache2 start</strong>
+      <span class="color-comment">// Start the apache server</span>
+$ <strong>sudo service apache2 stop</strong>
+      <span class="color-comment">// Stop the apache server</span>
+$ <strong>sudo service apache2 restart</strong>
+      <span class="color-comment">// Stop and Start the apache server</span>
+$ <strong>sudo service apache2 reload</strong>
+      <span class="color-comment">// Reload the apache configurations without restarting the server</span></pre>
+
+<h5><span class="font-code">apachectl</span></h5>
+
+<p>apachectl is a front end to Apache HTTP server, meant for the administrator to control the Apache server. The commands are:</p>
+
+<pre class="color-command">
+$ <strong>sudo apachectl start|stop|restart</strong>
+      <span class="color-comment">// Start, stop, or restart the server</span>
+$ <strong>sudo apachectl fullstatus|status</strong>
+      <span class="color-comment">// Show the status of the server</span>
+$ <strong>sudo apachectl graceful</strong>
+      <span class="color-comment">// Gracefully restart the server</span>
+$ <strong>sudo apachectl graceful-stop</strong>
+      <span class="color-comment">// Complete all requests and stop the server</span>
+$ <strong>sudo apachectl start|stop|restart</strong>
+      <span class="color-comment">// Start, stop, or restart the server</span>
+$ <strong>sudo apachectl configtest</strong>
+      <span class="color-comment">// Check the configuration files</span></pre>
+
+
+<h5>Configuring Apache to start at boot time</h5>
+
+<p>Goto &quot;System&quot; &rArr; &quot;Bootup and Shutdown&quot; &rArr; Click on &quot;apache2&quot; &rArr; Set &quot;Start at boot time&quot; to &quot;Yes&quot;.  <br />
+  You can also view the Apache init script (<code>/etc/init.d/apache2</code>) here.</p>
+  
+<h5>Apache Configuration</h5>
+
+<p>The Apache configuration is divided into 3 sections: global settings, default server and virtual hosts. If a request matches one of the virtual hosts, it will be handled by the matched virtual host; otherwise, it will be processed by the default server.</p>
+
+  
+<h5>Configuring the Default Server</h5>
+
+<p>Goto &quot;Servers&quot; &rArr; &quot;Apache Webserver&quot; &rArr; Select tab &quot;Global configuration&quot; &rArr; Select &quot;Networking and Addresses&quot; &rArr; In &quot;Listen on addresses and ports&quot;, set &quot;Addresses&quot; to &quot;All&quot; and &quot;Port&quot; to 80 (the default HTTP TCP port number)  &rArr; Select tab &quot;Existing virtural hosts&quot; &rArr; choose &quot;Default Server&quot; &rArr; Click &quot;Document Options&quot;, set &quot;Document root directory&quot; to &quot;<code>/var/www</code>&quot; (or your choice) &rArr; &quot;Save&quot; &rArr; &quot;Apply Changes&quot;.</p>
+
+<h5>Configuring a virtual host</h5>
+
+<p>Goto &quot;Servers&quot; &rArr; &quot;Apache Webserver&quot; &rArr; Select tab &quot;Create virtual host&quot; &rArr; ...</p>
+
+<pre class="color-example">
+&lt;VirtualHost *:80&gt;
+ServerName example.com
+DocumentRoot &quot;/var/www/example.com&quot;
+&lt;/VirtualHost&gt;</pre>
+
+<h5>Setting options for directories, files and locations</h5>
+
+<p>Goto &quot;Servers&quot; &rArr; &quot;Apache Webserver&quot; &rArr; Select tab &quot;Existing virtual hosts&quot; &rArr; Select the virtual host to be configured &rArr; In &quot;Create Per-directory, file or location&quot; &rArr; Set &quot;Type&quot; to ...</p>
+
+<h5>Redirecting incoming requests</h5>
+
+<p>Goto &quot;Servers&quot; &rArr; &quot;Apache Webserver&quot; &rArr; &quot;Existing virtual hosts&quot; &rArr; Select the virtual host to be configured &rArr; Click &quot;Aliases and Redirects&quot; &rArr; Fill up &quot;Regexp URL redirects&quot;: set &quot;From&quot; to ..., &quot;Status&quot; to 301, &quot;To&quot; to ....</p>
+
+<p>Webmin adds directive <code>RedirectMatch</code> or <code>Redirect</code> under the virtual host:</p>
+<pre class="color-command">
+<span class="color-comment">// With Regexe matching</span>
+RedirectMatch 301 /test/(.*) "http://example.com/test/$1"
+ 
+<span class="color-comment">// Without regexe</span>
+Redirect 301 /test/ "http://example.com/test/"
+</pre>
+
+<h5>Setting up Secure Website with SSL</h5>
+<ol>
+<li>Enable Apache module <code>ssl</code>.</li>
+<li>Generate a private key via <code>openssl</code>: 
+<pre class="color-command">
+$ <strong>openssl genrsa -out key.pem 2048</strong>
+      <span class="color-comment">// genrsa 2048: use RSA algorithm with key length of 2048
+      // -out: output key filename</span>
+</pre></li>
+      
+<li>Make a self-signed certificate:
+  <pre class="color-command">
+$ <strong>openssl req -new -key key.pem -x509 -nodes -days 365 -out cert.pem</strong>
+       <span class="color-comment">// -new -x509: generate a new X509 certificate
+       // -nodes: ???
+       // -key key.pem: input private key filename
+       // -days 365: valid for 365 days
+       // -out cert.pem: output certificate filename
+       // The &quot;Common Name&quot; of the certificate shall be the same as
+       //   the full domain name of the server.</span>
+ 
+$ <strong>openssl x509 -noout -text -in cert.pem</strong>
+       <span class="color-comment">// Display the certificate data</span>
+</pre></li>
+
+<li>Move the private key file and certificate to the Apache configuration directory (<code>/etc/Apache2</code>) and set permissions of the private key file to protect it:
+  <pre class="color-command">
+$ <strong>sudo chmod 400 key.pem</strong>
+      <span class="color-comment">// Set permission to read-only by owner (r--------)
+      // Owner? Group?</span></pre></li>
+      
+<li>Goto &quot;Servers&quot; &rArr; &quot;Apache Webserver&quot; &rArr; &quot;Create virtual host&quot; &rArr; Set the &quot;Port&quot; to 443 (HTTPS default) &rArr; Set the &quot;Document Root&quot;  &rArr; Set the &quot;Server Name&quot; to be the same as the Common name in the certificate &rArr; Set &quot;Enable SSL&quot; to &quot;yes&quot; &rArr; Set the Certificate and private key file.</li>
+</ol>
+
+<p>Webmin activate SSL by adding the following directive to the virtual host:</p>
+
+<pre class="color-command">
+SSLEngine on
+SSLCertificateFile /etc/apache2/cert.pem
+SSLCertificateKeyFile /etc/apache2/key.pem</pre>
+
+<h5>Configure the Apache's Access and Error Log Files</h5>
+
+<p>By default, Apache keeps two log files: an access log which contains all incoming request, and an error log which contains the error messages. We typically separate the two logs in two files. Also, each virtual host may maintain its own log files.</p>
+<p>The log record format can be specified as:</p>
+
+<pre class="color-command">
+%h %l %u %t &quot;%r&quot; %&gt;s %O &quot;%{Referer}i&quot; &quot;%{User-Agent}i&quot;
+      <span class="color-comment">// %h: Remote IP or hostname
+      // %l:
+      // %u: Remote user if request was authenticated
+      // %t: time
+      // %r: Request header line (Request method and path)
+      // %&gt;s: HTTP response code (e.g., 200 for OK, 404 for not found)
+      // %O: Response size in bytes
+      // %{Referer}i: Referer
+      // %{User-Agent}i: user agent, which identifies the browser</span></pre>
+
+
+<p>These directives are added under the <code>&lt;VirtualHost&gt;</code>:</p>
+
+<pre class="color-command">
+ErrorLog /var/log/apache2/example.com-error.log
+LogLevel warn
+LogFormat &quot;combined&quot;
+TransferLog /var/log/apache2/example.com-access.log</pre>
+
+<h5>Analyzing logfiles using Webalizer</h5>
+
+<ol>
+<li>Check if Webalizer is already installed.</li>
+<li>Goto &quot;Servers&quot; &rArr; &quot;Webalizer Logfile Analysis&quot; &rArr; &quot;Add a new log fie for analysis&quot; &rArr; Set &quot;Base logfile path&quot; to the access log  &rArr; Set &quot;Write report to directory&quot; to ...  &rArr; Set &quot;Run webalizer as user&quot; to <code>root</code> &rArr; Set &quot;Always re-process log files&quot; to &quot;no&quot; &rArr; Set &quot;Clear log file after scheduled report&quot; to &quot;no&quot; &rArr; Set &quot;Report options&quot; to &quot;User global options&quot; &rArr; Set &quot;Scheduled report generation&quot; to &quot;Enabled, at times chosen below&quot; &rArr; Select &quot;Simple schedule&quot;, set to &quot;Daily (at midnight)&quot; &rArr; &quot;Create&quot;.</li>
+
+</ol>
+
+<h4>Configuring MySQL under Webmin</h4>
+
+<p>I recommend using PhpMyAdmin.</p>
+
+<h5>Post Installation</h5>
+<p>Run <code>mysql_secure_installation</code> script, which:</p>
+
+<ul>
+<li>Set a password for MySQL <code>root</code> user.</li>
+<li>Remove anonymous user.</li>
+<li>Disable remote login by <code>root</code> user. (SSH permitted. PhpMyAdmin?)</li>
+<li>Remove the <code>test</code> database.</li>
+</ul>
+
+
+<p>[TODO]</p>
+
+<h4>Usermin</h4>
+<p>Usermin (@ <a href="http://www.webmin.com/usermin.html">http://www.webmin.com/usermin.html</a>) is a web-based user interface for Unix-like systems. It is a simplified version of Webmin, meant for regular  users (instead of system administrator for webmin) for tasks such as reading mail, configuring mail forwarding, and setting up SSH (Secure Shell).</p>
+
+<h4>Mail Server</h4>
+
+<p>[TODO]</p>
+
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>Ubuntu Mother site @ <a href="http://www.ubuntu.com">http://www.ubuntu.com</a>.</li>
+
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Ubuntu 14.04<br />
+Last modified: April, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

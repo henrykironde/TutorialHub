@@ -1,0 +1,953 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Perl Tutorial Part 2 Regular Expression (Regexe) and File IO</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Perl</h1>
+<h2>Part 2: Regular Expression, File IO &amp; Text Processing</h2>
+
+<h3>Regular Expression (Regexe)</h3>
+<p>A <em>Regular Expression</em> (or <em>Regexe</em>) is a <em>pattern</em> (or <em>filter</em>) that describes a set of strings that matches the pattern.  In other words, a regexe <em>accepts</em> a certain set of strings and  <em>rejects</em> the rest. A string either <em>matches</em> a regexe or it does not.</p>
+
+<p>A regular expression consists of a sequence of characters,  meta-characters (such as <code>.</code>,  <code>\d</code>, <code>\</code>s, <code>\S</code>) and operators (such  as <code>+</code>, <code>*</code>, <code>?</code>, <code>|</code>, <code>^</code>).  In Perl, regexes are delimited by a pair of forward slashes <code>/.../</code>.</p>
+
+<p>Regexes are constructed by combining many smaller sub-expressions. The fundamental building blocks are patterns that match a single character. Most characters, including all letters and  digits, match themselves. For example,  the regexe <code>/Friday/</code> matches  the string <code>'Friday'</code>  exactly (and rejects the others). To match a special character (such as <code>+</code>, <code>*</code>, <code>\</code>) literally, you precede the character with a backslash (such as <code>\+</code>, <code>\*</code>, and <code>\\</code>).  For example, regexe <code>/10\+/</code> matches the string <code>'10+'</code>.</p>
+
+<h4>Substitution Operator <code>s///</code></h4>
+<p>You can substitute a string (or a portion of a string) with another string using <code>s///</code> substitution operator.  The syntax is:</p>
+<pre class="code-syntax"><strong>s/</strong><em>regexe</em><strong>/</strong><em>replacement</em><strong>/</strong><em>modifiers</em></pre>
+
+<p>By default <code>s///</code> operates on the default variable <code>$_</code>. It substitutes the portion of string in <code>$_</code> that matches <code><em>regexe</em></code> by the <code><em>replacement</em></code> string. For example,</p>
+
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+while (&lt;&gt;) {            <span class="code-comment"># Read input into default variable $_</span>
+   s/is/at/;            <span class="code-comment"># Substitute 'is' for 'at' in $_</span>
+   print 'Result: ', $_;
+}
+</pre>
+
+<pre class="code-command">&gt; <strong>perl tryRegexe1.pl
+This is an apple</strong>
+Result: That is an apple<strong>
+That is a pineapple</strong>
+Result: That at a pineapple
+<strong>A beautiful oasis</strong>
+Result: A beautiful oasat
+<strong>Is that an apple?</strong>
+Result: Is that an apple?
+</pre>
+
+<p><em>Modifiers</em> (such as <code>/g</code>, <code>/i</code>, <code>/e</code>, <code>/o</code>, <code>/s</code> and <code>/x</code>) can be used to control the behavior of <code>s///</code>. By default, only the first occurrence of the matching string of each line is replaced.  You can use modifier <code>/g</code> to specify <em>global</em> replacements. By default, matching is case-sensitive. You can use the modifier <code>/i</code> to enable case in-sensitive matching.</p>
+
+<pre class="code-listing">#!/usr/bin/perl         <span class="code-comment"># tryRegexe2.pl</span>
+use strict;
+use warnings;
+while (&lt;&gt;) {            <span class="code-comment"># Read input into default variable $_</span>
+   s/is/at/gi;          <span class="code-comment"># Global and case-insensitive substitution</span>
+   print 'Result: ', $_;
+}
+</pre>
+
+<pre class="code-command">&gt; <strong>perl tryRegexe2.pl
+This is an OASIS</strong>
+Result: That at an OASat
+</pre>
+
+<h4>OR (<code>|</code>)</h4>
+<p>A vertical bar <code>|</code> can be used to include <em>alternatives</em> in a regexe, e.g.,</p>
+<pre class="code-listing">#!/usr/bin/perl           <span class="code-comment"># tryRegexe3.pl</span>
+use strict;
+use warnings;
+while (&lt;&gt;) {              <span class="code-comment"># Read input into default variable $_</span>
+   s/four|for|floor/4/gi; <span class="code-comment"># Subs 'four', 'for' or 'floor' for 4</span>   
+   print 'Result: ', $_;
+}
+</pre>
+
+<pre class="code-command">
+&gt; <strong>perl tryRegexe3.pl</strong>
+<strong>For the four persons on the floor</strong>
+Result: 4 the 4 persons on the 4
+</pre>
+
+<p>You can use variables in the substitution, e.g.,</p>
+<pre class="code-example">my $replacement = 4;
+s/four|for|floor/$replacement/g;
+   
+my $pattern = 'four|for|floor';
+s/$pattern/4/g;
+</pre>
+
+<h4>Bracket <code>[ ]</code> and Range <code>[ - ]</code> Expressions</h4>
+<p>A <em>bracket expression</em> is <em>a list of characters</em> enclosed by <code>[ ]</code>, also called <em>character class</em>. It matches any single character in the list.  However, if the first character of the list is the caret (<code>^</code>), then it matches any single character NOT in the list.  For example, the regexes <code>[02468]</code> matches a single digit 0, 2, 4, 6, or 8; the regexes <code>[^02468]</code> matches any single character other than 0, 2, 4, 6, or 8.</p>
+
+<p>Instead of listing all characters, you could use a <em>range expression</em> inside the bracket.  A range expression consists of 2 characters separated by a hyphen (<code>-</code>).  It matches any single character that sorts between the two characters, inclusive. For example, <code>[a-d]</code> is the same as <code>[abcd]</code>.  You could include a caret (<code>^</code>) in front of the range to invert the matching.  For example, <code>[^a-d]</code> is equivalent to <code>[^abcd]</code>.</p>
+
+<p>Some named classes of characters are pre-defined within bracket expressions.  They are <code>[:alnum:]</code>, <code>[:alpha:]</code>, <code>[:cntrl:]</code>, <code>[:digit:]</code>, <code>[:graph:]</code>, <code>[:lower:]</code>, <code>[:print:]</code>, <code>[:punct:]</code>, <code>[:space:]</code>, <code>[:upper:]</code>, and <code>[:xdigit:]</code>.  For example, <code>[[:alnum:]]</code> means <code>[0-9A-Za-z]</code>.  (Note that the square brackets in these class names are part of the symbolic names, and must be included in addition to the square brackets delimiting the bracket list.)</p>
+
+<pre class="code-listing">#!/usr/bin/perl           <span class="code-comment"># tryRegexe4.pl</span>
+use strict;
+use warnings;
+while (&lt;&gt;) {              <span class="code-comment"># Input read into default variable $_</span>
+   s/[[:alnum:]][[:alnum:]]/x/g;  <span class="code-comment"># substitute 2 alphanumerics with x
+</span>   print 'Result: ', $_;
+}
+</pre>
+<pre class="code-command">
+&gt; <strong>perl tryRegexe4.pl
+This is an apple</strong>
+Result: xx x x xxe
+<strong>These are apples</strong>
+Result: xxe xe xxx
+</pre>
+
+<p>To include a <code>]</code>, place it first in the list.  To include a <code>^</code>, place it anywhere but first.  Finally, to include a <code>-</code> place it last. Most metacharacters (such as <code>+</code>, <code>*</code>) lose their special meaning inside bracketed lists.</p>
+
+<h4>Metacharacters Dot (<code>.</code>), <code>\w</code>, <code>\W</code>, <code>\d</code>, <code>\D</code>, <code>\s</code>, <code>\S</code></h4>
+<p>A metacharacter is a symbol with a special meaning inside a regexe.</p>
+
+<ul>
+<li>The metacharacter dot (<code>.</code>) matches any single character except newline <code>\n</code> (same as <code>[^\n]</code>).  For example, <code>/.../</code> matches any 3 characters (including alphabets, numbers, white-spaces, but except newline); <code>/the../</code> matches &quot;there&quot;, &quot;these&quot;, and etc.</li>
+
+<li>The metacharacter <code>\w</code> (word character) matches any single letter, number or underscore (same as <code>[a-zA-Z0-9_]</code>).  The uppercase counterpart <code>\W</code> (non-word-character) matches any single character that doesn't match by <code>\w</code> (same as <code>[^a-zA-Z0-9_]</code>).  (The uppercase metacharacter is always the inverse of the lowercase counterpart.)</li>
+
+<li>The metacharacter <code>\d</code> (digit) matches any single digit (same as <code>[0-9]</code>). The uppercase counterpart <code>\D</code> (non-digit) matches any single character that is not a digit (same as <code>[^0-9]</code>).</li>
+
+<li>The metacharacter <code>\s</code> (space) matches any single whitespace (same as <code>[\t\n\r\f ]</code>).  The uppercase counterpart <code>\S</code> (non-space) matches any single character that doesn't match by <code>\s</code> (same as <code>[^\t\n\r\f ]</code>).</li>
+</ul>
+
+<p>Examples:</p>
+<pre class="code-example">s/\s\s/ /g;    <span class="code-comment"># Replace two whitespaces with a single space</span>
+s/\S\S\s/ /g   <span class="code-comment"># Two non-whitespaces followed by a whitespace</span>
+s/\s+/ /g;    <span class="code-comment"> # Replace one or more whitespaces with one space</span>
+</pre>
+
+<h4>Occurrence Indicators (or Repetition Operators) <code>+</code>, <code>*</code>, <code>?</code>, <code>{}</code></h4>
+
+<p>A regexe may be followed by an <em>occurrence indicator</em> (or <em>repetition operator</em>):</p>
+<ul>
+<li><code>?</code>: The preceding item is optional and matched at most once (i.e., occurs 0 or 1 times).</li>
+<li><code>*</code>: The preceding item will be matched zero or more times.</li>
+<li><code>+</code>: The preceding item will be matched one or more times.</li>
+<li><code>{m}</code>: The preceding item is matched exactly m times.</li>
+<li><code>{m,}</code>: The preceding item is matched m or more times.</li>
+<li><code>{m,n}</code>: The preceding item is matched at least m times, but not more than n times.</li>
+</ul>
+
+<p>For example, <code>/xy{2,4}/</code> (<code>'x'</code> followed by 2 to 4 <code>'y'</code>) matches &quot;xyy&quot;, &quot;xyyy&quot; and &quot;xyyyy&quot;.</p>
+
+<h4>Greediness</h4>
+<p><code>*</code>, <code>+</code>, <code>?</code>, <code>{ }</code> repetition operators are <em>greedy operators</em>, and by default grasp as many characters as possible for a match.</p>
+
+<pre class="code-listing">#!/usr/bin/perl -w        <span class="code-comment"># tryRegexe5.pl</span>
+use strict;
+use warnings;
+while (&lt;&gt;) {              <span class="code-comment"># Read input into default variable $_</span>
+   s/xy{2,4}/z/g;
+   print 'Result: ', $_;
+}
+</pre>
+
+<pre class="code-command">
+&gt; <strong>perl tryRegexe5.pl
+xyyxxyyyyxxxyxxyyyyyy</strong>
+Result: zxzxxxyxzyy
+</pre>
+
+<p>In Perl, you can put an extra <code>?</code> after the repetition operator to curb its greediness (i.e., stop at the shortest match).  For example, <code>*?</code>, <code>+?</code>, <code>??</code>, <code>{}?</code>.</p>
+
+<pre class="code-listing">#!/usr/bin/perl           <span class="code-comment"># tryRegexe5a.pl</span>
+use strict;
+use warnings;
+while (&lt;&gt;) {              <span class="code-comment"># Read input into default variable $_</span>
+   s/xy{2,4}?/z/g;        <span class="code-comment"># curb greediness for shortest match
+</span>   print 'Result: ', $_;
+}
+</pre>
+
+<pre class="code-command">
+&gt; <strong>perl tryRegexe5a.pl</strong>
+<strong>xyyxxyyyyxxxyxxyyyyyy</strong>
+Result: zxzyyxxxyxzyyyy
+</pre>
+
+<h4>Positional Metacharacters (or Position Anchors) <code>^</code>, <code>$</code>, <code>\b</code>, <code>\B</code>, <code>\&lt;</code>, <code>\&gt;</code>, <code>\A</code>, <code>\Z</code></h4>
+
+<p><em>Positional anchors</em> do NOT match actual character but match <em>position</em> in a string (e.g., begin-of-line, end-of-line, begin-of-word, and end-of-word).</p>
+
+<ul>
+
+<li>The metacharacter caret (<code>^</code>) matches the beginning of the line; and the metacharacter dollar (<code>$</code>) matches the end of line (excluding newline).</li>
+
+<li>The metacharacter <code>\b</code> matches the empty string at the edge of a word (i.e., word boundary), and <code>\B</code> matches a string provided it's not at the edge of a word.  For example, <code>/\bcat\b/</code> matches the word '<code>cat</code>' (excluding the leading and trailing whitespaces).</li>
+
+<li>The metacharacters <code>\&lt;</code> and <code>\&gt;</code> match the empty string at the beginning and the end of a word respectively (compared with <code>\b</code>, which can match both the beginning and the end of a word).</li>
+
+<li><code>\A</code> matches the beginning of the line, just like <code>^</code>.  <code>\Z</code> matches the end of the line, just like <code>$</code>.  However, <code>\A</code> and <code>\Z</code> match only the actual beginning and ending, and ignore the embedded newlines within the string.</li>
+</ul>
+
+<p>You can use positional anchors liberally to increase the speed of matching. For examples:</p>
+<pre class="code-example">
+s/ing$/xyz/     <span class="code-comment"> # Substitute ending 'ing' with 'xyz'.</span>
+/^testing 123$/  <span class="code-comment"># Matches only one pattern.</span> <span class="code-comment">Should use eq instead.
+</span></pre>
+
+<h4>Delimiter</h4>
+
+<p>Instead of using slash (<code>/</code>) as delimiter for <code>s///</code> operator, you can use most of the non-alphanumeric characters (e.g., <code>!</code>, <code>@</code>, <code>#</code>).  For example,</p>
+<pre class="code-example">s!this!that!g    <span class="code-comment"># ! as delimiter</span>
+s#1/2#1/4#g      <span class="code-comment"># # as delimiter</span>
+</pre>
+
+<p>Change the default delimiter is confusing, and not recommended.</p>
+
+<h4>Matching Operator <code>m//</code></h4>
+<p>You can use <em>matching operator</em> <code>m//</code> to check if a pattern (in terms of a regexe) exists in a string.  The syntax is:</p>
+<pre class="code-syntax"><strong>m/</strong><em>regexe</em><strong>/</strong><em>modifiers</em></pre>
+<p><code>m//</code>, by default, operates on the default variable <code>$_</code>.  It returns true if <code>$_</code> matches regexe; and false otherwise.</p>
+
+<p>Similar to <code>s///</code> operator, instead of using slash (/) as delimiter, you could use other non-alphanumeric characters such as <code>@</code> and <code>%</code>.  However, if slash (<code>/</code>) is used as the delimiter, the operator <code>m</code> can be omitted.  For example, <code>/.\./</code> matches any character (except newline) followed by a period.</p>
+
+<p>Examples:</p>
+<pre class="code-example">
+if (/test/) { $test_mode = 'yes' }  <span class="code-comment"># if $_ contains test</span>.
+print 'have space' if /\s/;         <span class="code-comment"># if $_ contains whitespace.
+</span></pre>
+
+<h4>operators <code>=~</code> and <code>!~</code> for <code>s///</code> and <code>m//</code></h4>
+<p>By default, the substitution and matching operators operate on the default variable <code>$_</code>.  To operate on other variable instead of <code>$_</code>, you could use the <code>=~</code> and <code>!~</code> operators as follows:</p>
+<pre class="code-syntax"><em>str</em> <strong>=~ m/</strong><em>regexe</em><strong>/</strong> is true if <em>str</em> matches <em>regexe</em>.
+<em>str</em> <strong>!~ m/</strong><em>regexe</em><strong>/</strong> is true if <em>str</em> does not matches <em>regexe</em>.
+<em>str</em> <strong>=~ s/</strong><em>regexe</em><strong>/</strong><em>replacement</em><strong>/</strong><em>modifiers</em> replaces occurrence of <em>regexe</em> with <em>replacement</em> in <em>str</em>.
+</pre>
+
+<p>When used with <code>m//</code>, <code>=~</code> behaves like comparison (<code>==</code> or <code>eq</code>).  When used with <code>s///</code>, <code>=~</code> behaves like assignment (<code>=</code>).</p>
+
+<p>For examples:</p>
+<pre class="code-listing">my $msg;
+if ($msg =~ /hello/) {     <span class="code-comment"># Check if $msg contains 'Hello'</span>
+   print 'Hello world'; 
+}
+$msg =~ s/hello/hi/g;      <span class="code-comment"># Substitute 'hello' with 'hi' in $msg</span>
+   
+print 'yes or no? ';
+my $reply;
+chomp($reply = &lt;&gt;);        <span class="code-comment"># remove newline from $reply</span>
+if ($reply =~ /^y/} {      <span class="code-comment"># Begins with 'y'</span>
+   print 'positive!';
+} else {
+   print 'negative!';
+}
+</pre>
+
+<h4>More String Functions: <code>split</code> and <code>join</code></h4>
+
+<p><code>split(<em>regexe</em>, <em>str</em>)</code> or <code>split(<em>regexe</em>, <em>str</em>, <em>numItems</em>)</code>: split the given <em><code>str</code></em> using the regular expression <em><code>regexe</code></em>, and return the items in an array. The optional third parameter specifies the maximum items to be processed.</p>
+
+<p><code>join(<em>joinStr</em>, <em>strList</em>)</code> joins the items in <em><code>strList</code></em> with the given <em><code>joinStr</code></em> (possibly empty).</p>
+<p> For example,</p>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+use 5.010;
+   
+my $msg = 'Hello, world again!';
+my @words = split(/ /, $msg);  <span class="code-comment"># ('Hello,', 'world', 'again!')</span>
+for (@words) { say; }          <span class="code-comment"># Use default scalar variable</span>
+   
+say join('--', @words);        <span class="code-comment"># 'Hello,--world--again!'</span>
+my $newMsg = join '', @words;  <span class="code-comment"># 'Hello,worldagain!'</span>
+say $newMsg;
+</pre>
+
+<h4>Parenthesized Back-References &amp; Matched Variables <code>$1</code>,..., <code>$9</code></h4>
+<p>Parentheses <code>( )</code> serve two purposes in regexes.</p>
+
+<p>Firstly, parentheses <code>( )</code> can be used to group sub-expressions for overriding the precedence or applying a repetition operator.  For example, <code>/(a|e|i|o|u){3,5}/</code> is the same as <code>/a{3,5}|e{3,5}|i{3,5}|o{3,5}|u{3,5}/</code>.</p>
+
+<p>Secondly, parentheses are used to provide the so called <em>back-references</em>.  A back-reference contains the matched sub-string.  For examples, the regexe <code>/(\S+)/</code> creates one back-reference <code>(\S+)</code>, which contains the first word (consecutive non-spaces) in the input string; the regexe <code>/(\S+)\s+(\S+)/</code> creates two back-references: <code>(\S+)</code> and another <code>(\S+)</code>, containing the first two words, separated by one or more spaces <code>\s+</code>.</p>
+
+<p> The back-references are stored in special variables <code>$1</code>, <code>$2</code>, …, <code>$9</code>, where  <code>$1 </code>contains the substring matched the first pair of parentheses, and so on. For example, <code>/(\S+)\s+(\S+)/</code> creates two back-references which matched with the first two words. The matched words are stored in <code>$1</code> and <code>$2</code>, respectively. </p>
+
+<p>For example, the following expression swap the first and second words:</p>
+
+<pre class="code-example">s/(\S+) (\S+)/$2 $1/;   <span class="code-comment"># Swap the first and second words separated by a single space</span>
+</pre>
+
+<p> Back-references can also be referenced in your program. For example,</p>
+<pre class="code-example">(my $word) = ($str =~ /(\S+)/);
+</pre>
+
+<p>The parentheses creates one back-reference, which matches the first word of the <code>$str</code> if there is one, and is placed inside the scalar variable <code>$word</code>. If there is no match, <code>$word</code> is <code>UNDEF</code>.</p>
+
+<p>Another example,</p>
+<pre class="code-example">(my $word1, my $word2) = ($str =~ /(\S+)\s+(\S+)/);
+</pre>
+
+<p>The 2 pairs of parentheses place the first two words (separated by one or more white-spaces) of the <code>$str</code> into variables <code>$word1</code> and <code>$word2</code> if there are more than two words; otherwise, both <code>$word1</code> and <code>$word2</code> are <code>UNDEF</code>.  Note that regular expression matching must be complete and there is no partial matching.</p>
+
+<p><code>\1</code>, <code>\2</code>, <code>\3</code> has the same meaning as <code>$1</code>, <code>$2</code>, <code>$3</code>, but are valid only inside the <code>s///</code> or <code>m//</code>. For example, <code>/(\S+)\s\1/</code> matches a pair of repeated words, separated by a white-space.</p>
+
+<h4>Special Variables <code>$`</code>, <code>$'</code>, <code>$%</code> and <code>$+</code></h4>
+<ul>
+<li><code>$`</code> (or <code>$PREMATCH</code>): returns anything before the matched sub-string.</li>
+<li><code>$'</code> (or <code>$POSTMATCH</code>): returns anything after the matched sub-string.</li>
+<li><code>$%</code> (or <code>$MATCH</code>): returns the matched sub-string.</li>
+<li><code>$+</code> (or <code>$LAST_PAREN_MATCH</code>): returns the contents of the last parenthetical match.</li>
+</ul>
+
+<h4>Character Translation Operator <code>tr///</code></h4>
+<p>You can use <em>translator operator</em> to translate a character into another character.  The syntax is:</p>
+<pre class="code-syntax"><strong>tr/</strong><em>fromchar</em>s<strong>/</strong><em>tochars</em><strong>/</strong>
+</pre>
+<p>replaces or translates <code><em>fromchars</em></code> to <code><em>tochars</em></code> in <code>$_</code>, and returns the number of characters replaced.</p>
+
+<p>For examples,</p>
+<pre class="code-listing">
+tr/a-z/A-Z/         <span class="code-comment"># converts $_ to uppercase</span>.
+tr/dog/cat/         <span class="code-comment"># translates d to c, o to a, g to t.</span>
+$str =~ tr/0-9/a-j/ <span class="code-comment"># replace 0 by a, etc in $str.</span>
+tr/A-CG/KX-Z/       <span class="code-comment"># replace A by K, B by X, C by Y, G by Z.
+</span></pre>
+
+<p>Instead of forward slash (<code>/</code>), you can use parentheses <code>()</code>, brackets <code>[]</code>, curly bracket <code>{}</code> as delimiter, e.g.,</p>
+<pre class="code-example">
+tr[0-9][##########]  <span class="code-comment"># replace numbers by #</span>.
+tr{!.}(.!)           <span class="code-comment"># swap ! and ., one pass.</span>
+</pre>
+
+<p>If <code><em>tochars</em></code> is shorter than <code><em>fromchars</em></code>, the last character of <code><em>tochars</em></code> is used repeatedly.</p>
+<pre class="code-example">
+tr/a-z/A-E/       <span class="code-comment"># f to z is replaced by E.
+</span></pre>
+
+<p><code>tr///</code> returns the number of replaced characters.  You can use it to count the occurrence of certain characters.  For examples,</p>
+<pre class="code-example">my $numLetters = ($string =~ tr/a-zA-Z/a-zA-Z/);
+my $numDigits  = ($string =~ tr/0-9/0-9/);
+my $numSpaces  = ($string =~ tr/ / /);
+</pre>
+
+<h4>Modifiers <code>/c</code>, <code>/d</code> and <code>/s</code> for <code>tr///</code></h4>
+<ul>
+<li><code>/c</code> complements (inverses) <code><em>fromchars</em></code>.</li>
+<li><code>/d</code> deletes any matched but un-replaced characters.</li>
+<li><code>/s</code> squashes duplicate characters into just one.</li>
+</ul>
+
+<p>For examples,</p>
+<pre class="code-example">
+tr/A-Za-z/ /c  <span class="code-comment"># replaces all non-alphabets with spac</span>e
+tr/A-Z//d      <span class="code-comment"># deletes all uppercase (matched with no replacement).</span>
+tr/A-Za-z//dc  <span class="code-comment"># deletes all non-alphabets</span>
+tr/!//s        <span class="code-comment"># squashes duplicate !
+</span></pre>
+
+<h4>Modifiers <code>/m</code> and <code>/s</code> for <code>s///</code> and <code>m//</code></h4>
+<p><code>/m</code> lets the <code>^</code> and <code>$</code> anchors match more than once.  By default, <code>s///</code> and <code>m//</code> assume the input to be one string, even though it may contain newline.  with <code>/m</code> modifier, each sub-string terminating with newline is treated as a string to be matched.</p>
+<p><code>/s</code> permits <code>.</code> to match the newline.</p>
+
+<h4>Functions <code>grep</code>, <code>map</code></h4>
+<ul>
+<li><code>grep(<em>regexe</em>, <em>array</em>)</code>: selects those elements of the <code><em>array</em></code>, that matches <code><em>regexe</em></code>.</li>
+
+<li><code>map(<em>regexe</em>, <em>array</em>)</code>: returns a new array constructed by applying <code><em>regexe</em></code> to each element of the <code><em>array</em></code>.</li>
+</ul>
+
+<h3>File Input/Output</h3>
+
+<h4>Filehandle</h4>
+<p><em>Filehandles</em> are data structure which your program can use to manipulate files.   A <em>filehandle</em> acts as a <em>gate</em> between your program and the <em>files</em>, <em>directories</em>, or other <em>programs</em>.  Your program first opens a gate, then sends or receives data through the gate, and finally closes the gate. There are many types of gates: one-way vs. two-way, slow vs. fast, wide vs. narrow.</p>
+
+<p><strong>Naming Convention</strong>: use uppercase for the name of the filehandle, e.g., <code>FILE</code>,  <code>DIR</code>, <code>FILEIN</code>, <code>FILEOUT</code>, and etc.</p>
+
+<p>Once a filehandle is created and connected to a file (or a directory, or a program), you can read or write to the underlying file through the filehandle using angle brackets, e.g., <code>&lt;<em>FILEHANDLE</em>&gt;</code>.</p>
+
+<p><strong>Example</strong>: Read and print  the content of a text file via a filehandle.</p>
+
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+   
+<span class="code-comment"># FileRead.pl: Read &amp; print the content of a text file.</span>
+my $filename = shift;    <span class="code-comment"># Get the filename from command line.</span>
+  
+<span class="code-comment"># Create a filehandle called FILE and connect to the file.</span>
+open(FILE, $filename) or die &quot;Can't open $filename: $!&quot;;
+
+while (&lt;FILE&gt;) {      <span class="code-comment"># Set $_ to each line of the file</span> 
+   print;             <span class="code-comment"># Print $_</span>
+}
+</pre>
+
+<p><strong>Example</strong>: Search and  print lines containing a particular search word.</p>
+
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+   
+<span class="code-comment"># FileSearch.pl: Search for lines containing a search word.</span>
+(my $filename, my $word) = @ARGV;   <span class="code-comment"># Get filename &amp; search word.</span>
+<span class="code-comment">
+# Create a filehandle called FILE and connect to the file.
+</span>open(FILE, $filename) or die &quot;Can't open $filename: $!&quot;;
+  
+while (&lt;FILE&gt;) {           <span class="code-comment"># Set $_ to each line of the file</span>
+   print if /\b$word\b/i;  <span class="code-comment"># Match $_ with word, case insensitive</span>
+}
+</pre>
+
+<p><strong>Example</strong>: Print the  content of a directory via a directory handle.</p>
+
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+   
+<span class="code-comment"># DirPrint.pl: Print the content of a directory.</span>
+my $dirname = shift;       <span class="code-comment"># Get directory name from command-line</span>
+opendir(DIR, $dirname) or die &quot;Can't open directory $dirname: $!&quot;;
+my @files = readdir(DIR);
+foreach my $file (@files) {
+  <span class="code-comment"># Display files not beginning with dot.</span>
+  print &quot;$file\n&quot; if ($file !~ /^\./);
+}
+</pre>
+
+<p>You can use C-style's <code>printf</code> for formatted output to file.</p>
+
+<h4>File Handling Functions</h4>
+
+<p><strong>Function open</strong>: <code>open(<em>filehandle</em>, <em>string</em>)</code> opens the filename given by <em><code>string</code></em> and associates it with the <em><code>filehandle</code></em>. It returns true if success and <code>UNDEF</code> otherwise.</p>
+<ul>
+<li>If <em>string</em> begins with <code>&lt;</code>  (or nothing), it is opened for reading.</li>
+<li>If <em>string</em> begins with <code>&gt;</code>,  it is opened for writing.</li>
+<li>If <em>string</em> begins with <code>&gt;&gt;</code>,  it is opened for appending.</li>
+<li>If <em>string</em> begins with <code>+&lt;</code>, <code>+&gt;</code>, <code>+&gt;&gt;</code>, it is opened for  both reading and writing.</li>
+<li>If <em>string</em> is <code>-</code>,  <code>STDIN</code> is opened.</li>
+<li>If <em>string</em> is <code>&gt;-</code>,  <code>STDOUT</code> is opened.</li>
+<li>If <em>string</em> begins with <code>-|</code> or <code>|-</code>, your process will <code>fork()</code> to execute the <em>pipe command</em>.</li>
+</ul>
+  
+<p><strong>Function close</strong>: <code>close(<em>filehandle</em>)</code> closes the file associated with the <em><code>filehandle</code></em>. When the program exits, Perl closes all opened filehandles. Closing of file flushes the output buffer to the file.  You only have to explicitly close the file in case the user aborts the program, to ensure data integrity.</p>
+
+<p>A common procedure for modifying a file is to:</p>
+<ol>
+<li>Read in the entire file with <code>open(FILE, $filename)</code> and <code>@lines  = &lt;FILE&gt;</code>.</li>
+<li>Close the filehandle.</li>
+<li>Operate upon <code>@lines</code>  (which is in the fast RAM) rather than <code>FILE</code>  (which is in the slow disk).</li>
+<li>Write the new file contents using <code>open(FILE, “&gt;$filename”)</code>  and <code>print FILE @lines</code>.</li>
+<li>Close the file handle.</li>
+</ol>
+
+<p><strong>Example</strong>: Read the contents of the entire file into memory;  modify and write back to disk.</p>
+
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+   
+<span class="code-comment"># FileChange.pl</span>
+my $filename = shift;       <span class="code-comment"># Get the filename from command line.</span>
+
+<span class="code-comment"># Create a filehandle called FILE and connect to the file.</span>
+open(FILE, $filename) or die &quot;Can't open $filename: $!&quot;;
+<span class="code-comment"># Read the entire file into an array in memory.</span>
+my @lines = &lt;FILE&gt;;
+close(FILE);
+
+open(FILE, &quot;&gt;$filename&quot;) or die &quot;Can't write to $filename: $!&quot;;
+foreach my $line (@lines) {
+   print FILE uc($line);   <span class="code-comment"># Change to uppercase</span>
+}
+close(FILE);
+</pre>
+
+<p><strong>Example</strong>: Reading  from a file</p>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+   
+<span class="code-comment"></span>open(FILEIN, &quot;test.txt&quot;) or die &quot;Can't open file: $!&quot;;
+while (&lt;FILEIN&gt;) {     <span class="code-comment"># set $_ to each line of the file.</span>
+   print;              <span class="code-comment"># print $_</span>
+}
+</pre>
+
+<p><strong>Example</strong>: Writing to a file</p>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+   
+<span class="code-comment"></span>my $filename = shift;         <span class="code-comment"># Get the file from command line.</span>
+open(FILE, &quot;&gt;$filename&quot;) or die &quot;Can't write to $filename: $!&quot;;
+print FILE &quot;This is line 1\n&quot;;    <span class="code-comment"># no comma after FILE.</span>
+print FILE &quot;This is line 2\n&quot;;
+print FILE &quot;This is line 3\n&quot;;
+</pre>
+
+<p><strong>Example</strong>: Appending to a file</p>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+   
+<span class="code-comment"></span>my $filename = shift;             <span class="code-comment"># Get the file from command line.</span>
+open(FILE, &quot;&gt;&gt;$filename&quot;) or die &quot;Can't append to $filename: $!&quot;;
+print FILE &quot;This is line 4\n&quot;;     <span class="code-comment"># no comma after FILE.</span>
+print FILE &quot;This is line 5\n&quot;;
+</pre>
+
+<h4>In-Place Editing</h4>
+<p>Instead of reading in one file and write to another file, you  could do in-place editing by specifying <code>–i</code> flag or use the special variable <code>$^I</code>.</p>
+<ul>
+<li>The <code>–i<em>backupExtension</em></code> flag  tells Perl to edit files in-place.  If a <em><code>backupExtension</code></em> is provided, a backup file will be created with the <em><code>backupExtension</code></em>.</li>
+<li>The special variable <code>$^I=<em>backupExtension</em></code> does  the same thing.</li>
+</ul>
+
+<p><strong>Example</strong>: In-place editing using <code>–i</code> flag</p>
+<pre class="code-listing">#!/usr/bin/perl -i.old     <span class="code-comment"># In-place edit, backup as '.old'</span>
+use strict;
+use warnings;
+   
+<span class="code-comment"></span>
+while (&lt;&gt;) {
+  s/line/TEST/g;
+  print;           <span class="code-comment"># Print to the file, not STDOUT.</span>
+}
+</pre>
+
+<p><strong>Example</strong>:  In-place editing using <code>$^I</code> special variable.</p>
+
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+   
+<span class="code-comment"></span>
+$^I = '.bak';     <span class="code-comment"> # Enable in-place editing, backup in '.bak'</span>.
+while (&lt;&gt;) {
+  s/TEST/line/g;
+  print;           <span class="code-comment"># Print to the file, not STDOUT.</span>
+}
+</pre>
+
+<h4>Functions <code>seek</code>, <code>tell</code>, <code>truncate</code></h4>
+<p><code>seek(<em>filehandle</em>, <em>position</em>, <em>whence</em>)</code>: moves the file pointer of the <em><code>filehandle</code></em> to <em><code>position</code></em>, as  measured from <em><code>whence</code></em>.  <code>seek()</code>  returns 1 upon success and  0 otherwise.  File <em>position</em> is measured in bytes.  <em><code>whence</code></em> of 0  measured from the beginning of the file; 1  measured from the current position; and 2  measured from the end.  For example:</p>
+
+<pre class="code-example">
+seek(FILE, 0, 2);    <span class="code-comment"># 0 byte from end-of-file, give file size</span>.
+seek(FILE, -2, 2);   <span class="code-comment"># 2 bytes before end-of-file.</span>
+seek(FILE, -10, 1);  <span class="code-comment"># Move file pointer 10 byte backward.</span>
+seek(FILE, 20, 0);   <span class="code-comment"># 20 bytes from the begin-of-file.
+</span></pre>
+  
+<p><code>tell(<em>filehandle</em>)</code>: returns the current file position of <em><code>filehandle</code></em>.</p>
+
+<p><code>truncate(<em>FILE</em>, <em>length</em>)</code>: truncates <em><code>FILE</code></em> to <em><code>length</code></em> bytes.  <em><code>FILE</code></em> can be  either a filehandle or a file name.</p>
+
+<p>To find the length of a file, you could:</p>
+<pre class="code-example">seek(FILE, 0, 2);   <span class="code-comment"># Move file point to end of file.</span>
+print tell(FILE);   <span class="code-comment"># Print the file size.
+</span></pre>
+
+<p><strong>Example</strong>: Truncate  the last 2 bytes if they begin with <code>\x0D</code>,</p>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+   
+<span class="code-comment"></span>my $filename = shift;            <span class="code-comment"># Get the file from command line.</span>
+open(FILE, &quot;+&lt;$filename&quot;) or die &quot;Can't open $file: $!&quot;;
+seek(FILE, -2, 2);        <span class="code-comment"># 2 byte before end-of-file.</span>
+my $pos = tell FILE;
+my $data = &lt;FILE&gt;;        <span class="code-comment"># read moves the file pointer.</span>
+if ($data =~ /^\x0D/) {   <span class="code-comment"># begin with 0D</span>
+  truncate FILE, $pos;    <span class="code-comment"># truncate last 2 bytes.</span>
+}
+</pre>
+
+<h4>Function <code>eof</code></h4>
+<p><code>eof(<em>filehandle</em>)</code> returns 1 if  the file pointer is positioned at the end of the file or if the <em><code>filehandle</code></em> is not opened.</p>
+
+
+<h4>Reading Bytes Instead of Lines</h4>
+<p>The function <code>read(<em>filehandle</em>, <em>var</em>, <em>length</em>, <em>offset</em>)</code> reads <em><code>length</code></em> bytes from <em><code>filehandle</code></em> starting from the current file pointer, and saves into variable <em><code>var</code></em> starting from <em><code>offset</code></em> (if omitted, default is 0).  The bytes  includes <code>\x0A</code>, <code>\x0D</code> etc.</p>
+
+<p><strong>Example:</strong></p>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+   
+<span class="code-comment"></span>(my $numbytes, my $filename) = @ARGV;
+open(FILE, $filename) or die &quot;Can't open $filename: $!&quot;;
+   
+my $data;
+read(FILE, $data, $numbytes);
+print $data, &quot;\n----\n&quot;;
+   
+read(FILE, $data, $numbytes);    <span class="code-comment"># continue from current file ptr</span>
+print $data;
+print $data, &quot;\n----\n&quot;;
+   
+read(FILE, $data, $numbytes, 2);  <span class="code-comment"># save in $data offset 2</span>
+print $data, &quot;\n----\n&quot;;
+</pre>
+
+<h4>Piping Data To and From a Process</h4>
+<p>If you wish your program to receive data from a process or want  your program to send data to a process, you could open a <em>pipe</em> to an external program.</p>
+<ul>
+<li><code>open(<em>handle</em>, &quot;<em>command</em>|&quot;)</code> lets you read from the output of <em><code>command</code></em>.</li>
+<li><code>open(<em>handle</em>, &quot;|<em>command</em>&quot;)</code> lets you write to the input of <em><code>command</code></em>.</li>
+</ul>
+
+<p>Both of these statements return the Process ID (PID) of the <em><code>command</code></em>.</p>
+
+<p><strong>Example</strong>: The <code>dir</code> command lists the current directory.  By opening a <em>pipe</em> from <code>dir</code>,  you can access its output.</p>
+
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+  
+open(PIPEFROM, &quot;dir|&quot;) or die &quot;Pipe failed: $!&quot;;
+while (&lt;PIPEFROM&gt;) {
+   print;
+}
+close PIPEFROM;
+</pre>
+
+<p><strong>Example</strong>: This  example shows how you can <em>pipe</em> input  into the sendmail program.</p>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+  
+my $my_login = test
+open(MAIL, &quot;| sendmail –t –f$my_login&quot;) or die &quot;Pipe failed: $!&quot;;
+print MAIL, &quot;From: test101@test.com\n&quot;;
+print MAIL, &quot;To: test102@test.com\n&quot;;
+print MAIL, &quot;Subject: test\n&quot;;
+print MAIL, &quot;\n&quot;;
+print MAIL, &quot;Testing line 1\n&quot;;
+print MAIL, &quot;Testing line 2\n&quot;;
+close MAIL;
+</pre>
+
+<p>You cannot pipe data both to and from a <em><code>command</code></em>.  If you want to read the output of a <em><code>command</code></em>  that you have opened with the <code>|<em>command</em></code>,  send the output to a file.  For example,</p>
+
+<pre class="code-example">open (PIPETO, &quot;|command &gt; /output.txt&quot;);
+</pre>
+
+<h4>Deleting file: Function <code>unlink</code></h4>
+<p><code>unlink(<em>FILES</em>)</code> deletes the <em>FILES</em>,  returning the number of files deleted.   Do not use <code>unlink()</code>  to delete a directory, use <code>rmdir()</code>  instead. For example,</p>
+
+<pre class="code-listing">unlink $filename;
+unlink &quot;/var/adm/message&quot;;
+unlink &quot;message&quot;;
+</pre>
+
+<h4>Inspecting Files</h4>
+<p>You can inspect a file using <code>(-<em>test</em> <em>FILE</em>)</code>  condition.  The condition returns true if <em><code>FILE</code></em> satisfies <em><code>test</code></em>.  <em><code>FILE</code></em> can be a filehandle or filename.  The available <em><code>test</code></em> are:<br />
+</p>
+<ul>
+<li><code>-e</code>:  exists.</li>
+<li><code>-f</code>:  plain file.</li>
+<li><code>-d</code>:  directory.</li>
+<li><code>-T</code>:  seems to be a text file (data from 0 to 127).</li>
+<li><code>-B</code>:  seems to be a binary file (data from 0 to 255).</li>
+<li><code>-r</code>:  readable.</li>
+<li><code>-w</code>:  writable.</li>
+<li><code>-x</code>:  executable.</li>
+<li><code>-s</code>:  returns the size of the file in bytes.</li>
+<li><code>-z</code>:  empty (zero byte).</li>
+</ul>
+  
+<p><strong>Example:</strong></p>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+  
+my $dir = shift;
+opendir(DIR, $dir) or die &quot;Can't open directory: $!&quot;;
+my @files = readdir(DIR);
+closedir(DIR);
+   
+foreach my $file (@files) {
+   if (-f &quot;$dir/$file&quot;) {
+      print &quot;$file is a file\n&quot;;
+      print &quot;$file seems to be a text file\n&quot; if (-T &quot;$dir/$file&quot;);
+      print &quot;$file seems to be a binary file\n&quot; if (-B &quot;$dir/$file&quot;);
+      my $size = -s &quot;$dir/$file&quot;;
+      print &quot;$file size is $size\n&quot;;
+      print &quot;$file is a empty\n&quot; if (-z &quot;$dir/$file&quot;);
+   } elsif (-d &quot;$dir/$file&quot;) {
+      print &quot;$file is a directory\n&quot;;
+   }
+   print &quot;$file is a readable\n&quot; if (-r &quot;$dir/$file&quot;);
+   print &quot;$file is a writable\n&quot; if (-w &quot;$dir/$file&quot;);
+   print &quot;$file is a executable\n&quot; if (-x &quot;$dir/$file&quot;);
+}
+</pre>
+
+<h4>Function <code>stat</code> and <code>lsstat</code></h4>
+<p>The function <code>stat(<em>FILE</em>)</code> returns a 13-element  array giving the vital statistics of <em><code>FILE</code></em>.  <code>lsstat(<em>SYMLINK</em>)</code> returns the same  thing for the symbolic link <em><code>SYMLINK</code></em>.</p>
+
+<p>The elements are:</p>
+<table class="table-data">
+  <tr>
+    <th>Index</th>
+    <th>Value</th>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>The device</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>The file's inode</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>The file's mode</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>The number of hard links to the file</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>The user ID of the file's owner</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>The group ID of the file</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>The raw device</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>The size of the file</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>The last accessed time</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>The last modified time</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>The last time the file's status changed</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>The block size of the system</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>The number of blocks used by the file</td>
+  </tr>
+</table>
+
+
+<p>For example: The command</p>
+<pre class="code-example">perl -e &quot;$size= (stat('test.txt'))[7]; print $size&quot;</pre>
+<p>prints the file size of &quot;<code>test.txt</code>&quot;.</p>
+
+<h4>Accessing the Directories</h4>
+
+<ul>
+<li><code>opendir(<em>DIRHANDLE</em>, <em>dirname</em>)</code> opens the directory <em><code>dirname</code></em>.</li>
+<li><code>closedir(<em>DIRHANDLE</em>)</code> closes the  directory handle.</li>
+<li><code>readdir(<em>DIRHANDLE</em>)</code> returns the  next file from <em><code>DIRHANDLE</code></em> in a scalar context, or the rest of the files in the array context.</li>
+<li><code>glob(<em>string</em>)</code> returns an  array of filenames matching the wildcard in <em><code>string</code></em>,  e.g., <code>glob('*.dat')</code> and  <code>glob('test??.txt')</code>.</li>
+<li><code>mkdir(<em>dirname</em>, <em>mode</em>)</code> creates the directory <em><code>dirname</code></em> with the protection specified by <em><code>mode</code></em>.</li>
+<li><code>rmdir(dirname)</code> deletes the directory <em><code>dirname</code></em>, only if it is empty.</li>
+<li><code>chdir(<em>dirname</em>)</code> changes the  working directory to <em><code>dirname</code></em>.</li>
+<li><code>chroot(<em>dirname</em>)</code> makes <em><code>dirname</code></em> the root directory &quot;/&quot; for  the current process, used by superuser only.</li>
+</ul>
+
+<p><strong>Example</strong>: Print the  contents of a given directory.</p>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+  
+my $dirname = shift;      <span class="code-comment"># first command-line argument.</span>
+opendir(DIR, $dirname) or die &quot;can't open $dirname: $!\n&quot;;
+@files = readdir(DIR);
+closedir(DIR);
+foreach my $file (@files) {
+   print &quot;$file\n&quot;;
+}
+</pre>
+
+<p><strong>Example</strong>:  Removing empty files in a given directory</p>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+  
+
+my $dirname = shift;
+opendir(DIR, $dirname) or die &quot;Can't open directory: $!&quot;;
+my @files = readdir(DIR);
+foreach my $file (@files) {
+   if ((-f &quot;$dir/$file&quot;) &amp;&amp; (-z &quot;$dir/$file&quot;)) {
+      print &quot;deleting $dir/$file\n&quot;;
+      unlink &quot;$dir/$file&quot;;
+   }
+}
+closedir(DIR);
+</pre>
+
+<p><strong>Example</strong>: Display  files matches &quot;<code>*.txt</code>&quot;</p>
+<pre class="code-listing">my @files = glob('*.txt');
+foreach (@files) { print; print &quot;\n&quot; }
+</pre>
+
+<p><strong>Example</strong>: Display  files matches the command-line pattern.</p>
+<pre class="code-listing">$file = shift;
+@files = glob($file);
+foreach (@files) {
+   print;
+   print &quot;\n&quot; 
+}
+</pre>
+
+<h4>Standard Filehandles</h4>
+<p>Perl defines the following standard filehandles:</p>
+<ul>
+<li><code>STDIN</code>  – Standard Input, usually refers to the keyboard.</li>
+<li><code>STDOUT</code>  – Standard Output, usually refers to the console.</li>
+<li><code>STDERR</code>  – Standard Error, usually refers to the console.</li>
+<li><code>ARGV</code>  – Command-line arguments.</li>
+</ul>
+
+<p>For example:</p>
+<pre class="code-example">my $line = &lt;STDIN&gt;    <span class="code-comment"># Set $line to the next line of user input</span>
+my $item = &lt;ARGV&gt;     <span class="code-comment"># Set $item to the next command-line argument</span>
+my @items = &lt;ARGV&gt;    <span class="code-comment"># Put all command-line arguments into the array.
+</span></pre>
+
+<p>When you use an empty angle brackets <code>&lt;&gt;</code>  to get inputs from user, it uses the <code>STDIN</code>  filehandle; when you get the inputs from the command-line, it uses <code>ARGV</code> filehandle.  Perl fills in <code>STDIN</code>  or <code>ARGV</code> for you  automatically.  Whenever you use <code>print()</code> function, it uses the  <code>STDOUT</code> filehandler.</p>
+
+<p><code>&lt;&gt;</code>  behaves like <code>&lt;ARGV&gt;</code> when  there is still data to be read from the command-line files, and behave like <code>&lt;STDIN&gt;</code> otherwise.</p>
+
+<h3>Text Formatting</h3>
+
+<h4>Function <code>write</code></h4>
+<p><code>write(<em>filehandle</em>)</code>: printed formatted text to <code><em>filehandle</em></code>, using the format associated with <code><em>filehandle</em></code>.  If <code><em>filehandle</em></code> is omitted, <code>STDOUT</code> would be used.</p>
+
+<h4>Declaring format</h4>
+<pre class="code-syntax">format <em>name</em> =
+text1
+text2
+.
+</pre>
+
+
+<h4>Picture Field <code>@&lt;</code>, <code>@|</code>, <code>@&gt;</code></h4>
+<ul>
+<li><code>@&lt;</code>: left-flushes the string on the next line of formatting texts.</li>
+<li><code>@&gt;</code>: right-flushes the string on the next line of formatting texts.</li>
+<li><code>@|</code>: centers the string on the next line of the formatting texts.</li>
+</ul>
+
+<p><code>@&lt;</code>, <code>@&gt;</code>, <code>@|</code> can be repeated to control the number of characters to be formatted.
+The number of characters to be formatted is same as the length of the picture field.
+  <code>@###.##</code> formats numbers by lining up the decimal points under &quot;<code>.</code>&quot;.</p>
+
+<p>For examples,</p>
+<p>[TODO]</p>
+
+<h4>Printing Formatting String <code>printf</code></h4>
+<p><code>printf(<em>filehandle</em>, <em>template</em>, <em>array</em>)</code>: prints a formatted string to <code><em>filehandle</em></code> (similar to C's <code>fprintf()</code>). For example,</p>
+<pre class="code-example">
+printf(FILE &quot;The number is %d&quot;, 15);
+</pre>
+
+<p>The available formatting fields are:</p>
+
+<table class="table-data">
+  <tr>
+    <th>Field</th>
+    <th>Expected Value</th>
+  </tr>
+  <tr>
+    <td><code>%s</code></td>
+    <td>String</td>
+  </tr>
+  <tr>
+    <td><code>%c</code></td>
+    <td>Character</td>
+  </tr>
+  <tr>
+    <td><code>%d</code></td>
+    <td>Decimal number</td>
+  </tr>
+  <tr>
+    <td><code>%ld</code></td>
+    <td>Long decimal Number</td>
+  </tr>
+  <tr>
+    <td><code>%u</code></td>
+    <td>Unsigned decimal number</td>
+  </tr>
+  <tr>
+    <td><code>%x</code></td>
+    <td>Hexadecimal number</td>
+  </tr>
+  <tr>
+    <td><code>%lx</code></td>
+    <td>Long hexadecimal number</td>
+  </tr>
+  <tr>
+    <td><code>%o</code></td>
+    <td>Octal number</td>
+  </tr>
+  <tr>
+    <td><code>%lo</code></td>
+    <td>Long octal number</td>
+  </tr>
+  <tr>
+    <td><code>%f</code></td>
+    <td>Fixed-point floating-point number</td>
+  </tr>
+  <tr>
+    <td><code>%e</code></td>
+    <td>Exponential floating-point number</td>
+  </tr>
+  <tr>
+    <td><code>%g</code></td>
+    <td>Compact floating-point number</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>TODO</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: Perl 5.10.0 (cygwin)<br />
+Last modified: October 6, 2009</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

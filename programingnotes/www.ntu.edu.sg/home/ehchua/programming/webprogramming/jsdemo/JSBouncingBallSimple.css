@@ -1,0 +1,13 @@
+/* JSBouncingBallSimple.css */
+#box {  /* The container box */
+  position: absolute;
+  border: thick solid;
+  border-color: red;
+}
+ 
+/* The ball image.
+ * Use class selector to handle more than one balls
+*/
+img.ball {
+  position: absolute;
+}

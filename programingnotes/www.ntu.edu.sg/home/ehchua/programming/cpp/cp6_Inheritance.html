@@ -1,0 +1,2554 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Object-oriented Programming (OOP) in C++</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>C++ Programming Language</h1>
+<h2>OOP Part 2</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Revision on Classes and Objects</h3>
+
+<img class="image-float-left" src="images/ClassDiagram_PointInheritance.png" alt="ClassDiagram_PointInheritance.png" />
+<p>Let us revise the basics of OOP with an example of modeling 2D points with integer coordinates (x, y) in a class called <code>Point</code>, as shown in the class diagram.</p>
+
+<h5 class="float-clear">Header File: <span class="font-code">Point.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* The Point class Header file (Point.h) */</span>
+#ifndef POINT_H
+#define POINT_H
+ 
+<span class="color-comment"></span>class Point {
+private:
+   int x, y; <span class="color-comment"> // Private data members</span>
+ 
+public:
+   Point(int x = 0, int y = 0); <span class="color-comment">// Constructor with default arguments</span>
+   int getX() const; <span class="color-comment"> // Getter</span>
+   void setX(int x); <span class="color-comment"> // Setter</span>
+   int getY() const;
+   void setY(int y);
+   void setXY(int x, int y);
+   void print() const;
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5 class="float-clear">Implementation File: <span class="font-code">Point.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* The Point class Implementation file (Point.cpp) */</span>
+#include &quot;Point.h&quot;
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-comment">// Constructor - The default values are specified in the declaration</span>
+Point::Point(int x, int y) : x(x), y(y) { }
+ 
+<span class="color-comment">// Getters</span>
+int Point::getX() const { return x; }
+int Point::getY() const { return y; }
+ 
+<span class="color-comment">// Setters</span>
+void Point::setX(int x) { this-&gt;x = x; }
+void Point::setY(int y) { this-&gt;y = y; }
+ 
+<span class="color-comment">// Public Functions</span>
+void Point::setXY(int x, int y) { this-&gt;x = x; this-&gt;y = y; }
+ 
+void Point::print() const {
+   cout &lt;&lt; &quot;Point @ (&quot; &lt;&lt; x &lt;&lt; &quot;,&quot; &lt;&lt; y &lt;&lt; &quot;)&quot;;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5 class="float-clear">A Test Driver: <span class="font-code">TestPoint.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* A test driver program (TestPoint.cpp) */</span>
+#include &quot;Point.h&quot;
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> // Instances (Objects)</span>
+   Point p1;      <span class="color-comment"> // Invoke default constructor</span>
+                  <span class="color-comment"> // OR Point p1 = Point(); NOT Point p1();</span>
+   Point p2(2, 2);<span class="color-comment"> // Invoke constructor</span>
+                  <span class="color-comment"> // OR Point p2 = Point(2, 2);</span>
+   p1.print();    <span class="color-comment"> // Point @ (0,0)</span>
+   cout &lt;&lt; endl;
+   p2.print();    <span class="color-comment"> // Point @ (2,2)</span>
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Object Pointers with dynamic allocation</span>
+   Point * ptrP3, * ptrP4;<span class="color-comment"> // Declare two Point pointers</span>
+   ptrP3 = new Point();   <span class="color-comment"> // Dynamically allocate storage via new</span>
+                          <span class="color-comment"> // with default constructor</span>
+   ptrP4 = new Point(4, 4);
+   ptrP3-&gt;print(); <span class="color-comment"> // Point @ (0,0)</span>
+                   <span class="color-comment"> // prtPoint1-&gt;print() is the same as (*ptrP3).print()</span>
+   cout &lt;&lt; endl;
+   ptrP4-&gt;print(); <span class="color-comment"> // Point @ (4,4)</span>
+   cout &lt;&lt; endl;
+ 
+   delete ptrP3;   <span class="color-comment"> // Remove storage via delete</span>
+   delete ptrP4;
+ 
+  <span class="color-comment"> // Object Reference (Alias)</span>
+   Point &amp; p5 = p2;<span class="color-comment"> // Reference (alias) to an existing object</span>
+   p5.print();     <span class="color-comment"> // Point @ (2,2)</span>
+   cout &lt;&lt; endl;
+ 
+   <span class="color-comment">/********************
+    * ARRAYS           *
+    ********************/</span>
+ 
+  <span class="color-comment"> // Array of Objects - Static Memory Allocation</span>
+   Point ptsArray1[2];    <span class="color-comment"> // Array of Point objects</span>
+                          <span class="color-comment"> // Use default constructor for all elements of the array</span>
+   ptsArray1[0].print();  <span class="color-comment"> // Point @ (0,0)</span>
+   cout &lt;&lt; endl;
+   ptsArray1[1].setXY(11, 11);
+   (ptsArray1 + 1)-&gt;print();<span class="color-comment"> // Point @ (11,11)</span>
+                            <span class="color-comment"> // same as ptsArray1[1].print()</span>
+   cout &lt;&lt; endl;
+ 
+   Point ptsArray2[3] = {Point(21, 21), Point(22, 22), Point()};
+                          <span class="color-comment"> // Initialize array elements via constructor</span>
+   ptsArray2[0].print();  <span class="color-comment"> // Point @ (21,21)</span>
+   cout &lt;&lt; endl;
+   (ptsArray2 + 2)-&gt;print();<span class="color-comment"> // Point @ (0,0)</span>
+                            <span class="color-comment"> // same as ptsArray2[2].print()</span>
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Array of Object Pointers - Need to allocate elements dynamically</span>
+   Point * ptrPtsArray3 = new Point[2];
+   ptrPtsArray3[0].setXY(31, 31);
+   ptrPtsArray3-&gt;print(); <span class="color-comment"> // Point @ (31,31)</span>
+                          <span class="color-comment"> // same as ptrPtsArray3[0].print()</span>
+   cout &lt;&lt; endl;
+   (ptrPtsArray3 + 1)-&gt;setXY(32, 32);<span class="color-comment"> // same as ptrPtsArray3[1].setXY(32, 32)</span>
+   ptrPtsArray3[1].print();          <span class="color-comment"> // Point @ (32,32)</span>
+   cout &lt;&lt; endl;
+ 
+   delete[] ptrPtsArray3;<span class="color-comment"> // Free storage</span>
+ 
+  <span class="color-comment"> // C++ does not support Array of References</span>
+<span class="color-comment">//</span> Point &amp; pts[2] = {p1, p2}; <span class="color-error"> // error: declaration of 'pts' as array of references</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p><span class="line-heading">Classes:</span> A <em>class</em> is a <em>abstract</em> or <em>user-defined data type</em>, contrast to <em>built-in</em> fundamental types such as <code>int</code> or <code>double</code> <code></code>. A class is  represented as a three-compartment box: <em>name</em>, <em>date members</em> (or variables or attributes) and <em>member functions</em> (or methods, or operations). The data member and member functions are collectively called <em>class members</em>. The syntax of defining a class consists of two sections: <em>class declaration</em> and <em>class implementation</em>. Class declaration is further divided into two sections: <code>private</code> and <code>public</code> sections. Class implementation contains member function definitions.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Class Declaration Section - in Header file</span>
+class <em>ClassName</em> {
+private:
+   <em>private-data-members</em>
+   <em>private-member-functions</em>
+public:
+   <em>public-data-members</em>
+   <em>public-member-functions</em>
+};  <span class="color-comment">// Class declaration must end with a semi-colon</span>
+ 
+<span class="color-comment">// Class Implementation Section - in the Implementation file</span>
+<em>member-function-definitions</em></pre>
+
+<p><span class="line-heading">Objects (or instances):</span> An object (or instance) is a concrete realization of a class. For example, <code>Point</code> is a class, we can create instances (objects) <code>p1</code>, <code>p2</code>, <code>p3</code>, belonging to the class <code>Point</code>. You can invoke the constructor implicitly or explicitly as follows:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Invoke the constructor implicitly</span>
+Point p2(1, 2);
+Point p3;   <span class="color-comment">// No empty brackets for default constructor</span>
+ 
+<span class="color-comment">// Invoke the constructor explicitly</span>
+Point p5 = Point(1, 2);
+Point p6 = Point();   <span class="color-comment">// Need empty brackets for default constructor</span></pre>
+
+<p>There are a few ways to use a class to create instances, as shown in the above test driver program:</p>
+<ol>
+<li>Construct instances (or objects) via constructors, either implicitly or explicitly.</li>
+<li>Declare object pointers, and construct the objects dynamically via <code>new</code> operator.</li>
+<li>Declare object references, and initialized to an existing object, or received as function reference argument.</li>
+<li>Array of objects, or Array of object pointers (dynamically allocated via <code>new[]</code> operator).</li>
+</ol>
+
+<p><span class="line-heading">Data Members:</span> Similar to normal variables, but having so-called <em>class scope</em> such as <code>private</code> or <code>public</code>. The syntax of declaring a data member is the same as declaring a normal variable:</p>
+
+<pre class="color-syntax">
+<em>type</em> <em>variableName</em>;</pre>
+<p>A data member cannot be initialized (except const static data variables) in C++03.</p>
+
+<p><span class="line-heading">Member Functions:</span> Again, similar to normal functions, but having class scope. The syntax of declaring a member function is the same as normal function:</p>
+<pre class="color-syntax">
+<em>returnType</em> <em></em><em>functionName</em>(<em>parameter-type-list</em>);</pre>
+
+<p><span class="line-heading">Constant Member Functions:</span> A <code>const</code> member function, identified by a <code>const</code> keyword at the end of the member function's header, cannot modifies any data member of this object. For example,</p>
+
+<pre class="color-example">
+int getX() const;
+   <span class="color-comment">// This function cannot modify any data member</span></pre>
+
+<p><span class="line-heading">Implementing Member Functions:</span> Member functions are usually implemented outside class declaration. You need to use the <em>scope resolution operator</em> <code>::</code> to identify <em><code>functionName</code></em> as a member of a particular <em><code>ClassName</code></em>.</p>
+<pre class="color-syntax">
+<em>returnType</em> <span class="color-new"><em>ClassName</em>::<em>functionName</em></span>(<em>parameter-list</em>) {
+   <em>function-body</em>;
+}</pre>
+
+<p><span class="line-heading"><span class="font-code">public</span> vs. <span class="font-code">private</span> Access Specifier:</span> <code>private</code> members are accessible by the member functions of this class only. <code>public</code> members are accessible everywhere. For example, if <code>p1</code> is an instance of <code>Point</code>, <code>p1.getX()</code> is allowed outside the class definition (such as <code>main()</code>) as <code>getX()</code> is <code>public</code>. However, <code>p1.x</code> is not allowed in <code>main()</code>, as x is declared <code>private</code>.</p>
+
+<p><span class="line-heading">Constructor:</span> A <em>constructor</em> is a <em>special function</em> having the &quot;same name&quot; as the classname, with no return-type. As the name implied, constructor is called each time when an instance is declared (or constructed). Constructor is used for initializing the data members of the instances created. The syntax is:</p>
+<pre class="color-syntax">
+<span class="color-comment">// Declare constructor inside the class declaration</span>
+class <em>ClassName</em> {
+   <em>ClassName</em>(<em>parameter-list</em>);   <span class="color-comment">// prototype only</span>
+}
+  
+<span class="color-comment">// Constructor implementation - identified via scope resolution operator</span>
+<em>ClassName</em>::<em>ClassName</em>(<em>parameter-list</em>) {
+   <em>function-body</em>;
+}</pre>
+
+<p><span class="line-heading"> Member Initializer List</span>: used to initialize data members in the constructor. For example,</p>
+
+<pre class="color-example">
+Point::Point(int x, int y) <span class="color-new">: x(x), y(y)</span> { 
+   <span class="color-comment">// The body runs after the member initializer list
+</span>}</pre>
+
+<p>The member initializer list is placed after the function parameter list, separated by a colon. For fundamental-type data members (e.g., <code>int</code>, <code>double</code>), <code>x(x)</code> is the same as <code>this-&gt;x = x</code>. For object data members, the <em>copy constructor</em> will be invoked for each of the object. The function body will be executed <em>after</em> the  member initializer list, which is empty in this case.</p>
+
+<p>Alternatively, you could initialize the data members inside the constructor's body:</p>
+<pre class="color-example">
+Point::Point(int x, int y) {
+   <span class="color-new">this-&gt;x = x;
+   this-&gt;y = y;
+</span>}</pre>
+
+<p>where <code>this-&gt;x</code> refers to the data member <code>x</code>; and <code>x</code> refer to the function parameter <code>x</code>.</p>
+
+<p>Another alternative that avoids naming conflict, but is hard to read:</p>
+<pre class="color-example">
+Point::Point(int x_, int y_) {
+   <span class="color-new">x = x_;
+   y = y_;
+</span>}</pre>
+
+
+<p><span class="line-heading">Default Constructor:</span> The <em>default constructor</em> refers to the constructor that takes no parameter - either it has no parameter or all parameters have their default value (e.g., the above <code>Point</code>'s constructor). If no constructor is defined in the class, the compiler inserts a default constructor that takes no argument and does nothing (i.e., <em><code>ClassName</code></em><code>::<em>ClassName</em>() {}</code>). However, if you define one (or more) constructors, compiler will not insert the default constructor. You need to define your default constructor, if desired.</p>
+<p><span class="line-heading">Function Overloading:</span> A function (including constructor) can have many versions, differentiated by its parameter list (number, types and orders of parameters). Caller can choose to invoke a particular version by matching the parameter list.</p>
+
+<p><span class="line-heading">Function Default Argument:</span> In C++, default values can be assigned to <em>trailing</em> function's parameters. If the caller does not supply these arguments, compiler would insert the default value accordingly. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// The Point class declaration (in header file &quot;Point.h&quot;)</span>
+class Point {
+   ......
+   Point(int = 0, int = 0);
+}
+ 
+<span class="color-comment">// The Point class implementation (Point.cpp)</span>
+Point::Point(int x, int y) :  x(x), y(y) { }
+ 
+<span class="color-comment">// Test Driver (TestPoint.cpp)</span>
+Point p1;          <span class="color-comment">// (0, 0)</span>
+Point p2(4);       <span class="color-comment">// (4, 0)</span>
+Point p3(5, 6);    <span class="color-comment">// (5, 6)</span>
+</pre>
+
+<p>Notes:</p>
+
+<ul>
+<li>The default value can only be assigned to the trailing arguments.</li>
+<li>The default value shall be specified in the class declaration. I shall NOT be specified in the function implementation.</li>
+<li>Default argument is applicable to all functions, including constructor function.</li>
+</ul>
+
+<p><span class="line-heading">Constructing Instances:</span> As mentioned, instances (or objects) are concrete realizations of a class. A constructor would be invoked when declaring an instance to initialize the instance. The syntax to declare an instance is:</p>
+<pre class="color-syntax">
+<em>ClassName</em> <em>instanceName</em>;     <span class="color-comment">// Invoke default constructor</span>
+<em>ClassName</em> <em>instanceName</em>(<em>constructor-parameter-list</em>);  <span class="color-comment">// Invoke the constructor with matching parameter list</span></pre>
+
+<p><span class="line-heading">Public Getters and Setters for Private Variables:</span> Member variables are usually declared <code>private</code> to prevent direct access (called <em>data hiding</em>). Instead, <code>public</code> getter and setter are defined to retrieve (get) and modify (set) the <code>private</code> member variable. The convention is as follows:</p>
+
+<pre class="color-syntax">
+class ClassName {
+private:
+   <span class="color-new"><em>type</em> xxx;</span>  <span class="color-comment">// private variable</span>
+public:
+   <span class="color-new"><em>type</em> getXxx() const;</span>  <span class="color-comment">// public getter</span>
+   <span class="color-new">void setXxx(<em>type</em>);</span>    <span class="color-comment">// public setter (use const <em>type</em> if <em>type</em> is a class)</span>
+}
+ 
+<span class="color-comment">// Getter Implementation</span>
+<em>type</em> <em>ClassName</em>::getXxx() const { return xxx; }
+ 
+<span class="color-comment">// Setter Implementation</span>
+void <em>ClassName</em>::setXxx(<em>type</em> x) { xxx = x; }
+<span class="color-comment">// OR</span>
+void <em>ClassName</em>::setXxx(<em>type</em> xxx) { this-&gt;xxx = xxx; }</pre>
+
+<p><span class="line-heading">Implementing Member Functions in Class Declaration:</span> You can include the function's implementation inside the class declaration, as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Point with integer coords with inline functions (PointInline.h) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-comment">// Class Declaration with inline implementation</span>
+class Point {
+private:
+   int x, y;
+ 
+public:
+   Point(int x = 0, int y = 0) : x(x), y(y) { }
+   int getX() const { return x; }
+   int getY() const { return y; }
+   void setX(int x) { this-&gt;x = x; }
+   void setY(int y) { this-&gt;y = y; }
+   void setXY(int x, int y) { this-&gt;x = x; this-&gt;y = y; }
+   void print() const {
+      cout &lt;&lt; &quot;Point @ (&quot; &lt;&lt; x &lt;&lt; &quot;,&quot; &lt;&lt; y &lt;&lt; &quot;)&quot;;
+   }
+};</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Functions that implemented inside the class declaration are automatically treated as <em>inline functions</em>. That is, they will be expanded in place by the compiler (if the compiler chooses to do so), instead of performing a more expensive function call.</p>
+
+<p><span class="line-heading">Dot (<code>.</code>) Member Selection Operator:</span> Dot operator (<code>.</code>) is used to access <code>public</code> class members, in the form of <em><code>instanceName.memberName</code></em>, e.g., <code>point1.getX()</code>, <code>point2.print()</code>.</p>
+
+<p><span class="line-heading">Arrow (<code>-&gt;</code>) Member Selection Operator:</span> Arrow operator (<code><code>-&gt;</code></code>) is used with object pointer. Suppose <code>*pObj</code> is a pointer to an object, instead of using <code>(*pObj).member</code> to select a member, it is more convenient to use the arrow notation, in the form of <code>pObj-&gt;member</code>.</p>
+
+<p><span class="line-heading">Memberwise Assignment:</span> The assignment operator (<code>=</code>) can be used to assign one object into another object (of the same class), in <em>memberwise</em> manner. For example,</p>
+<pre class="color-example">
+Point p1(4, 5);
+Point p2 = p1;   <span class="color-comment">// Also (4, 5)</span></pre>
+                   
+<p>(Note: The compiler automatically generates an implicit assignment operator <code>operator=()</code>, which performs memberwise copying.)</p>
+
+<p><span class="line-heading">Passing Objects into Function:</span> Objects are <em>passed by value</em> into function. A copy is created (via memberwise assignment) and passed into the function. The caller's copy cannot be modified inside the function.</p>
+<p><em>Pass by reference</em> can be archived by passing an object pointer or an object reference.</p>
+
+<p><span class="line-heading">Object Pointer and Dynamic Allocation:</span> To allocate an instance of a class dynamically, define an object pointer and use <code>new</code> operator to allocate the storage. The <code>new</code> operator return a pointer pointing to the storage allocated. You could use arrow operator <code>-&gt;</code> to access the members with object pointer in the form of <code>pObj-&gt;member</code> (same as <code>(*pObj).member</code>). You need to use the <code>delete</code> operator to free the allocated storage.</p>
+<p>Similarly, you can use <code>new[]</code> and <code>delete[]</code> to dynamically allocate array of objects.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* A test driver for Dynamic Allocation (TestDynamicAllocation.cpp) */</span>
+#include &quot;Point.h&quot;
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> // Object Pointers with dynamic allocation</span>
+   <span class="color-comment"><span class="color-new">Point * ptrP1;
+   ptrP1 = new Point();</span> // Dynamically allocate storage via new</span>
+                       <span class="color-comment"> // with default constructor</span>
+   ptrP1-&gt;print();     <span class="color-comment"> // Point @ (0,0)</span>
+   cout &lt;&lt; endl;
+ 
+   <span class="color-new">Point * ptrP2 = new Point(2, 2);</span> <span class="color-comment"> // with constructor</span>
+   ptrP2-&gt;print(); <span class="color-comment"> // Point @ (0,0)</span>
+   cout &lt;&lt; endl;
+ 
+   <span class="color-new">delete ptrP1;</span>   <span class="color-comment"> // Remove storage via delete</span>
+   <span class="color-new">delete ptrP2;</span>
+ 
+  <span class="color-comment"> // Array of Dynamic Objects</span>
+   <span class="color-new">Point * ptrPtsArray = new Point[2];</span>
+   ptrPtsArray[1].setXY(31, 31);
+   ptrPtsArray[1].print(); <span class="color-comment"> // Point @ (31,31)</span>
+   cout &lt;&lt; endl;
+   <span class="color-new">delete[] ptrPtsArray;</span>   <span class="color-comment"> // Free storage for entire array</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p><span class="line-heading">Object Reference:</span> You can create an object reference to an existing object. A reference is similar to a pointer, but it is a name constant that is referenced and de-reference implicitly by the compiler.</p>
+
+<pre class="color-example">
+Point p1(1, 2);   <span class="color-comment">// Construct an object</span>
+Point &amp; p2 = p1;  <span class="color-comment">// p2 is an alias to p1</span></pre>
+
+<p>Object references are useful in passing object into function by reference (by default, objects are passed into function by value).</p>
+
+<p><span class="line-heading">Destructor:</span> Similar to constructor, a <em>destructor</em> has the same name as the classname, but preceded with a tilde (<code>~</code>). The destructor is called automatically when the instance expires. It has no-argument, no return type. There can be only one destructor in a class. If there is no destructor defined, the compiler supplies a destructor that does nothing.</p>
+
+<p>Destructor shall do the clean up, in particular, the dynamically allocated memory. If the constructor uses <code>new</code> to dynamically allocate storage, the destructor should <code>delete</code> them.</p>
+
+<h3>Inheritance</h3>
+
+<h4>Terminology</h4>
+
+<p><span class="line-heading">Superclass (Base Class) &amp; Subclass (Derived Class):</span> In OOP, we could organize classes in <em>hierarchy</em> to avoid redundancy. We can extend a subclass (or derived class) from a superclass (or base class). The subclass <em>inherits</em> the members of the superclass, known as <em>inheritance</em>.</p>
+<p>The syntax for deriving a subclass from a superclass is as follows:</p>
+
+<pre class="color-syntax">
+class <em>SubclassName</em> : <em>inheritance-access-specifier</em> <em>SuperclassName</em> {
+   ......
+};</pre>
+
+<p>The subclass inherits all the members of the superclass. The subclass shall define its own constructor(s). It may define additional members (data or functions).</p>
+
+<p><span class="line-heading">Access Specifier:</span> C++ supports three access specifier: <code>private</code>, <code>public</code> and <code>protected</code>. A <code>private</code> member is accessible within the class by member functions and by <em>friends</em> of that class. A <code>public</code> member is accessible by all. A <code>protected</code> member can be accessed by itself and its friend, as well as its subclasses and their friends.</p>
+<p> To access a superclass's member explicitly, you could use the scope resolution operator in the form of <code><em>superclassName</em>::<em>memberName</em></code>.</p>
+<p><span class="line-heading">Inheritance Access Specifier:</span> It specifies the type of inheritance: <code>public</code>, <code>private</code> or <code>protected</code>. The most commonly used is <code>public</code>-inheritance. In this case, the inherited members in the subclass  have the same visibility as the superclass. There is no further restriction. In other words, <code>public</code> members in the superclass becomes <code>public</code> members in the derived class; <code>protected</code> members in the base class become <code>protected</code> member in the derived class. In this case, every subclass object is also a superclass object (known as <em>is-a</em> relationship), and can be substituted for a superclass reference.</p>
+<p><code>private</code>- and <code>protected</code>-inheritance, which are rarely used, may further restrict the access of the inherited members (equal or lower than the access in superclass). In <code>protected</code>-inheritance, <code>public</code> and <code>protected</code> members in the base class become <code>protected</code> members in the derived class. In <code>private</code>-inheritance, <code>public</code> and <code>protected</code> members in the base class become <code>private</code> member in the derived class. Take note the <code>private</code> members in the superclass cannot be directly accessed in the subclass; while <code>protected</code> members can be directly accessed.</p>
+
+<h4>Example: Superclass <span class="font-code">Point</span> and subclass <span class="font-code">MovablePoint</span></h4>
+
+<p><img class="image-float-left" src="images/ClassDiagram_MovablePoint.png" alt="ClassDiagram_MovablePoint.png" /></p>
+
+<p>[TODO] Description</p>
+
+<h5 class="float-clear">Superclass <span class="font-code">Point.h</span>, <span class="font-code">Point.cpp</span></h5>
+
+<p>No change.</p>
+
+<h5>Subclass Header: <span class="font-code">MovablePoint.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Header for Moving 3D Points with int coords (MovablePoint.h) */</span>
+#ifndef MOVING_POINT_H
+#define MOVING_POINT_H
+ 
+#include &quot;Point.h&quot;  <span class="color-comment"> // Include header of the base class</span>
+ 
+class MovablePoint <span class="color-new">: public Point</span> {<span class="color-comment"> // MovablePoint is a subclass of Point</span>
+private:
+   int xSpeed, ySpeed;
+ 
+public:
+   MovablePoint(int x, int y, int xSpeed = 0, int ySpeed = 0);
+   int getXSpeed() const;
+   int getYSpeed() const;
+   void setXSpeed(int xSpeed);
+   void setYSpeed(int ySpeed);
+   void move();
+   void print() const;
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Subclass Implementation: <span class="font-code">MovablePoint.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Implementation for Moving 3D Points with int coords (MovablePoint.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;MovablePoint.h&quot;<span class="color-comment"> // Include header containing the class declaration</span>
+using namespace std;
+ 
+MovablePoint::MovablePoint(int x, int y, int xSpeed, int ySpeed)
+      : Point(x, y), xSpeed(xSpeed), ySpeed(ySpeed) { }
+ 
+<span class="color-comment">// Getters</span>
+int MovablePoint::getXSpeed() const { return xSpeed; }
+int MovablePoint::getYSpeed() const { return ySpeed; }
+ 
+<span class="color-comment">// Setters</span>
+void MovablePoint::setXSpeed(int xs) { xSpeed = xs; }
+void MovablePoint::setYSpeed(int ys) { ySpeed = ys; }
+ 
+<span class="color-comment">// Functions</span>
+void MovablePoint::print() const {
+   cout &lt;&lt; &quot;Movable&quot;;
+   <span class="color-comment"><span class="color-new">Point::print();</span> // Invoke base class function via scope resolution operator</span>
+   cout &lt;&lt; &quot; Speed=&quot; &lt;&lt; &quot;(&quot; &lt;&lt; xSpeed &lt;&lt; &quot;,&quot; &lt;&lt; ySpeed &lt;&lt; &quot;)&quot;;
+}
+ 
+void MovablePoint::move() {
+  <span class="color-comment"> // Subclass cannot access private member of the superclass directly</span>
+  <span class="color-comment"> // Need to go thru the public interface</span>
+   Point::setX(Point::getX() + xSpeed);
+   Point::setY(Point::getY() + ySpeed);
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Notes:</p>
+<ul>
+<li>When the subclass construct its instance, it must first construct a superclass object, which it inherited.</li>
+<li>The subclass does not have direct access to superclass' <code>private</code> members <code>x</code>, and <code>y</code>. To initialize these inherited members, the subclass constructor invokes the superclass constructor, which is <code>public</code>, in the <em>member initializer list</em>.</li>
+<li>You need to use the <em>member initializer list</em> (<code>: Point(x, y)</code>) to invoke the superclass <code>Point</code>'s constructor to initialize the superclass, before initializing the subclass. Object data member can only be initialized via member initializer list.</li>
+<li>If you did not explicitly invoke the superclass' constructor, the compile implicitly invoke the superclass' default constructor to construct a superclass object.</li>
+<li>To use the superclass members, use scope resolution operator in the form of <code><em>SuperclassName</em>::<em>memberName</em></code>. For example, <code>Point::print()</code>, <code>Point::getX()</code>.</li>
+</ul>
+
+<h5>A Test Driver: <span class="font-code">TestMovablePoint.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver Program for MovablePoint (TestMovablePoint.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;MovablePoint.h&quot; <span class="color-comment"> // included &quot;Point.h&quot;</span>
+using namespace std;
+ 
+int main() {
+   Point p1(4, 5); <span class="color-comment"> // superclass</span>
+   p1.print();     <span class="color-comment"> // Point @ (4,5)</span>
+   cout &lt;&lt; endl;
+ 
+   MovablePoint mp1(11, 22);<span class="color-comment"> // subclass, default speed</span>
+   mp1.print();      <span class="color-comment"> // MovablePoint @ (11,22) Speed=(0,0)</span>
+   cout &lt;&lt; endl;
+   mp1.setXSpeed(8);
+   mp1.move();
+   mp1.print();      <span class="color-comment"> // MovablePoint @ (19,22) Speed=(8,0)</span>
+   cout &lt;&lt; endl;
+ 
+   MovablePoint mp2(11, 22, 33, 44);
+   mp2.print(); <span class="color-comment"> // MovablePoint @ (11,22) Speed=(33,44)</span>
+   cout &lt;&lt; endl;
+   mp2.move();
+   mp2.print(); <span class="color-comment"> // MovablePoint @ (44,66) Speed=(33,44)</span>
+   cout &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>To compile/link (aka build) the program:</p>
+<pre class="color-command">
+<span class="color-comment">// Compile Point.cpp (with Point.h) into object code Point.o
+// -c option specifies compile-only</span>
+&gt; <strong>g++ -c Point.cpp</strong>
+ 
+<span class="color-comment">// Compile MovablePoint.cpp (with MovablePoint.h) into object code MovablePoint.o
+// Does not require Point.o for compilation (but needed in linkage)</span>
+&gt; <strong>g++ -c MovablePoint.cpp</strong>
+ 
+<span class="color-comment">// Compile and link TestMovablePoint.cpp with object files into executable file</span>
+&gt; <strong>g++ -o TestMovablePoint.exe TestMovablePoint.cpp MovablePoint.o Point.o</strong></pre>
+
+<h4>Example: <span class="font-code">Point</span> and <span class="font-code">MovablePoint</span> with <span class="font-code">protected</span> Data Members</h4>
+
+<p>Recall that a <code>private</code> data member in the superclass is not accessible in the subclass. For example, in the function <code>move()</code> of <code>MovablePoint</code>, you cannot reference <code>x</code> of superclass <code>Point</code> directly.</p>
+
+<pre class="color-example">
+void MovablePoint::move() {
+   <span class="color-new">x += xSpeed;</span>     <span class="color-comment">// error: 'int Point::x' is private</span>
+<span class="color-comment">//   Point::setX(Point::getX() + xSpeed);</span>
+   Point::setY(Point::getY() + ySpeed);
+}</pre>
+
+<p>However, if we make <code>x </code><code>protected</code> instead of <code>private</code>, the subclass can access <code>x</code> directly.</p>
+
+<pre class="color-example">
+<span class="color-comment">// Superclass Point</span>
+class Point {
+<span class="color-new">protected:
+   int x, y;</span>
+......
+};   
+
+<span class="color-comment">// Subclass MovablePoint</span>
+class MovablePoint : <span class="color-new">public</span> Point {
+   ......
+}
+ 
+void MovablePoint::move() {
+   <span class="color-new">x += xSpeed;
+   y += ySpeed;
+</span>}</pre>
+
+<p>[TODO] more examples</p>
+
+<h3>Polymorphism</h3>
+
+<p>Polymorphism works on object pointers and references using so-called dynamic binding at run-time. It does not work on regular objects<code></code>, which uses static binding during the compile-time.</p>
+
+<p>We typically allocate object dynamically via the <code>new</code> operator and manipulate the return pointer in polymorphism. Recall that we can dynamically allocate objects for the <code>Point</code> and <code>MovablePoint</code> classes as follows:</p>
+
+<pre class="color-example">
+Point * p1 = <span class="color-new">new</span> Point(1, 2);  <span class="color-comment">// Allocate a Point instance dynamically</span>
+p1-&gt;print();                   <span class="color-comment">// Invoke function via -&gt;</span>
+<span class="color-new">delete</span> p1;                     <span class="color-comment">// Free storage</span>
+
+MovablePoint * mp1 = <span class="color-new">new</span> MovablePoint(1, 2, 3, 4);
+mp1-&gt;print();
+mp1-&gt;move();
+<span class="color-new">delete</span> mp1;</pre>
+
+<h4>Substitution</h4>
+<p>A subclass instance inherits all the properties of the superclass, in the case of <code>public</code>-inheritance. It can do whatever a superclass instance can do. This is known as a &quot;<em>is-a</em>&quot; relationship. Hence, you can substitute a subclass instance to a superclass reference.</p>
+
+<h5>Example</h5>
+
+<p>Using the above example of superclass <code>Point</code> and subclass <code>MovablePoint</code>,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Substituting a subclass instance to a superclass reference
+   (TestSubstitution.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;MovablePoint.h&quot;  <span class="color-comment"> // included &quot;Point.h&quot;</span>
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> // Substitute a subclass instance to a superclass reference</span>
+ 
+  <span class="color-comment"> // Using Object Pointer</span>
+   <span class="color-new">Point * ptrP1 = new MovablePoint(11, 12, 13, 14);</span>  <span class="color-comment"> // upcast</span>
+   <span class="color-comment"><span class="color-new">ptrP1-&gt;print();</span> // Point @ (11,12) - Run superclass version!!</span>
+   cout &lt;&lt; endl;
+<span class="color-comment">// ptrP1-&gt;move(); <span class="color-comment"> // error: 'class Point' has no member named 'move'</span></span>
+   delete ptrP1;
+ 
+  <span class="color-comment"> // Using Object Reference</span>
+   MovablePoint mp2(21, 22, 23, 24);
+   <span class="color-new">Point &amp; p2 = mp2;</span> <span class="color-comment"> // upcast</span>
+   <span class="color-new">p2.print();</span>    <span class="color-comment"> // Point @ (21,22) - Run superclass version!!</span>
+   cout &lt;&lt; endl;
+<span class="color-comment">// p2.move();     <span class="color-comment"> // error: 'class Point' has no member named 'move'</span></span>
+ 
+  <span class="color-comment"> // Using object with explicit constructor</span>
+   <span class="color-new">Point p3 = MovablePoint(31, 32, 33, 34);</span> <span class="color-comment"> // upcast</span>
+   <span class="color-new">p3.print();</span>    <span class="color-comment"> // Point @ (31,32) - Run superclass version!!</span>
+   cout &lt;&lt; endl;
+<span class="color-comment">// p3.move();     <span class="color-comment"> // error: 'class Point' has no member named 'move'</span></span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Once substituted, it can invoke all the functions defined in the superclass, but CANNOT invoke functions defined in the subclass. This is because the reference is a superclass reference, which is not aware of subclass members.</p>
+
+<h4>Polymorphism</h4>
+<ol>
+<li>A subclass instance can be substituted for a superclass reference.</li>
+<li>Once substituted, only the superclass' functions can be called, no the subclass'.</li>
+<li>If the subclass overrides a superclass function. We wish to run the overridden version in the subclass, instead of the superclass' version (as in the previous example).</li>
+</ol>
+
+<p><span class="line-heading">Virtual Functions:</span> To implement polymorphism, we need to use the keyword <code>virtual</code> for functions that are meant to be polymorphic. In this case, if a superclass pointer is aiming at a subclass objects, and invoke a <code>virtual</code> function that is overridden by the subclass, the subclass version will be invoked, instead of the superclass version.  For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Point.h</span>
+class Point {
+   ......
+   <span class="color-new">virtual</span> void print() const;
+}</pre>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Substituting a subclass instance to a superclass reference.
+   (TestSubstitution.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;MovablePoint.h&quot;  <span class="color-comment"> // included &quot;Point.h&quot;</span>
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> // Substitute a subclass instance to a superclass reference</span>
+ 
+  <span class="color-comment"> // Using Object Pointer</span>
+   Point * ptrP1 = new MovablePoint(11, 12, 13, 14);  <span class="color-comment"> // upcast</span>
+   <span class="color-comment"><span class="color-new">ptrP1-&gt;print();</span> // MovablePoint @ (11,12) Speed=(13,14)</span>
+                  <span class="color-comment"> //   - Run subclass version!!</span>
+   cout &lt;&lt; endl;
+   delete ptrP1;
+ 
+  <span class="color-comment"> // Using Object Reference</span>
+   MovablePoint mp2(21, 22, 23, 24);
+   Point &amp; p2 = mp2; <span class="color-comment"> // upcast</span>
+   <span class="color-new">p2.print();</span>    <span class="color-comment"> // MovablePoint @ (21,22) Speed=(23,24)</span>
+                  <span class="color-comment"> //   - Run subclass version!!</span>
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Using object with explicit constructor</span>
+   Point p3 = MovablePoint(31, 32, 33, 34); <span class="color-comment"> // upcast</span>
+   <span class="color-new">p3.print();</span>    <span class="color-comment"> // Point @ (31,32) - Run superclass version!!</span>
+   cout &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The keyword <code>virtual</code> determines which method is used if the method is invoked by a pointer (or reference). Without <code>virtual</code>, the program chooses the method based on the <em>pointer type</em>; with <code>virtual</code>, the program chooses the method based on the <em>type of the object</em> pointed-to.</p>
+<p>Take note that virtual functions work on object pointers (and references), but not on regular objects.</p>
+<p>If the subclass override a method inherited from its superclass, the usual practice is to declare the superclass method as <code>virtual</code>. In this case, the program will choose the method based on the type of the object, instead of the type of pointer.</p>
+
+<p>For non-virtual function, the compiler selects the function that will be invoked at compiled-time (known as static binding). For virtual functions, the selection is delayed until the runtime. The function selected depends on the actual type that invokes the function (known as dynamic binding or late binding).</p>
+
+<p><span class="line-heading">Using Polymorphism:</span></p>
+<ol>
+<li>Create instances of concrete subclass.</li>
+<li>Declare superclass (possibly abstract) pointers (or references).</li>
+<li>Aim the superclass pointers to the subclass instances.</li>
+<li>Invoke virtual function, with implementation provided by subclass.</li>
+</ol>
+
+<h5>Using Virtual Functions</h5>
+
+<ul>
+<li>Using keyword <code>virtual</code> on a superclass function makes the function virtual for the superclass, as well as ALL its subclasses.</li>
+
+<li>If a virtual function is invoked using a pointer (or reference), the program uses the method defined for the object type instead of the pointer type. This is called <em>dynamic binding</em> or <em>late binding</em>, contrast to <em>static binding</em> during the compile time.</li>
+<li>It is recommended that functions to be overridden in the subclass be declared <code>virtual</code> in the superclass.</li>
+<li>Constructor can't be <code>virtual</code>, because it is not inherited. Subclass defines its own constructor, which invokes the superclass constructor to initialize the inherited data members.</li>
+<li>Destructor should be declared virtual, if a class is to to be used as a superclass, so that the appropriate object destructor is invoked to free the dynamically allocated memory in the subclass, if any.</li>
+<li>Friends can't be virtual, as friends are not class member and are not inherited.</li>
+<li>If you override function in the subclass, the overridden function shall have the same parameter list as the superclass' version.</li>
+</ul>
+
+<h5>Upcasting and Downcasting</h5>
+
+<p>Normally, C++ does not allow you to assign an address of one type to pointer (or reference) of another type. For example,</p>
+
+<pre class="color-example">
+int i = 8;
+<span class="color-error">double * ptr1 = &amp;i;</span>
+    <span class="color-comment"> // error: cannot convert 'int*' to 'double*' in initializatin</span>
+<span class="color-error">double &amp; d = i;</span>
+    <span class="color-comment"> // error: invalid initialization of reference of type 'double&amp;'</span> <span class="color-comment">from expression of type 'int'</span></pre>
+    
+<p>However, a pointer or reference of superclass can hold a subclass object without explicit type cast:</p>
+
+<pre class="color-example">
+MovablePoint mp(.....);
+Point * ptrP1 = &amp;mp;   <span class="color-comment">// Okay - Implicit upcast </span>
+Point &amp; p2 = mp;       <span class="color-comment">// Okay - Implicit upcast</span></pre>
+
+<p>Converting a subclass to superclass reference or pointer is called <em>upcasting</em>. (Because in UML diagram, we often draw the superclass on top of the subclass, with an arrow pointing up from the subclass to the superclass.) Upcasting is always allow for <code>public</code>-inheritance without the need for an explicit type cast, because <code>public</code>-inheritance exhibits <em>is-a</em> relationship. A subclass object is a superclass object, because it inherits all the attributes and operations from the superclass, and can do whatever the superclass object can do.</p>
+<p>The reverse operation, converting a superclass reference or pointer to subclass, is called <em>downcasting</em>. Downcasting requires explicit type cast.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Up and Down Cast (TestCast.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;MovablePoint.h&quot;  <span class="color-comment"> // included &quot;Point.h&quot;</span>
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> // Object Pointer</span>
+   <span class="color-new">Point * ptrP1 = new MovablePoint(11, 12, 13, 14);</span>
+      <span class="color-comment"> // Upcast is always permissible and safe</span>
+   ptrP1-&gt;print();
+ 
+<span class="color-comment">//</span> MovablePoint * ptrMP1 = ptrP1; <span class="color-error"> // error</span>
+   <span class="color-new">MovablePoint * ptrMP1 = (MovablePoint *) ptrP1;</span>
+      <span class="color-comment"> // Downcast requires explicit casting operator</span>
+   delete ptrP1;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Operator <span class="font-code">dynamic_cast</span></h5>
+
+<p>C++ provides a new casting operator called <code>dynamic_cast&lt;type&gt;(value)</code>, which returns a null pointer if the type cast fails. For example,</p>
+<pre class="color-example">
+MovablePoint * ptrMP1 = <span class="color-new">dynamic_cast&lt;MovablePoint *&gt;</span>(ptrP1);</pre>
+
+<h5>Operator <span class="font-code">typeid</span></h5>
+<p>The operator <code>typeid</code> returns a reference to an object of class <code>type_info</code> (in header &lt;typeinfo&gt;, which contains information about the type of its operands. You can use <code>type_info</code>'s member function <code>name()</code> to get the type name. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test typeid operator, which return an object of type_info (TestTypeID.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;typeinfo&gt;      <span class="color-comment"> // Need for typeid operator</span>
+#include &quot;MovablePoint.h&quot;<span class="color-comment"> // included &quot;Point.h&quot;</span>
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> // Object Pointer</span>
+   Point * ptrP1 = new MovablePoint(11, 12, 13, 14); <span class="color-comment"> // upcast</span>
+   cout &lt;&lt; <span class="color-new">typeid(*ptrP1).name()</span> &lt;&lt; endl;  <span class="color-comment"> // 12MovablePoint</span>
+ 
+   MovablePoint * ptrMP1 = dynamic_cast&lt;MovablePoint *&gt;(ptrP1);
+   cout &lt;&lt; <span class="color-new">typeid(*ptrMP1).name()</span> &lt;&lt; endl; <span class="color-comment"> // 12MovablePoint</span>
+   delete ptrP1;
+ 
+   Point p2;
+   cout &lt;&lt; <span class="color-new">typeid(p2).name()</span> &lt;&lt; endl; <span class="color-comment"> // 5Point</span>
+ 
+   MovablePoint mp2(1, 2, 3, 4);
+   cout &lt;&lt; <span class="color-new">typeid(mp2).name()</span> &lt;&lt; endl;<span class="color-comment"> // 12MovablePoint</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+<ul>
+<li>The number in front of the name gives the length of the string.</li>
+</ul>
+
+
+
+<h4>Pure Virtual Function and Abstract Superclass</h4>
+
+<p>A <em>pure virtual function</em> is specified by placing &quot;<code>= 0</code>&quot; (called <em>pure specifier</em>) in its declaration. For example,</p>
+
+<pre class="color-example">
+virtual double getArea() = 0;  <span class="color-comment">// Pure virtual function, to be implemented by subclass</span></pre>
+
+<p>A pure virtual function usually has no implementation body, because the class does not know how to implement the body. A class containing one or more pure virtual function is called an <em>abstract class</em>. You cannot create instances from an abstract class, because its definition may be incomplete.</p>
+<p>Abstract class is meant to be a superclass. To use an abstract class, you need to derive a subclass, override and provide implementation to all the pure virtual functions. You can then create instances from the concrete subclass.</p>
+<p>C++ allows implementation for pure virtual function. In this case, the <code>=0</code> simply make the class <em>abstract</em>. As the result, you cannot create instances.</p>
+
+
+<h4>Example: <span class="font-code">Shape</span> and its Subclasses</h4>
+
+<img class="image-float-left" src="images/ClassDiagram_Shape.png" alt="ClassDiagram_Shape.png" />
+
+<p>[TODO] Description</p>
+
+<h5 class="float-clear"><span class="font-code">Shape.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Header for Shape class (Shape.h) */</span>
+#ifndef SHAPE_H
+#define SHAPE_H
+ 
+#include &lt;string&gt;
+using namespace std;
+ 
+class Shape {
+private:
+   string color;  <span class="color-comment"> // Private data member</span>
+ 
+public:
+   Shape(const string &amp; color = &quot;red&quot;); <span class="color-comment"> // Constructor</span>
+   string getColor() const;           <span class="color-comment"> // Getter</span>
+   void setColor(const string &amp; color); <span class="color-comment"> // Setter</span>
+  <span class="color-comment"> // Virtual function, run subclass version if overridden</span>
+   virtual void print() const;
+  <span class="color-comment"> // Pure virtual, to be implemented by subclass</span>
+  <span class="color-comment"> // You cannot create instance of Shape</span>
+   virtual double getArea() const = 0;
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">Shape.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Implementation for Shape class (Shape.cpp) */</span>
+#include &quot;Shape.h&quot;
+#include &lt;iostream&gt;
+ 
+<span class="color-comment">// Constructor</span>
+Shape::Shape(const string &amp; color) {
+   this-&gt;color = color;
+}
+ 
+<span class="color-comment">// Getter</span>
+string Shape::getColor() const {
+   return color;
+}
+ 
+<span class="color-comment">// Setter</span>
+void Shape::setColor(const string &amp; color) {
+   this-&gt;color = color;
+}
+ 
+void Shape::print() const {
+   std::cout &lt;&lt; &quot;Shape of color=&quot; &lt;&lt; color;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">Circle.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Header for Circle (Circle.h) */</span>
+#ifndef CIRCLE_H
+#define CIRCLE_H
+ 
+#include &quot;Shape.h&quot;
+ 
+<span class="color-comment">// The class Circle is a subclass of Shape</span>
+class Circle : public Shape {
+private:
+   int radius;  <span class="color-comment"> // Private data member</span>
+ 
+public:
+   Circle(int radius = 1, const string &amp; color = &quot;red&quot;);<span class="color-comment"> // Constructor</span>
+   int getRadius() const;               <span class="color-comment"> // Getter</span>
+   void setRadius(int radius);    <span class="color-comment"> // Setter</span>
+   void print() const;     <span class="color-comment"> // Override the virtual function</span>
+   double getArea() const; <span class="color-comment"> // to implement virtual function</span>
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">Circle.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Implementation for Circle (Circle.cpp) */</span>
+#include &quot;Circle.h&quot;
+#include &lt;iostream&gt;
+#define PI 3.14159265
+ 
+<span class="color-comment">// Constructor</span>
+Circle::Circle(int radius, const string &amp; color)
+   : Shape(color), radius(radius) { }
+ 
+<span class="color-comment">// Getters</span>
+int Circle::getRadius() const {
+   return radius;
+}
+ 
+<span class="color-comment">// Setters</span>
+void Circle::setRadius(int radius) {
+   this-&gt;radius = radius;
+}
+ 
+void Circle::print() const {
+   std::cout &lt;&lt; &quot;Circle radius=&quot; &lt;&lt; radius &lt;&lt; &quot;, subclass of &quot;;
+   Shape::print();
+}
+ 
+<span class="color-comment">// Implement virtual function inherited for superclass Shape</span>
+double Circle::getArea() const {
+   return radius * radius * PI;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">Rectangle.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Header for Rectangle class (Rectangle.h) */</span>
+#ifndef RECTANGLE_H
+#define RECTANGLE_H
+ 
+#include &quot;Shape.h&quot;
+ 
+<span class="color-comment">// The class Rectangle is a subclass of Shape</span>
+class Rectangle : public Shape {
+private:
+   int length;
+   int width;
+ 
+public:
+   Rectangle(int length = 1, int width = 1, const string &amp; color = &quot;red&quot;);
+   int getLength() const;
+   void setLength(int length);
+   int getWidth() const;
+   void setWidth(int width);
+   void print() const;     <span class="color-comment"> // Override the virtual function</span>
+   double getArea() const; <span class="color-comment"> // to implement virtual function</span>
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">Rectangle.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Implementation for Rectangle (Rectangle.cpp) */</span>
+#include &quot;Rectangle.h&quot;
+#include &lt;iostream&gt;
+ 
+<span class="color-comment">// Constructor</span>
+Rectangle::Rectangle(int length, int width, const string &amp; color)
+  : Shape(color), length(length), width(width) { }
+ 
+<span class="color-comment">// Getters</span>
+int Rectangle::getLength() const {
+   return length;
+}
+int Rectangle::getWidth() const {
+   return width;
+}
+ 
+<span class="color-comment">// Setters</span>
+void Rectangle::setLength(int length) {
+   this-&gt;length = length;
+}
+void Rectangle::setWidth(int width) {
+   this-&gt;width = width;
+}
+ 
+void Rectangle::print() const {
+   std::cout &lt;&lt; &quot;Rectangle length=&quot; &lt;&lt; length &lt;&lt; &quot; width=&quot; &lt;&lt; width &lt;&lt; &quot;, subclass of &quot;;
+   Shape::print();
+}
+ 
+<span class="color-comment">// Implement virtual function inherited from superclass Shape</span>
+double Rectangle::getArea() const {
+   return length * width;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Test Driver: <span class="font-code">TestShape.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* A test driver program for polymorphism (TestShape.cpp) */</span>
+#include &quot;Circle.h&quot;
+#include &quot;Rectangle.h&quot;
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> // Circle object</span>
+   Circle c1(5, &quot;blue&quot;);
+   c1.print();
+   cout &lt;&lt; endl;
+   cout &lt;&lt; &quot;area=&quot; &lt;&lt; c1.getArea() &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Rectangle object</span>
+   Rectangle r1(5, 6, &quot;green&quot;);
+   r1.print();
+   cout &lt;&lt; endl;
+   cout &lt;&lt; &quot;area=&quot; &lt;&lt; r1.getArea() &lt;&lt; endl;
+ 
+<span class="color-comment">//</span> Shape s1; <span class="color-error"> // Cannot create instance of abstract class Shape</span>
+ 
+  <span class="color-comment"> // Polymorphism</span>
+   Shape * s1, * s2; <span class="color-comment"> // Shape pointers</span>
+ 
+   s1 = new Circle(6); <span class="color-comment"> // Dynamically allocate a subclass instance</span>
+   s1-&gt;print();  <span class="color-comment"> // Run subclass version</span>
+   cout &lt;&lt; endl;
+   cout &lt;&lt; &quot;area=&quot; &lt;&lt; s1-&gt;getArea() &lt;&lt; endl; <span class="color-comment"> // Run subclass version of getArea()</span>
+ 
+   s2 = new Rectangle(7, 8); <span class="color-comment"> // Dynamically allocate a subclass instance</span>
+   s2-&gt;print();  <span class="color-comment"> // Run subclass version</span>
+   cout &lt;&lt; endl;
+   cout &lt;&lt; &quot;area=&quot; &lt;&lt; s2-&gt;getArea() &lt;&lt; endl; <span class="color-comment"> // Run subclass version of getArea()</span>
+ 
+   delete s1;
+   delete s2;
+ 
+<span class="color-comment">//</span> Shape s3 = Circle(6); <span class="color-error"> // error: cannot allocate an object of abstract type 'Shape'</span>
+ 
+   Circle c3(8);
+   Shape &amp; s3 = c3;   <span class="color-comment"> // Object reference</span>
+   s3.print();
+   cout &lt;&lt; endl;
+   cout &lt;&lt; &quot;area=&quot; &lt;&lt; s3.getArea() &lt;&lt; endl;
+ 
+   Circle c4(9);
+   Shape * s4 = &amp;c4;  <span class="color-comment"> // Object pointer</span>
+   s4-&gt;print();
+   cout &lt;&lt; endl;
+   cout &lt;&lt; &quot;area=&quot; &lt;&lt; s4-&gt;getArea() &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Circle radius=5, subclass of Shape of color=blue
+area=78.5398
+Rectangle length=5 width=6, subclass of Shape of color=green
+area=30
+Circle radius=6, subclass of Shape of color=red
+area=113.097
+Rectangle length=7 width=8, subclass of Shape of color=red
+area=56
+Circle radius=8, subclass of Shape of color=red
+area=201.062
+Circle radius=9, subclass of Shape of color=red
+area=254.469</pre>
+
+<p>[TODO] Explanation</p>
+
+<h4>Dynamic Binding vs. Static Binding</h4>
+
+<p>[TODO]</p>
+
+<h3>More On OOP</h3>
+
+<h4><span class="font-code">const</span> Objects and <span class="font-code">const</span> Member Functions</h4>
+<p><span class="line-heading">Constant Object:</span> We can use <code>const</code> to specify that an <em>object</em> is not mutable. For example,</p>
+
+<pre class="color-example">
+<span class="color-new">const</span> Point p1;  <span class="color-comment">// Constant object</span>
+Point p2;        <span class="color-comment">// Non-constant object</span>
+// p1 = p2;      <span class="color-error">// error: const object cannot be reassigned</span>
+p2 = p1;         <span class="color-comment">// okay</span></pre>
+
+<p><span class="line-heading">Constant Member Functions:</span> We declare a member function constant by placing the keyword <code>const</code> after the parameter list. A <code>const</code> member function cannot modify any member variable. For example,</p>
+
+<pre class="color-example">
+int getX() <span class="color-new">const</span> { return x; }
+void print() <span class="color-new">const</span> { cout &lt;&lt; &quot;(&quot; &lt;&lt; x &lt;&lt; &quot;,&quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; endl; }</pre>
+
+<p>A constant member function cannot modify data members too. For example,</p>
+<pre class="color-example">
+void setX(int x) <span class="color-new">const</span> {
+   <span class="color-error">this-&gt;x  = x;    // ERROR!</span>
+}</pre>
+
+<p>The constructor and destructor cannot be made <code>const</code>, as they need to initialize data members. However, a <code>const</code> object can invoke non-<code>const</code> constructor.  The <code>const</code> property begins after construction.</p>
+
+<h5>A <span class="font-code">const</span> object can invoke only <span class="font-code">const</span> member functions</h5>
+<p>In C++, a <code>const</code> object can only invoke <code>const</code> member functions, and cannot invoke non-<code>const</code> member functions. On the other hand, a non-<code>const</code> object can invoke both <code>const</code> and non-<code>const</code> member functions. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Testing constant objects and constant member functions
+   (TestConstantObject.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+class Point {
+private:
+   int x, y;
+public:
+   Point(int x = 0, int y = 0) : x(x), y(y) { }
+   int getX() <span class="color-new">const</span> { return x; } <span class="color-comment"> // const function (cannot modify data)</span>
+   int getY() <span class="color-new">const</span> { return y; } <span class="color-comment"> // const function</span>
+   void setX(int x) { this-&gt;x = x; } <span class="color-comment"> // non-const function</span>
+   void setY(int y) { this-&gt;y = y; } <span class="color-comment"> // non-const function</span>
+   void print() <span class="color-new">const</span> { cout &lt;&lt; &quot;(&quot; &lt;&lt; x &lt;&lt; &quot;,&quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; endl; } <span class="color-comment"> // const</span>
+};
+ 
+int main() {
+  <span class="color-comment"> // non-const object can invoke const and non-const member functions</span>
+   Point p1(5, 6);       <span class="color-comment"> // non-const object</span>
+   p1.setX(55);
+   p1.print();  <span class="color-comment"> // (55,6)</span>
+ 
+  <span class="color-comment"> // const object can only invoke const member functions</span>
+   <span class="color-new">const</span> Point p2(7, 8); <span class="color-comment"> // const object</span>
+   p2.print();  <span class="color-comment"> // (7,8)</span>
+<span class="color-comment">//</span> p2.setX(55); <span class="color-error"> // error: const object cannot invoke non-const member function</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Member Function Overloading with <span class="font-code">const</span></h5>
+
+<p>As an example, if you check the <code>string</code> class' function <code>at()</code> (which returns the character at the given position), you will see two overloaded versions:</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// C++'s std::string class</span>
+      char &amp; at (size_t pos);
+const char &amp; at (size_t pos) const;</pre>
+
+<p>A non-<code>const</code> string object will run the non-<code>const</code> version, which returns a non-<code>const</code> <code>char</code> reference. The return reference can be used as the <em>lvalue</em> to modify the <code>char</code>, e.g., <code>str.at(1) = 'x'</code>. On the other hand, a <code>const</code> <code>string</code> object will invoke the <code>const</code> member function, which returns a <code>const</code> <code>char</code> reference. A <code>const</code> reference cannot be used as <em>lvalue</em>. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test const overloading function (TestConstFn.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+ 
+int main() {
+   const string s1(&quot;Apple&quot;); <span class="color-comment"> // const object</span>
+   string s2(&quot;Banana&quot;);      <span class="color-comment"> // non-const object</span>
+ 
+   cout &lt;&lt; <span class="color-new">s1.at(3)</span> &lt;&lt; endl; <span class="color-comment"> // run const version, non-mutable</span>
+   <span class="color-new">s2.at(0) = 'A';</span>           <span class="color-comment"> // run non-const version, mutable</span>
+   cout &lt;&lt; s2 &lt;&lt; endl;
+ 
+<span class="color-comment">//</span> s1.at(0) = 'B'; <span class="color-error"> // error: assignment of read-only location</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4><span class="font-code">const</span> Data Member</h4>
+<p>You can declare a data member <code>const</code>. A <code>const</code> data member cannot be modified by any member function. It can only be initialized by  the constructor using a special syntax called <em>member initializer list</em>. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Testing constant data members (TestConstantData.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+class Point {
+private:
+   int x;
+   <span class="color-new">const</span> int y; <span class="color-comment">// constant data member, cannot be modified by member functions</span>
+public:
+   Point(int x = 0, int y = 0) : x(x), <span class="color-new">y(y)</span> {  }  
+      <span class="color-comment">// init const data member via member initializer list</span>
+   int getX() const { return x; }
+   int getY() const { return y; }
+   void setX(int x) { this-&gt;x = x; }  <span class="color-comment">// modify non-const data member x</span>
+<span class="color-error">// void setY(int y) { this-&gt;y = y; }  // error: assignment of read-only member</span>
+   void print() const { cout &lt;&lt; &quot;(&quot; &lt;&lt; x &lt;&lt; &quot;,&quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; endl; }  <span class="color-comment">// const</span>
+};</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>A member initializer list is placed after the parameter list, in the form of <code>: <em>data-member-name</em>(<em>value</em>)</code>, ....  Using <code>this-&gt;y = y</code> triggers a compilation error due to the assignment into <code>const</code> data member <code>y</code>.</p>
+<p>For object data member, you can use the member initializer list to trigger its constructor. member initializer list is also use to invoke superclass constructor from the subclass constructor.</p>
+
+<h4>&quot;<span class="font-code">friend</span>&quot; Function and &quot;<span class="font-code">friend</span>&quot; Class</h4>
+
+<h5><span class="font-code">friend</span> Functions</h5>
+
+<p>A &quot;friend&quot; function of a class, marked by the keyword <code>friend</code>, is a function defined outside the class, yet its argument of that class has unrestricted access to all the class members (<code>private</code>, <code>protected</code> and <code>public</code> data members and member functions).</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Test Friend Function (TestFriend.cpp)
+ */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+class Point {
+   <span class="color-comment">// A friend function defined outside this class, but its argument of
+   // this class can access </span><span class="color-comment">all class members (including private members).</span>
+   <span class="color-new">friend void set(Point &amp; point, int x, int y);</span>  <span class="color-comment">// prototype</span>
+private:
+   int x, y;
+public:
+   Point(int x = 0, int y = 0) : x(x), y(y) { }
+   void print() const { cout &lt;&lt; &quot;(&quot; &lt;&lt; x &lt;&lt; &quot;,&quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; endl; }
+};
+ 
+<span class="color-comment">// Friend function is defined outside the class</span>
+<span class="color-new">void set(Point &amp; point, int x, int y) {
+  point.x = x;  <span class="color-comment">// can access private data x and y</span>
+  point.y = y;
+}</span>
+ 
+int main() {
+   Point p1;
+   p1.print();   <span class="color-comment">// (0, 0)</span>
+   set(p1, 5, 6);
+   p1.print();   <span class="color-comment">// (5, 6)</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Notes:</p>
+
+<ul>
+<li>A friend function is a regular function, NOT a member function of the class. Hence it is invoked without the dot operator in the form of <code>set(p1, 5, 6)</code>, instead of <code>p1.set(5, 6)</code> for a member function.</li>
+<li>The above example is meant for illustration. This operation is better served by a member function <code>void set(int x, int y)</code>, instead of friend function.</li>
+<li>The friend function prototype is provided inside the class declaration. You do not need to provide another prototype outside the class declaration, but merely provide its implementation.</li>
+
+<li>Friend functions can enhance the performance by directly accessing the private data members, eliminating the overhead of going thru the public member functions.</li>
+
+<li>Friend functions are neither public nor private, and it can be declared anywhere inside the class. As friends are part of the extended interface of the class, you may group them together with the public functions.</li>
+<li>Friend functions will not be inherited by the subclass. Friends can't be virtual, as friends are not class member.<br />
+</li>
+</ul>
+
+<h5><span class="font-code">friend</span> Class</h5>
+
+<p>To declare all member functions of a class (says <code>Class1</code>) friend functions of another class (says <code>Class2</code>), declared &quot;<code>friend class Class1;</code>&quot; in <code>Class2</code>.</p>
+
+<p>Friends are not <em>symmetric</em>. That is, if <code>Class1</code> is a friend of <code>Class2</code>, it does not imply that <code>Class2</code> is a friend of <code>Class1</code>. Friends are also not <em>transitive</em>. That is, if <code>Class1</code> is a friend of <code>Class2</code>, and <code>Class2</code> is a friend of <code>Class3</code>, it does not imply that <code>Class1</code> is a friend of <code>Class3</code>.</p>
+<p>Use friend with care. Incorrect use of friends may corrupt the concept of <em>information hiding and encapsulation</em>.</p>
+
+
+<h4>The <span class="font-code">static</span> Class Members</h4>
+
+<p>A static class member has only one copy, belonging to the class instead of the instances. All instances share the same storage for a <code>static</code> class member. A <code>static</code> members is referenced via scope resolution operator in the form of <code><em>ClassName</em>::<em>variableName</em></code> or <code><em>ClassName</em>::<em>functionName</em>()</code>.</p>
+
+<ul>
+<li>It can be used to implement &quot;global&quot; class variables and functions, that can be used without creating instances of a class.</li>
+<li>It can also be used to share information among all instances, e.g., a count on the number of instances created.</li>
+</ul>
+
+<p>A <code>static</code> function can only access <code>static</code> variables, and cannot access non-<code>static</code> variables. A static variable/function can be referenced without any instantiation (i.e., no instance is created).</p>
+
+<p><span class="line-heading">Example (<span class="font-code">static</span> Class Member)</span>: This example uses a <code>static</code> data member to keep track of the number of instances created.</p>
+
+<h5><span class="font-code">Point.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Header for Point class (Point.h) */</span>
+#ifndef POINT_H
+#define POINT_H
+class Point {
+private:
+   int x, y;         <span class="color-comment">// x and y coords</span>
+   <span class="color-new">static int count;</span> <span class="color-comment">// Count the number of instances created</span>
+ 
+public:
+   Point(int x = 0, int y = 0);
+   void print();
+   <span class="color-new">static int getCount();</span>  <span class="color-comment">// A static function</span>
+};
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">Point.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Implementation for Point class (Point.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;Point.h&quot;
+using namespace std;
+ 
+<span class="color-comment">// Initialize the static data member (outside the class declaration)</span>
+<span class="color-new">int Point::count = 0;</span>
+ 
+<span class="color-comment">// A static function can access static data member</span>
+<span class="color-new">int Point::getCount() {
+   return count;
+}</span>
+ 
+<span class="color-comment">// Constructor</span>
+Point::Point(int x, int y) : x(x), y(y) {
+   ++count; <span class="color-comment"> // one more instance created</span>
+}
+ 
+<span class="color-comment">// A non-static member function can also access static data member (of the class)</span> 
+void Point::print() {
+   cout &lt;&lt; &quot;Point number &quot; &lt;&lt; <span class="color-new">count</span> &lt;&lt; &quot; @ (&quot; &lt;&lt; x &lt;&lt; &quot;,&quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>You cannot initialize the <code>static</code> variable in the class declaration. This is because class declaration merely describe the memory allocation but does not actually allocate the memory. Instead, it is initialized outside the declaration as shown above. The initialization is kept in the implementation file, instead of header, so as not the repeat the same step when header file in included.</p>
+
+<h5><span class="font-code">TestPoint.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver Program for Point class (TestPoint.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;Point.h&quot;
+using namespace std;
+ 
+int main() {
+   Point p1;
+   p1.print();
+   cout &lt;&lt; <strong>Point::getCount()</strong> &lt;&lt; &quot; instances created&quot; &lt;&lt; endl;
+   Point p2(1, 2);
+   p2.print();
+   cout &lt;&lt; <strong>Point::getCount()</strong> &lt;&lt; &quot; instances created&quot; &lt;&lt; endl;
+   Point p3(3);
+   p3.print();
+   cout &lt;&lt; <strong>Point::getCount()</strong> &lt;&lt; &quot; instances created&quot; &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>A <code>static</code> data member retains this value throughout its life span.</li>
+
+<li>To reference a <code>static</code> class member, you need to use <code><em>ClassName</em>::<em>staticMemberName</em></code>. You CANNOT invoke <code>static</code> member function from an instance, such as <code>p1.getCount()</code>.</li>
+
+<li>A <code>static</code> data member can be accessed by <code>static</code> and non-<code>static</code> member functions. However, a <code>static</code> function member can only access <code>static</code> data members, and CANNOT access non-<code>static</code> data members. For example,
+  <pre class="color-example">
+<span class="color-comment">// static member function</span>
+int Point::getCount() {
+   <span class="color-error">cout &lt;&lt; &quot;(&quot; &lt;&lt; x &lt;&lt; &quot;,&quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+      // error: invalid use of member 'Point::x' in static member function</span>
+   return count;
+}</pre>
+</li>
+</ul>
+
+<h3>More On Inheritance</h3>
+
+<h4>Multiple Inheritance</h4>
+
+<p>A class derived from more than one base classes.</p>
+<p>[TODO]</p>
+
+<h4>Virtual Inheritance</h4>
+
+<p>A base class instance is shared by multiple derived class instances.</p>
+
+<p>[TODO]</p>
+
+<h3>Object with Dynamically Allocated Data Members</h3>
+
+<h4>Implicitly-generated Special member Functions</h4>
+
+<p>C++ compiler  automatically generates the following special member functions if they are required in your program:</p>
+<ul>
+<li>A <em>default constructor</em> if you did not define any constructor.</li>
+<li>A <em>copy constructor</em> if you did not define one.</li>
+<li>An <em>assignment operator</em> if you did not define one.</li>
+<li>An <em>address-of operator</em> if you did not define one.</li>
+</ul>
+
+<h5>Default Constructor</h5>
+
+<p>If you did not define any constructor in a class, C++ provide a <em>default constructor</em> that takes no argument and does nothing. For example, if you did not define any constructor in <code>Point</code> class, the following default constructor will be generated:</p>
+
+<pre class="color-example">
+<span class="color-comment"></span><span class="color-comment"></span>Point::Point() {}</pre>
+
+<p>The default constructor does not initialize the data members. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre>
+</td>
+<td>
+<pre>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+class Point {
+private:
+   int x, y;
+public:
+   void print() const { cout &lt;&lt; &quot;(&quot; &lt;&lt; x &lt;&lt; &quot;,&quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; endl; }
+};
+ 
+int main() {
+   Point p1;<span class="color-comment"> // Invoke implicitly-generated default constructor</span>
+            <span class="color-comment"> // Value of x and y uninitialized</span>
+   p1.print();  <span class="color-comment">// (???,???)</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>If you have define a constructor of with any parameter-list. C++ will not generate the default constructor. In this case, if you use default constructor without defining one, you will get a compilation error For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre>
+</td>
+<td>
+<pre>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+class Point {
+private:
+   int x, y;
+public:
+   Point(int x, int y) : x(x), y(y) { }
+   void print() const { cout &lt;&lt; &quot;(&quot; &lt;&lt; x &lt;&lt; &quot;,&quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; endl; }
+};
+ 
+int main() {
+   <span class="color-error">Point p1;
+      // error: no matching function for call to 'Point::Point()'</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>A constructor with arguments can be treated as a default constructor if all arguments have a default value. For example,</p>
+
+<pre class="color-example">
+point(int x <span class="color-new">= 0</span>, int y <span class="color-new">= 0</span>) : x(x), y(y) { }</pre>
+
+<h5>Copy Constructor</h5>
+
+<p>A copy constructor is used to construct a new object by copying the given object. It take a <code>const</code> reference of an object of the same class, as follows:</p>
+
+<pre class="color-syntax">
+<em>ClassName</em>(const <em>ClassName</em> &amp;);
+</pre>
+
+<p>The copy constructor is used in the following situations:</p>
+
+<pre class="color-example">
+Point p1(p2); <span class="color-comment">// Explicitly invoke the copy constructor</span>
+
+Point p1 = p2;
+Point p1 = (Point)p2;
+   <span class="color-comment">// Depending on compiler implementation, they may invoke the copy
+   // constructor to create a temporary object, and then copy over
+   // via memberwise assignment</span>
+ 
+Point * ptrP1 = new Point(p2);
+   <span class="color-comment">// Invoke the copy constructor to construct an object and
+   // assign the address to the pointer.</span></pre>
+   
+<p>In addition, when an object is passed by value into a function, and when a function returns an object by value, a compiler also uses the copy constructor to generate a temporary object and then copy over via memberwise assignment. [Hence, it is more efficient to pass an object by reference into function, which avoids the overhead of copying.]</p>
+<p>The default copy constructor performs a memberwise copy of all the non-<code>static</code> data members. Each data member is copied by value. If the data member is an object, the copy constructor of that object is used to do the copy. Static members are not copy as they belong to the class (one copy shared by all instances). However, if the data member is a pointer, the value of the pointer is copied - no dynamic memory allocation is performed to duplicate the contents pointed to by the pointer. This is called <em>shadow copying</em>.</p>
+
+<h5>Assignment Operator</h5>
+
+<p>C++ allows object assignment via the assignment operator (<code>=</code>). It does so by automatically overloading the assignment operator, as follows:</p>
+
+<pre class="color-syntax">
+<em>ClassName</em> &amp; operator=(const <em>ClassName</em> &amp;);</pre>
+
+<p>The overloaded assignment operator takes an object reference and return an object reference.</p>
+<p>Like the copy constructor, the implicit assignment operator performs memberwise copy. For object data members, the assignment operator of that class will be used for copying. Static members are not copied. Again, for pointers, the value of pointer is copied, but no dynamic allocation is performed to duplicate the contents of the pointer (shadow copying).</p>
+
+<h4>Dynamic Memory Allocation of Object Data Member</h4>
+
+<p>In C++, you can allocate memory for object during runtime, instead during compile-time, using operators <code>new</code> and <code>new[]</code>. However, you are responsible for memory management, and are required to free the memory via <code>delete</code> and <code>delete[]</code> to prevent memory leak. If you introduce <code>new</code> in your constructor, you need to use <code>delete</code> in destructor to free the memory.</p>
+
+<p>If you use <code>new</code> (or <code>new[]</code>) to dynamically allocate memory in the constructor to object data member pointers, for example,</p>
+
+<pre class="color-example">
+class <em>ClassName</em> {
+private:
+   <em>T </em>* <em>pObj</em>;   <span class="color-comment">// object data member pointer</span>
+public:
+   <span class="color-comment">// Constructors</span>
+   <em>ClassName</em>(...) {
+      <em>pObj</em> = new <em>T</em>(...); <span class="color-comment">// or new[]</span>
+      ....
+   }
+   <span class="color-comment">// Destructor</span>
+   ~<em>ClassName</em>() {
+      delete <em>pObj</em>;      <span class="color-comment">// OR delete[]</span>
+   }
+   <span class="color-comment">// Copy constructor</span>
+   <em>ClassName</em> &amp; <em>ClassName</em>(const <em>ClassName</em> &amp;);
+ 
+   <span class="color-comment">// Overload Assignment Operator</span>
+   <em>ClassName</em> &amp; operator=(const <em>ClassName</em> &amp;);   
+......
+}</pre>
+
+<ul>
+<li>You should use <code>delete</code> (or <code>delete[]</code>) in the destructor to free the dynamic memory allocated.</li>
+
+<li>If you have more than one constructors, all constructors should be compatible with the destructor, including the <em>default constructor</em>. You may need to provide you own default constructor, instead of using the implicitly generated one.</li>
+
+<li>You should define a copy constructor that initializes the object by <em>deep copying</em> the given object.  The default copy constructor implicitly generated by the compiler does <em>shadow copying</em>, which does not copy the contents of the pointers.</li>
+<li>You should also define an assignment operator that <em>deep copies</em> one object into another.</li>
+</ul>
+
+<h5>Using Object Pointer</h5>
+
+<ul>
+<li>Declare an object pointer:
+<pre class="color-example">
+T * pObj;</pre></li>
+
+<li>Either initialize the pointer to an existing object, or dynamically allocate an object.
+  <pre class="color-example">
+pObj = &amp;obj;
+<span class="color-comment">// OR</span>
+pObj = new T(...);</pre></li>
+
+<li>Use member-of (<code>-&gt;</code>) operator to refer to its class members, e.g. <code>obj-&gt;memberName</code>.</li>
+<li>Use dereferencing (<code>*</code>) operator to get its content, e.g., <code>*obj</code>.</li>
+
+
+</ul>
+
+
+
+<a class="references" href="../howto/References.html#cpp">Link to &quot;C++ References &amp; Resources&quot;</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Cygwin/MinGW GCC 4.6.2<br />
+Last modified: April, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+
+</body>
+</html>

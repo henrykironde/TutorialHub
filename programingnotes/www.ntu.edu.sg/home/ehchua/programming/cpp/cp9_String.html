@@ -1,0 +1,1209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>C++ Libraries, String and Standard Template Library</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>C++ Programming Language</h1>
+<h2>Characters and Strings</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Characters</h3>
+
+<h4>Header <span class="font-code">&lt;cctype&gt;</span> - Character Type Library</h4>
+
+<p>The <code>&lt;cctype&gt;</code> character type header (ported from C' <code>&lt;ctype.h&gt;</code>), contains the following character handling functions.</p>
+
+<table class="table-program">
+<tr>
+<th>FUNCTION</th>
+<th>EXAMPLE</th>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">
+int <strong>isalpha</strong> (int ch);
+  <span class="color-comment">Return 1 if ch is alphabetic; and 0 otherwise</span>
+int <strong>isdigit</strong> (int ch);
+  <span class="color-comment">Return 1 if ch is a digit [0-9]; and 0 otherwise</span>
+int <strong>isalnum</strong> (int ch);
+  <span class="color-comment">Return 1 if ch is an alphabet or digit; and 0 otherwise</span>
+int <strong>isxdigit </strong>(int ch);
+  <span class="color-comment">Return 1 if ch is a hexadecimal digit [0-9A-Fa-f]; and 0 otherwise</span>
+</pre></td>
+<td>
+<pre class="color-example">
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ </pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">
+int <strong>isupper</strong> (int ch);
+  <span class="color-comment">Return 1 if ch is in uppercase; and 0 otherwise</span>
+int <strong>islower</strong> (int ch);
+  <span class="color-comment">Return 1 if ch is in lowercase; and 0 otherwise</span></pre></td>
+<td>
+<pre class="color-example"> 
+ 
+ 
+</pre></td>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+int <strong>toupper</strong> (int ch);
+  <span class="color-comment">Return the uppercase of ch</span>
+int <strong>tolower</strong> (int ch);
+  <span class="color-comment">Return the lowercase of ch</span></pre></td>
+<td>
+<pre class="color-example">
+ 
+ 
+ 
+</pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">int <strong>isspace</strong> (int ch);
+  <span class="color-comment">Return 1 if ch is a white space (blank ' ', carriage return '\r',
+  newline '\n', tab '\t', form feed '\f', vertical tab '\v') and 0 otherwise</span>
+int <strong>ispunct</strong> (int ch)  <span class="color-comment">punctuation character?</span>
+int <strong>iscntrl</strong> (int ch)  <span class="color-comment">control character?</span>
+int <strong>isprint</strong> (int ch)  <span class="color-comment">printable character?</span>
+int <strong>isgraph</strong> (int ch)  <span class="color-comment">graphical representation?</span></pre></td>
+<td>
+<pre class="color-example">
+ 
+ 
+ 
+ 
+ 
+ 
+ </pre></td>
+</tr>
+</table>
+
+<p>All these functions treat a <code>char</code> as a signed <code>int</code>.</p>
+
+
+<h3>Strings: The C-String and the <span class="font-code">string</span> class</h3>
+
+<p>Recall that C++ supports two types of strings:</p>
+
+<ol>
+<li>The C-style string (or C-String) in header <code>cstring</code> (ported over from C's <code>string.h</code>), which represents a string as a <code>char</code> array terminated by a null character <code>'\0'</code> (or 0) (null-terminated char array).</li>
+<li>The new C++ <code>string</code> <em>class</em> in header <code>string</code>. <code>string</code> is a regular class, with <em>public interface</em> defined in the constructors and public member functions.</li>
+</ol>
+
+<h4>C-String Literals</h4>
+
+<p>A string literal such as <code>&quot;hello&quot;</code> is treated as &quot;an array of <code><em>n</em></code> <code><span class="underline">const</span></code> <code>char</code>&quot;, terminated with the null <code>'\0'</code> character (equivalent to 0), where <code><em>n</em></code> is the length of the array including the terminating null character.</p>
+
+<pre class="color-example">
+int main() {
+   char * str1 = &quot;hello&quot;;
+         <span class="color-error"> // warning: deprecated conversion from string constant to 'char*'</span>
+   char * str2 = <strong>const_cast&lt;char *&gt;</strong>(&quot;hello&quot;);   <span class="color-comment">// remove the &quot;const&quot;</span>
+ 
+   const char * str3 = &quot;hello&quot;;
+<span class="color-error">// *(str3 + 1) = 'a';  // error: assignment of read-only location '*(str3 + 1u)'</span>
+ 
+   char str4[] = &quot;hello&quot;;
+   str4[1] = 'a';
+ 
+   const char str5[] = &quot;hello&quot;;
+<span class="color-error">//  str5[1] = 'a';   // error: assignment of read-only location 'str5[1]'</span>
+}</pre>
+
+<p>Take note that you cannot modify the content pointed to by <code>const char *</code>.</p>
+
+<h4>C-String Headers  and Functions</h4>
+
+<p>C-string (null-terminated <code>char</code> array) can be declared as <code>char*</code> or <code>char[]</code>. This is because C treats an array name as a pointer to the first element of the array. Unlike regular arrays, there is no need to pass the length of C-string into function, as the function can deduce the length from the terminating null character.</p>
+
+<h5>C-String Functions in <span class="font-code">&lt;cstring&gt;</span> header</h5>
+
+<p>The <code>&lt;cstring&gt;</code> header (ported from C's <code>string.h</code>) contains these commonly-used functions to operate on C-strings.</p>
+
+<table class="table-program">
+<tr>
+<th>FUNCTION</th>
+<th>EXAMPLE</th>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">size_t <strong>strlen</strong> (const char * cstr)
+  <span class="color-comment">Return the length of cstr, excluding terminating null character '\0'.
+  size_t is typically typedef of unsigned int.</span></pre></td>
+<td>
+<pre class="color-example">char * msg = &quot;Hello&quot;;
+cout &lt;&lt; strlen(msg);  <span class="color-comment">// length of string</span>
+ </pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">
+<span class="color-comment">// Copying</span>
+char * <strong>strcpy</strong> (char * dest, const char * src)
+  <span class="color-comment">Copy src into dest, return dest</span>
+char * <strong>strncpy</strong> (char * dest, const char * src, size_t n)
+  <span class="color-comment">Copy at most n characters from src into dest, return dest</span></pre></td>
+<td>
+<pre class="color-example">&nbsp;
+
+ 
+ 
+ 
+ </pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">
+<span class="color-comment">// Comparison</span>
+int <strong>strcmp</strong> (const char * cstr1, const char * cstr2)
+  <span class="color-comment">Compare cstr1 and cstr2. Return 0 if cstr1 is equal to cstr1,
+  less than zero (usually -1) if cstr1 is less than cstr2,
+  more than zero (usually 1) if cstr1 is more than cstr2.</span>
+int <strong>strncmp</strong> (const char * cstr1, const char * cstr2, size_t n)
+  <span class="color-comment">Compare up to n characters.</span></pre></td>
+<td>
+<pre class="color-example">
+ 
+ 
+ 
+ 
+ 
+ 
+ </pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">
+<span class="color-comment">// Concatenation</span>
+char * <strong>strcat</strong> (char * dest, const char * src)
+  <span class="color-comment">Append src to dest, return src.</span>
+char * <strong>strncat</strong> (char * dest, const char * src, size_t n)
+  <span class="color-comment">Append at most n characters from src into dest, return src.</span></pre></td>
+<td>
+<pre class="color-example">
+ 
+ 
+ 
+ 
+ </pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">
+<span class="color-comment">// Searching</span>
+char * <strong>strchr</strong>  (char * cstr, int ch);<span class="color-comment">
+  Return a pointer to the first occurrence of character</span>
+char * <strong>strrchr</strong> (char * cstr, int ch);
+  <span class="color-comment">Return a pointer to the last occurrence of character</span>
+char * <strong>strstr</strong>  (char * cstr1, char * cstr2);
+  <span class="color-comment">Return a pointer to the first occurrence of cstr2 in cstr1</span>
+size_t <strong>strspn</strong> (const char * cstr, const char * accept)
+  <span class="color-comment">Return the length (span) of the initial portion of cstr
+  which consists of only characters in accept
+</span>char * <strong>strpbrk</strong> (char * cstr, const char * accept)
+  <span class="color-comment">Similar to strspn, but string pointer break returns a pointer
+  to the first occurrence in cstr of any char in accept</span>
+size_t <strong>strcspn</strong> (const char * cstr, const char * reject)
+  <span class="color-comment">Complement of strspn. Return the length of the initial
+  portion of cstr, which does not have char in reject</span></pre></td>
+<td>
+<pre class="color-example"> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ </pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">
+<span class="color-comment">// Tokenizing</span>
+char * <strong>strtok</strong> (char * cstr, const char * delim)
+  <span class="color-comment">Tokenize cstr with delim as the delimiters</span></pre></td>
+<td>
+<pre class="color-example">
+ 
+ 
+ </pre></td>
+</tr>
+</table>
+
+<p>[TODO] example</p>
+
+<h5>C-String Functions in <span class="font-code">&lt;cstdlib&gt;</span> header</h5>
+
+<p>The <code>&lt;cstdlib&gt;</code> header (ported from C's <code>&lt;stdlib.h&gt;</code>) contains functions to convert C-strings to fundamental types.</p>
+
+<table class="table-program">
+<tr>
+<th>FUNCTION</th>
+<th>EXAMPLE</th>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">int <strong>atoi</strong> (char * cstr)
+  <span class="color-comment">Parse C-string cstr into an int</span>
+double <strong>atof</strong> (char * cstr)
+  <span class="color-comment">Parse C-string cstr into a double</span>
+long <strong>atol</strong> (char * cstr)
+  <span class="color-comment">Parse C-string cstr into a long int</span>
+long long <strong>atoll</strong> (char * cstr)
+  <span class="color-comment">Parse C-string cstr into a long long int</span></pre></td>
+<td>
+<pre class="color-example">
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ </pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">double <strong>strtod</strong> (const char * cstr, char** endptr)
+  <span class="color-comment">Parse C-string cstr into a double. If endptr is not a null pointer,
+  set the endptr to the first character after the number</span>
+float <strong>strtof</strong> (const char * cstr, char** endptr)
+long <strong>strtol</strong> (const char * cstr, char** endptr)
+long double <strong>strtold</strong> (const char * cstr, char** endptr)
+long long <strong>strtoll</strong> (const char * cstr, char** endptr)
+unsigned long long <strong>strtoull</strong> (const char * cstr, char** endptr)</pre></td>
+<td>
+<pre class="color-example">
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ </pre></td>
+</tr>
+</table>
+
+<p>[TODO] example</p>
+
+<h5>C-String Input/Output Functions in <span class="font-code">&lt;iostream&gt;</span> Header</h5>
+<p>The <code>&lt;iostream&gt;</code> supports these functions for c-string input and output:</p>
+
+<table class="table-program">
+  <tr>
+    <th>FUNCTION</th>
+    <th>EXAMPLE</th>
+  </tr>
+  <tr>
+    <td>
+<pre class="color-syntax">
+<strong>cin &gt;&gt; var</strong>
+   Read a word (delimiter by space)</pre></td>
+    <td>
+<pre class="color-example">
+char *msg;
+cin &gt;&gt; msg;</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">
+<strong>cin.getline(char * cstr, unsigned int n)</strong>
+<strong>cin.getline(char * cstr, unsigned int n, char delim)</strong>
+  Read n-1 characters ('\0' appended) or till delimiter is reached. 
+  The delimiter character is not stored.</pre>
+</td>
+
+<td>
+<pre class="color-example">char msg[256];
+cin.getline(msg, 256);
+cin.getline(msg, 256, '\n');
+  </pre>
+</td>
+</tr>
+<tr>
+  <td>
+<pre class="color-syntax">
+<strong>int cin.get()</strong>: Return the next character, casted as an int.</pre></td>
+<td>
+<pre class="color-example">&nbsp;
+</pre>
+</td>
+</tr>
+<tr>
+  <td>
+<pre class="color-syntax">
+<strong>cin.peek()</strong>: return the next character (casted as an int), 
+   but not removing it from the input stream.</pre>
+</td>
+<td>
+<pre class="color-example">&nbsp;
+</pre>
+</td>
+</tr>
+<tr>
+  <td>
+<pre class="color-syntax">
+<strong>cin.ignore(unsigned int n = 1, int delim = EOF)</strong>:
+  Remove n-1 characters from the input stream, or until delimiter is reached.</pre>
+  </td>
+<td>
+<pre class="color-example">
+cin.ignore(256, ' ');   <span class="color-comment">// Skip next word</span>
+cin.ignore(1000, '\n'); <span class="color-comment">// Flush input buffer</span></pre>
+</td>
+</tr>
+</table>
+
+
+<h5>Converting C-string to Uppercase/Lowercase</h5>
+
+<p>You probably have to write your own function using <code>cctype</code>'s <code>toupper()</code> and <code>tolower()</code>, which converts individual character. For example,</p>
+
+<pre class="color-example">
+inline void strtoupper(char* str) {
+   while (*str) {
+      *str = toupper(*str);
+      ++str;
+   }
+}</pre>
+
+<h4>The C++'s <span class="font-code">string</span> class</h4>
+
+<p>The <code>string</code> class, in header <code>&lt;string&gt;</code> and under namespace <code>std</code> (i.e., <code>std::string</code>), models character sequences. The <code>string</code> class is an instantiation of the <code>basic_string&lt;T&gt;</code>  template class that uses <code>char</code> type with a <code>typedef</code>.</p>
+
+<pre class="color-syntax">
+typedef basic_string&lt;char&gt; <strong>string</strong>;
+typedef basic_string&lt;wchar_t&gt; <strong>wstring</strong>;</pre>
+
+<h5><span class="font-code">string</span> Class Constructors</h5>
+
+<pre class="color-syntax"><strong>string</strong> ();
+   <span class="color-comment">// (1) Default constructor: construct an empty string of length 0.</span>
+<strong>string</strong> (const string &amp; str);
+   <span class="color-comment">// (2) Copy constructor: construct by copying str (by value)</span>
+<strong>string</strong> (const string &amp; str, size_t pos, size_t len = npos);
+   <span class="color-comment">// (3) Substring constructor: copy the substring starting at pos, of the len.
+   // size_t is usually typedef to unsigned int
+   // npos is a static constant in string (i.e., string::npos),
+   //   which holds the maximum value of size_t.</span>
+<strong>string</strong> (const char * cstr);
+   <span class="color-comment">// (4) C-string: construct by copying the C-string.</span>
+<strong>string</strong> (const char * cstr, size_t len);
+   <span class="color-comment">// (5) C-string buffer: construct by copying the cstr for len</span>
+<strong>string</strong> (size_t len, char c);
+   <span class="color-comment">// (6) Fill Constructor: fill len with char c</span>
+template &lt;class Iterator&gt;
+<strong>string</strong> (Iterator first, Iterator last);
+   <span class="color-comment">// (7) Iterator: copy the char in [first, last)</span>
+<strong>string</strong> (initializer_list&lt;char&gt; initList);
+   <span class="color-comment">// (C++11)(8) Initializer list</span>
+<strong>string</strong> (string &amp;&amp; str) noexcept;
+   <span class="color-comment">// (C++11)(9) Move Constructor</span></pre>
+
+<p>Example,</p>
+
+<pre class="color-example">
+string str1(&quot;apple&quot;);
+string str2 = orange;
+   <span class="color-comment">// '=' is not an assignment, but an implicit call to string's
+   // constructor str2(&quot;orange&quot;);</span></pre>
+
+<p>You cannot construct a <code>string</code> from <code>char</code>, <code>int</code> or <code>double</code>.</p>
+
+<h5>Example: <span class="font-code">string</span> Constructor</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56</pre>
+</td>
+<td>
+<pre>
+#include &lt;iostream&gt;
+#include &lt;string&gt;  <span class="color-comment"> // C++ string class</span>
+#include &lt;cstring&gt; <span class="color-comment"> // C-string</span>
+using namespace std;
+ 
+int main() {
+   char cstr[] = &quot;hello world!&quot;; <span class="color-comment"> // C-string literal</span>
+ 
+   <span class="color-new">string s1</span>;                  <span class="color-comment"> // (1) Default constructor</span>
+   cout &lt;&lt; s1.length() &lt;&lt; endl;<span class="color-comment"> // 0</span>
+   cout &lt;&lt; s1.size() &lt;&lt; endl;  <span class="color-comment"> // 0 - length() and size() are synonyms</span>
+ 
+   <span class="color-new">string s4(cstr)</span>;   <span class="color-comment"> // (4) C-string</span>
+   s4[1] = 'E';       <span class="color-comment"> // [] does not perform index bound check</span>
+   cout &lt;&lt; s4 &lt;&lt; endl;<span class="color-comment"> // &quot;hEllo world!&quot;</span>
+ 
+   <span class="color-new">string s2(s4)</span>;      <span class="color-comment"> // (2) Copy constructor</span>
+   s2.at(0) = 'H';     <span class="color-comment"> // at() does index-bound check</span>
+                       <span class="color-comment"> // at() can be used on RHS</span>
+   cout &lt;&lt; s2 &lt;&lt; endl; <span class="color-comment"> // &quot;HEllo world!&quot;</span>
+   cout &lt;&lt; s4 &lt;&lt; endl; <span class="color-comment"> // no change - copy by value</span>
+ 
+   <span class="color-new">string s3a(s4, 2)</span>;  <span class="color-comment"> // (3) Substring</span>
+   cout &lt;&lt; s3a &lt;&lt; endl;<span class="color-comment"> // &quot;llo world!&quot;</span>
+   s3a += &quot; again&quot;;    <span class="color-comment"> // Append</span>
+   cout &lt;&lt; s3a &lt;&lt; endl;<span class="color-comment"> // &quot;llo world! again&quot;</span>
+ 
+   <span class="color-new">string s3b(s3a, 4, 3)</span>;<span class="color-comment"> // (3) Substring</span>
+   cout &lt;&lt; s3b &lt;&lt; endl;  <span class="color-comment"> // &quot;wor&quot;</span>
+ 
+   <span class="color-new">string s5a(cstr, strlen(cstr))</span>; <span class="color-comment"> // (5) C-string buffer</span>
+   cout &lt;&lt; s5a &lt;&lt; endl; <span class="color-comment"> // &quot;hello world!&quot;</span>
+   string s5b(cstr, 15);            <span class="color-comment"> // (5) C-string buffer</span>
+   cout &lt;&lt; s5b &lt;&lt; endl; <span class="color-comment"> // &quot;hello world! ??&quot;</span>
+       <span class="color-comment"> // If len &gt; length of cstr, garbage copied</span>
+ 
+   <span class="color-new">string s6(5, '$')</span>;   <span class="color-comment"> // (6) Fill constructor</span>
+   cout &lt;&lt; s6 &lt;&lt; endl;  <span class="color-comment"> // &quot;$$$$$&quot;</span>
+ 
+   <span class="color-new">string s7a(cstr, cstr + 4)</span>; <span class="color-comment"> // (7) Iterator</span>
+   cout &lt;&lt; s7a &lt;&lt; endl; <span class="color-comment"> // &quot;hell&quot;</span>
+       <span class="color-comment"> // cstr1 is char*. Instantiate type parameter Iterator to char*</span>
+ 
+<span class="color-comment">//</span>   <span class="color-new">string s7b(s4, s4 + 2)</span>;
+       <span class="color-comment"> // error: no match for 'operator+' in 's4 + 2'</span>
+       <span class="color-comment"> // s4 is a string object, not char*</span>
+ 
+   <span class="color-new">string s7c(&amp;s4[0], &amp;s4[2])</span>;  <span class="color-comment"> // (7) Iterator</span>
+       <span class="color-comment"> // &amp;s4[0] and &amp;s4[2] are char*</span>
+   cout &lt;&lt; s7c &lt;&lt; endl;         <span class="color-comment"> // &quot;hE&quot;</span>
+ 
+   <span class="color-new">string s7d(s4.begin(), s4.end())</span>;
+       <span class="color-comment"> // begin() returns an iterator pointing to the first character</span>
+       <span class="color-comment"> // end() returns an iterator pointing to past-the-end character</span>
+   cout &lt;&lt; s7d &lt;&lt; endl;  <span class="color-comment"> // &quot;hEllo world!&quot;</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Example: C++11 <span class="font-code">string</span> Constructor</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre>
+</td>
+<td>
+<pre>
+#include &lt;iostream&gt;
+#include &lt;string&gt;  <span class="color-comment"> // C++ string class</span>
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> // To compile with option -std=c++0x</span>
+   <span class="color-new">string str1 = {'a', 'p', 'p', 'l', 'e'}</span>;   <span class="color-comment"> // (8) C++11 Initializer List</span>
+   cout &lt;&lt; str1 &lt;&lt; endl;                      <span class="color-comment"> // &quot;apple&quot;</span>
+   <span class="color-new">string str2 {'o', 'r', 'a', 'n', 'g', 'e'}</span>;<span class="color-comment"> // (8) C++11 Initializer List (&quot;=&quot; optional)</span>
+   cout &lt;&lt; str2 &lt;&lt; endl;                      <span class="color-comment"> // &quot;orange&quot;</span>
+        <span class="color-comment"> // Using C-string literal is more convenient</span>
+        <span class="color-comment"> // Included in string class to make initializer list syntax universal</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">string</span> Class Overloaded Operators</h5>
+
+<p>Most of the string class operators are overloaded to handle <code>string</code> objects, as well as C-string and literals.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Member functions - First operand must be a string object</span>
+<strong>=</strong>      <span class="color-comment">// assignment</span>
+<strong>[]</strong>     <span class="color-comment">// character at index - no index range check</span>
+<strong>+=</strong>     <span class="color-comment">// append</span>
+
+<span class="color-comment">// Friends (non-member functions) - First operand could be a non-string</span>
+<strong>+</strong>                      <span class="color-comment">// Concatenate two strings (one of them could be C-string or literal),
+                       //   return a new string object (by value)</span>
+<strong>==</strong>, <strong>!=</strong>, <strong>&lt;</strong>, <strong>&lt;=</strong>, <strong>&gt;</strong>, <strong>&gt;=</strong>   <span class="color-comment">// Relational (comparison) operators.
+                       // Compare two strings (one of them could be C-string or literal)
+                       //   based on the machine collating sequence</span>
+<strong>&gt;&gt;</strong>                     <span class="color-comment">// Stream extraction (input)</span>
+<strong>&lt;&lt;</strong>                     <span class="color-comment">// Stream insertion (output)</span></pre>
+
+<h5>Public Functions</h5>
+
+<p>Most of the string class functions are overloaded to handle <code>string</code> objects, as well as C-string and literals.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Capacity</span>
+size_t <strong>size</strong> () const;    <span class="color-comment">// Return the size of the string</span>
+size_t <strong>length</strong> () const;  <span class="color-comment">// same as above
+                         // length() was from earlier version, size() added for compatibility with STL</span>
+bool <strong>empty</strong> () const;     <span class="color-comment">// Return true for empty string</span>
+void <strong>clear</strong> ();           <span class="color-comment">// Clear to empty string</span>
+void <strong>resize</strong> (size_t n, char pad = '\0');  <span class="color-comment">// resize the string to length n,
+                                          // discard trailing characters, or insert pad char</span>
+
+<strong>string::npos</strong>             <span class="color-comment">// static variable for the maximum possible characters in string,
+                         // typically max of size_t (unsigned int)</span>
+size_t <strong>max_size</strong> () const;    <span class="color-comment">// Return the maximum size of string object</span>
+size_t <strong>capacity</strong> () const;    <span class="color-comment">// Storage (in terms of characters) currently allocated</span>
+void <strong>reserve</strong> (size_t n = 0); <span class="color-comment">// Request for minimum of this capacity</span>
+void <strong>shrink_to_fit</strong> ();       <span class="color-comment">// (C++11) Request to reduce the capacity</span></pre>
+
+<p>Unlike C-string, which uses a fixed-size array, the <code>string</code> class handles the memory allocated implicitly. In other words, you can append more characters without worrying about exceeding the size. C++ implementation may allocate an initial block which is larger than the actual string length to allow the content to grow, and allocate more block when the current block is filled. You can use function <code>capacity()</code> to check the current allocation, and <code>reserve()</code> to request for a minimum allocation.</p>
+
+<p>Example:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre>
+</td>
+<td>
+<pre>
+#include &lt;iostream&gt;
+#include &lt;string&gt;  <span class="color-comment"> // C++ string class</span>
+using namespace std;
+ 
+int main() {
+   string strLarge(&quot;This is a very very very vary large string&quot;);
+   string strSmall(&quot;Hi&quot;);
+   string strEmpty;
+ 
+   cout &lt;&lt; &quot;size=&quot; &lt;&lt; strLarge.size() &lt;&lt; &quot; capacity=&quot; &lt;&lt; strLarge.capacity() &lt;&lt; endl;
+   cout &lt;&lt; &quot;size=&quot; &lt;&lt; strSmall.size() &lt;&lt; &quot; capacity=&quot; &lt;&lt; strSmall.capacity() &lt;&lt; endl;
+   cout &lt;&lt; &quot;size=&quot; &lt;&lt; strEmpty.size() &lt;&lt; &quot; capacity=&quot; &lt;&lt; strEmpty.capacity() &lt;&lt; endl;
+ 
+   cout &lt;&lt; &quot;string::npos=&quot; &lt;&lt; string::npos &lt;&lt; endl;
+   cout &lt;&lt; &quot;max_size=&quot; &lt;&lt; strEmpty.max_size() &lt;&lt; endl;
+ 
+   strSmall.reserve(100);
+   cout &lt;&lt; &quot;size=&quot; &lt;&lt; strSmall.size() &lt;&lt; &quot; capacity=&quot; &lt;&lt; strSmall.capacity() &lt;&lt; endl;
+ 
+   strLarge.resize(10);
+   cout &lt;&lt; strLarge &lt;&lt; endl;
+   cout &lt;&lt; &quot;size=&quot; &lt;&lt; strLarge.size() &lt;&lt; &quot; capacity=&quot; &lt;&lt; strLarge.capacity() &lt;&lt; endl;
+   strSmall.resize(10, '-');
+   cout &lt;&lt; strSmall &lt;&lt; endl;
+   cout &lt;&lt; &quot;size=&quot; &lt;&lt; strSmall.size() &lt;&lt; &quot; capacity=&quot; &lt;&lt; strSmall.capacity() &lt;&lt; endl;
+ 
+   strLarge.clear();
+   cout &lt;&lt; &quot;size=&quot; &lt;&lt; strLarge.size() &lt;&lt; &quot; capacity=&quot; &lt;&lt; strLarge.capacity() &lt;&lt; endl;
+   strLarge.shrink_to_fit();  <span class="color-comment"> // C++11</span>
+   cout &lt;&lt; &quot;size=&quot; &lt;&lt; strLarge.size() &lt;&lt; &quot; capacity=&quot; &lt;&lt; strLarge.capacity() &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+size=42 capacity=42
+size=2 capacity=2
+size=0 capacity=0
+string::npos=4294967295
+max_size=1073741820
+size=2 capacity=100
+This is a
+size=10 capacity=42
+Hi--------
+size=10 capacity=100
+size=0 capacity=42
+size=0 capacity=0</pre>
+
+<pre class="color-syntax">
+<span class="color-comment">// C-string</span>
+c_str;</pre>
+
+<p>Some functions, such as <code>ofstream</code>'s <code>open()</code> which opens a file, accept only C-string. You can use <code>c_str</code> to get a C-string from an <code>string</code> object.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Element Access</span>
+char &amp; <strong>operator[]</strong> (size_t pos);  <span class="color-comment">// Return char at pos, no index range check</span>
+char &amp; <strong>at</strong> (size_t pos);          <span class="color-comment">// Return char at pos, with index range check</span>
+char &amp; <strong>front</strong> ();                 <span class="color-comment">// Return first char</span>
+char &amp; <strong>back</strong> ();                  <span class="color-comment">// Return last char</span>
+string <strong>substr</strong> (size_t pos = 0, size_t len = npos) const;  <span class="color-comment">// Return a substring</span>
+ 
+<span class="color-comment">// Modifying</span>
+append
+insert
+assign
+erase
+replace
+swap
+push_back
+pop_back
+compare
+
+<span class="color-comment">// Searching</span>
+size_t <strong>find</strong> (const string &amp; str, size_t pos = 0) const;
+size_t <strong>find</strong> (const char * cstr, size_t pos = 0) const;
+size_t <strong>find</strong> (const char * cstr, size_t pos, size_t n) const;
+size_t <strong>find</strong> (char c, size_t pos = 0) const;
+    <span class="color-comment">// Find the first occurrence of the string or char, starting from pos
+    // Return the index or string::npos if not found</span>
+<strong>rfind</strong>: last occurrence
+<strong>find_first_of</strong>: first occurrence of ANY of the character in the string
+<strong>find_last_of</strong>: last occurrence of ANY of the character in the string
+<strong>find_first_not_of</strong>: first occurrence of NOT ANY of the character in the string
+<strong>find_last_not_of</strong>: last occurrence of NOT ANY of the character in the string</pre>
+
+<h5>Example: <span class="font-code">string</span> objects and their operations</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Guess a secret word (WordGuess.cpp)
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;cstdlib&gt;
+#include &lt;ctime&gt;
+#include &lt;cctype&gt;
+using namespace std;
+ 
+const int NUM_WORDS = 18;
+const string WORD_LIST[NUM_WORDS] = {
+   &quot;apple&quot;, &quot;orange&quot;, &quot;banana&quot;, &quot;watermelon&quot;, &quot;pear&quot;,
+   &quot;pineapple&quot;, &quot;papaya&quot;, &quot;mango&quot;, &quot;grape&quot;, &quot;strawberry&quot;,
+   &quot;lemon&quot;, &quot;peach&quot;, &quot;cherry&quot;, &quot;apricot&quot;, &quot;coconut&quot;,
+   &quot;honeydew&quot;, &quot;apricot&quot;, &quot;blueberry&quot;};
+ 
+int main() {
+  <span class="color-comment"> // Seed the pseudo-random number generator</span>
+   srand(time(0));
+ 
+   bool over = false;  <span class="color-comment"> // gameover</span>
+   do {
+      string target = WORD_LIST[rand() % NUM_WORDS];<span class="color-comment"> // choose a word between 0 to NUM_WORDS-1</span>
+      int target_length = target.length();
+      string attempt(target_length, '-');           <span class="color-comment"> // init to all dashes</span>
+      string badChars;                              <span class="color-comment"> // contains bad chars used</span>
+      int trial = 1;                                <span class="color-comment"> // number of trials</span>
+ 
+      cout &lt;&lt; &quot;Guess the secret word&quot; &lt;&lt; endl;
+ 
+      while (attempt != target) {
+         char letter;
+         cout &lt;&lt; &quot;Your guess so far: &quot; &lt;&lt; attempt &lt;&lt; endl;
+         cout &lt;&lt; &quot;Trial &quot; &lt;&lt; trial &lt;&lt; &quot;: Guess a letter: &quot;;
+         cin &gt;&gt; letter;
+ 
+        <span class="color-comment"> // Check if the letter has been used</span>
+         if (badChars.find(letter) != string::npos
+               || attempt.find(letter) != string::npos) {
+            cout &lt;&lt; &quot;You already use this letter. Try again.\n&quot;;
+            continue;
+         }
+ 
+        <span class="color-comment"> // Check for good or bad letter</span>
+         int pos = target.find(letter);
+         if (pos == string::npos) {
+            cout &lt;&lt; &quot;Oh, bad guess!\n&quot;;
+            badChars += letter;    <span class="color-comment"> // add to badChars string</span>
+         } else {
+            cout &lt;&lt; &quot;Good guess!\n&quot;;
+            attempt[pos] = letter;
+           <span class="color-comment"> // Check if this letter appears again later</span>
+            do {
+               pos = target.find(letter, pos + 1);
+               if (pos != string::npos) attempt[pos] = letter;
+            } while (pos != string::npos);
+         }
+ 
+         ++trial;
+      }
+ 
+      cout &lt;&lt; &quot;You got it in &quot; &lt;&lt; trial &lt;&lt; &quot; trials! The secret word is \&quot;&quot;
+           &lt;&lt; target &lt;&lt; &quot;\&quot;&quot; &lt;&lt; endl;
+ 
+      char playAgain;
+      cout &lt;&lt; &quot;Another game? &lt;y/n&gt; &quot;;
+      cin &gt;&gt; playAgain;
+      if (playAgain != 'y' &amp;&amp; playAgain != 'Y') over = true;
+   } while (!over);
+ 
+   cout &lt;&lt; &quot;Bye\n&quot;;
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>[TODO] More Example</p>
+
+<h5>Converting a <span class="font-code">string</span> to Uppercase/Lowercase</h5>
+<p>Use the <code>transform()</code> function in <code>algorithm</code>.</p>
+<pre class="color-example">
+#include &lt;algorithm&gt;
+#include &lt;string&gt;
+#include &lt;cctype&gt;
+ 
+std::string str = "Hello World";
+std::transform(str.begin(), str.end(), str.begin(), ::toupper);</pre>
+
+<h4>The C-String Input Methods</h4>
+
+<p>C-string has three input methods: stream extraction operator (<code>&gt;&gt;</code>), <code>getline()</code> and <code>get()</code>. All 3 functions belong to the <code>istream</code> class.</p>
+
+<h5><span class="font-code">istream</span>'s Overloaded Stream Extraction Operator (<span class="font-code">&gt;&gt;</span>)</h5>
+
+<p>The stream extraction operator (<code>&gt;&gt;</code>) of <code>istream</code> class has the following prototype for C-strings:</p>
+
+<pre class="color-syntax">
+istream &amp; <strong>operator&gt;&gt;</strong> (istream &amp; is, char * str);
+ 
+<span class="color-comment">// Example usage:</span>
+char str[80];
+cin &gt;&gt; str;</pre>
+
+<p>It extracts characters from the input stream and store into <code>str</code>, until either a whitespace (blank, tab, newline) is encountered or  <code>width-1</code> characters is read. A terminating null character is automatically inserted. The default <code>width</code> is 0, indicating unlimited. You can set the <code>width</code> via <code>cin &gt;&gt; setw(<em>n</em>)</code> (in header <code>&lt;iomanip&gt;</code>) or <code>cin.width(<em>n</em>)</code>. <code>setw()</code> is non-sticky and is only applicable to next input operation. It is reset to 0. The trailing whitespace is left in the input stream. The leading white spaces are ignored.</p>
+<p>For example,</p>
+
+<pre class="color-example">
+const int SIZE = 5;
+char str[SIZE];    <span class="color-comment">// max strlen is SIZE - 1</span>
+
+cout &lt;&lt; &quot;Enter a word: &quot;;
+<span class="color-new">cin &gt;&gt; setw(SIZE) &gt;&gt; str</span>;   <span class="color-comment">// need &lt;iomanip&gt; header</span>
+cout &lt;&lt; str &lt;&lt; endl;</pre>
+
+<p>We set the <code>width</code> to the <code>SIZE</code> (=5) of the <code>char[]</code>. <code>cin &lt;&lt;</code> reads up to 4 characters or whitespace.</p>
+<ul>
+<li>If you enter <code>&quot;12\n&quot;</code>, <code>&quot;12&quot;</code> is read into <code>str</code>, and <code>&quot;\n&quot;</code> remains in the input buffer.</li>
+
+<li>If you enter <code>&quot;12345\n&quot;</code>, <code>&quot;1234&quot;</code> is read into <code>str</code>, and <code>&quot;5\n&quot;</code> remains in the input buffer.</li>
+
+<li>If you enter <code>&quot;12 345\n&quot;</code>, <code>&quot;12&quot;</code> is read into <code>str</code>, and <code>&quot; 345\n&quot;</code> remains in the input buffer.</li>
+<li>The next <code>cin &gt;&gt;</code> discards the leading whitespaces and starts with the first non-whitespace character.</li>
+<li>If <code>width</code> is not set properly and if the  input (including the terminating null character) exceeds the size of <code>char</code> array,  memory will be corrupted.</li>
+<li>You may need to flush the input buffer (see below).</li>
+</ul>
+
+<h5><span class="font-code">istream::getline()</span></h5>
+
+<p>The <code>getline()</code> function of the <code>istream</code> class has the following prototypes:</p>
+
+<pre class="color-syntax">
+istream &amp; <strong>getline</strong> (char * str, int n);
+istream &amp; <strong>getline</strong> (char * str, int n, char delim);
+ 
+<span class="color-comment">// Example usage</span>
+char str[80];
+cin.getline(str, 80);      <span class="color-comment">// Read up to 79 chars or '\n'; discarding '\n'</span>
+cin.getline(str, 80, ':'); <span class="color-comment">// Read up to 79 chars or ':'; discarding ':'</span></pre>
+
+<p><code>getline()</code> extracts characters from the input stream and stores in <code>str</code>, until either it reaches the  delimiter character (default of  <code>'\n'</code>), or <code><em>n-1</em></code> character is written to <code>str</code>. A terminating null character is automatically inserted. The delimiter, if found, is extracted and discarded from input stream. You can use <code>cin.gcount()</code> to get the number of characters extracted (including <code>delim</code>). <code>getline()</code> reads all whitespace (including leading whitespaces which is ignore by <code>cin &gt;&gt;</code>).</p>
+<p>If <code>n-1</code> character is read and the next character is not delimit, then the <code>failbit</code> (of the <code>istream</code>) is set. You can check the <code>failbit</code> via <code>bool</code> function <code>cin.fail()</code>. You need to invoke <code>cin.clear()</code> to clear the error bit. Otherwise, all subsequent <code>getline()</code> will fail and return <code>gcount()</code> of 0.</p>
+
+<p>For example,</p>
+
+<pre class="color-example">
+const int SIZE = 5;
+char str[SIZE];    <span class="color-comment">// max strlen is SIZE - 1</span>
+ 
+cout &lt;&lt; &quot;Enter a line: &quot;;
+<span class="color-comment"><span class="color-new">cin.getline(str, SIZE);</span>     // Read a line (including whitespaces) until newline, discard newline</span>
+cout &lt;&lt; &quot;\&quot;&quot; &lt;&lt; str &lt;&lt; &quot;\&quot; length=&quot; &lt;&lt; strlen(str) &lt;&lt; endl;
+cout &lt;&lt; &quot;Number of characters extracted: &quot; &lt;&lt; cin.gcount() &lt;&lt; endl;
+ 
+if (<span class="color-new">cin.fail()</span>) {
+   cout &lt;&lt; &quot;failbit is set!&quot; &lt;&lt; endl;
+   <span class="color-new">cin.clear()</span>;  <span class="color-comment"> // Clear all error bits. Otherwise, subsequent getline() fails</span>
+}</pre>
+
+<p>Again, we set <code><em>n</em></code> to the <code>SIZE</code> (=5) of <code>char[]</code>. <code>getline()</code> reads up to 4 characters or <code>'\n'</code>.</p>
+<ul>
+<li>If you enter <code>&quot;xxxx\n&quot;</code>, where <code>xxxx</code> may include whitespaces, <code>&quot;xxxx&quot;</code> is read into <code>str</code>, and <code>&quot;\n&quot;</code> discarded from input buffer.</li>
+<li>If you enter <code>&quot;xxxxyyy\n&quot;</code>, <code>&quot;xxxx&quot;</code> is read into str, <code>&quot;yyy\n&quot;</code> remains in input buffer. <code>failbit</code> is set. You need to clear the error bits before issuing another <code>getline()</code> call.</li>
+
+
+</ul>
+
+
+<h5><span class="font-code">istream::get()</span></h5>
+
+<p>The <code>get()</code> function of the <code>istream</code> class has the following prototypes for C-string:</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// C-string</span>
+istream &amp; <strong>get</strong> (char * str, int n);
+istream &amp; <strong>get</strong> (char * str, int n, char delim);</pre>
+
+<p><code>get(str, n, delim)</code> is similar to <code>getline(str, n, delim)</code>, except that the <code>delim</code> character is not extracted and remains in the input stream.</p>
+
+<h5>Single-character Input</h5>
+
+<p>The <code>get()</code> member function is more often used to read a single character, unformatted, including whitespaces and newlines. It has the following two versions:</p>
+<pre class="color-syntax">
+<span class="color-comment">// Single character</span>
+istream &amp; <strong>get</strong> (char &amp; c);  <span class="color-comment">// Read next character into the char reference and
+                           //   return the istream for concatenated operations
+                           //   It returns null pointer (converted to false) at end-of-file</span>
+int <strong>get</strong> ();                <span class="color-comment">// Read next character and return an int
+                           //   Return a special value EOF at end-of-file</span>
+
+<span class="color-comment">// Examples</span>
+char ch;
+while (cin.get(ch) &amp;&amp; ch != '\') { ...... }  <span class="color-comment">// read all characters until newline</span>
+  <span class="color-comment">// You cannot use cin &gt;&gt; ch, because it ignores the whitespace</span>
+while (cin.get(ch)) { ...... }   <span class="color-comment">// read until end-of-file</span>
+
+int ch;
+while (ch = cin.get() != EOF) { ....... }  <span class="color-comment">// read until end-of-file</span></pre>
+
+<p>When the end-of-file is encountered, <code>get(char &amp;)</code> returns a null pointer, which is converted to <code>false</code>. On the other hand, <code>get(void)</code> return a special value EOF (defined in <code>&lt;iostream&gt;</code>). <code>get(char &amp;)</code> has no room to represent any special symbol such as EOF!</p>
+
+<p>In brief, there are 3 methods for reading single character, <code>cin &gt;&gt; char</code>, <code>get(char &amp;)</code> and <code>get(void)</code>. <code>cin &gt;&gt; char</code> skips whitespaces, <code>get(char &amp;)</code> reads a character by reference, while <code>get(void)</code> reads a character and return an <code>int</code>. <code>get(void)</code> is closely resembled the C's <code>getchar(void)</code> function (in <code>stdio.h</code>) and can be used to convert C programs into C++.</p>
+
+<h5>Flushing the <span class="font-code">cin</span> Buffer</h5>
+
+<p>Use <code>cin.ignore()</code> as follows. You may need to issue an <code>cin.clear()</code> to clear the error bits first.</p>
+
+<pre class="color-example">
+<span class="color-comment">// Ignore to the end-of-file</span>
+cin.ignore(numeric_limits&lt;streamsize&gt;::max());  <span class="color-comment">// need header &lt;limits&gt;</span>
+ 
+<span class="color-comment">// Ignore to the end-of-line</span>
+cin.ignore(numeric_limits&lt;streamsize&gt;::max(), '\n');</pre>
+
+<h5>Others</h5>
+
+<p><code>istream::peek()</code>, <code>istream::unget()</code>, etc.</p>
+
+<h4>The <span class="font-code">string</span> Class Input Methods</h4>
+
+<p>The <code>string</code> class has two input methods: stream extraction operator (<code>&gt;&gt;</code>) and <code>getline()</code>. Both methods are similar to C-string counterpart, but they are much simpler, as you don't need to worry about the limit of the <code>string</code>, compared with a fixed-size <code>char</code> array.</p>
+
+<h5><span class="font-code">string</span>'s Stream Extraction Operator (<span class="font-code">&gt;&gt;</span>)</h5>
+
+<p>The <code>string</code> class overloads the <code>&gt;&gt;</code> (stream extraction operator) via <em>friend</em> function such that it operates on <code>string</code> object like C-string:</p>
+
+<pre class="color-syntax">
+istream &amp; <strong>operator&gt;&gt;</strong> (istream &amp; is, string &amp; str)
+ 
+<span class="color-comment">// Example usage</span>
+string str;
+cin &gt;&gt; str;
+  <span class="color-comment">// Compared with C-string, no need to set the width</span></pre>
+ 
+<p>It extracts a string (word) from the input stream, delimited by whitespace (blank, tab or newline), and stores in <code>str<span class="color-comment"></span></code>, overriding its previous value. The size of <code>str</code> is determined by the length of input.</p>
+
+<h5><span class="font-code">string::getline()</span></h5>
+
+<p>The <code>string</code> class also provides a <em>friend</em> function <code>getline()</code>:</p>
+
+<pre class="color-syntax">
+istream &amp; <strong>getline</strong> (istream &amp; is, string &amp; str);
+istream &amp; <strong>getline</strong> (istream &amp; is, string &amp; str, char delim);
+ 
+<span class="color-comment">// Example usage</span>
+string str;
+getline(cin, str);       <span class="color-comment">// default delimiter of '\n'</span>
+getline(cin, str, ':');
+   <span class="color-comment">// Compared with C-string:
+   // 1. No need to specify a limit
+   // 2. NOT cin.getline() 
+   //    C-string getline() is a member function of istream class
+   //    string class' getline() is a non-member friend function</span></pre>
+
+<p>It extracts characters from the input stream into <code>str</code> until the delimiter character is found (default of newline <code>'\n'</code>) or end-of-file is reached. The delimiter is extracted and discard from the input buffer, i.e., the next operation will begin after the delimiter. The size of <code>str</code> is determined by the length of input.</p>
+
+<h5>Notes</h5>
+
+<ul>
+<li>The maximum allowable size for a <code>string</code> object is defined by the constant <code>string::npos</code>, which is typically the maximum value of <code>unsigned int</code>.</li>
+<li>If <code>getline()</code> is used to read from a file, and end-of-file is encountered, the <code>eofbit</code> of the input stream will be set. That is, <code>fail()</code> and <code>eof()</code> of the input stream will return <code>true</code>.</li>
+<li>If the maximum allowable size of string is reached, or memory exhausted, the <code>failbit</code> of the input stream will be set. That is, <code>fail()</code> of the input stream will return <code>true</code>.</li>
+<li>An input stream maintains its status in these bits: <code>goodbit</code> (<code>good()</code> function) indicates all is fine; <code>failbit</code> (<code>fail()</code> function) indicates input error; <code>badbit</code> (<code>bad()</code> function) indicates recognized failure such as hardware failure; <code>eofbit</code> (<code>eof()</code> function) indicates end-of-file detected.</li>
+</ul>
+
+<h4><span class="font-code">basic_string</span> Template Class</h4>
+
+<p>The <code>string</code> class is an instantiation of the <code>basic_string</code> template class with parameterized type of <code>char</code>.</p>
+
+<p>The declaration of <code>basic_string</code> is:</p>
+
+<pre class="color-syntax">template &lt; class charT,
+           class traits = char_traits&lt;charT&gt;,    // basic_string::traits_type
+           class Alloc  = allocator&lt;charT&gt; &gt;     // basic_string::allocator_type
+class <strong>basic_string</strong>;</pre>
+
+<p>There are 4 instantiations for <code>basic_string</code> template class, with a <code>typedef</code>.</p>
+
+<pre class="color-syntax">
+typedef basic_string&lt;<strong>char</strong>&gt; <strong>string</strong>;
+typedef basic_string&lt;<strong>wchar_t</strong>&gt; <strong>wstring</strong>;
+typedef basic_string&lt;<strong>char16_t</strong>&gt; <strong>u16string</strong>;  <span class="color-comment">// C++11</span>
+typedef basic_string&lt;<strong>char32_t</strong>&gt; <strong>u32string</strong>;  <span class="color-comment">// C++11</span></pre>
+
+<h3>Unicode Characters and Strings</h3>
+
+<p>[TODO] Types: <code>wchar_t</code>, <code>char16_t</code>, <code>char32_t</code>.</p>
+<p>[TODO] C's headers: <code>cuchar</code>, <code>wchar</code>, <code>cwctype</code>.</p>
+
+<p>[TODO] C++ Classes: <code>wstring</code>, <code>u16string</code>, <code>u32string</code>.</p>
+
+
+<a class="references" href="../howto/References.html#cpp">Link to &quot;C++ References &amp; Resources&quot;</a>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: GCC 4.6.2<br />
+Last modified: May, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

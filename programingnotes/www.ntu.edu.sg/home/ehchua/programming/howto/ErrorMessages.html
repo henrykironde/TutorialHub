@@ -1,0 +1,578 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Common Error Messages in Java Programming - JDK, MySQL, Tomcat, JDBC, Servlet and others</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Common Error Messages</h1>
+<h2>JDK, MySQL, Tomcat, JDBC, Servlet ...</h2>
+</div>
+
+<div id="content-main">
+
+<p>Murphy's Law states that:</p>
+<ul>
+<li>&quot;Anything that can possibly go wrong, does.&quot;</li>
+<li>&quot;Everything that can possibly go wrong will go wrong.&quot;</li>
+<li>&quot;If anything can go wrong, it will.&quot;</li>
+<li>&quot;If there is any way to do it wrong, he will.&quot;</li>
+</ul>
+
+<p>When software goes wrong, the MOST IMPORTANT thing to do is to FIND the ERROR MESSAGE, which can give you clues of what went wrong. If things were running fine until the lightning strikes, ask yourself what have you CHANGED!</p>
+<p><strong>Search</strong> this document with your <strong>Error Message</strong>; or simple google your error message.</p>
+
+<h5>Stack Trace</h5>
+
+<p>Most of the times, the error message consists of tens of lines of so-called <em>stack trace</em> of method invocation. That is, method A called method B, which called method C, and so on, until method Z encountered an error and threw an <code>Exception</code> or an <code>Error</code>. It is important to:</p>
+
+<ol>
+<li>Get to the <em>first line</em> of the error message to read the <em>description</em>, and</li>
+<li>Look for the <em>line number</em> of YOUR PROGEAM that triggered the error.</li>
+</ol>
+
+<p>For example, this error message (stack trace) has 40 over lines:</p>
+
+<pre class="color-example">
+com.mysql.jdbc.exceptions.jdbc4.<strong><span class="color-error">CommunicationsException: Communications link failure</span></strong>  <span class="color-comment">&lt;== First line with error description</span>
+The last packet sent successfully to the server was 0 milliseconds ago.
+The driver has not received any packets from the server.
+        at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+        at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+        at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+        at java.lang.reflect.Constructor.newInstance(Constructor.java:525)
+        at com.mysql.jdbc.Util.handleNewInstance(Util.java:411)
+        at com.mysql.jdbc.SQLError.createCommunicationsException(SQLError.java:1116)
+        at com.mysql.jdbc.MysqlIO.&lt;init&gt;(MysqlIO.java:344)
+        at com.mysql.jdbc.ConnectionImpl.coreConnect(ConnectionImpl.java:2333)
+        at com.mysql.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:2370)
+        at com.mysql.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:2154)
+        at com.mysql.jdbc.ConnectionImpl.&lt;init&gt;(ConnectionImpl.java:792)
+        at com.mysql.jdbc.JDBC4Connection.&lt;init&gt;(JDBC4Connection.java:47)
+        at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+        at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+        at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+        at java.lang.reflect.Constructor.newInstance(Constructor.java:525)
+        at com.mysql.jdbc.Util.handleNewInstance(Util.java:411)
+        at com.mysql.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:381)
+        at com.mysql.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:305)
+        at java.sql.DriverManager.getConnection(DriverManager.java:579)
+        at java.sql.DriverManager.getConnection(DriverManager.java:221)
+        at <strong><span class="color-error">MySQLJdbcTestJDK7.main(MySQLJdbcTestJDK7.java:7)</span></strong>   <span class="color-comment">      &lt;== Your program's line number here (line 7)</span>
+Caused by: java.net.<strong><span class="color-error">ConnectException: Connection refused: connect</span></strong>   <span class="color-comment">&lt;== First line of another related error</span>
+        at java.net.DualStackPlainSocketImpl.connect0(Native Method)
+        at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:69)
+        at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:337)
+        at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:198)
+        at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:180)
+        at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:157)
+        at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:391)
+        at java.net.Socket.connect(Socket.java:579)
+        at java.net.Socket.connect(Socket.java:528)
+        at java.net.Socket.&lt;init&gt;(Socket.java:425)
+        at java.net.Socket.&lt;init&gt;(Socket.java:241)
+        at com.mysql.jdbc.StandardSocketFactory.connect(StandardSocketFactory.java:257)
+        at com.mysql.jdbc.MysqlIO.&lt;init&gt;(MysqlIO.java:294)
+        ... 15 more</pre>
+
+<h3 id="JDKErrors">JDK Common Errors</h3>
+
+<h4 id="JDKInstallErrors">JDK Installation  Errors</h4>
+
+<img class="image-left" src="images/JavaErrorPath.png" />
+<pre class="output">
+<strong>SYMPTOM:</strong> Cannot compile Java program from the CMD shell (e.g., &quot;javac Hello.java&quot; does not work!)
+<strong>ERROR MESSAGE:</strong> <span class="color-error">'javac' is not recognized as an internal or external command, operable program or batch file.</span>
+<strong>PROBABLE CAUSES:</strong> The PATH environment variable, which maintains a list of search paths for executable
+   programs (including &quot;javac.exe&quot;), does not include JDK's bin directory.
+<strong>POSSIBLE SOLUTIONS:</strong>
+   1) Start a CMD shell (click &quot;Start&quot; button &rArr; &quot;run...&quot; &rArr; enter &quot;cmd&quot;) and issue a <strong>path</strong> command:
+         prompt&gt; <strong>path</strong>
+         PATH=.......
+   2) Check if it includes your JDK's &quot;bin&quot; directory. For example, suppose that your JDK is installed 
+      in &quot;c:\program files\java\jdk1.7.0&quot;, then PATH should include &quot;c:\program files\java\jdk1.7.0\bin&quot;.</p>
+      Otherwise, include JDK's bin directory in the PATH environment variable.
+      Read &quot;<a href="JDK_HowTo.html#jdk-install-step3">Step 3 of How to install JDK</a>&quot;.</pre>
+
+<br />
+<img class="image-left" src="images/JavaErrorClasspathJDK7.png" />
+<img class="image-left" src="images/JavaErrorClasspath.png" />
+<pre class="output"><strong>SYMPTOM:</strong> Can compile but cannot run Java program from the CMD shell (e.g., &quot;java Hello&quot; does not work!)
+<strong>ERROR MESSAGE (JDK 1.7):</strong> <span class="color-error">Error: Could not find or load main class Hello</span>
+<strong>ERROR MESSAGE (Pre JDK 1.7):</strong> <span class="color-error">Exception in thread &quot;main&quot; java.lang.<span class="underline">NoClassDefFoundError</span>: Hello</span></strong>
+<strong>PROBABLE CAUSES:</strong>
+   1) The Java class (in this example, Hello.class) is NOT in the current directory.
+   2) The CLASSPATH environment variable is set, but does not include the current directory &quot;.&quot;.
+<strong>POSSIBLE SOLUTIONS:</strong>
+   1) Issue a &quot;dir&quot; command to list the contents of the current directory. 
+      Check that it contains the Java class to be run (e.g., Hello.class). 
+      You need to compile the source program (&quot;.java&quot;) to get the class file (&quot;.class&quot;).
+   2) If the Java class is present in the current directory, issue a &quot;set classpath&quot; command
+      to check its settings:
+            prompt&gt; <strong>set classpath</strong>
+            CLASSPATH=.......
+      If you receive the message &quot;Environment variable CLASSPATH not defined&quot; and 
+        your program is correct, I can't help you here.
+      Otherwise, if the CLASSPATH is defined, for beginner, I suggest that you remove
+        the CLASSPATH environment variable. 
+        From &quot;Control Panel&quot;
+        &rArr; System
+        &rArr; (Vista only) Advanced system settings 
+        &rArr; Switch to &quot;Advanced&quot; tab 
+        &rArr; Environment Variables 
+        &rArr; System variables (and also User variables) 
+        &rArr; Select variable &quot;CLASSPATH&quot; 
+        &rArr; Delete (Delete from both the System variables and User variables)
+   3) (For Advanced Users Only)</strong> If CLASSPATH is not set, it is defaulted to the current directory.
+      However, if CLASSPATH is set, the current  directory is NOT implicitly included.
+      You can include the current  directory (denoted by a single dot &quot;.&quot;) in front of the 
+      existing class-paths. 
+      Read &quot;<a href="Environment_Variables.html#JavaEnv">Java Applications and Environment Variable</a>&quot; for more discussion on CLASSPATH.</pre>
+
+<br /> 
+<img class="image-left" src="images/JavaErrorMain.png" />
+<pre class="output"><strong>SYMPTOM:</strong> Can compile but cannot run the Hello-world program (e.g., &quot;java Hello&quot; does not work!)
+<strong>ERROR MESSAGE (JDK 1.7):</strong> <span class="color-error">Error: Main method not found in class Hello.</span>
+<strong>POSSIBLE SOLUTIONS:</strong> Check whether there is a main() method in your program, and the signature of your main()
+  as shown in the error message.</pre>
+
+<br /> 
+<pre class="output"><strong>SYMPTOM:</strong> Cannot compile Java program
+<strong>ERROR MESSAGE (JDK 1.7):</strong> <span class="color-error">Could not find or load main class com.sun.tools.javac.Main</span>
+<strong>POSSIBLE SOLUTIONS:</strong>
+  You did not install JDK and JRE correctly.
+  If you are a novice, re-install JDK (Read &quot;<a href="JDK_HowTo.html">How to install JDK</a>&quot; again)
+    1. Un-install JDK and JRE (via control panel &rArr; &quot;Program and Features&quot;...)
+    2. Download the JDK (with JRE) and re-install. Use the default directories for JDK and JRE.
+       That is, simply click Simply click &quot;next&quot;...&quot;next&quot;... 
+       to install JDK in &quot;C:\Program Files\java\jdk1.7.0_0x&quot; and
+       JRE in &quot;C:\Program Files\java\jre7&quot;.
+       DO NOT change the installed directories!
+    3. Update the PATH environment variable.</pre>
+
+
+<br /> 
+<pre class="output"><strong>SYMPTOM:</strong> Cannot run the downloaded JDK Installer. Double-click the installer but nothing happens!
+<strong></strong><strong>POSSIBLE SOLUTIONS:</strong>
+  There seems to be a bug in JDK 1.7 u2 onwards, that affects only some computers.
+  Download and install JDK 1.7 u1 or below.</pre>
+
+
+<h4 id="JNIError">Java Native Library (JNI) Errors</h4>
+
+<pre class="output">
+<strong>ERROR MESSAGE:</strong> <span class="color-error">SEVERE: java.lang.UnsatisfiedLinkError: no <em>xxx</em> in java.library.path</span>
+<strong>PROBABLE CAUSES:</strong> Your program uses a native library from a 3rd-party API (such as JOGL), 
+   which cannot be located in the native library search paths.
+<strong>POSSIBLE SOLUTION:</strong>
+A Java Native Library (JNI) contains non-Java library codes (in filetype of &quot;.dll&quot; in Windows, &quot;.so&quot; in Linux, 
+   &quot;.jnilib&quot; in MacOS). For example, JOGL's &quot;jogl_xxx.dll&quot;, &quot;gluegen-rt.dll&quot;.
+   These dll's are needed for proper operations.
+The directory path of native libraries must be included in Java system's property &quot;java.library.path&quot;.
+The &quot;java.library.path&quot; <em>usually</em> mirrors the Envrionment Variable PATH. You can list the entries by issuing:
+   System.out.println(System.getProperty(&quot;java.library.path&quot;));
+
+To include a directory in &quot;java.library.path&quot;, you can use VM command-line option -Djava.library.path=<em>pathname</em>
+For JRE:
+   &gt; java -Djava.library.path=d:\bin\jogl2.0\lib <em>myjoglapp</em>
+ 
+For Eclipse, the VM command-line option can be set in &quot;Run Configuration...&quot; &rArr; &quot;Arguments&quot; &rArr; &quot;VM Arguments&quot;.
+Alternatively, you can create a User library and specifying the native library (Refer to &quot;Eclipse How-To&quot;)
+ 
+For NetBeans, the VM command-line option can be set in &quot;Set Configuration&quot; ⇒ &quot;Customize...&quot; ⇒ &quot;Run&quot; ⇒ &quot;VM options&quot;.</pre>
+<h3 id="MySQLErrors">MySQL Installation Common Errors</h3>
+
+<h4 id="MySQLErrorsInstall">Starting the MySQL Server after Installation</h4>
+
+<p>First of all, check if you have already started an instance of MySQL Server:</p>
+
+<ul>
+<li>For Windows, start the &quot;Task Manager&quot;, select &quot;Processes&quot; and look for &quot;<code>mysqld</code>&quot; processes. &quot;End&quot; all the &quot;<code>mysqld</code>&quot; processes.</li>
+<li>For Mac, start the &quot;Activity Monitor&quot;, select &quot;All Processes&quot; and look for  &quot;<code>mysqld</code>&quot; processes. &quot;Kill&quot; all the &quot;<code>mysqld</code>&quot; processes.</li>
+<li>For Ubuntu, start the &quot;System Monitor&quot; and look for  &quot;<code>mysqld</code>&quot; processes. &quot;Kill&quot; all the &quot;<code>mysqld</code>&quot; processes.</li>
+</ul>
+
+<br />
+
+<pre class="output">
+<strong>SYMPTOM:</strong> Cannot start MySQL server after installation
+<strong>ERROR MESSAGE: </strong>[ERROR] <span class="color-error">Can't find message file</span> 'x:\xxxxx\share\english\errmsg.sys'
+<strong>PROBABLE CAUSES:</strong> Error in &quot;basedir&quot; option in the configuration file &quot;my.ini&quot;.
+<strong>POSSIBLE SOLUTIONS:</strong>
+  1. Take note of your MySQL installed directory, e.g., d:\myproject\mysql.
+  2. Goto the MySQL installed directory, and check if &quot;my.ini&quot; (for Windows) or &quot;my.cnf&quot; (for Mac and Ubuntu) exists.
+  3. For Windows, if you use <strong>NotePad</strong>, ensure that you save the configuration file as &quot;my.ini&quot;, instead of &quot;my.ini.txt&quot;.
+     &quot;my.ini.txt&quot; has file type of &quot;Text Document&quot;. &quot;my.ini&quot; has file type of &quot;Configuration Settings&quot;.
+     &quot;Save As...&quot; the file again by enclosing the filename &quot;my.ini&quot; with a pair of double quotes.
+  4. Check the &quot;basedir&quot; and &quot;datadir&quot; options in &quot;my.ini&quot;. Make sure that that path corresponds to your 
+     MySQL installed directory. Use Unix-style forward slash '/' as the directory separator, instead of 
+     Windows-style back slash '\'.</pre>
+
+<br />
+<pre class="output">
+<strong>SYMPTOM:</strong> Cannot start MySQL server after installation
+<strong>ERROR MESSAGE:</strong>
+  [ERROR] <span class="color-error">Can't open the mysql.plugin table</span>. Please run mysql_upgrade to create it.
+  .........
+  [ERROR] Fatal error: <span class="color-error">Can't open and lock privilege tables: Table 'mysql.host' doesn't exist</span>
+<strong>PROBABLE CAUSES:</strong> Error in &quot;datadir&quot; option in the configuration file &quot;my.ini&quot;.
+<strong>POSSIBLE SOLUTIONS:</strong> Check that &quot;datadir&quot; selects the &quot;data&quot; sub-directory of your MySQL installed directory, 
+  e.g., datadir=d:/myproject/mysql/<span class="underline"><strong>data</strong></span></pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM:</strong> MySQL Server runs on TCP port <span class="color-error">3306</span> (the MySQL default port number) instead of 8888 that was configured.
+<strong>PROBABLE CAUSES</strong><strong>:</strong> MySQL Server was not started with your customized &quot;my.ini&quot;.
+<strong></strong><strong>POSSIBLE SOLUTIONS:</strong>
+  1. Take note of your MySQL installed directory, e.g., d:\myproject\mysql.
+  2. Goto the MySQL installed directory, and check if &quot;my.ini&quot; exists.</pre>
+
+<br />
+<pre class="output">
+<strong>SYMPTOM:</strong> Cannot start MySQL server.
+<strong>ERROR MESSAGE:</strong>
+  InnoDB: <span class="color-error">Operating system error number 32 in a file operation</span>.
+  InnoDB: The error means that another program is using InnoDB's files.
+  InnoDB: This might be a backup or antivirus software or <span class="color-error">another instance of MySQL</span>. 
+  InnoDB: Please close it to get rid of this error.
+<strong><strong>PROBABLE CAUSES</strong><strong></strong>:</strong> You have already started an instance of MySQL.
+<strong></strong><strong>POSSIBLE SOLUTIONS:</strong> Shutdown the previously-started MySQL.
+  You may use &quot;Task Manager&quot; to cancel the &quot;process&quot; called &quot;mysqld&quot;.
+  [The proper way is to use &quot;mysqladmin&quot; to do a normal shutdown.]</pre>
+
+<h4 id="MySQLErrorsClient">Starting the &quot;<span class="font-code">mysql</span>&quot; Client</h4>
+
+<pre class="output">
+<strong>SYMPTOM:</strong> Cannot start mysql client
+<strong>ERROR MESSAGE:</strong> <span class="color-error">ERROR 2003 (HY000): Can't connect to MySQL server on 'localhost' (10061)</span>
+<strong>PROBABLE CAUSES:</strong> 
+  1. MySQL Server is NOT started, or
+  2. The client was connecting to the wrong port number
+<strong>POSSIBLE SOLUTIONS:</strong> 
+  1. Check to make sure that the MySQL server has been started. 
+     Note down the server's port number from the server's console.
+  2. Check &quot;my.ini&quot;, make sure that you have a [client] section with port=xxxx.
+  3. Run a client with command &quot;<strong>mysql -u root --port=xxxx</strong>&quot; to specify the server's port number manually.</pre>
+<br />
+
+<pre class="output">
+<strong>SYMPTOM:</strong> Cannot start mysql client
+<strong>ERROR MESSAGE:</strong> <span class="color-error">error 2005 (hy000) unknown mysql server host  'localhost' (2)</span>
+<strong>PROBABLE CAUSES:</strong> 
+  Somehow your localhost is not bind to 127.0.0.1
+<strong>POSSIBLE SOLUTIONS:</strong>
+  1. Try &quot;ping localhost&quot; to check if &quot;localhost&quot; exists.
+  2. If not, check &quot;C:\Windows\System32\drivers\etc\hosts&quot; file. There should be an entry:
+     127.0.0.1       localhost
+     Remove all the other localhost entries, if any.</pre>
+
+
+<h4 id="MySQLErrorsUsingClient">Using the &quot;<span class="font-code">mysql</span>&quot; Client</h4>
+
+<pre class="output">
+<strong>ERROR MESSAGE: </strong><span class="color-error">ERROR 1046 (3D000): No database selected</span>
+<strong>PROBABLE CAUSES:</strong> The default database is not set
+<strong>POSSIBLE SOLUTIONS:</strong> 
+  1) Issue command &quot;use database&quot; to set the default database, or
+  2) Use the fully-qualified name in the form of &quot;<em>databaseName.tableName</em>&quot;.
+  
+<strong>ERROR MESSAGE: </strong><span class="color-error">ERROR 1005 (HY000): Can't create table '....' (errno: 150)</span>
+<strong>PROBABLE CAUSES:</strong>
+A foreign key references a parent table's column which is not indexed. Create index for that column in the parent table.</pre>
+
+<h3 id="TomcatErrors">Tomcat Installation Common Errors</h3>
+
+<h4 id="TomcatErrorsStartup">Starting Tomcat after Installation</h4>
+
+<pre class="output">
+<strong>SYMPTOM:</strong> Cannot start Tomcat after installation. <span class="color-error">The Tomcat console flashed and disappeared.</span>
+<strong>POSSIBLE SOLUTIONS:</strong> 
+  1. Run the script &quot;configtest.bat&quot; (for Windows) or &quot;./configtest.sh&quot; (for Mac/Linux) to check
+     configuration files (&quot;server.xml&quot;, &quot;web.xml&quot;, &quot;content.xml&quot;).
+  2. Check the Tomcat's log files, located at &quot;&lt;TOMCAT_HOME&gt;\logs&quot;.
+     The &quot;catalina.{yyyy-mm-dd}.log&quot; shows the Tomcat's startup messages.
+  3. Start the tomcat in the debugging mode by running &quot;catalina debug&quot; (or ./catalina.sh debug) and 
+     type &quot;run&quot; in the &quot;jdb&quot; prompt. Look for the error messages.
+  4. Check if you have already started a copy of Tomcat.
+     For Windows, start Task Manager, Tomcat run as a &quot;process&quot; named &quot;java.exe&quot;. Kill it.
+     For Mac/Linux, issue &quot;ps -ef | grep tomcat&quot; to locate the Tomcat process.
+       Note the process ID (<em>pid</em>), and kill the process via &quot;kill -9 <em>pid</em>&quot;.
+  5. Check the JDK Extension directory, remove the <em>out-dated</em> &quot;servlet-api.jar&quot;, if any.</pre>
+
+<br />
+
+<pre class="output"><strong>SYMPTOM:</strong> Cannot start Tomcat
+<strong>ERROR MESSAGE:</strong> <span class="color-error">
+  SEVERE: StandardServer.await: create[localhost:8005]
+  java.net.BindException: Address already in use: JVM_Bind</span>
+<strong>POSSIBLE SOLUTIONS:</strong>
+  1. Another Tomcat instance has been started. Kill it.
+     For Windows, start Task Manager, Tomcat run as a &quot;process&quot; named &quot;java.exe&quot;. Kill it.
+     For Mac/Linux, issue &quot;ps -ef | grep tomcat&quot; to locate the Tomcat process.
+        Note the process ID (<em>pid</em>), and kill the process via &quot;kill -9 <em>pid</em>&quot;.
+  2. Another application is running on the Tomcat's port number.
+     Change the Tomcat's port number in &quot;server.xml&quot;.
+     You can issue command &quot;netstat -an&quot; to check the status of all the ports.</pre>
+    
+<br />    
+<pre class="output"><strong>SYMPTOM:</strong> Cannot start Tomcat after installation
+<strong>ERROR MESSAGE:</strong> 
+  1. <span class="color-error">Neither the JAVA_HOME nor the JRE_HOME environment variable is defined</span>
+     At least one of these environment variable is needed to run this program
+  2. <span class="color-error">JRE_HOME environment variable is not defined</span>
+<strong>POSSIBLE SOLUTIONS:</strong>
+  1. Check if JAVA_HOME is properly defined, via command &quot;set JAVA_HOME&quot; (for Windows)
+     or &quot;echo $JAVA_HOME&quot; (for Mac/Linux).
+     Check the spelling carefully.
+  2. Define environment variable JAVA_HOME according to &quot;<a href="Tomcat_HowTo.html#javahome">Step 2: Create an Environment Variable JAVA_HOME</a>&quot;.
+</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM:</strong> Cannoat start Tomcat start after installation
+<strong>ERROR MESSAGE:</strong> java.lang.<span class="color-error">NoSuchMethodError</span>: javax.servlet.ServletContext.<span class="color-error">getSessionCookieConfig()</span>
+    Ljavax/servlet/SessionCookieConfig;
+<strong>PROBABLE CAUSES:</strong> This is a new method in Servlets 3.0 (which Tomcat 7 supports).
+    There is a Servlets 2.x API is your CLASSPATH or JDK's extension directory.
+<strong>POSSIBLE SOLUTIONS:</strong> Check your CLASSPATH. Remove servlet-api.jar from JDK's extension directory if any.</pre>
+
+<h4>Accessing Tomcat Server</h4>
+
+<p>Common Error Messages:</p>
+
+<ul>
+<li>(Firefox) Unable to Connect; (IE) Internet Explorer cannot display the webpage; (Chrome) Oops! Google Chrome could not connect to xxxx.</li>
+<li>Error 404 File Not Found.</li>
+<li>Error 500 Internal Server Error.</li>
+<li>Error 505: GET (or POST) method not supported: Check you servlet to make sure that you have defined a <code>doGet()</code> (or <code>doPost()</code>) method.</li>
+</ul>
+
+<p>Read &quot;<a href="Tomcat_HowTo.html#TomcatDebug">How to debug</a>&quot; section of &quot;How to install Tomcat&quot;.</p>
+
+<h3 id="JDBCErrors">JDBC Programming Common Errors</h3>
+
+<h4 id="JDBCErrorsMySQL">JDBC  on MySQL</h4>
+
+<pre class="output">
+<strong>SYMPTOM:</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE:</strong> 
+   (Windows) <span class="color-error">No suitable driver found</span>
+   (Mac/Linux) <span class="color-error">NullPointerException</span>
+<strong>PROBABLE CAUSES:</strong> MySQL JDBC Driver Connector/J was NOT (properly) installed.<strong>
+POSSIBLE SOLUTION</strong>:
+   1. Read &quot;<a href="../java/JDBC_Basic.html#MySQLJDBCDriverInstall">Install  MySQL  JDBC Driver</a>&quot; again, again and again... 
+   2. Make sure that you copy the driver to the JDK's Extension directory.
+   3. You may the following command to run your JDBC program:
+      &gt; java -cp .;<em>path-to</em>\mysql-connector-java-5.1.xx-bin.jar <em>JdbcClassName</em></code>
+   4. For Tomcat, you may place the driver JAR-file in Tomcat's &quot;lib&quot; directory.</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM:</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: 
+   <span class="color-error">Communications link failure</span>
+<strong>PROBABLE CAUSES</strong>: 
+   1. MySQL Server is NOT started, or
+   2. The program was connecting to a wrong TCP port number or wrong hostname (or IP address)
+      in your database-URL jdbc:mysql://<strong>localhost:port</strong>/studentdb.
+<strong>POSSIBLE SOLUTION</strong>:
+   1. Make sure that server has been started. Note down the server's port number 
+      from the server's console.
+   2. Check the database-URL's hostname and port number: jdbc:mysql://localhost:<em>port</em>/studentdb
+   3. Run a MySQL client, issue command &quot;status&quot; to confirm the server's TCP port number.
+   4. Run a mysql client, use &quot;mysql -u root -p <strong>--port=xxxx</strong>&quot; to specify the port number to
+      confirm the server's port number.</pre>
+
+<br />
+<pre class="output">
+<strong>SYMPTOM:</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: java.sql.SQLException: <span class="color-error">Access denied for user</span> 'username'@'localhost' 
+   (using password: YES)
+<strong>PROBABLE CAUSES</strong>: Wrong username or password in statement:
+   DriverManager.getConnection(<strong><em>databaseURL</em>, <em>username</em>, <em>password</em></strong>).
+<strong>POSSIBLE SOLUTION</strong>: Obvious!</pre>
+
+<br />
+<pre class="output">
+<strong>SYMPTOM:</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: <span class="color-error">
+   Unknown database</span> 'xxxx'
+<strong>PROBABLE CAUSES</strong>: DriverManager.getConnection(&quot;jdbc:mysql://localhost:8888/<span class="underline"><em><strong>xxxx</strong></em></span>&quot;, user, password) 
+   specifies a database that does not exist in the server.
+<strong>POSSIBLE SOLUTION</strong>: Create the database using a client, before running the Java program.</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM:</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException:<span class="color-error"><strong> 
+   </strong>Table 'xxxx.xxxx' doesn't exist</span>
+<strong>PROBABLE CAUSES</strong>: The SQL statement references a non-existence table.
+<strong>POSSIBLE SOLUTION</strong>: Check your SQL statement and the database tables.</pre>
+
+<br />
+<pre class="output">
+<strong>SYMPTOM:</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: java.sql.SQLException: <span class="color-error">Column 'xxx' not found</span>.
+<strong>PROBABLE CAUSES</strong>: The method ResultSet.getXxx(<em>columnName</em>) cannot locate 
+   the requested <em>columnName</em> in the ResultSet.
+<strong>POSSIBLE SOLUTION</strong>: Make sure that the column 'xxx' is included in the SELECT statement,
+   so that it is included in the ResultSet.</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM:</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: 
+   <span class="color-error">You have an error in your SQL syntax; check the manual that corresponds to 
+   your MySQL server version for the right syntax to use near .... at line x</span>
+<strong>PROBABLE CAUSES</strong>: Syntax error in your SQL statement.
+<strong>POSSIBLE SOLUTION</strong>: Obvious!</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM:</strong> Logical error in comparing floating point numbers for equality. 
+   For example, &quot;SELECT * FROM class101 WHERE gpa = 4.4&quot; 
+   yields <span class="color-error">empty set</span> although there is a record with gpa=4.4.
+<strong>PROBABLE CAUSES</strong>: 
+   &quot;gpa&quot; has the type of FLOAT.
+<strong></strong>   Floating point numbers are not stored &quot;accurately&quot;.
+<strong>POSSIBLE SOLUTION</strong>: 
+   Do not compare two floating point number for equality. 
+   Instead, specify a range, e.g., &quot;gpa &gt; 3.9 AND gpa &lt; 4.1&quot;</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM (NetBeans):</strong> I got this strange error running JDBC program on NetBeans.
+<strong>ERROR MESSAGE</strong>: 
+   The DriverManager.getConnection() method throws:
+   com.mysql.jdbc.exceptions.jdbc4.<strong>MySQLSyntaxErrorException</strong>: You have an error 
+      in your SQL syntax; check the manual that corresponds to your MySQL server 
+      version for the right syntax to use near '??' at line 1
+<strong></strong><strong></strong><strong>POSSIBLE SOLUTION</strong>:
+   The NetBeans project was using &quot;UTF-16&quot; as the default charset. Hence, it communicates
+      with MySQL server using &quot;UTF-16&quot; character set.
+   The problem solved by setting the default charset to an ASCII compatible charset
+      such as &quot;Latin-1&quot; or &quot;UTF-8&quot; (Right-click on the project &rArr; Properties &rArr; Encoding)</pre>
+   
+<h4 id="JDBCErrorsAccess">JDBC on MS Access</h4>
+
+<pre class="output">
+<strong>SYMPTOM (Access 2007):</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: java.sql.SQLException: [Microsoft][ODBC Driver Manager] <span class="color-error"><strong>
+   </strong>Data source name not found</span> and no default driver specified.
+<strong>PROBABLE CAUSES</strong>: No such Data Source (ODBC) name in method 
+   DriverManager.getConnection(&quot;jdbc:odbc:<span class="underline"><em>ODBCName</em></span>&quot;);
+<strong>POSSIBLE SOLUTION</strong>: Check your ODBC configuration (under control panel &rArr; ODBC).</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM (Access 2007):</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: java.sql.SQLException: [Microsoft][ODBC Driver Manager] <span class="color-error">No data found</span>
+<strong>PROBABLE CAUSES</strong>: The <em>ODBCName</em> in method DriverManager.getConnection(&quot;jdbc:odbc:<span class="underline"><em>ODBCName</em></span>&quot;) 
+   does not SELECT a database.
+<strong>POSSIBLE SOLUTION</strong>: Check your ODBC configuration (under control panel &rArr; ODBC).</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM (Access 2007):</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: java.sql.SQLException: [Microsoft][ODBC Microsoft Access Driver] 
+   <span class="color-error">The Microsoft Office Access database engine cannot find the input table or query 'xxx'.</span>  
+   Make sure it exists and that its name is spelled correctly.
+<strong>PROBABLE CAUSES</strong>: The SQL statement references a non-existence table.
+<strong>POSSIBLE SOLUTION</strong>: Check your SQL statement and the database tables.</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM (Access 2007):</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: java.sql.SQLException: <span class="color-error">Column not found.</span>
+<strong>PROBABLE CAUSES</strong>: The method ResultSet.getXxx(<em>columnName</em>) cannot locate 
+   the requested <em>columnName</em> in the ResultSet.
+<strong>POSSIBLE SOLUTION</strong>: Make sure that the column is included in the SELECT statement, 
+   so that it is included in the ResultSet.</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM (Access 2007):</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: 
+  [Microsoft][ODBC Microsoft Access Driver] <span class="color-error">Syntax error</span> in FROM clause.
+  [Microsoft][ODBC Microsoft Access Driver] <span class="color-error">Too few parameters</span>.
+  ....
+<strong>PROBABLE CAUSES</strong>: Syntax error in the SQL statement.
+<strong>POSSIBLE SOLUTION</strong>: Obvious!</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM (Access 2007):</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: 
+  [Microsoft][ODBC Microsoft Access Driver] <span class="color-error">SQL General Error</span>.
+<strong>PROBABLE CAUSES</strong>: This message is not clear, but most likly caused by inserting a record
+  with duplicate primary key.</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM (Access 2007):</strong> Can compile the JDBC program but Runtime Error
+<strong>ERROR MESSAGE</strong>: 
+  [Microsoft][ODBC Microsoft Access Driver] <span class="color-error">The number of fields are not the same as the ....</span>
+<strong>PROBABLE CAUSES</strong>: In the INSERT INTO <em>tableName</em> VALUES (...), you should have the same number
+  of values as the number of columns.</pre>
+
+<h3 id="ServletErrors">Java Servlet Common Errors</h3>
+
+<pre class="output">
+<strong>SYMPTOM:</strong> Cannot compile Java Servlet
+<strong>ERROR MESSAGE</strong>: 
+  <span class="color-error">class <em>xxxx</em> is public, should be declared in a file named <em>xxxx</em>.java</span>
+<strong>CAUSES/SOLUTION</strong>:
+  In Java, the filename must be the same as the classname with extension of &quot;.java&quot;.
+  For example, the class &quot;HelloServlet&quot; must be saved as &quot;HelloServlet.java&quot; - case-sensitive!</pre>
+
+<br />
+<pre class="output"><strong>SYMPTOM:</strong> Cannot compile Java Servlet
+<strong>ERROR MESSAGE</strong>: <span class="color-error">package javax.servlet does not exist</span>
+<strong>CAUSES/SOLUTION</strong>:
+  The Java Servlet library is missing. Read &quot;<a href="Tomcat_HowTo.html#InstallServletAPI">Step 6(a) Install Servlet API Library</a>&quot; 
+  again, again and again....</pre>
+  
+<h3 id="NetBeansErrors">NetBeans Common Errors</h3>
+
+<pre class="output">
+<strong>SYMPTOM:</strong> Cannot display chinese characters and other Unicode characters in the NetBeans editor
+<strong>ERROR MESSAGE</strong>: Chinese characters displayed as boxes or question marks in the NetBeans editor
+<strong>CAUSES/SOLUTION</strong>:
+  1. Check the character set. Right-click on the project &rArr; Property &rArr; &quot;Source&quot; node 
+     &rArr; &quot;Encoding&quot; &rArr; Choose &quot;UTF-8&quot; or the desired Unicode charater sets.
+  2. You also need to choose a font type that displays chinese or Unicode characters,
+     such as &quot;Monospace&quot;.
+     In &quot;Tools&quot; menu ⇒ Options ⇒ Fonts &amp; Colors ⇒ Syntax ⇒ default.
+     If one font does not work, try another.</pre>
+     
+<h3>C++ with GCC Compiler</h3>
+
+<pre class="output">
+<strong>SYMPTOM:</strong> Cannot compile
+<strong>ERROR MESSAGE</strong>: error: 'string' does not name a type
+<strong>CAUSES/SOLUTION</strong>: missing &quot;using namespace std;&quot;
+ 
+<strong>SYMPTOM:</strong> Cannot compile
+<strong>ERROR MESSAGE</strong>: error: iostream: No such file or directory
+<strong>CAUSES/SOLUTION</strong>: The file is incorrectly saved as &quot;.c&quot; instead of &quot;.cpp&quot;</pre>
+
+    
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7.0_17, MySQL 5.6.10, Tomcat 7.0.39, JDBC 4.0<br />
+Last modified: April, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

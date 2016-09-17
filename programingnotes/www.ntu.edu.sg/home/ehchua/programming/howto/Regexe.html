@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Regular Expression (Regex) </title>
+
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Regular Expression (Regex)</h1>
+</div>
+
+<div id="content-main">
+
+
+<p><em>Regular Expression</em>, or <em>regex</em> or <em>regexp</em> in short, is extremely and amazingly powerful in searching and manipulating text strings. One line of regex can easily replace several dozen lines of programming codes. Regex is supported in almost all the scripting languages (such as Perl, Python, PHP, and JavaScript); as well as general purpose programming languages such as Java; and even word processors such as Word for searching texts. Getting started with regex may not be easy due to its geeky syntax, but it is certainly worth the investment of your time.</p>
+
+<h3>Regex By Examples</h3>
+
+<h5>Example 1: Numeric String <code>/^[0-9]+$/</code></h5>
+
+<ol>
+<li>A regex is typically delimited by a pair of forward slash, in the form of <code>/.../</code>.</li>
+<li>The leading <code>^</code> and the trailing <code>$</code> are known as position anchors, which match the beginning and ending of the input string, respectively. As a result, the entire input string shall be matched, instead of a portion of the input string. Without these position anchors, the regex can match any part of the input string, i.e., with leading and trailing sub-string unmatched.</li>
+<li>The <code>[...]</code> encloses a list of characters, and matches any character in the list. <code>[0-9]</code> matches any character between 0 and 9 (i.e., a digit), where dash (-) denotes the range.</li>
+<li>The <code>+</code> indicate 1 or more occurrences of the previous sub-expression. In this case, <code>[0-9]+</code> matches one or more digits.</li>
+<li>This regex matches any non-empty numeric string (of digits 0 to 9), e.g., &quot;<code>0</code>&quot; and &quot;<code>12345</code>&quot;. It does not match with &quot;&quot; (empty string), &quot;<code>abc</code>&quot;, &quot;<code>a123</code>&quot;, etc. However, it also matches &quot;<code>000</code>&quot;, &quot;<code>0123</code>&quot; and &quot;<code>0001</code>&quot;.</li>
+<li>You can also use <code>/^\d+$/</code>, where <code>\d</code> is a metacharacter that matches any digit, which is identical to <code>[0-9]</code>.</li>
+</ol>
+
+<h5>Example 2: Positive Integer Literal <code>/[1-9][0-9]*|0/</code></h5>
+<ol>
+<li><code>[1-9]</code> matches any character between 1 to 9; <code>[0-9]*</code> matches zero or more digits. The <code>*</code> is an occurrence indicator representing zero or more occurrences. Together, <code>[1-9][0-9]*</code> matches any number without a leading zero.</li>
+<li><code>|</code> represents the OR operator; which is used to include the number 0.</li>
+<li>This expression matches &quot;<code>0</code>&quot; and &quot;<code>123</code>&quot;; but does not match &quot;<code>000</code>&quot; and &quot;<code>0123</code>&quot;.</li>
+<li>You can replace <code>[0-9]</code> by metacharacter <code>\d</code>.</li>
+<li>We did not use position anchors <code>^</code> and <code>$</code> in this regex. Hence, it can match any part of the input string, instead of the whole string.</li>
+<li>Integers, both positive and negative, can be written as <code>/[+-]?[1-9]\d*|0/</code>, where <code>[+-] </code> matches either <code>+</code> or <code>-</code> sign, and <code>?</code> is an occurrence indicator denoting 0 or 1 occurrence (i.e. optional).</li>
+</ol>
+
+<h5>Example 3: An Identifier (or Name) <code>/[a-zA-Z_][0-9a-zA-Z_]*/</code></h5>
+<ol>
+<li>Begin with one letters or underscore, followed by zero or more digits, letters and underscore.</li>
+<li>You can use metacharacter <code>\w</code> (word character) for <code>[a-zA-Z0-9_]</code>; <code>\d</code> (digit) for <code>[0-9]</code>. Hence, it can be written as <code>/[a-zA-Z_]\w*/</code>.</li>
+<li>To include dash (-) in the identifier, use <code>/[a-zA-Z_][\w-]*/</code>. Nonetheless, dash conflicts with subtraction and is often excluded from identifier.</li>
+</ol>
+
+<h5>Example 4: An Image Filename <code>/^\w+\.(gif|png|jpg|jpeg)$/i</code></h5>
+
+<ol>
+<li>The two forward-slashes <code>/.../</code> contains a regex.</li>
+<li>The leading <code>^</code> and trailing <code>$</code> match the beginning and the ending of the input string, respectively. That is, the entire input string shall match with this regex, instead of a part of the input string.</li>
+<li><code>\w+</code> matches one or more word characters (i.e., <code>[a-zA-Z0-9_]+</code>).</li>
+<li><code>\.</code> matches the <code>.</code> character. We need to use <code>\.</code> to represent <code>.</code> as <code>.</code> has special meaning in regex. The <code>\</code> is known as the escape code, which restore the original literal meaning of the following character.</li>
+<li><code>(gif|png|jpg|jpeg)</code> matches either &quot;<code>gif</code>&quot;, &quot;<code>png</code>&quot;, &quot;<code>jpg</code>&quot; or &quot;<code>jpeg</code>&quot;. The <code>|</code> denotes &quot;OR&quot; operator.</li>
+<li>The modifier <code>i</code> after the regex specifies case-insensitive matching. That is, it accepts &quot;<code>test.GIF</code>&quot; and &quot;<code>test.Gif</code>&quot;.</li>
+</ol>
+
+<h5>Example 5: Email Address <code>/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/</code></h5>
+
+<ol>
+<li>The two forward-slashes <code>/.../</code> contains a regex.</li>
+<li>The leading <code>^</code> and trailing <code>$</code> match the beginning and the ending of the input string, respectively. That is, the entire input string shall match with this regex, instead of a part of the input string.</li>
+<li><code>\w+</code> matches 1 or more word characters (i.e., <code>[a-zA-Z0-9_]</code>).</li>
+<li><code>[\.-]</code> matches character <code>.</code> or <code>-</code>. We need to use <code>\.</code> to represent <code>.</code> as <code>.</code> has special meaning in regex. The <code>\</code> is known as the escape code, which restore the original literal meaning of the following character.</li>
+<li><code>[\.-]?</code> matches 0 or 1 occurrence of <code>[\.-]</code>.</li>
+<li>Again, <code>\w+</code> matches 1 or more word characters.</li>
+<li><code>([\.-]?\w+)*</code> matches 0 or more occurrences of <code>[\.-]?\w+</code>.</li>
+<li>The sub-expression <code>\w+([\.-]?\w+)*</code> is used to match the username in the email, before the <code>@</code> sign. It begins with at least one word character (a-z, A-Z, 0-9 and underscore), followed by more word characters or <code>.</code> or <code>-</code>. However, a . or - must follow by a word character (a-z, A-Z, 0-9 and underscore). That is, the string cannot contain &quot;<code>..</code>&quot;, &quot;<code>--</code>&quot;, &quot;<code>.-</code>&quot; or &quot;<code>-.</code>&quot;. Example of valid string are &quot;<code>a.1-2-3</code>&quot;.</li>
+<li>The <code>@</code> matches itself.</li>
+<li>Again, the sub-expression <code>\w+([\.-]?\w+)*</code> is used to match the email domain name, with the same pattern as the username described above.</li>
+<li>The sub-expression <code>\.\w{2,3}</code> matches a . followed by two or three word characters, e.g., &quot;<code>.com</code>&quot;, &quot;<code>.edu</code>&quot;, &quot;<code>.us</code>&quot;, &quot;<code>.uk</code>&quot;, &quot;<code>.co</code>&quot;.</li>
+<li><code>(\.\w{2,3})+</code> specifies that the above sub-expression could occur one or more times, e.g., &quot;<code>.com</code>&quot;, &quot;<code>.co.uk</code>&quot;, &quot;<code>.edu.sg</code>&quot; etc.</li>
+</ol>
+
+<p><span class="line-heading">Exercise:</span> Interpret this regex, which provide another representation of email address: <code>/^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/</code>.</p>
+
+<h5>Example 6: Swapping Words using Back-References <code>/^(\S+)\s+(\S+)$/</code></h5>
+
+<ol>
+<li>The two forward-slashes <code>/.../</code> contain a regex.</li>
+
+<li>The <code>^</code> and <code>$</code> match the beginning and ending of the input string, respectively</li>
+
+<li>The <code>\s</code> (lowercase <code>s</code>) matches a whitespace (blank, tab <code>\t</code>, form-feed <code>\f</code> and newline <code>\r</code> or <code>\n</code>). On the other hand, the <code>\S+</code> (uppercase <code>S</code>) matches anything that is not matched by <code>\s</code>, i.e., non-whitespace. In regex, the uppercase metacharacter denotes the <em>inverse</em> of the lowercase counterpart, for example, <code>\w</code> for word character and <code>\W</code> for non-word character.</li>
+
+<li>The above regex matches two words separated by one or more whitespaces.</li>
+
+<li>Parentheses () has two meanings in regex: to group a sub-expression (e.g., <code>(abc)?</code>) and to provide a so-called back-reference for capturing and extracting matches.</li>
+
+<li>The parentheses in <code>(\S+)</code>, called <em>parenthesized back-reference</em>, is used to extract the matched sub-string from the input string. In this regex, there are two <code>(\S+)</code>, match the first two words, separated by one or more whitespaces <code>\s+</code>. The two matched words are extracted from the input string and typically kept in special variables <code>$1</code> and <code>$2</code> respectively.</li>
+
+<li>To swap the two words, you can access the special variables, and print &quot;<code>$2 $1</code>&quot; (via a programming language); or substitute operator &quot;<code>s/(\S+)\s+(\S+)/$2 $1/</code>&quot; (in Perl).</li>
+</ol>
+
+<h5>Example 7: HTTP Address <code>/^http:\/\/\S+(\/\S+)*(\/)?$/</code></h5>
+<ol>
+<li>Begin with <code>http://</code>. Take note that <code>/</code> needs to be written as <code>\/</code> with an escape code.</li>
+<li>Followed by <code>\S+</code>, one or more non-whitespaces, for the domain name.</li>
+<li>Followed by <code>(\/\S+)*</code>, zero or more &quot;/...&quot;, for the sub-directories.</li>
+<li>Followed by <code>(\/)?</code>, an optional (0 or 1) trailing <code>/</code>, for directory request.</li>
+</ol>
+
+
+<h3>Regex Syntax<a name="Regex_Syntax">&nbsp;</a></h3>
+
+<p>A <em>Regular Expression</em> (or <em>Regex</em>) is a <em>pattern</em> (or <em>filter</em>) that accepts a set of strings that <em>matches</em> the pattern. </p>
+
+<p>A regex is typically delimited by a pair of forward slashes <code>/.../</code>. It consists of a sequence of characters,  meta-characters (such as <code>.</code>,  <code>\d</code>, <code>\</code>s, <code>\S</code>) and operators (such  as <code>+</code>, <code>*</code>, <code>?</code>, <code>|</code>, <code>^</code>)</p>
+
+<p>For examples,</p>
+
+<table class="table-zebra">
+<tr>
+<th>Regex</th>
+<th>Matches</th>
+</tr>
+
+<tr>
+<td class="font-code">/^[1-9][0-9]*|0$/</td>
+<td>A positive integer</td>
+</tr>
+
+<tr>
+<td class="font-code">/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/</td>
+<td>An email address</td>
+</tr>
+</table>
+
+<h4>Matching a Character</h4>
+
+<p>The fundamental building blocks are patterns that match <em>a single character</em>. Most characters, including all letters (<code>a-z</code> and <code>A-Z</code>) and  digits (<code>0-9</code>), match themselves. In other words, the regex <code>/a/</code> matches the string &quot;<code>a</code>&quot;; regex <code>/x/</code> matches the string &quot;<code>x</code>&quot;.</p>
+
+<p>A regex is constructed by combining many smaller <em>sub-expressions</em> or <em>atoms</em>. For example, the regex <code>/Friday/</code> matches  the string &quot;<code>Friday</code>&quot;. </p>
+
+<p><span class="line-heading">Escape Sequence</span>: To match some special characters, such as <code>+</code>, <code>*</code>, <code>/</code> and <code>\</code> which are regex's operators, we need to precede the character with a backslash, known as <em>escape sequence</em> (i.e., <code>\+</code>, <code>\*</code>, <code>\/</code> and <code>\\</code>).  For example, the regex <code>/a\*b\+/</code> matches the string &quot;<code>a*b+</code>&quot;.</p>
+
+<h4>OR (<code>|</code>) Operator</h4>
+
+<p>You can provide <em>alternatives</em> using the &quot;OR&quot; operator, denoted by a vertical bar <code>'|'</code>. For example, the regex <code>/four|for|floor|4/</code> matches strings &quot;<code>four</code>&quot;, &quot;<code>for</code>&quot;, &quot;<code>floor</code>&quot; or &quot;<code>4</code>&quot;.</p>
+
+<h4>Bracket List <code>[...]</code>, <code>[^...]</code> and Range <code>[ - ]</code> Expressions</h4>
+
+<p>A <em>bracket expression</em> is <em>a list of characters</em> enclosed by <code>[ ]</code>, also called <em>character class</em>. It matches any ONE character in the list.  However, if the first character of the list is the caret (<code>^</code>), then it matches any ONE character NOT in the list.  For example, the regex <code>[02468]</code> matches a single digit 0, 2, 4, 6, or 8; the regex <code>[^02468]</code> matches any single character other than 0, 2, 4, 6, or 8.</p>
+
+<p>Instead of listing all characters, you could use a <em>range expression</em> inside the bracket.  A range expression consists of 2 characters separated by a hyphen (<code>-</code>).  It matches any single character that sorts between the two characters, inclusive. For example, <code>[a-d]</code> is the same as <code>[abcd]</code>.  You could include a caret (<code>^</code>) in front of the range to invert the matching.  For example, <code>[^a-d]</code> is equivalent to <code>[^abcd]</code>.</p>
+
+<p>Special characters:</p>
+<ul>
+<li>To include a <code>]</code>, place it first in the list.</li>
+<li>To include a <code>^</code>, place it anywhere but first.</li>
+<li>To include a <code>-</code> place it last.</li>
+<li>Most special characters (such as <code>+</code>, <code>*</code>) lose their special meaning inside bracket list, and can be used as they are.</li>
+</ul>
+
+<h4>Metacharacters <code>.</code>, <code>\w</code>, <code>\W</code>, <code>\d</code>, <code>\D</code>, <code>\s</code>, <code>\S</code></h4>
+
+<p>A <em>metacharacter</em> is a symbol with a special meaning inside a regex.</p>
+
+<ul>
+<li>The metacharacter dot (<code>.</code>) matches any single character except newline <code>\n</code> (same as <code>[^\n]</code>).  For example, <code>/.../</code> matches any 3 characters (including alphabets, numbers, whitespaces, but except newline); <code>/the../</code> matches &quot;<code>there</code>&quot;, &quot;<code>these</code>&quot;, &quot;<code>the&nbsp;&nbsp;</code>&quot;, and etc.</li>
+
+<li><code>\w</code> (word character) matches any single letter, number or underscore (same as <code>[a-zA-Z0-9_]</code>).  The uppercase counterpart <code>\W</code> (non-word-character) matches any single character that doesn't match by <code>\w</code> (same as <code>[^a-zA-Z0-9_]</code>).</li>
+
+<li>In regex, the uppercase metacharacter is always the inverse of the lowercase counterpart.</li>
+
+<li><code>\d</code> (digit) matches any single digit (same as <code>[0-9]</code>). The uppercase counterpart <code>\D</code> (non-digit) matches any single character that is not a digit (same as <code>[^0-9]</code>).</li>
+
+<li><code>\s</code> (space) matches any single whitespace (same as <code>[ \t\n\r\f]</code>, blank, tab, newline, carriage-return and form-feed). The uppercase counterpart <code>\S</code> (non-space) matches any single character that doesn't match by <code>\s</code> (same as <code>[^ \t\n\r\f]</code>).</li>
+
+</ul>
+
+<p>Examples: </p>
+<pre class="color-example">/\s\s/      <span class="code-comment"># Matches two whitespaces</span>
+/\S\S\s/    <span class="code-comment"># Two non-whitespaces followed by a whitespace</span>
+/\s+/    <span class="code-comment">   # one or more whitespaces</span>
+/\S+\s\S+/  <span class="code-comment"># two words (non-whitespaces) separated by a whitespace</span></pre>
+
+
+<h4>Occurrence Indicators: <span class="font-code">+</span>, <span class="font-code">*</span>, <span class="font-code">?</span>, <span class="font-code">{m}</span>, <span class="font-code">{m,n}</span>, <span class="font-code">{m,}</span></h4>
+
+<p>A regex sub-expression may be followed by an <em>occurrence indicator</em> (aka <em>repetition operator</em>):</p>
+<ul>
+<li><code>?</code>: The preceding item is optional and matched at most once (i.e., occurs 0 or 1 times).</li>
+<li><code>*</code>: The preceding item will be matched zero or more times.</li>
+<li><code>+</code>: The preceding item will be matched one or more times.</li>
+<li><code>{m}</code>: The preceding item is matched exactly m times.</li>
+<li><code>{m,}</code>: The preceding item is matched m or more times.</li>
+<li><code>{m,n}</code>: The preceding item is matched at least m times, but not more than n times.</li>
+</ul>
+
+<p>For example: The regex <code>/xy{2,4}/</code> (<code>'x'</code> followed by 2 to 4 <code>'y'</code>) matches &quot;<code>xyy</code>&quot;, &quot;<code>xyyy</code>&quot; and &quot;<code>xyyyy</code>&quot;.</p>
+
+<h4>Modifier</h4>
+
+<p>You can attach <em>modifiers</em> after a regex, in the form of <code>/.../<em>modifiers</em></code>, to control the matching behavior. For example,</p>
+
+<ul>
+<li><code>i</code>: case insensitive matching. The default is case-sensitive.</li>
+<li><code>g</code>: global matching, i.e., search for all the matches. The default searches only the first match.</li>
+</ul>
+
+<p>Examples: [TODO]</p>
+
+<h4>Greediness, Backtracking and Laziness</h4>
+
+<p><span class="line-heading">Greediness</span>: The <code>*</code>, <code>+</code>, <code>?</code>, <code>{m,n}</code> repetition operators are <em>greedy operators</em>, and by default grasp as many characters as possible for a match. For example, the regex  <code>/xy{2,4}/</code> try to match for &quot;xyyyy&quot;, then &quot;xyyy&quot;, and then &quot;xyy&quot;.</p>
+
+<p><span class="line-heading">Backtracking</span>: If a regex reaches a state where a match cannot be completed, it backtracks by unwinding one character from the greedy match. For example, if the regex <code>/z*zzz/</code> is matched against the string &quot;<code>zzzz</code>&quot;, the <code>z*</code> first matches &quot;<code>zzzz</code>&quot;; unwinds to match &quot;<code>zzz</code>&quot;; unwinds to match &quot;<code>zz</code>&quot;; and finally unwinds to match &quot;<code>z</code>&quot;, such that the rest of the patterns can find a match.</p>
+
+<p><span class="line-heading">Laziness</span>: You can put an extra <code>?</code> after the repetition operator (<code>*</code>, <code>+</code>, <code>?</code>, or <code>{}</code>) to curb its greediness (i.e., stop at the shortest match) in the form of <code>*?</code>, <code>+?</code>, <code>??</code>, <code>{}?</code>. For example,</p>
+
+<pre class="color-example">
+input = &quot;The &lt;code&gt;first&lt;/code&gt; and &lt;code&gt;second&lt;/code&gt; instances&quot;
+/&lt;code&gt;.*&lt;/code&gt;/g matches &quot;&lt;code&gt;first&lt;/code&gt; and &lt;code&gt;second&lt;/code&gt;&quot;.
+But
+/&lt;code&gt;.*?&lt;/code&gt;/g produces two matches: &quot;&lt;code&gt;first&lt;/code&gt;&quot; and &quot;&lt;code&gt;second&lt;/code&gt;&quot;.
+</pre>
+
+
+<h4>Positional Metacharacters (aka Position Anchors) <code>^</code>, <code>$</code>, <code>\b</code>, <code>\B</code>, <code>\&lt;</code>, <code>\&gt;</code>, <code>\A</code>, <code>\Z</code></h4>
+
+<p><em>Positional anchors</em> do NOT match actual character but matches <em>position</em> in a string, such as begin-of-line, end-of-line, begin-of-word, and end-of-word.</p>
+
+<ul>
+
+<li>The metacharacter caret (<code>^</code>) matches the beginning of the line (or input string); and the metacharacter dollar (<code>$</code>) matches the end of line, excluding newline (or end of input string). These two are the most commonly used position anchors.</li>
+
+<li>The metacharacter <code>\b</code> matches the the edge of a word (i.e., word boundary after a whitespace); and <code>\B</code> matches a string provided it's not at the edge of a word. For example, the regex <code>/\bcat\b/</code> matches the word &quot;<code>cat</code>&quot; in input string &quot;<code>This is a cat.</code>&quot;; but does not match string &quot;<code>This is a catalog.</code>&quot;.</li>
+
+<li>The metacharacters <code>\&lt;</code> and <code>\&gt;</code> match the empty string at the beginning and the end of a word respectively (compared with <code>\b</code>, which can match both the beginning and the end of a word).</li>
+
+<li><code>\A</code> matches the beginning of the line, just like <code>^</code>.  <code>\Z</code> matches the end of the line, just like <code>$</code>.  However, <code>\A</code> and <code>\Z</code> match only the actual beginning and ending, and ignore the embedded newlines within the string.</li>
+</ul>
+
+<p>You can use positional anchors liberally to increase the speed of matching. For examples:</p>
+<pre class="color-example">
+/ing$/          <span class="code-comment"> # ending with 'ing'</span>
+/^testing 123$/  <span class="code-comment"># Matches only one pattern.</span> <span class="code-comment">Should use equality comparison instead.</span></pre>
+
+<h4>Capturing Matches via Parenthesized Back-References &amp; Matched Variables <code>$1</code>,... , <code>$9</code></h4>
+
+<p>Parentheses <code>( )</code> serve two purposes in regex.</p>
+
+<ol>
+<li>Firstly, parentheses <code>( )</code> can be used to group sub-expressions for overriding the precedence or applying a repetition operator.  For example, <code>/(a|e|i|o|u){3,5}/</code> is the same as <code>/a{3,5}|e{3,5}|i{3,5}|o{3,5}|u{3,5}/</code>.</li>
+
+<li>Secondly, parentheses are used to provide the so called <em>back-references</em>.  A back-reference contains the <em>matched sub-string</em>.  For examples, the regex <code>/(\S+)/</code> creates one back-reference <code>(\S+)</code>, which contains the first word (consecutive non-spaces) of the input string; the regex <code>/(\S+)\s+(\S+)/</code> creates two back-references: <code>(\S+)</code> and another <code>(\S+)</code>, containing the first two words, separated by one or more spaces <code>\s+</code>.</li>
+</ol>
+
+<p> The back-references are stored in special variables <code>$1</code>, <code>$2</code>, …, <code>$9</code>, where  <code>$1 </code>contains the substring matched the first pair of parentheses, and so on. For example, <code>/(\S+)\s+(\S+)/</code> creates two back-references which matched with the first two words. The matched words are stored in <code>$1</code> and <code>$2</code>, respectively. </p>
+
+<p>Back-references are important if you wish to manipulate the string.</p>
+<p>For example, the following Perl expression swap the first and second words separate by a space:</p>
+
+<pre class="color-example">s/(\S+) (\S+)/$2 $1/;   <span class="code-comment"># Swap the first and second words separated by a single space</span>
+</pre>
+
+<h3>Regex in Programming Languages</h3>
+
+<p>JavaScript: [Link]</p>
+<p>Java: [Link]</p>
+<p>Perl: [Link]</p>
+<p>Python: [Link]</p>
+<p>PHP: [Link]</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Last modified: October, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

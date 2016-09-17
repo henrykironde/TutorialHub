@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Install Android SDK and Get Started</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Android Programming</h1>
+<h2>Networking</h2>
+</div>
+
+<div id="content-main">
+
+<h3>HTTP Clients</h3>
+
+<p><span class="line-heading">Reference</span>: &quot;Connecting to the Network&quot; @ <a href="http://developer.android.com/training/basics/network-ops/connecting.html">http://developer.android.com/training/basics/network-ops/connecting.html</a>.</p>
+<p>This section explains how to setup a networking program on Android. Do Example 1 below.</p>
+
+<h5>Classes <span class="font-code">java.net.HttpURLConnection</span> and <span class="font-code">java.net.URL</span></h5>
+
+<p>A client program can use the <code>java.net.HttpURLConnection</code> class to establish a connection to an HTTP server. The <code>HttpURLConnection</code> support HTTPS, streaming uploads and downloads, configurable timeouts, IPv6, and connection pooling.</p>
+<p>The steps are:</p>
+
+<ol>
+<li>Construct a <code>java.net.URL</code> with the intended URL (e.g., http://www.android.com).
+<pre>
+URL url = new URL(&quot;http://www.android.com&quot;);</pre></li>
+
+<li>Obtain a new <code>java.net.HttpURLConnection</code> via <code>URL</code>'s <code>openConnection()</code> method.
+<pre>
+HttpURLConnection conn = (HttpURLConnection) url.openConnection();</pre></li>
+
+<li>To upload a request body, <code>setDoOutput(true)</code> to the connection, and write the the stream returned by <code>getOutputStream()</code>.
+<pre>
+conn.setDoOutput(true);
+OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+......</pre></li>
+
+<li>Read the response message (header and body). The response body can be read from the stream returned by <code>getInputStream()</code>.
+<pre>
+InputStream in = new BufferedInputStream(conn.getInputStream());
+......</pre></li>
+
+<li>Disconnect.
+<pre>
+conn.disconnect();</pre>
+</li>
+</ol>
+
+<p>Read the API for &quot;<code>java.net.HttpURLConnection</code>&quot; and &quot;<code>java.net.URL</code>&quot;.</p>
+
+<p>For example,</p>
+
+<pre class="color-example">
+URL url = new URL(......);
+HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+try {
+   <span class="color-comment">// Optionally write request body</span>
+   conn.setDoOutput(true);
+   conn.setChunkedStreamingMode(0); <span class="color-comment">// unknown stream length</span>
+   OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+   <span class="color-comment">... write ...</span>
+
+   <span class="color-comment">// Get response code</span>
+   int responseCode = conn.getResponseCode();
+
+   <span class="color-comment">// Read response body</span> 
+   InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+   <span class="color-comment">... read ...</span>   
+} finally {
+   conn.disconnect();
+}</pre>
+
+<h5>Permissions</h5>
+
+<p>To perform network operations in Android, your application manifest (<code>AndroidManifest.xml</code>) must include the following permissions:</p>
+<pre class="color-example">
+&lt;manifest ......&gt;
+   <span class="color-new">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
+   &lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;</span>
+   ......
+&lt;/manifest&gt;</pre>
+
+<h5>Background Task via <span class="font-code">android.os.AsyncTask</span></h5>
+
+<p>In Android, the networking operations must be run on a separate thread from the main UI thread, because of its unpredictable delays. This can be carried out via:</p>
+
+<ol>
+<li>Extending an <code>android.os.AsyncTask&lt;Params, Progress, Result&gt;</code>, where <code>Params</code> and <code>Result</code> are the types for the <code>doInBackground()</code> method below.</li>
+
+<li>Override method &quot;<code>Result doInBackground(Params... params)</code>&quot; to carry out operations in the background.</li>
+
+<li>Override method &quot;<code>void onPostExecute(Result result)</code>&quot; to process the <code>result<span class="color-comment"></span></code> returned by <code>doInBackground()</code>.</li>
+
+<li>To start the <code>AsyncTask</code>, create an instance and invoke <code>execute(Params... params)</code>, which triggers <code>doInBackground()</code> with the parameters and <code>onPostExecute()</code>.</li>
+
+</ol>
+
+<p>Read the API for &quot;<code>android.os.AsyncTask</code>&quot;.</p>
+
+<p>For example,</p>
+
+<pre class="color-example">
+import android.os.AsyncTask
+......
+ 
+<span class="color-comment">// Extend an AsyncTask to run the networking operations away from the main UI thread.</span>
+private class NetworkingTask extends AsyncTask&lt;String, Void, String&gt; { <span class="color-comment"> // &lt;Param, Progress, Result&gt;</span>
+ 
+  <span class="color-comment"> // Run the networking operation in the background</span>
+   @Override
+   protected String doInBackground(String... strUrls) {
+     <span class="color-comment"> // networking operations</span>
+      ......
+   }
+ 
+  <span class="color-comment"> // Process the result returned by doInBackground()</span>
+   @Override
+   protected void onPostExecute(String result) {
+      ......
+   }
+}
+ 
+......
+ 
+<span class="color-comment">// To invoke the networking task with the given URL</span>
+new NetworkingTask().execute(strUrl);</pre>
+
+
+<h4>Example 1: Send an HTTP Request and Check the Response Code</h4>
+
+<p>Create an Android project with application name of &quot;<code>Test HTTP</code>&quot;, domain &quot;<code>example.com</code>&quot;, activity &quot;<code>MainActivity</code>&quot; and layout &quot;<code>activity_main</code>&quot;.</p>
+
+<p>The screen contains a <code>Button</code> and a <code>TextView</code>. Clicking the <code>Button</code> triggers an HTTP request (e.g., http://www.android.com) and displays the response code (e.g., 200 for &quot;OK&quot; and 404 for &quot;file not found&quot;) displayed in the <code>TextView</code>.</p>
+
+<img src="images/Network_TestHttp1.png" alt="TestHTTP 1" /><br />
+<img src="images/Network_TestHttp2.png" alt="TestHTTP 2" />
+
+<h5><span class="font-code">AndroidManifest.xml</span></h5>
+
+<p>Add the permissions for network operations as follows:</p>
+<pre class="color-example">
+&lt;manifest ......&gt;
+   <span class="color-new">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
+</span>   
+   &lt;application ......&gt;
+   ......
+&lt;/manifest&gt;</pre>
+
+<h5><span class="font-code">content_main.xml</span></h5>
+
+<pre class="color-example">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot;
+    android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
+    app:layout_behavior=&quot;@string/appbar_scrolling_view_behavior&quot;
+    tools:context=&quot;com.example.testhttp.MainActivity&quot;
+    tools:showIn=&quot;@layout/activity_main&quot;&gt;
+
+    <span class="color-new">&lt;TextView
+        android:id=&quot;@+id/txtResponseId&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:background=&quot;#cccccc&quot;
+        android:gravity=&quot;center&quot; /&gt;
+ 
+    &lt;Button
+        android:id=&quot;@+id/btnSendId&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_alignParentTop=&quot;true&quot;
+        android:layout_centerHorizontal=&quot;true&quot;
+        android:layout_marginTop=&quot;32dp&quot;
+        android:text=&quot;@string/btnSendLabel&quot;
+        android:onClick=&quot;btnOnClickHandler&quot; /&gt;</span>
+&lt;/RelativeLayout&gt;</pre>
+
+<h5><span class="font-code">strings.xml</span></h5>
+
+<p>Add this entry:</p>
+<pre class="color-example">
+&lt;string name=&quot;btnSendLabel&quot;&gt;SEND&lt;/string&gt;
+</pre>
+
+
+<h5><span class="font-code">MainActivity.java</span></h5>
+
+<pre class="color-example">
+package ......;
+ 
+import .......;
+<span class="color-new">import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import android.os.AsyncTask;
+import android.widget.Button;
+import android.widget.TextView;
+import android.view.View;
+import android.widget.Toast;</span>
+
+public class MainActivity ...... {
+ 
+   <span class="color-new">TextView txtResponse;
+   Button   btnSend;</span>
+ 
+   @Override
+   protected void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_main);
+ 
+      <span class="color-new">txtResponse = (TextView) findViewById(R.id.txtResponseId);
+      btnSend     = (Button) findViewById(R.id.btnSendId);</span>
+      ......
+      ......
+   }
+ 
+   <span class="color-new">public void btnOnClickHandler(View v) {
+      btnSend.setEnabled(false); <span class="color-comment"> // Disable the button</span>
+      new HttpTask().execute(&quot;<strong>http://www.android.com</strong>&quot;);<span class="color-comment"> // Send HTTP request</span>
+	     Toast.makeText(this, "Send", Toast.LENGTH_LONG).show(); <span class="color-comment">// Toast a message</span>
+   }</span>
+ 
+   <span class="color-new"><span class="color-comment">// Run the HTTP request in a background thread, separating from the main UI thread</span>
+   private class HttpTask extends AsyncTask&lt;String, Void, String&gt; {
+        @Override
+        protected String doInBackground(String... strURLs) {
+           URL url = null;
+           HttpURLConnection conn = null;
+            try {
+               url = new URL(strURLs[0]);
+               conn = (HttpURLConnection) url.openConnection();
+              <span class="color-comment"> // Get the HTTP response code (e.g., 200 for &quot;OK&quot;, 404 for &quot;Not found&quot;)</span>
+              <span class="color-comment"> // and pass a string description in result to onPostExecute(String result)</span>
+               int responseCode = conn.getResponseCode();
+               <strong><span class="color-new">if (responseCode == HttpURLConnection.HTTP_OK) {  <span class="color-comment">// 200</span>
+        	         return &quot;OK (&quot; + responseCode + &quot;)&quot;; 
+        	      } else {
+        	         return &quot;Fail (&quot; + responseCode + &quot;)&quot;;
+               }</span></strong>
+            } catch (IOException e) {
+                return &quot;Unable to retrieve web page. URL may be invalid.&quot;;
+            }
+        }
+ 
+       <span class="color-comment"> // Displays the result of the AsyncTask.</span>
+       <span class="color-comment"> // The String result is passed from doInBackground().</span>
+        @Override
+        protected void onPostExecute(String result) {
+           txtResponse.setText(result); <span class="color-comment"> // put it on TextView</span>
+       }
+    }</span>
+
+    ......
+    ......
+}</pre>
+
+<p>Try changing the URL in <code>btnOnClickHandler()</code> to &quot;<code>http://www.android.com/999.html</code>&quot; and &quot;<code>http://www.android.com999</code>&quot;. Explain the result.</p>
+
+<p>Notes:</p>
+
+<ol>
+<li>The localhost (127.0.0.1) refers to the Android emulator, not the host machine. Use the IP address of the server; or use a special IP 10.0.2.2 for the host machine of the emulator.</li>
+<li>You can also use pre-defined constants for HTTP response codes, e.g., <code>HttpURLConnection.HTTP_OK</code> (for 200), <code>HttpURLConnection.HTTP_NOT_FOUND</code> (for 404), and etc.</li>
+</ol>
+
+<h4>Example 2: Retrieve the Response Message (Optional)</h4>
+
+<p>Read  &quot;Connecting to the Network&quot; @ <a href="http://developer.android.com/training/basics/network-ops/connecting.html">http://developer.android.com/training/basics/network-ops/connecting.html</a>.</p>
+
+<h4>Next</h4>
+<p>Procced to do your project...</p>
+
+
+<h5 class="float-clear">&nbsp;</h5>
+
+<!-- @@ start change in v1 -->
+<a class="references" href="../howto/References.html#android">Link to Android's References and Resources</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Android 6.0 (Mashmarrow), Android Studio 1.5.1<br />
+Last modified: March, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

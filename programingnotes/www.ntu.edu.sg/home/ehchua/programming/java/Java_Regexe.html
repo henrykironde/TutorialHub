@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Regular Expression - Java Programming Tutorial</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Java Programming Tutorial</h1>
+<h1>Regular Expression (Regexe) in Java</h1>
+
+<h3>Introduction</h3>
+<p>Regular Expression (regexe) is extremely useful in programming, especially in processing text files.</p>
+<p>The <a href="http://java.sun.com/docs/books/tutorial/">Sun's online Java Tutorial</a> trail on &quot;<a href="http://java.sun.com/docs/books/tutorial/essential/regex/index.html">Regular Expressions</a>&quot; is excellently written. Please read if you are new to regexe.</p>
+
+<h3><span class="code-font">java.util.regex.Pattern</span> &amp; <span class="code-font">java.util.regex.Matcher</span> (JDK 1.4)</h3>
+
+<p>Regular expression was introduced in Java 1.4 in package <code>java.util.regex</code>. This package contains only two classes: <code>Pattern</code> and <code>Matcher</code>.</p>
+
+<ol>
+<li>The <code>Pattern</code> class represents a compiled regular expression. You get a <code>Pattern</code> object via <code>static</code> method <code>Pattern.compile(String regexe)</code>.</li>
+<li>The resulting <code>Pattern</code> object is used to obtain a <code>Matcher</code> instance, which is used to parse the input source.</li>
+</ol>
+
+<pre class="code-example">
+String regexe = &quot;......&quot;;
+String input  = &quot;......&quot;;
+Pattern pattern = Pattern.compile(regexe);
+Matcher matcher = pattern.matcher(input);</pre>
+
+<h3>Regexe by Examples</h3>
+
+<h4>Example 1: Find Text</h4>
+<p>For example, given the input &quot;This is an apple. These are 33 (thirty-three) apples&quot;, you wish to find all occurrences of pattern &quot;Th&quot; (case-sensitive or case insensitive).</p>
+
+<pre class="code-listing">import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+   
+public class RegexeFindText {
+   public static void main(String[] args) {
+   
+      <span class="code-comment">// Input for matching the regexe pattern</span>
+      String input = &quot;This is an apple. These are 33 (thirty-three) apples&quot;;
+      <span class="code-comment">// Regexe to be matched</span>
+      String regexe = &quot;Th&quot;;
+   
+      <span class="code-comment">// Step 1: Allocate a Pattern object to compile a regexe</span>
+      Pattern pattern = Pattern.compile(regexe);
+      //Pattern pattern = Pattern.compile(regexe, Pattern.CASE_INSENSITIVE);  <span class="code-comment">// case-insensitive matching</span>
+   
+      <span class="code-comment">// Step 2: Allocate a Matcher object from the compiled regexe pattern,
+      //         and provide the input to the Matcher</span>
+      Matcher matcher = pattern.matcher(input);
+   
+      <span class="code-comment">// Step 3: Perform the matching and process the matching result</span>
+   
+      <span class="code-comment">// Use method find()</span>
+      while (matcher.find()) {     <span class="code-comment">// find the next match</span>
+         System.out.println(&quot;find() found the pattern \&quot;&quot; + matcher.group()
+               + &quot;\&quot; starting at index &quot; + matcher.start()
+               + &quot; and ending at index &quot; + matcher.end());
+      }
+   
+      <span class="code-comment">// Use method matches()</span>
+      if (matcher.matches()) {
+         System.out.println(&quot;matches() found the pattern \&quot;&quot; + matcher.group()
+               + &quot;\&quot; starting at index &quot; + matcher.start()
+               + &quot; and ending at index &quot; + matcher.end());
+      } else {
+         System.out.println(&quot;matches() found nothing&quot;);
+      }
+   
+      <span class="code-comment">// Use method lookingAt()</span>
+      if (matcher.lookingAt()) {
+         System.out.println(&quot;lookingAt() found the pattern \&quot;&quot; + matcher.group()
+               + &quot;\&quot; starting at index &quot; + matcher.start()
+               + &quot; and ending at index &quot; + matcher.end());
+      } else {
+         System.out.println(&quot;lookingAt() found nothing&quot;);
+      }
+   }
+}
+</pre>
+<pre class="code-output">find() found the pattern &quot;Th&quot; starting at index 0 and ending at index 2
+find() found the pattern &quot;Th&quot; starting at index 18 and ending at index 20
+matches() found nothing
+lookingAt() found the pattern &quot;Th&quot; starting at index 0 and ending at index 2
+</pre>
+
+<p><strong>Explanation:</strong></p>
+<ul>
+<li>Java's regexe classes are kept in package <code>java.util.regex.Pattern</code>. There are only two classes in this package: <code>Pattern</code> and <code>Matcher</code>. You should browse the Javadoc for <code>Pattern</code> class, followed by <code>Matcher</code> class.</li>
+
+<li>Three steps are required to perform regexe matching:
+<ol>
+<li>Allocate a <code>Pattern</code> object. There is no constructor for the <code>Pattern</code> class. Instead, you invoke the <code>static</code> method <code>Pattern.compile(<em>regexeString</em>)</code> to compile the  <em><code>regexeString</code></em>, which returns a <code>Pattern</code> instance.</li>
+<li>Allocate a <code>Matcher</code> object. Again, there is no constructor for the <code>Matcher</code> class. Instead, you invoke the <code>matcher(<em>inputString</em>)</code> method from the <code>Pattern</code> instance (created in Step 1). You also bind the input sequence to this <code>Matcher</code>.</li>
+<li>Use the <code>Matcher</code> instance (created in Step 2) to perform the matching and process the matching result. The <code>Matcher</code> class provides a few <code>boolean</code> methods for performing the matches:
+
+<ul>
+
+<li><code>boolean find()</code>: scans the input sequence to look for the <em>next</em> subsequence that matches the pattern. If match is found, you can use the <code>group()</code>, <code>start()</code> and <code>end()</code> to retrieve the matched subsequence and its starting and ending indices, as shown in the above example.</li>
+<li><code>boolean matches()</code>: try to match the entire input sequence against the regexe pattern. It returns true if the entire input sequence matches the pattern.</li>
+<li><code>boolean lookingAt()</code>: try to match the input sequence, starting from the beginning, against the regexe pattern. It returns true if a <em>prefix</em> of the input sequence matches the pattern.</li>
+</ul>
+
+</li>
+
+</ol>
+</li>
+
+
+<li>To perform case-insensitive matching, use <code>Pattern.compile(<em>regexeString</em>, Pattern.CASE_INSENSITIVE)</code> to create the <code>Pattern</code> instance (as commented out in the above example).</li>
+</ul>
+
+<h4>Example 2: Find Pattern (Expressed in Regular Expression)</h4>
+<p>The above example to find a particular piece of text from an input sequence is rather trivial. The power of regexe is that you can use it to specify a pattern, e.g., <code>(\w)+</code> matches any word (delimited by space), <code>\b[1-9][0-9]*\b</code> matches any number with a non-zero leading digit, separated by spaces from other words..</p>
+<p>Try changing the regexe pattern of the above example to the followings and observe the outputs. Take not that you need to use a escape sequence <code>'\'</code> for special characters such as <code>'\'</code> inside a Java's string.</p>
+<pre class="code-example">String regexe = &quot;\\w+&quot;;        <span class="code-comment">// Escape needed for \</span>
+String regexe = &quot;\\b[1-9][0-9]+\\b&quot;;
+</pre>
+
+
+<p>Read Javadoc for the class <code><a href="http://java.sun.com/javase/6/docs/api/">java.util.regex.Pattern</a></code> for the list of regular expression constructs supported by Java.</p>
+<p>Read Sun's online Java Tutorial trail on &quot;<a href="http://java.sun.com/docs/books/tutorial/essential/regex/index.html">Regular Expressions</a>&quot; on how to use regular expression.</p>
+<h4>Example 3: Find and Replace Text</h4>
+<p>Finding a pattern and replace it with something else is probably one of the most frequent tasks in text processing. Regexe allows you to express the pattern liberally, and also the replacement text/pattern.  This is extremely useful in batch processing a huge text document or many text files. For example, searching for stock prices from many online HTML files, rename many files in a directory with a certain pattern, etc.</p>
+
+<pre class="code-listing">import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+   
+public class RegexeFindReplace {
+   public static void main(String[] args) {
+      String input = &quot;This is an apple. These are 33 (Thirty-three) apples&quot;;
+      String regexe = &quot;apple&quot;;        <span class="code-comment">// pattern to be matched</span>
+      String replacement = &quot;orange&quot;;  <span class="code-comment">// replacement pattern</span>
+   
+      <span class="code-comment">// Step 1: Allocate a Pattern object to compile a regexe</span>
+      Pattern pattern = Pattern.compile(regexe, Pattern.CASE_INSENSITIVE);
+   
+      <span class="code-comment">// Step 2: Allocate a Matcher object from the pattern, and provide the input</span>
+      Matcher matcher = pattern.matcher(input);
+   
+      <span class="code-comment">// Step 3: Perform the matching and process the matching result</span>
+      String output = matcher.replaceAll(replacement);     <span class="code-comment">// all matches</span>
+      //String output = matcher.replaceFirst(replacement); <span class="code-comment">// first match only</span>
+      System.out.println(output);
+   }
+}
+</pre>
+
+<p><strong>Explanation:</strong></p>
+<ul>
+<li>First, create a <code>Pattern</code> object to compile a regexe pattern. Next, create a <code>Matcher</code> object from the <code>Pattern</code> and specify the input.</li>
+<li>The <code>Matcher</code> class provides a <code>replaceAll(<em>replacement</em>)</code> to replace all the matched subsequence with the <em><code>replacement</code></em>; or <code>replaceFirst(<em>replacement</em>)</code> to replace the first match only.</li>
+</ul>
+
+<h4>Example 4: Find and Replace with Back References</h4>
+<p>Given the input &quot;One:two:three:four&quot;, the following program produces &quot;four-three-two-One&quot; by matching the 4 words separated by colons, and uses the so-called back-references (<code>$1</code>, <code>$2</code>, <code>$3</code> and <code>$4</code>) in the replacement pattern.</p>
+
+<pre class="code-listing">import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+   
+public class RegexeReplaceBackReference {
+   public static void main(String[] args) {
+      String input = &quot;One:two:three:four&quot;;
+      String regexe = &quot;(.+):(.+):(.+):(.+)&quot;; <span class="code-comment">// pattern to be matched</span>
+      String replacement = &quot;$4-$3-$2-$1&quot;;   <span class="code-comment"> // replacement pattern with back references</span>
+   
+      <span class="code-comment">// Step 1: Allocate a Pattern object to compile a regexe</span>
+      Pattern pattern = Pattern.compile(regexe, Pattern.CASE_INSENSITIVE);
+   
+      <span class="code-comment">// Step 2: Allocate a Matcher object from the Pattern, and provide the input</span>
+      Matcher matcher = pattern.matcher(input);
+   
+      <span class="code-comment">// Step 3: Perform the matching and process the matching result</span>
+      String output = matcher.replaceAll(replacement);     <span class="code-comment">// all matches</span>
+      //String output = matcher.replaceFirst(replacement); <span class="code-comment">// first match only</span>
+      System.out.println(output);
+   }
+}
+</pre>
+
+<p>Parentheses <code>()</code> have two usages in regular expressions:</p>
+<ol>
+<li>To resolve ambiguity:  For example <code>xyz+</code> matches a '<code>x</code>', a '<code>y</code>', followed by one or more '<code>z</code>'. But <code>(xyz)+</code> matches one or more groups of '<code>xyz</code>', e.g., '<code>xyzxyzxyz</code>'.</li>
+<li>Provide references to the matched subsequences. The matched subsequence of the first pair of parentheses can be referred to as <code>$1</code>, second pair of patentee as <code>$2</code>, and so on. In the above example, there are 4 pairs of parentheses, which were referenced in the replacement pattern as <code>$1</code>, <code>$2</code>, <code>$3</code>, and <code>$4</code>. You can use <code>groupCount()</code> (of the <code>Matcher</code>) to get the number of groups captured, and <code>group(groupNumber)</code>, <code>start(groupNumber)</code>, <code>end(groupNumber)</code> to retrieve the matched subsequence and their indices. In Java, <code>$0</code> denotes the <em>entire</em> regular expression.</li>
+</ol>
+
+<h4>Example 5: Rename Files of a Given Directory</h4>
+<p>The following program rename all the files ending with &quot;<code>.class</code>&quot; to &quot;<code>.out</code>&quot; of the directory specified.</p>
+
+<pre class="code-listing">import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.io.File;
+   
+public class RegexeRenameFiles {
+   public static void main(String[] args) {
+      String regexe = &quot;.class$&quot;;   <span class="code-comment">// ending with &quot;.class&quot;</span>
+      String replacement = &quot;.out&quot;; <span class="code-comment">// replace with &quot;.out&quot;</span>
+   
+      <span class="code-comment">// Allocate a Pattern object to compile a regexe</span>
+      Pattern pattern = Pattern.compile(regexe, Pattern.CASE_INSENSITIVE);
+      Matcher matcher;
+   
+      File dir = new File(&quot;d:\\temp&quot;);  <span class="code-comment">// directory to be processed</span>
+      int count = 0;
+      File[] files = dir.listFiles();   <span class="code-comment">// list all files and dirs</span>
+      for (File file : files) {
+         if (file.isFile()) {   <span class="code-comment">// file only, not directory</span>
+            String inFilename = file.getName();  <span class="code-comment">  // get filename, exclude path</span>
+            matcher = pattern.matcher(inFilename); <span class="code-comment">// allocate Matches with input</span>
+            if (matcher.find()) {
+               ++count;
+               String outFilename = matcher.replaceAll(replacement);
+               System.out.print(inFilename + &quot; -&gt; &quot; + outFilename);
+   
+               if (file.renameTo(new File(dir + &quot;\\&quot; + outFilename))) {  <span class="code-comment">// execute rename</span>
+                  System.out.println(&quot; SUCCESS&quot;);
+               } else {
+                  System.out.println(&quot; FAIL&quot;);
+               }
+            }
+         }
+      }
+      System.out.println(count + &quot; files processed&quot;);
+   }
+}
+</pre>
+<p>You can use regexe to specify the pattern, and back references in the replacement, as in the previous example.</p>
+
+<h4>The <span class="code-font">String.split()</span> Method</h4>
+
+<p>The <code>String</code> class contains a method <code>split()</code>, which takes a regular expression and splits this <code>String</code> object into an array of <code>String</code>s.</p>
+
+<pre class="code-syntax">
+// In String class
+public String[] split(String regex)</pre>
+
+<p>For example,</p>
+<pre class="code-example">
+public class StringSplitTest {
+   public static void main(String[] args) {
+      String source = &quot;There are thirty-three big-apple&quot;;
+      String[] tokens = source.split(&quot;\\s+|-&quot;);  <span class="color-comment">// whitespace(s) or -</span>
+      for (String token : tokens) {
+         System.out.println(token);
+      }
+   }
+}</pre>
+<pre class="code-output">
+There
+are
+thirty
+three
+big
+apple</pre>
+
+<h3>The <span class="code-font">Scanner</span> &amp; <span class="code-font">useDelimiter()</span></h3>
+
+<p>The <code>Scanner</code> class, by default, uses <em>whitespace</em> as the delimiter in parsing input tokens. You can set the delimiter to a regexe via use <code>delimiter()</code> methods:</p>
+
+<pre class="code-syntax">
+public Scanner useDelimiter(Pattern pattern)
+public Scanner useDelimiter(String pattern)</pre>
+
+<p>For example,</p>
+<pre class="code-example">
+import java.util.Scanner;
+public class ScannerUseDelimiterTest {
+   public static void main(String[] args) {
+      String source = &quot;There are thirty-three big-apple&quot;;
+      Scanner in = new Scanner(source);
+      in.useDelimiter(&quot;\\s+|-&quot;);  <span class="color-comment">// whitespace(s) or -</span>
+      while (in.hasNext()) {
+         System.out.println(in.next());
+      }
+   }
+}</pre>
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>Sun's online Java tutorial trail on &quot;<a href="http://java.sun.com/docs/books/tutorial/essential/regex/index.html">Regular Expressions</a>&quot;</li>
+<li>Javadoc for package <code>java.util.regex</code>.</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: JDK 1.6<br />
+Last modified: January 18, 2010</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

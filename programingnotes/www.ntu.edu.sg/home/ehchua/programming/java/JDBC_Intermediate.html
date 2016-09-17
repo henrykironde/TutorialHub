@@ -1,0 +1,653 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>An Intermediate Java Database Programming (JDBC) Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Database Programming (JDBC)</h1>
+<h2>An Intermediate Tutorial</h2>
+</div>
+
+<div id="content-main">
+
+
+<h3>Introduction</h3>
+<p>JDBC (Java Database Connectivity) is the Java's <em>Application Programming Interface</em> (API) for interfacing with relational databases. The API defines how to connect to the database, execute SQL statements, return the results, among others. JDBC defines the API, while the database vendors develop their specific <em>drivers</em> that meets the JDBC specification.</p>
+<p>JDBC is divided into two parts: Core API and Optional API. Core API is implemented in <code>java.sql</code> package, while optional API in <code>javax.sql</code> package.</p>
+<p> Core API (<code>java.sql</code>) interfaces include:</p>
+<ul>
+  <li><code>DriverManager</code>, <code>Connection</code>, <code>Statement</code>,<code>PreparedStatement</code>, <code>CallableStatement</code>, <code></code><code>ResultSet</code>, </li>
+  <li><code>ResultSetMetaData</code>, <code>DatabaseMetaData</code>.</li>
+  <li><code>Types</code>, <code>Blob</code>, <code>Clob</code>, <code>Array</code>, <code>Struct</code>, <code>Date</code>, <code>Time</code>, <code>Timestamp</code>.</li>
+</ul>
+<p>Optional API (<code>javax.sql</code>) interfaces include:</p>
+<ul>
+  <li><code>DataSource</code>, <code>PooledConnection</code>, <code>RowSet</code>, and etc.</li>
+</ul>
+<p>JDBC has the following versions:</p>
+<ol>
+  <li>Version 1.0 (1997): Include how to create a driver instance, create a database connection (via <code>Connection</code> object) execute SQL statements (via <code>Statement</code> object), return the results (through a <code>ResultSet</code> object), and metadata of the database and the ResultSet.</li>
+  <li>Version 2.0/2.1 (integrated into JDK 1.2): JDBC 2.0 introduces many new features to improve the  performance and functionality.  For  example, it introduces scrollable and updatable ResultSet,  batching processing.  It also introduces  a new <code>RowSet</code> interface and <code>DataSource</code> interfaces to support connection pooling and distributed transaction.</li>
+  <li>Version 3.0 (integrated into JDK 1.4): [TODO]</li>
+  <li>Version 4.0 (integrated into JDK 6):  No need to load the database driver explicitly, as <code>DriverManager</code> can locate the appropriate database driver in the classpath. [TODO more]</li>
+</ol>
+
+<p>I assume that you have basic knowledge of JDBC programming; otherwise, read &quot;<a href="JDBC_Basic.html">Introduction to Java Database Programming (JDBC) by Examples</a>&quot;.</p>
+
+<h3>Handling <span class="font-code">SQLException</span></h3>
+
+<p></p>
+
+
+<p>Many methods in <code>java.sql</code> throw a <code>SQLException</code>. You can use these methods:</p>
+
+<pre class="color-syntax">
+public String getSQLState()
+<span class="color-comment">// Retrieves the SQLState (a five alphanumeric characters) for this SQLException object.</span>
+ 
+public int getErrorCode()
+<span class="color-comment">// Retrieves the vendor-specific exception code for this SQLException object.</span>
+ 
+public String getMessage()
+
+public Iterator&lt;Throwable&gt; iterator()
+<span class="color-comment">// Returns an iterator over the chained SQLExceptions.
+// You can instead use a for-each loop:
+// for (Throwable t : ex) { t.getCause(); }</span></pre>
+
+<p><span class="line-heading">Example:</span> [TODO]</p>
+
+<h3><span class="font-code">ResultSet</span> Interface</h3>
+
+<p>The <code>java.sql.ResultSet</code> interface, which models the <em>resultant table</em> of a <code>SELECT</code> query, provides methods for retrieving and manipulating the results of <code>SELECT</code> queries. As seen in all the earlier example, the <code>Statement.executeQuery(&quot;SELECT ... FROM ...&quot;)</code> method returns the query result in a <code>ResultSet</code> object. A <code>ResultSet</code> object  maintains a <em>row cursor</em>. The row cursor initially positions before the first row in the <code>ResultSet</code>. <code>ResultSet.next()</code> moves the cursor to the next (first) row. You can then use <code>ResultSet.getXxx(<em>columnName</em>)</code> or <code>ResultSet.getXxx(<em>columnNumber</em>)</code> to retrieve the value of a column for the current row.</p>
+
+<p>The default <code>ResultSet</code> object is not <em>updatable</em> and has a row cursor that <em>moves forward only</em> (via the <code>next()</code> method) to move from the first row to the last row). JDBC 2.0 introduces more functions to <code>ResultSet</code>, such as  <em>updatable</em> and <em>scrollable</em> ResultSet. To enable these new functions, pass the desired parameters into the <code>Connection.createStatement()</code> method, e.g.,</p>
+
+<pre class="color-example">
+Connection conn = DriverManager.getConnection(database-<em>URL</em>, <em>username</em>, <em>password</em>);
+Statement stmt = conn.<span class="color-new">createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)</span>;
+ResultSet rset = stmt.executeQuery(&quot;SELECT ... FROM ...&quot;);
+</pre>
+
+<p>The syntax is as follows:</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// In Connection Interface</span>
+Statement <strong>createStatement</strong>(
+   int <em>resultSetType</em>, 
+   int <em>resultSetConcurrency</em>) throws SQLException <span class="color-comment">// JDBC 2.0 (JDK 1.2)</span>
+   
+Statement <strong>createStatement</strong>(
+   int <em>resultSetType</em>,
+   int <em>resultSetConcurrency</em>,
+   int <em>resultSetHoldability</em>) throws SQLException <span class="color-comment">// JDBC 3.0 (JDK 1.4)</span></pre>
+
+<p><span class="line-heading">ResultSet's Type:</span> The possible values are:</p>
+<ul>
+<li><code>ResultSet.TYPE_FORWARD_ONLY</code> (default): The <code>ResultSet</code> is not scrollable, but moves forward only from the first row to the last row via the <code>next()</code> method.</li>
+
+<li><code>ResultSet.TYPE_SCROLL_INSENSITIVE</code> or  <code>ResultSet.TYPE_SCROLL_SENSITIVE</code>: The <code>ResultSet</code> is scrollable, i.e., the row cursor can move forward, backward or to an absolute or relative row, via methods such as <code>first()</code>, <code>last()</code>, <code>previous()</code>, <code>next()</code>, <code>absolute(rowNumber)</code>, <code>relative(rowNumber)</code>, <code>beforeFirst()</code>, <code>afterLast()</code>, <code>moveToCurrentRow()</code>, <code>moveToInsertRow()</code>.
+
+  <ul>
+<li><code>ResultSet.TYPE_SCROLL_INSENSITIVE</code>: The <code>ResultSet</code> does NOT reflect change made by others to the underlying data source while it is opened, hence, <em>insensitive</em> to changes.</li>
+<li><code>ResultSet.TYPE_SCROLL_SENSITIVE</code>: The <code>ResultSet</code> reflects changes made by others to the underlying data source while it remains opened.</li>
+</ul>
+</li>
+</ul>
+
+<p><span class="line-heading">ResultSet's Concurrency:</span> The possible values are:</p>
+<ul>
+<li><code>ResultSet.CONCUR_READ_ONLY</code> (default): The <code>ResultSet</code> is read-only. You cannot update the underlying database via the <code>ResultSet</code>.</li>
+<li><code>ResultSet.CONCUR_UPDATABLE</code>: The <code>ResultSet</code> object can be updated via the <code>updateXxx()</code> methods. Change in <code>ResultSet</code> is reflected in the underlying database.</li>
+</ul>
+
+<p><span class="line-heading">ResultSet's Cursor Holdability</span> (JDBC 3.0/JDK 1.4): The <code>Connection.commit()</code> command may close the <code>ResultSet</code> that have been created during the current transaction. You can control this behaviour via:</p>
+<ul>
+<li><code>HOLD_CURSORS_OVER_COMMIT</code>: <code>ResultSet</code> cursors are NOT closed but held open when the <code>Connection.commit()</code> is called. Holdable cursors are useful if your application uses mostly read-only ResultSet objects.</li>
+<li><code>CLOSE_CURSORS_AT_COMMIT</code>: <code>ResultSet</code> objects (and cursors) are closed when the <code>commit()</code> method is called.</li>
+</ul>
+
+<p>Not all databases and JDBC drivers support these <code>ResultSet</code>'s types. You can verify via method <code>DatabaseMetaData.supportsResultSetType(resultSetType)</code>. For example,</p>
+
+<pre class="color-example">
+import java.sql.*;
+ 
+public class <strong>SupportedResultSetTypeTest</strong> {  <span class="color-comment">// JDK 7 and above</span>
+   public static void main(String[] args) {
+      try (
+         Connection conn = DriverManager.getConnection(
+               &quot;jdbc:mysql://localhost:8888/ebookshop&quot;, &quot;myuser&quot;, &quot;xxxx&quot;);  <span class="color-comment">// MySQL</span>
+      ) {
+         <strong>DatabaseMetaData md = conn.getMetaData();</strong>   <span class="color-comment">// Get the database metadata</span>
+         <span class="color-comment">// Verify ResultSet's type</span>
+         System.out.println(&quot;-- ResultSet Type --&quot;);
+         System.out.println(&quot;Supports TYPE_FORWARD_ONLY: &quot;
+                 + <strong>md.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY)</strong>);
+         System.out.println(&quot;Supports TYPE_SCROLL_INSENSITIVE: &quot;
+                 + <strong>md.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE)</strong>);
+         System.out.println(&quot;Supports TYPE_SCROLL_SENSITIVE: &quot;
+                 + <strong>md.supportsResultSetType(ResultSet.TYPE_SCROLL_SENSITIVE)</strong>);
+ 
+         <span class="color-comment">// Verify ResultSet's concurrency</span>
+         System.out.println(&quot;-- ResultSet Concurrency --&quot;);
+         System.out.println(&quot;Supports CONCUR_READ_ONLY: &quot;
+                 + <strong>md.supportsResultSetType(ResultSet.CONCUR_READ_ONLY)</strong>);
+         System.out.println(&quot;Supports CONCUR_UPDATABLE: &quot;
+                 + <strong>md.supportsResultSetType(ResultSet.CONCUR_UPDATABLE)</strong>);
+ 
+         <span class="color-comment">// Verify ResultSet's cursor holdability</span>
+         System.out.println(&quot;-- ResultSet Cursor Holdability --&quot;);
+         int holdability = <strong>md.getResultSetHoldability()</strong>;  <span class="color-comment">// Get the default holdability</span>
+         if (holdability == ResultSet.CLOSE_CURSORS_AT_COMMIT) {
+            System.out.println(&quot;Default: CLOSE_CURSORS_AT_COMMIT&quot;);
+         } else if (holdability == ResultSet.HOLD_CURSORS_OVER_COMMIT) {
+            System.out.println(&quot;Default: ResultSet.HOLD_CURSORS_OVER_COMMIT&quot;);
+         }
+         System.out.println(&quot;Supports CLOSE_CURSORS_AT_COMMIT: &quot;
+                 + <strong>md.supportsResultSetType(ResultSet.CLOSE_CURSORS_AT_COMMIT)</strong>);
+         System.out.println(&quot;Supports HOLD_CURSORS_OVER_COMMIT: &quot;
+                 + <strong>md.supportsResultSetType(ResultSet.HOLD_CURSORS_OVER_COMMIT)</strong>);
+ 
+      } catch(SQLException ex) {
+         ex.printStackTrace();
+      }
+   }
+}</pre>
+
+<h5>Example: Scrollable <span class="font-code">ResultSet</span></h5>
+<p>Set the <code>ResultSet</code>’s type to <code>TYPE_SCROLL_INSENSITIVE</code>, as follows.  You could then use methods such as <code>first()</code>, <code>last()</code>, <code>previous()</code>, <code>next()</code>, <code>absolute(rowNumber)</code>, <code>relative(rowNumber)</code>, <code>beforeFirst()</code>, <code>afterLast()</code>, <code>moveToCurrentRow()</code>, <code>moveToInsertRow()</code> to move or position the cursor.  You can use <code>getRow()</code> to get the current row number. Take note that row number starts at 1.</p>
+
+<pre class="color-example">
+import java.sql.*;
+ 
+public class <strong>ScrollableResultSetTest</strong> {  <span class="color-comment">// JDK 7 and above</span>
+   public static void main(String[] args) {
+      try (
+         Connection conn = DriverManager.getConnection(
+               &quot;jdbc:mysql://localhost:8888/ebookshop&quot;, &quot;myuser&quot;, &quot;xxxx&quot;); <span class="color-comment">// MySQL</span>
+ 
+         <span class="color-comment">//  TYPE_SCROLL_INSENSITIVE: ResultSet is scrollable and does not</span>
+         <span class="color-comment">//    reflect changes by others while it is opened for processing.</span>
+         <span class="color-comment">//  CONCUR_READ_ONLY: Resultset is not updatable</span>
+         Statement stmt = conn.<span class="color-new">createStatement(
+               ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)</span>;
+      ) {
+         ResultSet rset = stmt.executeQuery(&quot;select * from books&quot;);
+ 
+         <span class="color-new">rset.last()</span>;
+         System.out.println(&quot;-- LAST ROW --&quot;);
+         System.out.println(
+                 <span class="color-new">rset.getRow()</span> + &quot;: &quot; + + rset.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rset.getString(&quot;title&quot;) + &quot;, &quot; + rset.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rset.getDouble(&quot;price&quot;) + &quot;, &quot; + rset.getInt(&quot;qty&quot;));
+ 
+         <span class="color-new">rset.beforeFirst()</span>;
+         System.out.println(&quot;-- ALL ROWS --&quot;);
+         while(rset.next()) {
+            System.out.println(
+                    rset.getRow() + &quot;: &quot; + rset.getInt(&quot;id&quot;) + &quot;, &quot;
+                    + rset.getString(&quot;title&quot;) + &quot;, &quot; + rset.getString(&quot;author&quot;) + &quot;, &quot;
+                    + rset.getDouble(&quot;price&quot;) + &quot;, &quot; + rset.getInt(&quot;qty&quot;));
+         }
+ 
+         <span class="color-new">rset.absolute(3)</span>;  <span class="color-comment">// Row number starts at 1</span>
+         System.out.println(&quot;-- ABSOLUTE ROW 3 --&quot;);
+         System.out.println(
+                 rset.getRow() + &quot;: &quot; + rset.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rset.getString(&quot;title&quot;) + &quot;, &quot; + rset.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rset.getDouble(&quot;price&quot;) + &quot;, &quot; + rset.getInt(&quot;qty&quot;));
+ 
+         <span class="color-new">rset.relative(-2)</span>;
+         System.out.println(&quot;-- RELATIVE ROW -2 --&quot;);
+         System.out.println(
+                 rset.getRow() + &quot;: &quot; + rset.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rset.getString(&quot;title&quot;) + &quot;, &quot; + rset.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rset.getDouble(&quot;price&quot;) + &quot;, &quot; + rset.getInt(&quot;qty&quot;));
+ 
+      } catch(SQLException ex) {
+         ex.printStackTrace();
+      }
+   }
+}</pre>
+
+<h5>Example: Updatable <span class="font-code">ResultSet</span></h5>
+
+<p>Set the <code>ResultSet</code>’s concurrency to <code>CONCUR_UPDATABLE</code> as follows.  You can use <code>UpdateXxx()</code> methods to set the new content of a particular cell of the current row.  You can then use <code>updateRow()</code> or <code>deleteRow() </code>to update or delete the current row; or <code>insertRow()</code> to insert the staging row.</p>
+
+<pre class="color-example">
+import java.sql.*;
+ 
+public class <strong>JdbcUpdatetableResultSetJDK7</strong> {  <span class="color-comment">// JDK 7 and above</span>
+   public static void main(String[] args) {
+      try (
+         Connection conn = DriverManager.getConnection(
+               &quot;jdbc:mysql://localhost:8888/ebookshop&quot;, &quot;myuser&quot;, &quot;xxxx&quot;); <span class="color-comment">// MySQL</span>
+ 
+         <span class="color-comment">//  TYPE_SCROLL_INSENSITIVE: ResultSet is scrollable and does not</span>
+         <span class="color-comment">//    reflect changes by others while it is opened for processing.</span>
+         <span class="color-comment">//  CONCUR_UPDATABLE: Resultset is updatable</span>
+         Statement stmt = conn.<span class="color-new">createStatement(
+               ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)</span>;
+      ) {
+         conn.setAutoCommit(false);  <span class="color-comment">// Disable auto-commit</span>
+ 
+         ResultSet rset = stmt.executeQuery(&quot;select * from books&quot;);
+ 
+         <span class="color-comment">// Update a row</span>
+         rset.last();
+         System.out.println(&quot;-- Update a row --&quot;);
+         System.out.println(
+                 rset.getRow() + &quot;: &quot; + + rset.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rset.getString(&quot;title&quot;) + &quot;, &quot; + rset.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rset.getDouble(&quot;price&quot;) + &quot;, &quot; + rset.getInt(&quot;qty&quot;));
+         <span class="color-new">rset.updateDouble(&quot;price&quot;, 99.99)</span>;   <span class="color-comment">// update cells via column name</span>
+         <span class="color-new">rset.updateInt(&quot;qty&quot;, 99)</span>;
+         <span class="color-new">rset.updateRow()</span>;  <span class="color-comment">// update the row in the data source</span>
+         System.out.println(
+                 rset.getRow() + &quot;: &quot; + + rset.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rset.getString(&quot;title&quot;) + &quot;, &quot; + rset.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rset.getDouble(&quot;price&quot;) + &quot;, &quot; + rset.getInt(&quot;qty&quot;));
+ 
+         <span class="color-comment">// Delete a row</span>
+         rset.first();
+         System.out.println(&quot;-- Delete a row --&quot;);
+         System.out.println(
+                 rset.getRow() + &quot;: &quot; + + rset.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rset.getString(&quot;title&quot;) + &quot;, &quot; + rset.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rset.getDouble(&quot;price&quot;) + &quot;, &quot; + rset.getInt(&quot;qty&quot;));
+         <span class="color-new">rset.deleteRow()</span>;  <span class="color-comment">// delete the current row</span>
+ 
+         <span class="color-comment">// A updatable ResultSet has a special row that serves as a staging area</span>
+         <span class="color-comment">// for building a row to be inserted.</span>
+         <span class="color-new">rset.moveToInsertRow()</span>;
+         <span class="color-new">rset.updateInt(1, 8001)</span>;  <span class="color-comment">// Update cells via column number (starts at 1)</span>
+         <span class="color-new">rset.updateString(2, &quot;Even More Programming&quot;)</span>;
+         <span class="color-new">rset.updateString(3, &quot;Kumar&quot;)</span>;
+         <span class="color-new">rset.updateDouble(4, 77.88)</span>;
+         <span class="color-new">rset.updateInt(5, 77)</span>;
+         <span class="color-new">rset.insertRow()</span>;
+         <span class="color-comment">// After inserting a row, you need to move the cursor to another row, to avoid
+         //  unexpected error if another part of the program also accesses this ResultSet.</span>
+         rset.beforeFirst();
+ 
+         conn.commit();  <span class="color-comment">// commit changes</span>
+      } catch(SQLException ex) {
+         ex.printStackTrace();
+      }
+   }
+}</pre>
+
+<h4>How to Detect Empty ResultSet</h4>
+
+<p>The first invocation of <code>rset.next()</code> shall return <code>false</code>, indicating empty <code>ResultSet</code>. You can re-write the <code>ResultSet</code> processing codes as follows:</p>
+
+<pre class="color-example">
+if (<strong>!rset.next()</strong>) {
+   <span class="color-comment">// ResultSet is empty</span>
+   ......
+} else {
+   <span class="color-comment">// Process the ResultSet. Cursor pointing at first row</span>
+   do {
+      ......
+   } while (rset.next());
+}</pre>
+
+<h4>How to Get the Number of Rows of a ResultSet</h4>
+
+<p>Unfortunately, JDBC's <code>ResultSet</code> does not offer any method to return the number of rows in the <code>ResultSet</code>. (It does provide the number of columns in the <code>ResultSetMetaData</code>.) This is because most DBMS starts sending the data back to the  client (once the buffer is filled) before it knows how many rows qualified.</p>
+
+<p>These are the suggestions:</p>
+<ol>
+<li>Issue a prior query &quot;<code>SELECT COUNT(*) FROM <em>tableName</em> WHERE ...</code>&quot; to get the number of rows, before issuing the proper query. The drawback is two queries are needed.</li>
+
+<li>For JDBC 2.0's <em>scrollable</em> <code>ResultSet</code>, you could move the cursor to the last row (via <code>rset.last()</code>) and use the <code>rset.getRow()</code> to get the row number (row number starts at 1). Take note that <code>rset.last()</code> returns <code>false</code> for an empty <code>ResultSet</code>; <code>rset.getRow()</code> returns 0 if there is no current row. You can then use <code>rset.beforeFirst()</code> to rewind the <code>ResultSet</code>.
+
+<pre class="color-example">
+int rowCount = rset.last() ? rset.getRow() : 0;
+rset.beforeFirst();  <span class="color-comment">// so that you can process your ResultSet</span></pre>
+
+Drawback: the method <code>last()</code> is an expensive operation, which forces the DBMS to retrieve the entire <code>ResultSet</code>. The previous query could be less expensive! Furthermore, you need a JDBC's driver that supports scrollable <code>ResultSet</code>.</li>
+
+</ol>
+
+
+<h3>More on Transaction</h3>
+<p>As discussed earlier, you could disable the auto-commit, and use commit/rollback to group a set of SQL statements as a transaction.</p>
+
+<h5>Transaction Isolation Level</h5>
+<p>[TODO]</p>
+
+<h5>Savepoints</h5>
+<p>Within a transaction, you can use <code>conn.setSavepoint()</code> to set a particular <code>Savepoint</code>.  You could then rollback to the <code>Savepoint</code>, via <code>rollback(savePoint)</code>.</p>
+
+<p>Example [TODO]</p>
+
+
+<h3><span class="font-code">RowSet</span> Interface</h3>
+
+<p>So far, we have been using <code>ResultSet</code> to store the <code>SELECT</code> query result.  Use of <code>ResultSet</code> requires programmers to manage the <code>Connection</code> and <code>Statement</code> explicitly.  JDBC 2.0 introduces a new <code>RowSet</code> interface, which manages <code>Connection</code> and <code>Statement</code> for you automatically and greatly simplifies your programming for enterprise web applications.</p>
+
+<p>To use a <code>RowSet</code>:</p>
+<ol>
+  <li>Construct an instance of <code>RowSet</code>;</li>
+<li>Set the properties and query statement of the <code>RowSet</code>;</li>
+<li>Invoke <code>execute()</code> to execute the query.</li>
+</ol>
+<p>You do not have to manage the <code>Connection</code> and <code>Statement</code>.  For example,</p>
+<pre class="color-example">
+JdbcRowSet rowSet = new JdbcRowSetImpl();
+rowSet.setUrl(<em>databaseUrl</em>);
+rowSet.setUsername(<em>username</em>);
+rowSet.setPassword(<em>password</em>);
+rowSet.setCommand(&quot;SELECT * FROM books&quot;); <span class="color-comment">// Set query command</span>
+rowSet.execute();                         <span class="color-comment">// Run command</span></pre>
+
+<p><code>RowSet</code> implements <code>ResultSet</code> interface and therefore share its capabilities. <code>RowSet</code> adds these new capabilities:</p>
+<ol>
+<li>A <code>RowSet</code> object is scrollable and updatable by default.</li>
+<li><code>RowSet</code> support JavaBeans component model and can be used in a visual environment. It also supports JavaBeans Event model for events such as cursor movement; update, insertion, or deletion of a row; and change to the entire RowSet contents.</li>
+</ol>
+
+<img class="image-center" src="images/JDBC_RowSet_Classes.png" alt="JDBC_RowSet_Classes.png" />
+
+<p>There are two types of <code>RowSet</code>: connected and unconnected.  A connected RowSet remains connected to the database, until the application terminates.  Changes to a connected <code>RowSet</code> are reflected in the underlying data source.  An unconnected <code>RowSet</code> closes the connection after the query.  You may change the data in a disconnected <code>RowSet</code> while it is disconnected.  Modified data can be updated into the data source after a disconnected <code>RowSet</code> reestablished the connection with the data source.</p>
+
+<p>There are 5 implementations of <code>RowSet</code> as illustrated:</p>
+<ol>
+<li><code>JdbcRowSet</code>: a connected <code>RowSet</code>, which can be considered as a wrapper to a scrollable and updatable <code>ResultSet</code>.</li>
+<li><code>CachedRowSet</code>: defines the basic capabilities of disconnected <code>RowSet</code>, which can re-connect to the data source to update the changes made while disconnected.</li>
+<li><code>WebRowSet</code>: sub-interface of <code>CachedRowSet</code>, which uses XML documents.</li>
+<li><code>JoinRowSet</code>: sub-interface of <code>WebRowSet</code>, which can form the equivalent of a SQL JOIN without having to connect to a data source.</li>
+<li><code>FilteredRowSet</code>: sub-interface of <code>WebRowSet</code>, which can perform query on a <code>RowSet</code> object without having to connect to a data source.</li>
+</ol>
+
+<h5>Example: JdbcRowSet</h5>
+
+<p><code>JdbcRowSet</code> is a connected <code>RowSet</code> that wraps around a scrollable and updatable <code>ResultSet</code> (<code>TYPE_SCROLL_INSENSITIVE</code>, <code>CONCUR_UPDATABLE</code>).  An implementation is provided in <code>com.sun.rowset.JdbcRowSetImpl</code>.  For example,</p>
+
+<pre class="color-example">
+import java.sql.*;
+import javax.sql.rowset.*;
+<strong>import com.sun.rowset.JdbcRowSetImpl;</strong>
+ 
+public class <strong>JdbcRowSetTest</strong> {
+   public static void main(String[] args) {
+      String databaseUrl = &quot;jdbc:mysql://localhost:8888/ebookshop&quot;;
+      String username = &quot;myuser&quot;;
+      String password = &quot;xxxx&quot;;
+      <strong>JdbcRowSet rowSet</strong> = null;
+ 
+      try {
+         <span class="color-comment">// No need to allocate Connection and Statement,</span>
+         <span class="color-comment">// Simply allocate a RowSet instance</span>
+         <strong>rowSet = new JdbcRowSetImpl();
+         rowSet.setUrl(databaseUrl);
+         rowSet.setUsername(username);
+         rowSet.setPassword(password);
+         rowSet.setCommand(&quot;SELECT * FROM books&quot;);
+         rowSet.execute();</strong>
+ 
+         <span class="color-comment">// RowSet is scrollable and updatable</span>
+         <span class="color-comment">// Update a row</span>
+         rowSet.last();
+         System.out.println(&quot;-- Update a row --&quot;);
+         System.out.println(
+                 rowSet.getRow() + &quot;: &quot; + + rowSet.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rowSet.getString(&quot;title&quot;) + &quot;, &quot; + rowSet.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rowSet.getDouble(&quot;price&quot;) + &quot;, &quot; + rowSet.getInt(&quot;qty&quot;));
+         rowSet.updateDouble(&quot;price&quot;, 99.99);   <span class="color-comment">// update cells</span>
+         rowSet.updateInt(&quot;qty&quot;, 99);
+         rowSet.updateRow();  <span class="color-comment">// update the row in the data source</span>
+         System.out.println(
+                 rowSet.getRow() + &quot;: &quot; + + rowSet.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rowSet.getString(&quot;title&quot;) + &quot;, &quot; + rowSet.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rowSet.getDouble(&quot;price&quot;) + &quot;, &quot; + rowSet.getInt(&quot;qty&quot;));
+ 
+         <span class="color-comment">// Delete a row</span>
+         rowSet.first();
+         System.out.println(&quot;-- Delete a row --&quot;);
+         System.out.println(
+                 rowSet.getRow() + &quot;: &quot; + + rowSet.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rowSet.getString(&quot;title&quot;) + &quot;, &quot; + rowSet.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rowSet.getDouble(&quot;price&quot;) + &quot;, &quot; + rowSet.getInt(&quot;qty&quot;));
+         rowSet.deleteRow();  <span class="color-comment">// delete the current row</span>
+ 
+         <span class="color-comment">// A updatable ResultSet has a special row that serves as a staging area</span>
+         <span class="color-comment">// for building a row to be inserted.</span>
+         rowSet.moveToInsertRow();
+         rowSet.updateInt(1, 8104);  <span class="color-comment">// Use column number</span>
+         rowSet.updateString(2, &quot;Even More Programming&quot;);
+         rowSet.updateString(3, &quot;Kumar&quot;);
+         rowSet.updateDouble(4, 77.88);
+         rowSet.updateInt(5, 77);
+         rowSet.insertRow();
+         rowSet.beforeFirst();
+ 
+      } catch(SQLException ex) {
+         ex.printStackTrace();
+      } finally {
+         try {
+            <strong>rowSet.close();</strong>
+         } catch (SQLException ex) {
+            ex.printStackTrace();
+         }
+      }
+   }
+}</pre>
+
+<p>In JDK 7 (with RowSet 1.1), you can use a <code>RowSetFactory</code> to create a <code>JdbcRowSet</code> object. For example,</p>
+
+<pre class="color-example">
+import java.sql.*;
+import javax.sql.rowset.*;
+ 
+public class JdbcRowSetTestJDK7 {  <span class="color-comment">// JDK 7</span>
+   public static void main(String[] args) {
+      String databaseUrl = &quot;jdbc:mysql://localhost:8888/ebookshop&quot;;
+      String username = &quot;myuser&quot;;
+      String password = &quot;xxxx&quot;;
+ 
+      <span class="color-comment">// Get an instance of RowSetFactory</span>
+      RowSetFactory rowSetFactory = null;
+      try {
+         rowSetFactory = RowSetProvider.newFactory();
+      } catch (SQLException ex) {
+         ex.printStackTrace();
+         return;
+      }
+ 
+      try (
+         <span class="color-comment">// Use RowSetFactory to allocate a RowSet instance.</span>
+         JdbcRowSet rowSet = rowSetFactory.createJdbcRowSet();
+      ) {
+         rowSet.setUrl(databaseUrl);
+         rowSet.setUsername(username);
+         rowSet.setPassword(password);
+         rowSet.setCommand(&quot;SELECT * FROM books&quot;);
+         rowSet.execute();
+ 
+         <span class="color-comment">// RowSet is scrollable and updatable</span>
+         <span class="color-comment">// Update a row</span>
+         rowSet.last();
+         System.out.println(&quot;-- Update a row --&quot;);
+         System.out.println(
+                 rowSet.getRow() + &quot;: &quot; + + rowSet.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rowSet.getString(&quot;title&quot;) + &quot;, &quot; + rowSet.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rowSet.getDouble(&quot;price&quot;) + &quot;, &quot; + rowSet.getInt(&quot;qty&quot;));
+         rowSet.updateDouble(&quot;price&quot;, 99.99);   <span class="color-comment">// update cells</span>
+         rowSet.updateInt(&quot;qty&quot;, 99);
+         rowSet.updateRow();  <span class="color-comment">// update the row in the data source</span>
+         System.out.println(
+                 rowSet.getRow() + &quot;: &quot; + + rowSet.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rowSet.getString(&quot;title&quot;) + &quot;, &quot; + rowSet.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rowSet.getDouble(&quot;price&quot;) + &quot;, &quot; + rowSet.getInt(&quot;qty&quot;));
+ 
+         <span class="color-comment">// Delete a row</span>
+         rowSet.first();
+         System.out.println(&quot;-- Delete a row --&quot;);
+         System.out.println(
+                 rowSet.getRow() + &quot;: &quot; + + rowSet.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rowSet.getString(&quot;title&quot;) + &quot;, &quot; + rowSet.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rowSet.getDouble(&quot;price&quot;) + &quot;, &quot; + rowSet.getInt(&quot;qty&quot;));
+         rowSet.deleteRow();  <span class="color-comment">// delete the current row</span>
+ 
+         <span class="color-comment">// A updatable ResultSet has a special row that serves as a staging area</span>
+         <span class="color-comment">// for building a row to be inserted.</span>
+         rowSet.moveToInsertRow();
+         rowSet.updateInt(1, 8303);  <span class="color-comment">// Use column number</span>
+         rowSet.updateString(2, &quot;Even More Programming&quot;);
+         rowSet.updateString(3, &quot;Kumar&quot;);
+         rowSet.updateDouble(4, 77.88);
+         rowSet.updateInt(5, 77);
+         rowSet.insertRow();
+         rowSet.beforeFirst();
+ 
+      } catch(SQLException ex) {
+         ex.printStackTrace();
+      }
+   }
+}</pre>
+
+<h5>Example: CachedRowSet</h5>
+<p><code>CachedRowSet</code> is a <em>unconnected</em> <code>RowSet</code> that wraps around a scrollable and updatable <code>ResultSet</code>.  <code>CachedRowSet</code> disconnects from the data source after an <code>SELECT</code> query and caches the query result in memory.  For unconnected <code>RowSet</code>, a call to <code>acceptChanges()</code> reconnected to the data source to apply changes in the <code>RowSet</code>.  An implementation is provided in <code>com.sun.rowset.CachedRowSetImpl</code>.  </p>
+<p>For example,</p>
+
+<pre class="color-example">
+import java.sql.*;
+import javax.sql.rowset.*;
+import com.sun.rowset.CachedRowSetImpl;
+ 
+public class <strong>CachedRowSetTest</strong> {
+   public static void main(String[] args) {
+      String databaseUrl = &quot;jdbc:mysql:<span class="color-comment">//localhost:8888/ebookshop&quot;;</span>
+      String username = &quot;myuser&quot;;
+      String password = &quot;xxxx&quot;;
+      Connection conn = null;
+      CachedRowSet rowSet = null;
+ 
+      try {
+         conn = DriverManager.getConnection(databaseUrl, username, password);
+         conn.setAutoCommit(false);  <span class="color-comment">// Need to disable auto-commit for CachedRowSet</span>
+ 
+         rowSet = new CachedRowSetImpl();
+         rowSet.setUrl(databaseUrl);
+         rowSet.setUsername(username);
+         rowSet.setPassword(password);
+         rowSet.setCommand(&quot;SELECT * FROM books&quot;);
+         int [] keys = {1};  <span class="color-comment">// Set column 1 as the key column in the RowSet</span>
+         rowSet.setKeyColumns(keys);
+         rowSet.execute(conn);  <span class="color-comment">// execute on the Connection</span>
+ 
+         <span class="color-comment">// RowSet is scrollable and updatable</span>
+         <span class="color-comment">// Update a row</span>
+         rowSet.first();
+         System.out.println(&quot;-- Update a row --&quot;);
+         System.out.println(
+                 rowSet.getRow() + &quot;: &quot; + + rowSet.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rowSet.getString(&quot;title&quot;) + &quot;, &quot; + rowSet.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rowSet.getDouble(&quot;price&quot;) + &quot;, &quot; + rowSet.getInt(&quot;qty&quot;));
+         rowSet.updateDouble(&quot;price&quot;, 99.99);   <span class="color-comment">// update cells</span>
+         rowSet.updateInt(&quot;qty&quot;, 99);
+         rowSet.updateRow();  <span class="color-comment">// update the row in the data source</span>
+         System.out.println(
+                 rowSet.getRow() + &quot;: &quot; + + rowSet.getInt(&quot;id&quot;) + &quot;, &quot;
+                 + rowSet.getString(&quot;title&quot;) + &quot;, &quot; + rowSet.getString(&quot;author&quot;) + &quot;, &quot;
+                 + rowSet.getDouble(&quot;price&quot;) + &quot;, &quot; + rowSet.getInt(&quot;qty&quot;));
+ 
+         <span class="color-comment">// A updatable ResultSet has a special row that serves as a staging area</span>
+         <span class="color-comment">// for building a row to be inserted.</span>
+         rowSet.moveToInsertRow();
+         rowSet.updateInt(1, 8909);  <span class="color-comment">// Use column number</span>
+         rowSet.updateString(2, &quot;Even More Programming&quot;);
+         rowSet.updateString(3, &quot;Kumar&quot;);
+         rowSet.updateDouble(4, 77.88);
+         rowSet.updateInt(5, 77);
+         rowSet.insertRow();
+         <span class="color-comment">// need to move away from insert row before apply changes</span>
+         rowSet.moveToCurrentRow();
+ 
+         <span class="color-comment">// Reconnect to data source to apply change in the RowSet.</span>
+         rowSet.acceptChanges(conn);  <span class="color-comment">// On non-autocommit Connection</span>
+      } catch(SQLException ex) {
+         ex.printStackTrace();
+      } finally {
+         try {
+            rowSet.close();
+            conn.close();
+         } catch (SQLException ex) {
+            ex.printStackTrace();
+         }
+      }
+   }
+}</pre>
+
+<p>For <code>CachedRowSet</code>, we need to set a key column for the <code>RowSet</code>. Furthermore, the <code>applyChanges(conn)</code> must be run on a non-autocommit <code>Connection</code>.</p>
+
+<h3>Connecting with DataSource</h3>
+
+<p>A JDBC program can connect to a target data source using one of two classes:</p>
+<ul>
+<li><code>DriverManager</code>: It connects an application to a data source, via a database URL specified in its static method <code>getConnection()</code>. For example,
+<pre class="color-example">
+<span class="color-comment">// MySQL</span>
+Connection conn = DriverManager.getConnection(&quot;jdbc:mysql://{host}:{port}/{db-name}&quot;, &quot;{user}&quot;, &quot;{password}&quot;);
+<span class="color-comment">// MS Access</span>
+Connection conn = DriverManager.getConnection(&quot;jdbc:odbc:{odbc-name}&quot;);</pre>
+
+Since JDK 6 (with JDBC 4.0), <code>DriverManager</code> automatically loads the JDBC driver found in the classpath. [But You need to manually load the JDBC driver prior to JDK 6.]</li>
+<li><code>DataSource</code>: <code>DriverManager</code> is much easier to use. But the <code>DataSource</code> interface makes available the details of the underlying data source to your application. <code>DataSource</code> can provide <em>connection pooling</em> (re-using a pool of connections, instead of opening/closing each connection, due to its high overhead) and <em>distributed transactions</em> (on multiple database systems), which are essential for Java EE applications, in particular EJB (Enterprise JavaBeans).</li>
+</ul>
+
+<p>To set up a <code>DataSource</code>:</p>
+<ol>
+<li>Create an instance of the <code>DataSource</code>.</li>
+<li>Set its properties.</li>
+<li>Register it with a naming service that uses the Java Naming and Directory Interface (JNDI).</li>
+</ol>
+
+<p>DataSource for Connection Pooling: [TODO]</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+  <li>JDBC Online Tutorial @ <a href="http://download.oracle.com/javase/tutorial/jdbc/index.html">http://download.oracle.com/javase/tutorial/jdbc/index.html</a>.</li>
+  <li>JDBC Home Page @ <a href="http://java.sun.com/products/jdbc/overview.html.">http://java.sun.com/products/jdbc/overview.html.</a></li>
+  <li>JDBC API Specifications 1.2, 2.1, 3.0, and 4.0 @ <a href="http://java.sun.com/products/jdbc">http://java.sun.com/products/jdbc</a>.</li>
+  <li>White Fisher, et al., &quot;JDBC API Tutorial and Reference&quot;, 3rd eds, Addison Wesley, 2003.</li>
+  <li>MySQL Home Page @ <a href="http://www.mysql.org">http://www.mysql.org</a>, and documentation.</li>
+  <li>MySQL 5.5 Reference Manual @ <a href="http://dev.mysql.com/doc/refman/5.1/en/index.html">http://dev.mysql.com/doc/refman/5.5/en/index.html</a>.</li>
+  <li>SQL.org @ <a href="http://www.sql.org">http://www.sql.org</a>.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7.0/JDBC 4.0, MySQL 5.5<br />
+Last modified: October, 2011</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

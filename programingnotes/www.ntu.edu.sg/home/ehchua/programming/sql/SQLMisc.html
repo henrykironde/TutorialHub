@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SQL Miscellaneous</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>SQL Miscellaneous</h1>
+
+</div>
+
+<div id="content-main">
+
+<h3>Miscellaneous How-Tos</h3>
+
+<h4>How to insert a row only if it does not exist?</h4>
+
+<p>To insert a row only if it does not exists (or no duplicate primary key or unique key), you could:</p>
+
+<ol>
+<li>Use 'INSERT INTO ... ON DUPLICATE KEY UPDATE ...'. For example,
+<pre class="color-example">
+INSERT INTO Table1 (column1, column2) VALUES (?, ?)
+  ON DUPLICATE KEY UPDATE column1 = column1</pre>
+  
+The command check for duplicate primary key as well as unique key. It performs the INSERT if no duplicate key; otherwise, it does the UPDATE. It returns affected_rows of 1 for INSERT, 2 for UPDATE, and 0 for no UPDATE.<br />
+This command is available in MySQL. Not sure about other RDBMS.
+</li>
+
+<li>Use a subquery 'SELECT ... WHERE NOT EXISTS' to check if the row already exists. For example,
+<pre class="color-command">
+INSERT INTO Table1 (column1, column2)
+  SELECT ?, ? FROM dual 
+    WHERE NOT EXISTS (SELECT * FROM Table1 WHERE column1 = ? AND column2 = ?)</pre>
+
+You can interpret as <code>'INSERT INTO Table1 (column1, column2) VALUES (?, ?)'</code> only if the values does not exist.<br />
+In MySQL, &quot;<code>dual</code>&quot; is a special table that can be used in queries that do not need any real database table. In the above example, we merely select values, rather than table columns.<br />
+This probably works for all the RDBMS.
+</li>
+</ol>
+
+<h4>Count with GROUP BY and Sort with ORDER BY</h4>
+
+<p>You can use COUNT with GROUP BY to group record and obtain the count. However, to get the COUNT and says the latest record, you can't use ORDER BY as ORDER BY is evaluated after GROUP BY. Instead, you need to use a subquery. For example,</p>
+
+<pre class="color-example">
+CREATE TABLE Cafe (
+  id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  category ENUM ('Coffee', 'Tea') NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  price DECIMAL(5,2) NOT NULL,
+  PRIMARY KEY(id)
+);
+ 
+INSERT INTO Cafe VALUES
+  (NULL, 'Coffee', 'Espresso', 3.19),
+  (NULL, 'Coffee', 'Cappuccino', 3.29),
+  (NULL, 'Coffee', 'Caffe Latte', 3.39),
+  (NULL, 'Coffee', 'Caffe Mocha', 3.49),
+  (NULL, 'Coffee', 'Brewed Coffee', 3.59),
+  (NULL, 'Tea', 'Green Tea', 2.99),
+  (NULL, 'Tea', 'Wulong Tea', 2.89);</pre>
+
+<p>To count the 'Coffee' and 'Tea', you could:</p>
+
+<pre class="color-example">
+SELECT category, count(*) AS count FROM Cafe
+  GROUP BY category;</pre>
+
+<p>However, the get the count as well as the most expensive 'Coffee' and 'Tea':</p>
+
+<pre class="color-example">
+<span class="color-comment">// Won't work, as there is no ordering</span>
+SELECT category, count(*) AS count, name, price FROM Cafe
+  GROUP BY category;
+  
+<span class="color-comment">// Syntax error, ORDER BY shall be after GROUP BY</span>
+SELECT category, count(*) AS count, name, price FROM Cafe
+  ORDER BY price DESC
+  GROUP BY category;
+
+<span class="color-comment">// Not the expected outcome</span>
+SELECT category, count(*) AS count, name, price FROM Cafe
+  GROUP BY category
+  ORDER BY price DESC;
+
+<span class="color-comment">// Use a subquery to do the ordering</span>
+SELECT category, count(*) AS count, name, price
+  FROM (SELECT category, name, price FROM Cafe ORDER BY price DESC) AS tmpTable
+  GROUP BY category;</pre>
+
+<h4>NULL vs Empty String or Zero</h4>
+
+<p>NULL denotes no value, where empty string denote a special value. A classical example is for the <code>'middleName'</code> column, NULL means no value assigned or value unknown, whereas empty string is a known value of empty string. Another example is in the <code>'markAwarded'</code> column, NULL means not marked yet, but 0 means zero mark awarded.</p>
+
+<p>You can use operators <code>IS NULL</code> or <code>IS NOT NULL</code> or function ISNULL() to test for NULL value (instead of comparing with empty string). For example,</p>
+
+<pre class="color-example">
+SELECT * FROM table1 WHERE column1 IS NOT NULL;</pre>
+
+<p>Rule of Thumb:</p>
+<ul>
+<li>Use NULL (as default) for <em>optional</em> columns, with NULL indicating no value.</li>
+<li>Use NOT NULL for <em>required</em> columns, where empty string could be a possible value.</li>
+</ul>
+
+<p>[TODO] more</p>
+
+<h4>COUNT vs SUM(IF(test, 1, 0))</h4>
+
+<p>COUNT does not count the NULL value.</p>
+
+<p>You can use <code>SUM(IF(test, 1, 0))</code> for <em>selected</em> count. For example,</p>
+<pre class="color-example">
+SELECT COUNT(*) AS numAttempts, SUM(IF(status="YES", 1, 0)) AS numYes
+  FROM Submissions
+  WHERE ......
+  GROUP BY ......</pre>
+
+
+<p>[TODO]</p>
+
+<h4>INNER JOIN vs LEFT JOIN</h4>
+
+<p>[TODO]</p>
+
+<h4>privileges</h4>
+
+<h5>Revoking all privileges</h5>
+
+<pre class="color-example">
+REVOKE ALL PRIVILEGES ON *.* FROM 'username'@'localhost';
+FLUSH PRIVILEGES;</pre>
+
+<h5>GRANT USAGE?</h5>
+
+<p>Let's create a new user, show his privilege (via SHOW GRANTS), grant some privileges:</p>
+
+<pre class="color-command">
+-- Create a new user
+mysql&gt; CREATE USER 'testuser'@'localhost' identified by 'xxxx';
+ 
+-- Show the privileges
+mysql&gt; SHOW GRANTS FOR 'testuser'@'localhost';
+GRANT USAGE ON *.* TO 'testuser'@'localhost' IDENTIFIED BY PASSWORD *****</pre>
+ 
+-- Grant privilege
+mysql&gt; GRANT SELECT ON test.* to 'testuser'@'localhost';
+ 
+-- Show the privileges again
+mysql&gt; SHOW GRANTS FOR 'testuser'@'localhost';
+GRANT USAGE ON *.* TO 'testuser'@'localhost' IDENTIFIED BY PASSWORD ***** 
+GRANT SELECT ON `test`.* TO 'testuser'@'localhost'
+
+<p>The &quot;<code>GRANT USAGE ON *.*</code>&quot; means &quot;No privilege&quot;. In other word, the user has been created (with an entry in mysql.users table) with no privilege.</p>
+
+<a class="references" href="../howto/References.html#mysql">Link to MySQL References &amp; Resources</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: MySQL 5.5.28, MySQL Workbench 5.2.44<br />
+Last modified: October, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

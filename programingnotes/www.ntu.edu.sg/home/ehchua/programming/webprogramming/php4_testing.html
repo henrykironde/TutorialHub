@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PHP Unit Testing with PHPUnit</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>PHP Unit Testing with PHPUnit</h1>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction</h3>
+
+<p>Various type of software testings:</p>
+<ul>
+<li><strong>Unit Test</strong>: Test individual component/class in isolation.</li>
+<li><strong>Integration Test</strong>: Test a group of associated components/classes.</li>
+<li><strong>Acceptance Test (or Functional Test)</strong>: operate on a fully integrated system, testing against the user interface (e.g., HTML for browser or XML/JSON for web services).</li>
+<li><strong>Regression Test</strong>: Tests to ensure the a change (such as enhancement, patches or configuration change) does not break the system or introduce new faults.</li>
+</ul>
+
+<p>PHP unit testing frameworks:</p>
+<ul>
+<li>PHPUnit</li>
+<li>Simpletest @ <a href="http://www.simpletest.org/">http://www.simpletest.org</a>.</li>
+<li>......</li>
+</ul>
+
+<p>PHP Acceptance test frameworks:</p>
+<ul>
+<li>Selenium @ <a href="http://www.seleniumhq.org/">http://www.seleniumhq.org</a>.</li>
+<li>Behat</li>
+<li>Codecpetion</li>
+<li>......</li>
+</ul>
+
+<h3>PHPUnit</h3>
+
+<p>&quot;Unit testing allows you to write small test methods which verify units of functionality in your program.  It is a powerful technique for improving the  quality of your software, preventing regressions, and allowing confident refactoring of your code.&quot;</p>
+
+<p>&quot;PHPUnit is a unit testing suite for the PHP language, modeled on the xUnit testing framework, designed by Kent Beck and Erich Gamma.  If you've used JUnit (for Java), PyUnit (for Python), CxxUnit (for C++), or any of the other equivalents for other languages, the API for this package should seem fairly familiar.  If you've never written unit tests before, the PHPUnit
+ API is simple to learn and use.&quot;</p>
+
+<h4>Installing PHPUnit</h4>
+
+<p>On Ubuntu:</p>
+
+<pre class="color-command">
+$ sudo apt-get install phpunit</pre>
+
+<h4>Getting Started with Examples</h4>
+
+<p>Read &quot;PHPUnit Manual&quot; @ <a href="http://phpunit.de/manual/current/en/index.html">http://phpunit.de/manual/current/en/index.html</a>, which is extremely extensive.</p>
+
+<h5>Example 1:</h5>
+
+<p>Suppose that you have written the PHP array, and need to do unit test for the array and its functions count(), array_push(), array_pop().</p>
+
+<p>Write the following PHPUnit test script called &quot;<code>ArrayTest</code>&quot;</p>
+
+<pre class="color-example">
+&lt;?php
+class ArrayTest extends PHPUnit_Framework_TestCase {
+   public function testPushAndPop() {
+      <span class="color-comment">// Allocate a test fixture.</span>
+      $fixture = array();
+      <span class="color-comment">// Assert initially empty, count() is 0.</span>
+      $this-&gt;assertEquals(0, count($fixture));
+
+      <span class="color-comment">// Test array_push().
+      // Push an item into array.</span>
+      array_push($fixture, 'foo');
+      <span class="color-comment">// Assert one item, count() is 1.</span>
+      $this-&gt;assertEquals(1, count($fixture));
+      <span class="color-comment">// Assert item pushed.</span>
+      $this-&gt;assertEquals('foo', $fixture[count($fixture)-1]);
+ 
+      <span class="color-comment">// Test array_pop().</span>
+      $this-&gt;assertEquals('foo', array_pop($fixture));
+      $this-&gt;assertEquals(0, count($fixture));
+   }
+}
+?&gt;</pre>
+
+<p>To run the test:</p>
+
+<pre class="color-command">
+$ phpunit --verbose ArrayTest.php
+PHPUnit 3.6.10 by Sebastian Bergmann.
+.
+Time: 0 seconds, Memory: 3.00Mb
+OK (1 test, 5 assertions)</pre>
+
+<p>The dot (.) represents ONE test passed.</p>
+
+<p>To show you what happens if the test fails, we modify the test script for array_pop() (we can't change the array!) as follows:</p>
+
+<pre class="color-example">
+&lt;?php
+class ArrayTest extends PHPUnit_Framework_TestCase {
+   public function testPushAndPop() {
+      <span class="color-comment">// Allocate a test fixture.</span>
+      $fixture = array();
+      <span class="color-comment">// Assert initially empty, count() is 0.</span>
+      $this-&gt;assertEquals(0, count($fixture));
+
+      <span class="color-comment">// Test array_push().
+      // Push an item into array.</span>
+      array_push($fixture, 'foo');
+      <span class="color-comment">// Assert one item, count() is 1.</span>
+      $this-&gt;assertEquals(1, count($fixture));
+      <span class="color-comment">// Assert item pushed.</span>
+      $this-&gt;assertEquals('foo', $fixture[count($fixture)-1]);
+ 
+      <span class="color-comment">// Test array_pop().</span>
+      $this-&gt;assertEquals('bar', array_pop($fixture));
+      $this-&gt;assertEquals(0, count($fixture));
+   }
+}
+?&gt;</pre>
+
+<p>Run the test again:</p>
+
+<pre class="color-command">
+$ phpunit --verbose ArrayTest.php
+PHPUnit 3.6.10 by Sebastian Bergmann.
+F
+Time: 0 seconds, Memory: 3.00Mb
+
+There was 1 failure:
+1) ArrayTest::testPushAndPop
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'bar'
++'foo'
+
+ArrayTest.php:18
+
+FAILURES!
+Tests: 1, Assertions: 4, Failures: 1.</pre>
+
+<p>The 'F' represents ONE test failed, with the details of the failure.</p>
+
+<h5>Example 2: </h5>
+
+<pre class="color-example">
+&lt;?php
+class ArrayTest extends PHPUnit_Framework_TestCase {
+    public function testEmpty() {
+        $fixture = array();
+        $this-&gt;assertEmpty($fixture);
+        return $fixture;
+    }
+ 
+    /**
+     * @depends testEmpty
+     */
+    public function testPush(array $fixture) {
+        array_push($fixture, 'foo');
+        $this-&gt;assertEquals('foo', $fixture[count($fixture)-1]);
+        $this-&gt;assertNotEmpty($fixture);
+        return $fixture;
+    }
+ 
+    /**
+     * @depends testPush
+     */
+    public function testPop(array $fixture) {
+        $this-&gt;assertEquals('foo', array_pop($fixture));
+        $this-&gt;assertEmpty($fixture);
+    }
+}
+?&gt;</pre>
+
+<p>Run test:</p>
+
+<pre class="color-command">
+$ phpunit --verbose ArrayTestDepends.php
+PHPUnit 3.6.10 by Sebastian Bergmann.
+...
+Time: 0 seconds, Memory: 2.75Mb
+OK (3 tests, 5 assertions)</pre>
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>PHPUnit Manual @ <a href="http://phpunit.de/manual/current/en/index.html">http://phpunit.de/manual/current/en/index.html</a>.</li>
+
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: PHP 5.4, PHPUnit 3.6.10 (Ubuntu 13.04)<br />
+Last modified: October, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

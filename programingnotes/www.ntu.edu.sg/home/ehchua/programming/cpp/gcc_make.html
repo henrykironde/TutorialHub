@@ -1,0 +1,730 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>GCC and Make - A Tutorial on how to compile, link and build C/C++ applications</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>GCC and Make</h1>
+<h2>Compiling, Linking and Building<br />C/C++ Applications</h2>
+</div>
+
+<div id="content-main">
+
+
+<h3>GCC (GNU Compiler Collection)</h3>
+
+<h4>A Brief History and Introduction to GCC</h4>
+
+<p>The original <em>GNU C Compiler</em> (GCC) is developed by Richard Stallman, the founder of the <em>GNU Project</em>. Richard Stallman founded the GNU project in 1984 to create a complete Unix-like operating system as free software, to promote freedom and cooperation among computer users and programmers.</p>
+
+<p>GCC, formerly for &quot;<em>GNU C Compiler</em>&quot;, has grown over times to support many languages such as C++, Objective-C, Java, Fortran and Ada. It is now referred to as &quot;<em>GNU Compiler Collection</em>&quot;. The mother site for GCC is <a href="http://gcc.gnu.org/">http://gcc.gnu.org/</a>.</p>
+
+<p>GCC is a key component of &quot;<em>GNU Toolchain</em>&quot;, for developing applications, as well as operating systems. The GNU Toolchain includes:</p>
+
+<ol>
+<li>GNU Compiler Collection (GCC): a compiler suit that supports many languages, such as C/C++, Objective-C and Java.</li>
+<li>GNU Make: an automation tool for compiling and building applications.</li>
+<li>GNU Binutils: a suit of binary utility tools, including linker and assembler.</li>
+<li>GNU Debugger (GDB).</li>
+<li>GNU Autotools: A build system including Autoconf, Autoheader, Automake and Libtool.</li>
+<li>GNU Bison: a parser generator (similar to lex and yacc).</li>
+</ol>
+
+<p>GCC is <em>portable</em> and run in many operating platforms. GCC (and GNU Toolchain) is currently available on all Unixes. They are also ported to Windows by MinGW and Cygwin. GCC is also a <em>cross-compiler</em>, for producing executables on different platform.</p>
+
+<p>The various GCC versions are:</p>
+<ul>
+<li>In 1987, the first version of GCC was released.</li>
+<li>In 1992, GCC version 2 was released which supports C++.</li>
+<li>In 2001, GCC version 3 was released incorporating ECGS (Experimental GNU Compiler System), with improve optimization.</li>
+<li>In 2005, GCC version 4 was released. As of July 2012, the latest release of GCC is 4.7.4.</li>
+</ul>
+
+<h4>Installing GCC</h4>
+
+<p>GCC (GNU Toolchain) is included in all Unixes. For Windows, you could either install MinGW GCC or Cygwin GCC. Read &quot;<a href="../howto/Cygwin_HowTo.html">How to install Cygwin and MinGW</a>&quot;.</p>
+
+<h5>MinGW GCC</h5>
+<p>MinGW (Minimalist GNU for Windows) is a port of the GNU Compiler Collection (GCC) and GNU Binutils for use in  Windows. It also included MSYS (Minimal System), which is basically a Bourne shell (<code>bash<span class="color-comment"></span></code>).</p>
+
+<h5>Cygwin GCC</h5>
+<p>Cygwin is a Unix-like environment and command-line interface for Microsoft Windows. Cygwin is huge and includes most of the Unix tools and utilities. It also included the commonly-used Bash shell. </p>
+<p>Two versions of GCC are installed, identified via <code>gcc-3.exe</code> and <code>gcc-4.exe</code> (and <code>g++-3.exe</code> and <code>g++-4.exe</code>). It also provides symlinks <code>gcc.exe</code> and <code>g++.exe</code>, which are linked to <code>gcc-4.exe</code> and <code>g++-4.exe</code>, respectively.</p>
+
+<h5>Versions</h5>
+<p>You could display the version of GCC via <code>--version</code> option:</p>
+
+<pre class="color-command">
+<span class="color-comment">// Cygwin in bash shell</span>
+$ <strong>gcc --version</strong>
+gcc (GCC) 4.5.3
+ 
+$ <strong>gcc-3 --version</strong>
+gcc-3 (GCC) 3.4.4 (cygming special, gdc 0.12, using dmd 0.125)
+<span class="color-comment"> 
+// MinGW in CMD shell</span>
+&gt; <strong>gcc --version</strong>
+gcc (GCC) 4.6.2
+ 
+&gt; <strong>g++ --version</strong>
+gcc (GCC) 4.6.2</pre>
+
+<p>More details can be obtained via <code>-v</code> option, for example,</p>
+<pre class="color-command">
+&gt; <strong>gcc -v</strong>
+Using built-in specs.
+COLLECT_GCC=gcc
+COLLECT_LTO_WRAPPER=d:/mingw/bin/../libexec/gcc/mingw32/4.6.2/lto-wrapper.exe
+Target: mingw32
+Configured with: ../gcc-4.6.2/configure --enable-languages=c,c++,ada,fortran,objc,obj-c++ 
+  --disable-sjlj-exceptions --with-dwarf2 --enable-shared --enable-libgomp 
+  --disable-win32-registry --enable-libstdcxx-debug --enable-version-specific-runtime-libs 
+  --build=mingw32 --prefix=/mingw
+Thread model: win32
+gcc version 4.6.2 (GCC)</pre>
+
+
+<h5>Help</h5>
+<p>You can get the help manual via the <code>--help</code> option. For example,</p>
+<pre class="color-command">
+&gt; <strong>gcc --help</strong>
+</pre>
+
+<h5>Man Pages</h5>
+<p>You can read the GCC manual pages (or <em>man pages</em>) via the <code>man</code> utility:</p>
+<pre class="color-command">
+&gt; <strong>man gcc</strong>
+<span class="color-comment">// or</span>
+&gt; <strong>man g++</strong>
+<span class="color-comment">// Press space key for next page, or 'q' to quit.</span></pre>
+
+<p>Reading man pages under CMD or Bash shell can be difficult. You could generate a text file via:</p>
+<pre class="color-command">
+&gt; <strong>man gcc | col -b &gt; gcc.txt</strong>
+</pre>
+
+<p>The <code>col</code> utility is needed to strip the backspace. (For Cygwin, it is available in  &quot;Utils&quot;, &quot;util-linux&quot; package.)</p>
+<p>Alternatively, you could look for an online man pages, e.g., <a href="http://linux.die.net/man/1/gcc">http://linux.die.net/man/1/gcc</a>.</p>
+
+<p>For MinGW, the GCC man pages are kept in &quot;<code>share\man\man1\gcc.1</code>&quot;. For Cygwin, it is kept under &quot;<code>usr\share\man\man1</code>&quot;.</p>
+
+
+<h4>Getting Started</h4>
+
+<p>The GNU C and C++ compiler are <code>gcc</code> and <code>g++</code>, respectively.</p>
+
+<h5>Compile/Link a Simple C Program - <span class="font-code">hello.c</span></h5>
+
+<p>Below is the Hello-world C program <code>hello.c</code>:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// hello.c</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+    printf(&quot;Hello, world!\n&quot;);
+    return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>To compile the <code>hello.c</code>:</p>
+<pre class="color-command">
+&gt; <strong>gcc hello.c</strong>
+  <span class="color-comment">// Compile and link source file hello.c into executable a.exe</span></pre>
+
+<p>The default output executable is called &quot;<code>a.exe</code>&quot;.</p>
+<p>To run the program:</p>
+
+<pre class="color-command">
+<span class="color-comment">// Under CMD Shell</span>
+&gt; <strong>a</strong>
+<span class="color-comment">// Under Bash or Bourne Shell - include the current path (./)</span>
+$ <strong>./a</strong></pre>
+
+<p>NOTES (for Bash Shell, Bourne Shell and Unixes):</p>
+<ul>
+<li>In Bash or Bourne shell, the default PATH does not include the current working directory. Hence, you may need to include the current path (<code>./</code>) in the command. (Windows include the current directory in the PATH automatically; whereas Unixes do not - you need to include the current directory explicitly in the PATH.)</li>
+<li>You may need to include the file extension, i.e., &quot;<code>./a.exe</code>&quot;.</li>
+<li> In some Unixes, the output file could be &quot;<code>a.out</code>&quot; or simply &quot;<code>a</code>&quot;. Furthermore, you may need to assign <em>executable file-mode</em> (<em>x</em>) to the executable file &quot;<code>a.out</code>&quot;, via command &quot;<code>chmod a+x <em>filename</em></code>&quot; (add executable file-mode &quot;<code>+x</code>&quot; to all users &quot;<code>a+x</code>&quot;).</li>
+</ul>
+
+<p>To specify the output filename, use <code>-o</code> option:</p>
+<pre class="color-example">
+&gt; <strong>gcc -o hello.exe hello.c</strong>
+  <span class="color-comment">// Compile and link source file hello.c into executable hello.exe</span>
+&gt; <strong>hello</strong>
+  <span class="color-comment">// Execute hello.exe under CMD shell</span>
+$ <strong>./hello</strong>
+  <span class="color-comment">// Execute hello.exe under Bash or Bourne shell, specifying the current path (./)</span></pre>
+
+<p>NOTE for Unixes: In Unixes, you may omit the <code>.exe</code> file extension, and simply name the output executable as <code>hello</code>. You need to assign executable file mode via command &quot;<code>chmod a+x hello</code>&quot;.</p>
+
+<h5>Compile/Link a Simple C++ Program - <span class="font-code">hello.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// hello.cpp
+</span>#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   cout &lt;&lt; &quot;Hello, world!&quot; &lt;&lt; endl;
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>You need to use g++ to compile C++ program, as follows. We use the <code>-o</code> option to specify the output file name.</p>
+<pre class="color-command">
+&gt; g++ -o hello.exe hello.cpp
+   <span class="color-comment">// Compile and link source hello.cpp into executable hello.exe</span>
+&gt; hello
+   <span class="color-comment">// Execute under CMD shell</span>
+$ ./hello
+   <span class="color-comment">// Execute under Bash or Bourne shell, specifying the current path (./)</span></pre>
+
+<h5>More GCC Compiler Options</h5>
+
+<p>A few commonly-used GCC compiler options are:</p>
+<pre class="color-command">
+$ g++ <strong>-Wall -g -o Hello.exe</strong> Hello.cpp</pre>
+
+<ul>
+<li><code>-o</code>: specifies the <span class="underline">o</span>utput executable filename.</li>
+<li><code>-Wall</code>: prints &quot;<code>all</code>&quot; <span class="underline">w</span>arning messages.</li>
+<li><code>-g</code>: generates additional symbolic debug<span class="underline">g</span>ging information for use with <code>gdb</code> debugger.</li>
+</ul>
+
+<h5>Compile and Link Separately</h5>
+
+<p>The above command <em>compile</em> the source file into object file and <code>link</code> with other object files (system library) into executable in one step. You may separate compile and link in two steps as follows:</p>
+
+<pre class="color-command">
+<span class="color-comment">// Compile-only with -c option</span>
+&gt; g++ <strong>-c</strong> -Wall -g Hello.cpp
+<span class="color-comment">// Link object file(s) into an executable</span>
+&gt; g++ -g -o Hello.exe Hello.o</pre>
+
+<p>The options are:</p>
+<ul>
+<li><code>-c</code>: <span class="underline">c</span>ompile into object file &quot;<code>Hello.o</code>&quot;. By default, the object file has the same name as the source file with extension of &quot;<code>.o</code>&quot; (there is no need to specify <code>-o</code> option). No linking with other object file or library.</li>
+<li>Linking is performed when the input file are object files &quot;<code>.o</code>&quot; (instead of source file &quot;<code>.cpp</code>&quot; or &quot;<code>.c</code>&quot;). GCC uses a separate linker program (called <code>ld.exe</code>) to perform the linking.</li>
+</ul>
+
+<h5>Compile and Link Multiple Source Files</h5>
+<p>Suppose that your program has two source files: <code>file1.cpp</code>, <code>file2.cpp</code>. You could compile all of them in a single command:</p>
+<pre class="color-command">
+&gt; g++ -o myprog.exe file1.cpp file2.cpp </pre>
+
+<p>However, we usually compile each of the source files separately into object file, and link them together in the later stage. In this case, changes in one file does not require re-compilation of the other files.</p>
+<pre class="color-command">
+&gt; g++ -c file1.cpp
+&gt; g++ -c file2.cpp
+&gt; g++ -o myprog.exe file1.o file2.o</pre>
+
+<h5>Compile into a Shared Library</h5>
+
+<p>To compile and link C/C++ program into a shared library (<code>&quot;.dll&quot;</code> in Windows, <code>&quot;.so&quot;</code> in Unixes), use <code>-shared</code> option. Read &quot;<a href="../java/JavaNativeInterface.html">Java Native Interface</a>&quot; for example.</p>
+
+<h4>GCC Compilation Process</h4>
+
+<img class="image-center" src="images/GCC_CompilationProcess.png" />
+
+<p>GCC compiles a C/C++ program into executable in 4 steps as shown in the above diagram. For example, a &quot;<code>gcc -o hello.exe hello.c</code>&quot; is carried out as follows:</p>
+<ol>
+<li>Pre-processing: via the GNU C Preprocessor (<code>cpp.exe</code>), which includes the headers (<code>#include</code>) and expands the macros (<code>#define</code>).
+
+<pre class="color-command">
+&gt; <strong>cpp hello.c &gt; hello.i</strong></pre>
+
+The resultant intermediate file &quot;<code>hello.i</code>&quot; contains the expanded source code.</li>
+
+<li>Compilation: The compiler compiles the pre-processed source code into assembly code for a specific processor.
+  <pre class="color-command">
+&gt; <strong>gcc -S hello.i</strong></pre>
+The <code>-S</code> option specifies to produce assembly code, instead of object code. The resultant assembly file is &quot;<code>hello.s</code>&quot;.</li>
+
+<li>Assembly: The assembler (<code>as.exe</code>) converts the assembly code into machine code in the object file &quot;<code>hello.o</code>&quot;.
+<pre class="color-command">
+&gt; <strong>as -o hello.o hello.s</strong></pre></li>
+
+<li>Linker: Finally, the linker (<code>ld.exe</code>) links the object code with the library code to produce an executable file &quot;<code>hello.exe</code>&quot;.
+<pre class="color-command">
+&gt; <strong>ld -o hello.exe hello.o ...libraries...</strong></pre></li>
+</ol>
+
+<h5>Verbose Mode (<span class="font-code">-v</span>)</h5>
+
+<p>You can see the detailed compilation process by enabling <code>-v</code> (verbose) option. For example,</p>
+<pre class="color-command">
+&gt; <strong>gcc -v hello.c -o hello.exe</strong></pre>
+
+<h5>Defining Macro (<span class="font-code">-D</span>)</h5>
+
+<p>You can use the <code>-D<em>name</em></code> option to define a macro, or <code>-D<em>name</em>=<em>value</em></code> to define a macro with a value. The <code><em>value</em></code> should be enclosed in double quotes if it contains spaces.</p>
+
+
+
+<h4>Headers (<span class="font-code">.h</span>), Static Libraries (<span class="font-code">.lib</span>, <span class="font-code">.a</span>) and Shared Library (<span class="font-code">.dll</span>, <span class="font-code">.so</span>)</h4>
+
+<h5>Static Library vs. Shared Library</h5>
+
+<p>A library is a collection of pre-compiled object files that can be linked into your programs via the linker. Examples are the system functions such as <code>printf()</code> and <code>sqrt()</code>.</p>
+
+<p>There are two types of external libraries: <em>static library</em> and <em>shared library</em>.</p>
+
+<ol>
+<li>A static library has file extension of &quot;<code>.a</code>&quot; (archive file) in Unixes or &quot;<code>.lib</code>&quot; (library) in Windows. When your program is linked against a static library, the machine code of external functions used in your program is copied into the executable. A static library can be created via the <em>archive</em> program &quot;<code>ar.exe</code>&quot;.</li>
+
+<li>A shared library has file extension of &quot;<code>.so</code>&quot; (shared objects) in Unixes or &quot;<code>.dll</code>&quot; (dynamic link library) in Windows. When your program is linked against a shared library, only a small table is created in the executable. Before the executable starts running, the operating system loads the machine code needed for the external functions - a process known as <em>dynamic linking</em>. Dynamic linking makes executable files smaller and saves disk space, because one copy of a library can be shared between multiple programs. Furthermore, most operating systems allows one copy of a shared library in memory to be used by all running programs, thus, saving memory. The shared library codes can be upgraded without the need to recompile your program.</li>
+</ol>
+
+<p>Because of the advantage of dynamic linking, GCC, by default, links to the shared library if it is available.</p>
+
+<p>You can list the contents of a library via &quot;<code>nm <em>filename</em></code>&quot;.</p>
+
+<h5>Searching for Header Files and Libraries (<span class="font-code">-I</span>, <span class="font-code">-L</span> and <span class="font-code">-l</span>)</h5>
+
+<p>When compiling the program, the <em>compiler</em> needs the <em>header files</em> to compile the source codes; the <em>linker</em> needs the <em>libraries</em> to resolve external references from other object files or libraries. The compiler and linker will not find the headers/libraries unless you set the appropriate options, which is not obvious for first-time user.</p>
+<p>For each of the headers used in your source (via <code>#include</code> directives), the compiler searches the so-called <em>include-paths</em> for these headers. The include-paths are specified via <code>-I<em>dir</em></code> option (or environment variable <code>CPATH</code>). Since the header's filename is known (e.g., <code>iostream.h</code>, <code>stdio.h</code>), the compiler only needs the directories.</p>
+<p>The linker searches the so-called <em>library-paths</em> for libraries needed to link the program into an executable. The library-path is specified via <code>-L<em>dir</em></code> option (uppercase <code>'L'</code> followed by the directory path) (or environment variable <code>LIBRARY_PATH</code>). In addition, you also have to specify the library name. In Unixes, the library <code>lib<em>xxx</em>.a</code> is specified via <code>-l<em>xxx</em></code> option (lowercase letter <code>'l'</code>, without the prefix &quot;<code>lib</code>&quot; and <code>&quot;.a</code>&quot; extension). In Windows, provide the full name such as <code>-lxxx.lib</code>. The linker needs to know both the directories as well as the library names. Hence, two options need to be specified.</p>
+
+<h5>Default Include-paths, Library-paths and Libraries</h5>
+
+<p>Try list the default include-paths in your system used by the &quot;GNU C Preprocessor&quot; via &quot;<code>cpp -v</code>&quot;:</p>
+<pre class="color-command">
+&gt; <strong>cpp -v</strong>
+......
+#include &quot;...&quot; search starts here:
+#include &lt;...&gt; search starts here:
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include             <span class="color-comment">// d:\mingw\lib\gcc\mingw32\4.6.2\include</span>
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/../../../../include <span class="color-comment">// d:\mingw\include</span>
+ d:\mingw\bin\../lib/gcc/mingw32/4.6.2/include-fixed       <span class="color-comment">// d:\mingw\lib\gcc\mingw32\4.6.2\include-fixed</span></pre>
+
+<p>Try running the compilation in verbose mode (<code>-v</code>) to study the library-paths (<code>-L</code>) and libraries (<code>-l</code>) used in your system:</p>
+<pre class="color-command">
+&gt; <strong>gcc -v -o hello.exe hello.c</strong>
+......
+-Ld:/mingw/bin/../lib/gcc/mingw32/4.6.2                         <span class="color-comment">// d:\mingw\lib\gcc\mingw32\4.6.2</span>
+-Ld:/mingw/bin/../lib/gcc                                       <span class="color-comment">// d:\mingw\lib\gcc</span>
+-Ld:/mingw/bin/../lib/gcc/mingw32/4.6.2/../../../../mingw32/lib <span class="color-comment">// d:\mingw\mingw32\lib</span>
+-Ld:/mingw/bin/../lib/gcc/mingw32/4.6.2/../../..                <span class="color-comment">// d:\mingw\lib</span>
+-lmingw32     <span class="color-comment">// libmingw32.a</span>
+-lgcc_eh      <span class="color-comment">// libgcc_eh.a</span>
+-lgcc         <span class="color-comment">// libgcc.a</span>
+-lmoldname
+-lmingwex
+-lmsvcrt
+-ladvapi32
+-lshell32
+-luser32 
+-lkernel32</pre>
+
+
+<p><br  />
+  <span class="line-heading">Eclipse CDT:</span> In Eclipse CDT, you can set the include paths, library paths and libraries by right-click on the project  ⇒ Properties ⇒ C/C++ General  ⇒ Paths and Symbols ⇒ Under tabs &quot;Includes&quot;, &quot;Library Paths&quot; and &quot;Libraries&quot;. The settings are applicable to the selected project only.</p>
+  
+<h4>GCC Environment Variables</h4>
+<p>GCC uses the following environment variables:</p>
+<ul>
+  <li><code>PATH</code>: For searching the executables and run-time shared libraries (<code>.dll</code>, <code>.so</code>).</li>
+  <li><code>CPATH</code>: For searching the <em>include-paths</em> for headers. It is searched after paths specified in <code>-I&lt;<em>dir</em>&gt;</code> options. <code>C_INCLUDE_PATH</code> and <code>CPLUS_INCLUDE_PATH</code> can be used to specify C and C++ headers if the  particular language was indicated in pre-processing.</li>
+  <li><code>LIBRARY_PATH</code>: For searching <em>library-paths</em> for link libraries. It is searched after paths specified in  -<code>L&lt;<em>dir</em>&gt;</code> options.</li>
+</ul>
+
+<h4>Utilities for Examining the Compiled Files</h4>
+
+<p>For all the GNU utilities, you can use &quot;<code>command --help</code>&quot; to list the help menu; or &quot;<code>man command</code>&quot; to display the man pages.</p>
+
+<h5>&quot;<span class="font-code">file</span>&quot; Utility - Determine File Type</h5>
+
+<p>The utility &quot;<code>file</code>&quot; can be used to display the type of object files and executable files. For example,</p>
+
+<pre class="color-command">
+&gt; <strong>gcc -c hello.c</strong>
+&gt; <strong>gcc -o hello.exe hello.o</strong>
+ 
+&gt; <strong>file hello.o</strong>
+hello.o: 80386 COFF executable not stripped - version 30821
+ 
+&gt; <strong>file hello.exe</strong>
+hello.exe: PE32 executable (console) Intel 80386, for MS Windows</pre>
+
+<h5>&quot;<span class="font-code">nm</span>&quot; Utility - List Symbol Table of Object Files</h5>
+
+<p>The utility &quot;<code>nm</code>&quot; lists symbol table of object files. For example,</p>
+<pre class="color-command">
+&gt; <strong>nm hello.o</strong>
+00000000 b .bss
+00000000 d .data
+00000000 r .eh_frame
+00000000 r .rdata
+00000000 t .text
+         U ___main
+00000000 T _main
+         U _printf
+         U _puts
+ 
+&gt; <strong>nm hello.exe | grep printf</strong>
+00406120 I __imp__printf
+0040612c I __imp__vfprintf
+00401b28 T _printf
+00401b38 T _vfprintf</pre>
+
+<p>&quot;nm&quot; is commonly-used to check if a particular function is defined in an object file. A <code>'T'</code> in the second column indicates a function that is <em>defined</em>, while a <code>'U'</code> indicates a function which is <em>undefined</em> and should be resolved by the linker.</p>
+
+<h5>&quot;<span class="font-code">ldd</span>&quot; Utility - List Dynamic-Link Libraries</h5>
+
+<p>The utility &quot;<code>ldd</code>&quot; examines an executable and displays a list of the shared libraries that it needs. For example,</p>
+<pre class="color-command">
+&gt; <strong>ldd hello.exe</strong>
+ntdll.dll =&gt; /cygdrive/c/Windows/SYSTEM32/ntdll.dll (0x77bd0000)
+kernel32.dll =&gt; /cygdrive/c/Windows/system32/kernel32.dll (0x77600000)
+KERNELBASE.dll =&gt; /cygdrive/c/Windows/system32/KERNELBASE.dll (0x75fa0000)
+msvcrt.dll =&gt; /cygdrive/c/Windows/system32/msvcrt.dll (0x763f0000)</pre>
+
+<h3>GNU Make</h3>
+<p>The &quot;<code>make</code>&quot; utility automates the mundane aspects of building executable from source code. &quot;<code>make</code>&quot; uses a so-called <code>makefile</code>, which contains rules on how to build the executables.</p>
+
+<p>You can issue &quot;<code>make --help</code>&quot; to list the command-line options; or &quot;<code>man make</code>&quot; to display the man pages.</p>
+
+<h4>First Makefile By Example</h4>
+
+<p>Let's begin with a simple example to build the Hello-world program (<code>hello.c</code>) into executable (<code>hello.exe</code>) via make utility.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// hello.c</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+    printf(&quot;Hello, world!\n&quot;);
+    return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Create the following file named &quot;makefile&quot; (without any file extension), which contains rules to build the executable, and save in the same directory as the source file. Use &quot;tab&quot; to indent the command (NOT spaces).</p>
+
+<pre class="color-example">
+all: hello.exe
+
+hello.exe: hello.o
+	 gcc -o hello.exe hello.o
+
+hello.o: hello.c
+	 gcc -c hello.c
+     
+clean:
+	 rm hello.o hello.exe</pre>
+    
+<p>Run the &quot;<code>make</code>&quot; utility as follows:</p>
+
+<pre class="color-command">
+&gt; <strong>make</strong>
+gcc -c hello.c
+gcc -o hello.exe hello.o</pre>
+
+<p>Running <code>make</code> without argument starts the target &quot;<code>all</code>&quot; in the <code>makefile</code>. A makefile consists of a set of rules. A rule consists of 3 parts: a target, a list of pre-requisites and a command, as follows:</p>
+
+<pre class="color-syntax">
+<em>target</em>: <em>pre-req-1</em> <em>pre-req-2</em> ...
+	<em>command</em></pre>
+
+<p>The <em>target</em> and <em>pre-requisites</em> are separated by a colon (<code>:</code>). The <em>command</em> must be preceded by a tab (NOT spaces).</p>
+
+<p>When <code>make</code> is asked to evaluate a rule, it begins by finding the files in the prerequisites. If any of the prerequisites has an associated rule, make attempts to update those first.</p>
+<p>In the above example, the rule &quot;<code>all</code>&quot; has a pre-requisite &quot;<code>hello.exe</code>&quot;. <code>make</code> cannot find the file &quot;<code>hello.exe</code>&quot;, so it looks for a rule to create it. The rule &quot;<code>hello.exe</code>&quot; has a pre-requisite &quot;<code>hello.o</code>&quot;. Again, it does not exist, so <code>make</code> looks for a rule to create it. The rule &quot;<code>hello.o</code>&quot; has a pre-requisite &quot;<code>hello.c</code>&quot;. <code>make</code> checks that &quot;<code>hello.c</code>&quot; exists and it is newer than the target (which does not exist). It runs the command &quot;<code>gcc -c hello.c</code>&quot;. The rule &quot;<code>hello.exe</code>&quot; then run its command &quot;<code>gcc -o hello.exe hello.o</code>&quot;. Finally, the rule &quot;<code>all</code>&quot; does nothing.</p>
+
+<p>More importantly, if the pre-requisite is not newer than than target, the command will not be run. In other words, the command will be run only if the target is out-dated compared with its pre-requisite. For example, if we re-run the make command:</p>
+
+<pre class="color-command">
+&gt; <strong>make</strong>
+make: Nothing to be done for `all'.</pre>
+
+<p>You can also specify the target to be made in the <code>make</code> command. For example, the target &quot;<code>clean</code>&quot; removes the &quot;<code>hello.o</code>&quot; and &quot;<code>hello.exe</code>&quot;. You can then run the <code>make</code> without target, which is the same as &quot;<code>make all</code>&quot;.</p>
+<pre class="color-command">
+&gt; <strong>make clean</strong>
+rm hello.o hello.exe
+ 
+&gt; <strong>make</strong>
+gcc -c hello.c
+gcc -o hello.exe hello.o</pre>
+
+<p>Try modifying the &quot;<code>hello.c</code>&quot; and run <code>make</code>.</p>
+
+<p>NOTES:</p>
+
+<ul>
+<li>If the <em>command</em> is not preceded by a tab, you get an error message &quot;makefile:4: *** missing separator.  Stop.&quot;</li>
+<li>If there is no <code>makefile</code> in the current directory, you get an error message &quot;make: *** No targets specified and no makefile found.  Stop.&quot;</li>
+<li>The makefile can be named &quot;<code>makefile</code>&quot;, &quot;<code>Makefile</code>&quot; or &quot;<code>GNUMakefile</code>&quot;, without file extension.</li>
+</ul>
+
+<h4>More on Makefile</h4>
+
+<h5>Comment &amp; Continuation</h5>
+<p>A comment begins with a <code>#</code> and lasts till the end of the line. Long line can be broken and continued in several lines via a back-slash (<code>\</code>).</p>
+
+<h5>Syntax of Rules</h5>
+<p>A general syntax for the rules is:</p>
+
+<pre class="color-syntax">
+<em>target1</em> [<em>target2</em> ...]: [<em>pre-req-1</em> <em>pre-req-2</em> ...]
+	[<em>command1</em>
+	 <em>command2</em>
+	 ......]</pre>
+
+<p>The rules are usually organized in such as way the more general rules come first. The overall rule is often name &quot;<code>all</code>&quot;, which is the default target for <code>make</code>.</p>
+
+<h5>Phony Targets (or Artificial Targets)</h5>
+<p>A target that does not represent a file is called a phony target. For example, the &quot;<code>clean</code>&quot; in the above example, which is just a label for a command. If the target is a file, it will be checked against its pre-requisite for out-of-date-ness. Phony target is always out-of-date and its command will be run. The standard phony targets are: <code>all</code>, <code>clean</code>, <code>install</code>.</p>
+
+<h5>Variables</h5>
+<p>A variable begins with a <code>$</code> and is enclosed within parentheses <code>(...)</code> or braces <code>{...}</code>. Single character variables do not need the parentheses. For example, <code>$(CC)</code>, <code>$(CC_FLAGS)</code>, <code>$@</code>, <code>$^</code>.</p>
+
+<h5>Automatic Variables</h5>
+
+<p>Automatic variables are set by make after a rule is matched. There include:</p>
+<ul>
+<li><code>$@</code>: the target filename.</li>
+<li><code>$*</code>: the target filename without the file extension.</li>
+<li><code>$&lt;</code>: the first prerequisite filename.</li>
+<li><code>$^</code>: the filenames of all the prerequisites, separated by spaces, discard duplicates.</li>
+<li><code>$+</code>: similar to <code>$^</code>, but includes duplicates.</li>
+<li><code>$?</code>: the names of all prerequisites that are newer than the target, separated by spaces.</li>
+</ul>
+
+<p>For example, we can rewrite the earlier makefile as:</p>
+<pre class="color-example">
+all: hello.exe
+ 
+# $@ matches the target; $&lt; matches the first dependent
+hello.exe: hello.o
+	gcc -o $@ $&lt;
+
+hello.o: hello.c
+	gcc -c $&lt;
+     
+clean:
+	rm hello.o hello.exe</pre>
+
+<h5>Virtual Path - <span class="font-code">VPATH</span> &amp; <span class="font-code">vpath</span></h5>
+
+<p>You can use <code>VPATH</code> (uppercase) to specify the directory to search for dependencies and target files. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment"># Search for dependencies and targets from &quot;src&quot; and &quot;include&quot; directories
+# The directories are separated by space</span>
+VPATH = src include</pre>
+
+<p>You can also use <code>vpath</code> (lowercase) to be more precise about the file type and its search directory. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment"># Search for .c files in &quot;src&quot; directory; .h files in &quot;include&quot; directory
+# The pattern matching character '%' matches filename without the extension</span>
+vpath %.c src
+vpath %.h include</pre>
+
+<h5>Pattern Rules</h5>
+
+<p>A pattern rule, which uses pattern matching character <code>'%'</code> as the filename, can be applied to create a target, if there is no explicit rule. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment"># Applicable for create .o object file.
+# '%' matches filename.
+# $&lt; is the first pre-requisite
+# $(COMPILE.c) consists of compiler name and compiler options
+# $(OUTPUT_OPTIONS) could be -o $@</span>
+%.o: %.c
+	$(COMPILE.c) $(OUTPUT_OPTION) $&lt;
+ 
+<span class="color-comment"># Applicable for create executable (without extension) from object .o object file
+# $^ matches all the pre-requisites (no duplicates)</span>
+%: %.o
+$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@</pre>
+
+<h5>Implicit Pattern Rules</h5>
+<p>Make comes with a huge set of implicit pattern rules. You can list all the rule via <code>--print-data-base</code> option.</p>
+
+
+<h4>A Sample Makefile</h4>
+<p>This sample makefile is extracted from Eclipse's &quot;C/C++ Development Guide -Makefile&quot;.</p>
+
+<pre class="color-example">
+<span class="color-comment"># A sample Makefile
+# This Makefile demonstrates and explains 
+# Make Macros, Macro Expansions,
+# Rules, Targets, Dependencies, Commands, Goals
+# Artificial Targets, Pattern Rule, Dependency Rule.</span>
+
+<span class="color-comment"># Comments start with a # and go to the end of the line.</span>
+
+<span class="color-comment"># Here is a simple Make Macro.</span>
+LINK_TARGET = test_me.exe
+
+<span class="color-comment"># Here is a Make Macro that uses the backslash to extend to multiple lines.
+</span>OBJS =  \
+ Test1.o \
+ Test2.o \
+ Main.o
+
+<span class="color-comment"># Here is a Make Macro defined by two Macro Expansions.
+# A Macro Expansion may be treated as a textual replacement of the Make Macro.
+# Macro Expansions are introduced with $ and enclosed in (parentheses).</span>
+REBUILDABLES = $(OBJS) $(LINK_TARGET)
+
+<span class="color-comment"># Here is a simple Rule (used for &quot;cleaning&quot; your build environment).
+# It has a Target named &quot;clean&quot; (left of the colon &quot;:&quot; on the first line),
+# no Dependencies (right of the colon),
+# and two Commands (indented by tabs on the lines that follow).
+# The space before the colon is not required but added here for clarity.</span>
+clean : 
+  rm -f $(REBUILDABLES)
+  echo Clean done
+
+<span class="color-comment"># There are two standard Targets your Makefile should probably have:
+# &quot;all&quot; and &quot;clean&quot;, because they are often command-line Goals.
+# Also, these are both typically Artificial Targets, because they don't typically
+# correspond to real files named &quot;all&quot; or &quot;clean&quot;.</span>  
+
+<span class="color-comment"># The rule for &quot;all&quot; is used to incrementally build your system.
+# It does this by expressing a dependency on the results of that system,
+# which in turn have their own rules and dependencies.</span>
+all : $(LINK_TARGET)
+  echo All done
+
+<span class="color-comment"># There is no required order to the list of rules as they appear in the Makefile.
+# Make will build its own dependency tree and only execute each rule only once
+# its dependencies' rules have been executed successfully.</span>
+
+<span class="color-comment"># Here is a Rule that uses some built-in Make Macros in its command:
+# $@ expands to the rule's target, in this case &quot;test_me.exe&quot;.
+# $^ expands to the rule's dependencies, in this case the three files
+# main.o, test1.o, and  test2.o.</span>
+$(LINK_TARGET) : $(OBJS)
+  g++ -g -o $@ $^
+
+<span class="color-comment"># Here is a Pattern Rule, often used for compile-line.
+# It says how to create a file with a .o suffix, given a file with a .cpp suffix.
+# The rule's command uses some built-in Make Macros:
+# $@ for the pattern-matched target
+# $&lt; for the pattern-matched dependency</span>
+%.o : %.cpp
+  g++ -g -o $@ -c $&lt;
+
+<span class="color-comment"># These are Dependency Rules, which are rules without any command.
+# Dependency Rules indicate that if any file to the right of the colon changes,
+# the target to the left of the colon should be considered out-of-date.
+# The commands for making an out-of-date target up-to-date may be found elsewhere
+# (in this case, by the Pattern Rule above).
+# Dependency Rules are often used to capture header file dependencies.</span>
+Main.o : Main.h Test1.h Test2.h
+Test1.o : Test1.h Test2.h
+Test2.o : Test2.h
+
+<span class="color-comment"># Alternatively to manually capturing dependencies, several automated
+# dependency generators exist.  Here is one possibility (commented out)...</span>
+# %.dep : %.cpp
+#   g++ -M $(FLAGS) $&lt; &gt; $@
+# include $(OBJS:.o=.dep)</pre>
+
+<h4>Brief Summary</h4>
+
+<p>I have presented the basic make features here so that you can read and understand simple makefiles for building C/C++ applications. Make is actually quite complex, and can be considered as a programming language by itself!!</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>GCC Manual &quot;Using the GNU Compiler Collection (GCC)&quot; @ <a href="http://gcc.gnu.org/onlinedocs">http://gcc.gnu.org/onlinedocs</a>.</li>
+<li>GNU 'make' manual @ <a href="http://www.gnu.org/software/make/manual/make.html">http://www.gnu.org/software/make/manual/make.html</a>.</li>
+<li>Robert Mecklenburg, &quot;Managing Projects with GNU Make&quot;, 3rd Edition, 2004.</li>
+</ol>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: CygWin/MinGW GCC 4.6.2<br />
+Last modified: April, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

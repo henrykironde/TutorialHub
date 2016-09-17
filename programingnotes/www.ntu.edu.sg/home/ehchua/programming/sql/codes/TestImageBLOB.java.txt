@@ -1,0 +1,138 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import javax.swing.*;
+import java.sql.*;
+import java.io.*;
+import javax.imageio.ImageIO;
+
+/**
+* Read and Write image into MySQL database as BLOB type
+*/
+public class TestImageBLOB extends JPanel {
+   JPanel pnlRead;
+   JPanel pnlWrite;
+   JTextField tfIDRead;   // To read image of this ID from database
+   JTextField tfIDWrite;  // To write image of this ID to database
+   JButton btnRead;       // Read image file
+   JButton btnWrite;      // Browse for the image file
+   Connection conn = null;    // Database Connection
+   BufferedImage img = null;  // Image to be displayed
+
+   /** Constructor: Setup Connection and GUI */
+   public TestImageBLOB() {
+      // Setup database connection
+      try {
+         conn = DriverManager.getConnection(
+            "jdbc:mysql://localhost:8888/rental_db", "myuser", "xxxx");
+      } catch(SQLException ex) {
+         ex.printStackTrace();
+      }
+      
+      // Setup GUI
+      this.setLayout(new BorderLayout());
+      pnlRead = new JPanel();
+      this.add(pnlRead, BorderLayout.NORTH);   // Top panel for read image
+      pnlWrite = new JPanel();
+      this.add(pnlWrite, BorderLayout.SOUTH);  // Bottom panel for write image
+      
+      pnlRead.add(new JLabel("Read Image for Vehicle No:"));
+      tfIDRead = new JTextField("SBA1111A", 10);
+      pnlRead.add(tfIDRead);
+      btnRead = new JButton("Read Image");
+      pnlRead.add(btnRead);
+      btnRead.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+            // Read image from database for the selected ID
+            img = readImage(tfIDRead.getText());
+            repaint();
+         }
+      });
+      
+      pnlWrite.add(new JLabel("Write Image for Vehicle No:"));
+      tfIDWrite = new JTextField("GA5555E", 10);
+      pnlWrite.add(tfIDWrite);
+      
+      btnWrite = new JButton("Select Image");
+      btnWrite.addActionListener(new ActionListener() {
+         public void actionPerformed(ActionEvent e) {
+            JFileChooser chooser = new JFileChooser();
+            int returnCode = chooser.showOpenDialog(null);
+            File file = null;
+            if (returnCode == JFileChooser.APPROVE_OPTION) {
+               file = chooser.getSelectedFile();  // Path to image
+               // Insert image into database for the selected ID
+               writeImage(file, tfIDWrite.getText());
+               // Show confirmation message (need to check result)
+               JOptionPane.showMessageDialog(TestImageBLOB.this,
+                     "Image inserted.",  "ImageDemo",
+                     JOptionPane.PLAIN_MESSAGE);
+            }
+         }
+      });
+      pnlWrite.add(btnWrite);
+   }
+   
+   /** Write the selected image into the database for the given ID */ 
+   public void writeImage(File file, String id) {
+      try {
+         FileInputStream in = new FileInputStream(file);
+         PreparedStatement pstmt = conn.prepareStatement(
+               "UPDATE vehicles vehicles SET photo=? WHERE veh_reg_no = ?");
+         pstmt.setBinaryStream(1, (InputStream)in, (int)file.length());
+         pstmt.setString(2, id);
+         System.out.println(pstmt);  // for debugging
+         int returnCode = pstmt.executeUpdate();
+         System.out.println(returnCode + " record updated");
+      } catch (Exception ex) {
+         ex.printStackTrace();
+      }
+   }
+   
+   /** Read image from the database for the given ID */
+   public BufferedImage readImage(String id) {
+      BufferedImage bufImg = null;
+      try {
+         PreparedStatement pstmt = conn.prepareStatement(
+               "SELECT photo FROM vehicles WHERE veh_reg_no = ?");
+         pstmt.setString(1, id);
+         System.out.println(pstmt);  // for debugging
+         ResultSet rset = pstmt.executeQuery();
+         // Only one result expected
+         rset.next();
+         // Read image via InputStream
+         InputStream in = rset.getBinaryStream("photo"); 
+         // Decode the inputstream as BufferedImage
+         bufImg = ImageIO.read(in); 
+      } catch(Exception ex) {
+         ex.printStackTrace();
+      }
+      return bufImg;
+   }
+   
+   // Override paintComponent() to perform custom painting
+   @Override
+   public void paintComponent(Graphics g) {
+      super.paintComponent(g);     // paint parent's background
+      setBackground(Color.WHITE);  // set background color for this JPanel
+      if (img != null) {
+         g.drawImage(img, 100, 100, this);
+      }
+   }
+   
+   /** Entry main method */
+   public static void main(String[] args) {
+      // Run the GUI codes on the Event-Dispatching thread for thread safety
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            JFrame frame = new JFrame("Read/Write Image BLOB Demo");
+            TestImageBLOB imgPanel = new TestImageBLOB();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(imgPanel);
+            frame.setSize(600, 400);
+            frame.setVisible(true);
+         }
+      });
+   }
+}

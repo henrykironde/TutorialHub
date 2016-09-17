@@ -1,0 +1,1007 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>A Tutorial on JOGL 1.1 with Nehe Port</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Yet Another Tutorial on JOGL 1.1 (Obsolete)</h1>
+<h2>Including Nehe's JOGL 1.1 Port</h2>
+
+<p>JOGL 1.1 is obsolete. Read &quot;<a href="JOGL2.0.html">A Tutoiral on JOGL 2.0</a>&quot;.</p>
+
+<p>OpenGL (Open Graphics Library) is a cross-platform, language-independent, industrial standard API for producing 3D  computer graphics. Graphics cards that claim OpenGL-compliance make use of the hardware acceleration when possible to speed up the graphics rendering process. OpenGL competes with Direct3D on Microsoft Windows platform. The OpenGL mother site is at <a href="http://www.opengl.org/">www.opengl.org</a>.</p>
+
+<p>JOGL (<em>Java Bindings for the OpenGL</em>) allows Java applications to access the OpenGL API for graphics programming.</p>
+
+<p>This tutorial assumes that you have sufficient knowledge on OpenGL, but new to JOGL. To learn OpenGL, find a good OpenGL user's guide or references (e.g., the famous Red book &quot;OpenGL Programming Guide&quot; or Blue Book &quot;OpenGL Superbible&quot;). &quot;Nehe&quot; (@ <a href="http://nehe.gamedev.net/">http://nehe.gamedev.net</a>) has an excellent OpenGL Tutorials . You may also read my OpenGL tutorials.</p>
+
+<p>This guide is applicable and tested on JOGL 1.1.1. It is NOT applicable to JOGL 2.0, which is still in the pre-release stage, and completely different from 1.1. The JOGL mother site was at java.net (<a href="https://jogl.dev.java.net/">https://jogl.dev.java.net</a>), but has been migrated to JogAMP (at <a href="http://jogamp.org/">http://jogamp.org</a>). You still can access the java.net site, provided that you press the stop button before the page is re-directed to JogAmp.</p>
+
+<h3>Installing JOGL 1.1<a name="Install"></a></h3>
+
+<p><span class="line-heading">Step 0: JDK - </span>Install JDK, an IDE such as Eclipse or NetBeans or a programming text editor.</p>
+<p><span class="line-heading">Step 1: Download - </span>Download the JOGL 1.1 binaries from <a href="https://jogl.dev.java.net/">https://jogl.dev.java.net</a> (press the stop button before it is re-directed to JogAmp). Choose &quot;Current release build (JSR-231 1.1.1a) (June 18, 2009)&quot;. Select the binaries for your operating platform (e.g., <code>jogl-[version]-windows-i586.zip</code>). Also download the javadoc, source, demo and demo source.</p>
+<p><span class="line-heading">Step 2: Install - </span> Unzip into a directory of your choice. I shall denote the install directory as <code>$JOGL_HOME</code>. The libraries (<code>jar</code>'s and <code>dll</code>'s) needed to write JOGL programs are kept in the &quot;<code>lib</code>&quot; sub-directory.</p>
+<p>Read &quot;<code>README.txt</code>&quot; and the JOGL User Guide (&quot;<code>Userguide.html</code>&quot;) bundled together with the binaries.</p>
+<p><span class="line-heading">Step 3a: Customize for Eclipse 3.6 - </span>We shall create a &quot;user library&quot; called jogl-1.1.1, which specifies the jar-files, native codes, javadoc and sources for JOGL API. JOGL projects can then include this user library in their build path.</p>
+<p>The procedure to create a Eclipse's user library is as follows:</p>
+<ol>
+  <li>From &quot;Window&quot; menu  ⇒ Preferences  ⇒ Java  ⇒ Build Path ⇒ User Libraries  ⇒ New  ⇒ In &quot;User library name&quot;, enter &quot;jogl-1.1.1&quot;. The &quot;User Library&quot; dialog appears.</li>
+  <li>In &quot;User Library&quot; dialog ⇒ Select &quot;jogl-1.1.1&quot;  ⇒ Add JAR... ⇒ Navigate to <code>$JOGL_HOME/lib</code>, and select &quot;<code>gluegen-rt.jar</code>&quot; and  &quot;<code>jogl.jar</code>&quot;.</li>
+  <li>Expand the &quot;<code>jogl.jar</code>&quot; node, select &quot;Native library location: (none)&quot; &rArr; Edit... &rArr; External Folder... &rArr; select <code>$JOGL_HOME/lib</code>.
+    Repeat for &quot;<code>gluegen-rt.jar</code>&quot;.</li>
+  <li>(Optional But Recommended) Expand the &quot;<code>jogl.jar</code>&quot; node  ⇒ Select &quot;Javadoc location: (none)<code>&quot; </code>&rArr; Edit... &rArr; Javadoc in archive  &rArr; In &quot;Archive Path&quot;, &quot;Browse&quot; and  select the downloaded JOGL API documentation zip-file   ⇒ In &quot;Path within archive&quot;, &quot;Browse&quot; and expand the zip-file to select the top-level path (if any) ⇒ Validate. This is needed for Eclipse to display javadoc information about classes, fields, and methods. (I recommend using a zip-file for javadoc instead of unzip-file for performance.) </li>
+  <li>(Optional) You may provide the source files by editing &quot;Source attachment: (none)&quot;. Source is needed only if you are interested to debug into the JOGL source codes.</li>
+</ol>
+<p>For EACH JAVA PROJECT created that uses JOGL, right-click on the project &rArr; Build Path &rArr; Add Libraries &rArr; Select &quot;User Library&quot; ⇒ Check &quot;jogl-1.1.1&quot;.</p>
+<p><span class="line-heading">Native Libraries:</span> Native libraries refer to the JNI binaries in the form of &quot;<code>dll</code>&quot; in the JOGL's &quot;<code>lib</code>&quot; directory, e.g., &quot;<code>jogl_xxx.dll</code>&quot;, &quot;<code>gluegen-rt.dll</code>&quot;. These <code>dll</code>'s are needed at runtime.</p>
+<p><span class="line-heading">Error in Native Libraries: </span>If you receive an error message &quot;<code>SEVERE: java.lang.UnsatisfiedLinkError: no xxx in java.library.path</code>&quot;, print out the entries in <code>java.library.path</code> via the following statement and check if <code>$JOGL_HOME\lib</code> (which contains &quot;<code>jogl.dll</code>&quot; and &quot;<code>gluegen-rt.dll</code>&quot;) are included in one of the paths. &quot;<code>java.library.path</code>&quot; is supposed to mirror the <code>PATH</code> environment variable.</p>
+<pre class="code-example">System.out.println(System.getProperty(&quot;java.library.path&quot;));
+</pre>
+<p><span class="line-heading">Step 3b: Customize for NetBeans 6.9</span></p>
+<p>[TODO] NetBeans OpenGL Pack.</p>
+<p><span class="line-heading">Step 3c: Customize for JDK/Editor - </span>You need to modify two environment variables - <code>CLASSPATH</code> and <code>PATH</code>. Read <a href="../howto/Environment_Variables.html">&quot;Environment Variables For Java Applications&quot;</a>.</p>
+<p>To reference the jar-files, modify the <code>CLASSPATH</code> environment variable to include the full-path filenames of &quot;<code>jogl.jar</code>&quot; and &quot;<code>gluegen-rt.jar</code>&quot;:</p>
+<pre class="code-command">
+prompt&gt; <strong>set classpath=.;$JOGL_HOME\lib\jogl.jar;$JOGL_HOME\lib\gluegen-rt.jar</strong></pre>
+<p>where <code>$JOGL_HOME</code> denotes the JOGL installed directory. Take note that you should include the current working directory <code>'.'</code>.</p>
+<p>To reference the native libraries (<code>dll</code>'s), modified the <code>PATH</code> environment variable to include the full path to the JOGL's &quot;<code>lib</code>&quot; directory for accessing the native libraries (&quot;<code>jogl_xxx.dll</code>&quot; and  &quot;<code>gluegen-rt.dll</code>&quot;):</p>
+<pre class="code-command">
+prompt&gt; <strong>set path=$JOGL_HOME\lib;......</strong></pre>
+
+<h3>Getting Started with JOGL 1.1</h3>
+
+<h4>OpenGL Drawable</h4>
+<p>An OpenGL <em>drawable</em> is a surface or canvas for graphic rendering. JOGL provides two drawables in package <code>javax.media.opengl</code>:</p>
+
+<ol>
+  <li><code>GLCanvas</code>: modeled after <code>java.awt.Canvas</code>, for inclusion into AWT's <code>Frame</code>, or Swing's <code>JFrame</code>.</li>
+  <li><code>GLJPanel</code>: a lightweight component, modeled after <code>javax.swing.JPanel</code>, for inclusion into Swing's <code>JFrame</code>.</li>
+</ol>
+ <p>There are many ways to create a drawable (I shall assume that you are familiar with Java graphics programming). For examples,</p>
+
+<pre class="code-example">
+<span class="code-comment">// Example 1: Adding a GLCanvas into AWT's Frame</span>
+GLCanvas canvas = new GLCanvas();  <span class="code-comment">// Construct a GLCanvas</span>
+Frame frame = new Frame();         <span class="code-comment">// Construct a java.awt.Frame (application main window)</span>
+frame.add(canvas);                 <span class="code-comment">// AWT's frame adds the GLCanvas</span>
+   
+<span class="code-comment">// Example 2: Adding a GLCanvas into Swing's JFrame via a JPanel</span>
+GLCanvas canvas = new GLCanvas();  <span class="code-comment">// Construct a GLCanvas</span>
+JPanel panel = new JPanel();       <span class="code-comment">// Construct a Swing's JPanel</span>
+panel.add(canvas);                 <span class="code-comment">// Add GLCanvas into JPanel</span>
+JFrame frame = new JFrame();       <span class="code-comment">// Construct a JFrame (application main window)</span>
+frame.setContentPane(panel);       <span class="code-comment">// Add JPanel into the JFrame</span>
+   
+<span class="code-comment">// Example 3: Adding a GLJPanel into Swing's JFrame</span>
+GLJPanel canvas = new GLJPanel();  <span class="code-comment">// Construct a GLJPanel</span>
+JFrame frame = new JFrame();       <span class="code-comment">// Construct a JFrame (application main window)</span>
+frame.setContentPane(canvas);      <span class="code-comment">// Add JPanel into the JFrame</span></pre>
+
+<p>The <code>GLCanvas</code> is a heavyweight AWT widget which supports hardware acceleration. It is designed as the <em>primary</em> widget for JOGL applications. On the other hand, <code>GLJPanel</code> is a  swing-compatible lightweight widget, which supports hardware acceleration but is not as fast as <code>GLCanvas</code>. <code>GLJPanel</code> is intended to provide 100% swing integration when the heavyweight <code>GLCanvas</code> cannot be used. Both the <code>GLCanvas</code> and <code>GLJPanel</code> implement a common interface <code>GLAutoDrawable (</code>which in turn implements the interface <code>GLDrawable</code>). These interfaces define the common behaviors expected on <code>GLCanvas</code> and <code>GLJPanel</code>. so that applications can switch between them with minimal  code changes.</p>
+
+<h4>OpenGL Graphics Context</h4>
+<p>In order to perform  rendering, an so-called OpenGL rendering <em>context</em> is required. </p>
+<p>[MORE]</p>
+
+<h4>OpenGL Event Listener</h4>
+
+<p>The OpenGL graphics rendering processes operates on the interface <code>javax.media.opengl.GLEventListener</code> . The drawable you constructed earlier (the source) <em>adds</em> a <code>GLEventListener</code> object as its <code>GLEvent</code> listener. The listener object provides the appropriate event handlers.</p>
+<pre class="code-example">
+canvas.addGLEventListener(<em>aGLEventListener</em>);</pre>
+
+<p>The <code>GLEventListener</code> interface declares four abstract methods:</p>
+
+<ul>
+<li><code>init()</code>: called immediately after the OpenGL context is initialized. It can be used to perform one-time initialization tasks such as setting up of lights and display lists. <code>init()</code> runs only once.</li>
+
+<li><code>reshape()</code>: called when the canvas is first set to visible, and during the first repaint after the canvas has been resized.</li>
+
+<li><code>display()</code>: called to perform rendering by an animator.</li>
+
+<li><code>displayChanged()</code>: called when the display mode (e.g., screen resolution) has been changed.</li>
+</ul>
+
+<p>All these methods are call-back methods. When an OpenGL event is posted on the event-queue, the graphics sub-system calls back the corresponding handler method.</p>
+
+<h4>Animator</h4>
+
+<p>For animation, we need an <em>animator</em> to constantly drive the drawable's <code>display()</code> method to refresh the display. JOGL provides two animator classes: <code>Animator</code> and <code>FPSAnimator</code> (in package <code>com.sun.opengl.util</code>). The commonly-used <code>FPSAnimator</code> drives the <code>display()</code> method at a specified number of frame per seconds. For example,</p>
+
+<pre class="code-example">
+<span class="code-comment">// Construct a GLAutoDrawable (GLCanvas or GLJPanel)</span>
+GLCanvas canvas = new GLCanvas();
+<span class="code-comment">// Construct an FPS animator, which calls the display() of canvas at 60 frames per second, used fixed-rate scheduling</span>
+FPSAnimator animator = new FPSAnimator(canvas, 60, true);
+animator.start();  <span class="code-comment">// start the animator</span>
+animator.stop();   <span class="code-comment">// stop the animator</span>
+animator.isAnimating();   <span class="code-comment">// whether the animator is currently running</span></pre>
+
+<h4>JOGL Program Templates</h4>
+<p>The template of a JOGL Swing application using <code>GLCanvas</code> is as follows:</p>
+
+<pre class="code-listing">
+import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.glu.GLU;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import com.sun.opengl.util.FPSAnimator;
+
+public class <strong>JOGLTemplate extends JPanel implements GLEventListener</strong> {
+   private static final int REFRESH_FPS = 60;    <span class="code-comment">// Display refresh frames per second</span>
+   private GLU glu;             <span class="code-comment">// For the GL Utility</span>
+   final FPSAnimator animator;  <span class="code-comment">// Used to drive display()</span> 
+   
+   <span class="code-comment">// Constructor</span>
+   public JOGLTemplate() {
+      GLCanvas canvas = new GLCanvas();
+      this.setLayout(new BorderLayout());
+      this.add(canvas, BorderLayout.CENTER);
+      canvas.addGLEventListener(this);
+   
+      <span class="code-comment">// Run the animation loop using the fixed-rate Frame-per-second animator,
+      // which calls back display() at this fixed-rate (FPS).</span>
+      animator = new FPSAnimator(canvas, REFRESH_FPS, true);
+   }
+   
+   <span class="code-comment">// Main program</span>
+   public static void main(String[] args) {
+      final int WINDOW_WIDTH = 640;
+      final int WINDOW_HEIGHT = 480;
+      final String WINDOW_TITLE = &quot;JOGL Program Template&quot;;
+
+      JFrame frame = new JFrame();
+      final JOGLTemplate joglMain = new JOGLTemplate();
+      frame.setContentPane(joglMain);
+      frame.addWindowListener(new WindowAdapter() {
+         @Override 
+         public void windowClosing(WindowEvent e) {
+            <span class="code-comment">// Use a dedicate thread to run the stop() to ensure that the
+            // animator stops before program exits.</span>
+            new Thread() {
+               @Override 
+               public void run() {
+                  joglMain.animator.stop(); <span class="code-comment">// stop the animator loop</span>
+                  System.exit(0);
+               }
+            }.start();
+         }
+      });
+      frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+      frame.setVisible(true);
+      frame.setTitle(WINDOW_TITLE);
+      joglMain.animator.start(); <span class="code-comment">// start the animation loop</span>
+   }
+   
+   <span class="code-comment">// Implement methods defined in GLEventListener</span>
+   @Override
+   public void init(GLAutoDrawable drawable) {
+      <span class="code-comment">// Your OpenGL codes to perform one-time initialization tasks 
+      // such as setting up of lights and display lists.</span>
+   }
+   
+   @Override
+   public void display(GLAutoDrawable drawable) {
+      <span class="code-comment">// Your OpenGL graphic rendering codes for each refresh.</span>
+   }
+   
+   @Override
+   public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+      <span class="code-comment">// Your OpenGL codes to set up the view port, projection mode and view volume. </span>
+   }
+
+   @Override 
+   public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) { 
+      <span class="code-comment">// Not implemented in JOGL.</span>      
+   }
+}</pre>
+
+<p>Try running the above program, which will show a blank black screen.</p>
+
+<p>To use <code>GLJPanel</code>, simple replace <code>GLCanvas</code> by <code>GLJPanel</code>.</p>
+
+<img class="image-left" src="images/JOGLCanvas.png" />
+
+<p>The reason that our OpenGL drawable rests on a <code>JPanel</code>, as illustrated, is its flexibility and modularity. You can add the <code>JPanel</code> into a Swing's <code>JFrame</code>, AWT's <code>Frame</code>, Swing's <code>JApplet</code>, or AWT's <code>Applet</code>.</p>
+
+<p>For example, instead of using the <code>main()</code> to create the <code>JFrame</code>, you could write a class that extends <code>javax.swing.JFrame</code> or <code>java.awt.Frame</code>:</p>
+<pre class="code-listing">
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
+  
+public class <strong>JOGLTemplateMain extends JFrame</strong> {
+   private static final int WINDOW_WIDTH = 640;
+   private static final int WINDOW_HEIGHT = 480;
+   private static final String WINDOW_TITLE = &quot;JOGL Program Template&quot;;
+  
+   <span class="code-comment">// Constructor</span>
+   public JOGLTemplateMain() {
+      final JOGLTemplate joglMain = new JOGLTemplate();
+      this.setContentPane(joglMain);
+      this.addWindowListener(new WindowAdapter() {
+         @Override 
+         public void windowClosing(WindowEvent e) {
+            <span class="code-comment">// Use a dedicate thread to run the stop() to ensure that the
+            // animator stops before program exits.</span>
+            new Thread() {
+               @Override 
+               public void run() {
+                  joglMain.animator.stop(); <span class="code-comment">// stop the animator loop</span>
+                  System.exit(0);
+               }
+            }.start();
+         }
+      });
+      this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+      this.setTitle(WINDOW_TITLE);
+      this.setVisible(true);
+      joglMain.animator.start(); <span class="code-comment">// start the animation loop</span>
+   }
+   
+   <span class="code-comment">// main method</span>
+   public static void main(String[] args) {
+      new JOGLTemplateMain();
+   }
+}</pre>
+
+
+<p>You can also run the above template in an applet, by subclassing <code>javax.swing.JApplet</code> or <code>java.applet.Applet</code>, as follows:</p>
+
+<pre class="code-listing">
+import javax.swing.JApplet;
+   
+public class <strong>JOGLTemplateApplet extends JApplet</strong> {
+   JOGLTemplate joglMain;
+   
+   @Override
+   public void init() {
+      joglMain = new JOGLTemplate();
+      this.setContentPane(joglMain);
+      joglMain.animator.start();
+   }
+   
+   @Override
+   public void start() {
+   }
+   
+   @Override
+   public void stop() {
+   }
+   
+   @Override
+   public void destroy() {
+      <span class="code-comment">// Use a dedicate thread to run the stop() to ensure that the
+      // animator stops before program exits.</span>
+      new Thread() {
+         @Override 
+         public void run() {
+            joglMain.animator.stop();<span class="code-comment"></span>
+            System.exit(0);
+         }
+      }.start();
+   }
+}</pre>
+
+<h3>Example 1: Rotating 2D Shapes</h3>
+<p>The following JOGL program draws a triangle.</p>
+<img class="image-left" src="images/JOGLEx1Shape2D.png"  />
+
+<pre class="code-listing">
+import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.glu.GLU;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import com.sun.opengl.util.FPSAnimator;
+   
+public class <strong>JOGLEx1Shape2D</strong> extends JPanel implements GLEventListener {
+   private static final int REFRESH_FPS = 60;    <span class="code-comment">// Display refresh frames per second</span>
+   private GLU glu;             <span class="code-comment">// For the GL Utility</span>
+   final FPSAnimator animator;  <span class="code-comment">// Used to drive display()</span>
+   
+   <strong>private float theta = 0;
+   private float sinTheta, cosTheta;</strong>
+   
+   <span class="code-comment">// Constructor</span>
+   public JOGLEx1Shape2D() {
+      GLCanvas canvas = new GLCanvas();
+      this.setLayout(new BorderLayout());
+      this.add(canvas, BorderLayout.CENTER);
+      canvas.addGLEventListener(this);
+   
+      <span class="code-comment">// Run the animation loop using the fixed-rate Frame-per-second animator,
+      // which calls back display() at this fixed-rate (FPS).</span>
+      animator = new FPSAnimator(canvas, REFRESH_FPS, true);
+   }
+   
+   <span class="code-comment">// Main program</span>
+   public static void main(String[] args) {
+      final int WINDOW_WIDTH = 480;  <span class="code-comment">// Width of the drawable</span>
+      final int WINDOW_HEIGHT = 480; <span class="code-comment">// Height of the drawable</span>
+      final String WINDOW_TITLE = &quot;2D Shapes&quot;;
+
+      JFrame frame = new JFrame();
+      final JOGLEx1Shape2D joglMain = new JOGLEx1Shape2D();
+      frame.setContentPane(joglMain);
+      frame.addWindowListener(new WindowAdapter() {
+         @Override 
+         public void windowClosing(WindowEvent e) {
+            <span class="code-comment">// Use a dedicate thread to run the stop() to ensure that the
+            // animator stops before program exits.</span>
+            new Thread() {
+               @Override 
+               public void run() {
+                  joglMain.animator.stop(); <span class="code-comment">// stop the animator loop</span>
+                  System.exit(0);
+               }
+            }.start();
+         }
+      });
+      frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+      frame.setTitle(WINDOW_TITLE);
+      frame.setVisible(true);
+      joglMain.animator.start(); <span class="code-comment">// start the animation loop</span>
+   }
+   
+   <span class="code-comment">// Implement methods defined in GLEventListener</span>
+   @Override
+   public void init(GLAutoDrawable drawable) { }
+   
+   @Override
+   public void display(GLAutoDrawable drawable) {
+      <strong>render(drawable);      <span class="code-comment">// Draw a color triangle</span></strong>
+   }
+   
+   @Override
+   public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) { }
+
+   @Override 
+   public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) { }
+
+   <strong>private void render(GLAutoDrawable drawable) {
+      GL gl = drawable.getGL();
+
+      gl.glClear(GL.GL_COLOR_BUFFER_BIT);  <span class="code-comment">// Clear background</span>
+
+      <span class="code-comment">// Draw a triangle</span>
+      sinTheta = (float)Math.sin(theta);
+      cosTheta = (float)Math.cos(theta);
+      gl.glBegin(GL.GL_TRIANGLES);
+         gl.glColor3f(1.0f, 0.0f, 0.0f);   <span class="code-comment">// Red</span>
+         gl.glVertex2d(-cosTheta, -cosTheta);
+         gl.glColor3f(0.0f, 1.0f, 0.0f);   <span class="code-comment">// Green</span>
+         gl.glVertex2d(0.0f, cosTheta);
+         gl.glColor3f(0.0f, 0.0f, 1.0f);   <span class="code-comment">// Blue</span>
+         gl.glVertex2d(sinTheta, -sinTheta);
+      gl.glEnd();
+   }</strong>
+}</pre>
+
+<p>To rotate the triangle, include a new method called <code>update()</code> that changes the vertices of the triangle after each refresh.</p>
+<pre class="code-listing">
+   @Override
+   public void display(GLAutoDrawable drawable) {
+      render(drawable);    <span class="code-comment">// Draw a color triangle</span>
+      <strong>update();            <span class="code-comment">// Modify the triangle's vertices</span></strong>
+   }
+
+   <strong>private void update() {
+      theta += 0.01f;
+   }</strong>
+</pre>
+
+<h3>More on OpenGL Event Handlers</h3>
+
+<p><span class="line-heading">init():</span> called back immediately after the OpenGL context is initialized. It can be used to perform one-time initialization tasks such as setting up of lights and display lists. <code>init()</code> runs only once.</p>
+<p>A typical <code>init()</code> for rendering 3D shapes, with depth test enabled, is as follows:</p>
+
+<pre class="code-listing">@Override
+public void init(GLAutoDrawable drawable) {
+   <span class="code-comment">// Get the OpenGL graphics context</span>
+   GL gl = drawable.getGL();
+   <span class="code-comment">// GL Utilities</span>
+   glu = new GLU();
+   <span class="code-comment">// Enable smooth shading, which blends colors nicely, and smoothes out lighting.</span>
+   gl.glShadeModel(GL.GL_SMOOTH);
+   <span class="code-comment">// Set background color in RGBA. Alpha: 0 (transparent) 1 (opaque)</span> 
+   gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+   <span class="code-comment">// Setup the depth buffer and enable the depth testing</span>
+   gl.glClearDepth(1.0f);          <span class="code-comment">// clear z-buffer to the farthest</span>
+   gl.glEnable(GL.GL_DEPTH_TEST);  <span class="code-comment">// enables depth testing</span>
+   gl.glDepthFunc(GL.GL_LEQUAL);   <span class="code-comment">// the type of depth test to do</span>
+   <span class="code-comment">// Do the best perspective correction</span>
+   gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
+   
+   <span class="code-comment">// ----- Your OpenGL initialization code here -----</span>
+   <span class="code-comment">// ......</span>
+}</pre>
+
+<p><span class="line-heading">reshape():</span> called back when the drawable is first set to visible, and during the first repaint after the canvas has been resized.</p>
+<p>A typical <code>reshape()</code> that sets the view port (to cover the entire screen), and the project mode is as follows:</p>
+<pre class="code-listing">@Override
+public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+   <span class="code-comment">// Get the OpenGL graphics context</span>
+   GL gl = drawable.getGL();
+   
+   height = (height == 0) ? 1 : height; <span class="code-comment">// prevent divide by zero</span>
+   float aspect = (float)width / height;
+   
+   <span class="code-comment">// Reset the current view port</span>
+   gl.glViewport(0, 0, width, height);
+   
+   <span class="code-comment">// Set up the projection matrix - choose perspective view</span>
+   gl.glMatrixMode(GL.GL_PROJECTION);  
+   gl.glLoadIdentity(); <span class="code-comment">// reset</span>
+   <span class="code-comment">// Angle of view (fovy) is 45 degrees (in the up y-direction). Based on this
+   // canvas's aspect ratio. Clipping z-near is 0.1f and z-near is 100.0f.</span>
+   glu.gluPerspective(45.0f, aspect, 0.1f, 100.0f); <span class="code-comment">// fovy, aspect, zNear, zFar</span>
+   
+   <span class="code-comment">// Enable the model-view transform</span>
+   gl.glMatrixMode(GL.GL_MODELVIEW);
+   gl.glLoadIdentity(); <span class="code-comment">// reset</span>
+}</pre>
+
+<p><span class="line-heading">display():</span> called back to perform rendering by an animator.</p>
+
+<pre class="code-listing">
+@Override
+public void display(GLAutoDrawable drawable) {
+   <span class="code-comment">// Get the OpenGL graphics context</span>
+   GL gl = drawable.getGL();
+   <span class="code-comment">// Clear the color and the depth buffers</span>
+   gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+   <span class="code-comment">// Reset the view (x, y, z axes back to normal)</span>
+   gl.glLoadIdentity();
+   
+   <span class="code-comment">// ----- Your OpenGL rendering code here -----</span>
+}</pre>
+
+<p><span class="line-heading">displayChanged():</span> called back when the display mode (e.g., screen resolution) has been changed. Not implemented in JOGL.</p>
+
+<pre class="code-listing">
+@Override
+public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) { }</pre>
+
+<h3>Example 2: Rotating 3D Shapes</h3>
+<p>The following example show a color-pyramid and color-cube (Nehe Lesson 5).</p>
+<img class="image-left" src="images/JOGLEx1Shape3D.png"  />
+<pre class="code-listing">
+import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.glu.GLU;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import com.sun.opengl.util.FPSAnimator;
+  
+public class <strong>JOGLEx2Shape3D</strong> extends JPanel implements GLEventListener {
+   private static final int REFRESH_FPS = 60;    <span class="code-comment">// Display refresh frames per second</span>
+   final FPSAnimator animator;  <span class="code-comment">// Used to drive display()</span> 
+   private GLU glu;             <span class="code-comment">// For the GL Utility</span>
+   
+   <strong>static float anglePyramid = 0;</strong>    <span class="code-comment">// rotational angle in degree for pyramid</span>
+   <strong>static float angleCube = 0;</strong>       <span class="code-comment">// rotational angle in degree for cube</span>
+   <strong>static float speedPyramid = 2.0f;</strong> <span class="code-comment">// rotational speed for pyramid</span>
+   <strong>static float speedCube = -1.5f;</strong>   <span class="code-comment">// rotational speed for cube</span>
+
+   <strong>// Constructor</strong>
+   public JOGLEx2Shape3D() {
+      GLCanvas canvas = new GLCanvas();
+      this.setLayout(new BorderLayout());
+      this.add(canvas, BorderLayout.CENTER);
+      canvas.addGLEventListener(this);
+   
+      <span class="code-comment">// Run the animation loop using the fixed-rate Frame-per-second animator,
+      // which calls back display() at this fixed-rate (FPS).</span>
+      animator = new FPSAnimator(canvas, REFRESH_FPS, true);
+   }
+   
+   <span class="code-comment">// Main program</span>
+   public static void main(String[] args) {
+      final int WINDOW_WIDTH = 320;  <span class="code-comment">// Width of the drawable</span>
+      final int WINDOW_HEIGHT = 240; <span class="code-comment">// Height of the drawable</span>
+      final String WINDOW_TITLE = &quot;3D Shapes&quot;;
+<br />      JFrame frame = new JFrame();
+      final JOGLEx2Shape3D joglMain = new JOGLEx2Shape3D();
+      frame.setContentPane(joglMain);
+      frame.addWindowListener(new WindowAdapter() {
+         @Override 
+         public void windowClosing(WindowEvent e) {
+            <span class="code-comment">// Use a dedicate thread to run the stop() to ensure that the
+            // animator stops before program exits.</span>
+            new Thread() {
+               @Override 
+               public void run() {
+                  joglMain.animator.stop(); <span class="code-comment">// stop the animator loop</span>
+                  System.exit(0);
+               }
+            }.start();
+         }
+      });
+      frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+      frame.setTitle(WINDOW_TITLE);
+      frame.setVisible(true);
+      joglMain.animator.start(); <span class="code-comment">// start the animation loop</span>
+   }
+   
+   <span class="code-comment">// Implement methods defined in GLEventListener</span>
+   @Override
+   public void <strong>init</strong>(GLAutoDrawable drawable) {
+      <span class="code-comment">// Get the OpenGL graphics context</span>
+      GL gl = drawable.getGL();
+      <span class="code-comment">// GL Utilities</span>
+      glu = new GLU();
+      <span class="code-comment">// Enable smooth shading, which blends colors nicely, and smoothes out lighting.</span>
+      gl.glShadeModel(GL.GL_SMOOTH);
+      <span class="code-comment">// Set background color in RGBA. Alpha: 0 (transparent) 1 (opaque)</span> 
+      gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+      <span class="code-comment">// Setup the depth buffer and enable the depth testing</span>
+      gl.glClearDepth(1.0f);          <span class="code-comment">// clear z-buffer to the farthest</span>
+      gl.glEnable(GL.GL_DEPTH_TEST);  <span class="code-comment">// enables depth testing</span>
+      gl.glDepthFunc(GL.GL_LEQUAL);   <span class="code-comment">// the type of depth test to do</span>
+      <span class="code-comment">// Do the best perspective correction</span>
+      gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
+   }
+   
+   @Override
+   public void <strong>display</strong>(GLAutoDrawable drawable) {
+      <span class="code-comment">// Get the OpenGL graphics context</span>
+      GL gl = drawable.getGL();
+      <span class="code-comment">// Clear the color and the depth buffers</span>
+      gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        
+      <span class="code-comment">// ----- Render the Pyramid -----</span>
+      gl.glLoadIdentity();                 <span class="code-comment">// reset the model-view matrix</span>
+      gl.glTranslatef(-1.6f, 0.0f, -6.0f); <span class="code-comment">// translate left and into the screen</span>
+      gl.glRotatef(anglePyramid, -0.2f, 1.0f, 0.0f); <span class="code-comment">// rotate about the y-axis</span>
+  
+      gl.glBegin(GL.GL_TRIANGLES); <span class="code-comment">// of the pyramid</span>
+  
+      <span class="code-comment">// Font-face triangle</span>
+      gl.glColor3f(1.0f, 0.0f, 0.0f); <span class="code-comment">// Red</span>
+      gl.glVertex3f(0.0f, 1.0f, 0.0f);
+      gl.glColor3f(0.0f, 1.0f, 0.0f); <span class="code-comment">// Green</span>
+      gl.glVertex3f(-1.0f, -1.0f, 1.0f);
+      gl.glColor3f(0.0f, 0.0f, 1.0f); <span class="code-comment">// Blue</span>
+      gl.glVertex3f(1.0f, -1.0f, 1.0f);
+  
+      <span class="code-comment">// Right-face triangle</span>
+      gl.glColor3f(1.0f, 0.0f, 0.0f); <span class="code-comment">// Red</span>
+      gl.glVertex3f(0.0f, 1.0f, 0.0f);
+      gl.glColor3f(0.0f, 0.0f, 1.0f); <span class="code-comment">// Blue</span>
+      gl.glVertex3f(1.0f, -1.0f, 1.0f);
+      gl.glColor3f(0.0f, 1.0f, 0.0f); <span class="code-comment">// Green</span>
+      gl.glVertex3f(1.0f, -1.0f, -1.0f);
+  
+      <span class="code-comment">// Back-face triangle</span>
+      gl.glColor3f(1.0f, 0.0f, 0.0f); <span class="code-comment">// Red</span>
+      gl.glVertex3f(0.0f, 1.0f, 0.0f);
+      gl.glColor3f(0.0f, 1.0f, 0.0f); <span class="code-comment">// Green</span>
+      gl.glVertex3f(1.0f, -1.0f, -1.0f);
+      gl.glColor3f(0.0f, 0.0f, 1.0f); <span class="code-comment">// Blue</span>
+      gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+  
+      <span class="code-comment">// Left-face triangle</span>
+      gl.glColor3f(1.0f, 0.0f, 0.0f); <span class="code-comment">// Red</span>
+      gl.glVertex3f(0.0f, 1.0f, 0.0f);
+      gl.glColor3f(0.0f, 0.0f, 1.0f); <span class="code-comment">// Blue</span>
+      gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+      gl.glColor3f(0.0f, 1.0f, 0.0f); <span class="code-comment">// Green</span>
+      gl.glVertex3f(-1.0f, -1.0f, 1.0f);
+  
+      gl.glEnd(); <span class="code-comment">// of the pyramid</span>
+  
+      <span class="code-comment">// ----- Render the Color Cube -----</span>
+      gl.glLoadIdentity();                <span class="code-comment">// reset the current model-view matrix</span>
+      gl.glTranslatef(1.6f, 0.0f, -7.0f); <span class="code-comment">// translate right and into the screen</span>
+      gl.glRotatef(angleCube, 1.0f, 1.0f, 1.0f); <span class="code-comment">// rotate about the x, y and z-axes</span>
+  
+      gl.glBegin(GL.GL_QUADS); <span class="code-comment">// of the color cube</span>
+  
+      <span class="code-comment">// Top-face</span>
+      gl.glColor3f(0.0f, 1.0f, 0.0f); <span class="code-comment">// green</span>
+      gl.glVertex3f(1.0f, 1.0f, -1.0f);
+      gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+      gl.glVertex3f(-1.0f, 1.0f, 1.0f);
+      gl.glVertex3f(1.0f, 1.0f, 1.0f);
+  
+      <span class="code-comment">// Bottom-face</span>
+      gl.glColor3f(1.0f, 0.5f, 0.0f); <span class="code-comment">// orange</span>
+      gl.glVertex3f(1.0f, -1.0f, 1.0f);
+      gl.glVertex3f(-1.0f, -1.0f, 1.0f);
+      gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+      gl.glVertex3f(1.0f, -1.0f, -1.0f);
+  
+      <span class="code-comment">// Front-face</span>
+      gl.glColor3f(1.0f, 0.0f, 0.0f); <span class="code-comment">// red</span>
+      gl.glVertex3f(1.0f, 1.0f, 1.0f);
+      gl.glVertex3f(-1.0f, 1.0f, 1.0f);
+      gl.glVertex3f(-1.0f, -1.0f, 1.0f);
+      gl.glVertex3f(1.0f, -1.0f, 1.0f);
+  
+      <span class="code-comment">// Back-face</span>
+      gl.glColor3f(1.0f, 1.0f, 0.0f); <span class="code-comment">// yellow</span>
+      gl.glVertex3f(1.0f, -1.0f, -1.0f);
+      gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+      gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+      gl.glVertex3f(1.0f, 1.0f, -1.0f);
+  
+      <span class="code-comment">// Left-face</span>
+      gl.glColor3f(0.0f, 0.0f, 1.0f); <span class="code-comment">// blue</span>
+      gl.glVertex3f(-1.0f, 1.0f, 1.0f);
+      gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+      gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+      gl.glVertex3f(-1.0f, -1.0f, 1.0f);
+  
+      <span class="code-comment">// Right-face</span>
+      gl.glColor3f(1.0f, 0.0f, 1.0f); <span class="code-comment">// magenta</span>
+      gl.glVertex3f(1.0f, 1.0f, -1.0f);
+      gl.glVertex3f(1.0f, 1.0f, 1.0f);
+      gl.glVertex3f(1.0f, -1.0f, 1.0f);
+      gl.glVertex3f(1.0f, -1.0f, -1.0f);
+  
+      gl.glEnd(); <span class="code-comment">// of the color cube</span>
+  
+      <span class="code-comment">// Update the rotational angle after each refresh.</span>
+      anglePyramid += speedPyramid;
+      angleCube += speedCube;
+   }
+   
+   @Override
+   public void <strong>reshape</strong>(GLAutoDrawable drawable, int x, int y, int width, int height) {
+      <span class="code-comment">// Get the OpenGL graphics context</span>
+      GL gl = drawable.getGL();
+      
+      height = (height == 0) ? 1 : height; <span class="code-comment">// prevent divide by zero</span>
+      float aspect = (float)width / height;
+      
+      <span class="code-comment">// Set the current view port to cover full screen</span>
+      gl.glViewport(0, 0, width, height);
+        
+      <span class="code-comment">// Set up the projection matrix - choose perspective view</span>
+      gl.glMatrixMode(GL.GL_PROJECTION);  
+      gl.glLoadIdentity(); <span class="code-comment">// reset</span>
+      <span class="code-comment">// Angle of view (fovy) is 45 degrees (in the up y-direction). Based on this
+      // canvas's aspect ratio. Clipping z-near is 0.1f and z-near is 100.0f.</span>
+      glu.gluPerspective(45.0f, aspect, 0.1f, 100.0f); <span class="code-comment">// fovy, aspect, zNear, zFar</span>
+      
+      <span class="code-comment">// Enable the model-view transform</span>
+      gl.glMatrixMode(GL.GL_MODELVIEW);
+      gl.glLoadIdentity(); <span class="code-comment">// reset</span>
+   }
+ 
+   @Override 
+   public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) { 
+      <span class="code-comment">// Not implemented in JOGL.</span>    
+   }
+}</pre>
+
+<p>Try converting the program to run as an applet.</p>
+
+<h3>Example 2 Continue: Full-Screen Mode</h3>
+<p>Let's convert the previous example to run in full-screen mode, by writing a main class that extends <code>JFrame</code>. It processes the key input (ESC to quit, F1 to toggle between full-screen mode and windowed mode). No change needed for <code>JOGLEx2Shape3D</code> class, whose <code>main()</code> method is simply ignored.</p>
+
+<pre class="code-listing">
+import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
+   
+public class <strong>JOGLEx2Shape3DFullScreenMain extends JFrame implements KeyListener</strong> {
+   private static final String WINDOW_TITLE = &quot;3D Shapes in Full Screen Mode&quot;;
+   private static int windowWidth  = 640;  <span class="code-comment">// size in non-full-screen mode</span>
+   private static int windowHeight = 480;
+   
+   private JOGLEx2Shape3D joglMain;
+   private GraphicsDevice device;
+   private boolean fullScreen = true; <span class="code-comment">// full-screen or windowed mode</span>
+  
+   <span class="code-comment">// Constructor</span>
+   public JOGLEx2Shape3DFullScreenMain() {
+      joglMain = new JOGLEx2Shape3D();
+      this.getContentPane().add(joglMain);
+  
+      <span class="code-comment">// Get the default graphic device and try full screen mode</span>
+      device = GraphicsEnvironment.getLocalGraphicsEnvironment()
+            .getDefaultScreenDevice();
+      if (device.isFullScreenSupported()) { <span class="code-comment">// Go for full-screen mode</span>
+         this.setUndecorated(true);         <span class="code-comment">// Don't show title and border</span>
+         this.setResizable(false);
+         //this.setIgnoreRepaint(true);     <span class="code-comment">// Ignore OS re-paint request</span>
+         device.setFullScreenWindow(this);
+         fullScreen = true;
+      } else {      <span class="code-comment">// Windowed mode</span>
+         this.setSize(windowWidth, windowWidth);
+         this.setResizable(true);
+         fullScreen = false;
+      }
+      
+      this.addWindowListener(new WindowAdapter() {
+         @Override 
+         public void windowClosing(WindowEvent e) {
+            <span class="code-comment">// Use a dedicate thread to run the stop() to ensure that the
+            // animator stops before program exits.</span>
+            new Thread() {
+               @Override 
+               public void run() {
+                  joglMain.animator.stop(); <span class="code-comment">// stop the animator loop</span>
+                  System.exit(0);
+               }
+            }.start();
+         }
+      });
+   
+      <span class="code-comment">// Enable keyboard input</span>
+      this.addKeyListener(this);
+      this.setFocusable(true);  <span class="code-comment">// To receive key event</span>
+      this.requestFocus();
+      
+      this.setTitle(WINDOW_TITLE);
+      this.setVisible(true);
+      joglMain.animator.start(); <span class="code-comment">// start the animation loop</span>
+   }
+  
+   public static void main(String[] args) {
+      new JOGLEx2Shape3DFullScreenMain();
+   }
+
+   <span class="code-comment">// ------ Implement methods declared in KeyListener ------</span>
+   @Override
+   public void keyPressed(KeyEvent e) {
+      int keyCode = e.getKeyCode();
+      switch (keyCode) {
+         <span class="code-comment">// F1 to toggle between full-screen and windowed modes</span>
+         case KeyEvent.VK_F1: 
+            if (!fullScreen) {  <span class="code-comment">// Saved the current size for restoration</span>
+               Dimension screenSize = this.getSize();
+               windowWidth  = (int)screenSize.getWidth();
+               windowHeight = (int)screenSize.getHeight();
+            }
+            fullScreen = !fullScreen;
+            this.setVisible(false); <span class="code-comment">// Hide the display</span>
+            if (this.isDisplayable())
+               this.dispose();      <span class="code-comment">// For changing the decoration</span>
+            if (fullScreen) {
+               if (device.isFullScreenSupported()) {
+                  this.setUndecorated(true);
+                  this.setResizable(false);
+                  device.setFullScreenWindow(this);
+               }
+            } else {
+               this.setUndecorated(false);  <span class="code-comment">// Put the title and border back</span>
+               device.setFullScreenWindow(null); <span class="code-comment">// Windowed mode</span>
+               this.setSize(windowWidth, windowHeight);
+               this.setResizable(true);
+            }
+            this.setVisible(true);  <span class="code-comment">// Show it</span>
+            break;
+   
+         <span class="code-comment">// ESC to quit</span>
+         case KeyEvent.VK_ESCAPE: 
+            <span class="code-comment">// Use a dedicate thread to run the stop() to ensure that the
+            // animator stops before program exits.</span>
+            new Thread() {
+               @Override
+               public void run() {
+                  joglMain.animator.stop(); <span class="code-comment">// stop the animator loop</span>
+                  System.exit(0);
+               }
+            }.start();
+            break;
+      }
+   }
+
+   @Override
+   public void keyReleased(KeyEvent e) {}
+
+   @Override
+   public void keyTyped(KeyEvent e) {}
+}</pre>
+
+
+<h3>Nehe's JOGL 1.1 Port</h3>
+
+<p>I have ported some of the Nehe's lessons into JOGL. Refer to <a href="http://nehe.gamedev.net/">Nehe</a> for the problem descriptions. Take note that these codes run on JOGL 1.1, and NOT JOGL 2.0.</p>
+<p>Download all source codes: &quot;<a href="codes/JOGL1Nehe.zip">JOGL1Nehe.zip</a>&quot;.</p>
+
+<h5>Setting Up</h5>
+
+<ul>
+<li>Nehe's Lesson #1: Setting up OpenGL's window
+
+<ul>
+<li>Using <code>GLCanvas</code>: <code>NeheJOGL01SetupGLCanvas.java</code> (Read this and continue to the other lessons. Try the other set-ups later.)</li>
+<li>Using <code>GLJPanel</code>: <code>NeheJOGL01SetupGLJPanel.java</code>.</li>
+<li>Run as applet: <code>NeheJOGL01Applet.java</code>.</li>
+<li>Run in full-screen mode: <code>NeheJOGL01FullScreenMain.java</code>.</li>
+</ul>
+
+Expected output: blank black screen.
+</li>
+</ul>
+
+<h5>OpenGL Basics</h5>
+<p>I consider Lessons 2-8 as OpenGL basic lessons, that are extremely important!</p>
+
+<ul>
+<li>Nehe's Lesson #2: Your first polygon -  <code>NeheJOGL02Basics.java</code>.
+<img class="image-left" src="images/NeheJOGL02.png"  /></li>
+
+<li>Nehe's Lesson #3: Adding Color - <code>Nehe03JOGLColor.java</code>.
+<img class="image-left" src="images/NeheJOGL03.png"  /></li>
+
+<li>Nehe's Lesson #4: Rotation - <code>NeheJOGL04Rotation.java</code>.
+<img class="image-left" src="images/NeheJOGL04.png"  /></li>
+
+<li>Nehe's Lesson #5: 3D Shape - <code>NeheJOGL05Shape3D.java</code>.<img class="image-left" src="images/NeheJOGL05.png"  /></li>
+
+<li>Nehe's Lesson #6: Texture - <code>NeheJOGL06Texture.java</code>.<img class="image-left" src="images/NeheJOGL06.png"  /></li>
+
+<li>Nehe's Lesson #7: Texture Filter, Lighting, and key-controlled - <code>NeheJOGL07TextureFilterLightKey.java</code>. 
+Main program for running in full-screen mode: <code>NeheJOGL07FullScreenMain.java</code>.<img class="image-left" src="images/NeheJOGL07.png"  />
+</li>
+
+<li>Nehe's Lesson #8: Blending - <code>NeheJOGL08Blending.java</code>.<img class="image-left" src="images/NeheJOGL08.png" /></li>
+</ul>
+
+<h5>OpenGL Intermediates</h5>
+
+<ul>
+<li>Nehe's Lesson #9: Moving Bitmaps in 3D space - <code>NeheJOGL09Stars.java</code>.<img class="image-left" src="images/NeheJOGL09.png" /></li>
+
+<li>Nehe's Lesson #10: Building and moving in a 3D world - <code>NeheJOGL10World3D.java</code>.<img class="image-left" src="images/NeheJOGL10.png" /></li>
+
+<li>Nehe's Lesson #11: Waving Effect - <code>NeheJOGL11Flag.java</code>.<img class="image-left" src="images/NeheJOGL11.png" /></li>
+
+<li>Nehe's Lesson #12: Using Display List - <code>NeheJOGL12DisplayList.java</code>.<img class="image-left" src="images/NeheJOGL12.png" /></li>
+
+<li>Nehe's Lesson #13: Bitmap Fonts (2D Texts) - <code>NeheJOGL13Text2D.java</code>.<img class="image-left" src="images/NeheJOGL13.png" /></li>
+
+<li>Nehe's Lesson #14: Outline Fonts (3D Texts) - <code>NeheJOGL14Text3D.java</code>.<img class="image-left" src="images/NeheJOGL14.png" /></li>
+
+<li>Nehe's Lesson #16: Cool Looking Fog - <code>NeheJOGL16Fog.java</code>.<img class="image-left" src="images/NeheJOGL16.png" /></li>
+
+<li>Nehe's Lesson #18: Quadrics - <code>NeheJOGL18Quadrics.java</code>.<img class="image-left" src="images/NeheJOGL18.png" /></li>
+
+<li>Nehe's Lesson #19: Particle Engine Using Triangle Strips <code>NeheJOGL19Particle.java</code> and Fireworks <code>NeheJOGL19Firework.java</code><br />
+<img src="images/NeheJOGL19.png" />&nbsp;&nbsp;<img src="images/NeheJOGL19a.png" />
+</li>
+
+<li>Nehe's Lesson #26: Clipping &amp; Reflections Using The Stencil Buffer - <code>NeheJOGL26Reflection.java</code>.<img class="image-left" src="images/NeheJOGL26.png" /></li>
+</ul>
+  
+<h3>Deploying JOGL Applets</h3>
+
+<p>JDK 1.6 update 10 has greatly improved the efficiency of Java applet, and it is now feasible and practical to deploy a huge Java program as an applet.</p>
+
+<p>Deploying JOGL applet is a little tricky, as it involves many jar files (<code>jogl.jar</code>, <code>gluegen.jar</code>) as well as their associate native libraries. The JNLPAppletLauncher (@ <a href="https://applet-launcher.dev.java.net/">https://applet-launcher.dev.java.net</a>) greatly simplifies the deployment process for JOGL (as well as Java3D, JOAL etc.).</p>
+
+<p>A JOGL applet most likely involves a few classes (and inner classes). You should jar up all the class into a single JAR file for efficient deployment (as the files are compressed). For example, suppose that your applet includes <code>Hello.class</code>, <code>Hello$1.class</code>, <code>Hello$1$1.class</code> and <code>HelloApplet.class</code>, where <code>HelloApplet.class</code> contains the main program. Invoke the JDK's JAR utility (from cmd shell) as follows:</p>
+
+<pre class="code-command">
+&gt; jar cvf Hello.jar Hello.class, Hello$1.class, Hello$1$1.class  HelloApplet.class</pre>
+
+<p>The command-line options needed are: '<code>c</code>' (create new JAR file), '<code>v</code>' (verbose and print the output), '<code>f</code>' (JAR filename followed, i.e., <code>Hello.jar</code>). Include all the relevant classes.</p>
+
+<h4>JOGL 1.x</h4>
+
+<p>To deploy a JOGL 1.x applet, use the following HTML &lt;applet&gt; tag:</p>
+
+<pre class="code-listing">&lt;applet code=&quot;org.jdesktop.applet.util.JNLPAppletLauncher&quot;
+  width=640
+  height=480
+  archive=&quot;http://download.java.net/media/applet-launcher/applet-launcher.jar,
+    http://download.java.net/media/jogl/builds/archive/jsr-231-1.x-webstart-current/gluegen-rt-natives-windows-i586.jar,
+    http://download.java.net/media/jogl/builds/archive/jsr-231-1.x-webstart-current/jogl-natives-windows-i586.jar,
+    http://download.java.net/media/jogl/builds/archive/jsr-231-1.x-webstart-current/jogl.jar,
+    http://download.java.net/media/jogl/builds/archive/jsr-231-1.x-webstart-current/gluegen-rt.jar,
+    <strong>Hello.jar</strong>&quot;&gt;
+  &lt;param name=&quot;codebase_lookup&quot; value=&quot;false&quot;&gt;
+  &lt;param name=&quot;subapplet.classname&quot; value=&quot;<strong>HelloApplet</strong>&quot;&gt;
+  &lt;param name=&quot;subapplet.displayname&quot; value=&quot;Test JOGL Applet&quot;&gt;
+  &lt;param name=&quot;noddraw.check&quot; value=&quot;true&quot;&gt;
+  &lt;param name=&quot;progressbar&quot; value=&quot;true&quot;&gt;
+  &lt;param name=&quot;jnlpNumExtensions&quot; value=&quot;1&quot;&gt;
+  &lt;param name=&quot;jnlpExtension1&quot;
+     value=&quot;http://download.java.net/media/jogl/builds/archive/jsr-231-1.x-webstart-current/jogl.jnlp&quot;&gt;
+&lt;/applet&gt;</pre>
+
+<p>where:</p>
+  <ul>
+    <li>Attribute &quot;<code>code</code>&quot; is pointing at &quot;<code>JNLPAppletLauncher</code>&quot;, which is downloaded from http://download.java.net/media/applet-launcher/applet-launcher.jar, instead of your local server.</li>
+    <li>Attribute &quot;<code>archive</code>&quot; includes all the jar files (all 
+      relevant native codes) for running JOGL program. Again, these are 
+      downloaded from java.net instead of providing your own copy. &quot;<code>archive</code>&quot; also include your JAR file (<code>Hello.jar</code>).</li>
+    <li>Attributes &quot;<code>width</code>&quot; and &quot;<code>height</code>&quot; specify the width and height of your applet's display area inside the browser's window.</li>
+    <li>The name of your main applet is specified in the parameter &quot;<code>subapplet.classname</code>&quot;.</li>
+    <li>The parameter &quot;<code>codebase_lookup</code>&quot; is set to false, as this applet does not need to fetch other files from your local server's code base path.</li>
+    <li>The parameter &quot;<code>noddraw.check</code>&quot; is set to true, to check 
+      if DirectDraw is enabled and, if so, will prompt the user   to disable 
+      it for all applets. DirectDraw is incompatible with OpenGL. Disabling it
+      is unlikely to slow   down other non-3D applets significantly.</li>
+  </ul>
+
+<p>In the above example, I included only the &quot;<code>i586</code>&quot; native files. You probably need to include native files for the other platforms as well. Check  http://download.java.net/media/jogl/builds/archive/jsr-231-1.x-webstart-current.</p>
+
+<p>To deploy an applet with a single class, you can replace your JAR file with &quot;.&quot; (current working directory), and give the applet's class name in the parameter &quot;<code>subapplet.classname</code>&quot;. (You need not JAR up one single class!)</p>
+
+<h4>JOGL 2.x</h4>
+
+<p>You need to fetch a different set of JOGL binaries and native codes, as follows:</p>
+
+<pre class="code-listing">
+&lt;applet code=&quot;org.jdesktop.applet.util.JNLPAppletLauncher&quot;
+      width=640
+      height=400
+      archive=&quot;http://download.java.net/media/applet-launcher/applet-launcher.jar,
+               http://download.java.net/media/jogl/jsr-231-2.x-webstart/nativewindow.all.jar,
+               http://download.java.net/media/jogl/jsr-231-2.x-webstart/jogl.all.jar,
+               http://download.java.net/media/gluegen/webstart-2.x/gluegen-rt.jar,
+               <strong>Hello.jar</strong>&quot;&gt;
+   &lt;param name=&quot;codebase_lookup&quot; value=&quot;false&quot;&gt;
+   &lt;param name=&quot;subapplet.classname&quot; value=&quot;<strong>HelloApplet</strong>&quot;&gt;
+   &lt;param name=&quot;subapplet.displayname&quot; value=&quot;Test JOGL Applet&quot;&gt;
+   &lt;param name=&quot;noddraw.check&quot; value=&quot;true&quot;&gt;
+   &lt;param name=&quot;progressbar&quot; value=&quot;true&quot;&gt;
+   &lt;param name=&quot;jnlpNumExtensions&quot; value=&quot;1&quot;&gt;
+   &lt;param name=&quot;jnlpExtension1&quot;
+          value=&quot;http://download.java.net/media/jogl/jsr-231-2.x-webstart/jogl-core.jnlp&quot;&gt;
+&lt;/applet&gt;</pre>
+
+<p>Read the above section for the explanation.</p>
+
+<p> I believe that &quot;<code>nativewindow.all.jar</code>&quot; provides the native codes for all the major platforms.</p>
+
+
+<p>&nbsp;</p>
+
+<h4>REFERENCES &amp; RESOURCES</h4>
+  <ul>
+    <li>JOGL mother site @ <a href="https://jogl.dev.java.net/">https://jogl.dev.java.net</a>.</li>
+    <li>OpenGL mother site @ <a href="http://www.opengl.org/">www.opengl.org</a>.</li>
+    <li>Nehe OpenGL tutorials @ <a href="http://nehe.gamedev.net/">http://nehe.gamedev.net</a>.</li>
+    <li>OpenGL Programming Guide (Red book)</li>
+    <li>OpenGL Superbible (Blue book)</li>
+  </ul>
+  <p class="p-last-modified">Latest version tested: JDK 1.6, JOGL 1.1.1a<br />
+    Last modified: October, 2010</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

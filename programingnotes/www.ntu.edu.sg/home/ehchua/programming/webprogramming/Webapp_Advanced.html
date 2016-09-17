@@ -1,0 +1,441 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Advanced Webapp Development - Tips and Tricks</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Advanced  Webapp Development - Tips and Tricks</h1>
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+<p>This chapter presents some tips and tricks for webapp development, including database programming, server-side programming (PHP and others), client-side programming (HTML/CSS/JavaScript); Version Control System (Git); etc.</p>
+
+<p>Some parts are platform specific (e.g., Apache, PHP, Ubuntu only); while many are generic (e.g., Git, database naming convention).</p>
+
+<h3>Version Control System</h3>
+
+<p>You need to set up a Version Control System, such as Git, for backup, version control and collaboration. Read &quot;<a href="../howto/Git_HowTo.html">How to setup and get started with Git</a>&quot;.</p>
+
+<h3>Configuring Virtual Hosts in Apache Server</h3>
+
+<p>You may need to run multiple web sites under the same Apache server, e.g., production and test systems. It is common to run port-based Virtual Hosts on Apache, e.g., production system running on port 80, while test system on port 8080.</p>
+
+<p>Read &quot;<a href="../howto/Apache_HowToConfigure.html#PortVirtualHost">Port-based Virtual Host</a>&quot; on how to configure port-based virtual host on Apache server.</p>
+
+<p><span class="line-heading">For Ubuntu</span>: Instead of adding the configuration directly into the main configuration file, you create virtual host configuration in &quot;<code>\etc\apache2\sites-available</code>&quot;, run helper utility &quot;<code>a2ensite</code>&quot; to symlink it to the &quot;<code>\etc\apache2\sites-enabled</code>&quot;, which is then picked up by the main configuration &quot;<code>apache.conf</code>&quot;.</p>
+
+<h3 id="DBConvention">Database Convention</h3>
+
+<p>Webapp design typically begins with database design.</p>
+<p>Over the years, I have developed my own conventions that greatly   improve my productivity in writing webapp.</p>
+
+<h5>Naming Convention</h5>
+<ul>
+<li>Database name: in uppercase joined with underscore (e.g., <code>QUIZ_SYSTEM</code>)</li>
+<li>Table name: in camel-case with initial cap (e.g., <code>ProblemPool</code>)</li>
+<li>Column name: in camel-case with initial lowercase (e.g., <code>problemNo</code>, <code>studentID</code>). Acronyms like ID, OO shall be in uppercase.</li>
+<li>ENUM name: Use the exact format to be displayed, e.g., 'NO - Wrong Output', 'Student'</li>
+<li>Procedure name: in camel-case with prefix &quot;<code>proc</code>&quot; (e.g., <code>procProcedureName</code>)</li>
+<li>Function name: in camel-case with prefix &quot;<code>fn</code>&quot; (e.g., <code>fnFunctionName</code>)</li>
+<li>Procedure/Function parameters: in camel-case with prefix &quot;<code>in</code>&quot;, &quot;<code>out</code>&quot; or &quot;<code>io</code>&quot; (e.g. <code>inXxx</code>, <code>outXxx</code>, <code>ioXxx</code>)</li>
+<li>Trigger name: in camel-case with prefix &quot;<code>tg</code>&quot; (e.g., <code>tgTriggerName</code>)</li>
+<li>Event name: in camel-case with prefix &quot;<code>evt</code>&quot; (e.g., <code>evtEventName</code>)</li>
+</ul>
+
+<p>Do not use space (blank) or special characters in names, unless you are looking for more challenges.</p>
+
+<h5>Primary Keys</h5>
+<p>In general, the primary keys shall have suffix of &quot;<code>ID</code>&quot; (for Identification); or &quot;<code>No</code>&quot; (for number); or &quot;<code>code</code>&quot;,  e.g., <code>userID</code>, <code>problemNo</code>, <code>tutorialNo</code>, <code>courseCode</code>, <code>groupCode</code>.
+Do not simply use &quot;<code>ID</code>&quot; to name the primary key of all tables (although it is theoretically correct). You will get very confuse in your PHP/JavaScirpt programming codes. Use &quot;<code>ID</code>&quot; and &quot;<code>code</code>&quot; for <code>string</code> type (e.g. <code>userID</code>, <code>courseCode</code>); &quot;<code>No</code>&quot; for <code>int</code> type (e.g. <code>submissionNo</code>, <code>tutorialNo</code>, <code>problemNo</code>).</p>
+
+<h5>Validation Regexe</h5>
+
+<p>We should also define validation <em>regexe</em> for indexing columns during the database design. These regexe will then be used consistently in programming codes (such as PHP/JavaScript) to check the input validity and to present attack, e.g.,</p>
+<ul>
+<li><code>loginID</code>: <code>/^[\w-]{4,20}$/</code> (4 to 20 word characters of <code>[A-Za-z0-9_]</code> and dash (<code>-</code>))</li>
+<li><code>courseCode</code>: <code>/^[\w-]{3,15}$/</code> (3 to 15 word characters of <code>[A-Za-z0-9_]</code> and dash (<code>-</code>))</li>
+<li><code>password</code>: <code>/^\w{4,}$/</code> (4 or more word characters of <code>[A-Za-z0-9_]</code>)</li>
+<li><code>int</code> (<code>problemNo</code>, <code>SubmissionNo</code>, etc.): <code>/^\d+$/</code> (1 or more digit characters of <code>[0-9]</code>)</li>
+</ul>
+
+<h3>Ownership and Permission for Apache (Unix - Ubuntu/Mac OS X)</h3>
+
+<p>In Unix, Apache parent process is started by the superuser &quot;<code>root</code>&quot;; while the child processes are run by a special non-interactive user called &quot;<code>www-data</code>&quot;. The user <code>www-data</code> is in group <code>www-data</code> only.</p>
+
+<h5>Requirements</h5>
+
+<ol>
+<li>The user <code>www-data</code> needs <em>read</em> access to public HTML/CSS/JavaScript and server-side scripts (such as PHP). It needs <em>write</em> access to directories such as &quot;<code>log</code>&quot; and &quot;<code>work</code>&quot;.</li>
+<li>A group of developers (says Peter and Paul) need <em>read/write</em> access to all resources.</li>
+<li>Others shall have no permission at all to all resources.</li>
+</ol>
+
+<h5>Create Users and Group</h5>
+
+<p>To meet the requirements, we shall create a group called <code>web-dev</code> and places all developers (says users <code>peter</code> and <code>paul</code>) inside the group.</p>
+
+<pre class="color-command">
+<span class="color-comment">// create users &quot;peter&quot; and &quot;paul&quot;</span>
+$ <strong>sudo adduser peter</strong>
+$ <strong>sudo adduser paul</strong>
+<span class="color-comment">// show user info</span>
+$ <strong>less /etc/passwd</strong>
+ 
+<span class="color-comment">// create group &quot;web-dev&quot; (for webapp developers)</span>
+$ <strong>sudo addgroup web-dev</strong>
+<span class="color-comment">// show groups</span>
+$ <strong>less /etc/group</strong>
+ 
+<span class="color-comment">// add users &quot;peter&quot; and &quot;paul&quot; to group &quot;web-dev&quot;
+//   -a for append, -G for groupname</span>
+$ <strong>sudo usermod -a -G web-dev peter</strong>
+$ <strong>sudo usermod -a -G web-dev paul</strong>
+<span class="color-comment">// If desired, also add to &quot;sudo&quot; group</span></pre>
+
+<h5>File/Directory Ownership and Permissions</h5>
+
+<p>All directories/files are to be owned by user <code>www-data</code> and group <code>web-dev</code>.</p>
+
+<p>For public HTML/CSS/JavaScript and server-side Scripts (e.g. <code>/var/www</code>):</p>
+<ul>
+<li>Directory/Sub-directories: user <code>www-data</code> needs <code>r-x</code> (list, access), group <code>web-dev</code> needs <code>rwx</code> (list, write and access for maintenance), setgid to inherit group ownership, i.e. mode 2570 (<code>dr-xrws---</code>).</li>
+
+<li>Files: user <code>www-data</code> needs <code>r--</code> (read-only), group <code>web-dev</code> needs <code>rw-</code> (read-write for maintenance), i.e., mode 0460 (<code>-r--rw----</code>). (Note: No &quot;x&quot; needed for server-side scripts such as PHP.)</li>
+</ul>
+
+<pre class="color-command">
+$ <strong>cd /var/www</strong>
+ 
+<span class="color-comment">// Change ownership to user www-data and group web-dev
+//   -R for recursive</span>
+$ <strong>sudo chown -R www-data:web-dev .</strong>
+ 
+<span class="color-comment">// Change permissions of directory and sub-directories
+//   -type d for directory
+//   2 = setgid
+//   570 = r-xrwx---</span>
+$ <strong>sudo find . -type d -exec chmod 2570 {} +</strong>
+
+<span class="color-comment">// Change permissions of files
+//   -type f for file
+//   460 = r--rw----</span>
+$ <strong>sudo find . -type f -exec chmod 0460 {} +</strong>
+ 
+<span class="color-comment">// Check</span>
+$ <strong>ls -al</strong>
+ 
+<span class="color-comment">// Repeat for all such directories</span></pre>
+
+<p>For &quot;<code>work</code>&quot; and &quot;<code>log</code>&quot; files: read-write and create.</p>
+<ul>
+<li>Directory and sub-directories: user <code>www-data</code> needs <code>rwx</code> (list, write and access), group <code>web-dev</code> needs <code>rwx</code> (list, write and access), setgid to inherit group ownership, i.e. mode 2770 (<code>drwxrws---</code>).</li>
+
+<li>Files: user <code>www-data</code> needs <code>rw-</code> (read-write), group <code>web-dev</code> needs <code>rw-</code> (read-write for maintenance), i.e., mode 0660 (<code>-rw-rw----</code>).</li>
+</ul>
+
+<pre class="color-command">
+$ <strong>cd /<em>path-to/work</em></strong>
+ 
+<span class="color-comment">// Change ownership to user www-data and group web-dev
+//   -R for recursive</span>
+$ <strong>sudo chown -R www-data:web-dev .</strong>
+ 
+<span class="color-comment">// Change permissions of directory and sub-directories
+//   -type d for directory
+//   2 = setgid
+//   770 = rwxrwx---</span>
+$ <strong>sudo find . -type d -exec chmod 2770 {} +</strong>
+
+<span class="color-comment">// Change permissions of files
+//   -type f for file
+//   660 = r--rw----</span>
+$ <strong>sudo find . -type f -exec chmod 0660 {} +</strong>
+ 
+<span class="color-comment">// Check</span>
+$ <strong>ls -al</strong>
+ 
+<span class="color-comment">// Repeat for all such directories</span></pre>
+
+
+<h3>Webapp Directory Organization and File Conventions</h3>
+
+<h5>Directory Organization</h5>
+
+<p>An example of webapp directory structure of PHP webapp is as follows:</p>
+
+<pre class="color-example">
+app-base
+ | 
+ +-- www (read-only): public www (HTML/CSS/JavaScript + Server-side scripts)
+ |    |
+ |    +-- assets (read-only)
+ |         |
+ |         +-- include: Include files such as Header.inc.php, Footer.inc.php, Init.inc.php.
+ |         |            Include files are named as &quot;.inc.php.&quot;
+ |         +-- css: 
+ |         +-- js: Do not named as &quot;javascript&quot;, which causes conflict in some situation
+ |         +-- images: Images used by HTML, e.g., favicon.ico
+ |         |
+ |         +-- upload (read-write): data/images uploaded by users, but need to be placed under public www
+ |     
+ |   (These directories are outside the public www for security)
+ +-- php-lib (read-only): additional PHP libraries in sub-directories (such as kLogger) 
+ +-- conf (read-only): Confidential configuration files, e.g., password 
+ +-- export (read-write): data (report) exported by the app, may contain sensitive info
+ +-- work (read-write): generated work files
+ +-- log (read-write):  log file, may contains sub-directories for each type of logs,
+ |         such as php-log, java-log
+ |
+ |   (These are not used by the app in operation)
+ +-- sql:  SQL scripts
+ |    +-- init
+ |    +-- maintenance
+ +-- test: testing scripts (e.g., Selenium acceptance test scripts)
+ +-- import: description files, used to populate the database
+ +-- doc: public documentations (e.g., user guide in Wiki)
+ +-- private: not too be shared or tracked by git.
+      +-- doc: private documentations
+      +-- test: private test scripts
+      +-- data: confidential data</pre>
+
+<p>Each directory shall preferably contain a README.txt file to explain the contents of the directory.</p>
+
+<h5>Filename Conventions</h5>
+
+<ul>
+<li>Filename: in camel-case with initial cap (e.g., <code>ForgotPassword.php</code>, <code>SetupProblems.php</code>)</li>
+<li>PHP Include Filename: *.inc.php (e.g., <code>Header.inc.php</code>, <code>UserFunctions.inc.php</code>)</li>
+</ul>
+
+<h3>PHP Logging - kLogger</h3>
+<p><a href="php2_webapps.html#kLogger">HERE</a>.</p>
+
+<h3>PHP Webapp Examples</h3>
+<p>[TODO]</p>
+
+<h3>jQuery</h3>
+
+<p>jQuery (@ <a href="http://jquery.com/">http://jquery.com</a>) is a  JavaScript library that provides cross-browser support. Some JavaScript functions are not supported in certain broswer.</p>
+
+<p>The &quot;query&quot; refers to querying DOM elements within the HTML document.</p>
+
+<p>[TODO]</p>
+
+
+<h3>BootStrap</h3>
+
+<p>BootStrap (@ <a href="http://getbootstrap.com/">http://getbootstrap.com</a>) is set of CSS and JavaScript (jQuery) that greatly simplifies the client-side development. You can get a professional looking front-end in little time.</p>
+
+<h4>Setting up</h4>
+<ol>
+<li>Download BootStrap from <a href="http://getbootstrap.com/getting-started/#download">http://getbootstrap.com/getting-started/#download</a>.</li>
+
+<li>BootStrap requires jQuery. Download jQuery from <a href="http://jquery.com/">http://jquery.com</a>.</li>
+
+<li>Move the CSS files to sub-directory &quot;<code>css</code>&quot; and JavaScript files to &quot;<code>js</code>&quot;.</li>
+
+<li>Include the BootStrap's CSS, BootStrap and jQuery JavaScript File in your HTML document as follows:
+<pre class="color-example">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+ 
+    <span class="color-comment">&lt;!-- Bootstrap viewport setup --&gt;</span>
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+ 
+    <span class="color-comment">&lt;!-- Bootstrap's CSS --&gt;</span>
+    &lt;link href=&quot;css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+ 
+    &lt;title&gt;Your Title&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello, world!&lt;/h1&gt;
+ 
+    <span class="color-comment">&lt;!-- Place the JavaScript at the end so the the page loads faster --&gt;
+    &lt;!-- jQuery is needed for BootStrap --&gt;</span>
+    &lt;script src=&quot;js/jquery.min.js&quot;&gt;&lt;/script&gt;
+ 
+    <span class="color-comment">&lt;!-- Include BootStrap's all compiled plugins --&gt;</span>
+    &lt;script src=&quot;js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre></li>
+
+</ol>
+
+<h4>Getting Started</h4>
+
+<p>Read:</p>
+<ol>
+<li>BootStrap CSS @ <a href="http://getbootstrap.com/css/">http://getbootstrap.com/css</a>.</li>
+
+<li>Study the bootstrap examples @ <a href="http://getbootstrap.com/getting-started/#examples">http://getbootstrap.com/getting-started/#examples</a>. &quot;View Source&quot; as well as using Firebug to study the HTML/CSS.</li>
+</ol>
+
+
+<h5>Some Basic Usage Notes:</h5>
+
+<ul>
+<li>Place your body content under a <code>&lt;div class=&quot;container&quot;&gt;</code> or <code>&lt;div class=&quot;container-fluid&quot;&gt;</code> (for full screen width).</li>
+
+<li>BootStrap organizes the containers in rows. Each row has 12 columns.</li>
+
+<li>[TODO] more</li>
+
+</ul>
+
+<h4>Tips ad Tricks</h4>
+
+<h5>Login Page <span class="font-code">&lt;form&gt;</span>'s width</h5>
+<p>To control the width of the login form (placed under a &quot;container&quot;):</p>
+
+<pre class="color-example">
+&lt;div class=&quot;container&quot;&gt;
+  &lt;form method=&quot;post&quot; <span class="color-new">style=&quot;max-width:500px; margin:0 auto;&quot;</span>&gt;
+  ......
+  &lt;/form&gt;
+&lt;/div&gt;</pre>
+
+<p>See <a href="<p>See http://getbootstrap.com/examples/signin/</p>
+">http://getbootstrap.com/examples/signin</a>.</p>
+
+
+<h5><span class="font-code">&lt;body&gt;</span> Tag's <span class="font-code">padding-top</span> to skip the navigation bar</h5>
+
+<p>If you use a fixed navigation bar (<code>navbar-fixed-top</code>) at the top of the page, which has a &quot;<code>position:fixed</code>&quot; attribute, you need to use <code>padding-top</code> to skip the navigation bar, e.g.,</p>
+
+<pre class="color-example">
+body {
+  padding-top: 50px;   <span class="color-comment">/* To skip the &quot;fixed&quot; navigation bar */</span>
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}</pre>
+
+<h5>Collapsable Navigation Bar</h5>
+<p>When the screen width is too narrow to show all the menu items, a &quot;collapse&quot; button shown up, which contains the menu items.</p>
+
+<pre class="color-example">
+&lt;nav class=&quot;navbar navbar-default&quot;&gt;
+   &lt;div class=&quot;navbar-header&quot;&gt;
+      <span class="color-comment">&lt;!-- Place &quot;collapse button&quot; and &quot;brand&quot; here --&gt;</span>
+      &lt;button type=&quot;button&quot; class=&quot;navbar-toggle&quot; data-toggle=&quot;collapse&quot;
+         data-target=&quot;#navbar-collapse-menu&quot;&gt;
+         &lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;
+         <span class="color-comment">&lt;!-- to draw 3 bars on the collapse button --&gt;</span>
+         &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+         &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+         &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+      &lt;/button&gt;
+      &lt;a class=&quot;navbar-brand&quot; href=&quot;#&quot;&gt;LOGO&lt;/a&gt;
+   &lt;/div&gt;
+ 
+   <span class="color-comment">&lt;!-- Collect all the collapsable items here, with &quot;id&quot; targeted by the above button --&gt;</span>
+   &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;navbar-collapse-menu&quot;&gt;
+      &lt;ul class=&quot;nav navbar-nav&quot;&gt;
+         &lt;li class=&quot;active&quot;&gt;&lt;a href=&quot;#&quot;&gt;Item 1&lt;/a&gt;&lt;/li&gt;
+         &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 2&lt;/a&gt;&lt;/li&gt;
+         &lt;li class=&quot;dropdown&quot;&gt;
+            &lt;a href=&quot;#&quot; class=&quot;dropdown-toggle&quot; data-toggle=&quot;dropdown&quot;&gt;
+               Item 3&lt;b class=&quot;caret&quot;&gt;&lt;/b&gt;
+            &lt;/a&gt;
+            &lt;ul class=&quot;dropdown-menu&quot;&gt;
+               &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 3-1&lt;/a&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 3-2&lt;/a&gt;&lt;/li&gt;
+               &lt;li class=&quot;divider&quot;&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 3-3&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+         &lt;/li&gt;
+      &lt;/ul&gt;
+   &lt;/div&gt;
+&lt;/nav&gt;</pre>
+
+<p>See <a href="http://getbootstrap.com/components/#navbar">http://getbootstrap.com/components/#navbar</a>.</p>
+
+<h3>Parsley JS for Client-side Input Validation</h3>
+
+<p>Parsley JS (@ http://parsleyjs.org/) provides a JavaScript form validation library.</p>
+
+<h5>Setting Up</h5>
+
+<p>[TODO]</p>
+
+<h5>Example (with BootStrap)</h5>
+
+<pre class="color-example">
+&lt;form method=&quot;post&quot; <span class="color-new">data-parsley-validate&gt;</span>
+      <span class="color-comment">&lt;!-- Enable Parsley for form input validation --&gt;</span>
+ 
+  &lt;div class=&quot;form_group&quot;&gt;
+    &lt;label for=&quot;loginID&quot;&gt;Login ID&lt;/label&gt;
+    &lt;input type=&quot;text&quot; name=&quot;loginID&quot; id=&quot;loginID&quot;
+        class=&quot;form-control&quot;
+        autofocus
+        <span class="color-new">required
+        data-parsley-trigger=&quot;change&quot;
+        pattern=&quot;/^[\w-]{4,20}$/&quot;
+        data-parsley-pattern-message=&quot;Invalid Login ID&quot;</span> /&gt;
+  &lt;/div&gt;
+ 
+  &lt;div class=&quot;form-group&quot;&gt;
+    &lt;label class=&quot;control-label&quot;&gt;Email&lt;/label&gt;
+    &lt;input class=&quot;form-control&quot;
+        name=&quot;email&quot; id=&quot;email&quot;
+        <span class="color-new">type=&quot;email&quot;
+        required
+        data-parsley-trigger=&quot;change&quot;</span> /&gt;
+  &lt;/div&gt;
+ 
+  ......
+&lt;/form&gt;</pre>
+
+
+<h3>Setup HTTPS for Apache</h3>
+
+<p>For Windows: <a href="../howto/Apache_HowToConfigure.html#https">HERE</a>.</p>
+<p>For Ubuntu: <a href="../howto/Ubuntu_HowTo.html#https">HERE</a>.</p>
+
+<h3>Profiling PHP Webapps with XDebug and WebGrind</h3>
+
+<p>The XDebug PHP extension helps you debugging your script by providing a lot of valuable debug information and generate trace and profiling information.</p>
+
+<p>Webgrind (@ <a href="http://code.google.com/p/webgrind/">http://code.google.com/p/webgrind</a>) is an XDebug profiling web front end in PHP5. It implements a subset of the features of kcachegrind and installs in seconds and works on all platforms.</p>
+<p>[TODO]</p>
+
+</div> 
+<!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: ???<br />
+Last modified: September, 2014</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

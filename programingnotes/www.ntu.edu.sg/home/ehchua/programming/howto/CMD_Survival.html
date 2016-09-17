@@ -1,0 +1,477 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Programmer's Survival Guide for Windows - CMD Shell, File System &amp; Source-code Editors</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Programmer's Survival Guide for  Windows</h1>
+<h2>CMD Shell, File System &amp; Source-code Editors</h2>
+</div>
+
+<div id="content-main">
+
+<h3 id="cmd_intro">Command Prompt - CMD</h3>
+
+<p>Programmers use a Command-Line Shell to issue commands, instead of clicking on Graphical User Interface (GUI). This is because command-line is much more flexible and powerful than graphical interface.</p>
+
+<p>The CMD is a <em>Command Shell</em> (or <em>Command Interpreter</em>, <em>Command Prompt</em>, <em>DOS Prompt</em>) for issuing commands to interact with the Windows Operating System. It provides a set of commands and utilities. It also has its own programming language for writing batch files (shell scripts).</p>
+
+<p>You can launch a CMD shell via:</p>
+
+<ol>
+<li>&quot;Start&quot; button &rArr; &quot;Run...&quot; &rArr; Enter &quot;cmd&quot;, or</li>
+<li>&quot;Start&quot; button &rArr; All Programs &rArr; Accessories &rArr; Command Prompt.</li>
+</ol>
+
+<p>The CMD shell displays a  prompt which ends with &quot;<code>&gt;</code>&quot;, in the form of &quot;<em><code>drive</code></em><code>:\<em>current-directory</em>&gt;</code>&quot;. You can enter your command after the prompt.</p>
+
+<p>In this article, I shall denote the command prompt simply as &quot;<code>&gt;</code>&quot;.</p>
+
+<h3>File System and Commands</h3>
+
+<img class="image-float-right" src="images/DirectoryStructure.png" alt="DirectoryStructure.png" />
+
+<p>In Windows, files are organized in <em>directories</em> (aka <em>folders</em>). The directories are organized in a hierarchical <em>tree</em> structure, starting from the so-called <em>root</em> directory for each of the hard drive (as illustrated).  A directory may contain sub-directories and files. A sub-directory may contain sub-sub-directories and files, and so on.</p>
+
+<p> Windows' file system is further organized in drives, identified by a drive letter followed by a colon, e.g., <code>C:</code>, <code>D:</code> and  <code>E:</code>. Each drive has its own root directory, such as <code>C:\</code>, <code>D:\</code> and  <code>E:\</code>, where the &quot;<code>\</code>&quot; (back-slash) denote the root directory of each drive.</p>
+
+<p>Windows' file  system is NOT case-sensitive, a <em>rose</em> is a <em>Rose</em>, and is a <em>ROSE</em>.</p>
+
+<h4>Drive, Pathname and Filename</h4>
+
+<p>To reference a file in Windows' file system, you need to provide the <em>drive letter</em>, the <em>directory name</em> (aka <em>pathname</em>) and the <em>filename</em>. For example, in &quot;<code>C:\Program Files\java\jdk1.7.0_07\bin\javac.exe</code>&quot;, the drive is <code>C:</code>, the pathname is &quot;<code>\Program Files\java\jdk1.7.0_07\bin\</code>&quot; and the filename is &quot;<code>javac.exe</code>&quot;. The leading &quot;<code>\</code>&quot; (back-slash) denotes the root directory for that drive. The sub-directories are separated by &quot;<code>\</code>&quot; (back-slash).</p>
+
+<p>The  pathname can be specified in two ways:</p>
+
+<ol>
+<li>Absolute Pathname: An absolute pathname begins from the root directory of a drive. It starts with <code>X:\</code> (where <code>X</code> denotes the drive letter and the leading &quot;<code>\</code>&quot; denotes the root), and contains all the sub-directories leading to the file (separated by &quot;<code>\</code>&quot;). For example, &quot;<code>C:\Program Files\java\jdk1.7.0_07\bin\</code>&quot;.</li>
+
+<li>Relative Pathname: A relative pathname is relative to the so-called <em>current drive</em> and <em>current working directory</em>. For example, if the current drive and working directory is &quot;<code>C:\Program Files\java\</code>&quot;, then the relative path &quot;<code>jdk1.7.0_07\bin\</code>&quot; resolves to &quot;<code>C:\Program Files\java\jdk1.7.0_07\bin\</code>&quot;. A relative pathname does NOT begin with a leading &quot;<code>\</code>&quot; (back-slash).</li>
+</ol>
+
+<h4>Current Drive and Current Working Directory</h4>
+
+<p>Each CMD session maintains a so-called <em>current drive</em> and <em>current working directory</em>, which is shown in the prompt in the form of &quot;<em><code>drive</code></em><code>:\<em>current-directory</em>&gt;</code>&quot;. All relative pathnames/filenames are relative to this current drive and working directory.</p>
+
+<h4>Set Current Drive (<span class="font-code">x:</span>) Command</h4>
+
+<p>To set or change the current drive, enter the drive letter followed by a colon (<code>:</code>), e.g.,</p>
+
+<pre class="color-command">
+Prompt&gt; <strong>d:</strong>    <span class="color-comment">// Change the current drive to D. The prompt changes to D:\...</span>
+D:\...&gt; <strong>c:</strong>    <span class="color-comment">// Change the current drive to C. The prompt changes to C:\...</span>
+C:\...&gt;</pre>
+
+<h4>Change Directory (<span class="font-code">cd</span>) Command</h4>
+
+<p>To change current working directory, <em>under the current drive</em>, use command &quot;<code>cd <em>new-path</em></code>&quot; (change directory).</p>
+<p><strong>It is important to take note that you need to set the current drive first (via &quot;<code>x:</code>&quot; command) before setting the current directory under the current drive.</strong></p>
+
+<p>You can specify <em>new-path</em> in two ways: <em>absolute</em> or <em>relative</em>. An absolute path begins with a &quot;<code>\</code>&quot; or root directory. A relative path is relative to the current working directory and does NOT begin with a leading &quot;<code>\</code>&quot;. For example,</p>
+
+<pre class="color-command">
+Prompt&gt; <strong>c:</strong>
+   <span class="color-comment">// Set current drive to C. The prompt changes to C:\...</span>
+C:\....&gt; <strong>cd \</strong>           
+   <span class="color-comment">// Set current directory to the root directory of the current drive</span>
+C:\&gt; <strong>cd Windows</strong>
+   <span class="color-comment">// Set current directory to &quot;Windows&quot; <em>relative</em> to current directory of the current drive</span>
+C:\Windows&gt; <strong>cd system</strong>
+   <span class="color-comment">// Set current directory to &quot;system&quot; <em>relative</em> to current directory of the current drive</span>
+C:\Windows\system&gt; <strong>cd \myproject\java</strong>
+   <span class="color-comment">// Set current directory <em>absolutely</em> to &quot;\myproject\java&quot; of the current drive</span>
+C:\myproject\java&gt; <strong>cd &quot;\Program Files\java\jdk1.7.0_07\bin&quot;</strong>
+   <span class="color-comment">// Set current directory <em>absolutely</em>. Enclosed with double quotes if pathname contains blank.</span>
+C:\Program Files\java\jdk1.7.0_07\bin&gt; <strong>d:</strong>
+   <span class="color-comment">// Set the current drive to D drive</span>
+D:\....&gt; <strong>cd \</strong>
+   <span class="color-comment">// Change directory to the root of the current drive</span>
+D:\&gt; <strong>cd Java</strong>
+   <span class="color-comment">// Change directory to the &quot;Java&quot; sub-directory of the current directory</span>
+D:\Java&gt;</pre>
+
+<p>Take note that:</p>
+<ol>
+<li>You need to set the <em>current drive</em> and <em>current directory</em> in <em>two</em> commands: <code>X:</code> and <code>cd</code>.</li>
+<li>The current drive and current working directory is displayed in the command prompt before the &quot;<code>&gt;</code>&quot;.</li>
+</ol>
+
+<p>You can <code>cd</code> in multiple stages (e.g., one <code>cd</code> for each sub-directory - recommended), or <code>cd</code> in one single stage with the full pathname.</p>
+
+<pre class="color-command">
+Prompt&gt; <strong>c:</strong>                                  <span class="color-comment">// C:\...</span>
+C:\....&gt; <strong>cd \</strong>                               <span class="color-comment">// C:\</span>
+C:\&gt; <strong>cd Program Files</strong>                       <span class="color-comment">// C:\Program Files</span>
+C:\Program Files&gt; <strong>cd java</strong>                   <span class="color-comment">// C:\Program Files\java</span>
+C:\Program Files\java&gt; <strong>cd jdk1.7.0_07</strong>       <span class="color-comment">// C:\Program Files\java\jdk1.7.0_07</span>
+C:\Program Files\java\jdk1.7.0_07&gt; <strong>cd bin</strong>   <span class="color-comment">// C:\Program Files\java\jdk1.7.0_07\bin</span>
+C:\Program Files\java\jdk1.7.0_07\bin&gt;
+<span class="color-comment"> 
+// Same As</span>
+Prompt&gt; <strong>c:</strong>
+C:\....&gt; <strong>cd \Program Files\java\jdk1.7.0_07\bin</strong>
+C:\Program Files\java\jdk1.7.0_07\bin&gt;</pre>
+
+<p>You can use &quot;<code>..</code>&quot; (double-dot) to refer to the parent directory and &quot;<code>.<span class="color-comment"></span></code>&quot; (single-dot) to refer to current directory. For example,</p>
+
+<pre class="color-command">C:\Program Files\java\jdk1.7.0_07\bin&gt; <strong>cd ..</strong>   <span class="color-comment">// Parent directory</span>
+C:\Program Files\java\jdk1.7.0_07&gt; <strong>cd ..</strong>
+C:\Program Files\java&gt; <strong>cd ..</strong>
+C:\Program Files&gt;</pre>
+
+<p>Setting proper working directory is important. For example, to compile a Java program called &quot;<code>Hello.java</code>&quot; stored in &quot;<code>D:\myproject\java\</code>&quot;:</p>
+
+<ol>
+<li>Set the working directory to &quot;<code>D:\myproject\java\</code>&quot;, and reference the file relatively with filename only (without the path):
+<pre class="color-command">
+Prompt&gt; <strong>d:</strong>
+D:\...&gt; <strong>cd \myproject\java</strong>
+D:\myproject\java&gt; <strong>javac Hello.java</strong>   <span class="color-comment">// Filename only, in current directory</span></pre></li>
+
+<li>You can also refer to a file with its full path in any working directory:
+<pre class="color-command"><span class="color-comment">// Any working directory</span>
+Prompt&gt; <strong>javac d:\myproject\java\Hello.java</strong></pre></li>
+</ol>
+
+<h4>Directory (<span class="font-code">dir</span>) Command</h4>
+
+<p>You can list the contents of the current directory via the <code>dir</code> command, for example,</p>
+
+<pre class="color-command">Prompt&gt; <strong>dir</strong>              <span class="color-comment">// List of contents of the current directory</span>
+......
+Prompt&gt; <strong>dir Hello.java</strong>   <span class="color-comment">// Show the file &quot;Hello.java&quot; only</span></pre>
+
+<h5>Wildcards <span class="font-code">*</span> and <span class="font-code">?</span></h5>
+
+<p>You can use wildcards for pattern matching. The wildcard <code>*</code> matches zero or more (any) characters; <code>?</code> matches one (any) character.</p>
+
+<pre class="color-command">Prompt&gt; <strong>dir *.java</strong>  <span class="color-comment">// List files ending with &quot;.java&quot;</span>
+.....
+Prompt&gt; <strong>dir test*</strong>   <span class="color-comment">// List files starting with &quot;test&quot;</span>
+.....</pre>
+
+<p>You could, of course, view the contents of a directory using &quot;Computer&quot; or &quot;Window Explorer&quot; more conveniently.</p>
+
+<h4>Shortcut Keys in CMD Shell - IMPORTANT</h4>
+
+<p><span class="line-heading">Previous Commands in Command History:</span> You can use the up/down arrow keys to scroll through the previous/next command in the command history.</p>
+
+<p><span class="line-heading">Auto-Complete with TAB:</span> Type the first few characters of a filen/directory name, and press TAB key to auto-complete the file/directory name. Press TAB key repeatably to cycle through all the matches.</p>
+
+<p><span class="line-heading">Copy/Paste:</span> You need to enable Copy/Paste by clicking on the CMD icon (top-left corner) &rArr; Properties &rArr; Options &rArr; Edit Options &rArr; Check &quot;QuickEdit Mode&quot;. Once enabled, you can right-click to copy the highlighted text, and another right-click to paste on the command-line.</p>
+
+<p>ESC: Clear command-line.</p>
+
+<p>HOME|END: Move the the begin/end of command line.</p>
+
+<p>Ctrl-Arrow-Left|Right: Move one word to the left/right.</p>
+
+<h5>Tips and Tweaks for CMD</h5>
+
+<ol>
+<li>CMD shell is NOT case-sensitive.</li>
+<li>The screen buffer size (controlling the amount of messages retained in the screen) can be configured under &quot;Properties&quot; &rArr; &quot;Layout&quot;. You should set to a bigger number (500-2000), so that you can view more old messages.</li>
+</ol>
+
+<h3 id="key-shortcut">Keyboard Shortcuts (for Windows)</h3>
+
+<p>Good programmers uses keyboard shortcuts instead of mouse to perform most of the editing tasks, such as positioning the cursor, selecting texts,  copy and paste. Below are the frequently-used keyboard shortcuts for the programmers.</p>
+
+<table class="table-zebra" style="width:60%">
+<col style="width:40%" />
+<col />
+<tr>
+<th>Keyboard Shortcut</th>
+<th>Function</th>
+</tr>
+
+<tr>
+<td>Ctrl+c, Ctrl+v, Ctrl+x</td>
+<td>Copy, Paste, Cut</td>
+</tr>
+<tr class="tr-alt">
+  <td>Ctrl+s</td>
+  <td>Save</td>
+</tr>
+<tr>
+  <td>Ctrl+f</td>
+  <td>Find</td>
+</tr>
+<tr class="tr-alt">
+  <td>Ctrl+z, Ctrl+y</td>
+  <td>Undo, Redo</td>
+</tr>
+<tr>
+  <td>Ctrl+RightArrow, Ctrl+LeftArrow</td>
+  <td>Goto next/previous word</td>
+</tr>
+<tr class="tr-alt">
+  <td>Home, End</td>
+  <td>Goto begin/end of the current line</td>
+</tr>
+<tr>
+  <td>Ctrl+Home, Ctrl+End</td>
+  <td>Goto top/end of document</td>
+</tr>
+<tr class="tr-alt">
+  <td>Ctrl+a</td>
+  <td>Select all</td>
+</tr>
+<tr>
+  <td>Ctrl+Shift+RightArrow, Ctrl+Shift+LeftArrow</td>
+  <td>Select words</td>
+</tr>
+<tr class="tr-alt">
+  <td>Shift+DownArrow, Shift+UpArrow</td>
+  <td>Select lines</td>
+</tr>
+<tr>
+  <td>Shift+RightArrow, Shift+LeftArrow</td>
+  <td>Select characters</td>
+</tr>
+<tr class="tr-alt">
+  <td>Shift+End, Shift+Home</td>
+  <td>Select till end/begin of current line</td>
+</tr>
+<tr>
+  <td>Alt+Tab</td>
+  <td>Switch between open applications</td>
+</tr>
+<tr class="tr-alt">
+  <td>Alt+F4</td>
+  <td>Close the current application</td>
+</tr>
+</table>
+
+<h5>Mouse Clicks</h5>
+<ol>
+<li>Single-click to position the mouse pointer.</li>
+<li>Double-click to select a word.</li>
+<li>Triple-click to select a paragraph.</li>
+</ol>
+
+<h3 id="editor">Source-Code Editors (for Windows)</h3>
+
+<p>A <em>program editor</em> (or <em>source code editor</em>) is <em>programming language sensitive</em> and <em>context-aware</em>. It highlights the syntax elements of your programs; and provides many features that aid in your program development (such as auto-complete, compile/build/run, help menu, etc.). On the other hand, a <em>plain text editor</em>, such as &quot;NotePad&quot;, is not language-sensitive and, therefore, is NOT suitable for writing programs. For full-scale software development, you should use an appropriate IDE (Integrated Development Environment).</p>
+
+<p>It is important to use a <em>mono-space font</em> (such as &quot;Courier New&quot;, &quot;Consola&quot;) for programming, so that the columns are properly aligned.</p>
+
+<p>There are tons of free <em>program editors</em> available.  Here are some program editors that I am currently using. Unfortunately, there isn't one magic wane (or silver bullet) that suits all my programming needs.</p>
+
+<h4 id="textpad">TextPad</h4>
+
+<p>TextPad is an excellent source-code editor, especially for writing <em>toy</em> Java programs. It is simple to use, fast to launch, and it can be configured to run JDK commands directly.  TextPad is a shareware (not a freeware). The <em>full-function</em> version can be downloaded from <a href="http://www.textpad.com">www.textpad.com</a>. It has no time limit but a message will keep reminding you to purchase the shareware.</p>
+
+<p> To install, simply run the downloaded installer.</p>
+
+<h5>Using TextPad for Writing Toy Java Programs</h5>
+
+<p>TextPad is great in writing <em>toy</em> Java programs, as it can be configured to run JDK command directly, bypassing the command shell. From the TextPad editor, you can invoke the JDK compiler and runtime directly via &quot;Tools&quot; &rArr; (Version 5 only) &quot;External Tools&quot; &rArr; &quot;Compile Java&quot; or &quot;Run Java Application&quot;. Take note of the keyboard shortcuts.</p>
+
+<img class="image-center" src="images/TextpadJava.png" alt="TextpadJava.png" />
+
+<p>If you cannot find these commands in the &quot;Tools&quot; menu, goto &quot;Configure&quot; &rArr; Preferences... &rArr; Tools &rArr; Add &rArr; JDK Commands.  You can also configure the attributes of &quot;compile&quot; and &quot;run&quot; there, such as prompting for command-line arguments.</p>
+
+<h5>Tips for Using TextPad</h5>
+<ol>
+<li><span class="line-heading">Error Message Hyperlink:</span> Double-click on the first-line of an error message will hyperlink to the corresponding source statement.</li>
+
+<li><span class="line-heading">Find &amp; Replace:</span> Most important commands for programmers (after the copy/paste), available under the &quot;Search&quot; menu.</li>
+
+<li><span class="line-heading">Block Select Mode:</span> The Block Select mode allows you to operate on a block of texts, such as deleting a few columns and filling in blank columns. To enable/disable Block Select mode, select &quot;Configure&quot; menu &rArr; check/uncheck &quot;Block Select Mode&quot;.</li>
+
+<li><span class="line-heading">Line Numbers:</span> To display the line numbers, choose &quot;View&quot; menu &rArr; check the &quot;Line Number&quot; option.</li>
+
+<li><span class="line-heading">Command-Line Arguments:</span> To provide command-line arguments to your Java program in TextPad, choose &quot;Configure&quot; menu &rArr; &quot;Tools&quot; &rArr; &quot;Run Java Application&quot; &rArr; check &quot;Prompt for parameters&quot; box. When running your program, place your command-line arguments after <code>$BaseName</code> (which denotes the Java program name).</li>
+</ol>
+
+<h5>Configuring TextPad</h5>
+
+<p>TextPad is highly configurable to suit your personal programming style (such as your preferred font, color, layout, tab spaces, etc). Select &quot;Configure&quot; menu &rArr; Preferences.</p>
+
+<ol>
+<li><span class="line-heading">Font:</span> &quot;Configure&quot; &rArr; &quot;Preferences&quot; &rArr; Expand &quot;Document classes&quot; node &rArr; Select your desired class, e.g., &quot;Java&quot;, and expand the node &rArr; &quot;Font&quot; &rArr; Select <em>monospace</em> font for programming, e.g., Courier New, Courier, Consola, Lucida Console.</li>
+
+<li><span class="line-heading">Add File Association (e.g., *.xml to use HTML Syntax Highlighting):</span> &quot;Configure&quot; &rArr; &quot;Preferences&quot; &rArr; Expand &quot;Document classes&quot; node &rArr; Click on your desired class, e.g., &quot;HTML&quot; &rArr; In &quot;Files in class xxx&quot;, add your file extension, e.g., <code>*.xml</code>, <code>*.jsp</code>.</li>
+</ol>
+
+<h5>TextPad Common Errors</h5>
+
+<pre class="color-example">
+ERROR MESSAGE: <span class="color-new">error: illegal character: \29</span>
+SOLUTION: 
+  You has non-printable character &quot;\29&quot; (Ctrl-]) in your source code. (You probably meant to use Shift-] for '}'.)
+  Remove this character if you can figure out its location. Otherwise, remove the whole line and re-enter the line.</pre>
+
+
+<h4 id="NotePadPP">NotePad++</h4>
+
+<p>NotePad++ is an open-source and free program editor that supports syntax highlighting for many languages.  It is meant as a &quot;Notepad replacement&quot;. You can download NotePad++ from<a href="http://notepad-plus-plus.org/"> http://notepad-plus-plus.org</a>.</p>
+
+<h5>Plug-ins</h5>
+<p>Notepad++ is highly expandable via third-party plug-ins. Google &quot;notepad++ plug-in&quot; to search for plug-in. To install a plug-in, download, unzip, and move the &quot;<code>dll</code>&quot; file into notepad++'s &quot;<code>plugins</code>&quot; directory.</p>
+
+<p>These are the useful plug-ins:</p>
+<ol>
+<li><span class="line-heading">Hex Editor Plug-in:</span> The hex editor plug-in allows you to view/edit binary files in hex codes. Google &quot;notepad++ plugin hex editor&quot;, or from <a href="http://sourceforge.net/projects/npp-plugins/files">http://sourceforge.net/projects/npp-plugins/files</a> &rArr; from the file list, select &quot;Hex Editor&quot; &rArr; download &rArr; unzip &rArr; move the <code>dll</code> file into notepad++'s &quot;<code>plugins</code>&quot; directory. The Hex Editor will be available from the &quot;Plugins&quot; menu &rArr; &quot;Hex Editor&quot;, or the &quot;H&quot; icon on the menu bar.</li>
+</ol>
+
+<h5>Tips on Using NotePad++</h5>
+<ol>
+
+<li><span class="line-heading">Reformatting Source Code:</span> TextFX &rArr; TextFXEdit &rArr; Re-indent C++ Code (which also work for java codes).</li>
+
+<li><span class="line-heading">Block Select:</span> You can select columns of text by holding down the Alt key while selecting (similar to WinWord).</li>
+
+<li><span class="line-heading">Converting Source Code to HTML:</span> TextFX &rArr; TextFXConvert ⇒ Encode HTML (<code>&amp;&lt;&gt;&quot;</code>).</li>
+
+<li><span class="line-heading">Converting End-of-line (EOL) between Windows, Mac and Unix:</span> Edit ⇒ EOL Conversion ⇒ Choose Windows, Unix or Mac format.</li>
+
+<li><span class="line-heading">Tile 2 Windows:</span> Right-click on a window &rArr; Move to other view.</li>
+</ol>
+
+<h5>NotePad++ for Java Programming</h5>
+
+<p>To compile and run Java programs with a single hot-key (just like TextPad), I wrote two batch files called &quot;<code>JavaCompile.bat</code>&quot; and &quot;<code>JavaRun.bat</code>&quot; and save them in the NotePad++ installed directory (or a directory in the <code>PATH</code>).</p>
+
+<h5 class="font-code">JavaCompile.bat</h5>
+<pre class="color-example"><span class="color-comment">@REM To run with: JavaCompile $(CURRENT_DIRECTORY) $(FILE_NAME)</span>
+@cd /d %1
+javac %2
+@pause</pre>
+
+<h5 class="font-code">JavaRun.bat</h5>
+<pre class="color-example"><span class="color-comment">@REM To run with: JavaRun $(CURRENT_DIRECTORY) $(NAME_PART)</span>
+@cd /d %1
+java %2
+@pause</pre>
+
+<p>To install the batch files, select the &quot;Run&quot; menu &rArr; &quot;Run...&quot;, enter &quot;<code>JavaCompile $(CURRENT_DIRECTORY) $(FILE_NAME)</code>&quot; &rArr; Choose &quot;Ctrl-1&quot; as the hot-key for compiling Java program. Similarly, select the &quot;Run&quot; menu &rArr; &quot;Run...&quot;, enter &quot;<code>JavaRun $(CURRENT_DIRECTORY) $(NAME_PART)</code>&quot; &rArr; Choose &quot;Ctrl-2&quot; as the hot-key for running Java program. (To use Ctrl-1, Ctrl-2, you need to re-configure and remove the existing mappings for these keys  via &quot;Settings&quot; ⇒ &quot;Shortcut Mapper...&quot;.)</p>
+<p>These are the notepad++ internal variables:</p>
+<ul>
+<li><code>$(FULL_CURRENT_PATH)</code>: the fully qualified path and name to the current document.</li>
+<li><code>$(CURRENT_DIRECTORY)</code>: The directory the current document resides in.</li>
+<li><code>$(FILE_NAME)</code>: The filename of the document, without the directory.</li>
+<li><code>$(NAME_PART)</code>: The filename without the extension.</li>
+<li><code>$(EXT_PART)</code>: The extension of the current document.</li>
+</ul>
+<p>To modify the commands, you need to edit &quot;<code>shortcuts.xml</code>&quot; (search under your user's <code>AppDate</code> directory).</p>
+
+<h5>Using NppExec Plugin</h5>
+
+<p>The above Compile-Java batch file, unfortunately, does not automatically save the current file before running the compilation. To automatically save the file, I have to use the &quot;NppExec&quot; Plugin, as follows:</p>
+
+<ol>
+<li>Goto &quot;Plugins&quot; menu &rArr; Select &quot;NppExec&quot;. (If you cannot find &quot;NppExec&quot; under plugins, you need to first install the &quot;NppExec&quot; plugin.)</li>
+<li>Choose &quot;Execute...&quot; and enter the following commands:
+<pre class="color-example">NPP_SAVE
+cd $(CURRENT_DIRECTORY)
+javac $(FILE_NAME)</pre>
+Save it as script name &quot;Java-Compile&quot;.</li>
+
+<li>Press &quot;OK&quot; to run the script. You shall see the output on the NppExec's console.</li>
+<li>To install a hot-key for this NppExec script:
+
+<ol>
+<li>From &quot;Plugins&quot; menu &rArr; Select &quot;NppExec&quot; &rArr; &quot;Advanced Options...&quot;.</li>
+<li>In &quot;Menu Item&quot; &rArr; &quot;Associated script&quot; &rArr; Select the script &quot;Java-Compile&quot; &rArr; &quot;Add/Modify&quot;. You shall see the item appears in the &quot;Menu Items&quot;. If you open the NppExec menu, you will see &quot;Java-Compile&quot; as a menu item.</li>
+<li>To install a hot-key (such as Ctrl-1 - make sure it is not used) &rArr; Goto &quot;Settings&quot; &rArr; &quot;Shortcut Mapper&quot; &rArr; &quot;Plugin Commands&quot; &rArr; Select &quot;Java-Compile&quot; &rArr; Modify &rArr; Assign your chosen hot-key.</li>
+</ol>
+</li>
+</ol>
+
+<p>The above &quot;JavaRun&quot; batch file is fine, as there is no need to save the current file.</p>
+
+<h5>NotePad++ for C++ Programming</h5>
+
+<p>Similarly, these scripts are used for compiling toy C++ programs using g++.</p>
+
+<h5 class="font-code">GccCompile.bat</h5>
+<pre class="color-example">
+<span class="color-comment">@REM D:\MyScripts\GppCompile $(CURRENT_DIRECTORY) $(NAME_PART) $(EXT_PART)
+@REM Need to save the source file before running this script?!!</span>
+@ECHO OFF
+<span class="color-comment"></span>cd /D %1
+IF /I %3 EQU cpp GOTO CPP
+IF /I %3 EQU c GOTO C
+
+:CPP
+g++ -Wall -g %2.cpp -o %2
+ECHO g++ -Wall -g %2.cpp -o %2
+GOTO END
+
+:C
+gcc -Wall -g %2.c -o %2
+ECHO gcc -Wall -g %2.c -o %2
+GOTO END
+
+:END
+pause</pre>
+
+<h5 class="font-code">GccRun.bat</h5>
+<pre class="color-example">
+<span class="color-comment">@REM D:\MyScripts\JavaRun $(CURRENT_DIRECTORY) $(NAME_PART)</span>
+@cd %1
+%2
+@pause</pre>
+
+<h4>Other Program Editors</h4>
+
+<h5 id="PSPad">Sublime</h5>
+<p>@ <a href="http://www.sublimetext.com/">http://www.sublimetext.com</a>.</p>
+
+<h5 id="PSPad">PSPad</h5>
+<p>PSPad is an excellent program editor, especially for web programming such as writing JavaScript. It is a <em>freeware</em> and can be download from <a href="http://www.pspad.com">www.pspad.com</a>. To install, simply run the downloaded installer. The &quot;Help&quot; menu provides many good links to various online programming guides and references.</p>
+
+<h5 id="editra">Editra</h5>
+
+<p>Editra (@ <a href="http://editra.org">http://editra.org</a>): for Windows, Mac and Linux</p>
+
+<h4 id="HexEditor">Hex Editors</h4>
+
+<p>At times, you may need to display the hex values of a file. A <em>Hex Editor</em> is a handy tool that a good programmer should have in his/her toolbox. There are many freeware/shareware Hex Editor available. Try google &quot;Hex Editor&quot;.</p>
+
+<p>I recommend notepad++ with the &quot;Hex Editor plugin&quot;. Read &quot;<a href="#NotePadPP">NotePad++</a>&quot;.</p>
+
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+
+<ol>
+<li>Microsoft MS-DOS User's Guide and Reference.</li>
+<li>&quot;Microsoft XP Professional Product Documentation - Command-line reference&quot;, [online].</li>
+<li>&quot;Microsoft XP Professional Product Documentation - Using batch file&quot;, [online].</li>
+<li>&quot;Command-line Reference for IT Pros - Technical Reference&quot;, available under Windows &quot;Help&quot;.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Last modified: November, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

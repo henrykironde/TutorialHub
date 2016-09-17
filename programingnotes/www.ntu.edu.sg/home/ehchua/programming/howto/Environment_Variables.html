@@ -1,0 +1,405 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Environment Variables for Java Applications - PATH, CLASSPATH, JAVA_HOME</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Environment Variables For Java Applications</h1>
+<h2><span class="font-code">PATH</span>, <span class="font-code">CLASSPATH</span>, <span class="font-code">JAVA_HOME</span></h2>
+</div>
+
+<div id="content-main">
+
+
+<h3>What are Environment Variables?</h3>
+
+<p><em>Environment variables</em> are <em>global system variables</em> accessible by all the processes running under the Operating System (OS). Environment variables are useful to store system-wide values such as the directories to search for the executable programs (<code>PATH</code>) and the OS version. Examples of  environment variables in Windows OS are:</p>
+<ul>
+<li><code>COMPUTENAME</code>, <code>USERNAME</code>: stores the computer and current user name.</li>
+<li><code>OS</code>: the operating system.</li>
+<li><code>SystemRoot</code>: the system root directory.</li>
+<li><code>PATH</code>: stores a list of directories for searching executable programs.</li>
+</ul>
+
+<p>In setting up JDK and Java applications, you will encounter these environment variables: <code>PATH</code>, <code>CLASSPATH</code>, <code>JAVA_HOME</code> and <code>JRE_HOME</code>. In short:</p>
+
+<ul>
+<li><code>PATH</code>: maintains a list of directories. The OS searches the <code>PATH</code> entries for executable programs, such as Java Compiler (<code>javac</code>) and Java Runtime (<code>java</code>).</li>
+<li><code>CLASSPATH</code>: maintain a list of directories (containing many Java class files) and JAR file (a single-file archive of Java classes). The Java Compiler and Java Runtime searches the <code>CLASSPATH</code> entries for Java classes referenced in your program.</li>
+<li><code>JAVA_HOME</code> and <code>JRE_HOME</code>: maintain the locations of JDK and JRE installed directory, respectively.</li>
+</ul>
+
+<h3 id="set-environment">(Windows) How to Set or Change an Environment Variable</h3>
+<p>Variables in Windows are NOT case-sensitive (because the legacy DOS is not case-sensitive). Environment variables are typically named in uppercase, with words joined with underscore (<code>_</code>), e.g., <code>JAVA_HOME</code>.</p>
+
+<h5>Display Variables and their Values</h5>
+<p>To list all the variables and their values, start a CMD shell (Click &quot;Start&quot; button &rArr; Run &rArr; Enter &quot;cmd&quot;) and issue the command &quot;<code>set</code>&quot;. To display a particular variable, use command &quot;<code>set <em>varname</em></code>&quot;. For examples,</p>
+<pre class="color-example">
+<span class="color-comment">// Display all the variables (in NAME=VALUE pairs)</span>
+prompt&gt; <strong>set</strong>
+COMPUTERNAME=xxxxxxx
+OS=xxxxxxx
+PATH=xxxxxxx
+.......
+  
+<span class="color-comment">// Display a particular variable</span>
+prompt&gt; <strong>set COMPUTERNAME</strong>
+COMPUTERNAME=xxxxxx
+<span class="color-comment">// OR use echo command with variable enclosed within a pair of '%'s</span>
+prompt&gt; <strong>echo %COMPUTERNAME%</strong>
+COMPUTERNAME=xxxxxx</pre>
+  
+<p>Try issuing a <code>set</code> command on your system, and study the environment variables listed. Pay particular attention to the variable called <code>PATH</code>.</p>
+
+<h5>Set/Change/Unset a Variable</h5>
+<p>To set (or change) a variable, use command &quot;<code>set <em>varname</em>=<em>value</em></code>&quot;. There shall be no spaces before and after the <code>'='</code> sign. To unset an environment variable, use &quot;<code>set <em>varname</em>=</code>&quot;, i.e., set it to an empty string.</p>
+
+<table class="table-program">
+<col class="col-code" />
+<col class="col-desc" />
+<tbody>
+<tr>
+<td><pre>
+prompt&gt; <strong>set</strong> <em>varname</em>
+prompt&gt; <strong>set</strong> <em>varname</em><strong>=</strong><em>value</em>
+prompt&gt; <strong>set</strong> <em>varname</em><strong>=</strong>
+prompt&gt; <strong>set</strong></pre></td>
+<td><pre>Display the value of the variable
+Set or change the value of the variable (Note: no space before and after '=')
+Delete the variable by setting to empty string (Note: nothing after '=')
+Display ALL the environment variables</pre></td>
+</tr>
+</tbody>
+</table>
+
+<p>For examples,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Set an environment variable</span>
+prompt&gt; <strong>set MY_VAR=hello</strong>
+   
+<span class="color-comment">// Display</span>
+prompt&gt; <strong>set MY_VAR</strong>
+MY_VAR=hello
+   
+<span class="color-comment">// Unset an environment variable</span>
+prompt&gt; <strong>set MY_VAR=</strong>
+   
+<span class="color-comment">// Display</span>
+prompt&gt; <strong>set MY_VAR</strong>
+Environment variable MY_VAR not defined</pre>
+
+<p>A variable set via the &quot;<code>set</code>&quot; command under CMD is a <em>local variable</em>, available to the <em>current</em> CMD session only. </p>
+
+<h5>Set an Environment Variable</h5>
+<p>To set an <em>environment variable</em> permanently in Windows (so that it is available to all the Windows' processes), start the &quot;Control Panel&quot; &rArr; &quot;System&quot; &rArr; (Vista/7/8) &quot;Advanced system settings&quot; &rArr; Switch to &quot;Advanced&quot; tab &rArr; &quot;Environment variables&quot; &rArr; Choose &quot;System Variables&quot; (for all users) or &quot;User Variables&quot; (for this login user only) &rArr; Choose &quot;Edit&quot; (for modifying an existing variable) or &quot;New&quot; (to create a new variable) &rArr; Enter the variable &quot;Name&quot; and &quot;Value&quot;.</p>
+
+<h5>Using a Variable</h5>
+<p>To reference a variable in Windows, use <code>%<em>varname</em>%</code> (with prefix and suffix of <code>'%'</code>). For example, you can use the <code>echo</code> command to print the value of a variable in the form &quot;<code>echo %<em>varname</em>%</code>&quot;.</p>
+
+<pre class="color-example">
+<span class="color-comment">// Display the PATH environment variable</span>
+prompt&gt; <strong>echo %PATH%</strong>
+PATH=xxxxxxx
+   
+<span class="color-comment">// Append a directory in front of the existing PATH</span>
+prompt&gt; <strong>set PATH=d:\bin;%PATH%</strong>
+PATH=d:\bin;[<em>existing entries</em>]</pre>
+
+<h3>(Mac OS/Linux) How to Set or Change an Environment Variable</h3>
+<p>Variables in Unixes are case-sensitive. Global environment variables (available to ALL processes) are named in uppercase, with words joined with underscore (<code>_</code>), e.g., <code>JAVA_HOME</code>. Local variables (available to the current process only) are in lowercase.</p>
+
+<p>Most of the Unixes (Ubuntu and Mac OS X) use the so-called <em>Bash shell</em>. Under <code>bash</code> shell:</p>
+
+<ul>
+  <li>To list all the environment variables, use the command &quot;<code>env</code>&quot; (or &quot;<code>printenv</code>&quot;). You could use &quot;<code>set</code>&quot; to list all the variables, including all local variables.</li>
+<li>To reference a variable, use <code>$<em>varname</em></code>, with a prefix <code>'$'</code> (Windows uses <code>%<em>varname</em>%</code>).</li>
+<li>To print the value of a particular variable, use the command &quot;<code>echo $<em>varname</em></code>&quot;.</li>
+
+<li>To set an environment variable, use the command &quot;<code>export <em>varname=value</em></code>&quot;, which sets the variable and exports it to the global environment  (available to other processes). Enclosed the <em>value</em> with double quotes if it contains spaces.</li>
+
+<li>To set a local variable, use the command &quot;<em><code>varname</code></em><code>=<em>value</em></code>&quot; (or &quot;<code>set </code><em><code>varname</code></em><code>=<em>value</em></code>&quot;). Local variable is available within this process only.</li>
+<li>To unset a local variable, use command  &quot;<em><code>varname</code></em><code>=</code>&quot;, i.e., set to empty string (or &quot;<code>unset </code><em><code>varname</code></em>&quot;).</li>
+</ul>
+
+<h5>Set an Environment Variable Permanently</h5>
+
+<p>You can set an environment variable permanently by placing an <code>export</code> command in your Bash shell startup script &quot;<code>~/.bashrc</code>&quot; (or <code>&quot;~/.bash_profile</code>&quot;, or &quot;<code>~/.profile</code>&quot;) of your home directory; or &quot;<code>/etc/profile</code>&quot; for system-wide operations. Take note that files beginning with dot (<code>.</code>) is hidden by default. To display hidden files, use command &quot;<code>ls -a</code>&quot; or &quot;<code>ls -al</code>&quot;.</p>
+<p>For example, to add a directory to the <code>PATH</code> environment variable, add the following line at the end of<code> &quot;~/.bash_profile</code>&quot; (or &quot;<code>~/.profile</code>&quot;), under your home directory, or &quot;<code>/etc/profile</code>&quot;.</p>
+
+<pre class="color-syntax">
+export PATH=/usr/local/mysql/bin:$PATH</pre>
+
+<p>Similarly, You can set the <code>CLASSPATH</code> environment variables by adding the following line. For example,</p>
+<pre class="color-syntax">
+export CLASSPATH=.:/usr/local/tomcat/lib/servlet-api.jar</pre>
+
+
+<p>Take note that Bash shell uses colon (<code>:</code>) as the path separator; while windows use semi-colon (<code>;</code>).</p>
+
+<p>To refresh the bash shell, issue a &quot;<code>source</code>&quot; command (or re-start the bash shell):</p>
+<pre class="color-command">
+<span class="color-comment"></span><span class="color-comment">// Refresh the bash shell</span>
+$ <strong>source ~/.bashrc</strong>
+<span class="color-comment">// or</span>
+$ <strong>source ~/.bash_profile</strong>
+<span class="color-comment">// or</span>
+$ <strong>source /etc/profile</strong></pre>
+
+<div class="side-note">
+<p><span class="line-heading">(Notes) For the older <span class="font-code">csh</span> (C-shell) and <span class="font-code">ksh</span> (Korn-shell)</span></p>
+
+<ul>
+<li>Use &quot;<code>printenv</code>&quot; (or &quot;<code>env</code>&quot;) to list all the environment variables.</li>
+<li>Use &quot;<code>setenv <em>varname value</em></code>&quot; and &quot;<code>unsetenv <em>varname</em></code>&quot; to set and unset an environment variable.</li>
+<li>Use &quot;<code>set <em>varname</em>=<em>value</em></code>&quot; and &quot;<code>unset <em>varname</em></code>&quot; to set and unset a local variable for the current process.</li>
+</ul>
+</div>
+
+<h3 id="JavaEnv">Java Applications and the Environment Variables <span class="font-code">PATH</span>, <span class="font-code">CLASSPATH</span>, <span class="font-code">JAVA_HOME</span></h3>
+
+<p>Many problems in the installation and running of Java applications are caused by incorrect setting of <em>environment variables</em> (<em>global system variables</em> available to all the processes running under the system), in particular, <code>PATH</code>, <code>CLASSPATH</code> and <code>JAVA_HOME</code>.</p>
+
+<h4 id="path"><span class="font-code">PATH</span></h4>
+
+<p>When you launch a program from the command line, the operating system uses the <code>PATH</code> environment variable to search for the program in your local file system. In other words,  <code>PATH</code> maintains <em>a list of directories for searching executable programs</em>.</p>
+
+<h5 id="PathWindows"><span class="font-code">PATH</span> (For Windows)</h5>
+
+<p> When you launch an executable program (with file extension of &quot;<code>.exe</code>&quot;, &quot;<code>.bat</code>&quot; or &quot;<code>.com</code>&quot;) from the CMD shell, Windows searches for the executable program in the <em>current working directory</em>, followed by  all the directories listed in the <code>PATH</code> environment variable. If the program cannot be found in these directories, you will get the following error:</p>
+
+<pre class="color-command">
+<span class="color-comment">// (Windows 2000/XP/Vista/7/8) &quot;cmd.exe&quot;</span>
+prompt&gt; <strong>xxxx</strong>
+<span class="color-new">'xxxx' is not recognized as an internal or external
+command, operable program or batch file.</span>
+ 
+<span class="color-comment">// (Windows 95/98) &quot;command.com&quot;</span>
+prompt&gt; <strong>xxxx</strong>
+<span class="color-new">Bad command or file name</span></pre>
+
+<p>For example, if Java Compiler &quot;<code>javac.exe</code>&quot; is not found in the current directory and all the directories in the <code>PATH</code>, you will receive this error when compiling java source code:</p>
+<img class="image-center" src="images/JavaErrorPath.png" alt="JavaErrorPath.png" />
+
+<p><code>PATH</code> maintains a list of directories.  The directories are separated by semi-colon <code>';'</code>.</p>
+
+<p>For Java applications, <code>PATH</code> must include the following directories:</p>
+
+<ul>
+<li>JDK's &quot;<code>bin</code>&quot; directory (e.g., &quot;<code>c:\Program Files\java\jdk1.7.0_{<em>xx</em>}\bin</code>&quot;), which contains JDK programs such as Java Compiler &quot;<code>javac.exe</code>&quot; and Java Runtime &quot;<code>java.exe</code>&quot;.</li>
+<li>&quot;<code>c:\windows\system32</code>&quot; and  &quot;<code>c:\windows</code>&quot; which contain console programs and commands.</li>
+</ul>
+
+<p>NOTES: The JDK's &quot;<code>bin</code>&quot; directory should be listed <em>before</em> &quot;<code>c:\windows\system32</code>&quot; and &quot;<code>c:\windows</code>&quot; in the <code>PATH</code>.  This is because some older Windows systems provide their own Java runtime (which is often out-dated) in these directories (try search for &quot;<code>java.exe</code>&quot; in your computer!).</p>
+
+<p>To manipulate the <code>PATH</code> environment variable, you could use command &quot;<code>set PATH</code>&quot; (just like any environment variable). But as <code>PATH</code> is frequently used, a dedicated command called <code>path</code> is provided.</p>
+
+<table class="table-program">
+<col class="col-code" />
+<col class="col-desc" />
+<tbody>
+<tr>
+<td>
+<pre>
+prompt&gt; <strong>PATH</strong>
+prompt&gt; <strong>PATH</strong><em></em><strong>=</strong><em>value</em>
+prompt&gt; <strong>PATH</strong><strong>=</strong>
+prompt&gt; <strong>PATH=D:\bin;D:\bin\java</strong>
+prompt&gt; <strong>PATH=D:\bin;%PATH%</strong></pre>
+</td>
+<td>
+<pre>Display all the search paths, same as &quot;set PATH&quot; and &quot;echo %PATH%&quot;
+Set the value of PATH, same as &quot;set PATH=<em>value</em>&quot; (Note: no space before and after '=')
+Delete PATH (set it to empty string), same as &quot;set PATH=&quot;
+Set search paths, separated by semi-colon
+Insert &quot;D:\bin&quot; in front of the current PATH</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>In Windows, the current working directory <code>'.'</code> is automatically included in the <code>PATH</code>, as the first entry. In other words, the current working directory is searched first, before searching the other entries specified in <code>PATH</code>, in a the order specified.</p>
+<p>For Windows users, you could set the <code>PATH</code> permanently to include JDK's &quot;<code>bin</code>&quot; directory via &quot;Control Panel&quot; &rArr; &quot;System&quot;&rArr; (Vista/7/8) &quot;Advanced system settings&quot; &rArr; Switch to &quot;Advanced&quot; tab &rArr; &quot;Environment variables&quot; &rArr; Under &quot;System Variables&quot; (for all users) &rArr; Select variable &quot;PATH&quot; &rArr; Choose &quot;Edit&quot; (for modifying an existing variable) &rArr; In &quot;Value&quot;, <span class="underline">INSERT</span> your JDK's &quot;bin&quot; directory (e.g., &quot;<code>c:\Program Files\Java\jdk1.7.0_{<em>xx</em>}\bin</code>&quot;), followed by a semi-colon <code>';'</code>, <span class="underline">IN FRONT</span> of all the existing <code>PATH</code> entries. DO NOT remove any existing entry; otherwise, some programs may not run.</p>
+
+<h5><span class="font-code">PATH</span> (For Mac and Ubuntu)</h5>
+
+
+<p>Most of the Unixes and Mac use the so-called <em>Bash Shell</em> in the &quot;<em>Terminal</em>&quot;. When you launch an executable program (with file permission of <em>executable</em>) in a Bash shell, the system searches the program in ALL the directories listed in the <code>PATH</code>. If the program cannot be found, you will get the following error:</p>
+
+<pre class="color-command">
+$ <strong>xxxx</strong>
+<span class="color-new">bash: xxxx: command not found</span></pre>
+
+<p>To list the current <code>PATH</code>, issue command:</p>
+<pre class="color-command">
+$ <strong>echo $PATH</strong></pre>
+
+<p>To add a directory (e.g., <code>/usr/local/mysql/bin</code>) to the existing <code>PATH</code> (referenced as <code>$PATH</code>) permanently, you can add the following line <em>at the end</em> of the <code>.bashrc</code> (or <code>.bash_profile</code>) of the home directory of the user; or <code>/etc/profile</code> for all users.</p>
+
+<pre class="color-command">
+<strong>export PATH=/usr/local/mysql/bin:$PATH</strong></pre>
+
+<p>The directories are separated by colon (<code>:</code>) as shown in the above example.</p>
+<p>In Bash Shell, the current directory is NOT searched, unless it is included in the <code>PATH</code>. As a result, you have to enter &quot;<code>./programName</code>&quot; to run program stored in the current directory (the '<code>.</code>' denotes the current directory). It is recommended to include the current directory in the <code>PATH</code> by adding this line <em>at the end</em> of the <code>.bashrc</code> or <code>.bash_profile</code> of your home directory; or <code>/etc/profile</code> for all users.</p>
+<pre class="color-command">
+<strong>export PATH=.:$PATH</strong></pre>
+
+<h4 id="classpath"><span class="font-code">CLASSPATH</span></h4>
+
+<h5>Java Archive (JAR) File</h5>
+
+<p>For ease of distribution, Java classes are often archived (zipped) together into a so-called JAR file. To use a third-party Java package, you need to place the distributed JAR file in a location that is available to the Java Compiler and Java Runtime.</p>
+
+<h5>How Classes are Found?</h5>
+
+<p>Java Compiler (&quot;<code>javac</code>&quot;), Java Runtime (&quot;<code>java</code>&quot;) and other Java tools searches for classes used in your program in this order:</p>
+
+<ol>
+<li>Java platform (bootstrap) classes: include system classes in core packages (<code>java.*</code>) and extension packages (<code>javax.*</code>) in &quot;<code>rt.jar</code>&quot; (runtime class), &quot;<code>i18n.jar</code>&quot; (internationalization class), <code>charsets.jar</code>, <code>jre/classes</code>, and others.</li>
+
+<li>Java Extension Directories: You can copy the external JAR files into Java Extension Directory.
+
+  <ul>
+<li>For Windows, the Java Extension Directory is located at &quot;<code>&lt;JAVA_HOME&gt;\jre\lib\ext</code>&quot; (e.g., &quot;<code>c:\Program Files\Java\jdk1.7.0_{xx}\jre\lib\ext</code>&quot;).</li>
+<li>For Mac, the JDK extension directories are &quot;<code>/Library/Java/Extensions</code>&quot; and &quot;<code>/System/Library/Java/Extensions</code>&quot;.</li>
+<li>For Ubuntu, the JDK extension directories are &quot;<code>&lt;JAVA_HOME&gt;/jre/lib/ext</code>&quot; (e.g., &quot;<code>/usr/user/java/jdk1.7.0_{xx}/jre/lib/ext</code>&quot;) and &quot;<code>/usr/java/packages/lib/ext</code>&quot;.</li>
+</ul>
+
+The location of Java's Extension Directories is kept in Java's System Property &quot;<code>java.ext.dirs</code>&quot;. You can print its contents via <code>System.out.println(System.getProperty(&quot;java.ext.dirs&quot;))</code>.</li>
+
+<li>User classes search path (in short, class path): determined in the following order:
+
+  <ol>
+<li>Defaulted to the current working directory (<code>.</code>).</li>
+<li>Entries in the  <code>CLASSPATH</code> environment variable, which overrides the default.</li>
+<li>Entries in the <code>-cp</code> (or <code>-classpath</code>) command-line option, which overrides the <code>CLASSPATH</code> environment variable.</li>
+<li>The runtime command-line option <code>-jar</code>, which override all the above.</li>
+  </ol>
+
+The user class paths are kept in Java System property &quot;<code>java.class.path</code>&quot;.<br />
+
+It is recommended that you use the <code>-cp</code> (or <code>-classpath</code>) command-line option (customized for each of your applications), instead of setting a permanent <code>CLASSPATH</code> environment for all the Java applications. IDE (such as Eclipse/NetBeans) manages <code>-cp</code> (<code>-classpath</code>) for each of the applications and does not rely on the <code>CLASSPATH</code> environment.</li>
+</ol>
+
+<h5>Cannot Find Classes</h5>
+
+<p>If the Java Runtime (&quot;<code>java</code>&quot;) cannot find the classes used in your program in all the above places, it will issue error &quot;Could not find or load main class xxxx&quot; (JDK 1.7) or &quot;java.lang.NoClassDefFoundError&quot; (Prior to JDK 1.7).</p>
+
+<p>Similarly, Java Compiler (&quot;<code>javac</code>&quot;) will issue compilation errors such as &quot;cannot find symbol&quot;, &quot;package does not exist&quot;.</p>
+
+<div class="side-note">
+<p><span class="line-heading">Notes</span>: External native libraries (&quot;<code>.lib</code>&quot;, &quot;<code>.dll</code>&quot;, &quot;<code>.a</code>&quot;, &quot;<code>.so</code>&quot;) are to be found in a path in JRE's  Property &quot;<code>java.library.path</code>&quot;, which  <em>normally but not necessarily</em> includes all the directories in the <code>PATH</code> environment variable. Otherwise, you will get a runtime error &quot;<code>java.lang.UnsatisfiedLinkError: no <em>xxx</em> in java.library.path</code>&quot;.</p>
+</div>
+
+<h5><span class="font-code">CLASSPATH</span> Environment Variable</h5>
+
+<p>The <code>CLASSPATH</code> environment variable could include directories (containing many class files) and JAR files (a single-file archive of class files). If <code>CLASSPATH</code> is not set, it is defaulted to the current directory. If you set the <code>CLASSPATH</code>, it is important to include the current working directory (<code>.</code>). Otherwise, the current directory will not be searched. </p>
+<p>A common problem in running hello-world program is: <code>CLASSPATH</code> is set but does not include the current working directory. The current directory is therefore not searched, which results in &quot;Error: Could not find or load main class Hello&quot;. You can simply remove the <code>CLASSPATH</code>, and leave the class path defaulted to the current directory.</p>
+
+<p>For a beginner, no explicit <code>CLASSPATH</code> setting is required.  The default <code>CLASSPATH</code> setting of current directory is sufficient.  Remove all <code>CLASSPATH</code> setting if there is any.  However, if you have to set <code>CLASSPATH</code>, make sure that you include the current directory <code>'.'</code>.</p>
+
+<p>The <code>PATH</code> environment variable (for searching the executable programs) is applicable to all applications; while <code>CLASSPATH</code> is used by Java only.</p>
+
+<p> Read JDK documents &quot;Setting the <code>CLASSPATH</code>&quot; and &quot;How Classes are Found&quot; (you can find the hyperlinks from the index page of the JDK documentation, or googling).</p>
+
+<h5 id="classpath_windows"><span class="font-code">CLASSPATH</span> Environment Variable (For Windows)</h5>
+
+<p>The <code>CLASSPATH</code> accepts directories and jar-files.  Path entries are  separated by semi-colon (<code>;</code>).</p>
+
+<p>Example: Displaying and changing <code>CLASSPATH</code> for the current CMD session.</p>
+
+<pre class="color-example">
+<span class="color-comment">// Display current setting of CLASSPATH</span>
+prompt&gt; <strong>set CLASSPATH</strong>
+ 
+<span class="color-comment">// Unset (remove) CLASSPATH</span>
+prompt&gt; <strong>set CLASSPATH=</strong>
+   
+<span class="color-comment">// Set CLASSPATH to the current directory '.'</span>
+prompt&gt; <strong>set CLASSPATH=.</strong>
+ 
+<span class="color-comment">// Set CLASSPATH to the current directory and a JAR file</span>
+prompt&gt; <strong>set CLASSPATH=.;d:\tomcat\lib\servlet-api.jar</strong></pre>
+
+<p>You can set the <code>CLASSPATH</code> <em>permanently</em> via &quot;Control Panel&quot; &rArr; &quot;System&quot;&rArr; (Vista/7/8) &quot;Advanced system settings&quot; &rArr; Switch to &quot;Advanced&quot; tab &rArr; &quot;Environment variables&quot; &rArr; Choose &quot;System Variables&quot; (for all users) or &quot;User Variables&quot; (for this login user only):</p>
+<ul>
+<li>To modify the existing <code>CLASSPATH</code>, select variable &quot;<code>CLASSPATH</code>&quot; and Choose &quot;Edit&quot; &rArr; In variable &quot;Value&quot;, provide the directories and jar-files, separated by semi-colon <code>';'</code>. Make sure that the current directory <code>'.'</code> is included as the first entry.</li>
+<li>To create <code>CLASSPATH</code> &rArr; Choose &quot;New&quot; &rArr; In variable &quot;Name&quot;, enter &quot;<code>CLASSPATH</code>&quot; &rArr; In variable &quot;Value&quot;, provide the directories and jar-files, separated by semi-colon <code>';'</code>. Make sure that the current directory <code>'.'</code> is included as the first entry.</li>
+</ul>
+
+<h5><span class="font-code">CLASSPATH</span> (for Mac and Ubuntu)</h5>
+
+<ol>
+<li>To set the <code>CLASSPATH</code> for the current session, issue this command:
+<pre class="color-command">
+export CLASSPATH=.:/usr/local/tomcat/bin/servlet-api.jar
+</pre>
+
+Use colon '<code>:</code>' as the path separator (instead of semi-colon '<code>;</code>' in Windows).</li>
+<li>To set the <code>CLASSPATH</code> permanently, place the above export command in the bash shell initialization script (<code>.bashrc</code> or <code>.bash_profile</code> of the home directory or <code>/etc/profile</code> for all users).</li>
+</ol>
+
+<h4 id="javahome">JAVA_HOME and JRE_HOME</h4>
+
+<p>Set <code>JAVA_HOME</code> to your JDK installation directory (e.g., &quot;<code>c:\Program Files\java\jdk1.7.0_{<em>xx</em>}</code>&quot;). <code>JAVA_HOME</code>  is needed for running Tomcat and many other Java applications.</p>
+
+<p>You can optionally set <code>JRE_HOME</code> to the JRE base directory (e.g., &quot;<code>c:\Program Files\java\jre7</code>&quot;).</p>
+
+<p>Read the above section on how to set or change environment variable (in Windows, Mac and Unixes).</p>
+
+<h3>Notes: Windows vs. Unixes (Mac OS/Ubuntu)</h3>
+
+<p>Java is platform independent. Java classes run in Windows as well as Unixes - binary compatible.</p>
+
+<ul>
+<li>Unixes have many shells, such as the newer <code>bash</code> and the older <code>csh</code>, <code>ksh</code>. Windows have two shells: the newer <code>cmd.exe</code> and the older <code>command.com</code>. Each shell come with its own set of commands, utilities, and its own scripting programming language.</li>
+
+<li>Unix's  variable name is denoted as <code>$<em>varname</em></code>, e.g., <code>$CLASSPATH</code>. Windows uses <code>%<em>varname</em>%</code>, e,g., <code>%CLASSPATH%</code>.</li>
+
+<li>Unix uses command &quot;<code>printenv</code>&quot; (print environment) or &quot;<code>env</code>&quot; to list all the environment variables. Windows uses command &quot;<code>set</code>&quot;.</li>
+
+<li>Unix's <code>PATH</code> is set permanently in the login or shell initialization  script (e.g., &quot;<code>~/.login</code>&quot;, &quot;<code>~/.profile</code>&quot;, &quot;<code>~/.bashrc</code>&quot;, &quot;<code>~/.bash_profile</code>&quot;, or &quot;<code>/etc/profile</code>&quot;). Windows' <code>PATH</code> is set permanently via Control Panel &rArr; System &rArr; .... </li> 
+
+<li>The current directory is NOT included in the Unix's <code>PATH</code> implicitly. To run a program in the current directory, you need to issue &quot;<code>./programName</code>&quot; where &quot;<code>.</code>&quot; denotes the current directory. It is recommended to include the current directory (<code>.</code>) in the <code>PATH</code> explicitly. On the other hand, current directory is included in Windows' <code>PATH</code> implicitly.</li>
+
+<li>A Windows' path includes a drive letter and directories. Each drive has a root directory. It uses back-slash <code>'\'</code> as directory separator (e.g., &quot;<code>c:\jdk1.6\bin</code>&quot;). Linux's paths do not have drive letter. There is a single root. Unix uses forward slash <code>'/'</code> as the directory separator (e.g., &quot;<code>/usr/bin/jdk1.6</code>&quot;).</li>
+
+<li>Windows use semi-colon <code>';'</code> as path separator (e.g., in <code>PATH</code> environment variable), while Unix uses colon <code>':'</code>.</li>
+
+<li>Windows/DOS uses &quot;<code>0D0AH</code>&quot; (carriage-return plus line-feed) as line-break (or End-of-Line (EOL)). Unix uses &quot;<code>0AH</code>&quot; (line-feed) only. Mac uses &quot;<code>0DH</code>&quot; up to OS 9 and &quot;<code>0AH</code>&quot; from OS X.</li>
+</ul>
+
+</div> 
+
+<!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Last modified: April, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

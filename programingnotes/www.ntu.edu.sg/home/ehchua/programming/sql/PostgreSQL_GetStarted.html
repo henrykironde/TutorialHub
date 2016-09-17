@@ -1,0 +1,862 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>PostgreSQL Getting Started</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Getting Started with PostgreSQL</h1>
+</div>
+
+<div id="content-main">
+
+<p>I assume that you are familiar with SQL commands (such as CREATE TABLE, DROP TABLE, INSERT, SELECT, UPDATE and DELETE). Otherwise, read ...</p>
+
+<h3>Introduction</h3>
+
+<p>PostgreSQL is an open-source Object-Relational Database Management System (ORDBMS). It supports a large part of the SQL standards such as foreign keys, triggers, views and transactions; and object-oriented features such as inheritance.</p>
+
+<p>The project started in UC Berkeley in 1986, and is now developed by a group of volunteers called &quot;PostgreSQL Global Development Group&quot;.</p>
+
+<p>The mother site for PostgreSQL is <a href="http://www.postgresql.org/">http://www.postgresql.org</a>; with manual @ <a href="http://www.postgresql.org/docs/manuals/">http://www.postgresql.org/docs/manuals/</a>.</p>
+
+<h3>Installing PostgreSQL</h3>
+
+<p>In Ubuntu:</p>
+
+<pre class="color-command">
+<span class="color-comment">// Refresh the apt-get repository</span>
+$ <strong>sudo apt-get update</strong>
+<span class="color-comment">// Install PostgreSQL</span>
+$ <strong>sudo apt-get install postgresql postgresql-contrib</strong>
+
+<span class="color-comment">// Verify the installation</span>
+$ <strong>dpkg --status postgresql</strong>
+Package: postgresql
+Status: install ok installed
+Source: postgresql-common (154ubuntu1)
+Version: 9.3+154ubuntu1
+Depends: postgresql-9.3
+$ <strong>whereis postgresql</strong>
+postgresql: /etc/postgresql /usr/lib/postgresql /usr/share/postgresql ...
+$ <strong>which psql</strong>     <span class="color-comment">// psql is an interactive PostgreSQL client</span>
+/usr/bin/psql
+$ <strong>ll /usr/bin/psql</strong>
+lrwxrwxrwx 1 root root 37 Feb 18  2015 /usr/bin/psql -> ../share/postgresql-common/pg_wrapper*</pre>
+
+<p>The following packages will be installed:</p>
+<ul>
+<li>postgresql, postgresql-common, postgresql-9.3: Core database server.</li>
+<li>postgresql-client-common, postgresql-client-9.3: Client binaries and libraries.</li>
+<li>postgresql-contrib-9.3: Additional supplied modules.</li>
+</ul>
+
+<p>You can also choose the PostgreSQL version, e.g., &quot;<code>apt-get install postgresql-9.4</code>&quot;, and install additional packages such as <code>pgadmin3</code> (pgAdmin III graphical administration utility).</p>
+
+<h5>PostgreSQL Configuration Files</h5>
+<p>The PostgreSQL configuration files are stored in directory <code>/etc/postgresql/9.x/main</code> (for Ubuntu). The main configuration file is called &quot;<code>postgresql.conf</code>&quot;.</p>
+
+<pre class="color-example">
+$ <strong>less /etc/postgresql/9.3/main/postgresql.conf</strong> 
+......
+data_directory = '/var/lib/postgresql/9.3/main'
+hba_file = '/etc/postgresql/9.3/main/pg_hba.conf'     <span class="color-comment"># host-based authentication file</span>
+ident_file = '/etc/postgresql/9.3/main/pg_ident.conf' <span class="color-comment"># ident configuration file</span>
+#listen_addresses = 'localhost'   <span class="color-comment"># what IP address(es) to listen on;
+                                  # comma-separated list of addresses;
+                                  # defaults to 'localhost', '*' = all</span>
+port = 5432
+max_connections = 100
+......</pre>
+
+<p>Notes:</p>
+<ul>
+<li><code>data_directory</code> directive specifies where the databases are stored.</li>
+<li><code>hba_file</code> directive specifies the host-based authentication file.</li>
+<li><code>ident_file</code> directive specifies the ident authentication file.</li>
+<li>The <code>port</code> directive specifies the TCP port number. The default is 5432.</li>
+</ul>
+
+<h3>Getting Started</h3>
+
+<p>Reference: PostgreSQL Documentation - Tutorial @ <a href="http://www.postgresql.org/docs/9.1/static/tutorial.html">http://www.postgresql.org/docs/9.1/static/tutorial.html</a>.</p>
+
+<h4>PostgreSQL Client-Server System</h4>
+
+<p>PostgreSQL runs as a client-server system.</p>
+<p>[TODO] more explanation.</p>
+
+<h5>PostgreSQL Server</h5>
+
+<p>In Ubuntu, the server is run as a <em>service</em> called <code>postgresql</code> (configured in <code>/etc/init.d/postgresql</code>). The <code>postgresql</code> service is started automatically upon startup. Like all other services, you could:</p>
+
+<pre class="color-command">
+$ <strong>sudo service postgresql stop</strong>     <span class="color-comment">// Stop the service</span>
+$ <strong>sudo service postgresql start</strong>    <span class="color-comment">// Start the service</span>
+$ <strong>sudo service postgresql restart</strong>  <span class="color-comment">// Stop and restart the service</span>
+$ <strong>sudo service postgresql reload</strong>   <span class="color-comment">// Reload the configuration without stopping the service</span></pre>
+
+<p>The PostgreSQL server accepts connection by client program over the TCP/IP network. The default TCP port number is 5432.</p>
+
+<p>The PostgreSQL server program is called <code>postgres</code> (in directory <code>/usr/lib/postgresql/9.1/bin</code>). There is also a symlink called <code>postmaster</code> in the same directory. You could display the PostgreSQL server process via:</p>
+
+<pre class="color-command">
+$ <strong>ps aux | grep postgres</strong>
+postgres  7136  0.0  0.2 134068  9608 ?        S    Dec13   0:01 
+/usr/lib/postgresql/9.1/bin/postgres -D /var/lib/postgresql/9.1/main 
+-c config_file=/etc/postgresql/9.1/main/postgresql.conf
+......
+</pre>
+
+<h5>Command-line Client Program &quot;<code>psql</code>&quot;</h5>
+
+<p>The PostgreSQL installation provides a command-line client program called <code>psql</code>, which can be used to login to the server.</p>
+
+<pre class="color-command">
+$ <strong>which psql</strong>
+/usr/bin/psql
+$ <strong>ll /usr/bin/psql</strong>
+lrwxrwxrwx 1 root root 37 Feb 18  2015 /usr/bin/psql -> ../share/postgresql-common/pg_wrapper*</pre>
+
+<p><code>psql</code> is a symlink located in <code>/usr/bin</code> (a PATH entry). The actual program and utilities are located at <code>/usr/lib/postgresql/9.3/bin</code> and linked via <code>pg_wrapper</code>.</p>
+
+<h5>Utilities <code>createdb</code>, <code>createuser</code></h5>
+
+<p>The directory <code>/usr/lib/postgresql/9.3/bin</code> also contains many utilities such as <code>createdb</code> (create database), <code>dropdb</code> (drop database), <code>createuser</code> (create PostgreSQL user), <code>dropuser</code> (drop PostgreSQL user), among others, with symlinks defined in <code>/usr/bin</code>.</p>
+
+<pre class="color-command">
+$ <strong>ll /usr/bin/create*</strong>
+lrwxrwxrwx 1 root root 37 Feb 18  2015 /usr/bin/createdb -> ../share/postgresql-common/pg_wrapper*
+lrwxrwxrwx 1 root root 37 Feb 18  2015 /usr/bin/createuser -> ../share/postgresql-common/pg_wrapper*</pre>
+
+<h5>Graphical Clients</h5>
+
+<p>Besides the command-line client <code>psql</code>, many graphical clients are available to access PostgreSQL, e.g., pgAdmin 3, PhpPgAdmin (for PHP, model after PhpMyAdmin), etc. I will describe these tools in later sections.</p>
+
+<h4>Login to the PostgreSQL Server</h4>
+
+<h5>Default PostgreSQL User &quot;<code>postgres</code>&quot;</h5>
+
+<p>The PostgreSQL installation creates a UNIX user called <code>postgres</code>, who is also the default PostgreSQL superuser. The UNIX user <code>postgres</code> (in Ubuntu) cannot login interactively, as its password is not enabled.</p>
+
+<h5>Login with User &quot;<code>postgres</code>&quot; via &quot;<code>psql</code>&quot; Client</h5>
+
+<p>To run <code>psql</code> using UNIX user <code>postgres</code>, you need to invoke &quot;<code>sudo -u postgres psql</code>&quot;, which switches to user <code>postgres</code> and run the <code>psql</code> command.</p>
+
+<pre class="color-command">
+$ <strong>sudo -u postgres psql</strong>
+   <span class="color-comment">-- Run command &quot;psql&quot; as UNIX user &quot;postgres&quot;.
+   -- Enter the CURRENT USER password for sudo.</span>
+psql (9.1.11)
+Type &quot;help&quot; for help.
+
+postgres=# <strong>help</strong> 
+You are using psql, the command-line interface to PostgreSQL.
+Type:  \copyright for distribution terms
+       \h for help with SQL commands
+       \? for help with psql commands
+       \g or terminate with semicolon to execute query
+       \q to quit
+
+<span class="color-comment">-- Display version</span>
+postgres=# <strong>SELECT version();</strong>
+     version                                                   
+---------------------------------------------------
+ PostgreSQL 9.1.11 on x86_64-unknown-linux-gnu, ...
+<strong>press q to quit display</strong>
+
+<span class="color-comment">-- Quit</span>
+postgres=# <strong>\q</strong></pre>
+
+<p>Notes:</p>
+
+<ul>
+<li>The PostgreSQL's prompt is in the format of <code><em>databaseName</em>=#</code> for superuser or <code><em>databaseName</em>=&gt;</code> for regular user. In this case, the current database is also called <code>postgres</code>, which is the same as the username.</li>
+<li>Type &quot;help&quot; to see the help menu.</li>
+<li>Type <code>\q</code> to quit.</li>
+<li>Type <code>\?</code> to see all the psql commands.</li>
+<li>You need to end a SQL statement with a semicolon (<code>;</code>) or <code>\g</code> (for GO) to execute the statement. For example, in &quot;<code>SELECT version();</code>&quot;.</li>
+<li>Comments: In a SQL script or command, an end-of-line begins with <code>--</code>; a block comment is enclosed by <code>/*</code> and <code>*/</code></li>
+</ul>
+
+<h4>Create Database, Create Table, CURD (Create-Update-Read-Delete) Records</h4>
+
+<pre class="color-command">
+<span class="color-comment">-- Login to server</span>
+$ <strong>sudo -u postgres psql</strong>
+......
+
+<span class="color-comment">-- List all databases via \l (or \list), or \l+ for more details</span>
+postgres=# <strong>\l</strong>
+......
+ 
+<span class="color-comment">-- Help on SQL command syntax</span>
+postgres=# <strong>\h CREATE DATABASE</strong>
+......
+ 
+<span class="color-comment">-- Create a new database called mytest</span>
+postgres=# <strong>CREATE DATABASE mytest;</strong>
+CREATE DATABASE
+   <span class="color-comment">-- By default, the owner of the database is the current login user.</span>
+ 
+<span class="color-comment">-- List all databases via \l (or \list), or \l+ for more details</span>
+postgres=# <strong>\l</strong>
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ mytest    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+   <span class="color-comment">-- By default, CREATE DATABASE copies the &quot;template1&quot;, which you could customize.
+   -- &quot;template0&quot; has the same contents as &quot;template1&quot;, but you should not change.</span>
+ 
+<span class="color-comment">-- Connect to mytest database via \c (or \connect)
+-- Take note of the change of database name in the command prompt.</span>
+postgres=# <strong>\c mytest</strong> 
+You are now connected to database "mytest" as user "postgres".
+
+<span class="color-comment">-- Display all tables (aka relations) via \dt or \dt+ for more details</span>
+mytest=# <strong>\dt</strong>
+No relations found.
+ 
+<span class="color-comment">-- We will be using an enumeration (TYPE) in our table, let's define it.</span>
+mytest=# <strong>CREATE TYPE cat_enum AS ENUM ('coffee', 'tea');</strong>
+CREATE TYPE
+
+<span class="color-comment">-- Display all types via /dT or /dT+ for more details.</span>
+mytest=# <strong>\dT+</strong>
+                        List of data types
+ Schema |   Name   | Internal name | Size | Elements | Description 
+--------+----------+---------------+------+----------+-------------
+ public | cat_enum | cat_enum      | 4    | coffee  +| 
+        |          |               |      | tea      | 
+ 
+<span class="color-comment">-- Create a new table.</span>
+mytest=# <strong>CREATE TABLE IF NOT EXISTS cafe (
+  id SERIAL PRIMARY KEY,</strong>        <span class="color-comment">-- AUTO_INCREMENT integer, as primary key</span>
+  <strong>category cat_enum NOT NULL,</strong>   <span class="color-comment">-- Use the enum type defined earlier</span>
+  <strong>name VARCHAR(50) NOT NULL,</strong>    <span class="color-comment">-- Variable-length string of up to 50 characters</span>
+  <strong>price NUMERIC(5,2) NOT NULL,</strong>  <span class="color-comment">-- 5 digits total, with 2 decimal places</span>
+  <strong>last_update DATE</strong>              <span class="color-comment">-- 'YYYY-MM-DD'</span>
+<strong>);</strong>
+NOTICE:  CREATE TABLE will create implicit sequence "cafe_id_seq" for serial column "cafe.id"
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "cafe_pkey" for table "cafe"
+CREATE TABLE
+ 
+<span class="color-comment">-- Display all tables in the current database, via \dt or \dt+ for more details</span>
+mytest-# <strong>\dt+</strong>
+                    List of relations
+ Schema | Name | Type  |  Owner   |  Size   | Description 
+--------+------+-------+----------+---------+-------------
+ public | cafe | table | postgres | 0 bytes | 
+
+<span class="color-comment">-- Display details of a particular table.</span>
+mytest-# <strong>\d+ cafe</strong>
+                                               Table "public.cafe"
+   Column    |         Type          |                     Modifiers                     | Storage  | Description 
+-------------+-----------------------+---------------------------------------------------+----------+-------------
+ id          | integer               | not null default nextval('cafe_id_seq'::regclass) | plain    | 
+ category    | cat_enum              | not null                                          | plain    | 
+ name        | character varying(50) | not null                                          | extended | 
+ price       | numeric(5,2)          | not null                                          | main     | 
+ last_update | date                  |                                                   | plain    | 
+Indexes:
+    "cafe_pkey" PRIMARY KEY, btree (id)
+Has OIDs: no
+
+<span class="color-comment">-- Insert rows.</span>
+mytest-# <strong>INSERT INTO cafe (category, name, price) VALUES
+  ('coffee', 'Espresso', 3.19),
+  ('coffee', 'Cappuccino', 3.29),
+  ('coffee', 'Caffe Latte', 3.39),
+  ('coffee', 'Caffe Mocha', 3.49),
+  ('coffee', 'Brewed Coffee', 3.59),
+  ('tea', 'Green Tea', 2.99),
+  ('tea', 'Wulong Tea', 2.89);</strong>
+INSERT 0 7
+<span class="color-comment">-- The output shows the OID (Object Identification Number) and the rows affected.
+-- Each row has an hidden OID. OID is not a standard SQL feature and not recommended.</span>
+   
+<span class="color-comment">-- Query (SELECT)</span>
+mytest=# <strong>SELECT * FROM cafe;</strong>
+ id | category |     name      | price | last_update 
+----+----------+---------------+-------+-------------
+  1 | coffee   | Espresso      |  3.19 | 2013-12-14
+  2 | coffee   | Cappuccino    |  3.29 | 2013-12-14
+  3 | coffee   | Caffe Latte   |  3.39 | 2013-12-14
+  4 | coffee   | Caffe Mocha   |  3.49 | 2013-12-14
+  5 | coffee   | Brewed Coffee |  3.59 | 2013-12-14
+  6 | tea      | Green Tea     |  2.99 | 2013-12-14
+  7 | tea      | Wulong Tea    |  2.89 | 2013-12-14
+(7 rows)
+
+mytest=# <strong>SELECT name, price FROM cafe WHERE category = 'coffee' AND price &lt; 3.3;</strong> 
+    name    | price 
+------------+-------
+ Espresso   |  3.19
+ Cappuccino |  3.29
+(2 rows)
+
+<span class="color-comment">-- Update</span>
+mytest=# <strong>UPDATE cafe SET price = price * 1.1 WHERE category = 'tea';</strong>
+UPDATE 2
+ 
+mytest=# <strong>SELECT * FROM cafe WHERE category = 'tea';</strong>
+ id | category |    name    | price | last_update 
+----+----------+------------+-------+-------------
+  6 | tea      | Green Tea  |  3.29 | 2013-12-14
+  7 | tea      | Wulong Tea |  3.18 | 2013-12-14
+(2 rows)
+
+<span class="color-comment">-- Delete</span>
+mytest=# <strong>DELETE FROM cafe WHERE id = 6;</strong>
+DELETE 1
+ 
+mytest=# <strong>SELECT * FROM cafe WHERE category = 'tea';</strong>
+ id | category |    name    | price | last_update 
+----+----------+------------+-------+-------------
+  7 | tea      | Wulong Tea |  3.18 | 2013-12-14
+(1 row)
+
+<span class="color-comment">-- Quit</span>
+mytest=# <strong>\q</strong></pre>
+
+<p>Notes:</p>
+
+<ul>
+<li>Take note that there are two sets of commands:
+<ul>
+<li><code>psql</code> commands: such as <code>\c</code>, <code>\l</code>, <code>\dt</code>.</li>
+<li>SQL commands: such as CREATE DATABASE, CREATE TABLE and SELECT. SQL command KEYWORDS are not case sensitive. I show them in uppercase for clarity. PostgreSQL automatically converts all names (identifiers) to lowercase (even you type in uppercase or mixed case). To use uppercase or mixed case, you need to double-quote the names.</li>
+</ul></li>
+
+<li>You need to end your SQL commands with a semi-colon (<code>;</code>) or <code>\g</code>. If you forget to enter a semi-colon, the command-prompt changes to <code>dbname-#</code> to signal continuation (A SQL command can span many lines). You can enter the semi-colon on the new line.</li>
+</ul>
+
+<h5>More on <code>psql</code> commands</h5>
+
+<ul>
+<li><strong><code>\?</code></strong>: show all psql commands.</li>
+<li><strong><code>\h sql-command</code></strong>: show syntax on SQL command.</li>
+<li><strong><code>\c dbname [username]</code></strong>: Connect to database, with an optional username (aka <code>\connect</code>).</li>
+<li>Display Commands: You can append <code>+</code> to show more details.
+<ul>
+<li><strong><code>\l</code></strong>: List all database (aka <code>\list</code>).</li>
+<li><strong><code>\d</code></strong>: Display all tables, indexes, views, and sequences.</li>
+<li><strong><code>\dt</code></strong>: Display all tables.</li>
+<li><strong><code>\di</code></strong>: Display all indexes.</li>
+<li><strong><code>\dv</code></strong>: Display all views.</li>
+<li><strong><code>\ds</code></strong>: Display all sequences.</li>
+<li><strong><code>\dT</code></strong>: Display all types.</li>
+<li><strong><code>\dS</code></strong>: Display all system tables.</li>
+</ul></li>
+
+<li><strong><code>\x auto|on|off</code></strong>: Toggle|On|Off expanded output mode.</li>
+</ul>
+
+<h5>More on SQL commands</h5>
+
+<p>See ....</p>
+
+
+<h4>Using Utility &quot;<code>createuser</code>&quot; and &quot;<code>createdb</code>&quot;</h4>
+
+<p>As an example, let's create a PostgreSQL user called <code>testuser</code>, and a new database called <code>testdb</code> (owned by <code>testuser</code>).</p>
+
+<pre class="color-command">
+<span class="color-comment"># Create a new PostgreSQL user called testuser, allow user to login, but NOT creating databases</span>
+$ <strong>sudo -u postgres createuser --login --pwprompt testuser</strong>
+Enter password for new role: ......
+
+<span class="color-comment"># Create a new database called testdb, owned by testuser.</span>
+$ <strong>sudo -u postgres createdb --owner=testuser testdb</strong></pre>
+
+<p>Tailor the PostgreSQL configuration file <code>/etc/postgresql/9.3/main/pg_hba.conf</code> to allow non-default user <code>testuser</code> to login to PostgreSQL server, by adding the following entry:</p>
+
+<pre class="color-command">
+<span class="color-comment"># TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD</span>
+local   testdb      testuser                          md5</pre>
+
+<p>Restart PostgreSQL server:</p>
+<pre class="color-command">
+$ <strong>sudo service postgresql restart</strong></pre>
+
+<p>Login to PostgreSQL server:</p>
+
+<pre class="color-command">
+<span class="color-comment"># Login to PostgreSQL: psql -U user database</span>
+$ <strong>psql -U testuser testdb</strong>
+Password for user testuser: ......
+psql (9.3.10)
+Type "help" for help.
+
+<span class="color-comment"># List all databases</span>
+testdb=&gt;<strong>\list</strong>
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ testdb    | testuser | UTF8     | en_SG.UTF-8 | en_SG.UTF-8 |
+......
+
+<span class="color-comment"># Create table</span>
+testdb=&gt; <strong>create table if not exists cafe (</strong>
+testdb(&gt;   <strong>name varchar(50),</strong>
+testdb(&gt;   <strong>price numeric(5,2),</strong>
+testdb(&gt;   <strong>primary key (name));</strong>
+CREATE TABLE
+
+<span class="color-comment"># Insert rows</span>
+testdb=&gt; <strong>insert into cafe values</strong>
+testdb-&gt;   <strong>('Espresso', 3.99),</strong>
+testdb-&gt;   <strong>('Green Tea', 2.99);</strong>
+INSERT 0 2
+
+<span class="color-comment"># Select query</span>
+testdb=&gt; <strong>select * from cafe;</strong>
+   name    | price 
+-----------+-------
+ Espresso  |  3.99
+ Green Tea |  2.99
+(2 rows)
+
+testdb=&gt; <strong>\q</strong></pre>
+
+<p>You can also use other utilities like <code>dropuser</code>, <code>dropdb</code>, and etc.</p>
+
+<h4>Commonly-used SQL Data Types</h4>
+
+<p>As illustrated in the above example, the commonly-used SQL data types in PostgreSQL are:</p>
+<ol>
+<li><code>INT</code>, <code>SMALLINT</code>: whole number. There is no UNSIGNED attribute in PostgreSQL.</li>
+<li><code>SERIAL</code>: auto-increment integer (<code>AUTO_INCREMENT</code> in MySQL).</li>
+<li><code>REAL</code>, <code>DOUBLE</code>: single and double precision floating-point number.</li>
+<li><code>CHAR(n)</code> and <code>VARCHAR(n)</code>: fixed-length string of n characters and variable-length string of up to n characters. String literals are enclosed by single quotes, e.g., 'Peter', 'Hello, world'.</li>
+<li><code>NUMERIC(m,n)</code>: decimal number with m total digits and n decimal places (<code>DECIMAL(m,n)</code> in MySQL).</li>
+<li><code>DATE</code>, <code>TIME</code>, <code>TIMESTAMP</code>, <code>INTERVAL</code>: date and time.</li>
+<li>User-defined types.</li>
+<li><code>NULL</code>: A special value indicates <em>unknown value</em> or <em>no value</em> (of an optional field), which is different from 0 and empty string (that represent known value of 0 and empty string). To test for NULL value, use operator <code>IS NULL</code> or <code>IS NOT NULL</code> (e.g., <code>email IS NULL</code>). Comparing two <code>NULL</code>s with <code>=</code> or <code>!=</code> results in unknown.</li>
+</ol>
+
+<h3>PostgreSQL Administration</h3>
+
+<h4>Default Superuser &quot;<code>postgres</code>&quot;</h4>
+
+<p>During installation, a UNIX system user (who cannot login interactively) called <code>postgres</code> is created. You can verify by checking the entry in <code>/etc/passwd</code> and <code>/etc/shadow</code>:</p>
+
+<pre class="color-example">
+$ <strong>sudo less /etc/passwd</strong>
+......
+postgres:x:120:130:PostgreSQL administrator,,,:/var/lib/postgresql:/bin/bash
+ 
+$ <strong>sudo less /etc/shadow</strong>
+......
+postgres:*:16049:0:99999:7:::  
+   <span class="color-comment">// * indicates that password is not enabled (this user cannot login interactively).</span></pre>
+
+<p>The user <code>postgres</code> belongs to the following groups:</p>
+<pre class="color-example">
+$ <strong>groups postgres</strong>
+postgres : postgres ssl-cert</pre>
+
+<p>An entry is also defined in PostgreSQL's HBA (Host-Based Authentication) configuration file for this user:</p>
+<pre class="color-example">
+$ <strong>sudo less /etc/postgresql/9.1/main/pg_hba.conf</strong>
+......
+<span class="color-comment"># TYPE  DATABASE        USER            ADDRESS                 METHOD</span>
+local   all             postgres                                peer
+   <span class="color-comment">// UNIX user &quot;postgres&quot; can access all databases from the localhost.
+   // The &quot;peer&quot; authentication method means that if &quot;foo&quot; is a UNIX user and &quot;foo&quot; is also an PostgreSQL user,
+   // then &quot;foo&quot; can login to PostgreSQL server from localhost without password.</span>
+ 
+<span class="color-comment"># "local" is for Unix domain socket connections only</span>
+local   all             all                                     peer
+<span class="color-comment"># IPv4 local connections:</span>
+host    all             all             127.0.0.1/32            md5
+<span class="color-comment"># IPv6 local connections:</span>
+host    all             all             ::1/128                 md5</pre>
+
+<h4>Authentication Methods</h4>
+
+<p>PostgreSQL supports many authentication methods. The commonly-used are:</p>
+
+<ul>
+<li><code>ident</code>, <code>peer</code>: identical (match) to the OS account, with an optional name mapping defined in <code>pg_ident.conf</code> file. <code>ident</code> is applicable to TCP/IP; while <code>peer</code> for &quot;local&quot; connection.</li>
+<li><code>md5</code>: require md5-hashed password (most common).</li>
+<li><code>password</code>: require clear-text password.</li>
+<li><code>trust</code>: no password, as long as meeting the IP, user, and database criteria defined in the HBA.</li>
+<li><code>reject</code>: reject login immediately.</li>
+<li>others, such as <code>GSSAPI</code>, <code>SSPI</code>, <code>Kerberos</code>, <code>LDAP</code>, <code>RADIUS</code>, <code>Certificate</code>, <code>PAM</code>.</li>
+</ul>
+
+<p>There are two ways to login PostgreSQL:</p>
+<ol>
+<li>By running the &quot;psql&quot; command as a UNIX user which is also configured as PostgreSQL user using so-called IDENT/PEER authentication, e.g., &quot;<code>sudo -u postgres psql</code>&quot;.</li>
+<li>Via TCP/IP connection using PostgreSQL's own managed username/password (using so-called MD5 authentication).</li>
+</ol>
+
+
+<h4>Set a Password for User <code>postgres</code></h4>
+
+<p>To set a password, login to PostgreSQL server using <code>postgres</code> via <code>psql</code> and issue command &quot;<code>\password <em>username</em>&quot;</code>, as follows:</p>
+
+<pre class="color-command">
+<span class="color-comment">-- Login in to server via &quot;psql&quot; with user &quot;postgres&quot;</span>
+$ <strong>sudo -u postgres psql</strong>
+......
+ 
+<span class="color-comment">-- Change password for current user &quot;postgres&quot;</span>
+postgres=# <strong>\password postgres</strong>
+Enter new password: xxxx
+Enter it again: xxxx
+  
+<span class="color-comment">-- Display the user table</span>
+postgres=# <strong>SELECT * FROM pg_user;</strong>
+ usename  | usesysid | usecreatedb | usesuper | usecatupd | userepl |  passwd  | valuntil | useconfig 
+----------+----------+-------------+----------+-----------+---------+----------+----------+-----------
+ postgres |       10 | t           | t        | t         | t       | ******** |          |
+ 
+<span class="color-comment">-- Quit</span>
+postgres=# <strong>\q</strong>$</pre>
+
+<p>To test the password login, you need to change the the authentication method from &quot;peer&quot; to &quot;md5&quot; in <code>pg_hba.conf</code>.</p>
+
+<h4>Add your UNIX username as PostgreSQL user</h4>
+
+<p>Using user &quot;<code>postgres</code>&quot; (which is a UNIX user as well as PostgreSQL user) to run &quot;<code>psql</code>&quot; involves switching user (via &quot;<code>sudo -u <em>username</em></code>&quot; or &quot;<code>su - <em>username</em></code>&quot;). You can simply the process by configuring your current UNIX userID as PostgreSQL user, as follows:</p>
+
+<pre class="color-command">
+<span class="color-comment">-- Switch to default superuser &quot;postgres&quot;,
+-- run utility &quot;createuser&quot; to create a superuser same name as current login.
+-- &quot;$USER&quot; is an environment variable denoting the current login user.</span>
+$ <strong>sudo -u postgres createuser --superuser $USER</strong>
+
+<span class="color-comment">-- Create the default database which shall be the same as the username.</span>
+$ <strong>sudo -u postgres createdb $USER</strong>
+
+<span class="color-comment">-- Now, you can invoke &quot;psql&quot; from your user account.</span>
+$ <strong>psql</strong>
+......
+yourname=# <strong>SELECT * FROM pg_user;</strong>
+ usename  | usesysid | usecreatedb | usesuper | usecatupd | userepl |  passwd  | valuntil | useconfig 
+----------+----------+-------------+----------+-----------+---------+----------+----------+-----------
+ yourname |    16424 | t           | t        | t         | t       | ******** |          |            
+ 
+<span class="color-comment">-- Perform database operations.</span>
+.......</pre>
+
+
+<h4>Create Group and User</h4>
+
+<p>The latest PostgreSQL treats both group and user as role. Some roles can login (i.e. user), some roles have member of other roles (i.e., group). You should use CREATE ROLE to create both users and groups (CREATE USER and CREATE GROUP are meant for compatibility).</p>
+
+<pre class="color-command">
+<span class="color-comment">-- Create a login user role</span>
+CREATE ROLE user1 LOGIN PASSWORD 'xxxx' CREATEDB VALID UNTIL 'infinity';
+
+<span class="color-comment">-- Create a login superuser role</span>
+CREATE ROLE user2 LOGIN PASSWORD 'xxxx' SUPERUSER VALID UNTIL '2019-12-31';
+
+<span class="color-comment">-- Create a group role</span>
+CREATE ROLE group1 INHERIT;
+<span class="color-comment">-- Add a user (or group) to this group</span>
+GRANT group1 TO user1;</pre>
+
+<h4>Backup and Restore</h4>
+
+<p>PostgreSQL provides two utilities for backup:</p>
+<ol>
+<li><code>pg_dump</code>: backup a specific database.</li>
+<li><code>pg_dumpall</code>: backup all databases and server globals. Need to be run by superuser.</li>
+</ol>
+
+<p>For example,</p>
+
+<pre class="color-command">
+<span class="color-comment">-- Create a compressed backup for a database</span>
+pg_dump -h localhost -p 5432 -U username -F c -b -v -f mydatabase.backup mydatabase
+
+<span class="color-comment">-- Create a plain-text backup for a database, including the CREATE DATABASE</span>
+pg_dump -h localhost -p 5432 -U username -C -F p -b -v -f mydatabase.backup.sql mydatabase</pre>
+
+<p>To restore a database from backup generated by <code>pg_dump</code> or <code>pg_dumpall</code>:</p>
+<ol>
+<li>Use &quot;<code>psql</code>&quot; to run the plain-text backup.
+<pre class="color-command">
+<span class="color-comment">-- Run SQL script</span>
+$ psql -U username -f filename.sql</pre>
+</li>
+<li>Use utility &quot;<code>pg_restore</code>&quot; to restore compressed backup.</li>
+</ol>
+
+<h3>Admin Tools</h3>
+
+<h4>pgAdmin 3</h4>
+
+<p>The mother site is <a href="http://www.pgadmin.org/">http://www.pgadmin.org</a>.</p>
+
+<p>To install pgAdmin 3 (on Ubuntu):</p>
+
+<pre class="color-command">
+$ sudo apt-get install pgadmin3</pre>
+
+<p>To launch: Run &quot;pgadmin3&quot; from terminal; or launch &quot;pgAdmin III&quot; form the dash. Push the &quot;Connection&quot; button. In &quot;Properties&quot; tab: enter a description in &quot;Name&quot;; &quot;localhost&quot; or &quot;127.0.0.1&quot; in Host; &quot;postgres&quot; in Username and its password.</p>
+
+<p>[TODO] more</p>
+
+<h3>PHP-PostgreSQL</h3>
+
+<h4>Install Driver</h4>
+
+<p>Install PDO PostgreSQL driver:</p>
+
+<pre class="color-command">
+$ sudo apt-get install php5-pgsql</pre>
+
+<h4>Example</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90</pre>
+</td>
+<td>
+<pre>
+&lt;?php
+<span class="color-comment">/**
+ * Testing PDO MySQL Database Connection, query() and exec().
+ * For CREATE TABLE, INSERT, DELETE, UPDATE:
+ *   exec(): returns the affected rows.
+ * For SELECT:
+ *   query(): returns a result set.
+ */</span>
+define('DB_HOST', 'localhost'); <span class="color-comment"> // MySQL server hostname</span>
+define('DB_PORT', '5432');      <span class="color-comment"> // MySQL server port number (default 3306)</span>
+define('DB_NAME', 'mytest');      <span class="color-comment"> // MySQL database name</span>
+define('DB_USER', 'postgres');  <span class="color-comment"> // MySQL username</span>
+define('DB_PASS', 'xxxx');      <span class="color-comment"> // password</span>
+ 
+<span class="color-comment">// Create a database connection to PostgreSQL server.</span>
+try {
+  <span class="color-comment"> // new PDO('pgsql:host=hostname;port=number;dbname=database;user=username;password=pw')</span>
+   $dbConn = new PDO('pgsql:host=' . DB_HOST . ';'
+                     . 'port=' . DB_PORT . ';'
+                     . 'dbname=' . DB_NAME . ';'
+                     . 'user=' . DB_USER . ';'
+                     . 'password=' . DB_PASS);
+   $dbConn-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);<span class="color-comment"> // Set error mode to exception</span>
+   echo 'Connected', '&lt;br /&gt;';
+ 
+} catch (PDOException $e) {
+   $fileName = basename($e-&gt;getFile(), &quot;.php&quot;);<span class="color-comment"> // File that triggers the exception</span>
+   $lineNumber = $e-&gt;getLine();         <span class="color-comment"> // Line number that triggers the exception</span>
+   die(&quot;[$fileName][$lineNumber] Database connect failed: &quot; . $e-&gt;getMessage() . '&lt;br /&gt;');
+}
+ 
+<span class="color-comment">// Run SQL statements</span>
+try {
+  <span class="color-comment"> // Use exec() to run a CREATE TABLE, DROP TABLE, INSERT, DELETE and UPDATE,</span>
+  <span class="color-comment"> // which returns the affected row count.</span>
+   $rowCount = $dbConn-&gt;exec('DROP TABLE IF EXISTS test');
+   echo 'DROP TABLE: ', $rowCount, ' rows', '&lt;br /&gt;';
+ 
+   $rowCount = $dbConn-&gt;exec(
+         'CREATE TABLE IF NOT EXISTS test (
+           id SERIAL,
+           name VARCHAR(20),
+           PRIMARY KEY (id))');
+   echo 'CREATE TABLE: ', $rowCount, ' rows', '&lt;br /&gt;';
+ 
+   $rowCount = $dbConn-&gt;exec(&quot;INSERT INTO test (id, name) VALUES (1001, 'peter')&quot;);
+   echo 'INSERT INTO: ', $rowCount, ' rows', '&lt;br /&gt;';
+<span class="color-comment">// Cannot called lastInsertId as nextval() was not called in the previous insert.</span>
+<span class="color-comment">// echo 'LAST_INSERT_ID (of the AUTO_INCREMENT column) is ', $dbConn-&gt;lastInsertId('test_id_seq'), '&lt;br /&gt;';</span>
+ 
+   $rowCount = $dbConn-&gt;exec(&quot;INSERT INTO test (name) VALUES ('paul'),('patrick')&quot;);
+   echo 'INSERT INTO: ', $rowCount, ' rows', '&lt;br /&gt;';
+   echo 'LAST_INSERT_ID (of the AUTO_INCREMENT column) is ', $dbConn-&gt;lastInsertId('test_id_seq'), '&lt;br /&gt;';
+ 
+  <span class="color-comment"> // Use query() to run a SELECT, which returns a resultset.</span>
+   $sql = 'SELECT * FROM test';
+   $resultset = $dbConn-&gt;query($sql);
+   foreach ($resultset as $row) {
+      echo 'Using column name: id=', $row['id'], ' name=', $row['name'], '&lt;br /&gt;';
+      echo 'Using column number: id=', $row[0], ' name=', $row[1], '&lt;br /&gt;';
+      print_r($row);<span class="color-comment"> // for illustrating the contents of resultset's row</span>
+                    <span class="color-comment"> // indexed by both column-name and 0-indexed column-number</span>
+      echo '&lt;br /&gt;';
+   }
+ 
+  <span class="color-comment"> // Run again with FETCH_ASSOC.</span>
+   $resultset = $dbConn-&gt;query($sql, PDO::FETCH_ASSOC);
+   foreach ($resultset as $row) { <span class="color-comment"> // by column-name only</span>
+      echo 'Using column name: id=', $row['id'], ' name=', $row['name'], '&lt;br /&gt;';
+      print_r($row);<span class="color-comment"> // for illustrating the contents of resultset's row</span>
+                    <span class="color-comment"> // indexed by column-name only</span>
+      echo '&lt;br /&gt;';
+   }
+ 
+  <span class="color-comment"> // PostgreSQL supports &quot;INSERT ... RETURNING ID&quot;, which returns a resultset of IDs.</span>
+   $sql = &quot;INSERT INTO test (name) VALUES ('john'), ('jimmy') RETURNING ID&quot;;
+   $resultset = $dbConn-&gt;query($sql, PDO::FETCH_ASSOC);
+   foreach ($resultset as $row) {
+      echo &quot;Last insert id is {$row['id']}&lt;br /&gt;&quot;;
+   }
+ 
+  <span class="color-comment"> // Close the database connection  (optional).</span>
+   $dbConn = NULL;
+ 
+} catch (PDOException $e) {
+   $fileName = basename($e-&gt;getFile(), &quot;.php&quot;);<span class="color-comment"> // File that trigger the exception</span>
+   $lineNumber = $e-&gt;getLine();        <span class="color-comment"> // Line number that triggers the exception</span>
+   die(&quot;[$fileName][$lineNumber] Database error: &quot; . $e-&gt;getMessage() . '&lt;br /&gt;');
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>More Examples</h4>
+
+<p>See &quot;<a href="../webprogramming/php2_webapps.html#pdo">PHP PDO</a>&quot; (some modifications needed from MySQL to PostgreSQL).</p>
+
+
+<h3>Python-PostgreSQL</h3>
+
+<p>Goto &quot;Python Database Programming&quot;.</p>
+
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+
+<ol>
+<li>PostgreSQL mother site @ <a href="http://www.postgresql.org/">http://www.postgresql.org</a>; documentation @ <a href="http://www.postgresql.org/docs/">http://www.postgresql.org/docs/</a>; manual @ <a href="http://www.postgresql.org/docs/manuals/">http://www.postgresql.org/docs/manuals/</a>.</li>
+</ol>
+
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: PostgreSQL 9.3 under Ubuntu 14.04<br />
+Last modified: November, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

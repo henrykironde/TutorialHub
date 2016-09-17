@@ -1,0 +1,908 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Exception Handling &amp; Assertion in Java</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming</h1>
+<h2>Exception Handling &amp; Assertion</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Exception Handling</h3>
+
+<h4>Introduction</h4>
+
+<p>An exception is an <em>abnormal event</em> that arises during the execution of the program and disrupts the normal flow of the program. Abnormality do occur when your program is running.  For example, you might expect the user to enter an integer, but receive a text string; or an unexpected I/O error pops up at runtime. What really matters is &quot;what happens after an abnormality occurred?&quot;  In other words, &quot;how the abnormal situations are handled by your program.&quot;  If these exceptions are not handled properly, the program terminates abruptly and may cause severe consequences.  For example, the network connections, database connections and files may remain opened; database and file records may be left in an inconsistent state.</p>
+
+<p>Java has a built-in mechanism for handling runtime errors, referred to as <em>exception handling</em>. This is to ensure that you can write <em>robust</em> programs for mission-critical applications.</p>
+
+<p>Older programming languages such as C have some drawbacks in exception handing. For example, suppose the programmer wishes to open a file for processing:</p>
+
+<ol>
+<li>The programmers are not made to aware of the exceptional conditions.  For example, the file to be opened may not necessarily exist.  The programmer therefore did not write codes to test whether the file exists before opening the file.</li>
+
+<li>Suppose the programmer is aware of the exceptional conditions, he/she might decide to finish the main logic first, and write the exception handling codes later – this &quot;later&quot;, unfortunately, usually never happens.  In other words, you are not force to write the exception handling codes together with the main logic.</li>
+
+<li>Suppose the programmer decided to write the exception handling codes, the exception handling codes <em>intertwine</em> with the main logic in many if-else statements.  This makes main logic hard to follow and the entire program hard to read. For example,
+<pre class="color-example">
+if (file exists) {
+   open file;
+   while (there is more records to be processed) {
+      if (no IO errors) {
+         process the file record
+      } else {
+         handle the errors
+      }
+   }
+   if (file is opened) close the file;
+} else {
+   report the file does not exist;
+}</pre></li>
+</ol>
+
+<p>Java overcomes these drawbacks by building the exception handling into the language rather than leaving it to the discretion of the programmers:</p>
+
+<ol>
+<li>You will be informed of the exceptional conditions that may arise in calling a method - Exceptions are declared in the method's signature.</li>
+
+<li>You are forced to handle exceptions while writing the main logic and cannot leave them as an afterthought - Your program cannot compiled without the exception handling codes.</li>
+
+<li>Exception handling codes are separated from the main logic - Via the <code>try-catch-finally</code> construct.</li>
+</ol>
+
+<p>Let's look into these three points in more details.</p>
+
+<h5>Point 1: Exceptions must be Declared</h5>
+<p>As an  example, suppose that you want to use a <code>java.util.Scanner</code> to perform formatted input from a disk file. The signature of the <code>Scanner</code>'s constructor with a <code>File</code> argument is given as follows:</p>
+<pre class="color-example">
+public Scanner(File source) <span class="color-new">throws FileNotFoundException</span>;</pre>
+
+<p>The method's signature informs the programmers that an exceptional condition  &quot;file not found&quot; may arise. By declaring the exceptions in the method's signature, programmers are made to aware of the exceptional conditions in using the method.</p>
+
+<h5>Point 2: Exceptions must be Handled</h5>
+
+<p>If a method declares an exception in its signature, you cannot use this method without handling the exception - you can't compile the program.</p>
+
+<p><span class="line-heading">Example 1:</span> The program did not handle the exception declared, resutled in compilation error.</p>
+<pre class="color-example">
+import java.util.Scanner;
+import java.io.File;
+public class ScannerFromFile {
+   public static void main(String[] args) {
+      Scanner in = <span class="color-new">new Scanner(new File(&quot;test.in&quot;)</span>);
+      <span class="color-comment">// do something ...</span>
+   }
+}</pre>
+
+<pre class="output">
+ScannerFromFile.java:5: <span class="color-new">unreported exception java.io.FileNotFoundException; must be caught or declared to be thrown</span>
+      Scanner in = new Scanner(new File(&quot;test.in&quot;));
+                   ^</pre>
+
+<p>To use a method that declares an exception in its signature, you MUST either:</p>
+<ol>
+<li>provide exception handling codes in a &quot;<code>try-catch</code>&quot; or &quot;<code>try-catch-finally</code>&quot; construct, or</li>
+<li>not handling the exception in the current method, but declare the exception to be thrown up the call stack for the next higher-level method to handle.</li>
+</ol>
+
+<p><span class="line-heading">Example 2:</span> Catch the exception via a &quot;<code>try-catch</code>&quot; (or &quot;<code>try-catch-finally</code>&quot;) construct.</p>
+<pre class="color-example">
+import java.util.Scanner;
+import java.io.File;
+<span class="color-new">import java.io.FileNotFoundException;</span>
+public class ScannerFromFileWithCatch {
+   public static void main(String[] args) {
+      <span class="color-new">try {</span>
+         Scanner in = <span class="color-new">new Scanner(new File(&quot;test.in&quot;)</span>);
+         <span class="color-comment">// do something if no exception ...
+         // you main logic here in the try-block</span>
+      <span class="color-new">} catch (FileNotFoundException ex) {</span> <span class="color-comment">// error handling separated from the main logic</span>
+         <span class="color-new">ex.printStackTrace();</span>             <span class="color-comment">// print the stack trace</span>
+      <span class="color-new">}</span>
+   }
+}</pre>
+
+<p>If the file cannot be found, the exception is caught in the catch-block. In this example,
+ the error handler simply prints the <em>stack trace</em>, which provides useful information for debugging. In some situations, you may need to perform some clean-up operations, or open another file instead. Take note that the main logic in the try-block is separated from the error handling codes in the catch-block.</p>
+
+<p><span class="line-heading">Example 3:</span> You decided not to handle the exception in the current method, but throw the exception up the call stack for the next higher-level method to handle.</p>
+<pre class="color-example">
+import java.util.Scanner;
+import java.io.File;
+<span class="color-new">import java.io.FileNotFoundException;</span>
+public class ScannerFromFileWithThrow {
+   public static void main(String[] args) <span class="color-new">throws FileNotFoundException</span> {  
+                                 <span class="color-comment">// to be handled by next higher-level method</span>
+      Scanner in = <span class="color-new">new Scanner(new File(&quot;test.in&quot;)</span>);   
+                                <span class="color-comment">// this method may throw FileNotFoundException</span>
+      <span class="color-comment">// main logic here ...</span>
+   }
+}</pre>
+
+<p>In this example, you decided not to handle the <code>FileNotFoundException</code> thrown by the <code>Scanner(File)</code> method (with <code>try-catch</code>). Instead, the caller of <code>Scanner(File)</code> - the <code>main()</code> method - declares in its signature  &quot;<code>throws FileNotFoundException</code>&quot;, which means that this exception will be thrown up the  call stack, for the next higher-level method to handle. In this case, the next higher-level method of <code>main()</code> is the JVM, which simply terminates the program and prints the stack trace.</p>
+
+<h5>Point 3: Main logic is separated from the exception handling codes</h5>
+<p>As shown in Example 2, the main logic is contained in the try-block, while the exception handling codes are kept in the catch-block(s) separated from the main logic. This greatly improves the readability of the program.</p>
+
+<p>For example, a Java program for file processing could be as follows:</p>
+<pre class="color-example">
+try {
+   <span class="color-comment">// Main logic here</span>
+   open file;
+   process file;
+   ......
+} catch (FileNotFoundException ex) {   <span class="color-comment">// Exception handlers below</span>
+   <span class="color-comment">// Exception handler for &quot;file not found&quot;</span>
+} catch (IOException ex) {
+   <span class="color-comment">// Exception handler for &quot;IO errors&quot;</span>
+} finally {
+  close file;      <span class="color-comment">// always try to close the file</span>
+}</pre>
+
+<h4>Method Call Stack</h4>
+
+<p>A typical application involves many levels of method calls, which is managed by a so-called <em>method call stack</em>. A <em>stack</em> is a <em>last-in-first-out queue</em>. In the following example, <code>main()</code> method invokes <code>methodA()</code>; <code>methodA()</code> calls <code>methodB()</code>; <code>methodB()</code> calls <code>methodC()</code>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+public class MethodCallStackDemo {
+   public static void main(String[] args) {
+      System.out.println(&quot;Enter main()&quot;);
+      methodA();
+      System.out.println(&quot;Exit main()&quot;);
+   }
+ 
+   public static void methodA() {
+      System.out.println(&quot;Enter methodA()&quot;);
+      methodB();
+      System.out.println(&quot;Exit methodA()&quot;);
+   }
+ 
+   public static void methodB() {
+      System.out.println(&quot;Enter methodB()&quot;);
+      methodC();
+      System.out.println(&quot;Exit methodB()&quot;);
+   }
+ 
+   public static void methodC() {
+      System.out.println(&quot;Enter methodC()&quot;);
+      System.out.println(&quot;Exit methodC()&quot;);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Enter main()
+Enter methodA()
+Enter methodB()
+Enter methodC()
+Exit methodC()
+Exit methodB()
+Exit methodA()
+Exit main()</pre>
+
+<img class="image-float-right" src="images/Exception_MethodCallStack.png" alt="Exception_MethodCallStack.png" />
+<p>As seen from the output, the sequence of events is:</p>
+<ol>
+<li>JVM invoke the <code>main()</code>.</li>
+<li><code>main()</code> pushed onto call stack, before invoking <code>methodA()</code>.</li>
+<li><code>methodA()</code> pushed onto call stack, before invoking <code>methodB()</code>.</li>
+<li><code>methodB()</code> pushed onto call stack, before invoking <code>methodC()</code>.</li>
+<li><code>methodC()</code> completes.</li>
+<li><code>methodB()</code> popped out from call stack and completes.</li>
+<li><code>methodA()</code> popped out from the call stack and completes.</li>
+<li><code>main()</code> popped out from the call stack and completes. Program exits.</li>
+</ol>
+
+<p>suppose that we modify <code>methodC()</code> to carry out a &quot;divide-by-0&quot; operation, which triggers a <code>ArithmeticException</code>:</p>
+
+<pre class="color-example">
+public static void methodC() {
+   System.out.println(&quot;Enter methodC()&quot;);
+   System.out.println(1 / 0);  <span class="color-comment">// divide-by-0 triggers an ArithmeticException</span>
+   System.out.println(&quot;Exit methodC()&quot;);
+}</pre>
+
+<p>The exception message clearly shows the <em>method call stack trace</em> with the relevant statement line numbers:</p>
+
+<pre class="output">
+Enter main()
+Enter methodA()
+Enter methodB()
+Enter methodC()
+Exception in thread &quot;main&quot; java.lang.ArithmeticException: / by zero
+        at MethodCallStackDemo.<span class="color-new">methodC</span>(MethodCallStackDemo.java:22)
+        at MethodCallStackDemo.<span class="color-new">methodB</span>(MethodCallStackDemo.java:16)
+        at MethodCallStackDemo.<span class="color-new">methodA</span>(MethodCallStackDemo.java:10)
+        at MethodCallStackDemo.<span class="color-new">main</span>(MethodCallStackDemo.java:4)</pre>
+
+<p><code>MethodC()</code> triggers an <code>ArithmeticException</code>. As it does not handle this exception, it popped off from the call stack immediately. <code>MethodB()</code> also does not handle this exception and popped off the call stack. So does <code>methodA()</code> and <code>main()</code> method. The <code>main()</code> method passes back to JVM, which abruptly terminates the program and print the call stack trace, as shown.</p>
+
+<h4>Exception &amp; Call Stack</h4>
+
+<img class="image-float-right" src="images/Exception_CallStack.png" alt="Exception_CallStack.png" />
+
+<p>When an exception occurs inside a Java method, the method creates an <code>Exception</code> object and passes the <code>Exception</code> object to the JVM (in Java term, the method &quot;<code>throw</code>&quot; an <code>Exception</code>).  The <code>Exception</code> object contains the type of the exception, and the state of the program when the exception occurs.  The JVM is responsible for finding an <em>exception handler</em> to process the <code>Exception</code> object.  It searches backward through the call stack until it finds a matching exception handler for that particular class of <code>Exception</code> object (in Java term, it is called &quot;<code>catch</code>&quot; the <code>Exception</code>).  If the JVM cannot find a matching exception handler in all the methods in the call stack, it terminates the program.</p>
+
+<p>This process is illustrated as follows. Suppose that <code>methodD()</code> encounters an abnormal condition and throws a <code>XxxException</code> to the JVM.  The JVM searches backward through the call stack for a matching exception handler.  It finds <code>methodA()</code> having a <code>XxxException</code> handler and passes the exception object to the handler.  Notice that <code>methodC()</code> and <code>methodB()</code> are required to declare &quot;<code>throws XxxException&quot;</code> in their method signatures in order to compile the program.</p>
+
+<h4 class="float-clear">Exception Classes - <span class="font-code">Throwable</span>, <span class="font-code">Error</span>, <span class="font-code">Exception</span> &amp; <span class="font-code">RuntimeException</span></h4>
+
+<p>The figure ‎below shows the hierarchy of the <code>Exception</code> classes.  The base class for all <code>Exception</code> objects is <code>java.lang.Throwable</code>, together with its two subclasses <code>java.lang.Exception</code> and <code>java.lang.Error</code>.</p>
+
+<img class="image-center" src="images/Exception_Classes.png" alt="Exception_Classes.png" />
+
+<ul>
+<li>The <code>Error</code> class describes internal system errors (e.g., <code>VirtualMachineError</code>, <code>LinkageError</code>) that rarely occur.  If such an error occurs, there is little that you can do and the program will be terminated by the Java runtime.</li>
+<li>The <code>Exception</code> class describes the error caused by your program (e.g. <code>FileNotFoundException</code>, <code>IOException</code>).  These errors could be caught and handled by your program (e.g., perform an alternate action or do a graceful exit by closing all the files, network and database connections).</li>
+</ul>
+
+<h4>Checked vs. Unchecked Exceptions</h4>
+
+<p>As illustrated, the subclasses of <code>Error</code> and <code>RuntimeException</code> are known as <em>unchecked exceptions</em>. These exceptions are not checked by the compiler, and hence, need not be caught or declared to be thrown in your program. This is because there is not much you can do with these exceptions. For example, a &quot;divide by 0&quot; triggers an <code>ArithmeticException</code>, array index out-of-bound triggers an <code>ArrayIndexOutOfBoundException,</code> which are really programming logical errors that shall be been fixed in compiled-time, rather than leaving it to runtime exception handling.</p>
+<p>All the other exception are called <em>checked exceptions</em>. They are checked by the compiler and must be caught or declared to be thrown.</p>
+
+<h4>Exception Handling Operations</h4>
+
+<p>Five keywords are used in exception handling: <code>try</code>, <code>catch</code>, <code>finally</code>, <code>throws</code> and <code>throw</code> (take note that there is a difference between <code>throw</code> and <code>throws</code>).</p>
+
+<p>Java’s exception handling consists of three operations:</p>
+<ol>
+<li>Declaring exceptions;</li>
+<li>Throwing an exception; and</li>
+<li>Catching an exception.</li>
+</ol>
+
+<h5>Declaring Exceptions</h5>
+
+<p>A Java method must declare in its signature the types of checked exception it may &quot;throw&quot; from its body, via the keyword &quot;throws&quot;.</p>
+
+<p>For example, suppose that <code>methodD()</code> is defined as follows:</p>
+
+<pre class="color-example">
+public void methodD() <span class="color-new">throws XxxException, YyyException</span> {
+   <span class="color-comment">// method body throw XxxException and YyyException</span>
+}</pre>
+
+<p>The method's signature indicates that running <code>methodD()</code> may encounter two checked exceptions: <code>XxxException</code> and <code>YyyException</code>.  In other words, some of the abnormal conditions inside <code>methodD()</code> may trigger <code>XxxException</code> or <code>YyyException</code>.</p>
+
+<p>Exceptions belonging to <code>Error</code>, <code>RuntimeException</code> and their <em>subclasses</em> need not be declared. These exceptions are called <em>unchecked exceptions</em> because they are not checked by the compiler.</p>
+
+<h5>Throwing an Exception</h5>
+<p>When a Java operation encounters an abnormal situation, the method containing the erroneous statement shall create an appropriate <code>Exception</code> object and throw it to the Java runtime via the statement &quot;<code>throw XxxException</code>&quot;. For example,</p>
+<pre class="color-example">
+public void methodD() <span class="color-new">throws XxxException, YyyException</span> {   <span class="color-comment">// method's signature</span>
+   <span class="color-comment">// method's body</span>
+   ...
+   ...
+   <span class="color-comment">// XxxException occurs</span>
+   if ( ... )
+      <span class="color-new">throw new XxxException(...);</span>   <span class="color-comment">// construct an XxxException object and throw to JVM</span>
+   ...
+   <span class="color-comment">// YyyException occurs</span>
+   if ( ... )
+      <span class="color-new">throw new YyyException(...);</span>   <span class="color-comment">// construct an YyyException object and throw to JVM</span>
+   ...
+}</pre>
+
+<p>Note that the keyword to declare exception in the method's signature is &quot;<code>throws</code>&quot; and the keyword to throw an exception object within the method's body is &quot;<code>throw</code>&quot;.</p>
+
+<h5>Catching an Exception</h5>
+
+<p>When a method throws an exception, the JVM searches backward through the call stack for a matching exception handler.  Each exception handler can handle one particular class of exception.  <em>An exception handler handles a specific class can also handle its subclasses</em>.  If no exception handler is found in the call stack, the program terminates.</p>
+
+<p>For example, suppose <code>methodD()</code> declares that it may throw <code>XxxException</code> and <code>YyyException</code> in its signature, as follows:</p>
+<pre class="color-example">
+public void methodD() <span class="color-new">throws XxxException, YyyException</span> { ...... }</pre>
+
+<p>To use <code>methodD()</code> in your program (says in <code>methodC()</code>), you can either:</p>
+<ol>
+<li>Wrap the call of <code>methodD()</code> inside a try-catch  (or try-catch-finally) as follows.  Each catch-block can contain an exception handler for one type of exception.
+<pre class="color-example">
+public void methodC() {  <span class="color-comment">// no exception declared</span>
+   ......
+   <span class="color-new">try {</span>
+      ......
+      <span class="color-comment">// uses methodD() which declares XxxException &amp; YyyException</span>
+      <span class="color-new">methodD();</span>
+      ......
+   <span class="color-new">} catch (XxxException ex) {</span>
+      <span class="color-comment">// Exception handler for XxxException</span>
+      ......
+   <span class="color-new">} catch (YyyException ex} {</span>
+      <span class="color-comment">// Exception handler for YyyException</span>
+      ......
+   <span class="color-new">} finally {</span>   <span class="color-comment">// optional</span>
+      <span class="color-comment">// These codes always run, used for cleaning up</span>
+      ......
+   <span class="color-new">}</span>
+   ......
+}</pre></li>
+
+<li>Suppose that <code>methodC()</code> who calls <code>methodD()</code> does not wish to handle the exceptions (via a try-catch), it can declare these exceptions to be thrown up the call stack in its signature as follows:
+  <pre class="color-example">
+public void methodC() <span class="color-new">throws XxxException, YyyException</span> {   <span class="color-comment">// for next higher-level method to handle</span>
+   ...
+   <span class="color-comment">// uses methodD() which declares &quot;throws XxxException, YyyException&quot;</span>
+   <span class="color-new">methodD();</span>   <span class="color-comment">// no need for try-catch</span>
+   ...
+}</pre>
+In this case, if a <code>XxxException</code> or <code>YyyException</code> is thrown by <code>methodD()</code>, JVM  will <em>terminate</em> <code>methodD()</code> as well as <code>methodC()</code> and pass the exception object up the call stack to the caller of <code>methodC()</code>.</li>
+
+</ol>
+
+<h4><span class="font-code">try-catch-finally</span></h4>
+
+<p>The syntax of try-catch-finally is:</p>
+<pre class="color-syntax">
+<strong>try {</strong>
+   <span class="color-comment">// main logic, uses methods that may throw Exceptions</span>
+   ......
+<strong>} catch (</strong><em>Exception1 ex</em><strong>) {</strong>
+   <span class="color-comment">// error handler for Exception1</span>
+   ......
+<strong>} catch (</strong><em>Exception2 ex</em><strong>) {</strong>
+   <span class="color-comment">// error handler for Exception1</span>
+   ......
+<strong>} finally {</strong>   <span class="color-comment">// finally is optional</span>
+   <span class="color-comment">// clean up codes, always executed regardless of exceptions</span>
+   ......
+<strong>}</strong></pre>
+
+<p>If no exception occurs during the running of the try-block, all the catch-blocks are skipped, and finally-block will be executed after the try-block.  If one of the statements in the try-block throws an exception, the Java runtime ignores the rest of the statements in the try-block, and begins searching for a matching exception handler.  It matches the exception type with each of the catch-blocks <em>sequentially</em>.  If a catch-block catches that exception class or catches a <em>superclass</em> of that exception, the statement in that catch-block will be executed.  The statements in the finally-block are then executed after that catch-block.  The program continues into the next statement after the try-catch-finally, unless it is pre-maturely terminated or branch-out.</p>
+
+If none of the <code>catch</code>-block matches, the exception will be passed up the call stack. The current method executes the <code>finally</code> clause (if any) and popped off the call stack. The caller follows the same procedures to handle the exception.
+
+<p>The <code>finally</code> block is almost certain to be executed, regardless of whether or not exception occurs (unless JVM encountered a severe error or a <code>System.exit()</code> is called in the <code>catch</code> block).</p>
+<h5>Example 1</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+public class TryCatchFinally {
+   public static void main(String[] args) {
+      try {         <span class="color-comment">// main logic</span>
+         System.out.println(&quot;Start of the main logic&quot;);
+         System.out.println(&quot;Try opening a file ...&quot;);
+         Scanner in = new Scanner(new File(&quot;test.in&quot;));
+         System.out.println(&quot;File Found, processing the file ...&quot;);
+         System.out.println(&quot;End of the main logic&quot;);
+      } catch (FileNotFoundException ex) {    <span class="color-comment">// error handling separated from the main logic</span>
+         System.out.println(&quot;File Not Found caught ...&quot;);
+      } finally {   <span class="color-comment">// always run regardless of exception status</span>
+         System.out.println(&quot;finally-block runs regardless of the state of exception&quot;);
+      }
+      <span class="color-comment">// after the try-catch-finally</span>
+      System.out.println(&quot;After try-catch-finally, life goes on...&quot;);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>This is the output when the <code>FileNotFoundException</code> triggered:</p>
+<pre class="output">
+Start of the main logic
+Try opening a file ...
+File Not Found caught ...
+finally-block runs regardless of the state of exception
+After try-catch-finally, life goes on...</pre> 
+
+<p>This is the output when no exception triggered:</p>
+<pre class="output">
+Start of the main logic
+Try opening a file ...
+File Found, processing the file ...
+End of the main logic
+finally-block runs regardless of the state of exception
+After try-catch-finally, life goes on...</pre>
+
+<h5>Example 2</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+public class MethodCallStackDemo {
+   public static void main(String[] args) {
+      System.out.println(&quot;Enter main()&quot;);
+      methodA();
+      System.out.println(&quot;Exit main()&quot;);
+   }
+ 
+   public static void methodA() {
+      System.out.println(&quot;Enter methodA()&quot;);
+      try {
+         System.out.println(1 / 0);
+            <span class="color-comment">// A divide-by-0 triggers an ArithmeticException - an unchecked exception</span>
+            <span class="color-comment">// This method does not catch ArithmeticException</span>
+            <span class="color-comment">// It runs the &quot;finally&quot; and popped off the call stack</span>
+      } finally {
+         System.out.println(&quot;finally in methodA()&quot;);
+      }
+      System.out.println(&quot;Exit methodA()&quot;);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Enter main()
+Enter methodA()
+finally in methodA()
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+        at MethodCallStackDemo.methodA(MethodCallStackDemo.java:11)
+        at MethodCallStackDemo.main(MethodCallStackDemo.java:4)</pre>
+
+<h5><span class="font-code">try-catch-finally</span></h5>
+<ul>
+<li>A try-block must be accompanied by at least one catch-block or a finally-block.</li>
+<li>You can have multiple catch-blocks.  Each catch-block catches only one type of exception.</li>
+<li>A catch block requires one argument, which is a <code>throwable</code> object (i.e., a subclass of <code>java.lang.Throwable</code>), as follows:
+<pre class="color-example">
+catch (<em>AThrowableSubClass</em> <em>aThrowableObject</em>) {
+   <span class="color-comment">// exception handling codes</span>
+}</pre></li>
+
+<li>You can use the following methods to retrieve the type of the exception and the state of the program from the <code>Throwable</code> object:
+<ul>
+<li><code>printStackTrace()</code>:  Prints this <code>Throwable</code> and its call stack trace to the standard error stream <code>System.err</code>. The first line of the outputs contains the result of <code>toString()</code>, and the remaining lines are the stack trace. This is the most common handler, if there is nothing better that you can  do. For example,
+<pre class="color-example">
+try {
+   Scanner in = new Scanner(new File(&quot;test.in&quot;));
+   <span class="color-comment">// process the file here</span>
+   ......
+} catch (FileNotFoundException ex) {
+   <strong>ex.printStackTrace();</strong>
+}</pre>
+You can also use <code>printStackTrace(PrintStream s)</code> or <code>printStackTrace(PrintWriter s)</code>.</li>
+
+<li><code>getMessage()</code>:  Returns the <code>message</code> specified if the object is constructed using constructor <code>Throwable(String message)</code>.</li>
+
+<li><code>toString()</code>:  Returns a short description of this <code>Throwable</code> object, consists of the name of the class, a colon <code>':'</code>, and a message from <code>getMessage()</code>.</li>
+</ul>
+</li>
+
+<li>A catch block catching a specific exception class can also catch its <em>subclasses</em>.  Hence, <code>catch(Exception ex) {...}</code> catches all kinds of exceptions. However, this is not a good practice as the exception handler that is too general may unintentionally catches some subclasses' exceptions it does not intend to.</li>
+
+<li>The order of catch-blocks is important.  A subclass must be caught (and placed in front) before its superclass.  Otherwise, you receive a compilation error &quot;exception <code>XxxException</code> has already been caught&quot;.</li>
+
+<li>The finally-block is meant for cleanup code such as closing the file, database connection regardless of whether the try block succeeds.  The finally block is always executed (unless the catch-block pre-maturely terminated the current method).</li>
+
+</ul>
+
+
+<h5>What if I really don't care about the exceptions</h5>
+<p>Certainly not advisable other than writing toy programs. But to bypass the compilation error messages triggered by methods declaring unchecked exceptions, you could declare &quot;<code>throws Exception</code>&quot; in your <code>main()</code> (and other methods), as follows:</p>
+<pre class="color-example">
+public static void main(String[] args)<strong> throws Exception</strong> {  <span class="color-comment">// throws all subclass of Exception to JRE</span>
+   Scanner in = new Scanner(new File(&quot;test.in&quot;));   <span class="color-comment">// declares &quot;throws FileNotFoundException&quot;</span>
+   ......
+   <span class="color-comment">// other exceptions</span>
+}</pre>
+
+<h5>Overriding and Overloading Methods</h5>
+
+<p>An overriding method must have the same argument list and return-type (or subclass of its original from JDK 1.5). An overloading method must have different argument list, but it can have any return-type.</p>
+<p>An overriding method cannot have more restricted access. For example, a method with <code>protected</code> access may be overridden to have protected or public access but not <code>private</code> or default access. This is because an overridden method is considered to be a replacement of its original, hence, it cannot be more restrictive.</p>
+
+<p>An overriding method cannot declare exception types that were not declared in its original. However, it may declare exception types are the same as, or subclass of its original. It needs not declare all the exceptions as its original. It can throw fewer exceptions than the original, but not more.</p>
+
+<p>An overloading method must be differentiated by its argument list. It cannot be differentiated by the return-type, the exceptions, and the modifier, which is illegal. It can have any return-type, access modifier, and exceptions, as long as it can be differentiated by the argument list.</p>
+
+<h4>Common Exception Classes</h4>
+
+<p><span class="line-heading font-code">ArrayIndexOutOfBoundsException</span>: thrown by JVM when your code uses an array index, which is is outside the array's bounds. For example,</p>
+<pre class="color-example">
+int[] anArray = new int[3];
+System.out.println(anArray[3]);</pre>
+<pre class="output">
+Exception in thread &quot;main&quot; java.lang.ArrayIndexOutOfBoundsException: 3</pre>
+        
+<p><span class="line-heading font-code">NullPointerException</span>: thrown by the JVM when your code attempts to use a null reference where an object reference is required. For example,</p>
+
+<pre class="color-example">
+String[] strs = new String[3];
+System.out.println(strs[0].length());</pre>
+<pre class="output">
+Exception in thread &quot;main&quot; java.lang.NullPointerException</pre>
+
+<p><span class="line-heading font-code">NumberFormatException</span>: Thrown programmatically (e.g., by <code>Integer.parseInt()</code>) when an attempt is made to convert a string to a numeric type, but the string does not have the appropriate format. For example,</p>
+
+<pre class="color-example">
+Integer.parseInt(&quot;abc&quot;);</pre>
+<pre class="output">
+Exception in thread &quot;main&quot; java.lang.NumberFormatException: For input string: &quot;abc&quot;</pre>
+
+<p><span class="line-heading font-code">ClassCastException</span>: thrown by JVM when an attempt is made to cast an object reference fails. For example,</p>
+
+<pre class="color-example">
+Object o = new Object();
+Integer i = (Integer)o;</pre>
+<pre class="output">
+Exception in thread &quot;main&quot; java.lang.ClassCastException: java.lang.Object cannot be cast to java.lang.Integer</pre>
+
+<p><span class="line-heading font-code">IllegalArgumentException</span>: thrown programmatically to indicate that a method has been passed an illegal or inappropriate argument. You could re-use this exception for your own methods.</p>
+
+<p><span class="line-heading font-code">IllegalStateException</span>: thrown programmatically when a method is invoked and the program is not in an appropriate state for that method to perform its task. This typically happens when a method is invoked out of sequence, or perhaps a method is only allowed to be invoked once and an attempt is made to invoke it again.</p>
+
+<p><span class="line-heading font-code">NoClassDefFoundError</span>: thrown by the JVM or class loader when the definition of a class cannot be found. Prior to JDK 1.7, you will see this exception call stack trace if you try to run a non-existent class. JDK 1.7 simplifies the error message to &quot;Error: Could not find or load main class xxx&quot;.</p>
+
+<h4>Creating Your Own Exception Classes</h4>
+
+<p>You should try to reuse the <code>Exception</code> classes provided in the JDK, e.g., <code>IndexOutOfBoundException</code>, <code>ArithmeticException</code>, <code>IOException</code>, and <code>IllegalArugmentException</code>.  But you can always create you own <code>Exception</code> classes by extending from the class <code>Exception</code> or one of its subclasses.</p>
+
+<p>Note that <code>RuntimeException</code> and its subclasses are not checked by the compiler and need not be declared in the method's signature.  Therefore, use them with care, as you will not be informed and may not be aware of the exceptions that may occur by using that method (and therefore do not have the proper exception handling codes) – a bad software engineering practice.</p>
+
+<h5>Example</h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// Create our own exception class by subclassing Exception. This is a checked exception</span>
+public class MyMagicException <span class="color-new">extends Exception</span> {
+   public MyMagicException(String message) {  <span class="color-comment">//constructor</span>
+      super(message);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre>
+</td>
+<td>
+<pre>
+public class MyMagicExceptionTest {
+   <span class="color-comment">// This method &quot;throw MyMagicException&quot; in its body.
+   // MyMagicException is checked and need to be declared in the method's signature </span>
+   public static void magic(int number) throws MyMagicException {
+      if (number == 8) {
+         throw (new MyMagicException(&quot;you hit the magic number&quot;));
+      }
+      System.out.println(&quot;hello&quot;);  <span class="color-comment">// skip if exception triggered</span>
+   }
+   
+   public static void main(String[] args) {
+      try {
+         magic(9);   <span class="color-comment">// does not trigger exception</span>
+         magic(8);   <span class="color-comment">// trigger exception</span>
+      } catch (MyMagicException ex) {   <span class="color-comment">// exception handler</span>
+         ex.printStackTrace();
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The  output is as follows:</p>
+<pre class="output">
+hello
+MyMagicException: you hit the magic number
+        at MyMagicExceptionTest.magic(MyMagicExceptionTest.java:6)
+        at MyMagicExceptionTest.main(MyMagicExceptionTest.java:14)</pre>
+
+
+<h3 id="assertion">Assertion (JDK 1.4)</h3>
+<p>JDK 1.4 introduced a new keyword called <code>assert</code>, to support the so-called <em>assertion</em> feature. Assertion enables you to <em>test your assumptions</em> about your program logic (such as pre-conditions, post-conditions, and invariants).  Each assertion contains a boolean expression that you believe will be true when the program executes. If it is not true, the JVM will throw an <code>AssertionError</code>. This error signals you that you have an invalid assumption that needs to be fixed. Assertion is much better than using if-else statements, as it serves as proper documentation on your assumptions, and it does not carry performance liability in the production environment (to be discussed later).</p>
+
+<p>The <code>assert</code> statement has two forms:</p>
+<pre class="color-syntax">
+<strong>assert</strong> <em>booleanExpr</em><strong>;</strong>
+<strong>assert</strong> <em>booleanExpr</em> <strong>:</strong> <em>errorMessageExpr</em><strong>;</strong></pre>
+
+<p>When the runtime execute the assertion, it first evaluates the <em><code>booleanExpr</code></em>.  If the value is <code>true</code>, nothing happens.  If it is <code>false</code>, the runtime throws an <code>AssertionError</code>, using the no-argument constructor (in the first form) or <em><code>errorMessageExpr</code></em> as the argument to the constructor (in the second form). If an object is passed as the <code><em>errorMessageExpr</em></code>, the object's <code>toString()</code> will be called to obtain the message string.</p>
+
+<p>Assertion is useful in detecting bugs.  It also serves to document the inner workings of you program (e.g., pre-conditions and post-conditions) and enhances the maintainability.</p>
+
+<p>One good candidate for assertion is the switch-case statement where the programmer believes that one of the cases will be selected, and the default-case is not plausible. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+public class AssertionSwitchTest {
+   public static void main(String[] args) {
+      char operator = '%';                  <span class="color-comment">// assumed either '+', '-', '*', '/' only</span>
+      int operand1 = 5, operand2 = 6, result = 0;
+      switch (operator) {
+         case '+': result = operand1 + operand2; break;
+         case '-': result = operand1 - operand2; break;
+         case '*': result = operand1 * operand2; break;
+         case '/': result = operand1 / operand2; break;
+         <span class="color-new">default: assert false : &quot;Unknown operator: &quot; + operator;</span>  <span class="color-comment">// not plausible here</span>
+      }
+      System.out.println(operand1 + &quot; &quot; + operator + &quot; &quot; + operand2 + &quot; = &quot; + result);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Assertion, by default, are disabled to ensure that they are not a  performance liability in the production environment. To enable assertion, use the runtime command-line option <code>–enableassertions</code>  (or <code>–ea</code>).</p>
+
+<p>In the above example, &quot;<code>assert false</code>&quot; always triggers an <code>AssertionError</code>.  However, the output is different, depending on whether assertion is enabled or disabled.</p>
+
+<pre class="color-command">
+&gt; javac AssertionSwitchTest.java   <span class="color-comment">// no option needed to compile</span>
+&gt; java <strong>-ea</strong> AssertionSwitchTest     <span class="color-comment">// enable assertion</span>
+</pre>
+<pre class="output">
+Exception in thread &quot;main&quot; java.lang.AssertionError: %
+        at AssertionSwitchTest.main(AssertionSwitchTest.java:11)</pre>
+
+<pre class="color-command">
+&gt; java AssertionSwitchTest     <span class="color-comment">    // assertion disable by default</span></pre>
+
+<pre class="output">
+5 % 6 = 0</pre>
+
+<p>In the above example, since the &quot;<code>assert false</code>&quot; always triggers an <code>AssertionError</code>, you could choose to <code>throw</code> an <code>AssertionError</code>. &quot;<code>throw</code>&quot; is always enabled during runtime.</p>
+
+<pre class="color-example">
+default: throw new AssertionError(&quot;Unknown operator: &quot; + operator);</pre>
+
+<p>Another usage of assertion is to assert &quot;internal invariants&quot;. In other words, to assert the possible values of an internal variable. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9</pre>
+</td>
+<td>
+<pre>
+public class AssertionTest {
+   public static void main(String[] args) {
+      int number = -5;    <span class="color-comment">// assumed number is not negative</span>
+      <span class="color-comment">// This assert also serve as documentation</span>
+      <strong>assert (number &gt;= 0) : &quot;number is negative: &quot; + number;
+</strong>      <span class="color-comment">// do something</span>
+      System.out.println(&quot;The number is &quot; + number);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="color-command">
+&gt; java <strong>-ea</strong> AssertionSwitchTest     <span class="color-comment">// enable assertion</span></pre>
+
+<pre class="output">
+Exception in thread &quot;main&quot; java.lang.AssertionError: -5
+        at AssertionTest.main(AssertionTest.java:5)</pre>
+
+<p>Assertion can be used for verifying:</p>
+<ul>
+<li>Internal Invariants: Assert that a value is within a certain constraint, e.g., <code>assert x &gt; 0</code>.</li>
+<li>Class Invariants:  Assert that an object's state is within a constraint. What must be true about each instance of a class before or after the execution of a method? Class invariants are typically verified via <code>private boolean</code> method, e.g., an <code>isValid()</code> method to check if a <code>Circle</code> object has a positive radius.</li>
+<li>Control-Flow Invariants: Assert that  a certain location will not be reached. For example, the <code>default</code> clause of a <code>switch-case</code> statement.</li>
+<li>Pre-conditions of methods:  What must be true when a method is invoked? Typically expressed in terms of the method's arguments or the states of its objects.</li>
+
+<li>Post-conditions of methods:  What must be true after a method completes successfully?</li>
+</ul>
+
+<h5>Pre-conditions of <span class="font-code">public</span> methods</h5>
+
+<p>Assertion should not be used to check the validity of the arguments (pre-condition) passed into &quot;public&quot; method. It is because <code>public</code> methods are exposed and anyone could call this method with an invalid argument. Instead, use a <code>if</code> statement to check the argument and throw an <code>IllegalArgumentException</code> otherwise. On the other hand, <code>private</code> methods are under your sole control and it is appropriate to assert the pre-conditions. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Constructor of Time class</span>
+public Time(int hour, int minute, int second) {
+   if(hour &lt; 0 || hour &gt; 23 || minute &lt; 0 || minute &gt; 59 || second &lt; 0 || second &gt; 59) {
+      throw new IllegalArgumentException();
+   }
+   this.hour = hour;
+   this.minute = minute;
+   this.second = second;
+}</pre>
+
+<h5>Example</h5>
+<p>[TODO] Example on pre-condition (private method), post-condition, and class invariant.</p>
+
+<a class="references" href="../howto/References.html#java">LINK TO JAVA REFERENCES &amp; RESOURCES</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7.0_03<br />
+Last modified: May, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

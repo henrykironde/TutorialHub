@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Javadoc</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Java Programming</h1>
+<h2>Documentation &amp; JavaDoc</h2>
+
+<h3>Java Documentation<a name="javadocumentation">&nbsp;</a></h3>
+
+<p>JDK documentation is, by far, the most important piece of information needed in developing Java programs. You need to download the JDK documentation separately from JDK. Although an online copy is provided at <a href="http://java.sun.com/javase/6/docs/">http://java.sun.com/javase/6/docs/</a>, but you should have a local copy, as you need it extensively.</p>
+
+<p>The home page (&quot;index.html&quot;) of Java Documentation provides links to many important Java resources, such as &quot;Java Specification&quot;, &quot;Java Tutorial&quot; and &quot;JDK Tools and Utilities&quot;. Make sure you take a good look at this page to understand the resources available.</p>
+
+<h4>JDK API Specification<a name="jdkapiapec">&nbsp;</a></h4>
+<p>JDK API Specification is where you can find out the classes available in JDK, the available public methods of a class and the signature of these methods.</p>
+
+<ol>
+<li> From the &quot;Java Documentation&quot; home page &rArr; Select &quot;API, Language, and VM Specs&quot; &rArr; &quot;Java Platform API Specification&quot;. The API specification is organized in 3 panels, as illustrated below. The top-left panel list the packages available, e.g., <code>java.lang</code>, <code>java.awt</code>, <code>java.awt.event</code>, <code>javax.swing</code> and <code>java.io</code>. Recall that Java entities such as classes and interfaces are organized in packages for namespace management. 
+<img class="image-center" src="images/JavaBasics_Javadoc.png" />
+</li>
+
+<li>You first select the package of interest, says <code>java.lang</code>, the bottom-left panel will show all the entities available in that package. There are currently six types of entities: (a) ordinary classes, (b) interfaces, (c) errors (d) exceptions (e) enums (enumerations) and (f) annotation types. enum and annotation are introduced in JDK 1.5.</li>
+
+<li>Select an entity of interest, says class <code>String</code> of package <code>java.lang</code>. The right panel will display the &quot;<code>public</code>&quot; attributes and operations about this entity. (Only attributes and operations with &quot;<code>public</code>&quot; access visibility will be shown. If you are interested in <code>private</code>/<code>protected</code>/package attributes and operations, you need to read the source code.) The information is organized in 4 groups: (a) variables (or fields), (b) constructors, (c) methods, and (d) nested (or inner classes), as reflected in the links on top of the panel.</li>
+
+<li>You can choose to display either the &quot;SUMMARY&quot; or &quot;DETAIL&quot; information. For example, select &quot;SUMMARY: METHOD&quot;, all the public methods of the class will be listed, with their signature and brief explanation. Click on the method of interest to read a more detailed explanation of this method.</li>
+
+</ol>
+
+<h3>Javadoc Comment and Utility</h3>
+<p>[TODO]</p>
+
+<h3>Java Tutorial</h3>
+<p>[TODO]</p>
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>TODO</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: JDK 1.6<br />
+Last modified: August 8, 2008</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

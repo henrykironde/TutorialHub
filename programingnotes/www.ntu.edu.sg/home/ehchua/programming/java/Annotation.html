@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Programming Tutorial - Annotation</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Java Programming</h1>
+<h2>Annotation (JDK 1.5)</h2>
+
+<h3>Introduction to Annotation</h3>
+
+<p>If you look inside a JDK package (says <code>java.lang</code>), besides classes, interfaces, exceptions and errors, JDK 1.5 introduces two new entities: enums and annotations.</p>
+
+<p><em>Annotation</em> gives you the ability to provide additional <em>metadata</em> alongside a Java entity (such as classes, interfaces, fields and methods). This additional metadata, called <em>annotation</em>, can be read and interrelated by the compiler or other utilities.  They can also be stored in the class files.  The runtime can discovered these <em>metadata</em> via the &quot;reflection&quot; API.</p>
+
+<p>Prior to the introduction of this standardized annotation feature in JDK 1.5, Java provided only ad-hoc and non-standardized mechanism, including <code>Serializable</code> interface (a <em>tag</em> interface without a method) and <code>transient</code> modifier (not to serialize), Javadoc comments (used by the javadoc utility to generate documentation), <code>@deprecated</code> tag (indicates that the method should no longer be used).</p>
+
+<p>One of the main reasons for adding annotation and metadata to the Java platform is to enable development and runtime tools to have a common infrastructure so as to reduce the effort required for development and deployment.  A tool could use the metadata information to generate additional source code, or to provide additional information for debugging, among others. A typical application programmer does not have to define annotation.</p>
+
+<p>Annotation is defined like a ordinary Java interface, but with an <code>'@'</code> preceding the interface keyword (i.e., <code>@interface</code>).  You can declare methods inside an annotation definition (just like declaring abstract method inside an interface).  These methods are called <em>elements</em> instead.  The declarations must not have any formal parameters or a throw clause.  Return types are restricted to primitives, <code>String</code>, <code>Class</code>, enum, annotation, and array of the preceding types.  They can have default value.</p>
+
+<h4>Example: Annotation <code>java.lang.Override</code></h4>
+<p>Let look at annotation type <code>java.lang.Override</code> API:</p>
+<pre class="code-syntax">
+@Target(value=METHOD)
+@Retention(value=SOURCE)
+public @interface Override
+</pre>
+
+<p>The purpose of annotation <code>Override</code> is to indicates that &quot;a method declaration is intended to override a method declaration in a superclass. If a method is annotated with this annotation type but does not override a superclass method, compilers are required to generate an error message.&quot;</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<tr>
+<td class="code-line-number-width">
+<pre class="code-line-number">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre>
+</td>
+<td>
+<pre class="code-listing">
+public class AnnotationOverrideTest {
+   
+   @Override public String toString() {
+      return &quot;Override the toString() of the superclass&quot;;
+   }
+   
+   <span class="code-comment">// Compilation Error because superclass Object does not have this method</span>
+   @Override public String <span class="code-error">toString123()</span> {
+      return &quot;Override the toString123() of the superclass&quot;;
+   }
+}
+</pre>
+</td>
+</tr>
+</table>
+
+<pre class="code-output">
+AnnotationOverrideTest.java:7: method does not override or implement a method from a super-type
+   @Override public String toString123() {
+   ^
+</pre>
+
+<p>The following example shows how the <code>Override</code> annotation can save you many hours of fluctuation.</p>
+
+<table class="table-program">
+<tr>
+<td class="code-line-number-width">
+<pre class="code-line-number">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre>
+</td>
+<td>
+<pre class="code-listing">
+import java.awt.*;
+import java.awt.event.*;
+public class AnnotationOverrideDemo extends Frame {
+   public AnnotationOverrideDemo() {
+      this.addWindowListener(new WindowAdapter() {
+         public void windowclosing(WindowEvent e) {
+            System.exit(0);
+         }
+      });
+      setSize(200, 100);
+      setTitle(&quot;Annotation Override Demo&quot;);
+      setVisible(true);
+   }
+   public static void main(String[] args) { new AnnotationOverrideDemo(); }
+}
+</pre>
+</td>
+</tr>
+</table>
+
+<p>The above program look fine and cannot be compiled without error. However, clicking the window close button produces no effect.  This is because <code>windowClosing()</code> is mis-spelled.  Instead of overriding the event handler, it defines a new useless method.</p>
+
+<p>Add annotation <code>@Override</code> to the <code>windowClosing()</code> as follows, which signal your intention, serves as documentation, and also allow the compiler to catch this error.</p>
+<pre class="code-example">
+@Override 
+public void windowclosing(WindowEvent e) {
+   System.exit(0);
+}
+</pre>
+
+
+
+
+<p>The source code for <code>java.lang.Override</code> is as follows:</p>
+
+
+<table class="table-program">
+<tr>
+<td class="code-line-number-width">
+<pre class="code-line-number">
+1
+2
+3
+4
+5
+6
+7
+</pre>
+</td>
+<td>
+<pre class="code-listing">
+package java.lang;
+import java.lang.annotation.*;
+   
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface Override {
+}
+</pre>
+</td>
+</tr>
+</table>
+
+<p>The package <code>java.lang.annotation</code> defines the following annotation types, that can be served as the <em>super-type</em> of the annotations:</p>
+<ul>
+<li><code>@Retention</code>: specifies how long the annotation information is to be kept, takes value from <code>enum</code> <code>RetensionPolicy</code> of {<code>SOURCE</code>, <code>CLASS</code>, <code>RUNTIME</code>} and default to <code>RetensionPolicy.CLASS</code>.</li>
+<li><code>@Target</code>:  specifies the kinds of program element to which this annotation is applicable, takes value from <code>enum</code> <code>ElementType</code> of {<code>TYPE</code>, <code>FILED</code>, <code>METHOD</code>, <code>PARAMETER</code>, <code>CONSTRUCTOR</code>, <code>LOCAL_VARIABLE</code>, <code>ANNOTATION_TYPE</code>, <code>PACKAGE</code>}.</li>
+</ul>
+
+<p>Annotation with <em>no element</em> is called a <em>marker annotation type</em>. For example,</p>
+<pre class="code-example">
+public @interface UnderConstruction { }
+</pre>
+<p>You can annotate as follows:</p>
+<pre class="code-example">
+@UnderConstruction
+public class aMethod { ... }
+</pre>
+
+<p>If the annotation has a <em>single element</em>, it must be called <code>value()</code>.</p>
+<pre class="code-example">
+public @interface Author {
+    String <strong>value()</strong> default &quot;Tan Ah Teck&quot;;
+}
+</pre>
+
+<p>To use a single-element annotation, you can omit &quot;value=&quot;:</p>
+<pre class="code-example">
+@Author(&quot;Kevin Jones&quot;)
+public class anotherMethod { ... }
+</pre>
+
+
+
+
+
+<p>[TODO] To be continued...</p>
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+  <li>TODO</li>
+  <li>TODO</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: JDK 1.6<br />
+Last modified: July 2008</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+
+</div>  <!-- End the container division -->
+
+</body>
+</html>

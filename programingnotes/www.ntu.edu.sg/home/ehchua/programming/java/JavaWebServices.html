@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Web Services</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Java Server-Side Programming</h1>
+<h2>Web Services</h2>
+
+<h3>Develop and Deploy Web Services in Tomcat 6</h3>
+
+<p>We shall develop web services in JDK and deploy in Tomcat first, and using IDE tools such as Eclipse and NetBeans later.</p>
+
+<h4>Server-Side</h4>
+
+<p><strong>Step 1: Implement the Web Service</strong></p>
+
+<p>Let us begin by writing a web service, using JAX-WS (Java API for XML - Web Services) provided in JDK 1.6. JAX-WS is the technology for building web services in Java.</p>
+
+<ul>
+
+<li>Write a <em>web service end-point implementation</em> (SEI) class called <code>Hello</code>, in package <code>helloservice</code>. Save your source file as &quot;<code>helloservice\Hello.java</code>&quot;. (You cannot use the default package for SEI.)
+
+<pre class="code-listing">package helloservice;
+import javax.jws.WebService;
+import javax.jws.WebMethod;
+<span class="code-comment">/**
+ * Web Service End-point implementation class
+ */</span>
+   
+@WebService
+public class Hello {
+   <span class="code-comment">// Constructor</span>
+   public void Hello() {}
+   
+   @WebMethod
+   public String sayHello(String name) {
+      return &quot;Hello, &quot; + name + &quot;.&quot;;
+   }
+   
+   @WebMethod
+   public int addNumbers(int number1, int number2) {
+      return number1 + number2;
+   }
+   
+   @WebMethod
+   public double divideNumbers(int dividend, int divisor)
+         throws DivideNumbersException {
+      if (divisor == 0) {
+         throw new DivideNumbersException(&quot;Divisor cannot be zero!&quot;);
+      }
+      return (double)dividend/divisor;
+   }
+}
+</pre>
+
+<p>We also need to write the <code>DivideNumbersException</code> used in the above program:</p>
+<pre class="code-listing">package helloservice;
+public class DivideNumbersException extends Exception {
+   public DivideNumbersException(String message) {
+      super(message);
+   }
+}
+</pre>
+
+<p>Explanation:</p>
+
+
+<ul>
+<li>The annotation <code>@WebService</code> specifies that this class is meant as a web service.</li>
+<li>Three methods are annotated with <code>@WebMethod</code>. That is, these methods are accessible by the clients.</li>
+</ul>
+</li>
+
+<li>Compile the source codes:
+<pre class="code-command">&gt; cd <em>package-base-directory</em>
+&gt; javac helloservice\*.java
+</pre>
+</li>
+
+<li>Use JDK's <code>wsgen</code> tool to generate all the portable artifacts needed for web service deployment and invocation, as follows:
+<pre class="code-command">&gt; cd <em>package-base-directory</em>
+&gt; wsgen -classpath . -keep helloservice.Hello
+</pre>
+
+<p>The following classes will be generated in sub-directory <code>jaxws</code> (more precisely, in package <code>helloservice.jaxws</code>). The &quot;-keep&quot; option keeps the generated source files.</p>
+
+<pre class="code-listing">SayHello.class
+SayHelloResponse.class
+AddNumbers.class
+AddNumbersResponse.class
+DivideNumbers.class
+DivideNumbersExceptionBean.class
+DivideNumbersResponse.class
+</pre>
+
+<p>Observe that for each web method exposed, two classes were generated: <code><em>WebMethod</em>.class</code> and <code><em>WebMethod</em>Response.class</code>.  An exception bean was further created for the <code>DivideNumbersException</code>.</p>
+</li>
+
+</ul>
+
+<p><strong>Step 2: Download and install JAX-WS Runtime for Tomcat</strong></p>
+
+<ul>
+<li>Download the JAX-WS Runtime from <a href="https://jax-ws.dev.java.net">https://jax-ws.dev.java.net</a>. From the &quot;Downloads&quot; link, choose the latest version.</li>
+
+<li>Download the binary. Unpack the binary by double clicking the downloaded jar file (or run the JDK's <code>jar</code> tool).</li>
+<li>Copy all the jar files from the JAX-WS's &quot;<code>lib</code>&quot; directory to Tomcat's &quot;<code>lib</code>&quot; directory (i.e., &quot;<code>$CATALINA_HOME\lib</code>&quot;).</li>
+
+</ul>
+
+<p><strong>Step 3: Deploy the Web Service in Tomcat</strong></p>
+
+<ul>
+<li>First, create a context (or web application) called <code>hellows</code> for our web service in Tomcat, by creating a sub-directory called <code>hellows</code> under <code>$CATALINA_HOME\webapps</code>. Also create a subdirectory &quot;<code>WEB-INF</code>&quot; and sub-sub-directory &quot;<code>WEB-INF\classes</code>&quot; under the context root directory.</li>
+
+<li>Copy all the implementation and generated artifact classes (i.e., the directory <code>helloservice</code>) into &quot;<code>WEB-INF\classes</code>&quot;. (Alternatively, you could create and deploy as a single WAR (Web Archive) file).</li>
+
+<li>Write the following web configuration file &quot;<code>web.xml</code>&quot; and save it in &quot;<code>WEB-INF</code>&quot;.
+<pre class="code-listing">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;
+   version=&quot;2.5&quot;&gt;
+   
+  &lt;listener&gt;
+    &lt;listener-class&gt;com.sun.xml.ws.transport.http.servlet.WSServletContextListener&lt;/listener-class&gt;
+  &lt;/listener&gt;
+   
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;<strong>HelloService</strong>&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;com.sun.xml.ws.transport.http.servlet.WSServlet&lt;/servlet-class&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+  
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;<strong>HelloService</strong>&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;<strong>/hello</strong>&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+  
+  &lt;session-config&gt;
+    &lt;session-timeout&gt;60&lt;/session-timeout&gt;
+  &lt;/session-config&gt;
+&lt;/web-app&gt;
+</pre>
+</li>
+
+<li>Write the following configuration file for JAX-WS called &quot;<code>sun-jaxws.xml</code>&quot; and save it in &quot;<code>WEB-INF</code>&quot; to define the end-points for the web service:
+<pre class="code-listing">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;endpoints xmlns=&quot;http://java.sun.com/xml/ns/jax-ws/ri/runtime&quot; version=&quot;2.0&quot;&gt;
+  &lt;endpoint
+    name=&quot;HelloService&quot;
+    implementation=&quot;helloservice.Hello&quot;
+    url-pattern=&quot;/hello&quot; /&gt;
+&lt;/endpoints&gt;
+</pre>
+</li>
+
+<li>Start Tomcat. Observe these messages in Tomcat's console:
+<pre class="code-output">......
+xxxxx com.sun.xml.ws.transport.http.servlet.WSServletContextListener contextInitialized
+INFO: WSSERVLET12: JAX-WS context listener initializing
+xxxxx com.sun.xml.ws.model.RuntimeModeler getRequestWrapperClass
+INFO: Dynamically creating request wrapper Class <strong>helloservice.jaxws.Hello</strong>
+xxxxx com.sun.xml.ws.model.RuntimeModeler getResponseWrapperClass
+INFO: Dynamically creating response wrapper bean Class <strong>helloservice.jaxws.HelloResponse</strong>
+xxxxx com.sun.xml.ws.transport.http.servlet.WSServletDelegate &lt;init&gt;
+INFO: WSSERVLET14: JAX-WS servlet initializing
+......</pre>
+</li>
+
+<li>Issue the following URL (assuming that Tomcat is running in port 8080):
+<pre class="code-command">http://localhost:8080/hellows/hello
+</pre>
+<img class="image-center" src="images/WebService_Hellows.png" />
+</li>
+
+<li>You could click on the WSDL (Web Service Description Language), to study the descriptions about this web service.</li>
+
+</ul>
+
+<h4>Client-Side</h4>
+
+<p>Now, a web service has been published. Let us write a client program (in Java) to access this web service.</p>
+
+<ul>
+
+<li>Write the following Java standalone program called <code>HelloClient</code>:
+
+<pre class="code-listing">import javax.xml.ws.WebServiceRef;
+import helloservice.HelloService;
+import helloservice.Hello;
+   
+public class HelloClient {
+   
+   @WebServiceRef(wsdlLocation=&quot;http://localhost:8080/hellows/hello?wsdl&quot;)
+   static HelloService service = new HelloService();
+   //static HelloService service;
+   
+   public static void main(String[] args) {
+      try {
+         System.out.println(&quot;Retrieving the port from the following service: &quot;
+            + service);
+         Hello port = service.getHelloPort();
+   
+         System.out.println(&quot;Invoking the sayHello operation on the port.&quot;);
+         String response = port.sayHello(&quot;World&quot;);
+         System.out.println(response);
+   
+         System.out.println(&quot;Invoking the addNumbers operation on the port.&quot;);
+         int sum = port.addNumbers(55, 66);
+         System.out.println(sum);
+   
+         System.out.println(&quot;Invoking the divideNumbers operation on the port.&quot;);
+         double quotient = port.divideNumbers(1, 0);
+         System.out.println(quotient);
+   
+      } catch(Exception e) {
+         e.printStackTrace();
+      }
+   }
+}
+</pre>
+
+<p>Notice that this client program imports some classes from the web service. You cannot compile unless you get these classes.</p>
+</li>
+
+<li>Use JDK's <code>wsimport</code> tool to generate the client artifacts (i.e., the service endpoint interface and the service interface classes) (the &quot;<code>-keep</code>&quot; option keep the generated source files):
+
+<pre class="code-command">wsimport -keep http://localhost:8080/hellows/hello?wsdl
+</pre>
+
+<p>Observe that these classes (in package <code>helloservice</code>) are generated, in particular, <code>HelloService</code> and <code>Hello</code> class which we used in our client program:</p>
+<pre class="code-listing">AddNumbers.class
+AddNumbersResponse.class
+DivideNumbers.class
+DivideNumbersException.class
+DivideNumbersException_Exception.class
+DivideNumbersResponse.class
+<strong>Hello.class
+</strong>HelloResponse.class
+<strong>HelloService.class</strong>
+Hello_Type.class
+ObjectFactory.class
+package-info.class
+SayHello.class
+SayHelloResponse.class
+</pre>
+</li>
+
+<li>Compile and run the client program:
+<pre class="code-output">Retrieving the port from the following service: helloservice.HelloService@xxxxxx
+Invoking the <strong>sayHello</strong> operation on the port.
+<strong>Hello, World.</strong>
+Invoking the <strong>addNumbers</strong> operation on the port.
+<strong>121</strong>
+Invoking the <strong>divideNumbers</strong> operation on the port.
+<strong>helloservice.DivideNumbersException_Exception: Divisor cannot be zero!</strong>
+</pre>
+</li>
+
+</ul> 
+
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>&quot;The Java EE 5 Tutorial for Sun Java System Application Server 9.1&quot; @ <a href="http://java.sun.com/javaee/5/docs/tutorial/doc">http://java.sun.com/javaee/5/docs/tutorial/doc</a>.</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: JDK 1.6, Tomcat 6.0.20, JAX-WS 2.1.7<br />
+Last modified: September 6, 2009</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

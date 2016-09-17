@@ -1,0 +1,1614 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Examples on Classes and Objects</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>C++ Programming Language</h1>
+<h2>Examples on Classes and Objects</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Example: The <span class="font-code">Time</span> Class Version 2 - Using References</h3>
+
+<p>Further to our <a href="cp3_OOP.html#timeclass">earlier version of Time class</a>, suppose that we wish to support cascaded operations on a <code>Time</code> instance, such as  <code>t.nextSecond().nextSecond().print()</code>. We could let <code>nextSecond()</code> to return &quot;<code>this</code>&quot; instance <em>by reference</em>. The cascaded operations <code>t.nextSecond().nextSecond().print()</code> shall be read as <code>((t.nextSecond()).nextSecond()).print()</code>.  <code>t.nextSecond()</code> returns a reference to &quot;<code>this</code>&quot;<code></code> instance, which is then used to invoke the second operation, and so on.</p>
+
+<h5 class="font-code">Time.h</h5>
+
+<pre class="color-example">
+class Time {
+private:
+   ......
+public:
+   <span class="color-new">Time &amp;</span> nextSecond();  <span class="color-comment">// Return a reference to &quot;this&quot; instance</span>
+   ......
+};</pre>
+
+<p>In the function prototype, we declare that the <code>nextSecond()</code> member function returns a <em>reference</em> to a <code>Time</code> object. The return reference can be used to invoke a member function of the class. For example, <code>t.nextSecond().nextSecond()</code> is interpreted as <code>(t.nextSecond()).nextSecond()</code>. Our previous version returns <code>void</code>, which cannot be used further.</p>
+
+<h5 class="font-code">Time.cpp</h5>
+
+<pre class="color-example">
+<span class="color-comment">// Increase this instance by one second and return this instance by reference</span>
+<span class="color-new">Time &amp; Time::nextSecond()</span> {
+   if (++second == 60) {
+      second = 0;
+      if (++minute == 60) {
+         minute = 0;
+         if (++hour == 24) {
+            hour = 0;
+         }
+      }
+   }
+   <span class="color-new">return *this;</span>  <span class="color-comment">// Return this instance by reference</span>
+                  <span class="color-comment">// &quot;this&quot; is a pointer to this instance. *this refers to this instance.</span>
+}</pre>
+
+<p>C++ has a special keyword <code>this</code>, which contains a pointer to <em>this</em> instance. Hence, <code>*this</code> refers to this instance, which is returned by reference back to the caller corresponding to the return type <code>Time &amp;</code>.</p>
+
+<p><span class="line-heading font-code">TestTime.cpp</span></p>
+
+<pre class="color-example">Time t1(23, 59, 58);<br />t1.print();     <span class="color-comment">// 23:59:58</span><br />t1.nextSecond();<br />t1.print();     <span class="color-comment">// 23:59:59</span><br />t1.nextSecond().nextSecond().print();  <span class="color-comment">// 00:00:01</span><br />t1.print();     <span class="color-comment">// 00:00:01</span></pre>
+
+<h5>Exercise</h5>
+<p>Try modifying <code>setHour()</code>, <code>setMinute()</code> and <code>setSecond()</code> to support cascaded operations such as <code>aTime.setHour(22).setMinute(29).setSecond(20).print()</code>.</p>
+
+<h3 id="time_exception">Example: The <span class="font-code">Time</span> Class Version 3 - Exception Handling</h3>
+
+<p>Input validation is necessary. For example, in <code>setHour(int h)</code>, we should check that the given input <code>h</code> is between 0 and 23. Checking input is simple, but what to do if the input is invalid is tricky. For example, we could print an error message and abruptly terminate the program (via the <code>exit(1)</code> in <code>&lt;cstdlib&gt;</code>); we could print a warning message, set the hour to 0, and continue the program with a hour value may or may not be desired. Both approaches are less than ideal.</p>
+
+<pre class="color-example">
+void Time::setHour(int h) {
+   if (h &gt;= 0 &amp;&amp; h &lt;= 23) {
+      hour = h;
+   } else {
+      <span class="color-new">cout &lt;&lt; &quot;Error: Invalid hour! Hour shall be 0-23.&quot; &lt;&lt; endl;
+      exit(1);</span>  <span class="color-comment">// Terminate the program abruptly!!!</span>
+   }
+}</pre>
+
+<pre class="color-example">
+void Time::setHour(int h) {
+   if (h &gt;= 0 &amp;&amp; h &lt;= 23) {
+      hour = h;
+   } else {
+      <span class="color-new">cout &lt;&lt; &quot;Warning: Invalid hour! Hour shall be 0-23. Set to 0.&quot; &lt;&lt; endl;
+      hour = 0;</span>  <span class="color-comment">// Program continues with a hour value may or may not be desired?</span>
+   }
+}</pre>
+
+<p>Instead, C++ provides an exception handling facility (in header <code>&lt;stdexcept&gt;</code>) to properly and gracefully handle exceptions. Let's modify the codes to perform input validation using the C++ exception handling facility.</p>
+
+<h5><span class="font-code">Time.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Header for the Time class (Time.h) */</span>
+#ifndef TIME_H
+#define TIME_H
+ 
+class Time {
+private:
+   int hour;    <span class="color-comment"> // 0 - 23</span>
+   int minute;  <span class="color-comment"> // 0 - 59</span>
+   int second;  <span class="color-comment"> // 0 - 59</span>
+ 
+public:
+   Time(int h = 0, int m = 0, int s = 0);
+   int getHour() const;
+   void setHour(int h);
+   int getMinute() const;
+   void setMinute(int m);
+   int getSecond() const;
+   void setSecond(int s);
+   void setTime(int h, int m, int s);
+   void print() const;
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5 class="font-code">Time.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Implementation for the Time Class (Time.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;stdexcept&gt;   <span class="color-comment"> // Needed for exception handling</span>
+#include &quot;Time.h&quot;
+using namespace std;
+ 
+Time::Time(int h, int m, int s) {
+  <span class="color-comment"> // Call setters to perform input validation</span>
+   <span class="color-new">setHour(h);
+   setMinute(m);
+   setSecond(s);</span>
+}
+ 
+int Time::getHour() const {
+   return hour;
+}
+ 
+void Time::setHour(int h) { <span class="color-comment"> // with input validation</span>
+   if (h &gt;= 0 &amp;&amp; h &lt;= 23) {
+      hour = h;
+   } else {
+      <span class="color-new">throw invalid_argument(&quot;Invalid hour! Hour shall be 0-23.&quot;);</span>
+           <span class="color-comment"> // need &lt;stdexcept&gt;</span>
+   }
+}
+ 
+int Time::getMinute() const {
+   return minute;
+}
+ 
+void Time::setMinute(int m) {
+   if (m &gt;= 0 &amp;&amp; m &lt;= 59) {
+      minute = m;
+   } else {
+      <span class="color-new">throw invalid_argument(&quot;Invalid minute! Minute shall be 0-59.&quot;);</span>
+           <span class="color-comment"> // need &lt;stdexcept&gt;</span>
+   }
+}
+ 
+int Time::getSecond() const {
+   return second;
+}
+ 
+void Time::setSecond(int s) {
+   if (s &gt;= 0 &amp;&amp; s &lt;= 59) {
+      second = s;
+   } else {
+      <span class="color-new">throw invalid_argument(&quot;Invalid second! Second shall be 0-59.&quot;);</span>
+           <span class="color-comment"> // need &lt;stdexcept&gt;</span>
+   }
+}
+ 
+void Time::setTime(int h, int m, int s) {
+   <span class="color-comment">// Call setters to validate inputs</span>
+   <span class="color-new">setHour(h);
+   setMinute(m);
+   setSecond(s);</span>
+}
+ 
+void Time::print() const {
+   cout &lt;&lt; setfill('0');
+   cout &lt;&lt; setw(2) &lt;&lt; hour &lt;&lt; &quot;:&quot; &lt;&lt; setw(2) &lt;&lt; minute &lt;&lt; &quot;:&quot;
+        &lt;&lt; setw(2) &lt;&lt; second &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li><span class="line-heading-code-new">void Time::setHour(int h)<br />
+&nbsp;&nbsp;&nbsp;if (h &gt;= 0 &amp;&amp; h &lt;= 23) {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hour = h;<br />
+&nbsp;&nbsp;&nbsp;} else {<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw invalid_argument(&quot;Invalid hour! Hour shall be 0-23.&quot;);<br />
+&nbsp;&nbsp;&nbsp;}<br />
+}<br />
+</span>
+We shall illustrate the input validation with the <code>setHour()</code> member function. It assigns the given <code>h</code> to <code>hour</code> if <code>h</code> is a valid hour. Otherwise, we use the C++ <em>exception handling facility</em> to throw an <em>exception object</em> of the type <code>invalid_argument</code> (defined in <code>&lt;stdexcept&gt;</code> header). This allows the caller to catch the exception and gracefully process the abnormal condition (to be illustrated later in the test driver).</li>
+
+<li><span class="line-heading-code-new">Time::Time(int h, int m, int s) {<br />
+&nbsp;&nbsp;&nbsp;setHour(h);<br />
+&nbsp;&nbsp;&nbsp;setMinute(m);<br />
+&nbsp;&nbsp;&nbsp;setSecond(s);<br />
+}<br />
+</span>
+In the constructor, we invoke the <code>setHour()</code>, <code>setMinute()</code> and <code>setSecond()</code>, which perform input validation, instead of direct assignment. We also modified <code>setTime()</code> in a similar manner.</li>
+
+</ul>
+
+<h5 class="font-code">TestTime.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver for the Time class (TestTime.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt; <span class="color-comment"> // Needed for exception handling</span>
+#include &quot;Time.h&quot;
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> //   <span class="color-new">Time t2(25, 0, 0);</span> // program terminates abruptly</span>
+  <span class="color-comment"> //   t2.print();        // The rest of program will not be run</span>
+ 
+  <span class="color-comment"> // Graceful handling of exception</span>
+   <span class="color-new">try</span> {
+      Time t1(25, 0, 0);<span class="color-comment"> // Skip the remaining statements in try-clause and</span>
+                        <span class="color-comment"> // jump to catch-clause if an exception is thrown</span>
+      t1.print();
+        <span class="color-comment"> // Continue to the next statement after try-catch, if there is no exception</span>
+   } <span class="color-new">catch (invalid_argument&amp; ex)</span> { <span class="color-comment"> // need &lt;stdexcept&gt;</span>
+      <span class="color-new">cout &lt;&lt; &quot;Exception: &quot; &lt;&lt; ex.what() &lt;&lt; endl;</span>
+        <span class="color-comment"> // Continue to the next statement after try-catch</span>
+   }
+   cout &lt;&lt; &quot;Next statement after try-catch&quot; &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li><span class="line-heading-code-new">Time t1(25, 0, 0);</span><br />
+If you run the above statements (un-comment lines 8 and 9) without catching the exception, the program terminates abruptly (i.e., the remaining statements will not be run) with the following error message:
+
+<pre class="output">
+terminate called after throwing an instance of 'std::invalid_argument'
+  what():  Invalid hour! Hour shall be 0-23.</pre></li>
+
+<li><span class="line-heading-code-new">try {<br />
+&nbsp;&nbsp;&nbsp;Time t2(25, 0, 0);<br />
+&nbsp;&nbsp;&nbsp;t2.print();<br />
+} catch (invalid_argument&amp; ex) {<br />
+&nbsp;&nbsp;&nbsp;cout &lt;&lt; &quot;Exception: &quot; &lt;&lt; ex.what() &lt;&lt; endl;<br />
+}<br />
+</span>
+However, if you enclose the statements in a <em>try-catch construct</em> as above, when an exception occurs in one of the statement in the try-clause, the remaining statements in the try-clause are skipped, and control transferred to the catch-clause. In this case, the catch-clause catches the <code>invalid_argument</code> exception thrown, run the catch-body. The program then continues to the next statement after the try-catch. In this way, your program can gracefully process the abnormal condition (e.g., to close the file and resource) instead of abrupt termination.</li>
+
+</ul>
+
+<h3>Object Reference, Pointer and Array with Dynamic Allocation (Advanced)</h3>
+
+<p>We shall use the above <code>Time</code> class to illustrate object pointer, reference and array, with dynamic allocation.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test object pointer, reference and array (TestTimeObject.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;Time.h&quot;
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> // Ordinary object</span>
+   Time t1(1, 2, 3);
+   t1.print(); <span class="color-comment"> // 01:02:03</span>
+ 
+  <span class="color-comment"> // Object pointer</span>
+   Time* ptrT1 = &amp;t1;
+   (*ptrT1).print();<span class="color-comment"> // 01:02:03</span>
+   ptrT1-&gt;print();  <span class="color-comment"> // 01:02:03</span>
+     <span class="color-comment"> // anObjectPtr-&gt;member is the same as (*anObjectPtr).member</span>
+ 
+  <span class="color-comment"> // Object reference</span>
+   Time&amp; refT1 = t1;<span class="color-comment"> // refT1 is an alias to t1</span>
+   refT1.print();   <span class="color-comment"> // 01:02:03</span>
+ 
+  <span class="color-comment"> // Dynamic allocation</span>
+   Time* ptrT2 = new Time(4, 5, 6);<span class="color-comment"> // allocate dynamically</span>
+   ptrT2-&gt;print();<span class="color-comment"> // 04:05:06</span>
+   delete ptrT2;  <span class="color-comment"> // deallocate</span>
+ 
+  <span class="color-comment"> // Object Array</span>
+   Time tArray1[2];   <span class="color-comment"> // tArray1 is an array of Time with 2 elements</span>
+                      <span class="color-comment"> // Use default constructor for all elements</span>
+   tArray1[0].print(); <span class="color-comment"> // 00:00:00</span>
+   tArray1[1].print(); <span class="color-comment"> // 00:00:00</span>
+ 
+   Time tArray2[2] = {Time(7, 8, 9), Time(10)};<span class="color-comment"> // Invoke constructor</span>
+   tArray2[0].print(); <span class="color-comment"> // 07:08:09</span>
+   tArray2[1].print(); <span class="color-comment"> // 10:00:00</span>
+ 
+   Time* ptrTArray3 = new Time[2];<span class="color-comment"> // ptrTArray3 is a pointer to Time</span>
+           <span class="color-comment"> // Dynamically allocate an array of Time with 2 elements via new[]</span>
+   ptrTArray3[0].print(); <span class="color-comment"> // 00:00:00</span>
+   ptrTArray3[1].print(); <span class="color-comment"> // 00:00:00</span>
+   delete[] ptrTArray3;   <span class="color-comment"> // Deallocate dynamic array via delete[]</span>
+ 
+  <span class="color-comment"> // C++11 syntax, compile with -std=c++0x</span>
+   Time* ptrTArray4 = new Time[2] {Time(11, 12, 13), Time(14)};<span class="color-comment"> // Invoke constructor</span>
+   ptrTArray4-&gt;print();       <span class="color-comment"> // 11:12:13</span>
+   (ptrTArray4 + 1)-&gt;print(); <span class="color-comment"> // 14:00:00</span>
+   delete[] ptrTArray4;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h3>Example: The <span class="font-code">Complex</span> Class</h3>
+
+<img class="image-float-right" src="images/ClassDiagramComplex.png" alt="class diagram" />
+
+<p>A class <code>Complex</code> models a complex number is designed as shown in the class diagram. It contains:</p>
+
+<ul>
+<li>Two <code>private</code> data members: <code>real</code> and <code>imag</code>, with default values of 0.0.</li>
+
+<li>Constructor, public getters/setters for private data members.</li>
+
+<li><code>setValue()</code> which sets both the <code>real</code> and <code>imag</code>.</li>
+<li>A <code>public</code> member function <code>print()</code> which prints &quot;(<em>real</em>, <em>imag</em>)&quot;.</li>
+<li><code>bool</code> member functions <code>isReal()</code> and <code>isImaginary()</code> which returns true if <code>imag</code> is 0 and <code>real</code> is 0, respectively.</li>
+<li><code>addInto()</code>, which adds the given complex number (by reference) into <code>this</code> instance, and return <code>this</code> instance by reference.</li>
+<li><code>addReturnNew()</code>, which adds the given complex number (by reference) and <code>this</code> instance, and returns a new instance of my complex. <code>this</code> instance shall not change.</li>
+</ul>
+
+<h5 class="font-code float-clear">Complex.h</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Header for the Complex class (Complex.h) */</span>
+#ifndef COMPLEX_H
+#define COMPLEX_H
+ 
+class Complex {
+private:
+   double real;
+   double imag;
+ 
+public:
+   Complex(double real = 0.0, double imag = 0.0);
+   double getReal() const;
+   void setReal(double real);
+   double getImag() const;
+   void setImag(double imag);
+   void setValue(double real, double imag);
+   void print() const;
+   bool isReal() const;
+   bool isImaginary() const;
+   <span class="color-comment">// Add the given Complex instance into this instance, and return this instance by reference</span>
+   Complex &amp; addInto(const Complex &amp; another);
+   Complex &amp; addInto(double real, double imag);
+   <span class="color-comment">// Add the given Complex instance and this instance, return the sum in a new instance by value</span>
+   Complex addReturnNew(const Complex &amp; another) const;
+   Complex addReturnNew(double real, double imag) const;
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Explanation: [TODO]</p>
+
+<h5 class="font-code">Complex.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Implementation for the Complex Class (Complex.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;Complex.h&quot;
+using namespace std;
+ 
+Complex::Complex(double real, double imag)
+   : real(real), imag(imag) { }
+ 
+double Complex::getReal() const {
+   return real;
+}
+ 
+void Complex::setReal(double real) {
+   this-&gt;real = real;
+}
+ 
+double Complex::getImag() const {
+   return imag;
+}
+ 
+void Complex::setImag(double imag) {
+   this-&gt;imag = imag;
+}
+ 
+void Complex::setValue(double real, double imag) {
+   this-&gt;real = real;
+   this-&gt;imag = imag;
+}
+ 
+<span class="color-comment">// Print this Complex instance in the format of &quot;x + iy&quot;</span>
+void Complex::print() const {
+   cout &lt;&lt; '(' &lt;&lt; real &lt;&lt; ',' &lt;&lt; imag &lt;&lt; ')' &lt;&lt; endl;
+}
+ 
+bool Complex::isReal() const {
+   return (imag == 0);
+}
+ 
+bool Complex::isImaginary() const {
+   return (real == 0);
+}
+ 
+<span class="color-comment">// Add the given Complex instance into this instance and</span>
+<span class="color-comment">//  return a reference of this instance</span>
+Complex &amp; Complex::addInto(const Complex &amp; another) {
+   real += another.real;
+   imag += another.imag;
+   return *this;
+}
+ 
+Complex &amp; Complex::addInto(double real, double imag) {
+   this-&gt;real += real;
+   this-&gt;imag += imag;
+   return *this;
+}
+ 
+<span class="color-comment">// Add the given Complex instance and return the sum in a new instance by value</span>
+Complex Complex::addReturnNew(const Complex &amp; another) const {
+   return Complex(real + another.real, imag + another.imag);
+}
+ 
+Complex Complex::addReturnNew(double real, double imag) const {
+   return Complex(this-&gt;real + real, this-&gt;imag + imag);
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Return-by-reference vs. Return-by-value</h5>
+
+<ul>
+<li>The <code>addInto()</code> returns this instance (which already constructed in <code>main()</code> and existed) by reference.</li>
+
+<li>The <code>addReturnNew()</code> constructs a <em>temporary</em> (<em>local</em>) instance of <code>Complex</code> class, and passes this temporary instance as the return value. The caller receives and copy the temporary instance into its own variable, via memberwise assignment (i.e., return by value). The temporary local instance goes out-of-scope when the function returns.</li>
+</ul>
+
+<h5 class="font-code">TestComplex.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver for the Complex class (TestComplex.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &quot;Complex.h&quot;
+using namespace std;
+ 
+int main() {
+   Complex c1, c2(4, 5);
+   c1.print(); <span class="color-comment"> // (0,0)</span>
+   c2.print(); <span class="color-comment"> // (4,5)</span>
+ 
+   c1.setValue(6, 7);
+   c1.print(); <span class="color-comment"> // (6,7)</span>
+ 
+   c1.setReal(0);
+   c1.setImag(8);
+   c1.print(); <span class="color-comment"> // (0,8)</span>
+ 
+   cout &lt;&lt; boolalpha; <span class="color-comment"> // print true/false instead of 0/1</span>
+   cout &lt;&lt; &quot;Is real? &quot; &lt;&lt; c1.isReal() &lt;&lt; endl;          <span class="color-comment"> // false</span>
+   cout &lt;&lt; &quot;Is Imaginary? &quot; &lt;&lt; c1.isImaginary() &lt;&lt; endl;<span class="color-comment"> // true</span>
+ 
+   c1.addInto(c2).addInto(1, 1).print(); <span class="color-comment"> // (5,14)</span>
+   c1.print(); <span class="color-comment"> // (5,14)</span>
+ 
+   c1.addReturnNew(c2).print();  <span class="color-comment"> // (9,19)</span>
+   c1.print(); <span class="color-comment"> // (5,14) - no change in c1</span>
+   c1.addReturnNew(1, 1).print();<span class="color-comment"> // (6,15)</span>
+   c1.print(); <span class="color-comment"> // (5,14) - no change in c1</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h5>Don't Return a Reference of Local Variable</h5>
+
+<p>Suppose that we modify the <code>addReturnNew()</code> to return a reference, as follows:</p>
+
+<pre class="color-example">
+<span class="color-new">Complex &amp;</span> Complex::addReturnNew(const Complex &amp; another) const {
+   return Complex(real + another.real, imag + another.imag);
+}</pre>
+
+<p>You will receive this compilation error: &quot;<code>invalid initialization of non-const reference of type
+'Complex&amp;' from an rvalue of type 'Complex'</code>&quot;. This is because the temporary local variable constructed inside the function will go out-of-scope when the function returns and ceases to exist. The caller's reference becomes invalid.</p>
+
+<h3>Example: The <span class="font-code">Date</span> Class</h3>
+
+<img class="image-float-right" src="images/ClassDiagramDate.png" alt="class diagram" />
+
+<h5 class="font-code float-clear">Date.h</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Header for the Date class (Date.h) */</span>
+#ifndef DATE_H
+#define DATE_H
+ 
+#include &lt;string&gt;
+using namespace std;
+ 
+class Date {
+private:
+   int year;   <span class="color-comment"> // 1753-9999</span>
+   int month;  <span class="color-comment"> // 1-12</span>
+   int day;    <span class="color-comment"> // 1-31</span>
+   const static string STR_MONTHS[];
+   const static string STR_DAYS[];
+   const static int DAYS_IN_MONTHS[];
+   const static int YEAR_MIN = 1753;
+   const static int YEAR_MAX = 9999;
+ 
+public:
+   static bool isLeapYear(int y);
+   static bool isValidDate(int y, int m, int d);
+   static int getDayOfWeek(int y, int m, int d);
+ 
+   Date(int y, int m, int d);
+   void setDate(int y, int m, int d);
+   int getYear() const;
+   int getMonth() const;
+   int getDay() const;
+   void setYear(int y);
+   void setMonth(int m);
+   void setDay(int d);
+   void print() const;
+ 
+   Date &amp; nextDay();
+   Date &amp; previousDay();
+   Date &amp; nextMonth();
+   Date &amp; previousMonth();
+   Date &amp; nextYear();
+   Date &amp; previousYear();
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h5 class="font-code">Date.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Implementation for Date Class (Date.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+#include &quot;Date.h&quot;
+using namespace std;
+ 
+<span class="color-comment">// Initialize static non-integer variable (must be done outside the class declaration)</span>
+const string Date::STR_MONTHS[] = {&quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;Jun&quot;,
+                                   &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sep&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot;};
+ 
+const int Date::DAYS_IN_MONTHS[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+ 
+const string Date::STR_DAYS[] = {&quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;,
+                                 &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot;};
+ 
+<span class="color-comment">// A static function that returns true if the given year is a leap year</span>
+bool Date::isLeapYear(int year) {
+   return ((year % 4 == 0 &amp;&amp; year % 100 != 0) || (year % 400 == 0));
+}
+ 
+<span class="color-comment">// A static function that returns true if the given y, m, d constitutes a valid date</span>
+bool Date::isValidDate(int y, int m, int d) {
+   if (y &gt;= YEAR_MIN &amp;&amp; y &lt;= YEAR_MAX &amp;&amp; m &gt;= 1 &amp;&amp; m &lt;= 12) {
+      int lastDayOfMonth = DAYS_IN_MONTHS[m-1];
+      if (m == 2 &amp;&amp; isLeapYear(y)) {
+         lastDayOfMonth = 29;
+      }
+      return (d &gt;= 1 &amp;&amp; d &lt;= lastDayOfMonth);
+   } else {
+      return false;
+   }
+}
+ 
+<span class="color-comment">// A static function that returns the day of the week (0:Sun, 6:Sat) for the given date</span>
+<span class="color-comment">// Wiki &quot;Determination of the day of the week&quot; for the algorithm</span>
+int Date::getDayOfWeek(int y, int m, int d) {
+   int centuryTable[] = {4, 2, 0, 6, 4, 2, 0, 6};<span class="color-comment"> // 17xx, 18xx, ...</span>
+   int MonthTable[] = {0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5};
+   int MonthLeapYearTable[] = {6, 2, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5};
+ 
+   int century = y / 100;
+   int twoDigitYear = y % 100;
+   int centuryTableIndex = (century - 17) % 8;
+  <span class="color-comment"> // Date before 17xx are not valid, but needed to prevent negative index</span>
+   if (centuryTableIndex &lt; 0) {
+      centuryTableIndex += 8;
+   }
+   int sum = centuryTable[centuryTableIndex] + twoDigitYear + twoDigitYear / 4;
+   if (isLeapYear(y)) {
+      sum += MonthLeapYearTable[m-1];
+   } else {
+      sum += MonthTable[m-1];
+   }
+   sum += d;
+   return sum % 7;
+}
+ 
+<span class="color-comment">// Constructor</span>
+Date::Date(int y, int m, int d) {
+   setDate(y, m, d);
+}
+ 
+<span class="color-comment">// With Input validation</span>
+void Date::setDate(int y, int m, int d) {
+   setYear(y);
+   setMonth(m);
+   setDay(d);<span class="color-comment"> // need to set the day after year and month</span>
+}
+ 
+int Date::getYear() const {
+   return year;
+}
+ 
+void Date::setYear(int y) {
+   if (y &gt;= YEAR_MIN &amp;&amp; y &lt;= YEAR_MAX) {
+      year = y;
+   } else {
+      throw invalid_argument(&quot;Error: Invalid year (1753-9999)!&quot;);
+   }
+}
+ 
+int Date::getMonth() const {
+   return month;
+}
+ 
+void Date::setMonth(int m) {
+   if (m &gt;= 1 &amp;&amp; m &lt;= 12) {
+      month = m;
+   } else {
+      throw invalid_argument(&quot;Error: Invalid month (1-12)!&quot;);
+   }
+}
+ 
+int Date::getDay() const {
+   return day;
+}
+ 
+<span class="color-comment">// Assuming that the year and month are already set</span>
+void Date::setDay(int d) {
+   int lastDayOfMonth = DAYS_IN_MONTHS[month-1];
+   if (month == 2 &amp;&amp; isLeapYear(year)) {
+      lastDayOfMonth = 29;
+   }
+   if (d &gt;= 1 &amp;&amp; d &lt;= lastDayOfMonth) {
+      day = d;
+   } else {
+      throw invalid_argument(&quot;Error: Invalid day (1-28|29|30|31)!&quot;);
+   }
+}
+ 
+<span class="color-comment">// Print this instance in the format &quot;xxxday, d mmm yyyy&quot;.</span>
+void Date::print() const {
+   cout &lt;&lt; STR_DAYS[getDayOfWeek(year, month, day)] &lt;&lt; &quot;, &quot;
+        &lt;&lt; day &lt;&lt; &quot; &quot; &lt;&lt; STR_MONTHS[month-1] &lt;&lt; &quot; &quot; &lt;&lt; year &lt;&lt; endl;
+}
+ 
+<span class="color-comment">// Increment this instance to the next day and return this instance by reference</span>
+Date&amp; Date::nextDay() {
+   int lastDayOfMonth = DAYS_IN_MONTHS[month-1];
+   if (month == 2 &amp;&amp; isLeapYear(year)) {
+      lastDayOfMonth = 29;
+   }
+ 
+  <span class="color-comment"> // check day against the end of month</span>
+   if (++day &gt; lastDayOfMonth) {
+      day = 1;
+      if (++month &gt; 12) {
+         month = 1;
+         if (++year &gt; YEAR_MAX) {
+            throw out_of_range(&quot;Error: Next day is out of range!&quot;);
+         }
+      }
+   }
+   return *this;
+}
+ 
+<span class="color-comment">// Decrement this instance to the previous day and return this instance by reference</span>
+Date&amp; Date::previousDay() {
+   int lastDayOfMonth = DAYS_IN_MONTHS[month-1];
+   if (month == 2 &amp;&amp; isLeapYear(year)) {
+      lastDayOfMonth = 29;
+   }
+ 
+  <span class="color-comment"> // check day against the end of month</span>
+   if (--day &lt; 1) {
+      day = lastDayOfMonth;
+      if (--month &lt; 1) {
+         month = 12;
+         if (--year &lt; YEAR_MIN) {
+            throw out_of_range(&quot;Error: Previous day is out of range!&quot;);
+         }
+      }
+   }
+   return *this;
+}
+ 
+<span class="color-comment">// Increment this instance to the next month and return this instance by reference</span>
+Date&amp; Date::nextMonth() {
+   if (++month &gt; 12) {
+      month = 1;
+      if (++year &gt; YEAR_MAX) {
+         throw out_of_range(&quot;Error: Next month is out of range!&quot;);
+      }
+   }
+  <span class="color-comment"> // may need to adjust the last day of the month</span>
+   int lastDayOfMonth = DAYS_IN_MONTHS[month-1];
+   if (month == 2 &amp;&amp; isLeapYear(year)) {
+      lastDayOfMonth = 29;
+   }
+   if (day &gt; lastDayOfMonth) {
+      day = lastDayOfMonth;
+   }
+   return *this;
+}
+ 
+<span class="color-comment">// Decrement this instance to the previous month and return this instance by reference</span>
+Date&amp; Date::previousMonth() {
+   if (--month &lt; 1) {
+      month = 12;
+      if (--year &lt; YEAR_MIN) {
+         throw out_of_range(&quot;Error: Previous month is out of range!&quot;);
+      }
+   }
+  <span class="color-comment"> // may need to adjust the last day of the month</span>
+   int lastDayOfMonth = DAYS_IN_MONTHS[month-1];
+   if (month == 2 &amp;&amp; isLeapYear(year)) {
+      lastDayOfMonth = 29;
+   }
+   if (day &gt; lastDayOfMonth) {
+      day = lastDayOfMonth;
+   }
+   return *this;
+}
+ 
+<span class="color-comment">// Increment this instance to the next year and return this instance by reference</span>
+Date&amp; Date::nextYear() {
+   if (++year &gt; YEAR_MAX) {
+      throw out_of_range(&quot;Error: Next year is out of range!&quot;);
+   }
+  <span class="color-comment"> // may need to adjust the last day of the month for leap year (29 Feb)</span>
+  <span class="color-comment"> //  to non-leap year (28 Feb)</span>
+   if (month == 2 &amp;&amp; day == 29 &amp;&amp; !isLeapYear(year)) {
+      day = 28;
+   }
+   return *this;
+}
+ 
+<span class="color-comment">// Decrement this instance to the previous year and return this instance by reference</span>
+Date&amp; Date::previousYear() {
+   if (--year &lt; YEAR_MIN) {
+      throw out_of_range(&quot;Error: Previous year is out of range!&quot;);
+   }
+  <span class="color-comment"> // may need to adjust the last day of the month for leap year (29 Feb)</span>
+  <span class="color-comment"> //  to non-leap year (28 Feb)</span>
+   if (month == 2 &amp;&amp; day == 29 &amp;&amp; !isLeapYear(year)) {
+      day = 28;
+   }
+   return *this;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>[TODO]</li>
+</ul>
+
+
+<h5 class="font-code float-clear">TestDate.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver Program (TestDate.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+#include &quot;Date.h&quot;
+ 
+int main() {
+   Date d1(2012, 1, 1);
+   d1.print(); <span class="color-comment"> // Sunday, 1 Jan 2012</span>
+   d1.nextDay().print(); <span class="color-comment"> // Monday, 2 Jan 2012</span>
+   d1.print(); <span class="color-comment"> // Monday, 2 Jan 2012</span>
+ 
+   d1.setDate(2012, 1, 31);
+   d1.print(); <span class="color-comment"> // Tuesday, 31 Jan 2012</span>
+   d1.nextDay().print(); <span class="color-comment"> // Wednesday, 1 Feb 2012</span>
+ 
+   d1.setDate(2012, 2, 28);
+   d1.print(); <span class="color-comment"> // Tuesday, 28 Feb 2012</span>
+   d1.nextDay().print(); <span class="color-comment"> // Wednesday, 29 Feb 2012</span>
+ 
+   d1.setDate(2012, 12, 31);
+   d1.print(); <span class="color-comment"> // Monday, 31 Dec 2012</span>
+   d1.nextDay().print(); <span class="color-comment"> // Tuesday, 1 Jan 2013</span>
+ 
+<span class="color-comment">//   Date d2(2011, 2, 29); <span class="color-comment"> // abrupt termination!</span></span>
+<span class="color-comment">//   d2.print();</span>
+ 
+   try { <span class="color-comment"> // graceful handling of exception</span>
+      Date d3(2011, 2, 29);
+      d3.print();
+   } catch (invalid_argument &amp;ex) {
+      cout &lt;&lt; ex.what() &lt;&lt; endl; <span class="color-comment"> // Error: Invalid day (1-28|29|30|31)!</span>
+   }
+   cout &lt;&lt; &quot;Next Statement after try-catch&quot; &lt;&lt; endl;
+ 
+   try { <span class="color-comment"> // graceful handling of exception</span>
+      Date d4(9999, 12, 30);
+      d4.nextDay().print();<span class="color-comment"> // Friday, 31 Dec 9999</span>
+      d4.nextDay();
+      d4.print();
+   } catch (out_of_range &amp;ex) {
+      cout &lt;&lt; ex.what() &lt;&lt; endl; <span class="color-comment"> // Error: Next day is outside the valid range!</span>
+   }
+ 
+   Date d5(2012, 1, 1);
+   d5.previousDay().print(); <span class="color-comment"> // Saturday, 31 Dec 2011</span>
+ 
+   Date d6(2012, 3, 31);
+   d6.nextMonth().print(); <span class="color-comment"> // Monday, 30 Apr 2012</span>
+ 
+   Date d7(2012, 3, 31);
+   d7.previousMonth().print(); <span class="color-comment"> // Wednesday, 29 Feb 2012</span>
+ 
+   Date d8(2012, 2, 29);
+   d8.nextYear().print();<span class="color-comment"> // Thursday, 28 Feb 2013</span>
+ 
+   Date d9(2012, 2, 29);
+   d9.previousYear().print(); <span class="color-comment"> // Monday, 28 Feb 2011</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>[TODO]</li>
+</ul>
+
+
+
+<h3>Example: The <span class="font-code">Point</span> and <span class="font-code">Polyline</span> Class</h3>
+<p>[TODO] Using STL <code>vector&lt;Point&gt;</code>..</p>
+
+<a class="references" href="../howto/References.html#cpp">Link to &quot;C++ Language References &amp; Resources&quot;</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: GCC g++ 4.6.2<br />
+Last modified: May, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

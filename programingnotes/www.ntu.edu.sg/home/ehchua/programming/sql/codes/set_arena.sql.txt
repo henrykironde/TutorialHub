@@ -1,0 +1,58 @@
+/*
+ * Playing with MySQL SET data type
+ */
+
+/*
+ * Setup database `the_arena`
+ */
+-- SHOW DATABASES;
+-- DROP DATABASE IF EXISTS `the_arena`;
+CREATE DATABASE IF NOT EXISTS `the_arena`;
+
+-- Use this database as the current default database
+USE `the_arena`;
+-- SHOW TABLES;
+
+/*
+ * Create table with SET columns
+ */
+DROP TABLE IF EXISTS `set_arena`;
+CREATE TABLE IF NOT EXISTS `set_arena` (
+   `id` SMALLINT(5) UNSIGNED ZEROFILL AUTO_INCREMENT, -- Primary key
+   `description` VARCHAR(50) DEFAULT NULL,            -- Describe this row
+   `genre` set('Action', 'Adventure', 'Animation', 'Comedy', 'Documentary', 'Drama') DEFAULT NULL,
+   `languages` set('en', 'cn', 'other') DEFAULT 'en',
+   PRIMARY KEY(`id`)
+);
+DESCRIBE `set_arena`;
+
+/*
+ * Inserting records.
+ */
+-- Inserting valid values. 
+INSERT INTO `set_arena` VALUES (NULL, 'Valid values', 'Action,Adventure,Animation', '');  -- No spaces around commas
+SELECT * FROM `set_arena`;
+
+-- Inserting invalid values. Invalid value is substituted with empty string (index of 0), with warning.
+INSERT INTO `set_arena` VALUES (NULL, 'Invalid values', 'Action,Horror,Thriller,Drama', 'fr');  
+SHOW WARNINGS;
+SELECT * FROM `set_arena`;
+
+/*
+ * Retrieve all the allowable values of a SET column from the system database information_schema
+ */
+SELECT column_type FROM information_schema.columns
+   WHERE table_schema='the_arena' AND table_name='set_arena' AND column_name='genre';
+
+/*
+ * Using indexes
+ */
+-- Convert to indexes with +0 and display
+SELECT `genre`, `genre`+0 AS `genre index`, `languages`, `languages`+0 AS `languages index` FROM `set_arena`;
+ 
+-- Using numeric value to reference a set member
+INSERT INTO `set_arena` VALUES (NULL, 'Use numeric values', 15, 4);
+SELECT * FROM `set_arena` WHERE `description`='Use numeric values';
+
+-- Selecting error records with numeric value of 0
+SELECT * FROM `set_arena` WHERE `genre`=0 OR `languages`=0;

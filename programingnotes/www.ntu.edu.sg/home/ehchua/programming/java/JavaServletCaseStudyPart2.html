@@ -1,0 +1,4692 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>A Java Servlet E-Shop Case Study Continue</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Server-side Programming</h1>
+<h2>A Java Servlet E-shop Case Study - Continue</h2>
+</div>
+
+<div id="content-main">
+
+
+<p>In this article, we shall continue from &quot;<a href="JavaServletCaseStudy.html">A Java Servlet E-shop Case Study</a>&quot;.</p>
+<p>I shall assume that you are familiar with:</p>
+
+<ol>
+<li>MySQL (read &quot;<a href="../sql/MySQL_HowTo.html">How to install MySQL and Get Start with Java Database Programming</a>&quot;).</li>
+<li>Tomcat (read &quot;<a href="../howto/Tomcat_HowTo.html">How to install Tomcat and Get Started with Java Servlet Programming</a>&quot;).</li>
+<li>JDBC (read &quot;<a href="JDBC_Basic.html">JDBC Basic</a>&quot;).</li>
+<li>You have completed the &quot;<a href="JavaServletCaseStudy.html">Java Servlet E-Shop Case Study</a>&quot;.</li>
+</ol>
+
+<h3>Touching Up our E-Bookshop</h3>
+<p>Before we proceed, let us first touch up the e-bookshop that we have written earlier. We shall create a new webapp called &quot;<code>yaebookshop</code>&quot; (<em>yet another e-bookshop</em>).</p>
+
+<p>We shall also use an IDE, such as NetBeans or Eclipse, to develop our webapp, so as to improve our productivity and efficiency. Read:</p>
+<ul>
+<li>NetBeans: &quot;<a href="../howto/NetBeans_HowTo.html#NetBeans_WebApp">Developing and Deploying Web Application in NetBeans</a>&quot;.</li>
+<li>Eclipse: &quot;<a href="../howto/EclipseJava_HowTo.html#EclipseWebapp">Developing and Deploying Web Applications in Eclipse for Java EE</a>&quot;.</li>
+</ul>
+
+<h4>Create a New Webapp &quot;<span class="font-code">yaebookshop</span>&quot;</h4>
+
+<p>Create the following webapp directory structure for &quot;<code>yaebookshop</code>&quot; under Tomcat's &quot;<code>webapps</code>&quot; directory:</p>
+
+<ol>
+<li><span class="line-heading font-code">webapps\yaebookshop</span>: The <em>context root</em> for the webapp &quot;<code>yaebookshop</code>&quot;. Contains resources visible to the web users, such as HTML, CSS, images and scripts.</li>
+<li><span class="line-heading font-code">webapps\yaebookshop\WEB-INF</span>: Hidden directory for protected resources of this webapp. Contains the web application deployment descriptor &quot;<code>web.xml</code>&quot;, and,
+
+<ol>
+<li><span class="line-heading font-code">webapps\yaebookshop\WEB-INF\src</span>: Keeps the Java Source file.</li>
+<li><span class="line-heading font-code">webapps\yaebookshop\WEB-INF\classes</span>: Keeps the Java classes.</li>
+<li><span class="line-heading font-code">webapps\yaebookshop\WEB-INF\lib</span>: Keep the external library's JAR-files, e.g., the MySQL JDBC Driver.</li>
+</ol></li>
+
+<li><span class="line-heading font-code">webapps\yaebookshop\META-INF</span>: Hidden directory for server-related resource specific to the server (such as Tomcat, Glassfish), e.g., configuration file &quot;<code>context.xml</code>&quot;. In contrast, &quot;<code>WEB-INF</code>&quot; is for resources independent of the web server.</li>
+</ol>
+
+<p><span class="line-heading">(NetBeans 7 with Java EE)</span> Create a web application called &quot;<code>yaebookshop</code>&quot;:</p>
+<ol>
+<li>From &quot;File&quot; menu &rArr; choose &quot;New Project&quot;.</li>
+<li>In &quot;Choose Project&quot; &rArr; Under &quot;Categories&quot;, choose &quot;Java Web&quot; &rArr; Under &quot;Projects&quot;, choose &quot;Web Application&quot; &rArr; &quot;Next&quot;.</li>
+<li>In &quot;Name and Location&quot; &rArr; In &quot;Project Name&quot;, enter &quot;<code>yaebookshop</code>&quot; &rArr;  In &quot;Project Location&quot;, select a suitable directory to save your works &rArr; In Project Folder, use the default &rArr; Check &quot;Set as Main Project&quot;  &rArr; Next.</li>
+<li>In &quot;Server and settings&quot; &rArr; In &quot;Server&quot;, select your Tomcat server, or &quot;add&quot; a new Tomcat server &rArr; In &quot;Java EE Version&quot;, choose the latest such as Java EE 6 Web &rArr; In &quot;Context Path&quot;, use the default &quot;<code>/yaebookshop</code>&quot; &rArr; Next.</li>
+<li>In &quot;Frameworks&quot;  &rArr; Select none for pure servlet/JSP application &rArr; Finish.</li>
+</ol>
+
+<h4>Setup the Database</h4>
+
+<p>We shall use the same database as the basic case study.</p>
+
+<pre class="color-example">
+Database: <strong>ebookshop</strong>
+Table: <strong>books</strong>
++-------+----------------------------+---------------+---------+-------+
+| <strong>id  </strong>  | <strong>title</strong>                      | <strong>author</strong>        | <strong>price</strong>   | <strong>qty  </strong> |
+| (INT) | (VARCHAR(50))              | (VARCHAR(50)) | (FLOAT) | (INT) |
++-------+----------------------------+---------------+---------+-------+
+| 1001  | Java for dummies           | Tan Ah Teck   | 11.11   | 11    |
+| 1002  | More Java for dummies      | Tan Ah Teck   | 22.22   | 22    |
+| 1003  | More Java for more dummies | Mohammad Ali  | 33.33   | 33    |
+| 1004  | A Cup of Java              | Kumar         | 44.44   | 44    |
+| 1005  | A Teaspoon of Java         | Kevin Jones   | 55.55   | 55    |
++-------+----------------------------+---------------+---------+-------+
+  
+Database: <strong>ebookshop</strong>
+Table: <strong>order_records</strong>
++-------+-------------+---------------+---------------+------------+
+| <strong>id  </strong>  | <strong>qty_ordered</strong> | <strong>cust_name</strong>     | <strong>cust_email</strong>    | <strong>cust_phone</strong> |
+| (INT) | (INT)       | (VARCHAR(30)) | (VARCHAR(30)) | CHAR(8)    |
++-------+-------------+---------------+---------------+------------+
+</pre>
+
+<p>You can create the database by running the following SQL script:</p>
+
+<pre class="color-command">
+create database if not exists <strong>ebookshop</strong>;
+ 
+use ebookshop;
+ 
+drop table if exists books;
+create table <strong>books</strong> (
+  <strong>id</strong>     int,
+ <strong> title</strong>  varchar(50),
+ <strong> author</strong> varchar(50),
+ <strong> price</strong>  float,
+ <strong> qty</strong>    int,
+  primary key (id));
+ 
+insert into books values (1001, 'Java for dummies', 'Tan Ah Teck', 11.11, 11);
+insert into books values (1002, 'More Java for dummies', 'Tan Ah Teck', 22.22, 22);
+insert into books values (1003, 'More Java for more dummies', 'Mohammad Ali', 33.33, 33);
+insert into books values (1004, 'A Cup of Java', 'Kumar', 44.44, 44);
+insert into books values (1005, 'A Teaspoon of Java', 'Kevin Jones', 55.55, 55);
+ 
+drop table if exists order_records;
+create table <strong>order_records</strong> (
+  <strong>id</strong>          int,
+  <strong>qty_ordered</strong> int,
+  <strong>cust_name</strong>   varchar(30),
+  <strong>cust_email</strong>  varchar(30),
+  <strong>cust_phone</strong>  char(8));
+ 
+select * from books;</pre>
+
+
+<h4>Sequence of Events</h4>
+
+<p>The sequence of events is as follows:</p>
+
+<ol>
+<li>A client can start the webapp by issuing <code>URL http://<em>hostname</em>:<em>port</em>/yaebookshop/start</code>, which is mapped to &quot;<code>EntryServlet</code>&quot;. The servlet outputs an HTML form of a search menu. The form is to be submitted to URL &quot;<code>/search</code>&quot;, with request parameters <code>author=<em>name</em></code> and <code>search=<em>term</em></code>.</li>
+<li>The URL &quot;<code>/search</code>&quot; maps to &quot;<code>QueryServlet</code>&quot;, which retrieves the request parameters <code>author=<em>name</em></code> and <code>search=<em>term</em></code>, queries the database, and outputs the list of books that meets the query criteria in an HTML form. Each book is identified by a checkbox (with <code>name=value</code> pair of <code>id=<em>xxx</em></code>) and a quantity text field (with name=value pair of <code>id<em>xxx</em>=<em>qty</em></code>, where <em>xxx</em> is the book's <code>id</code>). The form is to be submitted to URL &quot;<code>/order</code>&quot;.</li>
+<li>The URL &quot;<code>/order</code>&quot; maps to &quot;<code>OrderServlet</code>&quot;, which retrieves the book's id and quantity ordered, and update the table <code>books</code>, by reducing the quantity available. It also create a transaction record in a  table <code>order_records</code>.</li>
+</ol>
+
+<img class="image-center" src="images/ServletCS2_Sequence1.png" alt="ServletCS2_Sequence1.png" />
+
+<img class="image-center" src="images/ServletCS2_Sequence2.png" alt="ServletCS2_Sequence2.png" />
+
+<img class="image-center" src="images/ServletCS2_Sequence3.png" alt="ServletCS2_Sequence3.png" />
+
+<h4>Entry Page - &quot;<span class="font-code">EntryServlet</span>&quot; (with URL &quot;<span class="font-code">\start</span>&quot;)</h4>
+
+<p>The entry servlet (called &quot;<code>EntryServlet</code>&quot; with URL &quot;<code>\start</code>&quot;) prints an HTML form with a pull-down menu and a text field for users to issue query. It populates the pull-down menu with all the available authors, by querying the database. It also provides a text field for users to enter a search term to search for the desired title or author with pattern matching. Take note that the entry point of this webapp is a servlet with URL <code>http://<em>hostname</em>:<em>port</em>/yaebookshop/start</code>, instead of an HTML page as in the previous exercises.</p>
+
+<h5>&quot;<span class="font-code">EntryServlet.java</span>&quot;</h5>
+
+<p>For proper deployment, Java classes shall be kept in a named package (instead of the default <em>no-name</em> package). Let's call our package &quot;<code>mypkg</code>&quot;.</p>
+<p> Create a sub-directory called &quot;<code>mypkg</code>&quot; under &quot;<code>WEB-INF\src</code>&quot;, and save the &quot;<code>EntryServlet.java</code>&quot; under <code>&quot;mypkg&quot;</code>.</p>
+
+<p><span class="line-heading">(NetBeans)</span> Expand on your project node &rArr; Right-click on &quot;Source Packages&quot; &rArr; New &rArr; Others &rArr; In &quot;Categories&quot;, select &quot;Web&quot; &rArr; In &quot;File Types&quot;, select &quot;Servlet&quot; &rArr; In &quot;Class Name&quot;, enter &quot;<code>EntryServlet</code>&quot; &rArr; In &quot;Package&quot;, enter &quot;<code>mypkg</code>&quot; &rArr; Next &rArr; Check &quot;Add Information to deployment descriptor (web.xml)&quot; &rArr; In &quot;URL Pattern&quot;, enter &quot;<code>/start</code>&quot; &rArr; &quot;Finish&quot;.
+  (Alternatively, you can first create a new &quot;package&quot; called &quot;<code>mypkg</code>&quot; and then create the Java Servlet.)</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import java.sql.*;
+import java.util.logging.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+ 
+public class <strong>EntryServlet</strong> extends HttpServlet {
+ 
+   private String databaseURL, username, password;
+ 
+   @Override
+   public void init(ServletConfig config) throws ServletException {
+      <span class="color-comment">// Retrieve the database-URL, username, password from webapp init parameters</span>
+      super.init(config);
+      ServletContext context = config.getServletContext();
+      databaseURL = context.getInitParameter(&quot;databaseURL&quot;);
+      username = context.getInitParameter(&quot;username&quot;);
+      password = context.getInitParameter(&quot;password&quot;);
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      Connection conn = null;
+      Statement stmt = null;
+      try {
+         conn = DriverManager.getConnection(databaseURL, username, password);
+         stmt = conn.createStatement();
+         String sqlStr = &quot;SELECT DISTINCT author FROM books WHERE qty &gt; 0&quot;;
+         <span class="color-comment">// System.out.println(sqlStr);  // for debugging</span>
+         ResultSet rset = stmt.executeQuery(sqlStr);
+ 
+         out.println(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Welcome to YaEshop&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);
+         out.println(&quot;&lt;h2&gt;Welcome to Yet Another E-BookShop&lt;/h2&gt;&quot;);
+         <span class="color-comment">// Begin an HTML form</span>
+         out.println(&quot;&lt;form method='get' action='search'&gt;&quot;);
+ 
+         <span class="color-comment">// A pull-down menu of all the authors with a no-selection option</span>
+         out.println(&quot;Choose an Author: &lt;select name='author' size='1'&gt;&quot;);
+         out.println(&quot;&lt;option value=''&gt;Select...&lt;/option&gt;&quot;);  <span class="color-comment">// no-selection</span>
+         while (rset.next()) {  <span class="color-comment">// list all the authors</span>
+            String author = rset.getString(&quot;author&quot;);
+            out.println(&quot;&lt;option value='&quot; + author + &quot;'&gt;&quot; + author + &quot;&lt;/option&gt;&quot;);
+         }
+         out.println(&quot;&lt;/select&gt;&lt;br /&gt;&quot;);
+         out.println(&quot;&lt;p&gt;OR&lt;/p&gt;&quot;);
+ 
+         <span class="color-comment">// A text field for entering search word for pattern matching</span>
+         out.println(&quot;Search \&quot;Title\&quot; or \&quot;Author\&quot;: &lt;input type='text' name='search' /&gt;&quot;);
+ 
+         <span class="color-comment">// Submit and reset buttons</span>
+         out.println(&quot;&lt;br /&gt;&lt;br /&gt;&quot;);
+         out.println(&quot;&lt;input type='submit' value='SEARCH' /&gt;&quot;);
+         out.println(&quot;&lt;input type='reset' value='CLEAR' /&gt;&quot;);
+         out.println(&quot;&lt;/form&gt;&quot;);
+ 
+         out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+      } catch (SQLException ex) {
+         out.println(&quot;&lt;h3&gt;Service not available. Please try again later!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+         Logger.getLogger(EntryServlet.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+         out.close();
+         try {
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
+         } catch (SQLException ex) {
+            Logger.getLogger(EntryServlet.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
+   }
+ 
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      doGet(request, response);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Dissecting the Program:</p>
+
+<ol>
+<li>In Line 1, we place the source file in package &quot;<code>mypkg</code>&quot; to facilitate deployment.<br />
+  (If you are using JDK with CMD shell) As the source file is saved under &quot;<code>WEB-INF\src\mypkg</code>&quot;, we need to use the following command to compile the source and place the resultant class in &quot;<code>WEB-INF\classes\mypkg</code>&quot;:
+  <pre class="color-command">
+<span class="color-comment">// change directory to &quot;yaebooshop\WEB-INF\classes&quot;</span>
+&gt; <strong>javac -d . ..\src\EntryServlet.java</strong></pre></li>
+
+<li>Instead of hard-coding the database-URL, username and password in the <code>getConnection()</code> method, we shall keep them in the web application's initialization parameters. We will configure the init parameters later in &quot;<code>web.xml</code>&quot;. They are available to all the servlets under this web application (i.e., having application scope). In the <code>init()</code> method, which runs once when the servlet is loaded into the container, we retrieve the <code>ServletContext</code> via <code>ServletConfig</code>, and then retrieve the initialization parameters.</li>
+
+<li>In the <code>doGet()</code> method, which runs once per user request, we print an HTML form, consisting of a pull-down menu of authors (with request parameter name of &quot;<code>author=<em>name</em></code>&quot;) and a search text field (with request parameter name of &quot;<code>search=<em>term</em></code>&quot;). The list of author is obtained via a database query.</li>
+
+<li>The form will be submitted to a URL '<code>/query</code>&quot;, using GET request method. In production, we shall change to POST request, with <code>doPost()</code> re-directed to <code>doGet()</code>. The URL triggered shall be:
+  <pre class="color-command">
+http://hostname:port/yaebookshop/<strong>query?author=<em>name</em>&amp;search=<em>term</em></strong></pre>
+</li>
+
+<li>I also replace the <code>printStackTrace()</code> with proper logging framework, for  production use.</li>
+
+</ol>
+
+
+<h5>Application Deployment Descriptor &quot;<span class="font-code">web.xml</span>&quot;</h5>
+
+<p><span class="line-heading">(NetBeans)</span> You can create &quot;<code>web.xml</code>&quot; by right-click on the project node &rArr; New &rArr; Others &rArr; In &quot;Categories&quot;, select &quot;Web&quot; &rArr; In &quot;File Types&quot;, select &quot;Standard Deployment Descriptor (web.xml)&quot;. The &quot;<code>web.xml</code>&quot; is available under the &quot;Configuration Files&quot; node.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app version=&quot;3.0&quot;
+    xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd&quot;&gt;
+ 
+  &lt;context-param&gt;
+    &lt;param-name&gt;<strong>databaseURL</strong>&lt;/param-name&gt;
+    &lt;param-value&gt;<strong>jdbc:mysql://localhost:3306/ebookshop</strong>&lt;/param-value&gt;
+  &lt;/context-param&gt;
+  &lt;context-param&gt;
+    &lt;param-name&gt;<strong>username</strong>&lt;/param-name&gt;
+    &lt;param-value&gt;<strong>myuser</strong>&lt;/param-value&gt;
+  &lt;/context-param&gt;
+  &lt;context-param&gt;
+    &lt;param-name&gt;<strong>password</strong>&lt;/param-name&gt;
+    &lt;param-value&gt;<strong>xxxx</strong>&lt;/param-value&gt;
+  &lt;/context-param&gt;
+ 
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;EntryServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;<strong>mypkg.EntryServlet</strong>&lt;/servlet-class&gt;
+  &lt;/servlet&gt;
+ 
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;EntryServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;<strong>/start</strong>&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+ 
+  &lt;session-config&gt;
+    &lt;session-timeout&gt;30&lt;/session-timeout&gt;
+  &lt;/session-config&gt;
+  &lt;welcome-file-list&gt;
+    &lt;welcome-file&gt;<strong>start</strong>&lt;/welcome-file&gt;
+  &lt;/welcome-file-list&gt;
+&lt;/web-app&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Notes:</p>
+
+<ol>
+<li>This &quot;<code>web.xml</code>&quot; contains webapp's initialization parameters (namely, database-URL, username and password), which are available to all servlets under this webapp (i.e., having applications scope). They are make available via the <code>ServletContext</code> object.</li>
+<li>We configure request URL &quot;<code>/start</code>&quot; to &quot;<code>mypkg.EntryServlet.class</code>&quot;.</li>
+<li>We also set the &quot;<code>start</code>&quot; as a welcome file. In other word, directory request to <code>http://<em>hostname</em>:<em>port</em>/yaebookshop</code> will also start the application.</li>
+
+</ol>
+
+
+<h4>Handling the Query - &quot;<span class="font-code">QueryServlet</span>&quot; (with URL &quot;<span class="font-code">/query</span>&quot;)</h4>
+
+<h5>&quot;<span class="font-code">QueryServlet.java</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import java.sql.*;
+import java.util.logging.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+ 
+public class <strong>QueryServlet</strong> extends HttpServlet {
+ 
+   private String databaseURL, username, password;
+ 
+   @Override
+   public void init(ServletConfig config) throws ServletException {
+      super.init(config);
+      ServletContext context = config.getServletContext();
+      databaseURL = context.getInitParameter(&quot;databaseURL&quot;);
+      username = context.getInitParameter(&quot;username&quot;);
+      password = context.getInitParameter(&quot;password&quot;);
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      Connection conn = null;
+      Statement stmt = null;
+ 
+      try {
+         <span class="color-comment">// Retrieve and process request parameters: &quot;author&quot; and &quot;search&quot;</span>
+         String author = request.getParameter(&quot;author&quot;);
+         boolean hasAuthorParam = author != null &amp;&amp; !author.equals(&quot;Select...&quot;);
+         String searchWord = request.getParameter(&quot;search&quot;);
+         boolean hasSearchParam = searchWord != null &amp;&amp; ((searchWord = searchWord.trim()).length() &gt; 0);
+ 
+         out.println(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Query Results&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);
+         out.println(&quot;&lt;h2&gt;YAEBS - Query Results&lt;/h2&gt;&quot;);
+ 
+         if (!hasAuthorParam &amp;&amp; !hasSearchParam) {  <span class="color-comment">// No params present</span>
+            out.println(&quot;&lt;h3&gt;Please select an author or enter a search term!&lt;/h3&gt;&quot;);
+            out.println(&quot;&lt;p&gt;&lt;a href='start'&gt;Back to Select Menu&lt;/a&gt;&lt;/p&gt;&quot;);
+         } else {
+            conn = DriverManager.getConnection(databaseURL, username, password);
+            stmt = conn.createStatement();
+ 
+            <span class="color-comment">// Form a SQL command based on the param(s) present</span>
+            StringBuilder sqlStr = new StringBuilder();  <span class="color-comment">// more efficient than String</span>
+            sqlStr.append(&quot;SELECT * FROM books WHERE qty &gt; 0 AND (&quot;);
+            if (hasAuthorParam) {
+               sqlStr.append(&quot;author = '&quot;).append(author).append(&quot;'&quot;);
+            }
+            if (hasSearchParam) {
+               if (hasAuthorParam) {
+                  sqlStr.append(&quot; OR &quot;);
+               }
+               sqlStr.append(&quot;author LIKE '%&quot;).append(searchWord)
+                     .append(&quot;%' OR title LIKE '%&quot;).append(searchWord).append(&quot;%'&quot;);
+            }
+            sqlStr.append(&quot;) ORDER BY author, title&quot;);
+            <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+            ResultSet rset = stmt.executeQuery(sqlStr.toString());
+ 
+            if (!rset.next()) {  <span class="color-comment">// Check for empty ResultSet (no book found)</span>
+               out.println(&quot;&lt;h3&gt;No book found. Please try again!&lt;/h3&gt;&quot;);
+               out.println(&quot;&lt;p&gt;&lt;a href='start'&gt;Back to Select Menu&lt;/a&gt;&lt;/p&gt;&quot;);
+            } else {
+               <span class="color-comment">// Print the result in an HTML form inside a table</span>
+               out.println(&quot;&lt;form method='get' action='order'&gt;&quot;);
+               out.println(&quot;&lt;table border='1' cellpadding='6'&gt;&quot;);
+               out.println(&quot;&lt;tr&gt;&quot;);
+               out.println(&quot;&lt;th&gt;&amp;nbsp;&lt;/th&gt;&quot;);
+               out.println(&quot;&lt;th&gt;AUTHOR&lt;/th&gt;&quot;);
+               out.println(&quot;&lt;th&gt;TITLE&lt;/th&gt;&quot;);
+               out.println(&quot;&lt;th&gt;PRICE&lt;/th&gt;&quot;);
+               out.println(&quot;&lt;th&gt;QTY&lt;/th&gt;&quot;);
+               out.println(&quot;&lt;/tr&gt;&quot;);
+ 
+               <span class="color-comment">// ResultSet's cursor now pointing at first row</span>
+               do {
+                  <span class="color-comment">// Print each row with a checkbox identified by book's id</span>
+                  String id = rset.getString(&quot;id&quot;);
+                  out.println(&quot;&lt;tr&gt;&quot;);
+                  out.println(&quot;&lt;td&gt;&lt;input type='checkbox' name='id' value='&quot; + id + &quot;' /&gt;&lt;/td&gt;&quot;);
+                  out.println(&quot;&lt;td&gt;&quot; + rset.getString(&quot;author&quot;) + &quot;&lt;/td&gt;&quot;);
+                  out.println(&quot;&lt;td&gt;&quot; + rset.getString(&quot;title&quot;) + &quot;&lt;/td&gt;&quot;);
+                  out.println(&quot;&lt;td&gt;$&quot; + rset.getString(&quot;price&quot;) + &quot;&lt;/td&gt;&quot;);
+                  out.println(&quot;&lt;td&gt;&lt;input type='text' size='3' value='1' name='qty&quot; + id + &quot;' /&gt;&lt;/td&gt;&quot;);
+                  out.println(&quot;&lt;/tr&gt;&quot;);
+               } while (rset.next());
+               out.println(&quot;&lt;/table&gt;&lt;br /&gt;&quot;);
+ 
+               <span class="color-comment">// Ask for name, email and phone using text fields (arranged in a table)</span>
+               out.println(&quot;&lt;table&gt;&quot;);
+               out.println(&quot;&lt;tr&gt;&lt;td&gt;Enter your Name:&lt;/td&gt;&quot;);
+               out.println(&quot;&lt;td&gt;&lt;input type='text' name='cust_name' /&gt;&lt;/td&gt;&lt;/tr&gt;&quot;);
+               out.println(&quot;&lt;tr&gt;&lt;td&gt;Enter your Email (user@host):&lt;/td&gt;&quot;);
+               out.println(&quot;&lt;td&gt;&lt;input type='text' name='cust_email' /&gt;&lt;/td&gt;&lt;/tr&gt;&quot;);
+               out.println(&quot;&lt;tr&gt;&lt;td&gt;Enter your Phone Number (8-digit):&lt;/td&gt;&quot;);
+               out.println(&quot;&lt;td&gt;&lt;input type='text' name='cust_phone' /&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;br /&gt;&quot;);
+ 
+               <span class="color-comment">// Submit and reset buttons</span>
+               out.println(&quot;&lt;input type='submit' value='ORDER' /&gt;&quot;);
+               out.println(&quot;&lt;input type='reset' value='CLEAR' /&gt;&lt;/form&gt;&quot;);
+ 
+               <span class="color-comment">// Hyperlink to go back to search menu</span>
+               out.println(&quot;&lt;p&gt;&lt;a href='start'&gt;Back to Select Menu&lt;/a&gt;&lt;/p&gt;&quot;);
+            }
+         }
+         out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+      } catch (SQLException ex) {
+         out.println(&quot;&lt;h3&gt;Service not available. Please try again later!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+         Logger.getLogger(QueryServlet.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+         out.close();
+         try {
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
+         } catch (SQLException ex) {
+            Logger.getLogger(QueryServlet.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
+   }
+ 
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      doGet(request, response);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Dissecting the Program:</p>
+
+<ol>
+
+<li>This servlet retrieve the query parameters <code>author</code> and <code>search</code> to form a SQL SELECT query. Take note that many lines of codes are used to check the validity of input parameters (which could be simplified by other techniques). The SQL SELECT statement is as follows. We use pattern matching (LIKE operator) to handle the search term.
+  <pre class="color-command">
+SELECT * FROM books 
+  WHERE qty &gt; 0 
+  AND (author = '<em>name</em>' OR author LIKE '%<em>term</em>%' OR title LIKE '%<em>term</em>%')</pre></li>
+  
+<li>The servlet  outputs an HTML form, listing all the books selected, with a checkbox for ordering and a text field for entering the quantity.  The <code>name=value</code> pair of the checkbox is the <code>id=<em>xxx</em></code>; whereas the <code>name=value</code> pair of the quantity text field is <code>qty+id=<em>qtyOrdered</em></code>, for example, <code>id=1001</code> and <code>qty1001=5</code>.</li>
+<li>It also prints three text fields to prompt for the customer's name, email and phone number, with <code>name</code> attribute of <code>cust_name</code>, <code>cust_email</code> and <code>cust_phone</code>, respectively.</li>
+<li>The form is to be submitted to URL &quot;<code>/order</code>&quot; using GET request (shall change to POST for production).</li>  
+  
+</ol>
+
+<h5>Application Deployment Descriptor &quot;<code>web.xml</code>&quot;</h5>
+
+<pre class="color-example">
+&lt;servlet&gt;
+  &lt;servlet-name&gt;QueryServlet&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;<strong>mypkg.QueryServlet</strong>&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+ 
+......
+ 
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;QueryServlet&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;<strong>/search</strong>&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+
+<h4>Handling the Order - &quot;<span class="font-code">OrderServlet</span>&quot; (with URL &quot;<span class="font-code">/order</span>&quot;)</h4>
+
+<h5>&quot;<span class="font-code">OrderServlet.java</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import java.sql.*;
+import java.util.logging.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+ 
+public class <strong>OrderServlet</strong> extends HttpServlet {
+ 
+   private String databaseURL, username, password;
+ 
+   @Override
+   public void init(ServletConfig config) throws ServletException {
+      super.init(config);
+      ServletContext context = config.getServletContext();
+      databaseURL = context.getInitParameter(&quot;databaseURL&quot;);
+      username = context.getInitParameter(&quot;username&quot;);
+      password = context.getInitParameter(&quot;password&quot;);
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      Connection conn = null;
+      Statement  stmt = null;
+      ResultSet  rset = null;
+      String     sqlStr = null;
+ 
+      try {
+         out.println(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Order Confirmation&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);
+         out.println(&quot;&lt;h2&gt;YAEBS - Order Confirmation&lt;/h2&gt;&quot;);
+ 
+         <span class="color-comment">// Retrieve and process request parameters: id(s), cust_name, cust_email, cust_phone</span>
+         String[] ids = request.getParameterValues(&quot;id&quot;);  <span class="color-comment">// Possibly more than one values</span>
+         String custName = request.getParameter(&quot;cust_name&quot;);
+         boolean hasCustName = custName != null &amp;&amp; ((custName = custName.trim()).length() &gt; 0);
+         String custEmail = request.getParameter(&quot;cust_email&quot;).trim();
+         boolean hasCustEmail = custEmail != null &amp;&amp; ((custEmail = custEmail.trim()).length() &gt; 0);
+         String custPhone = request.getParameter(&quot;cust_phone&quot;).trim();
+         boolean hasCustPhone = custPhone != null &amp;&amp; ((custPhone = custPhone.trim()).length() &gt; 0);
+ 
+         <span class="color-comment">// Validate inputs</span>
+         if (ids == null || ids.length == 0) {
+            out.println(&quot;&lt;h3&gt;Please Select a Book!&lt;/h3&gt;&quot;);
+         } else if (!hasCustName) {
+            out.println(&quot;&lt;h3&gt;Please Enter Your Name!&lt;/h3&gt;&quot;);
+         } else if (!hasCustEmail || (custEmail.indexOf('@') == -1)) {
+            out.println(&quot;&lt;h3&gt;Please Enter Your e-mail (user@host)!&lt;/h3&gt;&quot;);
+         } else if (!hasCustPhone || (custPhone.length() != 8)) {
+            out.println(&quot;&lt;h3&gt;Please Enter an 8-digit Phone Number!&lt;/h3&gt;&quot;);
+         } else {
+            <span class="color-comment">// Display the name, email and phone (arranged in a table)</span>
+            out.println(&quot;&lt;table&gt;&quot;);
+            out.println(&quot;&lt;tr&gt;&lt;td&gt;Customer Name:&lt;/td&gt;&lt;td&gt;&quot; + custName + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+            out.println(&quot;&lt;tr&gt;&lt;td&gt;Customer Email:&lt;/td&gt;&lt;td&gt;&quot; + custEmail + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+            out.println(&quot;&lt;tr&gt;&lt;td&gt;Customer Phone Number:&lt;/td&gt;&lt;td&gt;&quot; + custPhone + &quot;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&quot;);
+ 
+            conn = DriverManager.getConnection(databaseURL, username, password);
+            stmt = conn.createStatement();
+ 
+            <span class="color-comment">// Print the book(s) ordered in a table</span>
+            out.println(&quot;&lt;br /&gt;&quot;);
+            out.println(&quot;&lt;table border='1' cellpadding='6'&gt;&quot;);
+            out.println(&quot;&lt;tr&gt;&lt;th&gt;AUTHOR&lt;/th&gt;&lt;th&gt;TITLE&lt;/th&gt;&lt;th&gt;PRICE&lt;/th&gt;&lt;th&gt;QTY&lt;/th&gt;&lt;/tr&gt;&quot;);
+ 
+            float totalPrice = 0f;
+            for (String id : ids) {
+               sqlStr = &quot;SELECT * FROM books WHERE id = &quot; + id;
+               <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+               rset = stmt.executeQuery(sqlStr);
+ 
+               <span class="color-comment">// Expect only one row in ResultSet</span>
+               rset.next();
+               int qtyAvailable = rset.getInt(&quot;qty&quot;);
+               String title = rset.getString(&quot;title&quot;);
+               String author = rset.getString(&quot;author&quot;);
+               float price = rset.getFloat(&quot;price&quot;);
+ 
+               int qtyOrdered = Integer.parseInt(request.getParameter(&quot;qty&quot; + id));
+               sqlStr = &quot;UPDATE books SET qty = qty - &quot; + qtyOrdered + &quot; WHERE id = &quot; + id;
+               <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+               stmt.executeUpdate(sqlStr);
+ 
+               sqlStr = &quot;INSERT INTO order_records values (&quot;
+                       + id + &quot;, &quot; + qtyOrdered + &quot;, '&quot; + custName + &quot;', '&quot;
+                       + custEmail + &quot;', '&quot; + custPhone + &quot;')&quot;;
+               <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+               stmt.executeUpdate(sqlStr);
+ 
+               <span class="color-comment">// Display this book ordered</span>
+               out.println(&quot;&lt;tr&gt;&quot;);
+               out.println(&quot;&lt;td&gt;&quot; + author + &quot;&lt;/td&gt;&quot;);
+               out.println(&quot;&lt;td&gt;&quot; + title + &quot;&lt;/td&gt;&quot;);
+               out.println(&quot;&lt;td&gt;&quot; + price + &quot;&lt;/td&gt;&quot;);
+               out.println(&quot;&lt;td&gt;&quot; + qtyOrdered + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+               totalPrice += price * qtyOrdered;
+            }
+ 
+            out.println(&quot;&lt;tr&gt;&lt;td colspan='4' align='right'&gt;Total Price: $&quot;);
+            out.printf(&quot;%.2f&lt;/td&gt;&lt;/tr&gt;&quot;, totalPrice);
+            out.println(&quot;&lt;/table&gt;&quot;);
+ 
+            out.println(&quot;&lt;h3&gt;Thank you.&lt;/h3&gt;&quot;);
+            out.println(&quot;&lt;p&gt;&lt;a href='start'&gt;Back to Select Menu&lt;/a&gt;&lt;/p&gt;&quot;);
+         }
+         out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+      } catch (SQLException ex) {
+         out.println(&quot;&lt;h3&gt;Service not available. Please try again later!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+         Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+         out.close();
+         try {
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
+         } catch (SQLException ex) {
+            Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
+   }
+ 
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      doGet(request, response);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Dissecting the Program:</p>
+<ol>
+<li>The servlet retrieves the request parameters, such as <code>id=1001</code>, <code>qty1001=1</code>, <code>id=1002</code>, <code>qty1002=2</code> and update the table <code>books</code> by reducing the quantity available. It also insert a transaction records in the table <code>order_records</code>.</li>
+<li>[TOOD] more</li>
+</ol>
+
+<h5>Application Deployment Descriptor &quot;<span class="font-code">web.xml</span>&quot;</h5>
+
+<pre class="color-example">
+&lt;servlet&gt;
+  &lt;servlet-name&gt;OrderServlet&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;<strong>mypkg.OrderServlet</strong>&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+ 
+......
+ 
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;OrderServlet&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;<strong>/order</strong>&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+
+<h4>Rewrite the &quot;<span class="font-code">OrderServlet</span>&quot; to do More  Checking</h4>
+
+<p>I rewrite the &quot;<code>OrderServlet</code>&quot; to do more checking on inputs and handle the abnormal conditions:</p>
+<ol>
+<li>The phone number must be exactly 8 numeric digits.</li>
+<li>The quantity ordered shall be less than or equal to quantity available.</li>
+<li>Replace special HMTL characters <code>&gt;</code>, <code>&lt;</code>, <code>&amp;</code> and <code>&quot;</code> with escape sequences in request parameters <code>cust_name</code>, <code>cust_email</code>.</li>
+<li>I also disable the auto-commit, which commit every SQL statement. Instead, a commit is issued only if the entire order (i.e., all books) can be met. Partial update will be roll-backed.</li>
+<li>[TODO]</li>
+</ol>
+
+<h5>Helper Utility &quot;<span class="font-code">myutil.InputFilter</span>&quot;</h5>
+
+<p>The utility class <code>InputFilter</code> provide these <code>static</code> methods to filter or verify the inputs entered by the client.</p>
+
+<ol>
+<li><code>htmlFilter</code>: replace special HTML characters <code>&gt;</code>, <code>&lt;</code>, <code>&amp;</code> and <code>&quot;</code> with escape sequences.</li>
+
+<li><code>isValidPhone</code>: Check if the given input string is a valid phone number.</li>
+
+<li><code>parsePositiveInt</code>: Parse the given input string to a positive integer or zero otherwise. Useful for checking the quantity ordered.</li>
+</ol>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70</pre>
+</td>
+<td>
+<pre>
+package myutil;
+ 
+public final class <strong>InputFilter</strong> {
+   <span class="color-comment">/**
+    * Filter the specified message string for characters that are sensitive
+    * in HTML.  This avoids potential attacks caused by including JavaScript
+    * codes in the request URL that is often reported in error messages.
+    */</span>
+   public static String <strong>htmlFilter</strong>(String message) {
+      if (message == null) return null;
+      int len = message.length();
+      StringBuilder result = new StringBuilder(len + 20);
+      char aChar;
+ 
+      for (int i = 0; i &lt; len; ++i) {
+         aChar = message.charAt(i);
+         switch (aChar) {
+         case '&lt;':
+             result.append(&quot;&amp;lt;&quot;);
+             break;
+         case '&gt;':
+             result.append(&quot;&amp;gt;&quot;);
+             break;
+         case '&amp;':
+             result.append(&quot;&amp;amp;&quot;);
+             break;
+         case '&quot;':
+             result.append(&quot;&amp;quot;&quot;);
+             break;
+         default:
+             result.append(aChar);
+         }
+      }
+      return (result.toString());
+   }
+ 
+   <span class="color-comment">/**
+    *  Given a phone number string, return true if it is an 8-digit number
+    */</span>
+   public static boolean <strong>isValidPhone</strong>(String phoneNumber) {
+      if (phoneNumber.length() != 8) {
+         return false;
+      }
+      for (int i = 0; i &lt; phoneNumber.length(); ++i) {
+         char c = phoneNumber.charAt(i);
+         if (c &lt; '0' || c &gt; '9') {
+            return false;
+         }
+      }
+      return true;
+   }
+ 
+   <span class="color-comment">/**
+    * Given a string, return a positive integer if the string can be parsed into
+    * a positive integer. Return 0 for non-positive integer or parsing error.
+    */</span>
+   public static int <strong>parsePositiveInt</strong>(String str) {
+      if (str == null || (str = str.trim()).length() == 0) {
+         return 0;
+      }
+ 
+      int result;
+      try {
+         result = Integer.parseInt(str);
+      } catch (NumberFormatException ex) {
+         return 0;
+      }
+      return (result &gt; 0) ? result : 0;
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>&quot;<span class="font-code">OrderServlet.java</span>&quot; (re-written)</h5>
+
+<p>The codes, which uses the utility methods, become rather messy! Checking valid inputs and handling abnormal conditions are never easy!</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import java.sql.*;
+import java.util.logging.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import myutil.InputFilter;
+ 
+public class <strong>OrderServlet</strong> extends HttpServlet {
+ 
+   private String databaseURL, username, password;
+ 
+   @Override
+   public void init(ServletConfig config) throws ServletException {
+      super.init(config);
+      ServletContext context = config.getServletContext();
+      databaseURL = context.getInitParameter(&quot;databaseURL&quot;);
+      username = context.getInitParameter(&quot;username&quot;);
+      password = context.getInitParameter(&quot;password&quot;);
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      Connection conn = null;
+      Statement  stmt = null;
+      ResultSet  rset = null;
+      String     sqlStr = null;
+ 
+      try {
+         out.println(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Order Confirmation&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);
+         out.println(&quot;&lt;h2&gt;YAEBS - Order Confirmation&lt;/h2&gt;&quot;);
+ 
+         <span class="color-comment">// Retrieve and process request parameters: id(s), cust_name, cust_email, cust_phone</span>
+         String[] ids = request.getParameterValues(&quot;id&quot;);  <span class="color-comment">// Possibly more than one values</span>
+         String custName = request.getParameter(&quot;cust_name&quot;);
+         boolean hasCustName = custName != null &amp;&amp;
+                 ((custName = InputFilter.htmlFilter(custName.trim())).length() &gt; 0);
+         String custEmail = request.getParameter(&quot;cust_email&quot;).trim();
+         boolean hasCustEmail = custEmail != null &amp;&amp;
+                 ((custEmail = InputFilter.htmlFilter(custEmail.trim())).length() &gt; 0);
+         String custPhone = request.getParameter(&quot;cust_phone&quot;).trim();
+         boolean hasCustPhone = custPhone != null &amp;&amp;
+                 ((custPhone = InputFilter.htmlFilter(custPhone.trim())).length() &gt; 0);
+ 
+         <span class="color-comment">// Validate inputs</span>
+         if (ids == null || ids.length == 0) {
+            out.println(&quot;&lt;h3&gt;Please Select a Book!&lt;/h3&gt;&quot;);
+         } else if (!hasCustName) {
+            out.println(&quot;&lt;h3&gt;Please Enter Your Name!&lt;/h3&gt;&quot;);
+         } else if (!hasCustEmail || (custEmail.indexOf('@') == -1)) {
+            out.println(&quot;&lt;h3&gt;Please Enter Your e-mail (user@host)!&lt;/h3&gt;&quot;);
+         } else if (!hasCustPhone || !InputFilter.isValidPhone(custPhone)) {
+            out.println(&quot;&lt;h3&gt;Please Enter an 8-digit Phone Number!&lt;/h3&gt;&quot;);
+         } else {
+            <span class="color-comment">// We shall build our output in a buffer, so that it will not be interrupted</span>
+            <span class="color-comment">//  by error messages.</span>
+            StringBuilder outBuf = new StringBuilder();
+            <span class="color-comment">// Display the name, email and phone (arranged in a table)</span>
+            outBuf.append(&quot;&lt;table&gt;&quot;);
+            outBuf.append(&quot;&lt;tr&gt;&lt;td&gt;Customer Name:&lt;/td&gt;&lt;td&gt;&quot;).append(custName).append(&quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+            outBuf.append(&quot;&lt;tr&gt;&lt;td&gt;Customer Email:&lt;/td&gt;&lt;td&gt;&quot;).append(custEmail).append(&quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+            outBuf.append(&quot;&lt;tr&gt;&lt;td&gt;Customer Phone Number:&lt;/td&gt;&lt;td&gt;&quot;).append(custPhone).append(&quot;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&quot;);
+ 
+            conn = DriverManager.getConnection(databaseURL, username, password);
+            stmt = conn.createStatement();
+            <span class="color-comment">// We shall manage our transaction (because multiple SQL statements issued)</span>
+            conn.setAutoCommit(false);
+ 
+            <span class="color-comment">// Print the book(s) ordered in a table</span>
+            outBuf.append(&quot;&lt;br /&gt;&quot;);
+            outBuf.append(&quot;&lt;table border='1' cellpadding='6'&gt;&quot;);
+            outBuf.append(&quot;&lt;tr&gt;&lt;th&gt;AUTHOR&lt;/th&gt;&lt;th&gt;TITLE&lt;/th&gt;&lt;th&gt;PRICE&lt;/th&gt;&lt;th&gt;QTY&lt;/th&gt;&lt;/tr&gt;&quot;);
+ 
+            boolean error = false;
+            float totalPrice = 0f;
+            for (String id : ids) {
+               sqlStr = &quot;SELECT * FROM books WHERE id = &quot; + id;
+               <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+               rset = stmt.executeQuery(sqlStr);
+ 
+               <span class="color-comment">// Expect only one row in ResultSet</span>
+               rset.next();
+               int qtyAvailable = rset.getInt(&quot;qty&quot;);
+               String title = rset.getString(&quot;title&quot;);
+               String author = rset.getString(&quot;author&quot;);
+               float price = rset.getFloat(&quot;price&quot;);
+ 
+               <span class="color-comment">// Validate quantity ordered</span>
+               String qtyOrderedStr = request.getParameter(&quot;qty&quot; + id);
+               int qtyOrdered = InputFilter.parsePositiveInt(qtyOrderedStr);
+               if (qtyOrdered == 0) {
+                  out.println(&quot;&lt;h3&gt;Please Enter a valid quantity for \&quot;&quot; + title + &quot;\&quot;!&lt;/h3&gt;&quot;);
+                  error = true;
+                  break;
+               } else if (qtyOrdered &gt; qtyAvailable) {
+                  out.println(&quot;&lt;h3&gt;There are insufficient copies of \&quot;&quot; + title + &quot;\&quot; available!&lt;/h3&gt;&quot;);
+                  error = true;
+                  break;
+               } else {
+                  <span class="color-comment">// Okay, update the books table and insert an order record</span>
+                  sqlStr = &quot;UPDATE books SET qty = qty - &quot; + qtyOrdered + &quot; WHERE id = &quot; + id;
+                  <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+                  stmt.executeUpdate(sqlStr);
+ 
+                  sqlStr = &quot;INSERT INTO order_records values (&quot;
+                          + id + &quot;, &quot; + qtyOrdered + &quot;, '&quot; + custName + &quot;', '&quot;
+                          + custEmail + &quot;', '&quot; + custPhone + &quot;')&quot;;
+                  <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+                  stmt.executeUpdate(sqlStr);
+ 
+                  <span class="color-comment">// Display this book ordered</span>
+                  outBuf.append(&quot;&lt;tr&gt;&quot;);
+                  outBuf.append(&quot;&lt;td&gt;&quot;).append(author).append(&quot;&lt;/td&gt;&quot;);
+                  outBuf.append(&quot;&lt;td&gt;&quot;).append(title).append(&quot;&lt;/td&gt;&quot;);
+                  outBuf.append(&quot;&lt;td&gt;&quot;).append(price).append(&quot;&lt;/td&gt;&quot;);
+                  outBuf.append(&quot;&lt;td&gt;&quot;).append(qtyOrdered).append(&quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+                  totalPrice += price * qtyOrdered;
+               }
+            }
+ 
+            if (error) {
+               conn.rollback();
+            } else {
+               <span class="color-comment">// No error, print the output from the StringBuilder.</span>
+               out.println(outBuf.toString());
+               out.println(&quot;&lt;tr&gt;&lt;td colspan='4' align='right'&gt;Total Price: $&quot;);
+               out.printf(&quot;%.2f&lt;/td&gt;&lt;/tr&gt;&quot;, totalPrice);
+               out.println(&quot;&lt;/table&gt;&quot;);
+ 
+               out.println(&quot;&lt;h3&gt;Thank you.&lt;/h3&gt;&quot;);
+               out.println(&quot;&lt;p&gt;&lt;a href='start'&gt;Back to Select Menu&lt;/a&gt;&lt;/p&gt;&quot;);
+               <span class="color-comment">// Commit for ALL the books ordered.</span>
+               conn.commit();
+            }
+         }
+         out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+      } catch (SQLException ex) {
+         try {
+            conn.rollback();  <span class="color-comment">// rollback the updates</span>
+            out.println(&quot;&lt;h3&gt;Service not available. Please try again later!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+         } catch (SQLException ex1) { }
+         Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+         out.close();
+         try {
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
+         } catch (SQLException ex) {
+            Logger.getLogger(OrderServlet.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
+   }
+ 
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      doGet(request, response);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Dissecting the Program:</p>
+
+<ol>
+<li>[TODO]</li>
+</ol>
+
+<h3>Database Connection Pooling</h3>
+<p>Using a new connection to service each request is highly inefficient, due to the high overhead involved in initializing and maintaining the connection. A common practice is to setup a common pool of database connections. A servlet picks up an available connection from the pool to perform database operation, and returns the connection to the pool once it is done. Tomcat supports database connection pooling via JDNI (Java Directory and Naming Interface).</p>
+
+<p>Create a new web application called &quot;<code>yaebsdbcp</code>&quot; (<em>yet another e-bookshop database connection pooling</em>). Copy all the servlets in the previous exercises into this webapp.</p>
+
+<p>The steps to set up database connection pooling in Tomcat is as follows:</p>
+
+<h5>Step 1: Configure a JNDI DataSource</h5>
+
+<p>Write  a JNDI (Java Naming and Directory Interface) DataSource configuration in &quot;<code>context.xml</code>&quot; as follows.  For application-specific configuration, save it under application's &quot;<code>META-INF</code>&quot;. (For server-wide configuration, put the <code>&lt;Resource&gt;</code> element under <code>&lt;GlobalNamingResources&gt;</code> in <code>$CATALINA_HOME\conf\server.xml</code>.)</p>
+
+<p><span class="line-heading">(NetBeans)</span> The &quot;<code>context.xml</code>&quot; can be found under the &quot;Configuration Files&quot; node.</p>
+
+<pre class="color-example">
+&lt;?xml version='1.0' encoding='ISO-8859-1' ?&gt;
+&lt;Context reloadable=&quot;true&quot;&gt;
+  <span class="color-comment">&lt;!-- 
+    maxActive: Maximum number of dB connections in pool. Set to -1 for no limit.
+    maxIdle: Maximum number of idle dB connections to retain in pool. Set to -1 for no limit.
+    maxWait: Maximum milliseconds to wait for a dB connection to become available
+             Set to -1 to wait indefinitely.
+  --&gt;</span>
+  &lt;Resource <strong>name=&quot;jdbc/mysql_ebookshop&quot;</strong> auth=&quot;Container&quot; type=&quot;javax.sql.DataSource&quot;
+     maxActive=&quot;100&quot; maxIdle=&quot;30&quot; maxWait=&quot;10000&quot; removeAbandoned=&quot;true&quot;
+     <span class="color-new">username=&quot;myuser&quot; password=&quot;xxxx&quot;</span> driverClassName=&quot;com.mysql.jdbc.Driver&quot;
+     <span class="color-new">url=&quot;jdbc:mysql://localhost:3306/ebookshop&quot;</span> /&gt;
+&lt;/Context&gt;</pre>
+
+<p>The above configuration declares a <em>JNDI resource name</em> called &quot;<code>jdbc/mysql_ebookshop</code>&quot; corresponds to the MySQL connection &quot;<code>mysql://localhost:3306/ebookshop</code>&quot;. Check your database-url, username and password.</p>
+
+<h5>Step 2: Application Deployment Descriptor &quot;<span class="font-code">web.xml</span>&quot;</h5>
+
+<p>Configure &quot;<code>WEB-INF\web.xml</code>&quot; to reference the JDNI &quot;<code>jdbc/mysql_ebookshop</code>&quot;.</p>
+
+<pre class="color-example">
+&lt;web-app ......&gt;
+ 
+   &lt;resource-ref&gt;
+      &lt;description&gt;DB Connection Pool&lt;/description&gt;
+      &lt;res-ref-name&gt;<strong>jdbc/mysql_ebookshop</strong>&lt;/res-ref-name&gt;
+      &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
+      &lt;res-auth&gt;Container&lt;/res-auth&gt;
+   &lt;/resource-ref&gt;
+   ......
+&lt;/web-app&gt;</pre>
+
+<p>Note: This step seems to be optional?!</p>
+
+<h5>Step 3: Modify your Servlet to Use Connection Pool</h5>
+
+<p>Modify all the servlet to use database connection pooling as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51</pre>
+</td>
+<td>
+<pre>
+......
+ 
+public class <strong>EntryServlet</strong> extends HttpServlet {
+ 
+   <strong>private DataSource pool;  <span class="color-comment">// Database connection pool</span></strong>
+ 
+   @Override
+   public void init(ServletConfig config) throws ServletException {
+      <strong>try {
+         <span class="color-comment">// Create a JNDI Initial context to be able to lookup the DataSource</span>
+         InitialContext ctx = new InitialContext();
+         <span class="color-comment">// Lookup the DataSource, which will be backed by a pool</span>
+         <span class="color-comment">//   that the application server provides.</span>
+         pool = (DataSource)ctx.lookup(&quot;java:comp/env/jdbc/mysql_ebookshop&quot;);
+         if (pool == null)
+            throw new ServletException(&quot;Unknown DataSource 'jdbc/mysql_ebookshop'&quot;);
+      } catch (NamingException ex) {
+         Logger.getLogger(EntryServlet.class.getName()).log(Level.SEVERE, null, ex);
+      }</strong>
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      Connection conn = null;
+      Statement stmt = null;
+      try {
+         <span class="color-comment"><strong>// Get a connection from the pool</strong></span><strong>
+         conn = pool.getConnection();</strong>
+ 
+         stmt = conn.createStatement();
+         ......
+         ......
+ 
+      } catch (SQLException ex) {
+         Logger.getLogger(EntryServlet.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+         out.close();
+         try {
+            if (stmt != null) stmt.close();
+            <strong>if (conn != null) conn.close();  <span class="color-comment">// return the connection to the pool</span></strong>
+         } catch (SQLException ex) {
+            Logger.getLogger(EntryServlet.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
+   }
+   ......
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Explanation:</p>
+
+<ol>
+<li>The <code>init()</code> method looks up the JNDI directory and setup the database connection pool (<code>DataSource</code>) as configured in the <code>&lt;context.xml&gt;</code>.</li>
+<li>In <code>doGet()</code>, <code>pool.getConnection()</code> gets an available connection from the pool. The <code>conn.close()</code> is important now, as it returns the connection back to the pool.</li>
+</ol>
+
+<p>Modify all the servlets (<code>EntryServlet</code>, <code>QueryServlet</code>, and <code>OrderServlet</code>) to use connection pooling.</p>
+<p>[TODO] How to monitor the connection pool?</p>
+
+<h3>Session Management (aka &quot;Shopping Cart&quot;)</h3>
+<p>HTTP is a <em>stateless</em> protocol. In other words, the current request does not know what has been done in the previous requests. This creates a problem for applications that runs over many requests, such as online shopping. You need to maintain a so-called <em>session</em> with a <em>shopping cart</em> to pass data among the multiple requests. The user will <em>check out</em> his/her shopping cart once he/she is done.</p>
+
+<p>Java Servlet API provide a <code>HttpSession</code> that greatly simplifies the session management.</p>
+
+
+
+<p>For details on session management, read &quot;<a href="JavaServlets.html#Servlet_HTTPSession">Java Servlets - Session Tracking</a>&quot;.</p>
+
+<h4>E-Shop with Shopping Cart</h4>
+
+<h5>Create a New Webapp</h5>
+<p>Create a new webapp called &quot;<code>yaebscart</code>&quot; (<em>yet another e-bookshop with shopping cart</em>). We shall re-use codes in database connection pooling exercise.</p>
+
+<h5>Sequence Diagram</h5>
+
+<ol>
+
+<li>A client issues a URL <code>http://<em>hostname</em>:<em>port</em>/yaebscart/start</code> to start the webapp, which is mapped to &quot;<code>EntryServlet</code>&quot;. The servlet responses with an HTML query form. The form is to be submitted to URL &quot;<code>/search</code>&quot; (mapped to &quot;<code>QueryServlet</code>&quot;) with request parameters <code>author=<em>name</em></code> and/or <code>search=<em>term</em></code>.
+<img class="image-center" src="images/ServletCS2_CartSequence1.png" alt="ServletCS2_CartSequence1.png" />
+</li>
+
+<li>The client checks the item(s) and sends the request to &quot;<code>QueryServlet</code>&quot;. The servlet extracts the request parameters, queries the database, and returns the list of books in an HTML form. Each item has a checkbox (with <code>id=<em>xxx</em></code> and <code>qty<em>xxx</em>=<em>yyy</em></code>). The checkboxes are enclosed within a form with a hidden input <code>todo=add</code>. The form is to be submitted to URL &quot;<code>\cart</code>&quot; (mapped is &quot;<code>CartServlet</code>&quot;).
+<img class="image-center" src="images/ServletCS2_CartSequence2.png" alt="ServletCS2_CartSequence2.png" />
+</li>
+
+<li>The &quot;<code>CartServlet</code>&quot; create a new <code>HttpSession</code> and a <code>Cart</code> (during the first access), and places the <code>Cart</code> inside the <code>HttpSession</code>. The <code>CartServlet</code> handle these processes:
+  <ol>
+<li><code>todo=add, id=1001, qty1001=2, [id=1002, qty1002-3...]</code>: Add the books into the shopping cart. If the book is already in the cart, increase its quantity ordered. Display the shopping cart.</li>
+<li><code>todo=remove, id=1001</code>: Remove the book (identified by the book's id) from the shopping cart. Display the shopping cart.</li>
+<li><code>todo=update, id=1001, qty1000=5</code>:  Update the quantity ordered for that particular book's id, in the shopping cart. Display the shopping cart.</li>
+<li><code>todo=view</code>: Display the shopping cart.</li>
+</ol>
+
+<img class="image-center" src="images/ServletCS2_CartSequence3.png" alt="ServletCS2_CartSequence3.png" />
+</li>
+
+<li>The &quot;<code>CheckoutServlet</code>&quot; performs the checkout process. It retrieves the orders form the shopping cart, updates the  database tables <code>books</code> by reducing the quantity available, and inserts a transaction record in <code>order_records</code> table.<img class="image-center" src="images/ServletCS2_CartSequence4.png" alt="ServletCS2_CartSequence4.png" />
+</li>
+
+</ol>
+
+
+<h5>Create the Java Classes to Support Shopping Cart - <span class="font-code">Cart</span> and <span class="font-code">CartItem</span></h5>
+
+<img class="image-center image-border" src="images/ServletCS2_Cart.png" alt="ServletCS2_Cart.png" />
+
+<p>The <code>CartItem</code> class models individual item placed inside the shopping cart.  In our e-bookstore, we need to keep track of the id, title, author, price and quantity ordered.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+<span class="color-comment">/**
+ * The class CartItem models an item in the Cart.
+ * This class shall not be accessed by the controlling logic directly.
+ * Instead Use Cart.add() or Cart.remove() to add or remove an item from the Cart.
+ */</span>
+public class <strong>CartItem</strong> {
+ 
+   private int id;
+   private String title;
+   private String author;
+   private float price;
+   private int qtyOrdered;
+ 
+   <span class="color-comment">// Constructor</span>
+   public CartItem(int id, String title,
+           String author, float price, int qtyOrdered) {
+      this.id = id;
+      this.title = title;
+      this.author = author;
+      this.price = price;
+      this.qtyOrdered = qtyOrdered;
+   }
+ 
+   public int getId() {
+      return id;
+   }
+ 
+   public String getAuthor() {
+      return author;
+   }
+ 
+   public String getTitle() {
+      return title;
+   }
+ 
+   public float getPrice() {
+      return price;
+   }
+ 
+   public int getQtyOrdered() {
+      return qtyOrdered;
+   }
+ 
+   public void setQtyOrdered(int qtyOrdered) {
+      this.qtyOrdered = qtyOrdered;
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The <code>Cart</code> class stores the items in a <code>List</code> of <code>CartItem</code>.  It also provides these public methods:</p>
+
+<ul>
+<li><code>add()</code>: Add a item into the card. It checks if the <code>id</code> is already in the cart.  If so, it adjust the quantity ordered.  Otherwise, it creates a new <code>CartItem</code> and adds to the <code>ArrayList</code>.</li>
+
+<li><code>update()</code>: Update the quantity order for the given book's id.</li>
+
+<li><code>remove()</code>: Remove a particular item from the shopping cart, identified via the book's id.</li>
+
+<li><code>isEmpty()</code>: Return true if the cart is empty.</li>
+
+<li><code>size()</code>: Return the number of items in the shopping cart.</li>
+
+<li><code>getItems()</code>: Return all the items of the shopping cart in a <code>List&lt;CartItem&gt;</code>.</li>
+<li><code>clear()</code>: Empty the contents of the shopping cart.</li>
+
+</ul>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+ 
+<span class="color-comment">/**
+ * The Cart class models the shopping cart, which contains CartItem.
+ * It also provides method to add() and remove() a CartItem.
+ */</span>
+public class <strong>Cart</strong> {
+ 
+   private List&lt;CartItem&gt; cart;  <span class="color-comment">// List of CartItems</span>
+ 
+   <span class="color-comment">// constructor</span>
+   public Cart() {
+      cart = new ArrayList&lt;CartItem&gt;();
+   }
+ 
+   <span class="color-comment">// Add a CartItem into this Cart</span>
+   public void add(int id, String title, String author, float price, int qtyOrdered) {
+      <span class="color-comment">// Check if the id is already in the shopping cart</span>
+      Iterator&lt;CartItem&gt; iter = cart.iterator();
+      while (iter.hasNext()) {
+         CartItem item = iter.next();
+         if (item.getId() == id) {
+            <span class="color-comment">// id found, increase qtyOrdered</span>
+            item.setQtyOrdered(item.getQtyOrdered() + qtyOrdered);
+            return;
+         }
+      }
+      <span class="color-comment">// id not found, create a new CartItem</span>
+      cart.add(new CartItem(id, title, author, price, qtyOrdered));
+   }
+ 
+   <span class="color-comment">// Update the quantity for the given id</span>
+   public boolean update(int id, int newQty) {
+      Iterator&lt;CartItem&gt; iter = cart.iterator();
+      while (iter.hasNext()) {
+         CartItem item = iter.next();
+         if (item.getId() == id) {
+            <span class="color-comment">// id found, increase qtyOrdered</span>
+            item.setQtyOrdered(newQty);
+            return true;
+         }
+      }
+      return false;
+   }
+ 
+   <span class="color-comment">// Remove a CartItem given its id</span>
+   public void remove(int id) {
+      Iterator&lt;CartItem&gt; iter = cart.iterator();
+      while (iter.hasNext()) {
+         CartItem item = iter.next();
+         if (item.getId() == id) {
+            cart.remove(item);
+            return;
+         }
+      }
+   }
+ 
+   <span class="color-comment">// Get the number of CartItems in this Cart</span>
+   public int size() {
+      return cart.size();
+   }
+ 
+   <span class="color-comment">// Check if this Cart is empty</span>
+   public boolean isEmpty() {
+      return size() == 0;
+   }
+ 
+   <span class="color-comment">// Return all the CartItems in a List&lt;CartItem&gt;</span>
+   public List&lt;CartItem&gt; getItems() {
+      return cart;
+   }
+ 
+   <span class="color-comment">// Remove all the items in this Cart</span>
+   public void clear() {
+      cart.clear();
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">EntryServlet.java</span> (URL &quot;<span class="font-code">/start</span>&quot;)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import java.sql.*;
+import java.util.logging.*;
+import javax.naming.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.sql.DataSource;
+ 
+public class <strong>EntryServlet</strong> extends HttpServlet {
+ 
+   private DataSource pool;  <span class="color-comment">// Database connection pool</span>
+ 
+   @Override
+   public void init(ServletConfig config) throws ServletException {
+      try {
+         <span class="color-comment">// Create a JNDI Initial context to be able to lookup the DataSource</span>
+         InitialContext ctx = new InitialContext();
+         <span class="color-comment">// Lookup the DataSource</span>
+         pool = (DataSource)ctx.lookup(&quot;java:comp/env/jdbc/mysql_ebookshop&quot;);
+         if (pool == null)
+            throw new ServletException(&quot;Unknown DataSource 'jdbc/mysql_ebookshop'&quot;);
+      } catch (NamingException ex) {
+         Logger.getLogger(EntryServlet.class.getName()).log(Level.SEVERE, null, ex);
+      }
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      Connection conn = null;
+      Statement stmt = null;
+      try {
+         conn = pool.getConnection();  <span class="color-comment">// Get a connection from the pool</span>
+         stmt = conn.createStatement();
+         String sqlStr = &quot;SELECT DISTINCT author FROM books WHERE qty &gt; 0&quot;;
+         ResultSet rset = stmt.executeQuery(sqlStr);
+ 
+         out.println(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Welcome to YaEshop&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);
+         out.println(&quot;&lt;h2&gt;Welcome to Yet Another E-BookShop&lt;/h2&gt;&quot;);
+         out.println(&quot;&lt;form method='get' action='search'&gt;&quot;);
+ 
+         <span class="color-comment">// A pull-down menu of all the authors with a no-selection option</span>
+         out.println(&quot;Choose an Author: &lt;select name='author' size='1'&gt;&quot;);
+         out.println(&quot;&lt;option value=''&gt;Select...&lt;/option&gt;&quot;);  <span class="color-comment">// no-selection</span>
+         while (rset.next()) {  <span class="color-comment">// list all the authors</span>
+            String author = rset.getString(&quot;author&quot;);
+            out.println(&quot;&lt;option value='&quot; + author + &quot;'&gt;&quot; + author + &quot;&lt;/option&gt;&quot;);
+         }
+         out.println(&quot;&lt;/select&gt;&lt;br /&gt;&quot;);
+         out.println(&quot;&lt;p&gt;OR&lt;/p&gt;&quot;);
+ 
+         <span class="color-comment">// A text field for entering search word for pattern matching</span>
+         out.println(&quot;Search \&quot;Title\&quot; or \&quot;Author\&quot;: &lt;input type='text' name='search' /&gt;&quot;);
+ 
+         <span class="color-comment">// Submit and reset buttons</span>
+         out.println(&quot;&lt;br /&gt;&lt;br /&gt;&quot;);
+         out.println(&quot;&lt;input type='submit' value='SEARCH' /&gt;&quot;);
+         out.println(&quot;&lt;input type='reset' value='CLEAR' /&gt;&quot;);
+         out.println(&quot;&lt;/form&gt;&quot;);
+ 
+         <span class="color-comment"><strong>// Show &quot;View Shopping Cart&quot; if the cart is not empty</strong></span><strong>
+         HttpSession session = request.getSession(false); <span class="color-comment">// check if session exists</span>
+         if (session != null) {
+            Cart cart;
+            synchronized (session) {
+               <span class="color-comment">// Retrieve the shopping cart for this session, if any. Otherwise, create one.</span>
+               cart = (Cart) session.getAttribute(&quot;cart&quot;);
+               if (cart != null &amp;&amp; !cart.isEmpty()) {
+                  out.println(&quot;&lt;P&gt;&lt;a href='cart?todo=view'&gt;View Shopping Cart&lt;/a&gt;&lt;/p&gt;&quot;);
+               }
+            }
+         }</strong>
+ 
+         out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+      } catch (SQLException ex) {
+         out.println(&quot;&lt;h3&gt;Service not available. Please try again later!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+         Logger.getLogger(EntryServlet.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+         out.close();
+         try {
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();  <span class="color-comment">// Return the connection to the pool</span>
+         } catch (SQLException ex) {
+            Logger.getLogger(EntryServlet.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
+   }
+ 
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      doGet(request, response);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">QueryServlet.java</span> (URL &quot;<span class="font-code">/query</span>&quot;)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import java.sql.*;
+import java.util.logging.*;
+import javax.naming.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.sql.*;
+ 
+public class <strong>QueryServlet</strong> extends HttpServlet {
+ 
+   private DataSource pool;  <span class="color-comment">// Database connection pool</span>
+ 
+   @Override
+   public void init(ServletConfig config) throws ServletException {
+      try {
+         <span class="color-comment">// Create a JNDI Initial context to be able to lookup the DataSource</span>
+         InitialContext ctx = new InitialContext();
+         <span class="color-comment">// Lookup the DataSource.</span>
+         pool = (DataSource)ctx.lookup(&quot;java:comp/env/jdbc/mysql_ebookshop&quot;);
+         if (pool == null)
+            throw new ServletException(&quot;Unknown DataSource 'jdbc/mysql_ebookshop'&quot;);
+      } catch (NamingException ex) {
+         Logger.getLogger(EntryServlet.class.getName()).log(Level.SEVERE, null, ex);
+      }
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      Connection conn = null;
+      Statement stmt = null;
+ 
+      try {
+         <span class="color-comment">// Retrieve and process request parameters: &quot;author&quot; and &quot;search&quot;</span>
+         String author = request.getParameter(&quot;author&quot;);
+         boolean hasAuthorParam = author != null &amp;&amp; !author.equals(&quot;Select...&quot;);
+         String searchWord = request.getParameter(&quot;search&quot;).trim();
+         boolean hasSearchParam = searchWord != null &amp;&amp; (searchWord.length() &gt; 0);
+ 
+         out.println(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Query Results&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);
+         out.println(&quot;&lt;h2&gt;YAEBS - Query Results&lt;/h2&gt;&quot;);
+ 
+         if (!hasAuthorParam &amp;&amp; !hasSearchParam) {  <span class="color-comment">// No params present</span>
+            out.println(&quot;&lt;h3&gt;Please select an author or enter a search term!&lt;/h3&gt;&quot;);
+            out.println(&quot;&lt;p&gt;&lt;a href='start'&gt;Back to Select Menu&lt;/a&gt;&lt;/p&gt;&quot;);
+         } else {
+            conn = pool.getConnection();
+            stmt = conn.createStatement();
+ 
+            <span class="color-comment">// Form a SQL command based on the param(s) present</span>
+            StringBuilder sqlStr = new StringBuilder();  <span class="color-comment">// more efficient than String</span>
+            sqlStr.append(&quot;SELECT * FROM books WHERE qty &gt; 0 AND (&quot;);
+            if (hasAuthorParam) {
+               sqlStr.append(&quot;author = '&quot;).append(author).append(&quot;'&quot;);
+            }
+            if (hasSearchParam) {
+               if (hasAuthorParam) {
+                  sqlStr.append(&quot; OR &quot;);
+               }
+               sqlStr.append(&quot;author LIKE '%&quot;).append(searchWord)
+                     .append(&quot;%' OR title LIKE '%&quot;).append(searchWord).append(&quot;%'&quot;);
+            }
+            sqlStr.append(&quot;) ORDER BY author, title&quot;);
+            <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+            ResultSet rset = stmt.executeQuery(sqlStr.toString());
+ 
+            if (!rset.next()) {  <span class="color-comment">// Check for empty ResultSet (no book found)</span>
+               out.println(&quot;&lt;h3&gt;No book found. Please try again!&lt;/h3&gt;&quot;);
+               out.println(&quot;&lt;p&gt;&lt;a href='start'&gt;Back to Select Menu&lt;/a&gt;&lt;/p&gt;&quot;);
+            } else {
+               <span class="color-comment">// Print the result in an HTML form inside a table</span>
+               out.println(&quot;&lt;form method='get' action='cart'&gt;&quot;);
+               out.println(&quot;&lt;input type='hidden' name='todo' value='add' /&gt;&quot;);
+               out.println(&quot;&lt;table border='1' cellpadding='6'&gt;&quot;);
+               out.println(&quot;&lt;tr&gt;&quot;);
+               out.println(&quot;&lt;th&gt;&amp;nbsp;&lt;/th&gt;&quot;);
+               out.println(&quot;&lt;th&gt;AUTHOR&lt;/th&gt;&quot;);
+               out.println(&quot;&lt;th&gt;TITLE&lt;/th&gt;&quot;);
+               out.println(&quot;&lt;th&gt;PRICE&lt;/th&gt;&quot;);
+               out.println(&quot;&lt;th&gt;QTY&lt;/th&gt;&quot;);
+               out.println(&quot;&lt;/tr&gt;&quot;);
+ 
+               <span class="color-comment">// ResultSet's cursor now pointing at first row</span>
+               do {
+                  <span class="color-comment">// Print each row with a checkbox identified by book's id</span>
+                  String id = rset.getString(&quot;id&quot;);
+                  out.println(&quot;&lt;tr&gt;&quot;);
+                  out.println(&quot;&lt;td&gt;&lt;input type='checkbox' name='id' value='&quot; + id + &quot;' /&gt;&lt;/td&gt;&quot;);
+                  out.println(&quot;&lt;td&gt;&quot; + rset.getString(&quot;author&quot;) + &quot;&lt;/td&gt;&quot;);
+                  out.println(&quot;&lt;td&gt;&quot; + rset.getString(&quot;title&quot;) + &quot;&lt;/td&gt;&quot;);
+                  out.println(&quot;&lt;td&gt;$&quot; + rset.getString(&quot;price&quot;) + &quot;&lt;/td&gt;&quot;);
+                  out.println(&quot;&lt;td&gt;&lt;input type='text' size='3' value='1' name='qty&quot; + id + &quot;' /&gt;&lt;/td&gt;&quot;);
+                  out.println(&quot;&lt;/tr&gt;&quot;);
+               } while (rset.next());
+               out.println(&quot;&lt;/table&gt;&lt;br /&gt;&quot;);
+ 
+               <span class="color-comment">// Submit and reset buttons</span>
+               out.println(&quot;&lt;input type='submit' value='Add to My Shopping Cart' /&gt;&quot;);
+               out.println(&quot;&lt;input type='reset' value='CLEAR' /&gt;&lt;/form&gt;&quot;);
+ 
+               <span class="color-comment">// Hyperlink to go back to search menu</span>
+               out.println(&quot;&lt;p&gt;&lt;a href='start'&gt;Back to Select Menu&lt;/a&gt;&lt;/p&gt;&quot;);
+ 
+               <span class="color-comment"><strong>// Show &quot;View Shopping Cart&quot; if cart is not empty</strong></span><strong>
+               HttpSession session = request.getSession(false); <span class="color-comment">// check if session exists</span>
+               if (session != null) {
+                  Cart cart;
+                  synchronized (session) {
+                     <span class="color-comment">// Retrieve the shopping cart for this session, if any. Otherwise, create one.</span>
+                     cart = (Cart) session.getAttribute(&quot;cart&quot;);
+                     if (cart != null &amp;&amp; !cart.isEmpty()) {
+                        out.println(&quot;&lt;p&gt;&lt;a href='cart?todo=view'&gt;View Shopping Cart&lt;/a&gt;&lt;/p&gt;&quot;);
+                     }
+                  }
+               }</strong>
+ 
+               out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+            }
+         }
+      } catch (SQLException ex) {
+         out.println(&quot;&lt;h3&gt;Service not available. Please try again later!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+         Logger.getLogger(QueryServlet.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+         out.close();
+         try {
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();  <span class="color-comment">// Return the connection to the pool</span>
+         } catch (SQLException ex) {
+            Logger.getLogger(QueryServlet.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
+   }
+ 
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      doGet(request, response);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h5><span class="font-code">CartServlet.java</span> (URL &quot;<span class="font-code">/cart</span>&quot;)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import java.sql.*;
+import java.util.logging.*;
+import javax.naming.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.sql.DataSource;
+ 
+public class <strong>CartServlet</strong> extends HttpServlet {
+ 
+   private DataSource pool;  <span class="color-comment">// Database connection pool</span>
+ 
+   @Override
+   public void init(ServletConfig config) throws ServletException {
+      try {
+         <span class="color-comment">// Create a JNDI Initial context to be able to lookup the DataSource</span>
+         InitialContext ctx = new InitialContext();
+         <span class="color-comment">// Lookup the DataSource.</span>
+         pool = (DataSource)ctx.lookup(&quot;java:comp/env/jdbc/mysql_ebookshop&quot;);
+         if (pool == null)
+            throw new ServletException(&quot;Unknown DataSource 'jdbc/mysql_ebookshop'&quot;);
+      } catch (NamingException ex) {
+         Logger.getLogger(EntryServlet.class.getName()).log(Level.SEVERE, null, ex);
+      }
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      <span class="color-comment">// Retrieve current HTTPSession object. If none, create one.</span>
+      HttpSession session = request.getSession(true);
+      Cart cart;
+      synchronized (session) {  <span class="color-comment">// synchronized to prevent concurrent updates</span>
+         <span class="color-comment">// Retrieve the shopping cart for this session, if any. Otherwise, create one.</span>
+         cart = (Cart) session.getAttribute(&quot;cart&quot;);
+         if (cart == null) {  <span class="color-comment">// No cart, create one.</span>
+            cart = new Cart();
+            session.setAttribute(&quot;cart&quot;, cart);  <span class="color-comment">// Save it into session</span>
+         }
+      }
+ 
+      Connection conn   = null;
+      Statement  stmt   = null;
+      ResultSet  rset   = null;
+      String     sqlStr = null;
+ 
+      try {
+         conn = pool.getConnection();  <span class="color-comment">// Get a connection from the pool</span>
+         stmt = conn.createStatement();
+ 
+         out.println(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Shopping Cart&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);
+         out.println(&quot;&lt;h2&gt;YAEBS - Your Shopping Cart&lt;/h2&gt;&quot;);
+ 
+         <span class="color-comment">// This servlet handles 4 cases:</span>
+         <span class="color-comment">// (1) todo=add id=1001 qty1001=5 [id=1002 qty1002=1 ...]</span>
+         <span class="color-comment">// (2) todo=update id=1001 qty1001=5</span>
+         <span class="color-comment">// (3) todo=remove id=1001</span>
+         <span class="color-comment">// (4) todo=view</span>
+ 
+         String todo = request.getParameter(&quot;todo&quot;);
+         if (todo == null) todo = &quot;view&quot;;  <span class="color-comment">// to prevent null pointer</span>
+ 
+         if (todo.equals(&quot;add&quot;) || todo.equals(&quot;update&quot;)) {
+            <span class="color-comment">// (1) todo=add id=1001 qty1001=5 [id=1002 qty1002=1 ...]</span>
+            <span class="color-comment">// (2) todo=update id=1001 qty1001=5</span>
+            String[] ids = request.getParameterValues(&quot;id&quot;);
+            if (ids == null) {
+               out.println(&quot;&lt;h3&gt;Please Select a Book!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+               return;
+            }
+            for (String id : ids) {
+               sqlStr = &quot;SELECT * FROM books WHERE id = &quot; + id;
+               <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+               rset = stmt.executeQuery(sqlStr);
+               rset.next(); <span class="color-comment">// Expect only one row in ResultSet</span>
+               String title = rset.getString(&quot;title&quot;);
+               String author = rset.getString(&quot;author&quot;);
+               float price = rset.getFloat(&quot;price&quot;);
+ 
+               <span class="color-comment">// Get quantity ordered - no error check!</span>
+               int qtyOrdered = Integer.parseInt(request.getParameter(&quot;qty&quot; + id));
+               int idInt = Integer.parseInt(id);
+               if (todo.equals(&quot;add&quot;)) {
+                  cart.add(idInt, title, author, price, qtyOrdered);
+               } else if (todo.equals(&quot;update&quot;)) {
+                  cart.update(idInt, qtyOrdered);
+               }
+            }
+ 
+         } else if (todo.equals(&quot;remove&quot;)) {
+            String id = request.getParameter(&quot;id&quot;);  <span class="color-comment">// Only one id for remove case</span>
+            cart.remove(Integer.parseInt(id));
+         }
+ 
+         <span class="color-comment">// All cases - Always display the shopping cart</span>
+         if (cart.isEmpty()) {
+            out.println(&quot;&lt;p&gt;Your shopping cart is empty&lt;/p&gt;&quot;);
+         } else {
+            out.println(&quot;&lt;table border='1' cellpadding='6'&gt;&quot;);
+            out.println(&quot;&lt;tr&gt;&quot;);
+            out.println(&quot;&lt;th&gt;AUTHOR&lt;/th&gt;&quot;);
+            out.println(&quot;&lt;th&gt;TITLE&lt;/th&gt;&quot;);
+            out.println(&quot;&lt;th&gt;PRICE&lt;/th&gt;&quot;);
+            out.println(&quot;&lt;th&gt;QTY&lt;/th&gt;&quot;);
+            out.println(&quot;&lt;th&gt;REMOVE&lt;/th&gt;&lt;/tr&gt;&quot;);
+ 
+            float totalPrice = 0f;
+            for (CartItem item : cart.getItems()) {
+               int id = item.getId();
+               String author = item.getAuthor();
+               String title = item.getTitle();
+               float price = item.getPrice();
+               int qtyOrdered = item.getQtyOrdered();
+ 
+               out.println(&quot;&lt;tr&gt;&quot;);
+               out.println(&quot;&lt;td&gt;&quot; + author + &quot;&lt;/td&gt;&quot;);
+               out.println(&quot;&lt;td&gt;&quot; + title +  &quot;&lt;/td&gt;&quot;);
+               out.println(&quot;&lt;td&gt;&quot; + price +  &quot;&lt;/td&gt;&quot;);
+ 
+               out.println(&quot;&lt;td&gt;&lt;form method='get'&gt;&quot;);
+               out.println(&quot;&lt;input type='hidden' name='todo' value='update' /&gt;&quot;);
+               out.println(&quot;&lt;input type='hidden' name='id' value='&quot; + id + &quot;' /&gt;&quot;);
+               out.println(&quot;&lt;input type='text' size='3' name='qty&quot;
+                       + id + &quot;' value='&quot; + qtyOrdered + &quot;' /&gt;&quot; );
+               out.println(&quot;&lt;input type='submit' value='Update' /&gt;&quot;);
+               out.println(&quot;&lt;/form&gt;&lt;/td&gt;&quot;);
+ 
+               out.println(&quot;&lt;td&gt;&lt;form method='get'&gt;&quot;);
+               out.println(&quot;&lt;input type='submit' value='Remove'&gt;&quot;);
+               out.println(&quot;&lt;input type='hidden' name='todo' value='remove'&quot;);
+               out.println(&quot;&lt;input type='hidden' name='id' value='&quot; + id + &quot;'&gt;&quot;);
+               out.println(&quot;&lt;/form&gt;&lt;/td&gt;&quot;);
+               out.println(&quot;&lt;/tr&gt;&quot;);
+               totalPrice += price * qtyOrdered;
+            }
+            out.println(&quot;&lt;tr&gt;&lt;td colspan='5' align='right'&gt;Total Price: $&quot;);
+            out.printf(&quot;%.2f&lt;/td&gt;&lt;/tr&gt;&quot;, totalPrice);
+            out.println(&quot;&lt;/table&gt;&quot;);
+         }
+ 
+         out.println(&quot;&lt;p&gt;&lt;a href='start'&gt;Select More Books...&lt;/a&gt;&lt;/p&gt;&quot;);
+ 
+         <span class="color-comment">// Display the Checkout</span>
+         if (!cart.isEmpty()) {
+            out.println(&quot;&lt;br /&gt;&lt;br /&gt;&quot;);
+            out.println(&quot;&lt;form method='get' action='checkout'&gt;&quot;);
+            out.println(&quot;&lt;input type='submit' value='CHECK OUT'&gt;&quot;);
+            out.println(&quot;&lt;p&gt;Please fill in your particular before checking out:&lt;/p&gt;&quot;);
+            out.println(&quot;&lt;table&gt;&quot;);
+            out.println(&quot;&lt;tr&gt;&quot;);
+            out.println(&quot;&lt;td&gt;Enter your Name:&lt;/td&gt;&quot;);
+            out.println(&quot;&lt;td&gt;&lt;input type='text' name='cust_name' /&gt;&lt;/td&gt;&lt;/tr&gt;&quot;);
+            out.println(&quot;&lt;tr&gt;&quot;);
+            out.println(&quot;&lt;td&gt;Enter your Email:&lt;/td&gt;&quot;);
+            out.println(&quot;&lt;td&gt;&lt;input type='text' name='cust_email' /&gt;&lt;/td&gt;&lt;/tr&gt;&quot;);
+            out.println(&quot;&lt;tr&gt;&quot;);
+            out.println(&quot;&lt;td&gt;Enter your Phone Number:&lt;/td&gt;&quot;);
+            out.println(&quot;&lt;td&gt;&lt;input type='text' name='cust_phone' /&gt;&lt;/td&gt;&lt;/tr&gt;&quot;);
+            out.println(&quot;&lt;/table&gt;&quot;);
+            out.println(&quot;&lt;/form&gt;&quot;);
+         }
+ 
+         out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+ 
+      } catch (SQLException ex) {
+         out.println(&quot;&lt;h3&gt;Service not available. Please try again later!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+         Logger.getLogger(CartServlet.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+         out.close();
+         try {
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();  <span class="color-comment">// return the connection to the pool</span>
+         } catch (SQLException ex) {
+            Logger.getLogger(CartServlet.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
+   }
+ 
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      doGet(request, response);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h5><span class="font-code">CheckoutServlet.java</span> (URL &quot;<span class="font-code">/checkout</span>&quot;)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import java.sql.*;
+import java.util.logging.*;
+import javax.naming.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.sql.DataSource;
+ 
+public class <strong>CheckoutServlet</strong> extends HttpServlet {
+ 
+   private DataSource pool;  <span class="color-comment">// Database connection pool</span>
+ 
+   @Override
+   public void init(ServletConfig config) throws ServletException {
+      try {
+         <span class="color-comment">// Create a JNDI Initial context to be able to lookup the DataSource</span>
+         InitialContext ctx = new InitialContext();
+         <span class="color-comment">// Lookup the DataSource.</span>
+         pool = (DataSource)ctx.lookup(&quot;java:comp/env/jdbc/mysql_ebookshop&quot;);
+         if (pool == null)
+            throw new ServletException(&quot;Unknown DataSource 'jdbc/mysql_ebookshop'&quot;);
+      } catch (NamingException ex) {
+         Logger.getLogger(EntryServlet.class.getName()).log(Level.SEVERE, null, ex);
+      }
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      Connection conn = null;
+      Statement stmt = null;
+      ResultSet rset = null;
+      String sqlStr = null;
+      HttpSession session = null;
+      Cart cart = null;
+ 
+      try {
+         conn = pool.getConnection();  <span class="color-comment">// Get a connection from the pool</span>
+         stmt = conn.createStatement();
+ 
+         out.println(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Checkout&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);
+         out.println(&quot;&lt;h2&gt;YAEBS - Checkout&lt;/h2&gt;&quot;);
+ 
+         <span class="color-comment">// Retrieve the Cart</span>
+         session = request.getSession(false);
+         if (session == null) {
+            out.println(&quot;&lt;h3&gt;Your Shopping cart is empty!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+            return;
+         }
+         synchronized (session) {
+            cart = (Cart) session.getAttribute(&quot;cart&quot;);
+            if (cart == null) {
+               out.println(&quot;&lt;h3&gt;Your Shopping cart is empty!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+               return;
+            }
+         }
+ 
+         <span class="color-comment">// Retrieve and process request parameters: id(s), cust_name, cust_email, cust_phone</span>
+         String custName = request.getParameter(&quot;cust_name&quot;);
+         boolean hasCustName = custName != null &amp;&amp; ((custName = custName.trim()).length() &gt; 0);
+         String custEmail = request.getParameter(&quot;cust_email&quot;).trim();
+         boolean hasCustEmail = custEmail != null &amp;&amp; ((custEmail = custEmail.trim()).length() &gt; 0);
+         String custPhone = request.getParameter(&quot;cust_phone&quot;).trim();
+         boolean hasCustPhone = custPhone != null &amp;&amp; ((custPhone = custPhone.trim()).length() &gt; 0);
+ 
+         <span class="color-comment">// Validate inputs</span>
+         if (!hasCustName) {
+
+            out.println(&quot;&lt;h3&gt;Please Enter Your Name!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+            return;
+         } else if (!hasCustEmail || (custEmail.indexOf('@') == -1)) {
+            out.println(&quot;&lt;h3&gt;Please Enter Your email (user@host)!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+            return;
+         } else if (!hasCustPhone || custPhone.length() != 8) {
+            out.println(&quot;&lt;h3&gt;Please Enter an 8-digit Phone Number!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+            return;
+         }
+ 
+         <span class="color-comment">// Display the name, email and phone (arranged in a table)</span>
+         out.println(&quot;&lt;table&gt;&quot;);
+         out.println(&quot;&lt;tr&gt;&quot;);
+         out.println(&quot;&lt;td&gt;Customer Name:&lt;/td&gt;&quot;);
+         out.println(&quot;&lt;td&gt;&quot; + custName + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+         out.println(&quot;&lt;tr&gt;&quot;);
+         out.println(&quot;&lt;td&gt;Customer Email:&lt;/td&gt;&quot;);
+         out.println(&quot;&lt;td&gt;&quot; + custEmail + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+         out.println(&quot;&lt;tr&gt;&quot;);
+         out.println(&quot;&lt;td&gt;Customer Phone Number:&lt;/td&gt;&quot;);
+         out.println(&quot;&lt;td&gt;&quot; + custPhone + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+         out.println(&quot;&lt;/table&gt;&quot;);
+ 
+         <span class="color-comment">// Print the book(s) ordered in a table</span>
+         out.println(&quot;&lt;br /&gt;&quot;);
+         out.println(&quot;&lt;table border='1' cellpadding='6'&gt;&quot;);
+         out.println(&quot;&lt;tr&gt;&quot;);
+         out.println(&quot;&lt;th&gt;AUTHOR&lt;/th&gt;&quot;);
+         out.println(&quot;&lt;th&gt;TITLE&lt;/th&gt;&quot;);
+         out.println(&quot;&lt;th&gt;PRICE&lt;/th&gt;&quot;);
+         out.println(&quot;&lt;th&gt;QTY&lt;/th&gt;&lt;/tr&gt;&quot;);
+ 
+         float totalPrice = 0f;
+         for (CartItem item : cart.getItems()) {
+            int id = item.getId();
+            String author = item.getAuthor();
+            String title = item.getTitle();
+            int qtyOrdered = item.getQtyOrdered();
+            float price = item.getPrice();
+ 
+            <span class="color-comment">// No check for price and qtyAvailable change</span>
+            <span class="color-comment">// Update the books table and insert an order record</span>
+            sqlStr = &quot;UPDATE books SET qty = qty - &quot; + qtyOrdered + &quot; WHERE id = &quot; + id;
+            <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+            stmt.executeUpdate(sqlStr);
+ 
+            sqlStr = &quot;INSERT INTO order_records values (&quot;
+                    + id + &quot;, &quot; + qtyOrdered + &quot;, '&quot; + custName + &quot;', '&quot;
+                    + custEmail + &quot;', '&quot; + custPhone + &quot;')&quot;;
+            <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+            stmt.executeUpdate(sqlStr);
+ 
+            <span class="color-comment">// Show the book ordered</span>
+            out.println(&quot;&lt;tr&gt;&quot;);
+            out.println(&quot;&lt;td&gt;&quot; + author + &quot;&lt;/td&gt;&quot;);
+            out.println(&quot;&lt;td&gt;&quot; + title + &quot;&lt;/td&gt;&quot;);
+            out.println(&quot;&lt;td&gt;&quot; + price + &quot;&lt;/td&gt;&quot;);
+            out.println(&quot;&lt;td&gt;&quot; + qtyOrdered + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+            totalPrice += price * qtyOrdered;
+         }
+         out.println(&quot;&lt;tr&gt;&lt;td colspan='4' align='right'&gt;Total Price: $&quot;);
+         out.printf(&quot;%.2f&lt;/td&gt;&lt;/tr&gt;&quot;, totalPrice);
+         out.println(&quot;&lt;/table&gt;&quot;);
+ 
+         out.println(&quot;&lt;h3&gt;Thank you.&lt;/h3&gt;&quot;);
+         out.println(&quot;&lt;a href='start'&gt;Back to Search Menu&lt;/a&gt;&quot;);
+         out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+ 
+         cart.clear();   <span class="color-comment">// empty the cart</span>
+      } catch (SQLException ex) {
+         cart.clear();   <span class="color-comment">// empty the cart</span>
+         out.println(&quot;&lt;h3&gt;Service not available. Please try again later!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+         Logger.getLogger(CheckoutServlet.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+         out.close();
+         try {
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();  <span class="color-comment">// Return the connection to the pool</span>
+         } catch (SQLException ex) {
+            Logger.getLogger(CheckoutServlet.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
+   }
+ 
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      doGet(request, response);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h5>Application Deployment Descriptor &quot;<span class="font-code">web.xml</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd&quot;
+    version=&quot;3.0&quot;&gt;
+ 
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;EntryServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;mypkg.EntryServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;QueryServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;mypkg.QueryServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;CartServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;mypkg.CartServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;CheckoutServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;mypkg.CheckoutServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+ 
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;EntryServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/start&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;QueryServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/search&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;CartServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/cart&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;CheckoutServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/checkout&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+ 
+    &lt;session-config&gt;
+        &lt;session-timeout&gt;30&lt;/session-timeout&gt;
+    &lt;/session-config&gt;
+    &lt;welcome-file-list&gt;
+        &lt;welcome-file&gt;start&lt;/welcome-file&gt;
+    &lt;/welcome-file-list&gt;
+&lt;/web-app&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h5>&quot;<span class="font-code">context.xml</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;Context antiJARLocking=&quot;true&quot; path=&quot;/yaebscart&quot; &gt;
+   &lt;Resource name=&quot;<strong>jdbc/mysql_ebookshop</strong>&quot; auth=&quot;Container&quot; type=&quot;javax.sql.DataSource&quot;
+     maxActive=&quot;100&quot; maxIdle=&quot;30&quot; maxWait=&quot;10000&quot; removeAbandoned=&quot;true&quot;
+     <strong>username=&quot;myuser&quot; password=&quot;xxxx&quot;</strong> driverClassName=&quot;com.mysql.jdbc.Driver&quot;
+     <strong>url=&quot;jdbc:mysql://localhost:3306/ebookshop&quot;</strong> /&gt;
+&lt;/Context&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>With More Input Validation and Abnormal Condition Checks</h4>
+
+<p>Again, I rewrite the <code>CartServlet</code> and <code>CheckoutServlet</code> to do more input validation and check for abnormal conditions. The codes are messy!</p>
+
+<ul>
+<li>&quot;<code>myutil.InputFilter</code>&quot; (as in the above example)</li>
+
+<li>&quot;<code>CartServlet.java</code>&quot; [<a href="codes/CartServlet.java">source link</a>]</li>
+
+<li>&quot;<code>CheckoutServlet.java</code>&quot; [<a href="codes/CheckoutServlet.java">source link</a>]</li>
+</ul>
+<h3>User and Role Management</h3>
+
+<p>[TODO] Intro</p>
+
+<p>In a practical system, a user has a password; a user may take one or many roles.</p>
+
+<h4>User and Role Management via HttpSession</h4>
+
+<h5>Setup Database</h5>
+
+<p>Set up tables <code>users</code> and <code>user_roles</code> under the database <code>ebookshop</code> as follows. Instead of storing plain-text password (which might exposes your password, if you use the same password for all your applications), we create a hash of password, via the MySQL <code>PASSWORD()</code> function, and store the hash value. The  <code>PASSWORD()</code> function produces a 41-byte hash value. (Read &quot;<a href="http://dev.mysql.com/doc/refman/5.5/en/password-hashing.html">MySQL Manual: Password Hashing in MySQL</a>&quot;).</p>
+<p>The following SQL script can be used to setup the database.</p>
+
+<pre class="color-command">
+use ebookshop;
+  
+drop table if exists user_roles;
+drop table if exists users;
+create table <strong>users</strong> (
+  username char(16) not null,
+  password char(41) not null,
+  primary key (username)
+);
+  
+create table <strong>user_roles</strong> (
+  username char(16) not null,
+  role     varchar(16) not null,
+  primary key (username, role),
+  foreign key (username) references users (username)
+);
+  
+insert into users values 
+  ('user1', <strong>password</strong>('user1')), 
+  ('admin1', <strong>password</strong>('admin1'));
+  
+insert into user_roles values
+  ('user1', 'user'), 
+  ('admin1', 'admin'), 
+  ('admin1', 'user');
+ 
+select * from users;
+select * from user_roles;</pre>
+
+<h5>Sequence of Events</h5>
+
+<ol>
+
+<li>The webapp begins with a login form to prompt the user for username and password, which are submitted to a login script (&quot;<code>LoginServlet</code>&quot; with URL &quot;<code>/login</code>&quot;.</li>
+
+<li>The login script verifies the hash of the submitted password with that stored in the database for the username.  If the username/password is successful verified, it creates a new <code>HttpSession</code>, and places the username and role(s) into the session. This information will be available for all sequence accesses.</li>
+
+<li> All sequence pages retrieve the username and roles from the session, before performing its operations. Otherwise, it shall abort its operations.</li>
+
+<li> The logout script invalidates the session.</li>
+</ol>
+
+<p>To verify username/password pair, you can issue the following SQL statement. Take note that <code>STRCMP</code> function is not case-sensitive. It returns 0 if two strings are the same.</p>
+<pre class="color-command">
+<span class="color-comment">// Verify username and password.</span>
+SELECT * FROM users 
+  WHERE STRCMP(username, 'user1') = 0 AND STRCMP(password, PASSWORD('user1') = 0);
+<span class="color-comment">  
+// Verify username and password, return the roles.</span>
+SELECT role FROM users, user_roles 
+  WHERE STRCMP(users.username, 'user1') = 0 AND STRCMP(users.password, PASSWORD('user1') = 0) 
+  AND users.username = user_roles.username;</pre>
+  
+<p>Let's illustrate with an example with the following sequences:</p>
+
+<img class="image-center" src="images/ServletCS2_UserSequence1.png" alt="ServletCS2_UserSequence1.png" />
+<img class="image-center" src="images/ServletCS2_UserSequence2.png" alt="ServletCS2_UserSequence2.png" />
+
+
+<h5>Login Form - &quot;<span class="font-code">index.html</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Login&lt;/title&gt;
+  &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;Login&lt;/h2&gt;
+  &lt;form method=&quot;get&quot; action=&quot;<strong>login</strong>&quot;&gt;
+  &lt;table&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Enter your username:&lt;/td&gt;
+      &lt;td&gt;<strong>&lt;input type='text' name='username' /&gt;</strong>&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Enter your password:&lt;/td&gt;
+      &lt;td&gt;<strong>&lt;input type='password' name='password' /&gt;</strong>&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;br /&gt;
+  &lt;input type=&quot;submit&quot; value='LOGIN' /&gt;
+  &lt;input type=&quot;reset&quot; value='CLEAR' /&gt;
+  &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Take note the the password is sent in <em>clear text</em> in HTTP GET as well as POST request, although it is masked out on the screen with <code>&lt;input type=&quot;password&quot;&gt;</code> tag. To use an HTML form to send password, you have to run HTTP with SSL (HTTPS), which encrypts the data transferred.</p>
+
+<h5>The Login Script - &quot;<span class="font-code">LoginServlet.java</span>&quot; (with URL &quot;<span class="font-code">/login</span>&quot;)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
+import javax.naming.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.sql.*;
+import javax.sql.*;
+ 
+public class <strong>LoginServlet</strong> extends HttpServlet {
+ 
+   private DataSource pool;  <span class="color-comment">// Database connection pool</span>
+ 
+   @Override
+   public void init(ServletConfig config) throws ServletException {
+      try {
+         <span class="color-comment">// Create a JNDI Initial context to be able to lookup the DataSource</span>
+         InitialContext ctx = new InitialContext();
+         <span class="color-comment">// Lookup the DataSource</span>
+         pool = (DataSource)ctx.lookup(&quot;java:comp/env/jdbc/mysql_ebookshop&quot;);
+         if (pool == null)
+            throw new ServletException(&quot;Unknown DataSource 'jdbc/mysql_ebookshop'&quot;);
+      } catch (NamingException ex) {
+         Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+      }
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      Connection conn = null;
+      Statement  stmt = null;
+      try {
+         out.println(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Login&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);
+         out.println(&quot;&lt;h2&gt;Login&lt;/h2&gt;&quot;);
+ 
+         conn = pool.getConnection();  <span class="color-comment">// Get a connection from the pool</span>
+         stmt = conn.createStatement();
+ 
+         <span class="color-comment">// Retrieve and process request parameters: username and password</span>
+         String userName = request.getParameter(&quot;username&quot;);
+         String password = request.getParameter(&quot;password&quot;);
+         boolean hasUserName = userName != null &amp;&amp; ((userName = userName.trim()).length() &gt; 0);
+         boolean hasPassword = password != null &amp;&amp; ((password = password.trim()).length() &gt; 0);
+ 
+         <span class="color-comment">// Validate input request parameters</span>
+         if (!hasUserName) {
+            out.println(&quot;&lt;h3&gt;Please Enter Your username!&lt;/h3&gt;&quot;);
+         } else if (!hasPassword) {
+            out.println(&quot;&lt;h3&gt;Please Enter Your password!&lt;/h3&gt;&quot;);
+         } else {
+            <span class="color-comment">// Verify the username/password and retrieve the role(s)</span>
+            StringBuilder sqlStr = new StringBuilder();
+            sqlStr.append(&quot;SELECT role FROM users, user_roles WHERE &quot;);
+            sqlStr.append(&quot;STRCMP(users.username, '&quot;)
+                  .append(userName).append(&quot;') = 0 &quot;);
+            sqlStr.append(&quot;AND STRCMP(users.password, PASSWORD('&quot;)
+                  .append(password).append(&quot;')) = 0 &quot;);
+            sqlStr.append(&quot;AND users.username = user_roles.username&quot;);
+            <span class="color-comment">//System.out.println(sqlStr);  // for debugging</span>
+ 
+            ResultSet rset = stmt.executeQuery(sqlStr.toString());
+ 
+            <span class="color-comment">// Check if username/password are correct</span>
+            if (!rset.next()) {  <span class="color-comment">// empty ResultSet</span>
+               out.println(&quot;&lt;h3&gt;Wrong username/password!&lt;/h3&gt;&quot;);
+               out.println(&quot;&lt;p&gt;&lt;a href='index.html'&gt;Back to Login Menu&lt;/a&gt;&lt;/p&gt;&quot;);
+            } else {
+               <span class="color-comment">// Retrieve the roles</span>
+               List&lt;String&gt; roles = new ArrayList&lt;&gt;();
+               do {
+                  roles.add(rset.getString(&quot;role&quot;));
+               } while (rset.next());
+ 
+               <span class="color-comment">// Create a new HTTPSession and save the username and roles</span>
+               <span class="color-comment">// First, invalidate the session. if any</span>
+               HttpSession session = request.getSession(false);
+               if (session != null) {
+                  session.invalidate();
+               }
+              <strong> session = request.getSession(true);
+               synchronized (session) {
+                  session.setAttribute(&quot;username&quot;, userName);
+                  session.setAttribute(&quot;roles&quot;, roles);
+               }</strong>
+ 
+               out.println(&quot;&lt;p&gt;Hello, &quot; + userName + &quot;!&lt;/p&gt;&quot;);
+               out.println(&quot;&lt;p&gt;&lt;a href='dosomething'&gt;Do Somethings&lt;/a&gt;&lt;/p&gt;&quot;);
+            }
+         }
+         out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+ 
+      } catch (SQLException ex) {
+         out.println(&quot;&lt;h3&gt;Service not available. Try again later!&lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+         Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+      } finally {
+         out.close();
+         try {
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();  <span class="color-comment">// Return the connection to the pool</span>
+         } catch (SQLException ex) {
+            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+         }
+      }
+   }
+ 
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      doGet(request, response);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Inside the Login Session - &quot;<span class="font-code">DoSomethingServlet.java</span>&quot; (URL &quot;<span class="font-code">/dosomething</span>&quot;)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.util.*;
+ 
+public class <strong>DoSomethingServlet</strong> extends HttpServlet {
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      try {
+         out.println(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Do Something&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);
+         out.println(&quot;&lt;h2&gt;Do Somethings...&lt;/h2&gt;&quot;);
+ 
+         <span class="color-comment">// Retrieve and Display the username and roles</span>
+         String userName;
+         List&lt;String&gt; roles;
+         <strong>HttpSession session = request.getSession(false);
+         if (session == null) {
+            out.println(&quot;&lt;h3&gt;You have not login!&lt;/h3&gt;&quot;);
+         } else {
+            synchronized (session) {
+               userName = (String) session.getAttribute(&quot;username&quot;);
+               roles = (List&lt;String&gt;) session.getAttribute(&quot;roles&quot;);
+            }</strong>
+ 
+            out.println(&quot;&lt;table&gt;&quot;);
+            out.println(&quot;&lt;tr&gt;&quot;);
+            out.println(&quot;&lt;td&gt;Username:&lt;/td&gt;&quot;);
+            out.println(&quot;&lt;td&gt;&quot; + userName + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+            out.println(&quot;&lt;tr&gt;&quot;);
+            out.println(&quot;&lt;td&gt;Roles:&lt;/td&gt;&quot;);
+            out.println(&quot;&lt;td&gt;&quot;);
+            for (String role : roles) {
+               out.println(role + &quot; &quot;);
+            }
+            out.println(&quot;&lt;/td&gt;&lt;/tr&gt;&quot;);
+            out.println(&quot;&lt;tr&gt;&quot;);
+            out.println(&quot;&lt;/table&gt;&quot;);
+ 
+            out.println(&quot;&lt;p&gt;&lt;a href='logout'&gt;Logout&lt;/a&gt;&lt;/p&gt;&quot;);
+         }
+         out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+      } finally {
+         out.close();
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>The Logout Script - &quot;<span class="font-code">LogoutServlet.java</span>&quot; (URL &quot;<span class="font-code">/logout</span>&quot;)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+ 
+public class LogoutServlet extends HttpServlet {
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      try {
+         out.println(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Logout&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);
+         out.println(&quot;&lt;h2&gt;Logout&lt;/h2&gt;&quot;);
+         <strong>HttpSession session = request.getSession(false);
+         if (session == null) {
+            out.println(&quot;&lt;h3&gt;You have not login!&lt;/h3&gt;&quot;);
+         } else {
+            session.invalidate();</strong>
+            out.println(&quot;&lt;p&gt;Bye!&lt;/p&gt;&quot;);
+            out.println(&quot;&lt;p&gt;&lt;a href='index.html'&gt;Login&lt;/a&gt;&lt;/p&gt;&quot;);
+         }
+         out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+      } finally {
+         out.close();
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Web Application Deployment Descriptor &quot;<span class="font-code">WEB-INF\web.xml</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app version=&quot;3.0&quot;
+      xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+      xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd&quot;&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;LoginServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;mypkg.LoginServlet&lt;/servlet-class&gt;
+  &lt;/servlet&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;DoSomethingServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;mypkg.DoSomethingServlet&lt;/servlet-class&gt;
+  &lt;/servlet&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;LogoutServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;mypkg.LogoutServlet&lt;/servlet-class&gt;
+  &lt;/servlet&gt;
+ 
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;LoginServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/login&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;DoSomethingServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/dosomething&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;LogoutServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/logout&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+ 
+  &lt;session-config&gt;
+    &lt;session-timeout&gt;30&lt;/session-timeout&gt;
+  &lt;/session-config&gt;
+  &lt;welcome-file-list&gt;
+    &lt;welcome-file&gt;index.html&lt;/welcome-file&gt;
+  &lt;/welcome-file-list&gt;
+&lt;/web-app&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>&quot;<span class="font-code">META-INF\context.xml</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;Context antiJARLocking=&quot;true&quot; path=&quot;/usertest&quot; &gt;
+   &lt;Resource name=&quot;jdbc/mysql_ebookshop&quot; auth=&quot;Container&quot; type=&quot;javax.sql.DataSource&quot;
+     maxActive=&quot;100&quot; maxIdle=&quot;30&quot; maxWait=&quot;10000&quot; removeAbandoned=&quot;true&quot;
+     username=&quot;myuser&quot; password=&quot;xxxx&quot; driverClassName=&quot;com.mysql.jdbc.Driver&quot;
+     url=&quot;jdbc:mysql://localhost:3306/ebookshop&quot; /&gt;
+&lt;/Context&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>User and Role Management via Container</h4>
+
+<p>[TODO] <code>HttpServletRequest</code>'s <code>authenticate()</code>, <code>login()</code> and <code>logout()</code>.</p>
+
+
+<h3>Input Validation</h3>
+
+<p>Observed that many lines of codes are used in validating the inputs provided by the client in the servlet (server-side program). You can perform input validation on the server-side as well as on the client-side.</p>
+
+<h4>Client-side Input Validation using JavaScript</h4>
+
+<p>We could perform client-side input validation using JavaScript. Validating user inputs with JavaScript before the data leaves the browser provides a much faster response, but it doesn't necessarily eliminate the checks you have to do on the server side. This is because a user might have disabled JavaScript or maliciously issue URLs that bypasses the client-side checks.</p>
+
+<p>Read &quot;<a href="../webprogramming/JavaScript_Examples.html#JSExample_FormInputValidation">JavaScript Examples - Validating Form Inputs</a>&quot;.</p>
+
+<h4>Input Validation via JavaServer Faces (JSF)</h4>
+
+<p>[TODO]</p>
+
+<h3 id="FileUpload">Uploading Files (Servlet 3.0)</h3>
+
+<p>Before Servlet 3.0, processing file upload requires 3rd party libraries such as <a href="http://commons.apache.org/fileupload/">Apache Commons FileUpload</a>. Servlet 3.0 (which requires Tomcat 7) builds in file upload support.</p>
+
+<p>File upload over HTTP is specified in &quot;RFC 1867 Form-based File Upload in HTML&quot;. Read &quot;<a href="../webprogramming/HTTP_Basics.html#FileUpload">File Upload using multipart/form-data POST Request</a>&quot;.</p>
+
+<h5>Client-side HTML Form: &quot;<span class="font-code">FileUpload.html</span>&quot;</h5>
+
+<p>On the client-side, you provides an HTML <code>&lt;form&gt;</code> with an input element <code>&lt;input type=&quot;file&quot;&gt;</code> as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h2&gt;Upload File&lt;/h2&gt;
+    <span class="color-new">&lt;form method=&quot;post&quot; enctype=&quot;multipart/form-data&quot; action=&quot;upload&quot;&gt;</span>
+      Choose a file: <span class="color-new">&lt;input type=&quot;file&quot; name=&quot;uploadedFile&quot; /&gt;</span>&lt;br /&gt;
+      &lt;input type=&quot;submit&quot; /&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<img class="image-center image-border" src="images/ServletCS2_FileUpload.png" alt="ServletCS2_FileUpload.png" />
+
+<h5>Server-side</h5>
+
+<p>Servlet 3.0 introduces a new annotation <code>@MultipartConfig</code> with these attributes:</p>
+<ol>
+<li><code>location</code>: An absolute path to a directory in your file system (NOT relative to your context root) to store files temporarily while processing parts, when the file is bigger than <code>fileSizeThreshold</code>. This directory shall exist; otherwise, an <code>IOException</code> will be thrown.</li>
+<li><code>fileSizeThreshold</code>: The file size in bytes after which the file will be stored temporarily in the <code>location</code>.</li>
+<li><code>maxFileSize</code>: The maximum file size in bytes. If the size of the file is bigger than this, Tomcat throws an <code>IllegalStateException</code>.</li>
+<li><code>maxRequestSize</code>: The maximum size in bytes for the entire <code>multipart/form-data</code> request (i.e., all the parts).</li>
+</ol>
+
+<p>For example,</p>
+<pre class="color-example">
+@MultipartConfig(location=&quot;d:\\temp\\upload&quot;, fileSizeThreshold=1024*1024, maxFileSize=5*1024*1024, maxRequestSize=2*5*1024*1024)</pre>
+
+<p>A new interface <code>javax.servlet.http.Part</code> is also introduced to represent a part of a form item that were received within a <code>multipart/form-data</code> POST request. The following methods are declared:</p>
+
+<ol>
+<li><code>getName()</code>: Get the name of this part.</li>
+<li><code>getSize()</code>: Get the size of this part.</li>
+<li><code>getInputStream()</code>: Get the content of this part as an <code>InputStream</code>.</li>
+<li><code>write(String filename)</code>: Write this part to file. The filename is relative to the &quot;<code>location</code>&quot; in <code>@MultipartConfig</code>. The container may simply rename the temporary file. Existing file will be overridden.</li>
+<li><code>delete()</code>: Delete the underlying storage, including the temporary file. Do not call <code>delete()</code> after <code>write()</code>.</li>
+<li><code>getContentType()</code>: Get the content type of this part.</li>
+<li><code>getHeader(String name)</code>, <code>getHeaders(String name)</code>, <code>getHeaderNames()</code>: Get the header.</li>
+</ol>
+
+<p>The method <code>request.getParts()</code> (in <code>javax.servlet.http.HttpServletRequest</code>) returns a collection of all parts. The <code>request.getPart(String name)</code> returns a <code>Part</code> for given name attribute (if you have other input elements besides file).</p>
+
+<h5>&quot;<span class="font-code">FileUploadServlet30.java</span>&quot; with URL &quot;<span class="font-code">/upload</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+ 
+import java.io.*;
+import java.util.Collection;
+import javax.servlet.*;
+import javax.servlet.annotation.*;
+import javax.servlet.http.*;
+ 
+@WebServlet(
+   name = &quot;upload&quot;,
+   urlPatterns = {&quot;/upload&quot;})
+@MultipartConfig(
+   location=&quot;d:\\temp\\upload&quot;,
+   fileSizeThreshold=1024*1024,
+   maxFileSize=5*1024*1024,
+   maxRequestSize=2*5*1024*1024)
+public class FileUploadServlet30 extends HttpServlet {
+ 
+   @Override
+   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      response.setContentType(&quot;text/html&quot;);
+      PrintWriter out = response.getWriter();
+ 
+      Collection&lt;Part&gt; parts = request.getParts();
+ 
+      try {
+         out.write(&quot;&lt;h2&gt;Number of parts : &quot; + parts.size() + &quot;&lt;/h2&gt;&quot;);
+         for(Part part : parts) {
+            printPartInfo(part, out);
+            String filename = getFileName(part);
+            if (filename != null) {
+               part.write(filename); <span class="color-comment">// relative to location in @MultipartConfig</span>
+            }
+         }
+       } finally {
+         out.close();
+      }
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+      getServletContext()
+              .getRequestDispatcher(&quot;/FileUpload.html&quot;)
+              .forward(request, response);
+   }
+ 
+   <span class="color-comment">// Print the headers for the given Part</span>
+   private void printPartInfo(Part part, PrintWriter writer) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(&quot;&lt;p&gt;Name: &quot;).append(part.getName()).append(&quot;&lt;br&gt;&quot;);
+      sb.append(&quot;ContentType: &quot;).append(part.getContentType()).append(&quot;&lt;br&gt;&quot;);
+      sb.append(&quot;Size: &quot;).append(part.getSize()).append(&quot;&lt;br&gt;&quot;);
+      for(String header : part.getHeaderNames()) {
+         sb.append(header).append(&quot;: &quot;).append(part.getHeader(header)).append(&quot;&lt;br&gt;&quot;);
+      }
+      sb.append(&quot;&lt;/p&gt;&quot;);
+      writer.write(sb.toString());
+   }
+ 
+   <span class="color-comment">// Gets the file name from the &quot;content-disposition&quot; header</span>
+   private String getFileName(Part part) {
+    for (String token : part.getHeader(&quot;content-disposition&quot;).split(&quot;;&quot;)) {
+      if (token.trim().startsWith(&quot;filename&quot;)) {
+        return token.substring(token.indexOf('=') + 1).trim()
+            .replace(&quot;\&quot;&quot;, &quot;&quot;);
+      }
+    }
+    return null;
+  }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Total parts : 1
+
+Name: uploadedFile
+ContentType: text/plain
+Size: 811
+content-type: text/plain
+content-disposition: form-data; name=&quot;uploadedFile&quot;; filename=&quot;uploadedFile.txt&quot;</pre>
+
+<ol>
+<li>The client-side &quot;<code>FileUpload.html</code>&quot; has one submission part, i.e., <code>&lt;input type=&quot;file&quot;&gt;</code>.</li>
+<li>The <code>printPartInfo()</code> prints the headers of the given part. The output is as shown above.</li>
+<li>The <code>part.write()</code> method is used to write the file under the <code>location</code> of the <code>@MultipartConfig</code> with the filename extracted from the <code>content-disposition</code> header.</li>
+</ol>
+
+<h5>An Multi-part HTML Form - &quot;<code>FileUploadMultipart.html</code>&quot;</h5>
+
+<p>The HTML form below has four input fields, which will be sent in four parts, as shown in the output below.</p>
+
+<img class="image-center image-border" src="images/ServletCS2_FileUploadMultipart.png" alt="ServletCS2_FileUploadMultipart.png" />
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h2&gt;Upload File&lt;/h2&gt;
+    &lt;form method=&quot;post&quot; enctype=&quot;multipart/form-data&quot; action=&quot;upload&quot;&gt;
+      Who are you: &lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;&lt;br /&gt;
+      Choose the file to upload: &lt;input type=&quot;file&quot; name=&quot;file1&quot; /&gt;&lt;br /&gt;
+      Choose another file to upload: &lt;input type=&quot;file&quot; name=&quot;file2&quot; /&gt;&lt;br /&gt;
+      Comments:&lt;br /&gt;
+      &lt;textarea name=&quot;comment&quot;&gt;&lt;/textarea&gt;&lt;br /&gt;
+      &lt;input type=&quot;submit&quot; value=&quot;SEND&quot; /&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Number of parts : 4
+
+Name: username
+ContentType: null
+Size: 5
+content-disposition: form-data; name=&quot;username&quot;
+
+Name: file1
+ContentType: text/plain
+Size: 811
+content-type: text/plain
+content-disposition: form-data; name=&quot;file1&quot;; filename=&quot;uploadedFile.txt&quot;
+
+Name: file2
+ContentType: audio/mpeg
+Size: 4842585
+content-type: audio/mpeg
+content-disposition: form-data; name=&quot;file2&quot;; filename=&quot;away.mp3&quot;
+
+Name: comment
+ContentType: null
+Size: 7
+content-disposition: form-data; name=&quot;comment&quot;</pre>
+
+<p>Notes:</p>
+<ol>
+<li>You can use <code>request.getPart(<em>name</em>)</code> to retrieve a particular part with the given <em>name</em> attribute, instead of <code>request.getParts()</code>, which retrieves all parts in a <code>Collection&lt;Part&gt;</code>.</li>
+
+<li>You can also use the following code to read the data from each part:
+<pre class="color-example">
+InputStream instream = request.getPart(part.getName()).getInputStream();
+int byteRead;
+while ((byteRead = instream.read()) != -1) {
+   out.write(byteRead);
+}</pre></li>
+
+</ol>
+
+<h3>Deploying a Web Application in a WAR file</h3>
+
+<p>To deploy a Java webapp, you &quot;zip&quot; all the files and resources together in a single WAR (Web Application   Archive) file. A WAR file, like a JAR file, uses ZIP algorithm, and can be opened using WinZIP or WinRAR.</p>
+
+<p>You could use the JDK's <code>jar</code> utility to produce a WAR file as follows.</p>
+
+<pre class="color-command"><span class="color-comment">.... Change current directory to the webapp's context root</span>
+&gt; <strong>jar cvf test.war .</strong></pre>
+
+<p><span class="line-heading">(NetBeans)</span> A war file is generated when you build the project, under the project's &quot;<code>dist</code>&quot; directory.</p>
+
+<p>To deploy a WAR file, simply drop the WAR file (says <code>test.war</code>) into <code>$CATALINA_HOME\webapps</code>. A context called &quot;<code>test</code>&quot; will be created automatically. You can access the web application via URL <code>http://<em>host</em>:<em>port</em>/test</code>.</p>
+<p>Tomcat will unpack the <code>test.war</code> into a &quot;<code>test</code>&quot; directory in <code>$CATALINA_HOME\webapps</code>, if the configuration option <code>unpackWARs=&quot;true&quot;</code>. Otherwise, it will run directly from the WAR file without unpacking, which may involve some overhead. You may need to remove the unpakced directory, if you drop a new version.</p>
+<h3>A Secured Payment Gateway</h3>
+<p>[TODO]</p>
+
+
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>TODO</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Tomcat 7.0.32, MySQL 5.5.27, JDK 1.7.0_07, NetBeans 7.2<br />
+Last modified: October, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

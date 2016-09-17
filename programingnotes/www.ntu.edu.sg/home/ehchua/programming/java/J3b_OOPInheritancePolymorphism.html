@@ -1,0 +1,2905 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OOP Inheritance &amp; Polymorphism - Java Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>OOP - Composition, Inheritance &amp; Polymorphism</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Composition</h3>
+
+<p>There are two ways to <em>reuse</em>  existing classes, namely, <em>composition</em> and <em>inheritance</em>.  With <em>composition</em> (aka <em>aggregation</em>), you define a new class, which is composed of existing classes.  With <em>inheritance</em>, you derive a new class based on an existing class, with  modifications or extensions.</p>
+
+<p>We shall begin with reusing classes via composition - through examples.</p>
+
+<h4>Composition EG. 1: The <span class="font-code">Author</span> and <span class="font-code">Book</span> Classes</h4>
+
+<h5>Let's start with the <span class="font-code">Author</span> class</h5>
+
+<img src="images/OOP_AuthorClass.png" alt="OOP_AuthorClass.png" />
+
+<p>A class called <code>Author</code> is designed as shown in the class diagram. It contains:</p>
+
+<ul>
+
+<li>Three <code>private</code> member variables: <code>name</code> (<code>String</code>), <code>email</code> (<code>String</code>), and <code>gender</code> (<code>char</code> of either <code>'m'</code> or <code>'f'</code> - you might also use a <code>boolean</code> variable called <code>isMale</code> having value of <code>true</code> or <code>false</code>).</li>
+
+<li>A constructor to initialize the <code>name</code>, <code>email</code> and <code>gender</code> with the given values.<br  />
+(There is no <em>default constructor</em>, as there is no default value for <code>name</code>, <code>email</code> and <code>gender</code>.)</li>
+
+<li>Public getters/setters: <code>getName()</code>, <code>getEmail()</code>, <code>setEmail()</code>, and <code>getGender()</code>.<br />
+(There are no setters for <code>name</code> and <code>gender</code>, as these properties are not designed to be changed.)</li>
+
+<li>A <code>toString()</code> method that returns &quot;<code><em>name</em> (<em>gender</em>) at <em>email</em></code>&quot;, e.g., &quot;<code>Tan Ah Teck (m) at ahTeck@somewhere.com</code>&quot;.</li>
+</ul>
+
+<h5>The <span class="font-code">Author</span> Class (<span class="font-code">Author.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* 
+ * The Author class model a book's author.
+ */</span>
+public class <strong>Author</strong> {
+   <span class="color-comment">// The private instance variables</span>
+   private String name;
+   private String email;
+   private char gender;   <span class="color-comment">// 'm' or 'f'</span>
+ 
+   <span class="color-comment">// The constructor</span>
+   public Author(String name, String email, char gender) {
+      this.name = name;
+      this.email = email;
+      this.gender = gender;
+   }
+ 
+   <span class="color-comment">// The public getters and setters for the private instance variables.
+   // No setter for name and gender as they are not designed to be changed.</span>
+   public String getName() {
+      return name;
+   }
+   public char getGender() {
+      return gender;
+   }
+   public String getEmail() {
+      return email;
+   }
+   public void setEmail(String email) {
+      this.email = email;
+   }
+ 
+   <span class="color-comment">// The toString() describes itself</span>
+   public String toString() {
+      return name + &quot; (&quot; + gender + &quot;) at &quot; + email;
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>A Test Driver for the <span class="font-code">Author</span> Class (<span class="font-code">TestAuthor.java</span>)</h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * A test driver for the Author class.
+ */</span>
+public class <strong>TestAuthor</strong> {
+   public static void main(String[] args) {
+      <span class="color-comment">// Test constructor and toString()</span>
+      Author ahTeck = new Author(&quot;Tan Ah Teck&quot;, &quot;teck@nowhere.com&quot;, 'm');
+      System.out.println(ahTeck);  <span class="color-comment">// toString()</span>
+
+      <span class="color-comment">// Test Setters and Getters</span>
+      ahTeck.setEmail("teck@somewhere.com");
+      System.out.println(ahTeck);  <span class="color-comment">// toString()</span>
+      System.out.println(&quot;name is: &quot; + ahTeck.getName());
+      System.out.println(&quot;gender is: &quot; + ahTeck.getGender());
+      System.out.println(&quot;email is: &quot; + ahTeck.getEmail());
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>A <span class="font-code">Book</span> is written by one <span class="font-code">Author</span> - Using an &quot;Object&quot; Member Variable</h5>
+ 
+<img src="images/OOP_BookClass.png" alt="OOP_BookClass.png" />
+
+<p>Let's design a <code>Book</code> class. Assume that a book is written by one (and exactly one) author. The Book class (as shown in the class diagram) contains the following members:</p>
+
+<ul>
+<li>Four <code>private</code> member variables: <code>name</code> (<code>String</code>), <code>author</code> (an <em>instance</em> of the <code>Author</code> class we have just created, assuming that each book has exactly one author), <code>price</code> (<code>double</code>), and <code>qty</code> (<code>int</code>).</li>
+
+<li>The <code>public</code> getters and setters: <code>getName()</code>, <code>getAuthor()</code>, <code>getPrice()</code>, <code>setPrice()</code>, <code>getQty()</code>, <code>setQty()</code>.</li>
+
+<li>A <code>toString()</code> that returns &quot;<code>'book-name' by author-name (gender) at email</code>&quot;. You could reuse the <code>Author</code>'s <code>toString()</code> method, which returns &quot;<code>author-name (gender) at email</code>&quot;.</li>
+</ul>
+
+<h5>The <span class="font-code">Book</span> Class (<span class="font-code">Book.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * The Book class models a book with one (and only one) author.
+ */</span>
+public class <strong>Book</strong> {
+   <span class="color-comment">// The private instance variables</span>
+   private String name;
+   private Author author;
+   private double price;
+   private int qty;
+ 
+   <span class="color-comment">// Constructor</span>
+   public Book(String name, Author author, double price, int qty) {
+      this.name = name;
+      this.author = author;
+      this.price = price;
+      this.qty = qty;
+   }
+ 
+   <span class="color-comment">// Getters and Setters</span>
+   public String getName() {
+      return name;
+   }
+   public Author getAuthor() {
+      return author;  <span class="color-comment">// return member author, which is an instance of the class Author</span>
+   }
+   public double getPrice() {
+      return price;
+   }
+   public void setPrice(double price) {
+      this.price = price;
+   }
+   public int getQty() {
+      return qty;
+   }
+   public void setQty(int qty) {
+      this.qty = qty;
+   }
+ 
+   <span class="color-comment">// The toString() describes itself</span>
+   public String toString() {
+      return &quot;'&quot; + name + &quot;' by &quot; + author;  <span class="color-comment">// author.toString()</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>A Test Driver Program for the <span class="font-code">Book</span> Class (<span class="font-code">TestBook.java</span>)</h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * A test driver program for the Book class.
+ */</span>
+public class <strong>TestBook</strong> {
+   public static void main(String[] args) {
+      <span class="color-comment">// We need an Author instance to create a Book instance</span>
+      Author ahTeck = new Author("Tan Ah Teck", "ahTeck@somewhere.com", 'm');
+      System.out.println(ahTeck);  <span class="color-comment">// Author's toString()</span>
+
+      <span class="color-comment">// Test Book's constructor and toString()</span>
+      Book dummyBook = new Book("Java for dummies", ahTeck, 9.99, 99);
+      System.out.println(dummyBook);  <span class="color-comment">// Book's toString()</span>
+
+      <span class="color-comment">// Test Setters and Getters</span>
+      dummyBook.setPrice(8.88);
+      dummyBook.setQty(88);
+      System.out.println(dummyBook);  <span class="color-comment">// Book's toString()</span>
+      System.out.println(&quot;name is: &quot; + dummyBook.getName());
+      System.out.println(&quot;price is: &quot; + dummyBook.getPrice());
+      System.out.println(&quot;qty is: &quot; + dummyBook.getQty());
+      System.out.println(&quot;author is: &quot; + dummyBook.getAuthor());  <span class="color-comment">// invoke Author's toString()</span>
+      System.out.println(&quot;author's name is: &quot; + dummyBook.getAuthor().getName());
+      System.out.println(&quot;author's email is: &quot; + dummyBook.getAuthor().getEmail());
+      System.out.println(&quot;author's gender is: &quot; + dummyBook.getAuthor().getGender());
+
+      <span class="color-comment">// Using an anonymous Author instance to create a Book instance</span>
+      Book moreDummyBook = new Book("Java for more dummies",
+            new Author("Peter Lee", "peter@nowhere.com", 'm'), <span class="color-comment">// an anonymous Author's instance</span>
+            19.99, 8);
+      System.out.println(moreDummyBook);  <span class="color-comment">// Book's toString()</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Composition EG. 2: The <span class="font-code">Point</span> and <span class="font-code">Line</span> Classes</h4>
+
+<img src="images/ClassDiagram_Point.png" alt="class diagram" />
+
+<p>As an example of reusing a class via composition, suppose that we have an <em>existing</em> class called <code>Point</code>, defined as shown in the above class diagram. The source code is <a href="J3a_OOPBasics.html#pointclass">HERE</a>.</p>
+
+<p>Suppose that we need a new class called <code>Line</code>, we can design the <code>Line</code> class by re-using the <code>Point</code> class via <em>composition</em>. We say that &quot;A line is <em>composed</em> of two points&quot;, or &quot;A line <em>has</em> two points&quot;. Composition exhibits a &quot;<em>has-a</em>&quot; relationship.</p>
+
+
+<img src="images/OOP_CompositionLinePointDetails.png" alt="OOP_CompositionLinePointDetails.png" />
+
+<p class="float-clear"><span class="line-heading">UML Notation:</span> In UML notations, composition is represented as a diamond-head line pointing to its constituents.</p>
+
+<h5>The <span class="font-code">Line</span> Class via Composition (<span class="font-code">Line.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* 
+ * A Line composes of two Points - a begin point and an end point.
+ */</span>
+public class Line {
+  <span class="color-comment"> // The private instance variables</span>
+   Point begin, end;  <span class="color-comment"> // Object members - instances of the Point class</span>
+ 
+  <span class="color-comment"> // Constructors</span>
+   public Line(int x1, int y1, int x2, int y2) {
+      begin = new Point(x1, y1); <span class="color-comment"> // Construct the instances declared</span>
+      end   = new Point(x2, y2);
+   }
+   public Line(Point begin, Point end) {
+      this.begin = begin;  <span class="color-comment">// The caller constructed the instances</span>
+      this.end   = end;
+   }
+ 
+  <span class="color-comment"> // The public getter and setter for the private instance variables</span>
+   public Point getBegin() {
+      return begin;
+   }
+   public Point getEnd() {
+      return end;
+   }
+   public void setBegin(Point begin) {
+      this.begin = begin;
+   }
+   public void setEnd(Point end) {
+      this.end = end;
+   }
+ 
+   public int getBeginX() {
+      return begin.getX();  <span class="color-comment">// Point's getX()</span>
+   }
+   public void setBeginX(int x) {
+      begin.setX(x);  <span class="color-comment">// Point's setX()</span>
+   }
+   public int getBeginY() {
+      return begin.getY();  <span class="color-comment">// Point's getY()</span>
+   }
+   public void setBeginY(int y) {
+      begin.setY(y);  <span class="color-comment">// Point's setY()</span>
+   }
+   public int[] getBeginXY() {
+      return begin.getXY();  <span class="color-comment">// Point's getXY()</span>
+   }
+   public void setBeginXY(int x, int y) {
+      begin.setXY(x, y);  <span class="color-comment">// Point's setXY()</span>
+   }
+   public int getEndX() {
+      return end.getX();  <span class="color-comment">// Point's getX()</span>
+   }
+   public void setEndX(int x) {
+      end.setX(x);  <span class="color-comment">// Point's setX()</span>
+   }
+   public int getEndY() {
+      return end.getY();  <span class="color-comment">// Point's getY()</span>
+   }
+   public void setEndY(int y) {
+      end.setY(y);  <span class="color-comment">// Point's setY()</span>
+   }
+   public int[] getEndXY() {
+      return end.getXY();  <span class="color-comment">// Point's getXY()</span>
+   }
+   public void setEndXY(int x, int y) {
+      end.setXY(x, y);  <span class="color-comment">// Point's setXY()</span>
+   }
+ 
+   <span class="color-comment">// The toString() describe itself</span>
+   public String toString() {
+      return &quot;Line[begin=&quot; + begin + &quot;,end=&quot; + end + &quot;]&quot;;
+            <span class="color-comment">// Invoke begin.toString() and end.toString()</span>
+   }
+ 
+   public double getLength() {
+      return begin.distance(end);  <span class="color-comment">// Point's distance()</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>A Test Driver for <span class="font-code">Line</span> Class (<span class="font-code">TestLine.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * A Test Driver for the Line class.
+ */</span>
+public class TestLine {
+   public static void main(String[] args) {
+      <span class="color-comment">// Test constructor and toString()</span>
+      Line l1 = new Line(1, 2, 3, 4);
+      System.out.println(l1);  <span class="color-comment">// Line's toString()</span>
+      Line l2 = new Line(new Point(5,6), new Point(7,8));  <span class="color-comment">// anonymous Point's instances</span>
+      System.out.println(l2);  <span class="color-comment">// Line's toString()</span>
+
+      <span class="color-comment">// Test Setters and Getters</span>
+      l1.setBegin(new Point(11, 12));
+      l1.setEnd(new Point(13, 14));
+      System.out.println(l1);  <span class="color-comment">// Line's toString()</span>
+      System.out.println(&quot;begin is: &quot; + l1.getBegin());  <span class="color-comment">// Point's toString()</span>
+      System.out.println(&quot;end is: &quot; + l1.getEnd());  <span class="color-comment">// Point's toString()</span>
+
+      l1.setBeginX(21);
+      l1.setBeginY(22);
+      l1.setEndX(23);
+      l1.setEndY(24);
+      System.out.println(l1);  <span class="color-comment">// Line's toString()</span>
+      System.out.println(&quot;begin's x is: &quot; + l1.getBeginX());
+      System.out.println(&quot;begin's y is: &quot; + l1.getBeginY());
+      System.out.println(&quot;end's x is: &quot; + l1.getEndX());
+      System.out.println(&quot;end's y is: &quot; + l1.getEndY());
+
+      l1.setBeginXY(31, 32);
+      l1.setEndXY(33, 34);
+      System.out.println(l1);  <span class="color-comment">// Line's toString()</span>
+      System.out.println(&quot;begin's x is: &quot; + l1.getBeginXY()[0]);
+      System.out.println(&quot;begin's y is: &quot; + l1.getBeginXY()[1]);
+      System.out.println(&quot;end's x is: &quot; + l1.getEndXY()[0]);
+      System.out.println(&quot;end's y is: &quot; + l1.getEndXY()[1]);
+
+      <span class="color-comment">// Test getLength()</span>
+      System.out.printf("length is: %.2f%n", l1.getLength());
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>TRY</h5>
+
+<p>Try writing these more complex methods for the <code>Line</code> class:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Return the gradient of this line in radian (use Math.atan2(y, x)).</span>
+public double getGradient();
+
+<span class="color-comment">// Return the distance from this line to the given point.</span>
+public double distance(int x, int y);
+public double distance(Point p);
+
+<span class="color-comment">// Return true if this line intersects the given line.</span>
+public boolen intersects(Line another);</pre>
+
+<h4>Composition EG. 3: The <span class="font-code">Point</span> and <span class="font-code">Circle</span> Classes</h4>
+
+<p>Suppose that we have an <em>existing</em> class called <code>Point</code>, defined as shown in the class diagram. The source code is <a href="J3a_OOPBasics.html#pointclass">HERE</a>.</p>
+
+<img src="images/ClassDiagram_Point.png" alt="OOP_MyPoint.png" />
+
+<p>A class called <code>Circle</code> is designed as shown in the class diagram.</p>
+
+<img src="images/ClassDiagram_CirclePoint.png" alt="ClassDiagram_CirclePoint.png" />
+
+<p>It contains:</p>
+
+<ul>
+<li>Two <code>private</code> member variables: a <code>radius</code> (double) and a <code>center</code> (an instance of <code>Point</code> class, which we created earlier).</li>
+<li>The constructors, <code>public</code> getters and setters.</li>
+
+<li>Methods <code>getCenterX()</code>, <code>setCenterX()</code>, <code>getCenterY()</code>, <code>setCenterY()</code>, <code></code><code>getCenterXY()</code>, <code>setCenterXY()</code>, etc.</li>
+
+<li>A <code>toString()</code> method that returns a string description of <code>this</code> instance in the format of &quot;<code>Circle[center=(<em>x</em>,<em>y</em>),radius=<em>r</em>]</code>&quot;. You should re-use the <code>Point</code>'s <code>toString()</code> to print &quot;<code>(<em>x</em>,<em>y</em>)</code>&quot;.</li>
+
+<li>A <code>distance(Circle another)</code> method that returns the distance from the center of <code>this</code> instance to the center of the given <code>Circle</code> instance (called <code>another</code>).</li>
+</ul>
+
+<h5>The <span class="font-code">Circle</span> class (<span class="font-code">Circle.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* 
+ * The Circle class composes a Point (as its center) and a radius.
+ */</span>
+public class Circle {
+  <span class="color-comment"> // The private member variables</span>
+   private Point center;  <span class="color-comment">// Declare an instance of the Point class</span>
+   private double radius;
+ 
+  <span class="color-comment"> // Constructors</span>
+   public Circle() {
+      this.center = new Point();<span class="color-comment"> // Construct a Point at (0,0)</span>
+      this.radius = 1.0;
+   }
+   public Circle(int xCenter, int yCenter, double radius) {
+      center = new Point(xCenter, yCenter);<span class="color-comment"> // Construct a Point at (xCenter,yCenter)</span>
+      this.radius = radius;
+   }
+   public Circle(Point center, double radius) {
+      this.center = center;  <span class="color-comment">// The caller constructed an Point instance</span>
+      this.radius = radius;
+   }
+ 
+  <span class="color-comment"> // Getters and Setters</span>
+   public double getRadius() {
+      return this.radius;
+   }
+   public void setRadius(double radius) {
+      this.radius = radius;
+   }
+   public Point getCenter() {
+      return this.center;  <span class="color-comment">// return a Point instance</span>
+   }
+   public void setCenter(Point center) {
+      this.center = center;
+   }
+ 
+   public int getCenterX() {
+      return center.getX();  <span class="color-comment">// Point's getX()</span>
+   }
+   public void setCenterX(int x) {
+      center.setX(x);  <span class="color-comment">// Point's setX()</span>
+   }
+   public int getCenterY() {
+      return center.getY();  <span class="color-comment">// Point's getY()</span>
+   }
+   public void setCenterY(int y) {
+      center.setY(y);  <span class="color-comment">// Point's setY()</span>
+   }
+   public int[] getCenterXY() {
+      return center.getXY();  <span class="color-comment">// Point's getXY()</span>
+   }
+   public void setCenterXY(int x, int y) {
+      center.setXY(x, y);  <span class="color-comment">// Point's setXY()</span>
+   }
+ 
+   public String toString() {
+      return &quot;Circle[center=&quot; + center + &quot;,radius=&quot; + radius + &quot;]&quot;;  <span class="color-comment">// invoke center.toString()</span>
+   }
+ 
+   public double getArea() {
+      return Math.PI * radius * radius;
+   }
+ 
+   public double getCircumference() {
+      return 2.0 * Math.PI * radius;
+   }
+ 
+   <span class="color-comment">// Return the distance from the center of this instance to the center of
+   // the given Circle instance called another.</span>
+   public double distance(Circle another) {
+      return center.distance(another.center); <span class="color-comment"> // Invoke distance() of the Point class</span>
+   }
+ }</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>A Test Driver for the <span class="font-code">Circle</span> Class (<span class="font-code">TestCircle.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * A test driver for the Circle class.
+ */</span>
+public class <strong>TestCircle</strong> {
+   public static void main(String[] args) {
+      <span class="color-comment">// Test Constructors and toString()</span>
+      Circle c1 = new Circle();
+      System.out.println(c1);  <span class="color-comment">// Circle's toString()</span>
+      Circle c2 = new Circle(1, 2, 3.3);
+      System.out.println(c2);  <span class="color-comment">// Circle's toString()</span>
+      Circle c3 = new Circle(new Point(4, 5), 6.6);   <span class="color-comment">// an anonymous Point instance</span>
+      System.out.println(c3);  <span class="color-comment">// Circle's toString()</span>
+
+      <span class="color-comment">// Test Setters and Getters</span>
+      c1.setCenter(new Point(11, 12));
+      c1.setRadius(13.3);
+      System.out.println(c1);  <span class="color-comment">// Circle's toString()</span>
+      System.out.println(&quot;center is: &quot; + c1.getCenter());  <span class="color-comment">// Point's toString()</span>
+      System.out.println(&quot;radius is: &quot; + c1.getRadius());
+
+      c1.setCenterX(21);
+      c1.setCenterY(22);
+      System.out.println(c1);  <span class="color-comment">// Circle's toString()</span>
+      System.out.println(&quot;center's x is: &quot; + c1.getCenterX());
+      System.out.println(&quot;center's y is: &quot; + c1.getCenterY());
+      c1.setCenterXY(31, 32);
+      System.out.println(c1);  <span class="color-comment">// Circle's toString()</span>
+      System.out.println(&quot;center's x is: &quot; + c1.getCenterXY()[0]);
+      System.out.println(&quot;center's y is: &quot; + c1.getCenterXY()[1]);
+
+      <span class="color-comment">// Test getArea() and getCircumference()</span>
+      System.out.printf(&quot;area is: %.2f%n&quot;, c1.getArea());
+      System.out.printf(&quot;circumference is: %.2f%n&quot;, c1.getCircumference());
+
+      <span class="color-comment">// Test distance()</span>
+      System.out.printf(&quot;distance is: %.2f%n&quot;, c1.distance(c2));
+      System.out.printf(&quot;distance is: %.2f%n&quot;, c2.distance(c1));
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Exercises</h4>
+<p><a href="J3f_OOPExercises.html#ExerciseComposition">LINK TO EXERCISES</a></p>
+
+<h3>Inheritance</h3>
+
+<p>In OOP, we often organize classes in <em>hierarchy</em> to <em>avoid duplication and reduce redundancy</em>. The classes in the lower hierarchy inherit all the variables (static attributes) and methods (dynamic behaviors) from the higher hierarchies.  A class in the lower hierarchy is called a <em>subclass</em> (or <em>derived</em>, <em>child</em>, <em>extended class</em>).  A class in the upper hierarchy is called a <em>superclass</em> (or <em>base</em>, <em>parent class</em>).  By pulling out all the common variables and methods into the superclasses, and leave the specialized variables and methods in the subclasses, <em>redundancy</em> can be greatly reduced or eliminated as these common variables and methods do not need to be repeated in all the subclasses. For example,</p>
+
+<img class="image-center" src="images/OOP_InheritanceExamples.png" alt="OOP_InheritanceExamples.png" />
+
+<p>A subclass inherits all the variables and methods from its superclasses, including its immediate parent as well as all the ancestors. It is important to note that a subclass is not a &quot;subset&quot; of a superclass.  In contrast, subclass is a &quot;superset&quot; of a superclass.  It is because a subclass inherits all the variables and methods of the superclass; in addition, it extends the superclass by providing more variables and methods.</p>
+<p>In Java, you define a subclass using the keyword &quot;<code>extends</code>&quot;, e.g.,</p>
+<pre class="color-example">
+class Goalkeeper <strong>extends</strong> SoccerPlayer {......}
+class MyApplet <strong>extends</strong> java.applet.Applet {.....}
+class Cylinder <strong>extends</strong> Circle {......}
+</pre>
+
+<img class="image-float-left" src="images/OOP_UMLSuperSubClass.png" alt="OOP_UMLSuperSubClass.png" />
+
+<p><span class="line-heading">UML Notation:</span> The UML notation for inheritance is a solid line with a hollow arrowhead leading from the subclass to its superclass. By convention, superclass is drawn on top of its subclasses  as shown.</p>
+
+<h4 class="float-clear">Inheritance EG. 1: The <span class="font-code">Circle</span> and <span class="font-code">Cylinder</span> Classes</h4>
+
+<img src="images/OOP_CircleCylinder.png" alt="OOP_CircleCylinder.png" />
+
+<p>In this example, we derive a subclass called <code>Cylinder</code> from the superclass <code>Circle</code>, which we have created in the previous chapter.  It is important to note that we reuse the class <code>Circle</code>.  Reusability is one of the most important properties of OOP.  (Why reinvent the wheels?)  The class <code>Cylinder</code> inherits all the member variables (<code>radius</code> and <code>color</code>) and methods (<code>getRadius()</code>, <code>getArea()</code>, among others) from its superclass <code>Circle</code>.  It further defines a variable called <code>height</code>, two public methods - <code>getHeight()</code> and <code>getVolume()</code> and its own constructors, as shown:</p> 
+
+<h5><span class="font-code">Circle.java</span> (Re-produced)</h5>
+
+<pre class="color-example">
+public class <strong>Circle</strong> {
+   <span class="color-comment">// private instance variables</span>
+   private double radius;
+   private String color;
+
+   <span class="color-comment">// Constructors</span>
+   public Circle() {
+      this.radius = 1.0;
+      this.color = "red";
+   }
+   public Circle(double radius) {
+      this.radius = radius;
+      this.color = &quot;red&quot;;
+   }
+   public Circle(double radius, String color) {
+      this.radius = radius;
+      this.color = color;
+   }
+
+   <span class="color-comment">// Getters and Setters</span>
+   public double getRadius() {
+      return this.radius;
+   }
+   public String getColor() {
+      return this.color;
+   }
+   public void setRadius(double radius) {
+      this.radius = radius;
+   }
+   public void setColor(String color) {
+      this.color = color;
+   }
+
+   <span class="color-comment">// Describle itself</span>
+   public String toString() {
+      return "Circle[radius=" + radius + ",color=" + color + "]";
+   }
+
+   <span class="color-comment">// Return the area of this Circle</span>
+   public double getArea() {
+      return radius * radius * Math.PI;
+   }
+}</pre>
+
+<h5><span class="font-code">Cylinder.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * A Cylinder is a Circle plus a height.
+ */</span>
+public class <strong>Cylinder extends Circle</strong> {
+   <span class="color-comment">// private instance variable</span>
+   private double height;
+   
+   <span class="color-comment">// Constructors</span>
+   public Cylinder() {
+      super();  <span class="color-comment">// invoke superclass' constructor Circle()</span>
+      this.height = 1.0;
+   }
+   public Cylinder(double height) {
+      super();  <span class="color-comment">// invoke superclass' constructor Circle()</span>
+      this.height = height;
+   }
+   public Cylinder(double height, double radius) {
+      super(radius);  <span class="color-comment">// invoke superclass' constructor Circle(radius)</span>
+      this.height = height;
+   }
+   public Cylinder(double height, double radius, String color) {
+      super(radius, color);  <span class="color-comment">// invoke superclass' constructor Circle(radius, color)</span>
+      this.height = height;
+   }
+   
+   <span class="color-comment">// Getter and Setter</span>
+   public double getHeight() {
+      return this.height;
+   }
+   public void setHeight(double height) {
+      this.height = height;
+   }
+
+   <span class="color-comment">// Return the volume of this Cylinder</span>
+   public double getVolume() {
+      return getArea()*height;   <span class="color-comment">// Use Circle's getArea()</span>
+   }
+
+   <span class="color-comment">// Describle itself</span>
+   public String toString() {
+      return &quot;This is a Cylinder&quot;;  <span class="color-comment">// to be refined later</span>
+   }
+}</pre></td>
+</tr>
+</tbody>
+</table>
+
+<h5>A Test Drive for the <span class="font-code">Cylinder</span> Class (<span class="font-code">TestCylinder.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * A test driver for the Cylinder class.
+ */</span>
+public class <strong>TestCylinder</strong> {
+   public static void main(String[] args) {
+      Cylinder cy1 = new Cylinder();
+      System.out.println(&quot;Radius is &quot; + cy1.getRadius()
+         + &quot; Height is &quot; + cy1.getHeight()
+         + &quot; Color is &quot; + cy1.getColor()
+         + &quot; Base area is &quot; + cy1.getArea()
+         + &quot; Volume is &quot; + cy1.getVolume());
+   
+      Cylinder cy2 = new Cylinder(5.0, 2.0);
+      System.out.println(&quot;Radius is &quot; + cy2.getRadius()
+         + &quot; Height is &quot; + cy2.getHeight()
+         + &quot; Color is &quot; + cy2.getColor()
+         + &quot; Base area is &quot; + cy2.getArea()
+         + &quot; Volume is &quot; + cy2.getVolume());
+   }
+}</pre></td>
+</tr>
+</tbody>
+</table>
+
+<p>Keep the &quot;<code>Cylinder.java</code>&quot; and &quot;<code>TestCylinder.java</code>&quot; in the same directory as &quot;<code>Circle.class</code>&quot; (because we are reusing the class <code>Circle</code>).  Compile and run the program. The expected output is as follows:</p>
+<pre class="output">
+Radius is 1.0 Height is 1.0 Color is red Base area is 3.141592653589793 Volume is 3.141592653589793
+Radius is 5.0 Height is 2.0 Color is red Base area is 78.53981633974483 Volume is 157.07963267948966</pre>
+
+<h4>Method Overriding &amp; Variable Hiding</h4>
+<p>A subclass inherits all the member variables and methods from its superclasses (the immediate parent and all its ancestors). It can use the inherited methods and variables as they are.  It may also override an inherited method by providing its own version, or hide an inherited variable by defining a variable of the same name.</p>
+
+<p>For example, the inherited method <code>getArea()</code> in a <code>Cylinder</code> object computes the base area of the cylinder.  Suppose that we decide to override the <code>getArea()</code> to compute the surface area of the cylinder in the subclass <code>Cylinder</code>. Below are the changes:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre>
+</td>
+<td>
+<pre>
+public class <strong>Cylinder extends Circle</strong> {
+   ......
+   <span class="color-comment">// Override the getArea() method inherited from superclass Circle</span>
+   @Override
+   <span class="color-new">public double getArea() {
+      return 2*Math.PI*getRadius()*height + 2*super.getArea();
+   }</span>
+   <span class="color-comment">// Need to change the getVolume() as well</span>
+   public double getVolume() {
+      return <span class="color-new">super.getArea()</span>*height;   <span class="color-comment">// use superclass' getArea()</span>
+   }
+   <span class="color-comment">// Override the inherited toString()</span>
+   <span class="color-new">@Override
+   public String toString() {
+      return &quot;Cylinder[&quot; + super.toString() + &quot;,height=&quot; + height + &quot;]&quot;;   
+   }</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>If <code>getArea()</code> is called from a <code>Circle</code> object, it computes the area of the circle.  If <code>getArea()</code> is called from a <code>Cylinder</code> object, it computes the surface area of the cylinder using the <em>overridden implementation</em>.  Note that you have to use public accessor method <code>getRadius()</code> to retrieve the <code>radius</code> of the <code>Circle</code>, because <code>radius</code> is declared <code>private</code> and therefore not accessible to other classes, including the subclass <code>Cylinder</code>.</p>
+
+<p>But if you override the <code>getArea()</code> in the <code>Cylinder</code>, the <code>getVolume()</code> (<code>=getArea()*height</code>) no longer works.  It is because the overridden <code>getArea()</code> will be used in <code>Cylinder</code>, which does not compute the base area.  You can fix this problem by using <code>super.getArea()</code> to use the superclass' version of <code>getArea()</code>.  Note that <code>super.getArea()</code> can only be issued from the subclass definition, but no from an instance created, e.g. <code>c1.super.getArea()</code>, as it break the information hiding and encapsulation principle.</p>
+
+<h4>Annotation <span class="font-code">@Override</span> (JDK 1.5)</h4>
+<p>The &quot;<code>@Override</code>&quot; is known as <em>annotation</em> (introduced in JDK 1.5), which asks compiler to check whether there is such a method in the superclass to be overridden. This helps greatly if you <em>misspell</em> the name of the method to be overridden. For example, suppose that you wish to override method <code>toString()</code> in a subclass. If <code>@Override</code> is not used and <code>toString()</code> is misspelled as <code>TOString()</code>, it will be treated as a new method in the subclass, instead of overriding the superclass. If <code>@Override</code> is used, the compiler will signal an error.</p>
+
+<p><code>@Override</code> annotation is optional, but certainly nice to have.</p>
+
+<p>Annotations are not programming constructs. They have no effect on the program output. It is only used by the compiler, discarded after compilation, and not used by the runtime.</p>
+
+<h4>Keyword &quot;<span class="font-code">super</span>&quot;</h4>
+<p>Recall that inside a class definition, you can use the keyword <code>this</code> to refer to <em>this instance</em>.  Similarly, the keyword <code>super</code> refers to the superclass, which could be the immediate parent or its ancestor.</p>
+
+<p>The keyword <code>super</code> allows the subclass to access superclass' methods and variables within the subclass' definition.  For example, <code>super()</code> and <code>super(<em>argumentList</em>)</code> can be used invoke the superclass’ constructor.  If the subclass overrides a method inherited from its superclass, says <code>getArea()</code>, you can use <code>super.getArea()</code> to invoke the superclass' version within the subclass definition.  Similarly, if your subclass hides one of the superclass' variable, you can use <code>super.<em>variableName</em></code> to refer to the hidden variable within the subclass definition.</p>
+
+<h4>More on Constructors</h4>
+<p>Recall that the subclass inherits all the  variables and methods from its superclasses. Nonetheless, the subclass does not inherit the constructors of its superclasses. Each class in Java defines its own constructors.</p>
+<p>In the body of a constructor, you can use <code>super(<em>args</em>)</code> to invoke a constructor of its immediate superclass.  Note that <code>super(<em>args</em>)</code>, if it is used,  must be the <em>first statement</em> in the subclass' constructor.  If it is not used in the constructor, Java compiler automatically insert a <code>super()</code> statement to invoke the no-arg constructor of its immediate superclass.    This follows the fact that the parent must be born before the child can be born. You need to properly construct the superclasses before you can construct the subclass.</p>
+
+
+<h4>Default no-arg Constructor</h4>
+<p>If no constructor is defined in a class, Java compiler automatically create a <em>no-argument (no-arg) constructor</em>, that simply issues a <code>super()</code> call, as follows:</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// If no constructor is defined in a class, compiler inserts this no-arg constructor </span>
+public <em>ClassName</em> () {  
+   super();   <span class="color-comment">// call the superclass' no-arg constructor</span>
+}</pre>
+<p>Take note that:</p>
+<ul>
+<li>The default no-arg constructor will not be automatically generated, if one (or more) constructor was defined. In other words, you need to define no-arg constructor explicitly if other constructors were defined.</li>
+<li>If the immediate superclass does not have the default constructor (it defines some constructors but does not define a no-arg constructor), you will get a compilation error in doing a <code>super()</code> call. Note that Java compiler inserts a <code>super()</code> as the first statement in a constructor if there is no <code>super(args)</code>.</li>
+</ul>
+
+<h4>Single Inheritance</h4>
+<p>Java does not support multiple inheritance (C++ does).  Multiple inheritance permits a subclass to have more than one direct superclasses.  This has a serious drawback if the superclasses have conflicting implementation for the same method. In Java, each subclass can have one and only one direct superclass, i.e., single inheritance.  On the other hand, a superclass can have many subclasses.</p>
+
+<h4>Common Root Class - <span class="font-code">java.lang.Object</span></h4>
+<p>Java  adopts a so-called <em>common-root</em> approach.  All Java classes are derived from a <em>common root class</em> called <code>java.lang.Object</code>.  This <code>Object</code> class defines and implements the <em>common behaviors</em> that are required of all the Java objects running under the JRE.  These common behaviors enable the implementation of features such as multi-threading and garbage collector.</p>
+
+<h4><span class="float-clear">Inheritance </span>EG. 2: The <span class="font-code">Point2D</span> and <span class="font-code">Point3D</span> Classes</h4>
+
+<img src="images/OOP_PointPoint3D.png" alt="OOP_PointPoint3D.png" />
+
+<h5 class="float-clear">The Superclass <span class="font-code">Point2D.java</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Point2D class models a 2D point at (x, y).
+ */</span>
+public class Point2D {
+   <span class="color-comment">// Private instance variables</span>
+   private int x, y;
+
+   <span class="color-comment">// Constructors</span>
+   public Point2D() {  <span class="color-comment">// default constructor</span>
+      this.x = 0;
+      this.y = 0;
+   }
+   public Point2D(int x, int y) {
+      this.x = x;
+      this.y = y;
+   }
+
+   <span class="color-comment">// Getters and Setters</span>
+   public int getX() {
+      return this.x;
+   }
+   public void setX(int x) {
+      this.x = x;
+   }
+   public int getY() {
+      return this.y;
+   }
+   public void setY(int y) {
+      this.y = y;
+   }
+
+   <span class="color-comment">// Return &quot;(x,y)&quot;</span>
+   public String toString() {
+      return "(" + this.x + "," + this.y + ")";
+   }
+}</pre>
+
+<h5>The Subclass <span class="font-code">Point3D.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * The Point3D class models a 3D point at (x, y,z),
+ * which is a subclass of Point2D.
+ */</span>
+public class Point3D extends Point2D {
+   <span class="color-comment">// Private instance variables</span>
+   private int z;
+
+   <span class="color-comment">// Constructors</span>
+   public Point3D() {  <span class="color-comment">// default constructor</span>
+      super();     <span class="color-comment">// x = y = 0</span>
+      this.z = 0;
+   }
+   public Point3D(int x, int y, int z) {
+      super(x, y);
+      this.z = z;
+   }
+
+   <span class="color-comment">// Getters and Setters</span>
+   public int getZ() {
+      return this.z;
+   }
+   public void setZ(int z) {
+      this.z = z;
+   }
+
+   <span class="color-comment">// Return &quot;(x,y,z)&quot;</span>
+   @Override
+   public String toString() {
+      return "(" + super.getX() + "," + super.getY() + "," + this.z + ")";
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>A Test Driver for <span class="font-code">Point2D</span> and <span class="font-code">Point3D</span> Classes (<span class="font-code">TestPoint2DPoint3D.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * A test driver for the Point2D and Point3D classes
+ */</span>
+public class TestPoint2DPoint3D {
+   public static void main(String[] args) {
+      <span class="color-comment">/* Test Point2D */</span>
+      <span class="color-comment">// Test constructors and toString()</span>
+      Point2D p2a = new Point2D(1, 2);
+      System.out.println(p2a);  <span class="color-comment">// toString()</span>
+      Point2D p2b = new Point2D();  <span class="color-comment">// default constructor</span>
+      System.out.println(p2b);
+      <span class="color-comment">// Test Setters and Getters</span>
+      p2a.setX(3);  <span class="color-comment">// Test setters</span>
+      p2a.setY(4);
+      System.out.println(p2a);  <span class="color-comment">// toString()</span>
+      System.out.println(&quot;x is: &quot; + p2a.getX());
+      System.out.println(&quot;x is: &quot; + p2a.getY());
+
+      <span class="color-comment">/* Test Point3D */</span>
+      <span class="color-comment">// Test constructors and toString()</span>
+      Point3D p3a = new Point3D(11, 12, 13);
+      System.out.println(p3a);  <span class="color-comment">// toString()</span>
+      Point2D p3b = new Point3D();  <span class="color-comment">// default constructor</span>
+      System.out.println(p3b);
+      <span class="color-comment">// Test Setters and Getters</span>
+      p3a.setX(21);  <span class="color-comment">// in superclass</span>
+      p3a.setY(22);  <span class="color-comment">// in superclass</span>
+      p3a.setZ(23);  <span class="color-comment">// in this class</span>
+      System.out.println(p3a);  <span class="color-comment">// toString()</span>
+      System.out.println(&quot;x is: &quot; + p3a.getX());  <span class="color-comment">// in superclass</span>
+      System.out.println(&quot;y is: &quot; + p3a.getY());  <span class="color-comment">// in superclass</span>
+      System.out.println(&quot;z is: &quot; + p3a.getZ());  <span class="color-comment">// in this class</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h4><span class="float-clear">Inheritance </span>EG. 3: Superclass <span class="font-code">Person</span> and its Subclasses</h4>
+
+<img src="images/OOP_PersonStudnetTeacher.png" alt="OOP_PersonStudnetTeacher.png" />
+
+<p>Suppose that we are required to model students and teachers in our application.  We can define a superclass called <code>Person</code> to store common properties such as <code>name</code> and <code>address</code>, and subclasses <code>Student</code> and <code>Teacher</code> for their specific properties. For students, we need to maintain the courses taken and their respective grades; add a course with grade, print all courses taken and the average grade. Assume that a student takes no more than 30 courses for the entire program. For teachers, we need to maintain the courses taught currently, and able to add or remove a course taught. Assume that a teacher teaches not more than 5 courses concurrently.</p>
+<p>We design the classes as follows.</p>
+
+<h5>The Superclass <span class="font-code">Person.java</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">/* 
+ * Superclass Person has name and address.
+ */</span>
+public class <strong>Person</strong> {
+   <span class="color-comment">// private instance variables</span>
+   private String name, address;
+   
+   <span class="color-comment">// Constructor</span>
+   public Person(String name, String address) {
+      this.name = name;
+      this.address = address;
+   }
+   
+   <span class="color-comment">// Getters and Setters</span>
+   public String getName() {
+      return name;
+   }
+   public String getAddress() {
+      return address;
+   }
+   public void setAddress(String address) {
+      this.address = address;
+   }
+   
+   <span class="color-comment">// Describle itself</span>
+   public String toString() {
+      return name + &quot;(&quot; + address + &quot;)&quot;;
+   }
+}</pre>
+
+<h5>The Subclass <span class="font-code">Student.java</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Student class, subclass of Person.
+ */</span>
+public class <strong>Student extends Person</strong> {
+   <span class="color-comment">// private instance variables</span>
+   private int numCourses;   <span class="color-comment">// number of courses taken so far</span>
+   private String[] courses; <span class="color-comment">// course codes</span>
+   private int[] grades;     <span class="color-comment">// grade for the corresponding course codes</span>
+   private static final int MAX_COURSES = 30; <span class="color-comment">// maximum number of courses</span>
+   
+   <span class="color-comment">// Constructor</span>
+   public Student(String name, String address) {
+      super(name, address);
+      numCourses = 0;
+      courses = new String[MAX_COURSES];
+      grades = new int[MAX_COURSES];
+   }
+   
+   <span class="color-comment">// Describe itself</span>
+   @Override
+   public String toString() {
+      return &quot;Student: &quot; + super.toString();
+   }
+   
+   <span class="color-comment">// Add a course and its grade - No validation in this method</span> 
+   public void addCourseGrade(String course, int grade) {
+      courses[numCourses] = course;
+      grades[numCourses] = grade;
+      ++numCourses;
+   }
+   
+   <span class="color-comment">// Print all courses taken and their grade</span>
+   public void printGrades() {
+      System.out.print(this);
+      for (int i = 0; i &lt; numCourses; ++i) {
+         System.out.print(&quot; &quot; + courses[i] + &quot;:&quot; + grades[i]);
+      }
+      System.out.println();
+   }
+   
+   <span class="color-comment">// Compute the average grade</span>
+   public double getAverageGrade() {
+      int sum = 0;
+      for (int i = 0; i &lt; numCourses; i++ ) {
+         sum += grades[i];
+      }
+      return (double)sum/numCourses;
+   }
+}</pre>
+
+<h5>The Subclass <span class="font-code">Teacher.java</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Teacher class, subclass of Person.
+ */</span>
+public class <strong>Teacher extends Person</strong> {
+   <span class="color-comment">// private instance variables</span>
+   private int numCourses;   <span class="color-comment">// number of courses taught currently</span>
+   private String[] courses; <span class="color-comment">// course codes</span>
+   private static final int MAX_COURSES = 5; <span class="color-comment">// maximum courses</span>
+   
+   <span class="color-comment">// Constructor</span>
+   public Teacher(String name, String address) {
+      super(name, address);
+      numCourses = 0;
+      courses = new String[MAX_COURSES];
+   }
+   
+   <span class="color-comment">// Describe itself</span>
+   @Override
+   public String toString() {
+      return &quot;Teacher: &quot; + super.toString();
+   }
+   
+   <span class="color-comment">// Return false if the course already existed</span>
+   public boolean addCourse(String course) {
+      <span class="color-comment">// Check if the course already in the course list</span>
+      for (int i = 0; i &lt; numCourses; i++) {
+         if (courses[i].equals(course)) return false;
+      }
+      courses[numCourses] = course;
+      numCourses++;
+      return true;
+   }
+   
+   <span class="color-comment">// Return false if the course cannot be found in the course list</span>
+   public boolean removeCourse(String course) {
+      boolean found = false;
+      <span class="color-comment">// Look for the course index</span>
+      int courseIndex = -1;  <span class="color-comment">// need to initialize</span>
+      for (int i = 0; i &lt; numCourses; i++) {
+         if (courses[i].equals(course)) {
+            courseIndex = i;
+            found = true;
+            break;
+         }
+      }
+      if (found) {
+         <span class="color-comment">// Remove the course and re-arrange for courses array</span>
+         for (int i = courseIndex; i &lt; numCourses-1; i++) {
+            courses[i] = courses[i+1];
+         }
+         numCourses--;
+         return true;
+      } else {
+         return false;
+      }
+   }
+}</pre>
+
+<h5>A Test Driver (<span class="font-code">TestPerson.java</span>)</h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * A test driver for Person and its subclasses.
+ */</span>
+public class <strong>TestPerson</strong> {
+   public static void main(String[] args) {
+      <span class="color-comment">/* Test Student class */</span>
+      Student s1 = new Student(&quot;Tan Ah Teck&quot;, &quot;1 Happy Ave&quot;);
+      s1.addCourseGrade(&quot;IM101&quot;, 97);
+      s1.addCourseGrade(&quot;IM102&quot;, 68);
+      s1.printGrades();
+      System.out.println(&quot;Average is &quot; + s1.getAverageGrade());
+      
+      <span class="color-comment">/* Test Teacher class */</span>
+      Teacher t1 = new Teacher(&quot;Paul Tan&quot;, &quot;8 sunset way&quot;);
+      System.out.println(t1);
+      String[] courses = {&quot;IM101&quot;, &quot;IM102&quot;, &quot;IM101&quot;};
+      for (String course: courses) {
+         if (t1.addCourse(course)) {
+            System.out.println(course + &quot; added.&quot;);
+         } else {
+            System.out.println(course + &quot; cannot be added.&quot;);
+         }
+      }
+      for (String course: courses) {
+         if (t1.removeCourse(course)) {
+            System.out.println(course + &quot; removed.&quot;);
+         } else {
+            System.out.println(course + &quot; cannot be removed.&quot;);
+         }
+      }
+   }
+}</pre>
+<pre class="output">
+Tan Ah Teck(1 Happy Ave)
+Tan Ah Teck
+8 Sunrise Place
+Student: Mohd Ali(8 Kg Java)
+Mohd Ali
+9 Kg Satu
+Student: Mohd Ali(9 Kg Satu) IM101:97 IM102:68
+Average is: 82.5
+Teacher: Paul Tan(8 sunset way)
+IM101 added.
+IM102 added.
+IM101 cannot be added.
+IM101 removed.
+IM102 removed.
+IM101 cannot be removed.</pre>
+
+
+<h4>Exercises</h4>
+<p><a href="J3f_OOPExercises.html#ExerciseInheritance">LINK TO EXERCISES</a></p>
+
+
+<h3>Composition vs. Inheritance</h3>
+
+<h4>&quot;A line is composed of 2 points&quot; vs. &quot;A line is a point extended by another point&quot;</h4>
+
+<p>Recall that there are two ways of reusing existing classes: <em>composition</em> and <em>inheritance</em>. We have seen that a <code>Line</code> class can be implemented using composition of <code>Point</code> class - &quot;A line is composed of two points&quot;, in the previous section.</p>
+
+<p>A <code>Line</code> can also be implemented, using inheritance from the <code>Point</code> class - &quot;A line is a point extended by another point&quot;. Let's call this subclass <code>LineSub</code> (to differentiate from the <code>Line</code> class using composition).</p>
+
+
+<img src="images/OOP_PointLineSub.png" alt="OOP_PointLineSub.png" />
+
+<h5>The Superclass <span class="font-code">Point.java</span></h5>
+
+<p>As above.</p>
+
+<h5>The Subclass <span class="font-code">LineSub.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* 
+ * The LineSub class, subclass of Point.
+ * It inherits the begin point from the superclass, and adds an end point.
+ */</span>
+public class <strong>LineSub extends Point</strong> { <span class="color-comment"> // Inherited the begin point</span>
+  <span class="color-comment"> // Private instance variables</span>
+   Point end;  <span class="color-comment"> // Declare end as instance of Point</span>
+ 
+  <span class="color-comment"> // Constructors</span>
+   public LineSub(int x1, int y1, int x2, int y2) {
+      super(x1, y1);
+      this.end = new Point(x2, y2);  <span class="color-comment"> // Construct Point instances</span>
+   }
+   public LineSub(Point begin, Point end) {
+      super(begin.getX(), begin.getY());  <span class="color-comment">// Need to construct super</span>
+      this.end = end;
+   }
+
+   <span class="color-comment">// Getters and Setters</span> 
+   public Point getBegin() {
+      return this;  <span class="color-comment"> // upcast to Point (polymorphism)</span>
+   }
+   public Point getEnd() {
+      return end;
+   }
+   public void setBegin(Point begin) {
+      super.setX(begin.getX());
+      super.setY(begin.getY());
+   }
+   public void setEnd(Point end) {
+      this.end = end;
+   }
+ 
+   <span class="color-comment">// Other Get and Set methods</span>
+   public int getBeginX() {
+      return super.getX(); <span class="color-comment"> // inherited, super is optional</span>
+   }
+   public void setBeginX(int x) {
+      super.setX(x);       <span class="color-comment"> // inherited, super is optional</span>
+   }
+   public int getBeginY() {
+      return super.getY();
+   }
+   public void setBeginY(int y) {
+      super.setY(y);
+   }
+   public int[] getBeginXY() {
+      return super.getXY();
+   }
+   public void setBeginXY(int x, int y) {
+      super.setXY(x, y);
+   }
+   public int getEndX() {
+      return end.getX();
+   }
+   public void setEndX(int x) {
+      end.setX(x);
+   }
+   public int getEndY() {
+      return end.getY();
+   }
+   public void setEndY(int y) {
+      end.setY(y);
+   }
+   public int[] getEndXY() {
+      return end.getXY();
+   }
+   public void setEndXY(int x, int y) {
+      end.setXY(x, y);
+   }
+ 
+   <span class="color-comment">// Describe itself</span>
+   public String toString() {
+      return &quot;LineSub[begin=&quot; + super.toString() + &quot;,end=&quot; + end + &quot;]&quot;;
+   }
+ 
+   // Return the length of this Line
+   public double getLength() {
+      return super.distance(end);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>A Test Driver (<span class="font-code">TestLineSub.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Test Driver for the LineSub class
+ */</span>
+public class TestLineSub {
+   public static void main(String[] args) {
+      <span class="color-comment"><code>// Test constructors and toString()</code></span>
+      LineSub l1 = new LineSub(1, 2, 3, 4);
+      System.out.println(l1);  <span class="color-comment">// toString()</span>
+      LineSub l2 = new LineSub(new Point(5,6), new Point(7,8));
+      System.out.println(l2);
+
+      <span class="color-comment">// Test Setters and Getters</span>
+      l1.setBegin(new Point(11, 12));
+      l1.setEnd(new Point(13, 14));
+      System.out.println(l1);  <span class="color-comment">// toString()</span>
+      System.out.println(&quot;begin is: &quot; + l1.getBegin());
+      System.out.println(&quot;end is: &quot; + l1.getEnd());
+
+      l1.setBeginX(21);
+      l1.setBeginY(22);
+      l1.setEndX(23);
+      l1.setEndY(24);
+      System.out.println(l1);
+      System.out.println(l1);  <span class="color-comment">// toString()</span>
+      System.out.println(&quot;begin's x is: &quot; + l1.getBeginX());
+      System.out.println(&quot;begin's y is: &quot; + l1.getBeginY());
+      System.out.println(&quot;end's x is: &quot; + l1.getEndX());
+      System.out.println(&quot;end's y is: &quot; + l1.getEndY());
+
+      l1.setBeginXY(31, 32);
+      l1.setEndXY(33, 34);
+      System.out.println(l1);  <span class="color-comment">// toString()</span>
+      System.out.println(&quot;begin's x is: &quot; + l1.getBeginXY()[0]);
+      System.out.println(&quot;begin's y is: &quot; + l1.getBeginXY()[1]);
+      System.out.println(&quot;end's x is: &quot; + l1.getEndXY()[0]);
+      System.out.println(&quot;end's y is: &quot; + l1.getEndXY()[1]);
+
+      <span class="color-comment">// Test getLength()</span>
+      System.out.printf("length is: %.2f%n", l1.getLength());
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Notes: This is the same test driver used in the earlier example on composition, except change in classname.</p>
+
+<p>Study both versions of the Line class (<code>Line</code> and <code>LineSub</code>). I suppose that it is easier to say that &quot;A line is composed of two points&quot; than that &quot;A line is a point extended by another point&quot;.</p>
+
+<p><span class="line-heading">Rule of Thumb:</span> Use composition if possible, before considering inheritance. Use inheritance only if there is a clear hierarchical relationship between classes.</p>
+
+<h4>Exercises</h4>
+<p><a href="J3f_OOPExercises.html#ExerciseCompInherit">LINK TO EXERCISES ON COMPOSITION VS INHERITANCE</a></p>
+
+<h3>Polymorphism</h3>
+
+<p>The word &quot;<em>polymorphism</em>&quot; means &quot;<em>many forms</em>&quot;.  It comes from Greek word &quot;<em>poly</em>&quot; (means <em>many</em>) and &quot;<em>morphos</em>&quot; (means <em>form</em>).  For examples, in chemistry, carbon exhibits polymorphism because it can be found in more than one form: graphite and diamond.  But, <em>each of the form has it own distinct properties</em> (and price).</p>
+
+<h4>Substitutability</h4>
+
+<p>A subclass possesses all the attributes and operations of its superclass (because a subclass inherited all attributes and operations from its superclass).  This means that a subclass object can do whatever its superclass can do.  As a result, we can <em>substitute</em> a subclass instance when a superclass instance is expected, and everything shall work fine.  This is called <em>substitutability</em>.</p>
+
+<img src="images/OOP_PolymorphismCircleCylinder.png" alt="OOP_PolymorphismCircleCylinder.png" />
+
+<p>In our earlier example of <code>Circle</code> and <code>Cylinder</code>: <code>Cylinder</code> is a subclass of <code>Circle</code>. We can say that <code>Cylinder</code> &quot;<em>is-a</em>&quot; <code>Circle</code> (actually, it &quot;<em>is-more-than-a</em>&quot; <code>Circle</code>). Subclass-superclass exhibits a so called &quot;<em>is-a</em>&quot; relationship.</p>
+
+<h5><span class="font-code">Circle.java</span></h5>
+<pre class="color-example">
+<span class="color-comment">// The superclass Circle</span>
+public class Circle {
+   <span class="color-comment">// private instance variable</span>
+   private double radius;
+   <span class="color-comment">// Constructor</span>
+   public Circle(double radius) {
+      this.radius = radius;
+   }
+   <span class="color-comment">// Getter</span>
+   public double getRadius() {
+      return this.radius;
+   }
+   <span class="color-comment">// Return the area of this circle</span>
+   public double getArea() {
+      return radius * radius * Math.PI;
+   }
+   <span class="color-comment">// Describe itself</span>
+   public String toString() {
+      return "Circle[radius=" + radius + "]";
+   }
+}</pre>
+
+<h5><span class="font-code">Cylinder.java</span></h5>
+<pre class="color-example">
+<span class="color-comment">// The subclass Cylinder</span>
+public class <strong>Cylinder extends Circle</strong> {
+   <span class="color-comment">// private instance variable</span>
+   private double height;
+   <span class="color-comment">// Constructor</span>
+   public Cylinder(double height, double radius) {
+      super(radius);
+      this.height = height;
+   }
+   <span class="color-comment">// Getter</span>
+   public double getHeight() {
+      return this.height;
+   }
+   <span class="color-comment">// Return the volume of this cylinder</span>
+   public double getVolumne() {
+      return super.getArea() * height;
+   }
+   <span class="color-comment">// Override the inherited method to return the surface area</span>
+   @Override
+   public double getArea() {
+      return 2.0 * Math.PI * getRadius() * height;
+   }
+   <span class="color-comment">// Override the inherited method to describe itself</span>
+   @Override
+   public String toString() {
+      return "Cylinder[height=" + height + "," + super.toString() + "]";
+   }
+}</pre>
+
+<p>Via <em>substitutability</em>, we can create an instance of <code>Cylinder</code>, and assign it to a <code>Circle</code> (its superclass) reference, as follows:</p>
+<pre class="color-example">
+<span class="color-comment">// Substitute a subclass instance to a superclass reference</span>
+<span class="color-new">Circle</span> c1 = new <span class="color-new">Cylinder</span>(1.1, 2.2);</pre>
+
+<p>You can invoke all the methods defined in the <code>Circle</code> class for the reference <code>c1</code>, (which is <code></code> actually holding a <code>Cylinder</code> object), e.g.</p>
+<pre class="color-example">
+<span class="color-comment">// Invoke superclass Circle's methods</span>
+c1.getRadius();</pre>
+<p>This is because a subclass instance possesses all the properties of its superclass.</p>
+
+<p>However, you CANNOT invoke methods defined in the <code>Cylinder</code> class for the reference <code>c1</code>, e.g.</p>
+<pre class="color-example">
+<span class="color-comment">// CANNOT invoke method in Cylinder as it is a Circle reference!</span>
+c1.getHeight();  <span class="color-error">// compilation error</span>
+c1.getVolume();  <span class="color-error">// compilation error</span>
+</pre>
+
+<p>This is because <code>c1</code> is a reference to the <code>Circle</code> class, which does not know about methods defined in the subclass <code>Cylinder</code>.</p>
+
+<p><code>c1</code> is a reference to the <code>Circle</code> class, but holds an object of its subclass <code>Cylinder</code>.  The reference <code>c1</code>, however, <em>retains its internal identity</em>. In our example, the subclass <code>Cylinder</code> overrides methods <code>getArea()</code> and <code>toString()</code>. <code>c1.getArea()</code> or <code>c1.toString()</code> invokes the <em>overridden</em> version defined in the subclass <code>Cylinder</code>, instead of the version defined in <code>Circle</code>.  This is because <code>c1</code> is in fact holding a <code>Cylinder</code> object internally.</p>
+
+<pre class="color-example">
+c1.toString();  <span class="color-comment">// Run the overridden version!</span>
+c1.getArea();   <span class="color-comment">// Run the overridden version!</span></pre>
+
+<h5>Summary</h5>
+<ol>
+<li>A subclass instance can be assigned (substituted) to a superclass' reference.</li>
+<li>Once substituted, we can invoke methods defined in the superclass; we cannot invoke methods defined in the subclass.</li>
+<li>However, if the subclass overrides inherited methods from the superclass, the subclass (overridden) versions will be invoked.</li>
+
+</ol>
+
+<h4>Polymorphism EG. 1： <span class="font-code">Shape</span> and its Subclasses</h4>
+
+<p>Polymorphism is very powerful in OOP to <em>separate the interface and implementation</em> so as to allow the programmer to <em>program at the interface</em> in the  design of a <em>complex system</em>.</p>
+
+<p>Consider the following example. Suppose that our program uses many kinds of shapes, such as triangle, rectangle and so on. We should design a superclass called <code>Shape</code>, which defines the public interfaces (or behaviors) of all the shapes. For example, we would like all the shapes to have a method called <code>getArea()</code>, which returns the area of that particular shape. The <code>Shape</code> class can be written as follow.</p>
+
+<img src="images/OOP_PolymorphismShape.png" alt="OOP_PolymorphismShape.png" />
+  
+
+<h5>The Superclass <span class="font-code">Shape.java</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * Superclass Shape maintain the common properties of all shapes
+ */</span>
+public class <strong>Shape</strong> {
+   <span class="color-comment">// Private member variable</span>
+   private String color;
+   
+   <span class="color-comment">// Constructor</span>
+   public Shape (String color) {
+      this.color = color;
+   }
+   
+   @Override
+   public String toString() {
+      return &quot;Shape[color=&quot; + color + &quot;]&quot;;
+   }
+   
+   <span class="color-comment">// All shapes must have a method called getArea().</span>
+   public double getArea() {
+      <span class="color-comment">// We have a problem here!
+      // We need to return some value to compile the program.</span>
+      System.err.println(&quot;Shape unknown! Cannot compute area!&quot;);
+      return 0;
+   }
+}</pre>
+
+<p>Take note that we have a problem writing the <code>getArea()</code> method in the <code>Shape</code> class, because the area cannot be computed unless the actual shape is known. We shall print an error message for the time being. In the later section, I shall show you how to resolve this problem.</p>
+
+<p>We can then derive subclasses, such as <code>Triangle</code> and <code>Rectangle</code>, from the superclass <code>Shape</code>.</p>
+
+<h5>The Subclass <span class="font-code">Rectangle.java</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Rectangle class, subclass of Shape
+ */</span>
+public class <strong>Rectangle extends Shape</strong> {
+   <span class="color-comment">// Private member variables</span>
+   private int length;
+   private int width;
+   
+   <span class="color-comment">// Constructor</span>
+   public Rectangle(String color, int length, int width) {
+      super(color);
+      this.length = length;
+      this.width = width;
+   }
+   
+   @Override
+   public String toString() {
+      return &quot;Rectangle[length=&quot; + length + &quot;,width=&quot; + width + &quot;,&quot; + super.toString() + &quot;]&quot;;
+   }
+   
+   <span class="color-comment">// Override the inherited getArea() to provide the proper implementation</span>
+   @Override
+   public double getArea() {
+      return length*width;
+   }
+}</pre>
+
+<h5>The Subclass <span class="font-code">Triangle.java</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">/* 
+ * The Triangle class, subclass of Shape
+ */</span>
+public class <strong>Triangle extends Shape</strong> {
+   <span class="color-comment">// Private member variables</span>
+   private int base;
+   private int height;
+   
+   <span class="color-comment">// Constructor</span>
+   public Triangle(String color, int base, int height) {
+      super(color);
+      this.base = base;
+      this.height = height;
+   }
+   
+   @Override
+   public String toString() {
+      return &quot;Triangle[base=&quot; + base + &quot;,height=&quot; + height + &quot;,&quot; + super.toString() + &quot;]&quot;;
+   }
+   
+   <span class="color-comment">// Override the inherited getArea() to provide the proper implementation</span>
+   @Override
+   public double getArea() {
+      return 0.5*base*height;
+   }
+}</pre>
+
+<p>The subclasses override the <code>getArea() </code>method inherited from the superclass, and provide the proper implementations for <code>getArea()</code>.</p>
+
+<h5>A Test Driver (<span class="font-code">TestShape.java</span>)</h5>
+
+<p>In our application, we could create references of <code>Shape</code>, and assigned them instances of subclasses, as follows:</p>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * A test driver for Shape and its subclasses
+ */</span>
+public class <strong>TestShape</strong> {
+   public static void main(String[] args) {
+      Shape s1 = new Rectangle(&quot;red&quot;, 4, 5);  <span class="color-comment">// Upcast</span>
+      System.out.println(s1);  <span class="color-comment">// Run Rectangle's toString()</span>
+      System.out.println(&quot;Area is &quot; + s1.getArea());  <span class="color-comment">// Run Rectangle's getArea()</span>
+      
+      Shape s2 = new Triangle(&quot;blue&quot;, 4, 5);  <span class="color-comment">// Upcast</span>
+      System.out.println(s2);  <span class="color-comment">// Run Triangle's toString()</span>
+      System.out.println(&quot;Area is &quot; + s2.getArea());  <span class="color-comment">// Run Triangle's getArea()</span>
+   }
+}</pre>
+
+<p>The expected outputs are:</p>
+<pre class="output">
+Rectangle[length=4,width=5,Shape[color=red]]
+Area is 20.0
+Triangle[base=4,height=5,Shape[color=blue]]
+Area is 10.0</pre>
+
+<p>The beauty of this code is that <em>all the references are from the superclass</em> (i.e., <em>programming at the interface level</em>). You could instantiate different subclass instance, and the code still works.  You could extend your program easily by adding in more subclasses, such as <code>Circle</code>, <code>Square</code>, etc, with ease.</p>
+
+<p>Nonetheless, the above definition of <code>Shape</code> class poses a problem, if someone instantiate a <code>Shape</code> object and invoke the <code>getArea()</code> from the <code>Shape</code> object, the program breaks.</p>
+<pre class="color-example" >
+public class <strong>TestShape</strong> {
+   public static void main(String[] args) {
+      <span class="color-comment">// Constructing a Shape instance poses problem!</span>
+      Shape s3 = new Shape(&quot;green&quot;);
+      System.out.println(s3);
+      System.out.println(&quot;Area is &quot; + s3.getArea());  <span class="color-comment">// Invalid output</span>
+   }
+}</pre>
+
+<p>This is because the <code>Shape</code> class is meant to provide a common interface to all its subclasses, which are supposed to provide the actual implementation.  We do not want anyone to instantiate a <code>Shape</code> instance. This problem can be resolved by using the so-called <code>abstract</code> class.</p>
+
+
+<h4>Polymorphism EG. 2： <span class="font-code">Monster</span> and its Subclasses</h4>
+
+<img src="images/OOP_PolymorphismMonster.png" alt="OOP_PolymorphismMonster.png" />
+
+<p>Polymorphism is a powerful mechanism in OOP to <em>separate the interface and implementation</em> so as to allow the programmer to program at the interface in the design of a complex system.  For example, in our game app, we have many types of monsters that can attack. We shall design a superclass called <code>Monster</code> and define the method <code>attack()</code> in the superclass. The subclasses shall then provides their actual implementation. In the main program, we declare instances of superclass, substituted with actual subclass; and invoke method defined in the superclass.</p>
+
+<h5>Superclass <span class="font-code">Monster.java</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The superclass Monster defines the expected common behaviors for its subclasses.
+ */</span>
+public class Monster {
+   <span class="color-comment">// private instance variable</span>
+   private String name;
+
+   <span class="color-comment">// Constructor</span>
+   public Monster(String name) {
+      this.name = name;
+   }
+
+   <span class="color-comment">// Define common behavior for all its subclasses</span>
+   public String attack() {
+      return "!^_&amp;^$@+%$* I don't know how to attack!";
+      <span class="color-comment">// We have a problem here!
+      // We need to return a String; else, compilation error!</span>
+   }
+}</pre>
+  
+<h5>Subclass <span class="font-code">FireMonster.java</span></h5>
+
+<pre class="color-example">
+public class FireMonster extends Monster {
+   <span class="color-comment">// Constructor</span>
+   public FireMonster(String name) {
+      super(name);
+   }
+   <span class="color-comment">// Subclass provides actual implementation</span>
+   @Override public String attack() {
+      return "Attack with fire!"; 
+   }
+}</pre>
+
+<h5>Subclass <span class="font-code">WaterMonster.java</span></h5>
+
+<pre class="color-example">
+public class WaterMonster extends Monster {
+   <span class="color-comment">// Constructor</span>
+   public WaterMonster(String name) {
+      super(name);
+   }
+   <span class="color-comment">// Subclass provides actual implementation</span>
+   @Override public String attack() {
+      return "Attack with water!";
+   }
+}</pre>
+
+<h5>Subclass <span class="font-code">StoneMonster.java</span></h5>
+
+<pre class="color-example">
+public class StoneMonster extends Monster {
+   <span class="color-comment">// Constructor</span>
+   public StoneMonster(String name) {
+      super(name);
+   }
+   <span class="color-comment">// Subclass provides actual implementation</span>
+   @Override public String attack() {
+      return "Attack with stones!";
+   }
+}</pre>
+
+<h5>A Test Driver <span class="font-code">TestMonster.java</span></h5>
+
+<pre class="color-example">
+public class <strong>TestMonster</strong> {
+   public static void main(String[] args) {
+      <span class="color-comment">// Program at the &quot;interface&quot; defined in the superclass.
+      // Declare instances of the superclass, substituted by subclasses.</span>
+      Monster m1 = new FireMonster("r2u2");   <span class="color-comment">// upcast</span>
+      Monster m2 = new WaterMonster("u2r2");  <span class="color-comment">// upcast</span>
+      Monster m3 = new StoneMonster("r2r2");  <span class="color-comment">// upcast</span>
+
+      <span class="color-comment">// Invoke the actual implementation</span>
+      System.out.println(m1.attack());  <span class="color-comment">// Run FireMonster's attack()</span>
+      System.out.println(m2.attack());  <span class="color-comment">// Run WaterMonster's attack()</span>
+      System.out.println(m3.attack());  <span class="color-comment">// Run StoneMonster's attack()</span>
+
+      <span class="color-comment">// m1 dies, generate a new instance and re-assign to m1.</span>
+      m1 = new StoneMonster("a2b2");  <span class="color-comment">// upcast</span>
+      System.out.println(m1.attack());  <span class="color-comment">// Run StoneMonster's attack()</span>
+
+      <span class="color-comment">// We have a problem here!!!</span>
+      Monster m4 = new Monster("u2u2");
+      System.out.println(m4.attack());  <span class="color-comment">// garbage!!!</span>
+   }
+}</pre>
+
+<h4>Upcasting &amp; Downcasting</h4>
+
+<h5>Upcasting a Subclass Instance to a Superclass Reference</h5>
+<p>Substituting a subclass instance for its superclass is called &quot;<em>upcasting</em>&quot;. This is because, in a UML class diagram, subclass is often drawn below its superclass. Upcasting is <em>always safe</em> because a subclass instance possesses all the properties of its superclass and can do whatever its superclass can do. The compiler checks for valid upcasting and issues error &quot;incompatible types&quot; otherwise. For example,</p>
+
+<pre class="color-example">
+Circle c1 = new Cylinder(1.1, 2.2);  <span class="color-comment">// Compiler checks to ensure that R-value is a subclass of L-value.</span>
+Circle c2 = new String();            <span class="color-comment">// Compilation error: incompatible types</span></pre>
+
+<h5>Downcasting a Substituted Reference to Its Original Class</h5>
+
+<p>You can revert a substituted instance back to a subclass reference.  This is called &quot;<em>downcasting</em>&quot;.  For example,</p>
+<pre class="color-example">
+Circle c1 = new Cylinder(1.1, 2.2);  <span class="color-comment">// upcast is safe</span>
+Cylinder cy1 = (Cylinder) c1;        <span class="color-comment">// downcast needs the casting operator</span></pre>
+
+<p>Downcasting requires <em>explicit type casting operator</em> in the form of prefix operator <code>(<em>new-type</em>)</code>.  Downcasting is not always safe, and throws a runtime <code>ClassCastException</code> if the instance to be downcasted does not belong to the correct subclass.  A subclass object can be substituted for its superclass, but the reverse is not  true.</p>
+
+<h5>Another Example on Upcasting and Downcasting</h5>
+<img src="images/OOP_PolymorphismABC.png" alt="OOP_PolymorphismABC.png" />
+
+<pre class="color-example">
+public class <strong>A</strong> {
+   public A() {  <span class="color-comment">// Constructor</span>
+      System.out.println(&quot;Constructed A&quot;);
+   }
+   public String toString() {
+      return &quot;This is A&quot;;
+   }
+}</pre>
+
+<pre class="color-example">
+public class <strong>B extends A</strong> {
+   public B() {  <span class="color-comment">// Constructor</span>
+      super();
+      System.out.println(&quot;Constructed B&quot;);
+   }
+   @Override
+   public String toString() {
+      return &quot;This is B&quot;;
+   }
+}</pre>
+
+<pre class="color-example">
+public class <strong>C extends B</strong> {
+   public C() {  <span class="color-comment">// Constructor</span>
+      super();
+      System.out.println(&quot;Constructed C&quot;);
+   }
+   @Override
+   public String toString() {
+      return &quot;This is C&quot;;
+   }
+}</pre>
+
+<p>The following program tests the upcasting an downcasting (refer to the above instance diagram):</p>
+<pre class="color-example">
+public class <strong>TestCasting</strong> {
+   public static void main(String[] args) {
+      A a1 = new C();   <span class="color-comment">// upcast</span>
+      System.out.println(a1);  <span class="color-comment">// run C's toString()</span>
+      B b1 = (B)a1;     <span class="color-comment">// downcast okay</span>
+      C c1 = (C)b1;     <span class="color-comment">// downcast okay</span>
+
+      A a2 = new B();  <span class="color-comment">// upcast</span>
+      System.out.println(a2);  <span class="color-comment">// run B's toString()</span>
+      B b2 = (B)a2;    <span class="color-comment">// downcast okay</span>
+      C c2 = (C)a2;    <span class="color-comment">// compilation okay, but runtime error ClassCastException</span>
+   }
+}</pre>
+
+
+
+<h5>Casting Operator</h5>
+
+<p>Compiler may not be able to detect error in explicit cast, which will be detected only at runtime. For example,</p>
+<pre class="color-example">
+Circle c1 = new Circle(5);
+Point p1 = new Point();
+ 
+c1 = p1;          <span class="color-comment">// compilation error: incompatible types (Point is not a subclass of Circle)</span>
+c1 = (Circle)p1;  <span class="color-comment">// runtime error: java.lang.ClassCastException: Point cannot be casted to Circle</span></pre>
+
+<h4>The &quot;<span class="font-code">instanceof</span>&quot; Operator</h4>
+
+<p>Java provides a binary operator called <code>instanceof </code>which returns <code>true</code> if an object is an instance of a particular class. The syntax is as follows:</p>
+<pre class="color-syntax">
+<em>anObject</em> <strong>instanceof</strong> <em>aClass</em></pre>
+
+<pre class="color-example">
+Circle c1 = new Circle();
+System.out.println(c1 instanceof Circle);  <span class="color-comment">// true</span>
+ 
+if (c1 instanceof Circle) { ...... }</pre>
+
+<p>An instance of subclass is also an instance of its superclass. For example,</p>
+<pre class="color-example">
+Circle c1 = new Circle(1.1);
+Cylinder cy1 = new Cylinder(2.2, 3.3);
+System.out.println(c1 instanceof Circle);    <span class="color-comment">// true</span>
+System.out.println(c1 instanceof Cylinder);  <span class="color-comment">// false</span>
+System.out.println(cy1 instanceof Cylinder); <span class="color-comment">// true</span>
+System.out.println(cy1 instanceof Circle);   <span class="color-comment">// true</span>
+ 
+Circle c2 = new Cylinder(4.4, 5.5);
+System.out.println(c2 instanceof Circle);    <span class="color-comment">// true</span>
+System.out.println(c2 instanceof Cylinder);  <span class="color-comment">// true</span></pre>
+
+
+<h4>Summary of Polymorphism</h4>
+<ol>
+<li>A subclass instance processes all the attributes operations of its superclass. When a superclass instance is expected, it can be substituted by a subclass instance. In other words, a reference to a class may hold an instance of that class or an instance of one of its subclasses - it is called substitutability.</li>
+<li>If a subclass instance is assign to a superclass reference, you can invoke the methods defined in the superclass only. You cannot invoke methods defined in the subclass.</li>
+<li>However, the substituted instance retains its own identity in terms of overridden methods and hiding variables. If the subclass overrides methods in the superclass, the subclass's version will be executed, instead of the superclass's version.</li>
+</ol>
+
+<h4>Exercises</h4>
+<p><a href="J3f_OOPExercises.html#ExercisePolymorphism">LINK TO EXERCISES</a></p>
+
+<h3>Abstract Classes &amp; Interfaces</h3>
+
+<h4>The <span class="font-code">abstract</span> Method and <span class="font-code">abstract</span> class</h4>
+
+<p>In the above examples of <code>Shape</code> and <code>Monster</code>, we encountered a problem when we create instances of <code>Shape</code> and <code>Monster</code> and run the <code>getArea()</code> or <code>attack()</code>. This can be resolved via <code>abstract</code> method and <code>abstract</code> class.</p>
+<p>An <code>abstract</code> method is a method with only signature (i.e., the method name, the list of  arguments and the return type) without implementation (i.e., the method’s body).  You use the keyword <code>abstract</code> to declare an <code>abstract</code> method.</p>
+
+<p>For example, in the <code>Shape</code> class, we can declare <code>abstract</code> methods <code>getArea()</code>, <code>draw()</code>, etc, as follows:</p>
+<pre class="color-example">
+<strong>abstract</strong> public class <strong>Shape</strong> {
+   ......
+   ......
+   <strong>abstract</strong> public double getArea();
+   <strong>abstract</strong> public double getPerimeter();
+   <strong>abstract</strong> public void draw();
+}</pre>
+<p>Implementation of these methods is NOT possible in the <code>Shape</code> class, as the actual shape is not yet known.  (How to compute the area if the shape is not known?)  Implementation of these <code>abstract</code> methods will be provided later once the actual shape is known.  These <code>abstract</code> methods cannot be invoked because they have no implementation.</p>
+
+<img src="images/OOP_PolymorphismAbstractShape.png" alt="OOP_PolymorphismAbstractShape.png" />
+
+<p>A class containing one or more <code>abstract</code> methods is called an <code>abstract</code> class. An <code>abstract</code> class must be declared with a class-modifier <code>abstract</code>. An <code>abstract</code> class CANNOT be instantiated, as its definition is not complete.</p>
+<p><strong>UML Notation</strong>: <code>abstract</code> class and method are shown in <em>italic</em>.</p>
+
+<h4>Abstract Class EG. 1: <span class="font-code">Shape</span> and its Subclasses</h4>
+
+<p>Let us rewrite our <code>Shape</code> class as an <code>abstract</code> class, containing an <code>abstract</code> method <code>getArea()</code> as follows:</p>
+
+<h5>The <span class="font-code">abstract</span> Superclass <span class="font-code">Shape.java</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * This abstract superclass Shape contains an abstract method
+ * getArea(), to be implemented by its subclasses.
+ */</span>
+<strong>abstract</strong> public class <strong>Shape</strong> {
+   <span class="color-comment">// Private member variable</span>
+   private String color;
+   
+   <span class="color-comment">// Constructor</span>
+   public Shape (String color) {
+      this.color = color;
+   }
+   
+   @Override
+   public String toString() {
+      return &quot;Shape of color=\&quot;&quot; + color + &quot;\&quot;&quot;;
+   }
+   
+   <span class="color-comment">// All Shape subclasses must implement a method called getArea()</span>
+   <strong>abstract public double getArea();</strong>
+}</pre>
+
+<p>An <code>abstract</code> class is <em>incomplete</em> in its definition, since the implementation of its <code>abstract</code> methods is missing.  Therefore, an <code>abstract</code> class <em>cannot be instantiated</em>.  In other words, you cannot create instances from an <code>abstract</code> class (otherwise, you will have an incomplete instance with missing method's body).</p>
+
+<p>To use an <code>abstract</code> class, you have to derive a subclass from the <code>abstract</code> class.  In the derived subclass, you have to override the <code>abstract</code> methods and provide implementation to all the <code>abstract</code> methods.  The subclass derived is now complete, and can be instantiated.  (If a subclass does not provide implementation to all the <code>abstract</code> methods of the superclass, the subclass remains <code>abstract</code>.)</p>
+
+<p>This property of the <code>abstract</code> class  solves our earlier problem. In other words, you can create instances of the subclasses such as <code>Triangle</code> and <code>Rectangle</code>, and upcast them to <code>Shape</code> (so as to program and operate at the interface level), but you cannot create instance of <code>Shape</code>, which avoid the pitfall that we have faced. For example,</p>
+
+<pre class="color-example">
+public class <strong>TestShape</strong> {
+   public static void main(String[] args) {
+      Shape s1 = new Rectangle(&quot;red&quot;, 4, 5);
+      System.out.println(s1);
+      System.out.println(&quot;Area is &quot; + s1.getArea());
+      
+      Shape s2 = new Triangle(&quot;blue&quot;, 4, 5);
+      System.out.println(s2);
+      System.out.println(&quot;Area is &quot; + s2.getArea());
+      
+      <span class="color-comment">// Cannot create instance of an abstract class</span>
+      <span class="color-error">Shape s3 = new Shape(&quot;green&quot;);</span>   <span class="color-comment">// Compilation Error!!</span>
+   }
+}</pre>
+
+<p>In summary, an <code>abstract</code> class provides <em>a template for further development</em>. The purpose of an abstract class is to provide a common interface (or protocol, or contract, or understanding, or naming convention) to all its subclasses. For example, in the <code>abstract</code> class <code>Shape</code>, you can define abstract methods such as <code>getArea()</code> and <code>draw()</code>.  No implementation is possible because the actual shape is not known. However, by specifying the signature of the <code>abstract</code> methods, all the subclasses are <em>forced</em> to use these methods' signature. The subclasses could provide the proper implementations.</p>
+
+<p>Coupled with polymorphism, you can upcast  subclass instances to <code>Shape</code>, and program at the <code>Shape</code> level, i,e., program at the interface. The separation of interface and implementation enables better software design, and ease in expansion. For example, <code>Shape</code> defines a method called <code>getArea()</code>, which all the subclasses must provide the correct implementation. You can ask for a <code>getArea()</code> from any subclasses of Shape, the correct area will be computed.  Furthermore, you application can be extended easily to accommodate new shapes (such as <code>Circle</code> or <code>Square</code>) by deriving more subclasses.</p>
+
+<p><span class="line-heading">Rule of Thumb:</span> Program at the interface, not at the implementation. (That is, make references at the superclass; substitute with subclass instances; and invoke methods defined in the superclass only.)</p>
+
+<p>Notes:</p>
+<ul>
+<li>An abstract method cannot be declared <code>final</code>, as <code>final</code> method cannot be overridden. An <code>abstract</code> method, on the other hand, must be overridden in a descendant before it can be used.</li>
+<li>An <code>abstract</code> method cannot be <code>private</code> (which generates a compilation error). This is because <code>private</code> method are not visible to the subclass and thus cannot be overridden.</li>
+</ul>
+
+<h4>Abstract Class EG. 2: <span class="font-code">Monster</span></h4>
+
+<p>We shall define the superclass <code>Monster</code> as an <code>abstract</code> class, containing an <code>abstract</code> method <code>attack()</code>. The <code>abstract</code> class cannot be instantiated (i.e., creating instances).</p>
+
+<pre class="color-example"><span class="color-comment">/*
+ * The abstract superclass Monster defines the expected common behaviors,
+ * via abstract methods.
+ */</span>
+abstract public class Monster {
+   private String name;  <span class="color-comment">// private instance variable</span>
+
+   public Monster(String name) {  <span class="color-comment">// constructor</span>
+      this.name = name;
+   }
+
+   <span class="color-comment">// Define common behavior for all its subclasses</span>
+   abstract public String attack();
+}</pre>
+
+<h4>The Java's <span class="font-code">interface</span></h4>
+
+<p>A Java <code>interface</code> is a <em>100% abstract superclass</em> which define a set of methods its subclasses must support.  An <code>interface</code> contains only <code>public</code> <em>abstract methods</em> (methods with signature and no implementation) and possibly <em>constants</em> (<code>public</code> <code>static</code> <code>final</code> variables).  You have to use the keyword &quot;<code>interface</code>&quot; to define an <code>interface</code> (instead of keyword &quot;<code>class</code>&quot; for normal classes).  The keyword <code>public</code> and <code>abstract</code> are not needed for its abstract methods as they are mandatory.</p>
+
+<p>Similar to an <code>abstract</code> superclass, an <code>interface</code> cannot be instantiated.  You have to create a &quot;subclass&quot; that implements an interface, and provide the actual implementation of all the <code>abstract</code> methods.</p>
+
+<p>Unlike a normal class, where you use the keyword &quot;<code>extends</code>&quot; to derive a subclass.  For interface, we use the keyword &quot;<code>implements</code>&quot; to derive a subclass.</p>
+<p>An interface is a <em>contract</em> for what the classes can do. It, however, does not specify how the classes should do it.</p>
+
+<p>An interface provides a <em>form</em>, a <em>protocol</em>, a <em>standard</em>, a <em>contract</em>, a <em>specification</em>, a set of <em>rules</em>, an <em>interface</em>, for all objects that implement it.  It is a <em>specification</em> and <em>rules</em> that any object implementing it agrees to follow.</p>
+
+<p>In Java, <code>abstract</code> class and <code>interface</code> are used to separate the public <em>interface</em> of a class from its <em>implementation</em> so as to allow the programmer to program at the <em>interface</em> instead of the various <em>implementation</em>.</p>
+
+<p><span class="line-heading">Interface Naming Convention:</span> Use an adjective (typically ends with &quot;<code>able</code>&quot;) consisting of one or more words. Each word shall be initial capitalized (camel-case). For example, <code>Serializable</code>, <code>Extenalizable</code>, <code>Movable</code>, <code>Clonable</code>, <code>Runnable</code>, etc.</p>
+
+<h4>Interface EG. 1: <span class="font-code">Shape</span> Interface and its Implementations</h4>
+
+<p>We can re-write the <code>abstract</code> superclass <code>Shape</code> into an <code>interface</code>, containing only <code>abstract</code> methods, as follows:</p>
+
+<img src="images/OOP_InterfaceShape.png" alt="OOP_InterfaceShape.png" />
+
+<p><strong>UML Notations</strong>: Abstract classes, Interfaces and abstract methods are shown in italics. Implementation of interface is marked by a dash-arrow leading from the subclasses to the interface.</p>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The interface Shape specifies the behaviors
+ * of this implementations subclasses.
+ */</span>
+public interface <strong>Shape</strong> {  <span class="color-comment">// Use keyword "interface" instead of "class"</span>
+   <span class="color-comment">// List of public abstract methods to be implemented by its subclasses</span>
+   double getArea();
+}</pre>
+
+<pre class="color-example">
+<span class="color-comment">// The subclass Rectangle needs to implement all the abstract methods in Shape</span>
+public class <strong>Rectangle implements Shape</strong> {  <span class="color-comment">// using keyword &quot;implements&quot; instead of &quot;extends&quot;</span>
+   <span class="color-comment">// Private member variables</span>
+   private int length;
+   private int width;
+
+   <span class="color-comment">// Constructor</span>
+   public Rectangle(int length, int width) {
+      this.length = length;
+      this.width = width;
+   }
+
+   @Override
+   public String toString() {
+      return "Rectangle[length=" + length + ",width=" + width + "]";
+   }
+
+   <span class="color-comment">// Need to implement all the abstract methods defined in the interface</span>
+   @Override
+   public double getArea() {
+      return length * width;
+   }
+}</pre>
+
+<pre class="color-example">
+<span class="color-comment">// The subclass Triangle need to implement all the abstract methods in Shape</span>
+public class <strong>Triangle implements Shape</strong> {
+   <span class="color-comment">// Private member variables</span>
+   private int base;
+   private int height;
+
+   <span class="color-comment">// Constructor</span>
+   public Triangle(int base, int height) {
+      this.base = base;
+      this.height = height;
+   }
+
+   @Override
+   public String toString() {
+      return "Triangle[base=" + base + ",height=" + height + "]";
+   }
+
+   <span class="color-comment">// Need to implement all the abstract methods defined in the interface</span>
+   @Override
+   public double getArea() {
+      return 0.5 * base * height;
+   }
+}</pre>
+
+<p>A test driver is as follows:</p>
+<pre class="color-example">
+public class <strong>TestShape</strong> {
+   public static void main(String[] args) {
+      Shape s1 = new Rectangle(1, 2);  <span class="color-comment">// upcast</span>
+      System.out.println(s1);
+      System.out.println("Area is " + s1.getArea());
+
+      Shape s2 = new Triangle(3, 4);  <span class="color-comment">// upcast</span>
+      System.out.println(s2);
+      System.out.println("Area is " + s2.getArea());
+
+      <span class="color-comment">// Cannot create instance of an interface</span>
+      //Shape s3 = new Shape("green");   <span class="color-error">// Compilation Error!!</span>
+   }
+}</pre>
+
+
+<h4>Interface EG. 2: <span class="font-code">Movable</span> Interface and its Implementations</h4>
+
+<p>Suppose that our application involves many objects that can move. We could define an interface called <code>movable</code>, containing the signatures of the various movement methods.</p>
+
+<img src="images/OOP_InterfaceMovable.png" alt="OOP_InterfaceMovable.png" />
+
+<h5>Interface <span class="font-code">Moveable.java</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Movable interface defines a list of public abstract methods
+ * to be implemented by its subclasses
+ */</span>
+public interface <strong>Movable</strong> {  <span class="color-comment">// use keyword &quot;interface&quot; (instead of &quot;class&quot;) to define an interface</span>
+   <span class="color-comment">// An interface defines a list of abstract methods to be implemented by the subclasses</span>
+   public void moveUp();
+   public void moveDown();
+   public void moveLeft();
+   public void moveRight();
+}</pre>
+
+<p>Similar to an <code>abstract</code> class, an <code>interface</code> cannot be instantiated; because it is incomplete (the abstract methods' body is missing).  To use an interface, again, you must derive subclasses and provide implementation to all the abstract methods declared in the interface.  The subclasses are now complete and can be instantiated.</p>
+
+<h5 class="font-code">MovablePoint.java</h5>
+
+<p>To derive subclasses from an <code>interface</code>, a new keyboard &quot;<code>implements</code>&quot; is to be used instead of &quot;<code>extends</code>&quot; for deriving subclasses from an ordinary class or an <code>abstract</code> class.  It is important to note that the subclass implementing an interface need to override ALL the abstract methods defined in the interface; otherwise, the subclass cannot be compiled. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// The subclass MovablePoint needs to implement all the abstract methods
+// defined in the interface Movable</span>
+public class <strong>MovablePoint implements Movable</strong> {
+   <span class="color-comment">// Private member variables</span>
+   private int x, y;   <span class="color-comment">// (x, y) coordinates of the point</span>
+      
+   <span class="color-comment">// Constructor</span>
+   public MovablePoint(int x, int y) {
+      this.x = x;
+      this.y = y;
+   }
+ 
+   @Override
+   public String toString() {
+      return &quot;(&quot; + x + &quot;,&quot; + y + &quot;)&quot;;
+   }
+
+   <span class="color-comment">// Need to implement all the abstract methods defined in the interface Movable</span>
+   @Override
+   public void moveUp() {
+      y--;
+   }
+   @Override
+   public void moveDown() {
+      y++;
+   }
+   @Override
+   public void moveLeft() {
+      x--;
+   }
+   @Override
+   public void moveRight() {
+      x++;
+   }
+}</pre>
+
+<p>Other classes in the application can similarly implement the <code>Movable</code> interface and provide their own implementation to the <code>abstract</code> methods defined in the interface <code>Movable</code>.</p>
+
+<h5 class="font-code">TestMovable.java</h5>
+
+<p>We can also upcast subclass instances to the <code>Movable</code> interface, via polymorphism, similar to an <code>abstract</code> class.</p>
+
+<pre class="color-example">
+public class <strong>TestMovable</strong> {
+   public static void main(String[] args) {
+      MovablePoint p1 = new MovablePoint(1, 2);  <span class="color-comment">// upcast</span>
+      System.out.println(p1);
+      p1.moveDown();
+      System.out.println(p1);
+      p1.moveRight();
+      System.out.println(p1);
+      
+      <span class="color-comment">// Test Polymorphism</span>
+      Movable p2 = new MovablePoint(3, 4);  <span class="color-comment">// upcast</span>
+      p2.moveUp();
+      System.out.println(p2);
+      MovablePoint p3 = (MovablePoint)p2;   <span class="color-comment">// downcast</span>
+      System.out.println(p3);
+   }
+}</pre>
+
+<h4>Implementing Multiple Interfaces</h4>
+<p>As mentioned, Java supports only <em>single inheritance</em>. That is, a subclass can be derived from one and only one superclass. Java does not support <em>multiple inheritance</em> to avoid inheriting conflicting properties from multiple superclasses.  Multiple inheritance, however, does have its place in programming.</p>
+
+<p>A subclass, however, can implement more than one interfaces. This is permitted in Java as an interface merely defines the abstract methods without the actual implementations and less likely leads to inheriting conflicting properties from multiple interfaces. In other words, Java indirectly supports multiple inheritances via implementing multiple interfaces. For example,</p>
+
+<pre class="color-example">
+public class <strong>Circle extends Shape implements Movable, Adjustable</strong> { 
+          <span class="color-comment">// extends one superclass but implements multiple interfaces</span>
+   .......
+}</pre>
+
+<h4><span class="font-code">interface</span> Formal Syntax</h4>
+
+<p>The formal syntax for declaring interface is:</p>
+<pre class="color-syntax">
+[<strong>public</strong>|<strong>protected</strong>|<em>package</em>] <strong>interface</strong> <em>interfaceName
+</em>[<strong>extends</strong> <em>superInterfaceName</em>] <strong>{</strong>
+   <span class="color-comment">// constants</span>
+   <strong>static final</strong> ...;
+
+   <span class="color-comment">// abstract methods' signature</span>
+   ...
+<strong>}</strong></pre>
+
+<p>All methods in an interface shall be <code>public</code> and <code>abstract</code> (default). You cannot use other access modifier such as <code>private</code>, <code>protected</code> and default, or modifiers such as <code>static</code>, <code>final</code>.</p>
+
+<p>All fields shall be <code>public</code>, <code>static</code> and <code>final</code> (default).</p>
+
+<p>An <code>interface</code> may &quot;<code>extends</code>&quot; from a super-interface.</p>
+
+<p><span class="line-heading">UML Notation:</span> The UML notation uses a solid-line arrow linking the subclass to a concrete or abstract superclass, and dashed-line arrow to an interface as illustrated.  Abstract class and abstract method are shown in italics.</p>
+
+<img class="image-center" src="images/OOP_UMLSuperclass.png" alt="OOP_UMLSuperclass.png" />
+
+
+<h4>Why <span class="font-code">interface</span>s?</h4>
+<p>An interface is a <em>contract</em> (or a protocol, or a common understanding) of what the classes can do.  When a class implements a certain interface, it promises to provide implementation to all the abstract methods declared in the interface.  Interface defines a set of common behaviors.  The classes implement the interface agree to these behaviors and provide their own implementation to the behaviors. This allows you to program at the interface, instead of the actual implementation. One of the main usage of interface is provide a <em>communication contract</em> between two objects. If you know a class implements an interface, then you know that class contains concrete implementations of the methods declared in that interface, and you are guaranteed to be able to invoke these methods safely. In other words, two objects can communicate based on the contract defined in the interface, instead of their specific implementation.</p>
+
+<p>Secondly, Java does not support multiple inheritance (whereas C++ does).  Multiple inheritance permits you to derive a subclass from more than one direct superclass.  This poses a problem if two direct superclasses have conflicting implementations.  (Which one to follow in the subclass?). However, multiple inheritance does have its place.  Java does this by permitting you to &quot;implements&quot; more than one interfaces (but you can only &quot;extends&quot; from a single superclass).  Since interfaces contain only abstract methods without actual implementation, no conflict can arise among the multiple interfaces.  (Interface can hold constants but is not recommended.  If a subclass implements two interfaces with conflicting constants, the compiler will flag out a compilation error.)</p>
+
+<h4>Interface vs. Abstract Superclass</h4>
+
+<p>Which is a better design: interface or abstract superclass? There is no clear answer.</p>
+
+<p>Use abstract superclass if there is a clear class hierarchy. Abstract class can contain partial implementation (such as instance variables and methods). Interface cannot contain any implementation, but merely defines the behaviors.</p>
+
+<p>As an example, Java's thread can be built using interface <code>Runnable</code> or superclass <code>Thread</code>.</p>
+
+<h4>Exercises</h4>
+<p><a href="J3f_OOPExercises.html#ExercisePolymorphism">LINK TO EXERCISES ON POLYMORPHISM, ABSTRACT CLASSES AND INTERFACES</a></p>
+
+<h4>(Advanced) Dynamic Binding or Late Binding</h4>
+<p>We often treat an object not as its own type, but as its base type (superclass or interface).  This allows you to write codes that do not depends on a specific implementation type. In the <code>Shape</code> example, we can always use <code>getArea()</code> and do not have to worry whether they are triangles or circles.</p>
+
+<p>This, however, poses a new problem.  The compiler cannot know at compile time precisely which piece of codes is going to be executed at run-time (e.g., <code>getArea()</code> has different implementation for <code>Rectangle</code> and <code>Triangle</code>).</p>
+
+<p>In the procedural language like C, the compiler generates a call to a specific function name, and the linkage editor resolves this call to the absolute address of the code to be executed at run-time.  This mechanism is called <em>static binding</em> (or <em>early binding</em>).</p>
+
+<p>To support polymorphism, object-oriented language uses a different mechanism called <em>dynamic binding</em> (or <em>late-binding</em> or <em>run-time binding</em>).  When a method is invoked, the code to be executed is only determined at run-time. During the compilation, the compiler checks whether the method exists and performs type check on the arguments and return type, but does not know which piece of codes to execute at run-time.  When a message is sent to an object to invoke a method, the object figures out which piece of codes to execute at run-time.</p>
+
+<p>Although dynamic binding resolves the problem in supporting polymorphism, it poses another new problem. The compiler is unable to check whether the type casting operator is safe. It can only be checked during runtime (which throws a <code>ClassCastException</code> if the type check fails).</p>
+<p>JDK 1.5 introduces a new feature called <em>generics</em> to tackle this issue.  We shall discuss this problem and generics in details in the later chapter.</p>
+
+<h4>Exercises</h4>
+<p><a href="J3f_OOPExercises.html#ExerciseInterface">LINK TO EXERCISES</a></p>
+
+
+<h3>(Advanced) Object-Oriented Design Issues</h3>
+
+<h4>Encapsulation, Coupling &amp; Cohesion</h4>
+
+<p>In OO Design, it is desirable to design classes that are tightly encapsulated, loosely coupled and highly cohesive, so that the classes are easy to maintain and suitable for re-use.</p>
+
+<p><em>Encapsulation</em> refers to keeping the data and method inside a class such users do not access the data directly but via the <code>public</code> methods. <em>Tight encapsulation</em> is desired, which can be achieved by declaring all the variable <code>private</code>, and providing <code>public</code> getter and setter to the variables. The benefit is you have complete control on how the data is to be read (e.g., in how format) and how to the data is to be changed (e.g., validation).</p>
+
+<p>[TODO] Example: Time class with private variables hour (0-23), minute (0-59) and second (0-59); getters and setters (throws <code>IllegalArgumentException</code>). The internal time could also be stored as the number of seconds since midnight for ease of operation (information hiding).</p>
+
+<p>Information Hiding: Another key benefit of tight encapsulation is information hiding, which means that the users are not aware (and do not need to be aware) of how the data is stored internally.</p>
+<p>The benefit of tight encapsulation out-weights the overhead needed in additional method calls.</p>
+
+<p><em>Coupling</em> refers to the degree to which one class relies on knowledge of the <em>internals</em> of another class. Tight coupling is undesirable because if one class changes its internal representations, all the other tightly-coupled classes need to be rewritten.</p>
+<p>[TODO] Example: A class uses Time and relies on the variables hour, minute and second.</p>
+
+<p>Clearly, Loose Coupling is often associated with tight encapsulation. For example, well-defined public method for accessing the data, instead of directly access the data.</p>
+
+<p>Cohesion<em></em> refers to the degree to which a class or method resists being broken down into smaller pieces. High degree of cohesion is desirable. Each class shall be designed to model a single entity with its focused set of responsibilities and perform a collection of closely related tasks; and each method shall accomplish a single task. Low cohesion classes are hard to maintain and re-use.</p>
+
+<p>[TODO] Example of low cohesion: Book and Author in one class, or Car and Driver in one class.</p>
+
+<p>Again, high cohesion is associated with loose coupling. This is because a highly cohesive class has fewer (or minimal) interactions with other classes.</p>
+
+<h4>&quot;Is-a&quot; vs. &quot;has-a&quot; relationships</h4>
+<p>&quot;Is-a&quot; relationship: A subclass object processes all the data and methods from its superclass (and it could have more). We can say that a subclass object is-a superclass object (is more than a superclass object). Refer to &quot;polymorphism&quot;.</p>
+
+<p>&quot;has-a&quot; relationship: In composition, a class contains references to other classes, which is known as &quot;has-a&quot; relationship.</p>
+
+<p>You can use &quot;is-a&quot; and 'has-a&quot; to test whether to design the classes using inheritance or composition.</p>
+
+<h4>Program at the interface, not the implementation</h4>
+<p>Refer to polymorphism</p>
+
+
+<a class="references" href="../howto/References.html#java">LINK TO JAVA REFERENCES &amp; RESOURCES</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.8.0<br />
+Last modified: April, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

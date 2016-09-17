@@ -1,0 +1,417 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Advanced Webapp Development - Webapp Security</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Advanced  Webapp Development - Webapp Security</h1>
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+<h3>SQL Injection</h3>
+
+<p>Reference: Wikipedia's SQL Injection @ <a href="http://en.wikipedia.org/wiki/SQL_injection">http://en.wikipedia.org/wiki/SQL_injection</a></p>
+
+<p>SQL Injection is a special form of &quot;Code Injection Attack&quot;, whereas the attackers try to rewrite you SQL statements to obtain undesired outputs.</p>
+
+<p>For example, suppose that the following SQL statement is used in your server-side script and <code>userName</code> is read from the user input:</p>
+
+<pre class="color-command">
+sqlStr = &quot;SELECT * FROM users WHERE name ='&quot; + userName + &quot;';&quot;</pre>
+
+<p>A malicious attacker could supply:</p>
+
+<pre class="color-example">
+userName = ' OR '1' = '1
+sqlStr = &quot;SELECT * FROM users WHERE name ='' OR '1' = '1';&quot;
+      <span class="color-comment">// Returns all rows</span>
+ 
+userName = ' OR '1' = '1' --
+sqlStr = &quot;SELECT * FROM users WHERE name ='' OR '1' = '1' --';&quot;
+      <span class="color-comment">// Forcing the rest of statement, if any, as comment</span>
+ 
+userName = a';DROP TABLE users;
+sqlStr = &quot;SELECT * FROM users WHERE name ='a';DROP TABLE users;';&quot;
+      <span class="color-comment">// Piggyback another malicious SQL statement.
+      But most implementations do not permit multiple statements in one query</span></pre>
+
+<p>To prevent SQL Injection, in your server-side script:</p>
+<ul>
+<li>Validate user inputs. Discard invalid inputs.</li>
+<li>Use SQL Prepared-Statements (aka Parameterized statements), instead of normal SQL Statement.</li>
+</ul>
+
+<p>[TODO] explanation</p>
+
+<h3>Cross Site Scripting (XSS)</h3>
+
+<p>Reference: OWASP's &quot;Cross-site Scripting (XSS)&quot; @ <a href="https://www.owasp.org/index.php/Cross-site_Scripting_%28XSS%29">https://www.owasp.org/index.php/Cross-site_Scripting_%28XSS%29</a></p>
+
+<p>Cross-Site Scripting (XSS) is a special form of &quot;Code Injection Attack&quot;, whereas the attackers inject malicious client-side script (e.g., JavaScript) into your web pages (e.g., through the comment field) that would be saved in database. When another user retrieves and views the stored data, the client-side script will be executed on the victim's browser. The malicious script can access cookies, session, or other sensitive information retained by your browser. These scripts can easily rewrite the contents of the HTML page so as to de-face your web site.</p>
+
+<p>XSS can even be carried out without the <code>&lt;script&gt;...&lt;/script&gt;</code> tags, but through the event handlers such as <code>onload()</code>, <code>onerror()</code>, <code>onmouseover()</code>, e.g.,</p>
+
+<pre class="color-example">
+&lt;body onload=alert('hahaha!')&gt;
+&lt;img src=&quot;http://url-to-a-non-existent-file&quot; onerror=alert('hahaha!');&gt;
+&lt;p onmouseover=alert('hahaha!')&gt;click me!&lt;/p&gt;</pre>
+
+<p>Via the innocent <code>&lt;img&gt;</code>'s src attribute or any attribute that accepts URL of &quot;<code>javascript:...</code>&quot;</p>
+
+<pre class="color-example">
+&lt;img src=javascript:alert('hahaha!')&gt;
+&lt;img src=&#x4a;avascript:alert('hahaha!')&gt;
+      <span class="color-comment">// Hide letter j to prevent filtering 'javascript'</span></pre>
+
+
+<p>To prevent XSS, in your server-side script:</p>
+<ul>
+<li>Validate user inputs. Discard invalid inputs.</li>
+<li>Sanitize (or encode) the user inputs to disable all scripts BEFORE storing the data, i.e., before the data is viewed and possibly executed by other users.</li>
+</ul>
+
+<p>[TODO] explanation</p>
+
+<h3>Cross-Site Request Forgery (CSRF)</h3>
+
+<p>Cross-Site Request Forgery (CSRF) occurs when a malicious action is injected to cause a user’s Web browser to perform an unwanted action on a trusted site for which the user is currently authenticated. For example, Alice logins to her e-banking site. Alice then visits the malicious website, which runs a (hidden) request on Alice’s browser targeting the e-banking site to do fund transfer (e.g. http://e-bank.com/transfer?id=1234&amp;amount=9999). The request is allowed as Alice has been authenticated during the browser session.</p>
+
+<p>To prevent CSRF: Each request shall include a synchronizer token to identify the user’s session. The server-side script generates a token and stores in the session, after the login is authenticated. This token will be used for each subsequent request until the session expires. It would be hard for the malicious attacker to predict or intercept this per-session token.</p>
+
+<p>For example, in PHP:</p>
+<pre class="color-example">
+session_start();
+<span class="color-comment">// Generate an anti-CSRF token if one doesn't exist</span>
+if ( !isset($_SESSION['token']) ) {
+   $_SESSION['token'] = sha1(uniqid(mt_rand(), TRUE));
+      <span class="color-comment">// mt_rand - Generate a better random value.
+      // uniqid(mt_rand(), TRUE) - Generate a unique ID with prefix mt_rand() and
+      // more_entropy TRUE to return a 23-character string.</span>
+}
+
+<span class="color-comment">// All subsequent client's requests shall include this token, e.g.
+//    &lt;input type=&quot;hidden&quot; name=&quot;token&quot; value=&quot;$_SESSION[token]&quot; /&gt;
+// The server-side script shall authenticate the token before processing the requests.</span></pre>
+
+<h3>User Input Validation</h3>
+<p>[TODO]</p>
+
+<h3>User Input Sanitization</h3>
+
+<h4>Html Purifier (for PHP)</h4>
+<p>[TODO]</p>
+
+<h3>Hashed Password</h3>
+
+<p>Reference: &quot;Salted Password Hashing - Doing it Right&quot; @ <a href="https://crackstation.net/hashing-security.htm">https://crackstation.net/hashing-security.htm</a>.</p>
+
+<p>Plain-text password should not be stored in the database (because you use the same password for all your e-banks, and what if one is compromised). Instead, we store a hash value of the password. Hash is a one-way function, which is supposedly hard to reverse. In other words, if the password hash is compromised, the attacker is not able to get the plain-text password.</p>
+
+<p>Hashing is, however, susceptible to these attacks:</p>
+<ul>
+<li>Dictionary and Brute-Force attack: In dictionary attack, the attacker matches the hash with words in dictionary (consisting of common passwords); while in brute-force attack, he tries all combinations of characters. These attacks cannot be prevented.  You can increase the password length, enforce a combination of letters, digits and punctuation characters, choose a better hashing algorithm to make brute-force impractical.</li>
+
+<li>Lookup tables: pre-compute hashes of password dictionary. A special form called Rainbow tables is known to be very efficient in cracking hashes.</li>
+</ul>
+
+
+<p>To prevent cracking password hash: Add salt to plain-text password before hashing. The salt shall be random, such that users having the same password would have different hashes. The salt effectively increases the password length which makes brute-force attack and table lookup impractical. Its randomness could avoid dictionary-based attacks and table lookup.</p>
+
+<p>For example, you can compute the password hash based on 7-character random salt concatenated with the password, using SHA1 to obtain a 40-character hash.  You need to store both the 7-character salt and the 40-character hash (total 47 character) in the database for password verification.</p>
+
+<p>For example, in PHP, to create password hash:</p>
+
+<pre class="color-example">
+define('PW_SALT_LENGTH', 7);
+<span class="color-comment">// create a random 7-character salt</span>
+$pwsalt = substr(md5(time()), 0, PW_SALT_LENGTH);
+$pwHash = $pwsalt . sha1($pwsalt . $password);</pre>
+
+<p>To verify password:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Retrieve password hash from database</span>
+$pwHash = .....;   <span class="color-comment">// salt . sha1(salt . password)</span>
+<span class="color-comment">// Retrieve the salt (first 7 characters)</span>
+define('PW_SALT_LENGTH', 7); 
+$pwSalt = substr($pwHash, 0, PW_SALT_LENGTH);
+<span class="color-comment">// Compute password hash for the input password, using the retrieved salt</span>
+$inPwHash = $pwSalt . sha1($pwSalt . $password);
+<span class="color-comment">// Compare password hashes</span>
+if ($inPwHash === $pwHash) { .... }</pre>
+
+<h5>PHP 5.5 Function <span class="font-code">password_hash()</span></h5>
+
+<p>Using <code>bcrypt</code> instead of the older and weaker MD5 or SHA1, with automatically generated random salt.</p>
+
+<p>It consists of 4 functions:</p>
+
+<pre class="color-syntax">
+password_hash($password, $algo, [$options])
+   <span class="color-comment">// Hash the given password using the algorithm, with options (of salt and cost).
+   // Return the hash.
+   //
+   // $algo:
+   // PASSWORD_DEFAULT: used the default algorithm, which is bcrypt in PHP 5.5,
+   //    but may change in future releases. The hash length is 60 but may expand to 255.
+   // PASSWORD_BCRYPT: use bcrypt to produce a 60-character hash.
+   //
+   // $option: associative array of 'cost' (default 10) and 'salt' (default auto generated).</span>
+
+password_verify($password, $hash)
+    <span class="color-comment">// Verify the password against the hash. Return true/false.</span>
+    
+password_needs_rehash($hash, $algo, [$options])
+    <span class="color-comment">// Check if the given hash is created using the algorithm and options.
+    // Return true/false.</span>
+ 
+password_get_info($hash)
+    <span class="color-comment">// Returns the hashing algorithm and options used in the given hash.</span>
+</pre>
+
+<p>For example,</p>
+
+<pre class="color-example">
+$password = 'secured';
+$hash = password_hash($password, PASSWORD_DEFAULT);
+echo "$hash\n";
+   <span class="color-comment">// $2y$10$WAhQfgaZoQmjDZjA2kgcOO/UXonfjqs9JWT/AuV93saKS5v6oL05i
+   // $2y$ (blowfish algorithm), 10 (cost), $, 60-character hash using a random salt
+   // If you run again, you will get a different hash, due to the randomly generated salt, e.g.,
+   // $2y$10$smFyfxYl1rsSV4LFyEOzduTmPP0KgBa6H2xTzNOWXaw6jz9GgYixu
+   // The salt is incorporated into the hash.</span>
+
+<span class="color-comment">// Verify</span>
+echo password_verify($password, $hash) ? "matched!\n" : "not matched!\n";
+echo password_verify('attack', $hash) ? "matched!\n" : "not matched!\n";
+
+<span class="color-comment">// With $options of salt and cost</span>
+$options = [
+   'salt' => 'abcdefghijklmnopqrstuv', <span class="color-comment">// use our own salt, at least 22 characters</span>
+   'cost' => 12  <span class="color-comment">// instead of the default cost of 10</span>
+];
+$hash = password_hash($password, PASSWORD_DEFAULT, $options);
+echo $hash . "\n";
+   <span class="color-comment">// $2y$12$abcdefghijklmnopqrstuuHYKfFDux.AXqYz/kBRhcjazKAMQBm0m
+   // If you run again, you get the same hash because the same salt is used.
+   // Clearly, the first 22 characters in the hash is the salt.
+   // To generate a random salt, you may use (but not recommended):
+   //   mcrypt_create_iv(22, MCRYPT_DEV_URANDOM)</span>
+   
+<span class="color-comment">// Rehash?</span>
+if (password_needs_rehash($hash, PASSWORD_DEFAULT, ['cost' => 14])) {
+    <span class="color-comment">// the password needs to be rehashed as it was not generated with
+    // the specified algorithm or the cost</span>
+    $hash = password_hash($password, PASSWORD_DEFAULT, ['cost' => 14]);
+    echo "new hash is $hash\n";
+    <span class="color-comment">// don't forget to store the new hash!</span>
+}
+
+<span class="color-comment">// Note on cost: high cost deters brute-force and dictionary attacks,
+//   as the attacker needs to run the hashing function many many times,
+//   but you only need to run once.
+// The cost is a value between 4 to 31. Each increment doubles the complexity.</span>
+
+<span class="color-comment">// Hash info</span>
+$info = password_get_info($hash);
+var_dump($info);
+   <span class="color-comment">// array(3) {
+   //    ["algo"] => int(1)
+   //    ["algoName"] => string(6) "bcrypt"
+   //    ["options"] => array(1) {
+   //       ["cost"] => int(14)
+   //    }
+   // }</span></pre>
+
+<p>For PHP &gt;= 5.3.7 but &lt; 5.5, there is a library at https://github.com/ircmaxell/password_compat that is intended to provide forward compatibility with the password_* functions.</p>
+
+<h3>AppArmor for Program Access Control</h3>
+
+<p>References:</p>
+<ol>
+<li>&quot;AppArmor Wiki&quot; at <a href="https://wiki.ubuntu.com/AppArmor">https://wiki.ubuntu.com/AppArmor</a>.</li>
+<li>Bodhi.zazen's &quot;Introduction to AppArmor&quot; at <a href="http://ubuntuforums.org/showthread.php?t=1008906">http://ubuntuforums.org/showthread.php?t=1008906</a>.</li>
+<li>&quot;Part IV. Confining Privileges with AppArmor&quot; in &quot;openSUSE 12.3 Security Guide&quot; at <a href="http://doc.opensuse.org/documentation/html/openSUSE/opensuse-security/part.apparmor.html">http://doc.opensuse.org/documentation/html/openSUSE/opensuse-security/part.apparmor.html</a>.</li>
+<li>&quot;AppArmor Documentation&quot; at <a href="http://wiki.apparmor.net/index.php/Documentation">http://wiki.apparmor.net/index.php/Documentation</a>.</li>
+</ol>
+
+<h4>What is AppArmor?</h4>
+
+<p>&quot;AppArmor is a Mandatory Access Control (MAC) system which is a kernel (LSM) enhancement to confine programs to a limited set of resources. AppArmor's security model is to <em>bind access control attributes to programs rather than to users</em>. AppArmor confinement is provided via profiles loaded into the kernel. AppArmor profiles can be in one of two modes: enforcement and complain. Profiles loaded in enforcement mode will result in enforcement of the policy defined in the profile as well as reporting policy violation attempts (either via syslog or auditd). Profiles in complain mode will not enforce policy but instead report policy violation attempts.&quot;</p>
+
+<p>Traditionally, Unix associates privileges (such as file permissions) to users. On the other hand, AppArmor is meant to control programs.</p>
+
+<p>In Ubuntu, AppArmor is started via a service called &quot;<code>apparmor</code>&quot; automatically, after boot.</p>
+
+<h4>Setting Up AppArmor Profile</h4>
+
+<p>As an example, suppose that there is a <em>program</em> called &quot;<code>restricted</code>&quot; stored in <code>/usr/local/bin</code>. We can build a AppArmor profile called <code>usr.loacl.bin.restricted</code> (by replacing / with dot) to specify the permissions granted to this program. Moreover, wildcard can be used in the profile, e.g., <code>/usr/local/bin/*/*/limiteds</code> applies to the program(s) <code>limiteds</code> under all the matched directories.</p>
+
+<p>The profile shall be stored in &quot;<code>/etc/apparmor.d/</code>&quot;.</p>
+
+<p>For example,</p>
+
+<pre class="color-example">
+#include &lt;tunables/global&gt;
+ 
+usr.loacl.bin.restricted {
+   #include &lt;abstractions/base&gt;
+}</pre>
+
+<p>Reload the AppArmor profiles:</p>
+
+<pre class="color-command">
+$ <strong>sudo service apparmor reload</strong>
+<span class="color-comment">// Or, restart AppArmor:</span>
+$ <strong>sudo service apparmor restart</strong>
+</pre>
+
+<p>By default, AppArmor writes <code>syslog</code> @ &quot;<code>/var/log/syslog</code>&quot;. To show the <code>syslog</code>, with auto-refresh:</p>
+
+<pre class="color-command">
+$ <strong>tail -F /var/log/syslog</strong>
+    <span class="color-comment">// Press Ctrl-Shift-C to exit</span>
+</pre>
+
+<p>The above profile restricts the program from performing IO operations and many....  If the program perform an IO operation, the system kills the program and write the following error in <code>syslog</code>:</p>
+
+<pre class="color-example">
+Oct 15 12:18:18 ubuntu kernel: [53604.014028] type=1400 audit(1381810698.963:69):
+apparmor=&quot;DENIED&quot; operation=&quot;open&quot; parent=16309 profile=&quot;usr.loacl.bin.restricted&quot;
+name=&quot;/usr/loacl/bin/restricted/c.out&quot; pid=21447 comm=&quot;restricted&quot;
+requested_mask=&quot;wc&quot; denied_mask=&quot;wc&quot; fsuid=1000 ouid=1000</pre>
+
+<p>Notes on AppArmor Profile:</p>
+
+<ul>
+<li>The <code>&lt;tunables/global&gt;</code> contains global variable definitions.</li>
+<li>The <code>&lt;abstractions/base&gt;</code> includes files that should be readable and writable in all profiles.</li>
+
+<li>There are three main types of entries in the profiles:
+<ul>
+<li>Capabilities entries determines what privileges the program can use.</li>
+<li>File Permission Access: Path entries determines what files the program can access.</li>
+<li>Network Access Control.</li>
+</ul></li>
+<li>If not granted (as in the above example), the program cannot perform special privileged operations, IO and network operations.</li>
+</ul>
+
+<h4>Redirecting AppArmor's Log File</h4>
+
+<p>By default, AppArmor writes its logs to <code>/var/log/syslog</code> or <code>/var/log/messages</code>.  To re-direct log entries, create the following configuration file for <code>rsyslog</code> called &quot;<code>/etc/rsyslog.d/30-apparmor.conf</code>&quot;:</p>
+
+<pre class="color-example">
+# Log kernel generated apparmor log messages to file
+:msg,contains,&quot;apparmor&quot; /usr/local/olas/olas1.2/log/apparmor-log/apparmor.log
+
+# Discard the written messages. Don't apply any additional rules and write again.
+&amp; ~</pre>
+
+<p>Restart rsyslog by:</p>
+
+<pre class="color-command">
+$ <strong>sudo service rsyslog restart</strong></pre>
+
+<p>The AppArmor's user &quot;<code>syslog</code>&quot; (of group &quot;<code>adm</code>&quot;) must have &quot;w&quot; permission to the log file.</p>
+
+<h3>Java Security Manager</h3>
+
+<p>You can run a Java program under the control of Java Security Manager, with the following command-line option:</p>
+
+<pre class="color-command">
+java -Djava.security.manager -Djava.security.policy==/usr/local/my/my.policy programName</pre>
+
+<p>You can configure the permission granted to the program thru a policy file. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * Security policy file for the executing Java Programs
+ */</span>
+
+<span class="color-comment">// All programs</span>
+grant {
+   permission java.util.PropertyPermission &quot;file.encoding&quot;, &quot;read&quot;;
+   permission java.net.SocketPermission &quot;localhost&quot;, &quot;resolve&quot;;
+   permission java.net.SocketPermission &quot;127.0.0.1:3306&quot;, &quot;connect,resolve&quot;;
+
+   <span class="color-comment">// entries copy from default system policy</span>
+   permission java.util.PropertyPermission &quot;java.version&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;java.vendor&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;java.vendor.url&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;java.class.version&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;os.name&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;os.version&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;os.arch&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;file.separator&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;path.separator&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;line.separator&quot;, &quot;read&quot;;
+
+   permission java.util.PropertyPermission &quot;java.specification.version&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;java.specification.vendor&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;java.specification.name&quot;, &quot;read&quot;;
+
+   permission java.util.PropertyPermission &quot;java.vm.specification.version&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;java.vm.specification.vendor&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;java.vm.specification.name&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;java.vm.version&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;java.vm.vendor&quot;, &quot;read&quot;;
+   permission java.util.PropertyPermission &quot;java.vm.name&quot;, &quot;read&quot;;
+};
+
+<span class="color-comment">// Grant only necessary permissions for programs under codeBase
+// Tune by running the program without permission and observe the error messages.</span>
+grant codeBase "file:/usr/local/my/bin/-" {
+   <span class="color-comment">// Execute Runtime.exec()</span>
+   permission java.io.FilePermission &quot;&lt;&lt;ALL FILES&gt;&gt;&quot;, &quot;execute&quot;;
+   
+   <span class="color-comment">// Uses Java Logging</span>
+   permission java.util.logging.LoggingPermission &quot;control&quot;;
+   permission java.io.FilePermission &quot;/usr/local/my/log/-&quot;, &quot;read,write&quot;;
+
+   <span class="color-comment">// Needs to write error.log here</span>
+   permission java.io.FilePermission &quot;/usr/local/my/error/-&quot;, &quot;write&quot;;
+
+   <span class="color-comment">// Redirect sysout and syserr</span>
+   permission java.lang.RuntimePermission &quot;setIO&quot;;
+
+   <span class="color-comment">// Terminate runaway thread</span>
+   permission java.lang.RuntimePermission &quot;stopThread&quot;;
+};</pre>
+
+
+</div> 
+<!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: ???<br />
+Last modified: September, 2014</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!-- H5BouncingBall.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Bouncing Ball (HTML 5)</title>
+ 
+<script>
+var MIN_X = 0;
+var MIN_Y = 0;
+var WIDTH = 520;
+var HEIGHT = 410;
+var MAX_X = MIN_X + WIDTH - 1;
+var MAX_Y = MIN_Y + HEIGHT - 1;
+ 
+var ballRadius = 30;
+var ballSize = ballRadius*2 + 1;
+// Randomly place the initial ball within the box, slightly off from border
+var ballCenterX = (WIDTH - 2*ballSize)*Math.random() + (MIN_X + ballSize);
+var ballCenterY = (HEIGHT - 2*ballSize)*Math.random() + (MIN_Y + ballSize);
+// Initial speed
+var ballSpeedX = 5;
+var ballSpeedY = 3;
+ 
+var context;
+ 
+function init() {
+  var canvas = document.getElementById('box');
+  canvas.width = WIDTH;
+  canvas.height = HEIGHT;
+  canvas.style.border = "1px solid";
+ 
+  context = canvas.getContext('2d');
+  setInterval(draw, 30);
+}
+ 
+// Draw the ball
+function draw() {
+   // Calculate the ball's new position
+   ballCenterX += ballSpeedX;
+   ballCenterY += ballSpeedY;
+   // Check if the ball moves over the bounds
+   // If so, adjust the position and speed.
+   if (ballCenterX - ballRadius < MIN_X) {
+      ballSpeedX = -ballSpeedX; // Reflect along normal
+      ballCenterX = MIN_X + ballRadius; // Re-position the ball at the edge
+   } else if (ballCenterX + ballRadius > MAX_X) {
+      ballSpeedX = -ballSpeedX;
+      ballCenterX = MAX_X - ballRadius;
+   }
+   // May cross both x and y bounds
+   if (ballCenterY - ballRadius < MIN_Y) {
+      ballSpeedY = -ballSpeedY;
+      ballCenterY = MIN_Y + ballRadius;
+   } else if (ballCenterY + ballRadius > MAX_Y) {
+      ballSpeedY = -ballSpeedY;
+      ballCenterY = MAX_Y - ballRadius;
+   }
+ 
+   context.clearRect(MIN_X, MIN_Y, MAX_X, MAX_Y);
+   context.fillStyle="#FF0000";
+   context.beginPath();
+   context.arc(ballCenterX, ballCenterY, ballRadius, 0, Math.PI*2, true);
+   context.closePath();
+   context.fill();
+}
+ 
+window.addEventListener("load", init, true);
+</script>
+ 
+</head>
+<body>
+  <section>
+    <h2>Bouncing Ball (on HTML 5 Canvas)</h2>
+    <canvas id="box">Canvas not supported</canvas>
+  </section>
+</body>
+</html>

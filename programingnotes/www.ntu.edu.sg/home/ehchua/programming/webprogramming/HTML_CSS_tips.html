@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HTML and CSS Tutorial: How-To's and Miscellaneous</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet">
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+<script src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+
+<div id="content-header">
+<h1>HTML &amp; CSS</h1>
+<h2>How-To's &amp; Miscellaneous</h2></div>
+
+<div id="content-main">
+
+<h3>How to include an HTML file into another HTML file?</h3>
+<p>Why? So that you don't have to repeat certain HTML codes (such as header, footer) in every file. There are a number of methods, BUT I can't find the best method (each method has its own merits and drawbacks). The methods can be classified into server-side and client-side techniques.</p>
+<h4 class="original-case">Server-Side Techniques</h4>
+<ol>
+<li><span class="line-heading">Server-side Include:</span> Most of the HTTP servers (such as Apache HTTP server) support a so-called <em>Server-side Include</em> (SSI) technology, where the server can be asked to insert another HTML file into the current HTML file at runtime via a special directive &quot;<code>#include</code>&quot;, e.g.,
+<pre class="color-example">
+&lt;html&gt;
+&lt;head&gt;
+  ......
+&lt;/head&gt;
+&lt;body&gt;
+  ......
+  &lt;!-- <span class="color-comment">#include file=&quot;footer.html&quot;</span> --&gt;
+  ......
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+<p>The #include directive is often enclosed inside an HTML comment, meant for those servers/clients not supporting SSI.</p>
+<p>This is clean and simple, but although most servers support SSI, they might not allow all users (especially you) to <em>execute</em> SSI.</p>
+</li>
+</ol>
+<h4 class="original-case">Client-Side Techniques</h4>
+<ol>
+<li><span class="line-heading">JavaScript:</span> Use JavaScript to <em>print</em> out the HTML codes to be embedded. For example, create the following script and saved as &quot;<code>footer.js</code>&quot;:
+<pre class="color-example">
+<span class="color-comment">// Footer.js</span>
+document.write('&lt;div id=&quot;footer&quot;&gt;')
+document.write('&lt;p&gt;Sent your comment to xxxx&lt;/p&gt;')
+document.write('&lt;/div&gt;')</pre>
+
+<p>You can then include it via:</p>
+<pre class="color-example">
+&lt;script type=&quot;text/javascript&quot; src=&quot;footer.js&quot;&gt;</pre>
+
+<p>Drawback?</p>
+
+<ol>
+<li>Not all browsers support JavaScript(?!) Even the browser supports JavaScript, the user might not enable it!</li>
+<li>Search engine may not be able to search the JavaScript contents (and therefore NOT for a professional web designer)<br></li>
+</ol>
+</li>
+
+<li><span class="line-heading">HTML Inline Frame:</span> For example,
+<pre class="color-example">
+&lt;iframe src=&quot;footer.html&quot; width=&quot;780&quot; height=&quot;200&quot;&gt;
+&lt;a href=&quot;footer.html&quot;&gt;Your browser does not support inline frame.
+Click here to see the included contents.&lt;/a&gt;
+&lt;/iframe&gt;</pre>
+
+<p>Drawback?</p>
+
+<ol>
+<li>Again, not all browsers support Frame(?!)</li>
+<li>Search engine may not be able to search the inline frame's contents.</li>
+<li>How much space to be allocated for the inline frame?</li>
+</ol>
+</li>
+
+</ol>
+
+<h3>How to Format Tables via CSS</h3>
+
+<p>Formatting table using CSS is messy?!</p>
+
+<h5>How to Centralize a Table (or Block Elements such as Division)?</h5>
+
+<ul>
+<li>The old way of centralizing element via <code>align=&quot;center|left|right|justify&quot;</code> attribute, e.g.,, <code>&lt;table align=&quot;center&quot;&gt;...&lt;/table&gt;</code>, has been deprecated in HTML 4.</li>
+<li>There is no such property called &quot;<code>align</code>&quot; in CSS.</li>
+<li>There is only one(?) alignment property in CSS - a text property called <code>text-align=&quot;center|left|right|justify&quot;</code>. But &quot;<code>text-align:center</code>&quot; does not center the <code>&lt;table&gt;</code>, but centers the texts inside the table..</li>
+</ul>
+<p>To center a table (or a block element such as <code>&lt;div&gt;</code>, <code>&lt;img&gt;</code>), you need to set the <em>left and right margins</em> to &quot;<code>auto</code>&quot; (to ask the browsers to compute the margin) as follows:</p>
+<pre class="color-example">
+table {   <span class="color-comment">/* &lt;table&gt; */</span>
+   <span class="color-new">margin-left: auto;
+   margin-right: auto;</span>
+}
+
+div#header {   <span class="color-comment">/* &lt;div&gt; */</span>
+   <span class="color-new">margin-left: auto;
+   margin-right: auto;</span>
+}</pre>
+
+<p>Browsers divides the <em>remaining width</em> equally between left and right margins, so as to center the block element.</p>
+
+<h5>How to Set the Width of the  Table and Individual Columns?</h5>
+
+<p>You can use <code>&lt;table style=&quot;width:<em>n</em>|<em>n</em>%&quot;&gt;</code> to set the width of the table, where <em>n</em> is measurement such as <code>300px</code> or <code>80%</code>. The percentage is relative to the containing element such as <code>&lt;div&gt;</code> or <code>&lt;body&gt;</code>. Take note that width, margin, border and padding properties are NOT inherited by its descendants (<code>&lt;tr&gt;</code>, <code>&lt;td&gt;</code>, and etc.)</p>
+<p>To set the width of a columns or a set of columns, first declare appropriate <code>&lt;colgroup&gt;</code> or <code>&lt;col&gt;</code>, then use <code>&lt;colgroup|col span=&quot;<em>numOfColumns</em>&quot; style=&quot;width:<em>n</em>|<em>n</em>%&quot;&gt;.</code> Take note that you can only apply <code>background</code>, <code>border</code> and <code>width</code> properties to <code>&lt;colgroup&gt;</code> and <code>&lt;col&gt;</code>. To make life easier, use only <code>&lt;col&gt;</code> with possibly <code>span</code>, and ignore <code>&lt;colgroup&gt;</code>.</p>
+<p>You can also set the width of <code>&lt;td&gt;.</code> This is not recommended, as there are many <code>&lt;td&gt;</code>'s.</p>
+<p>Since each table has its own width, it may not be feasible to set the width globally in CSS. I typically set it in the <code>&lt;table&gt;</code> tag. For example, this table has the width of 80% across the screen (or the parent), with 4 columns of width 50%, 10%, 10%, 30% (totaling 100%).</p>
+<pre class="color-example">
+&lt;table style=&quot;width:80%&quot;&gt;             <span class="color-comment">&lt;!-- The table is 80% of screen width --&gt;</span>
+  &lt;col style=&quot;width:50%&quot; /&gt;           <span class="color-comment">&lt;!-- column 1 is 50% of the table's width --&gt;</span>
+  &lt;col span=&quot;2&quot; style=&quot;width:10%&quot; /&gt;  <span class="color-comment">&lt;!-- column 2 and 3 is 10% of the table's width --&gt;</span>
+  &lt;col /&gt;                             <span class="color-comment">&lt;!-- column 4 takes the remaining --&gt;</span>
+  &lt;tr&gt;......&lt;/tr&gt;
+  &lt;tr&gt;......&lt;/tr&gt;
+&lt;/table&gt;</pre>
+
+<h5>How to Format Tables via CSS?</h5>
+
+<ol>
+<li>Define a <code>class</code> for each sub-class of tables, e.g.,
+  <pre class="color-example">
+<span class="color-new">.table-data</span> { .... }</pre>
+
+Note that class selector by itself is efficient, no need to use <code>table.table-data</code>.
+</li>
+
+<li>Use the Descendant-Selector for the nested <code>&lt;tr&gt;</code>, <code>&lt;th&gt;</code> and <code>&lt;td&gt;</code>, e.g.,
+  <pre class="color-example">
+.table-data tr { .... }
+.table-data th { .... }  <span class="color-comment">/* descendant, not necessarily child */</span>
+.table-data td { .... }
+ 
+.center-block {               <span class="color-comment">/* center a block element */</span>
+   margin-left: auto;
+   margin-right: auto;
+}</pre>
+</li>
+
+<li>In the HTML documents, assign the <code>&lt;table&gt;</code> to the appropriate table's sub-class, e.g., 
+  <pre class="color-example">
+<span class="color-comment"></span>&lt;table <span class="color-new">class=&quot;table-data center-block&quot;</span>&gt;
+  &lt;tr&gt;
+    &lt;th&gt;...&lt;/th&gt;
+    ......
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;...&lt;/td&gt;
+    ......
+  &lt;/tr&gt;
+  ......
+&lt;/table&gt;</pre> 
+</li>
+
+<li>Recall that <code>class</code> attribute can take multiple values. For example, if you need to center the table, you could define a class-selector says &quot;<code>.center-block</code>&quot;, and apply this class to the desired HTML element as an additional class value.</li>
+<li>How about using ID-selector for table? This works only if there is only one such table in each HTML document, because <code>id</code> must be unique within an HTML document. Not really practical!</li>
+</ol>
+
+<h5>How to Set Different Background for Different Columns?</h5>
+<p>Specify the <code>background-color</code> in <code>&lt;col&gt;</code> or <code>&lt;colgroup&gt;</code>. Sad to find out that <code>&lt;col&gt;</code> and <code>&lt;colgroup&gt;</code> only support attributes <code>background</code>, <code>width</code> and <code>border</code>. You cannot set the <code>font-family</code>, <code>text-align</code>, or even the foreground <code>color</code>. See below.</p>
+
+<h5>How to Set Different Styles for Different Columns</h5>
+
+<p>You can use the <code>td:first-child</code> to select the first column (or <code>tr &gt; :first-child</code> to include <code>&lt;th&gt;</code>); <code>td:nth-child(3)</code> to select the 3rd column;  <code>td:nth-child(odd)</code> to select the odd columns;  <code>td:nth-child(even)</code> to select the even columns. The pseudo-element <code>:nth-child(n)</code> select the element only if it is the nth-child of the parent. [Take note that <code>:odd</code> and <code>:even</code> is for jQuery, not CSS.]</p>
+
+<pre class="color-example">
+.table-data td:first-child {  <span class="color-comment">/* all first column &lt;td&gt; */</span>
+   font-family: ...
+}
+
+.table-data tr &gt; :first-child {  <span class="color-comment">/* all first-child of &lt;tr&gt;, likely to be &lt;th&gt; or &lt;td&gt; */</span>
+   ....
+}
+
+.table-data tr &gt; :nth-child(3) {  <span class="color-comment">/* all 3rd-child of &lt;tr&gt; */</span>
+   ....
+}
+
+.table-data tr &gt; :nth-child(even) {  <span class="color-comment">/* all even-child of &lt;tr&gt; */</span>
+   ....
+}
+ 
+.table-data td:first-child + td {  <span class="color-comment">/* all second column &lt;td&gt; */</span>
+   font-family: ...
+}</pre>
+
+<h5>How to Set Different Background for the Header Row, the Odd and Even Data Rows?</h5>
+
+<p>You could use <code>tr:nth-child(even)</code> to select the even rows; <code>tr:nth-child(odd)</code> to select the old rows; <code>tr:first-child</code> for the first row, and <code>tr:last-child</code> for the last row. For example, to set different background colors for alternate rows:</p>
+
+<pre class="color-example">
+.table-data th {  <span class="color-comment">/* For the header row */</span>
+   background-color: #66ffff;
+}
+ 
+.table-data tr:nth-child(even) td {  <span class="color-comment">/* even rows */</span>
+   background-color: #ccffff;
+}
+ 
+.table-data tr.nth-child(odd) td {   <span class="color-comment">/* odd rows */</span>
+   background-color: #eeffff;
+}</pre>
+
+<h5>How to Specify HTML <span class="font-code">&lt;table&gt;</span>'s Deprecated Attributes <span class="font-code">border</span>, <span class="font-code">cellpadding</span> and <span class="font-code">cellspacing</span> in CSS?</h5>
+
+<p>You can avoid the deprecated attributes by using the CSS properties <code>border</code>, <code>padding</code> and <code>margin</code>. <code>cellpadding</code> can be replaced by <code>padding</code>.</p>
+<pre class="color-example">
+.table-data  {
+   <span class="color-comment">/* margin and padding for this table. Not cells. Not inherited */
+</span>   margin: ...;
+   padding: ...;
+
+   <span class="color-comment">/* Default color and background color. Inherited. */</span>
+   color: ...; 
+   background-color: ...;
+
+   border: 2px solid black;     <span class="color-comment">/* border of the table, specify the cells in td or th */</span>
+   border-collapse: separate;   <span class="color-comment">/* or collapse|initial|inherit */</span>
+   border-spacing: 10px 5px;    <span class="color-comment">/* horizontal and vertical spacing
+                                   Replace cellspacing, for border-collapse:separate only */</span>
+}
+ 
+.table-data th {
+   padding: 4px 10px;  <span class="color-comment">/* more top and bottom padding for header cells */</span>
+   margin: ...;
+   color: ...;         <span class="color-comment">/* Override colors for header cells */</span>
+   background-color: ...;
+   border: 1px solid light-gray;
+}
+ 
+.table-data td {
+   padding: 2px 10px;  <span class="color-comment">/* top right bottom left */</span>
+   margin: ...;
+   border: 1px solid light-gray;
+}</pre>
+
+<h3>How to ...</h3>
+
+<h4>How to underline text</h4>
+<p>The <code>&lt;u&gt;</code> (underline) tag is deprecated in HTML 4, to avoid confusion with hyperlinks  which are often displayed as underlined. [I strong disagree, as I need  underline frequently to represent special meaning such as default selection]. Take note that graphic designers generally hate underline, and treat it as a legacy of the old typewriter.</p>
+<p>Use CSS property &quot;<code>text-decoration:underline</code>&quot;. For example,</p>
+<pre class="color-example">
+.underline {                     <span class="color-comment">/* use this instead of &lt;u&gt; */</span>
+   <span class="color-new">text-decoration: underline;</span>   <span class="color-comment">/* underline text */</span>
+}</pre>
+
+<pre class="output">
+&lt;p&gt;This &lt;span <span class="color-new">class=&quot;underline&quot;</span>&gt;part&lt;/span&gt; is underlined.&lt;/p&gt;</pre>
+
+<h4>How to Center ...</h4>
+
+<p>The &quot;<code>align</code>&quot; attribute of most of the HTML tags has been deprecated in HTML 4.01 and XHTML 1.0 Strict DTD.  Use CSS instead.</p>
+
+<h5>How to center text horizontally?</h5>
+<p>The presentation attribute  <code>align=&quot;left|right|center|justify&quot;</code> of the block-level tags (such as <code>&lt;p&gt;</code>, <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code>) has been deprecated. Use CSS property &quot;<code>text-align:center</code>&quot; instead. For example,</p>
+<pre class="color-example">
+p, h1, h2, h3 {
+  <span class="color-new">text-align: center;</span>   <span class="color-comment">/* center text horizontally for block-level elements */</span>
+}</pre>
+
+<h5>How to center a block-level element horizontally (e.g., <span class="font-code">&lt;div&gt;</span>, <span class="font-code">&lt;table&gt;</span>)?</h5>
+<p>Set the <em>left and right margin</em> to &quot;<code>auto</code>&quot;, for example,</p>
+<pre class="color-example">
+#main-content {                   <span class="color-comment">/* for the main context &lt;div&gt; */</span>
+   width: 760px;
+   <span class="color-new">margin: 10px auto 10px auto;</span>   <span class="color-comment">/* top right bottom left */</span>
+}
+
+#header {
+   width: 800px;
+   <span class="color-new">margin-left: auto;
+   margin-right: auto;</span>
+}</pre>
+
+<pre class="output">
+&lt;div <span class="color-new">id=&quot;header&quot;</span>&gt; ... &lt;/div&gt;
+&lt;div <span class="color-new">id=&quot;main-content&quot;</span>&gt; ... &lt;/div&gt;</pre>
+
+<h5>How to center an image horizontally?</h5>
+<p>The <code>&lt;img&gt;</code> tag's <code>align</code> attribute (of <code>top</code>, <code>middle</code>, <code>bottom</code>, <code>left</code>, <code>right</code>) specifies how the image aligns with the surrounding text. It is deprecated in HTML 4.01 and XHTML 1.0 Strict DTD, and cannot be used to centralize an image horizontally.</p>
+<p>To centralize an image, you need to make it a block-element and then centralize the block, for example.</p>
+
+<pre class="color-example">
+img.center {
+   <span class="color-new">display: block;</span>     <span class="color-comment">/* render as a block-level element */</span>
+   <span class="color-new">margin: 5px auto;</span>   <span class="color-comment">/* top/down left/right */</span>
+}</pre>
+
+<pre class="output">
+&lt;img class=&quot;center&quot; src=&quot;logo.gif&quot; /&gt;</pre>
+
+<h5>How to center text vertically?</h5>
+
+<p>Use <code>text-align</code> to align text horizontally and <code>vertical-align</code> to align text vertically.</p>
+
+<p><span class="line-heading-code-new">text-align: left|right|center|justify<br>
+  vertical-align: top|middle|bottom|baseline</span><br>
+<code>baseline</code> works like <code>top</code>, except that the baseline of all the first lines of each cells are aligned,</p>
+
+<pre class="color-example">
+#container {
+   min-height: 200px;
+   display: table-cell;
+   vertical-align: middle;   <span class="color-comment">/* align text vertically */</span>
+}</pre>
+
+<pre class="output">
+&lt;div id=&quot;container&quot;&gt;
+  &lt;p&gt;Some text here ...&lt;/p&gt;
+&lt;/div&gt;</pre>
+
+
+<h4>How to Ensure that CSS is Refreshed after Modification</h4>
+
+<p>If you update a CSS and want to ensure it gets refreshed in every visitor's cache, a very popular method  is to add a version number as a GET parameter. In this way, the CSS will get refreshed when the version number changes, but not more often than that. For example,</p>
+
+<pre class="color-example">
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;styles.css?version=10&quot;&gt;</pre>
+
+<h4>How to set the tab-size of the browser</h4>
+<p>Use <code>tab-size</code> attribute. For example,</p>
+
+<pre class="color-example">
+pre {
+   tab-size: 3;       <span class="color-comment">/* for Chrome  */</span>
+   -moz-tab-size: 3;  <span class="color-comment">/* for firefox */</span>
+   -o-tab-size: 3;    <span class="color-comment">/* for opera   */</span>
+}</pre>
+
+<h4>How to apply different style for login page and the rest of the pages</h4>
+
+<p>In the login page (or home page), attached a class to the <code>&lt;body&gt;</code>, e.g., <code>&lt;body class=&quot;home&quot;&gt;</code>. You can then define descendant selector (such as <code>.home table</code>) to apply CSS.</p>
+
+<h3>Miscellaneous</h3>
+
+<h4>Document-Type Declaration <span class="font-code">&lt;!DOCTYPE&gt;</span></h4>
+
+<h5>Does <span class="font-code">&lt;!DOCTYPE&gt;</span> Matter?</h5>
+
+<p>An HTML document begins with a Document-Type Declaration<code> &lt;!DOCTYPE&gt;</code>, <em>supposedly</em> to be used by browsers to validate the HTML document. The <code>DOCTYPE</code> declares the standard (such as <abbr title="Hypertext Markup Language">HTML</abbr>5, <abbr title="Extended Hypertext Markup Language">XHTML</abbr>1.0, <abbr title="Hypertext Markup Language">HTML</abbr>4.01) the  document intends to conform to. However, it is interesting to note that no modern browsers actually use the <code>DOCTYPE</code> to validate the document?! So, why <code>DOCTYPE</code>?</p>
+
+<p>The <code>DOCTYPE</code> declaration remains in the HTML5 document for historical reasons. Most browsers (including Internet Explorer and Firefox) operate in two modes: <em>Standards mode</em> and <em>Quirks mode</em>. If no <code>DOCTYPE</code> is detected (as the first line of the document), the browser runs in the <em>quirks</em> mode. Quirks mode is meant for older versions of HTML document (pre-HTML4, before 1999), which tolerates bad syntaxes. However, every browser's quicks mode is different, and you will not get consistent layout across the browsers. On the other hand, if a <code>DOCTYPE</code> is found, the browser runs in the stricter <em>standards mode</em> and renders the document with consistent formatting and layout across  browsers.</p>
+
+<p>It is interesting to note that most browsers don't care what <code>DOCTYPE</code> you use. They simply check that you have a <code>DOCTYPE</code> to switch into standards mode!</p>
+
+<p> (To find the operation mode on Firefox, right-click on the page and select &quot;View Page Info&quot;. It is shown under the &quot;Render Mode&quot; with value such as &quot;standards compliance mode&quot; or &quot;quirks mode&quot;.)</p>
+
+<p>I suggest that you always use HTML5 <code>DOCTYPE</code> in your documents.</p>
+
+<h5>HTML5 <span class="font-code">DOCTYPE</span> (Recommended)</h5>
+
+<p>HTML5 defines a short <code>DOCTYPE</code>, which contains the document's root element name, <code>html</code>, as follows:</p>
+
+<pre class="color-syntax">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  .......
+&lt;/html&gt;</pre>
+
+<p>HTML5 define the shortest possible <code>DOCTYPE</code> to switch the browsers into <em>standards</em> mode. It does not specify the version, i.e., it uses <code>html</code> instead of <code>html5</code>, to signal that it is applicable to all HTML document, old, new and possibly future.</p>
+
+<h5>Pre-HTML5, XHTML1.0, HTML5, XHTML5</h5>
+
+<p>HTML is a sloppy language. It is easy to write but poses great challenge to browsers. XHTML tidies up HTML with stricter syntactic rules. The differences between HTML4 and XHTML1.0, in terms of syntax validation, are:</p>
+
+<ul>
+  <li>All XHTML elements must be properly nested. For example, <code>&lt;a&gt;&lt;b&gt;...&lt;/a&gt;&lt;/b&gt;</code> is invalid.</li>
+
+<li>All XHTML elements must be properly closed, either using a pair of opening and closing tags (e.g., <code>&lt;p&gt;...&lt;/p&gt;</code>), or a stand-alone tag with a trailing <code>'/'</code> (e.g., <code>&lt;br /&gt;</code>).</li>
+
+<li>XHTML elements are case-sensitive. All elements and attributes are defined in lowercase, e.g., <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code>.</li>
+<li>XHTML's attribute values must be quoted (in single quotes or double quotes) in the form of <code><em>name</em>=&quot;<em>value</em>&quot;</code> or <code><em>name</em>='<em>value</em>'</code>. Missing value is not allowed. Example, you need to write <code>&lt;input type=&quot;checkbox&quot; checked=&quot;checked&quot;&gt;</code>.</li>
+
+<li>XHTML document technically should begin with this declaration to declare that it is a XML document.
+<pre class="color-plain">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</pre></li>
+
+<li>All XHTML elements are nested inside the root element <code>&lt;html&gt;....&lt;/html&gt;</code>, with <em>mandatory</em> <code>&lt;head&gt;...&lt;/head&gt;</code> and <code>&lt;body&gt;...&lt;/body&gt;</code> sections.</li>
+</ul>
+
+<p>HTML5 loosens many of these restrictions:</p>
+
+<ul>
+<li>The <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code> tags are optional. But it is best to keep them.</li>
+<li>The tagname and attribute names are NOT case-sensitive, e.g. <code>&lt;HEAD&gt;</code>, <code>&lt;Head&gt;</code> are all valid <code>&lt;head&gt;</code> tag. However, it is best to keep them in lowercase.</li>
+<li>The attribute's value is no longer needed to be quoted (but, it is best to quote them). Missing attribute value is allowed, e.g., you can write <code>&lt;input type=&quot;checkbox&quot; <span class="color-new">checked</span>&gt;</code>, instead of <code>&lt;input type=&quot;checkbox&quot; <span class="color-new">checked=&quot;checked&quot;</span>&gt;</code> (this is welcomed by developers).</li>
+<li>The closing slash of a standalone tag is optional, e.g., you can write <code>&lt;br&gt;</code>, instead of <code>&lt;br /&gt;</code>or <code>&lt;br&gt;&lt;/br&gt;</code> (this is also welcomed by developers).</li>
+</ul>
+
+<p>XHTML5 is HTML5 with the stricter rules of XHTML. You need to include the XHTML5 name-space in the <code>&lt;html&gt;</code> tag, as follows:</p>
+
+<pre class="color-syntax">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot; <span class="color-new">xmlns=&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;
+  ......
+&lt;/html&gt;</pre>
+
+
+<h5>Pre-HTML5 <span class="font-code">DOCTYPE</span></h5>
+
+<p>I keep this section here for historical review?!</p>
+
+<p>Prior to HTML5, the <code>&lt;!DOCTYPE&gt;</code> element uses a syntax conforms to <abbr title="Standard Generalized Markup Language">SGML</abbr> to refer to a DTD (Document-Type Definition), as follows:</p>
+
+<pre class="color-syntax">
+&lt;!DOCTYPE <em>root-element</em> PUBLIC &quot;<em>FPI</em>&quot; &quot;<em>DTD-URI</em>&quot; &gt;
+&lt;!DOCTYPE <em>root-element</em> SYSTEM &quot;<em>DTD-URI</em>&quot; &gt;</pre>
+
+<ul>
+
+<li>The <em>root-element</em> is the first element opened (after the <code>DOCTYPE</code> declaration) and last one closed. In this case &quot;<code>html</code>&quot; for HTML document.</li>
+
+<li>The keywords <code>SYSTEM</code> and <code>PUBLIC</code> specifies the type of <abbr title="Document Type Definition">DTD</abbr> - one that is on a private <code>SYSTEM</code> or one that is open to the <code>PUBLIC</code>. For <code>PUBLIC</code> DTD, it is followed by a restricted form of &quot;Public Identifier&quot; called Formal Public Identifier (FPI), and  a &quot;System Identifier&quot; in the form of URI locating the public DTD file.</li>
+
+<li>The DTD file is a XML document that defines the structure of a valid document.</li>
+
+</ul>
+
+<p>For example, the <code>DOCTYPE</code> for XHTML 1.0 is as follows:</p>
+
+<pre class="color-example">
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;
+</pre>
+
+
+<p>The public identifier is &quot;<code>-//W3C//DTD XHTML 1.0 Strict//EN</code>&quot;; the system identifier (which locates the DTD) is &quot;<code>http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</code>&quot;. A validator may use either identifier for locating the referenced external entity.</p>
+
+<p>HTML 4.01 and XHTML 1.0 have three flavors: <em>strict</em>, <em>transitional</em> and <em>frameset</em>. The <em>strict</em> prohibits the use of deprecated tags, whereas <em>transitional</em> and <em>frameset</em> permit the use of deprecated tags. <em>Frameset</em> also recognizes the <code>&lt;frameset&gt;</code> and <code>&lt;frame&gt;</code> tags. The various <code>DOCTYPE</code> declarations are:</p>
+
+<ul>
+<li>HTML 4.01 <em>Strict</em>:
+<pre class="color-syntax">
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot; &quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;
+&lt;html&gt;
+  .....
+&lt;/html&gt;</pre></li>
+
+<li>HTML 4.01 <em>Transitional</em>:
+<pre class="color-syntax">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;</pre></li>
+
+<li>HTML 4.01 <em>Frameset</em>:
+<pre class="color-syntax">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Frameset//EN&quot; &quot;http://www.w3.org/TR/html4/frameset.dtd&quot;&gt;</pre></li>
+
+<li>XHTML 1.0 <em>Strict</em>:
+
+<pre class="color-syntax">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+  ......
+&lt;/html&gt;</pre></li>
+
+<li>XHTML 1.0 <em>Transitional</em>:
+<pre class="color-syntax">
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+</pre></li>
+
+<li>XHTML 1.0 <em>Frameset</em>:
+<pre class="color-syntax">
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Frameset//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd&quot;&gt;
+</pre></li>
+</ul>
+
+<h4>Declaring the Charset</h4>
+
+<p>It is important to declared the <em>charset</em> (character encoding scheme) used for the encoding (saving) of the HTML file, so that the browsers can properly decode the document. To understand charset, read &quot;<a href="../java/DataRepresentation.html#charencoding">Character Encoding</a>&quot;.</p>
+<p>The charset is declared in the <code>&lt;meta&gt;</code> tag of the <code>&lt;head&gt;</code> section.</p>
+
+<h5>HTML5</h5>
+
+<p>HTML5 simplifies this declaration to:</p>
+<pre class="color-example">&lt;meta <span class="color-new">charset=&quot;UTF-8&quot;</span> /&gt;
+</pre>
+
+
+<h5>Pre-HTML-5</h5>
+
+<pre class="color-syntax">&lt;meta <span class="color-new">http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=<em>your-character-set</em>&quot;</span> /&gt;</pre>
+
+<p>This <code>&lt;meta&gt;</code> tag instructs the HTTP server to include the following <em>response header</em>, when the file is downloaded by web users (to be rendered by the browser):</p>
+
+<pre class="color-syntax">
+Content-Type: text/html; charset=<em>your-character-set</em></pre>
+
+<h5>UTF-8 Charset</h5>
+<p>I suggest that you use &quot;<code>UTF-8</code>&quot; character set, which supports Unicode characters for <em>internationalization</em>, and is backward compatible with ASCII. You should save your HTML file as &quot;UTF-8, No BOM (Byte-Order Mark)&quot;. For example, in Windows' NotePad or NotePad++, choose UTF-8 encoding in the &quot;save-as&quot; menu; in Mac's TextEdit, set &quot;Format&quot; to &quot;Make Plain Text&quot;, and choose &quot;Unicode (UTF-8)&quot; for character encoding.</p>
+
+<h4>The <span class="font-code">&lt;body&gt;</span> Tag's Deprecated Attributes</h4>
+
+<p>The <code>&lt;body&gt;</code> tag's attributes <code>color</code> (text), <code>bgcolor</code> (background color), <code>background</code> (background image), <code>link</code> (unvisited link), <code>vlink</code> (visited link), <code>alink</code> (active link) have been deprecated. Use the following CSS styles instead.</p>
+<pre class="color-example">
+body {
+   color: black;                   <span class="color-comment">/* foreground color for texts */</span> 
+   background-color: white;        <span class="color-comment">/* background color */</span>
+   background-image: bg_logo.jpg;  <span class="color-comment">/* URL of the background image */</span>
+   background-position: top left;  <span class="color-comment">/* image starts from top left corner */</span>
+   background-repeat: repeat-y;    <span class="color-comment">/* repeat the image in y-direction */</span>
+}
+a:link     { color: blue   }       <span class="color-comment">/* unvisited links */</span>
+a:visited  { color: gray   }       <span class="color-comment">/* visited links */</span>
+a:hover    { color: red    }       <span class="color-comment">/* when you place the mouse over the link */</span>
+a:active   { color: yellow }       <span class="color-comment">/* when you click on the link */</span></pre>
+
+<h4>Some Interesting Unicode Symbols</h4>
+
+<h5>Ticks and Crosses</h5>
+<p>&#x2713; (<code>&amp;#x2713;</code>) &#x2714; (<code>&amp;#x2714;</code>) &#x2715; (<code>&amp;#x2715;</code>) &#x2716; (<code>&amp;#x2716;</code>) &#x2717; (<code>&amp;#x2717;</code>) &#x2718; (<code>&amp;#x2718;</code>)</p>
+<p>My choices: &#x2714; (<code>&amp;#x2714;</code>) &#x2718; (<code>&amp;#x2718;</code>)</p>
+
+<h5>Hidden Characters</h5>
+
+<p>&rarr; &nbsp; (<code>&amp;rarr;</code>) for tab</p>
+<p>&para; &nbsp; (<code>&amp;para;</code>) for paragraph mark</p>
+<p>&middot; &nbsp; (<code>&amp;middot;</code>) for space</p>
+
+<h5>Navigation</h5>
+
+<p>&bull; &nbsp; (<code>&amp;bull;</code>) as separator</p>
+<p>&#x25bf; &nbsp; (<code>&amp;#x25bf;</code>) white down-pointing small triangle</p>
+<p>&#x25c3; &nbsp; (<code>&amp;#x25c3;</code>) white left-pointing small triangle</p>
+<p>&#x25b9; &nbsp; (<code>&amp;#x25b9;</code>) white right-pointing small triangle</p>
+<p>&#x25b5; &nbsp; (<code>&amp;#x25b5;</code>) white up-pointing small triangle</p>
+
+
+<p>&nbsp;</p>
+<a class="references" href="../howto/References.html#HTML-CSS">Link To HTML/CSS References &amp; Resources</a>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: ???<br>
+Last modified: May, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

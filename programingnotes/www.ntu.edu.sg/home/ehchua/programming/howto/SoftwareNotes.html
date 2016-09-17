@@ -1,0 +1,366 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Windows, Office &amp; Other Software - Tips and Tricks</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Software Notes for Power Users</h1>
+<h2>Windows, Office, Firefox, Dreamweaver, others<br />
+</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Windows</h3>
+<p><span class="line-heading">Startup Programs and Services:</span> To configure startup programs and services, run &quot;<code>msconfig</code>&quot;.</p>
+
+<p><span class="line-heading">Snipping Tool: </span> Screen-capture tool which is great for snipping a <em>portion</em> of screen, available in Windows Vista/7. It is a replacement for the print-screen key, which you have little controls.</p>
+<p><span class="line-heading">Quick Launch Bar: </span>I personally find the Quick-launch Bar (next to the START button) useful.</p>
+<p> To add (or restore) quick-launch bar: Right-click on an open area of the taskbar  &rArr; Uncheck &quot;Lock the taskbar&quot; &rArr; 
+  Again, Right-click on an open area of the taskbar  and choose &quot;Toolbars&quot;, &quot;New Toolbar&quot;.   &rArr; In the Folder box: Paste the following path:
+  &quot;<code>%appdata%\Microsoft\Internet Explorer\Quick Launch</code>&quot; and click &quot;Select Folder&quot;  &rArr; Right-click on the &quot;Quick Launch&quot; dotted lines and uncheck “Show Text” and “Show Title” &rArr; Move it to your desired location  &rArr; Check the “Lock the taskbar”.</p>
+  
+<p><span class="line-heading">How to Remove File Associations in Windows 7:</span> Launch Register Editor (<code>regedit</code>), look for key &quot;<code>HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts</code>&quot;. Find and delete the association.</p>
+
+<p><span class="line-heading">Windows' Registry: </span> [TODO]</p>
+
+<p><span class="line-heading">Backing Up Your System: </span> [TODO]</p>
+
+<h5>&quot;<span class="font-code">shell:folder-name</span>&quot;</h5>
+<p>Starting from Windows 7, you can issue shell command to open certain special folders (on explorer) directly from the start menu, or run dialog box, in the form:</p>
+
+<pre class="color-command">
+shell:<em>folder-name</em>
+<span class="color-comment">// or</span>
+explorer shell:<em>folder-name</em>
+   <span class="color-comment">// This form can be issued from CMD shell</span></pre>
+
+<p>The frequently-used folders are:</p>
+
+<pre class="color-example">
+shell:startup
+   <span class="color-comment">// Program startup folder for current user 
+   //   @ C:\Users\puser\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup</span>
+shell:common startup
+   <span class="color-comment">// Program startup folder for all users
+   //   @ C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp</span>
+shell:ControlPanelFolder
+   <span class="color-comment">// Controol Panel</span>
+shell:desktop
+   <span class="color-comment">// Desktop for the current user @ &quot;C:\Users\User-Name\Desktop&quot;</span>
+shell:ProgramFiles
+   <span class="color-comment">// Program Files @ &quot;C:\Program Files&quot;</span>
+shell:recent<code></code>
+   <span class="color-comment">// Recent items @ &quot;C:\Users\User-Name\AppData\Roaming\Microsoft\Windows\Recent&quot;</span>
+<span class="color-comment">// ... more ...</span></pre>
+
+<p>The folder-name is NOT case sensitive (as the Windows common convention). The folder names are listed at registry location: <code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\explorer\FolderDescriptions</code>.</p>
+
+<p>Reference: &quot;Windows 7: Shell Command&quot; @ <a href="http://www.sevenforums.com/tutorials/4941-shell-command.html">http://www.sevenforums.com/tutorials/4941-shell-command.html</a>.</p>
+
+<p><span class="line-heading">Where is the Program Start up folder for Windows 8?</span> See above note.</p>
+
+<h5>&quot;<span class="font-code">run</span>&quot; Command</h5>
+<p> Starting from Windows 7, you can issue many commands directly from &quot;run&quot; dialog box, or CMD shell. The common-used are:</p>
+
+<pre class="color-command">
+<span class="color-comment">// Control Panel</span>
+Control Panel: <strong>control</strong>
+Devices and Printers: <strong>control printers</strong>
+Folders Options: <strong>control folders</strong>
+Administrative Tools: <strong>control admintools</strong>
+Task Scheduler: <strong>control schedtasks</strong>
+System Properties: <strong>control sysdm.cpl</strong>
+
+<span class="color-comment">// Administrative</span>
+Group Policy Editor: <strong>gpedit.msc</strong>
+Computer Management: <strong>compmgmt.msc</strong>
+Event Viewer: <strong>eventvwr.msc</strong>
+Local Users and Groups: <strong>lusrmgr.msc</strong>
+Performance Monitor: <strong>perfmon.msc</strong>
+Device Manager: <strong>devmgmt.msc</strong>
+Disk Management: <strong>diskmgmt.msc</strong>
+Services: <strong>services.msc</strong>
+Windows Management Infrastructure: <strong>wmimgmt.msc</strong>
+Registry Editor: <strong>regedit</strong> or <strong>regedt32</strong>
+Microsoft Management Console: <strong>mmc</strong>
+Resoure Monitor: <strong>resmon</strong>
+System Configuration Utility: <strong>msconfig</strong>
+Task Manager: <strong>taskmgr</strong>
+
+<span class="color-comment">// Programs</span>
+Calculator: <strong>calc</strong>
+Command Prompt: <strong>cmd</strong>
+Notepad: <strong>notepad</strong>
+Snipping Tool: <strong>snippingtool</strong> 
+Windows Explorer: <strong>explorer</strong> (Windows+E) 
+Internet Explorer: <strong>iexplore</strong>
+Windows PowerShell: <strong>powershell</strong>
+Logs out of Windows: <strong>logoff</strong></pre>
+
+<p>Note: The &quot;<code>.msc</code>&quot; files are knwon as  It is the Microsoft Management Console Snap-in Control File, like &quot;<code>services.msc</code>&quot; (Local Services), &quot;<code>devmgmt.msc</code>&quot; (Device Manager). They are opened using Microsoft Management Console (&quot;<code>mmc.exe</code>&quot;).</p>
+
+<p>Reference: &quot;A List of Run Commands for Windows 7&quot; @ <a href="http://www.sevenforums.com/tutorials/5966-run-commands-windows-7-a.html">http://www.sevenforums.com/tutorials/5966-run-commands-windows-7-a.html</a>.</p>
+
+<h5>CMD (Command Prompt) Shortcut Keys</h5>
+<p>CMD is such as important tool for programmers. It is critical to know the short-cut keys.</p>
+
+<pre class="color-example">
+<span class="color-comment">// Command History</span>
+<strong>F3</strong>: retrieve last commmand
+<strong>Up/Down</strong> (or <strong>F5</strong>): retrieve previous commands from the history
+<strong>F7</strong>: list previous commands with command numbers
+<strong>Alt-F7</strong>: clear command history
+<strong>F8</strong>: autofill from the previous commands
+
+<span class="color-comment">// Miscellaneous</span>
+<strong>ESC</strong>: erase current line
+<strong>Tab</strong>: Autofills matching file or folder names in current directory.
+     Repeat to cycle through all matching names in current directory.
+ 
+<span class="color-comment">// Others</span>
+<strong>F9</strong>: Prompts you to &quot;Enter command number&quot; from command history.
+<strong>F2</strong>: Prompts you to copy characters from previously ran command(??)
+</pre>
+
+
+
+<h5>Windows Logo Shortcut Keys</h5>
+
+<pre class="color-example">
+<strong>Windows Key</strong>: opens/closes START menu
+<strong>Windows + D</strong>: Desktop (toggle)
+<strong>Windows + E</strong> (or explorer): Explorer
+<strong>Windows + F</strong>: Find (Search)
+<strong>Windows + L</strong>: Locks current Account
+<strong>Windows + P</strong>: Projector
+<strong>Windows + R</strong>: Run
+<strong>Windows + T</strong>: Toggles thru programs in taskbar. Press Enter to open the selected
+<strong>Ctrl + Windows + T</strong>: same as above, but backward
+
+<strong>Windows + Left|Right Arrow</strong>: Docks/undocks current active window to the left/right side of the screen
+<strong>Windows + Up|Down Arrow</strong>: maximum/restore current active window
+
+<strong>Windows + +|-</strong>: zoom in/out (via Magnifier)
+<strong>Windows + =</strong>: opens Magnifier</pre>
+
+<h5>Launch &quot;Local Services&quot;</h5>
+
+<p>Type &quot;<code>services.msc</code>&quot; in run or from CMD shell.</p>
+
+<h5>How to run as program as Administrator (Command &quot;runas&quot;)?</h5>
+
+<pre class="color-command">
+runas /user:administor program-name
+   <span class="color-comment">// From &quot;run&quot; or &quot;cmd&quot;</span> 
+
+<span class="color-comment">// For example,</span>
+runas /user:root cmd</pre>
+
+<h5>What is the &quot;Power Shell&quot;?</h5>
+<p>[TODO]</p>
+
+<h5>Process Explorer and Process Monitor</h5>
+
+<p>Download from:</p>
+<ul>
+<li>Process Explorer: <a href="http://technet.microsoft.com/en-us/sysinternals/bb896653.aspx">http://technet.microsoft.com/en-us/sysinternals/bb896653.aspx</a></li>
+<li>Process Monitor: <a href="http://technet.microsoft.com/en-sg/sysinternals/bb896645.aspx">http://technet.microsoft.com/en-sg/sysinternals/bb896645.aspx</a></li>
+</ul>
+
+<p>[TODO]</p>
+
+<h5>Windows Maintenance</h5>
+
+<p>Paging: Control Panel &rArr; System &rArr; Advanced System settings &rArr; Advanced &rArr; Performance &rArr; Advanced &rArr; VM &rArr; twice the RAM size.</p>
+
+<p>Defrag Hard Disk: select drive (from explorer) &rArr; right-click &rArr; properties.</p>
+
+<p>Rebuild Index: Control Panel &rArr; Indexing option.</p>
+
+<p>Repair OS and System Files:</p>
+<pre class="color-example">
+<span class="color-comment">// Launch cmd (admin)</span>
+> <strong>chkdsk /r/f c:</strong> 
+    <span class="color-comment">// Check Disk
+    // /r: (recover) Locates bad sectors and recovers readable information
+    // /f: (fix) Fixes errors on the disk</span>
+ 
+> <strong>dism /online /cleanup-image /restorehealth</strong>
+    <span class="color-comment">// Check for component store corruption,
+    //    records the corruption to the log file,
+    //    and FIXES (/restorehealth) the image corruption
+    //    using Windows Update (/online).</span>
+
+> <strong>sfc /scannow</strong>
+    <span class="color-comment">// /scannow: Scans the integrity of all protected Windows system files and 
+    //    replaces incorrect corrupted, changed/modified, or damaged versions
+    //    with the correct versions if possible.</span></pre>
+    
+<p>Notes:</p>
+<ul>
+<li>DISM (Deployment Image Servicing and Management) is a command-line tool that can be used to service a Windows image or to prepare a Windows Preinstallation Environment (Windows PE) image (for Windows 8).</li>
+<li>SFC (System File Checker).</li>
+</ul>
+
+<h3>Word</h3>
+<p><span class="line-heading">Selecting Columns of Texts: </span>Hold the &quot;<code>alt</code>&quot; key, you can use mouse to select columns of texts.</p>
+<p><span class="line-heading">Format Painter: </span>One of the most useful feature for formatting your word documents. Suppose that you wish to apply the same format of a paragraph or a character to another part of the document. Select the texts, push &quot;Format Painter&quot; (at the leftmost &quot;Home&quot; menu), and paste over the texts to be formatted. This is similar to copy/paste but copying the format instead of texts. The &quot;Format Painter&quot; icon looks like copy too and is usually group together with cut/copy/paste icons.</p>
+<p><span class="line-heading">Table Formula:</span> You can use formula such as sum for WinWord's table just like excel. Under &quot;Table Tools&quot;  ⇒ Layout ⇒ Data ⇒ Fomula. The columns are named a, b, c, ... from left to right. The rows are named 1, 2, 3, ... from top to bottom. The address of the top-left table cell is a1. For example, <code>sum(a1,a5)</code> returns the sum of cell a1 and a5; <code>sum(a1:b3)</code> returns the sum of cells a1, a2, a3, b1, b2 and b3.</p>
+
+<p><span class="line-heading">Sytles and Templates: </span>[TODO]</p>
+
+<h3>FireFox</h3>
+
+<h5>How to locate your Firefox Profile Folder &amp; Technical Information?</h5>
+<p>From &quot;Firefox&quot; icon &rArr; Help &rArr; Troubleshooting Information &rArr; Profile folder &rArr; Show Folder.</p>
+<p>The profile folder can be referenced via environment variable <code>%APPDATA%</code>, i.e., &quot;<code>%APPDATA%\Mozilla\Firefox\Profiles\xxxxxx.default</code>&quot;.</p>
+
+<h5>Spell Check on Form Input Data?</h5>
+<p>Firefox support on-the-fly spell check on form data input (but form data input only). Right-click on input &rArr; Check Spelling. You can also choose the language dictionary.</p>
+<p>To enable Spell Check, goto &quot;Options&quot; &rArr; Advanced &rArr; General &rArr; Browsing &rArr; Check &quot;Check my spelling as I type&quot;.</p>
+
+<h5>Where is the Psrsonal Dictionary for Spell Check?</h5>
+<p>The personal dictionary is kept in &quot;<code>persdict.dat</code>&quot; in the profile folder, with one customed word per line.</p>
+<h5><span class="font-code">about:xxx</span></h5>
+
+<ul>
+<li>Issue URL &quot;<code>about:config</code>&quot; to view the firefox configuration.</li>
+<li>Issue URL &quot;<code>about:cache</code>&quot; to view the cache.</li>
+<li>Issue URL &quot;<code>about:plugins</code>&quot; to view the plugins.</li>
+</ul>
+
+<h5>How to set the default page of new tab to blank page?</h5>
+
+<p>Type &quot;<code>about:config</code>&quot;. Search for &quot;<code>browser.newtab.url</code>&quot; preference and change the url from &quot;<code>about:newtab</code>&quot; to &quot;<code>about:blank</code>&quot;. Alternately, you can change it to &quot;<code>about:home</code>&quot; for the Firefox Google home page, or type in your preferred home page.</p>
+
+<h3>Adobe Acrobat</h3>
+
+<h5>How to find out the font used in a PDF document?</h5>
+
+<ol>
+<li>Open the PDF document using Adobe Acrobat Professional.</li>
+<li>Goto &quot;Tools&quot; menu &rArr; Advanced Editing &rArr; Select &quot;TouchUp Text Tool&quot; &rArr; Select a block of text and highlight selected word &rArr; Right-click to choose &quot;Properties&quot; &rArr; Information on the font will be displayed.</li>
+</ol>
+
+<p><span class="line-heading">To enable smooth scrolling:</span> View &rArr; Page Display &rArr; Enable Scrolling.</p>
+
+<h3>Dreamweaver</h3>
+
+<p><span class="line-heading">Creating a Code Snippet:</span></p>
+<ol>
+<li>Show the &quot;Snippets&quot; panel: From &quot;Window&quot; menu &rArr; &quot;Snippets&quot; (or &quot;Snippets&quot; tab on the right panel).</li>
+<li>Create a folder for your snippets: right-click on &quot;Name&quot; panel ⇒ New Folder ⇒ <code>MySnippets</code>.</li>
+<li>Create your snippet: Let us create a snippet to underline selected texts by wrapping a style <code>&lt;span class=&quot;underline&quot;&gt;</code> and <code>&lt;/span&gt;</code> around the selected texts. Right-click on &quot;Name&quot; panel ⇒ &quot;New Snippet&quot;  &rArr; In &quot;Name&quot; field, enter a name, e.g., underline &rArr; In &quot;Snippet Type&quot;, you may choose &quot;Wrap selection&quot; (for applying markup to selected texts) or &quot;Insert block&quot; (for inserting codes/texts). For our example, we select &quot;Wrap selection&quot; &rArr; In &quot;Insert Before&quot;, enter <code>&lt;span class=&quot;underline&gt;</code> &rArr; In &quot;Insert After&quot;, enter <code>&lt;/span&gt;</code>  &rArr; OK. Move the snippet to your snippet folder <code>MySnippets</code>.</li>
+<li>Assign keyboard shortcut to your snippet: Right-click on the snippet name  &rArr; &quot;Edit Keyboard Shortcuts&quot;  &rArr; In &quot;Commands&quot;, choose &quot;Snippet&quot;  &rArr; Press the desired Key ⇒ Click &quot;Change&quot; to override the existing keyboard shortcut.</li>
+<li>I personably like to configure Ctrl-1, Ctrl-2,... for my common tasks. They were pre-configured for <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>,... To remove the pre-configuration, select &quot;Edit&quot; &rArr; &quot;Keyboard Shortcuts...&quot;  &rArr; In &quot;Commands&quot;, select &quot;Menu Commands&quot;  &rArr; Format  &rArr; Paragraph format  &rArr; Heading 1  &rArr; delete.<br />
+</li>
+</ol>
+
+<p><span class="line-heading">Customizing Keyword Shortcuts:</span> Use &quot;Edit&quot;  &rArr; &quot;Keyboard Shortcuts&quot;.</p>
+<p> Example: To remove &quot;ctrl-3&quot; for &quot;Format, Paragraph Format, Heading 3&quot;: &quot;Edit&quot;  &rArr; &quot;Keyboard Shortcuts&quot; &rArr; &quot;Menu Commands&quot;  &rArr; &quot;Format&quot;  &rArr; &quot;Heading 3&quot;  &rArr; Select the shortcut key   &rArr; Click &quot;-&quot; to remove.</p>
+<p><span class="line-heading">Display Orphaned Files and Broken Files:</span> From &quot;Site&quot; menu &rArr; &quot;Advanced&quot; &rArr; &quot;Recreate Site Cache&quot;  &rArr; &quot;Check Links Sitewide&quot;  &rArr; In the output, choose &quot;Show Orphaned Files&quot; to display the orphaned files; choose &quot;Show Broken Links&quot; to display broken links.</p>
+
+<p><span class="line-heading">Creating a Local Site and Synchronize with the Server:</span></p>
+<ol>
+<li>From &quot;Site&quot; menu &rArr; &quot;New Site...&quot; &rArr; Choose the &quot;Advanced&quot; tab.</li>
+<li>Fill in the &quot;local Info&quot;</li>
+<li>Fill in the &quot;Remote Info&quot; (the server)</li>
+<li>You can also use menu &quot;Manage Site...&quot; to configure a Dreamweaver site.</li>
+<li>To transfer local site to the server, From &quot;Files&quot; &rArr; &quot;Connect to remote host&quot; &rArr; &quot;Synchronize&quot;.</li>
+</ol>
+
+<h5>How to Exclude some Files/Folders from Synchronize with Remote Site</h5>
+
+<p>Right-click on the file/folder in the &quot;Files&quot; menu &rArr; Cloaking &rArr; Cloak.</p>
+
+<h5>Split Windows Horizontally (for CS6)</h5>
+
+<p>Choose &quot;View&quot; menu, uncheck &quot;Split Vertically&quot;.</p>
+
+
+<h5>Looking for Tips</h5>
+<p>I use dreamweaver to write this web site. BUT, I am certainly not a dreamweaver power user. I am still looking for answers for these questions. Let me know if you have a solution.</p>
+
+<ul>
+<li>How to do <em>on-the-fly</em> spell and grammar check, with errors highlighted while typing, just like Word?</li>
+<li>How to compress and optimal images for web display to save the bandwidth, just like Powerpoint? I am also looking for a <em>lightweight</em> image editor that can do the simple and basic image operations such as cropping. Any suggestion?</li>
+<li>What is the easier way to replace <code>'&gt;'</code>, <code>'&lt;'</code>, <code>'&quot;'</code> and <code>'&amp;'</code>, with their escape sequences?</li>
+</ul>
+
+<h3>AcuStudio-Conference 6 for Video Recording</h3>
+<p>You need to run &quot;as administrator&quot; for recording video (to access the devices?!); but you can run as a normal user for editing and publishing video.</p>
+<h5>One-touch Recording</h5>
+<ol>
+<li>Setting up:
+<ol>
+<li>Start acuStudio-Conference &rArr; Options &rArr; Settings &rArr; Audio/Video Settings (under Recording mode) &rArr; Check &quot;Single Video Input&quot;.</li>
+<li>Select &quot;Single Video Input&quot; (under Audio/Video Settings) &rArr; Under &quot;Video Source&quot;, check &quot;Screen&quot; and choose &quot;Screen Size&quot; &rArr; Under &quot;Audio Source&quot;, check &quot;Audio device&quot;.</li>
+<li>Select &quot;One-touch recording&quot; (under &quot;Recording Mode&quot;), check &quot;Prompt to pause recording&quot; and &quot;Prompt to stop recording&quot; &rArr; Take note of the hot-key: F6 for Start/Pause, F7 for Stop.</li>
+<li>To enable one-touch recording, select &quot;Options&quot; menu &rArr; click &quot;One-touch recording&quot;.</li>
+</ol>
+</li>
+
+<li>Recording: Open the ppt slide in full-screen. Press F6 to start recording. A message appears indicating the start of recording. Press F6 again to pause. Press F7 to stop recording.</li>
+</ol>
+
+<h5>Normal Recording</h5>
+<p>(I prefer One-touch Recording. There is no reason to use the normal recording mode?!)</p>
+<p>Select the Normal Recording mode: From &quot;Options&quot; menu  &rArr; click &quot;Normal Recording&quot;. </p>
+<p>To start recording: Select &quot;AcuSTUDIO&quot; menu &rArr; click &quot;QuickStart Recording&quot; &rArr; Check &quot;Video&quot; and select &quot;Screen Director...&quot; &rArr; In &quot;Screen Size&quot;, select &quot;Screen Size&quot; &rArr; Press the OK button &rArr; To start recording, push the record (red) button &rArr; To stop recording, press Shift-Escape.</p>
+
+<h5>Editing Video</h5>
+<p>Open the video file (.acm) to be edited &rArr; Play the video by pushing the &quot;Preview&quot; button &rArr; Note down the &quot;start time&quot; and &quot;end time&quot; of the video segment to be trimmed away.</p>
+<p>Play the video again &rArr; Push the &quot;Trim&quot; button to start trimming, and &quot;Trim&quot; button again to stop trimming  &rArr; In the trimming dialog, adjust the start time and end time for trimming  &rArr; push the OK button.</p>
+
+<h5>Publishing the Video to Blackboard</h5>
+<ol>
+<li>Login to the Blackboard and select the course &rArr; Tools  &rArr; AcuStudio  &rArr; AcuStudio starts.</li>
+<li>In AcuStudio, open the video file to be published &rArr; File  &rArr; Publish  &rArr; Network &rArr; Select the destination folder.</li>
+<li>In Blackboard, go to the destination folder, &quot;edit&quot; the video to make the video available.</li>
+</ol>
+
+<h3>Blackboard</h3>
+
+<h5>Create an Assignment (Instructor)</h5>
+<p>In &quot;Assignment&quot; (or any area), Click &quot;Assignments&quot; &rArr; &quot;Assignment&quot;. You can provide the description or attach a file. Set the &quot;Point Possible&quot; and &quot;Due Date&quot;.</p>
+
+<h5>Submit an Assignment (Students)</h5>
+<p>Prepare the submission in one single file, e.g., Zip-up all source code (<code>.java</code>), or a pdf file.</p>
+<p>Go to the &quot;Assignment&quot;, open the appropriate assignment &rArr; &quot;Attach&quot; the file &rArr; &quot;Submit&quot;. Wait for the online acknowledgement.</p>
+
+<h5>Grading Assignment (Instructor)</h5>
+<p>[TODO]</p>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Last modified: October, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

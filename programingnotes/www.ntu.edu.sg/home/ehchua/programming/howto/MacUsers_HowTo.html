@@ -1,0 +1,473 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How To install JDK, MySQL, Tomcat on Mac</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Mac Users</h1>
+<h2>How To Install JDK 1.7, MySQL 5.5, Tomcat 7, ...</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3 id="terminal_intro">Getting Started with &quot;Terminal&quot; - MUST READ Before You Start Programming</h3>
+
+<p>Programmers use &quot;Terminal&quot; to issue commands, instead of the graphical user interface - which is meant for common users.</p>
+<p>You MUST have some basic knowledge on using the Terminal and the file system. Read &quot;<a href="Unix_SurvivalGuide.html#Terminal_getstarted">Unix Survival Guide for Mac &amp; Ubuntu - Terminal, File System and Users</a>&quot;.</p>
+
+<h3 id="mac_jdk">How to Install JDK and Get Started with Java Programming on Mac</h3>
+
+<p>Read <a href="JDK_HowTo.html#jdk_mac">HERE</a>.</p>
+
+<h3 id="editor">Programming Text Editors for Mac</h3>
+
+<h4>TextEdit for Mac</h4>
+<p>TextEdit (the default text editor in Mac OS X) is NOT a programming text editor, as it lacks features like syntax highlighting. I strongly suggest you install a programming text editor.</p>
+
+<p>To use TextEdit to write source file, you need to open a new file &rArr; choose &quot;Format&quot; &rArr; &quot;Make Plain Text&quot;.</p>
+<p>You can open an existing file in TextEdit from Terminal by issuing:</p>
+<pre class="color-command">
+$ <strong>open -e <em>filename</em></strong></pre>
+
+<h4>nano (or pico) Command-line Text Editor</h4>
+<p>nano is a GNU text editor that is available for Unix Systems (including Mac OS X), that is suitable for creating/editing small files. To start nano, open a Terminal and issue:</p>
+
+<pre class="color-command">
+$ <strong>nano</strong>                <span class="color-comment">// Create a new file</span>
+$ <strong>nano <em>filename</em></strong>       <span class="color-comment">// Edit an existing file</span></pre>
+
+<p>You can run nano with superuser (for accessing restricted directories), as follows:</p>
+<pre class="color-command">
+$ <strong>sudo nano<em></em></strong>           <span class="color-comment">// Run nano with superuser to create a new file</span>
+$ <strong>sudo nano <em>filename</em></strong>  <span class="color-comment">// Run nano with superuser to edit an existing file</span></pre>
+
+
+<h4 id="jedit">JEdit for Mac</h4>
+
+<p>jEdit is a popular open-source cross-platform (Mac, Windows, Linux) programming text editor. The mother site is <a href="http://www.jedit.org">http://www.jedit.org</a>.</p>
+
+<h5>Step 1: Download and Install jEdit for Mac</h5>
+<ol>
+<li>Download jEdit package from <a href="http://www.jedit.org">http://www.jedit.org</a> &rArr; Download &rArr; Select Mac OS X package (stable version).</li>
+<li>Double click the downloaded Disk Image (&quot;<code>.dmg</code>&quot;) file. Drag the &quot;jEdit&quot; icon to &quot;Applications&quot; folder.</li>
+<li>Eject the Disk Image &quot;<code>jedit.dmg</code>&quot;.</li>
+</ol>
+
+<h5>Step 2: Install &quot;Console&quot; plugins</h5>
+<ol>
+<li>Launch jEdit (from &quot;Applications&quot;).</li>
+<li>Open plugin manager: From &quot;Plugins&quot; menu &rArr; Plugin Manager.</li>
+<li>Select &quot;Install&quot; tab.</li>
+<li>Search and select &quot;Console&quot; plugin. &quot;ErrorList&quot; plugin will selected automatically &rArr; Install.</li>
+</ol>
+
+<h5>Step 3: Write a Hello-World Java Program</h5>
+<ol>
+<li>Open a new file by selecting &quot;File&quot; menu &rArr; &quot;New&quot;.</li>
+<li>Enter the  following Java source code and save the file as &quot;<code>Hello.java</code>&quot;.
+<pre class="color-example">
+public class Hello {   <span class="color-comment">// saved as &quot;Hello.java&quot;</span>
+   public static void main(String[] args) {
+      System.out.println(&quot;Hello, world!&quot;);
+   }
+}</pre></li>
+</ol>
+
+<h5>Step 4: Compile and Run the Hello-World Java Program</h5>
+<p>You can start a &quot;Terminal&quot; to compile and run your Java program as described in the above JDK section.</p>
+
+<p>You can also use the &quot;Console&quot; plugin:</p>
+<ol>
+<li>To compile: From Plugins &rArr; Console &rArr; Compile Current Buffer. Click on the &quot;Console&quot; button to view the console. If message &quot;Process javac exited with code 0&quot; appears, the program is compiled successfully.</li>
+<li>To run: From Plugins &rArr; Console &rArr; Run Current Buffer.</li>
+</ol>
+
+<h4 id="gedit">gedit for Mac</h4>
+
+<p>gedit is the official text editor of the GNOME desktop environment. The mother site for gedit is <a href="http://projects.gnome.org/gedit/">http://projects.gnome.org/gedit/</a>.</p>
+<ol>
+<li>Download gedit for Mac (DMG version) from <a href="http://projects.gnome.org/gedit/">http://projects.gnome.org/gedit/</a> &rArr; &quot;gedit mac os x&quot; &rArr; Choose your specific Mac OS version.</li>
+
+<li>To install:
+<ol>
+<li>Double-click the downloaded Disk Image (&quot;<code>.dmg</code>&quot;) file.</li>
+<li>Drag the &quot;gedit&quot; icon to the &quot;Applications&quot; folder.</li>
+<li>Eject the Disk Image &quot;<code>gedit.dmg</code>&quot;.</li>
+</ol></li>
+</ol>
+
+<p><span class="line-heading">Notes:</span> To use &quot;gedit&quot; commands in Terminal, you need to add &quot;<code>/Applications/gedit.app/Contents/MacOS/</code>&quot; to PATH environment variable.</p>
+
+<h4>Sublime</h4>
+<p>@ <a href="http://www.sublimetext.com/">http://www.sublimetext.com</a>.</p>
+
+<h3 id="eclipse">How to Install Eclipse on Mac</h3>
+
+<p>To use Eclipse for Java programming, you need to first install JDK. Read &quot;<a href="#mac_jdk">How to install JDK on Mac</a>&quot;.</p>
+
+<p>To install Eclipse:</p>
+<ol>
+<li>Download Eclipse from <a href="http://www.eclipse.org/downloads/">http://www.eclipse.org/downloads/</a>. Choose &quot;Mac OS X&quot; &rArr; &quot;Eclipse IDE for Java Developers&quot; (or &quot;Eclipse Classic&quot;). You will receive a  TAR file (e.g., &quot;<code>eclipse-java-juno-SR1-macosx-cocoa-x86_64.tar.gz</code>&quot;) in &quot;<code>~/Downloads</code>&quot; folder.</li>
+
+<li>Double-click the downloaded TAR file to expand it into an folder called &quot;eclipse&quot;.</li> 
+
+<li>Drag the expanded &quot;eclipse&quot; folder to the &quot;<code>Applications</code>&quot; folder.</li>
+</ol>
+
+<p>To start Eclipse, open the &quot;eclipse&quot; folder and click on the &quot;Eclipse&quot; icon. You may drag the &quot;Eclipse&quot; icon to the dock.</p>
+
+<p><span class="line-heading">Notes:</span> To uninstall Eclipse, drag the &quot;<code>/Applications/eclipse</code>&quot; folder to trash.</p>
+
+<h3 id="netbeans">How to Install NetBeans on Mac</h3>
+
+<p>To use NetBeans for Java programming, you need to first install JDK. Read &quot;<a href="#mac_jdk">How to install JDK on Mac</a>&quot;.</p>
+
+<p>To install NetBeans:</p>
+<ol>
+<li>Download NetBeans from <a href="http://netbeans.org/downloads/">http://netbeans.org/downloads/</a>. Choose platform &quot;Mac OS X&quot; &rArr; &quot;Java SE&quot; (e.g., &quot;<code>netbeans-7.x-ml-javase-macosx.dmg</code>&quot;).</li>
+
+<li>Double-click the download Disk Image (DMG) file.</li>
+<li>Double-click the &quot;<code>NetBeans 7.x.mpkg</code>&quot;, and follow the instructions to install NetBeans. NetBeans will be installed under &quot;<code>/Applications/NetBeans</code>&quot;.</li> 
+
+<li>Eject the Disk Image (&quot;<code>.dmg</code>&quot;).</li>
+</ol>
+
+<p>You can launch NetBeans from the &quot;Applications&quot;.</p>
+
+<p><span class="line-heading">Notes:</span> To uninstall NetBeans, drag the &quot;<code>/Applications/NetBeans</code>&quot; folder to trash.</p>
+
+<h3 id="mac_mysql">How to Install MySQL 5.6 on Mac OS X 10.7 Lion</h3>
+
+<h4>Install MySQL using the DMG Package</h4>
+
+<p><span class="line-heading">Reference</span>: &quot;Installing MySQL on Mac OS X&quot; @ <a href="http://dev.mysql.com/doc/refman/5.6/en/macosx-installation.html">http://dev.mysql.com/doc/refman/5.6/en/macosx-installation.html</a>.</p>
+
+<h5>Step 1: Download and Install MySQL</h5>
+<p>Download the MySQL &quot;DMG Archive&quot;:</p>
+<ol>
+<li>Go to <a href="http://dev.mysql.com/downloads/mysql/">http://dev.mysql.com/downloads/mysql/</a>. In platform, select the &quot;Mac OS X&quot;.</li>
+
+<li>Select the appropriate &quot;<strong>DMG Archive</strong>&quot; for your specific Mac OS version:
+<ul>
+<li>Click the Apple logo &rArr; &quot;About this Mac&quot; to check your Mac OS version.</li>
+<li>Read <a href="http://support.apple.com/kb/ht3696">http://support.apple.com/kb/ht3696</a> to check if your OS is 32-bit or 64-bit.</li>
+</ul>
+For example, Choose &quot;Mac OS X ver. 10.7 (x86, 64-bit), DMG Archive (117.5M)&quot; for Lion and Core i7 processor.</li>
+<li>Click &quot;No thanks, just start my download&quot;.</li>
+</ol>
+
+<p>To install MySQL:</p>
+<ol>
+<li>Go to &quot;Downloads&quot;  &rArr; Double-click &quot;<code>.dmg</code>&quot; file downloaded.</li>
+<li>Double-click &quot;<code>mysql-5.5.{xx}-osx10.x-xxx.pkg</code>&quot; &rArr;  Follow the instructions to install MySQL. Click continue if &quot;unindentified developer&quot; warning dialog appeared.</li>
+<li>MySQL will be installed in &quot;<code>/usr/local/mysql-5.5.{xx}-osx10.x-x86_xx</code>&quot; directory. A symbolic link &quot;<code>/usr/local/mysql</code>&quot; will be created automatically to the MySQL installed directory.</li>
+<li>Eject the &quot;.<code>dmg</code>&quot; file.</li>
+</ol>
+
+<h5>Step 2: Configuring MySQL - Change TCP Port Number for MySQL Server</h5>
+<ol>
+<li>The default TCP port number used by MySQL Server is 3306.</li>
+<li>[For novices: <strong>SKIP THIS STEP</strong> to run the MySQL Server on port 3306. Goto Step 3.]<br />
+You can change the port number by editing the configuration file &quot;<code>my.cnf</code>&quot; at directory &quot;<code>/usr/local/mysql</code>&quot;.
+  <pre class="color-example">
+[mysqld]
+.....
+<span class="color-comment">port=8888</span>
+.....
+
+<span class="color-new">[client]
+port=8888</span></pre>
+
+To create this file, open a new &quot;Terminal&quot; and run the &quot;nano&quot; editor using this command:
+
+<pre class="color-command">
+sudo nano /usr/local/mysql/my.cnf</pre>
+
+Modify the lines in green and add in the lines in red; and press ctrl-X to exit. (We use the &quot;nano&quot; editor in this case, you can use any text editor, but run in superuser.)</li></ol>
+
+<p><span class="line-heading">Notes:</span> On Unix/Mac, the MySQL read the options file in this order: &quot;<code>/etc/my.cnf</code>&quot;, &quot;<code><em>SYSCONFDIR</em>/mf.cnf</code>&quot;, &quot;<code>$MYSQL_HOME/my.cnf</code>&quot;, &quot;<code>~/.my.cnf</code>&quot;.</p>
+
+<h5>Step 3: Start/Shutdown the MySQL Server</h5>
+
+<p>Open a new &quot;Terminal&quot; and issue these commands to start the MySQL server:</p>
+
+<pre class="color-command">
+$ <strong>cd /usr/local/mysql/bin</strong>
+$ <strong>sudo ./mysqld_safe --console</strong>
+Enter your password: 
+xxxxxx xx:xx:xx mysql_safe logging to '/usr/local/mysql/data/xxxxxx.err'
+xxxxxx xx:xx:xx mysql_safe Starting mysqld daemon with databases from /usr/local/mysql/data</pre>
+
+<p>To shutdown the server, start a <em>new</em> terminal and issue:</p>
+<pre class="color-command">
+$ <strong>cd /usr/local/mysql/bin</strong>
+ 
+$ <strong>sudo ./mysqladmin -u root shutdown</strong>     <span class="color-comment">// BEFORE you set a password for root</span>
+<span class="color-comment">// OR</span>
+$ <strong>sudo ./mysqladmin -u root -p<em></em> shutdown</strong>  <span class="color-comment">// AFTER you set a password for root</span></pre>
+
+
+<h5>Step 4: Start/Stop a MySQL Client</h5>
+
+<p>Open a <em>new</em> &quot;Terminal&quot; and issue this command to start a MySQL client with superuser <code>root</code>:</p>
+<pre class="color-command">
+$ <strong>cd /usr/local/mysql/bin</strong>
+ 
+$ <strong>./mysql -u root</strong>      <span class="color-comment">// BEFORE you set a password for root</span>
+<span class="color-comment">// OR</span>
+$ <strong>./mysql -u root -p</strong>   <span class="color-comment">// AFTER you set a password for root</span></pre>
+
+<p>To terminate the client, issue command &quot;<code>exit</code>&quot; (or &quot;<code>quit</code>&quot;) from the &quot;<code>mysql&gt;</code>&quot; prompt:</p>
+<pre class="color-command">
+mysql&gt; <strong>exit</strong></pre>
+
+<h5>Notes:</h5>
+<ol>
+<li>You can use &quot;Activity Monitor&quot; (under Applications/Utilities) to check if the MySQL Server is running. Look for process starting with <code>mysqld</code>.</li>
+<li>The log messages are written to <code>/usr/local/mysql/data/xxx.err</code>, where <code>xxx</code> denotes your machine name. Issue &quot;<code>sudo cat /usr/local/mysql/data/xxx.err</code>&quot; to view the messages.</li>
+<li>If you get the following error message when starting a client: &quot;Can't connect to local MySQL server through socket '....', check your &quot;Activity Monitor&quot; to see if the MySQL server has been started.</li>
+</ol>
+
+
+<h5>Step 5: (For Java Programmers) Install MySQL JDBC Driver</h5>
+
+<ol>
+
+<li>Download the latest JDBC driver from <a href="http://www.mysql.com/downloads">http://www.mysql.com/downloads</a> &rArr; MySQL Connectors &rArr; Connector/J &rArr; Compressed TAR archive (e.g., <code>mysql-connector-java-{5.x.xx}.tar.gz</code>, where <code>{5.x.xx}</code> is the latest release number).</li>
+
+<li>Double-click on the downloaded TAR file to expand into folder &quot;<code>mysql-connector-java-{5.x.xx}</code>&quot;.</li>
+
+<li>Open the expanded folder. Copy the JAR file &quot;<code>mysql-connector-java-{5.x.xx}-bin.jar</code>&quot; to JDK's extension directory at &quot;<code>/Library/Java/Extension</code>&quot;.</li>
+
+</ol>
+
+<h4>How to Uninstall and Remove MySQL 5</h4>
+
+<ol>
+<li>Open a Terminal &rArr; Run the &quot;<code>nano</code>&quot; editor to edit <code>/etc/hostconfig</code>, as follows:
+<pre class="color-command">
+<strong>sudo nano /etc/hostconfig</strong>
+Enter your password: ....</pre>
+Delete this line if present: &quot;<code>MYSQLCOM=-YES-</code>&quot;. Press cntl-x to exit &quot;nano&quot; and enter &quot;Y&quot; to save the file. The line &quot;<code>MYSQLCOM=-YES-</code>&quot; starts MySQL automatically during startup.</li>
+
+<li>Make sure that MySQL is not running (Open the &quot;Activity Monitor&quot; under the &quot;Applications/Utilities&quot;, and check for the process &quot;<code>mysqld</code>&quot;). Open a Terminal and issue &quot;<code>rm -r</code>&quot; to remove these directories and their sub-directories (with &quot;<code>f</code>&quot; indicating no confirmation prompt).
+  <pre class="color-command">
+sudo rm /usr/local/mysql
+sudo rm -rf /usr/local/mysql*
+sudo rm -rf /Library/StartupItems/MySQLCOM
+sudo rm -rf /Library/PreferencePanes/My*
+sudo rm -rf /Library/Receipts/mysql*
+sudo rm -rf /Library/Receipts/MySQL*
+sudo rm /etc/my.cnf</pre></li>
+</ol>
+
+<p>That's all!</p>
+
+
+
+
+<h4>(Advanced) Install MySQL using Tarball</h4>
+
+<p><span class="line-heading">Reference</span>: <a href="http://dev.mysql.com/doc/refman/5.5/en/macosx-installation-pkg.html">http://dev.mysql.com/doc/refman/5.5/en/macosx-installation-pkg.html</a>.</p>
+
+<p>[TODO]</p>
+
+<h3 id="mac_tomcat">How to Install Tomcat 7 on Mac</h3>
+
+<h5>Step 1: Download and Install Tomcat</h5>
+
+<ol>
+<li>Goto <a href="http://tomcat.apache.org">http://tomcat.apache.org</a> &rArr; Download &rArr; Tomcat 7.0 &rArr; <code>7.0.{xx}</code> (where <code>{xx}</code> denotes the latest release) &rArr; Binary distribution &rArr; Core. Download the &quot;<code>tar.gz</code>&quot; package (e.g., &quot;<code>apache-tomcat-7.0.{xx}.tar.gz</code>&quot;).</li>
+
+<li>To install Tomcat:
+<ol>
+<li>Goto &quot;<code>~/Downloads</code>&quot;, double-click the  downloaded TAR file (e.g., &quot;<code>apache-tomcat-7.0.{xx}.tar.gz</code>&quot;) to expand it into a folder (e.g., &quot;<code>apache-tomcat-7.0.{xx}</code>&quot;).
+
+<div class="side-note">
+<strong>(Notes for Advanced Users)</strong>
+Alternatively, you can use the <code>tar</code> command to expand the tarball as follow:
+<pre>
+$ cd ~/Downloads
+$ tar xvf apache-tomcat-7.0.{xx}.tar.gz</pre>
+</div>
+
+
+ </li>
+
+<li>Move the extracted folder (e.g., &quot;<code>apache-tomcat-7.0.{xx}</code>&quot;) to &quot;<code>/Applications</code>&quot;.</li>
+<li>Rename the folder &quot;tomcat&quot;, for ease of use.</li>
+</ol></li>
+</ol>
+
+<div class="side-note">
+<p><span class="line-heading">(Notes for Advanced Users):</span></p>
+<ol>
+<li>It is probably better to keep the tomcat in &quot;<code>/usr/local</code>&quot; or &quot;/Library&quot;.</li>
+<li>Instead of renaming the tomcat's folder, it it better to create a symlink called tomcat as follows:
+<pre>
+$ cd /Applications
+$ sudo ln -s apache-tomcat-7.0.{xx} tomcat</pre></li>
+
+<li>For security reason, you should not run Tomcat as root user. Instead, assign Tomat to user nobody (of group nobody):
+<pre>
+$ sudo chmod -R nobody:nobody /Applications/tomcat
+   <span class="color-comment">// -R: recursive thru sub-directories
+   // {user}:{group}</span>
+<span class="color-comment"> 
+// To start tomcat as user nobody</span>
+$ cd /Applications/tomcat/bin
+$ sudo -u nobody ./startup.sh       <span class="color-comment">// No console message</span>
+$ sudo -u nobody ./catalina.sh run  <span class="color-comment">// See console message</span>
+ 
+<span class="color-comment">// To stop tomcat</span>
+$ sudo -u nobody ./shutdown.sh</pre>
+
+</li>
+
+</ol>
+</div>
+
+<h5>Step 2: Configure Tomcat Server</h5>
+
+<p>Read &quot;<a href="Tomcat_HowTo.html#configure">Configure Tomcat Server</a>&quot;.</p>
+
+
+<h5>Step 3: Start the Tomcat Server</h5>
+
+<p>To start the Tomcat server, open a new &quot;Terminal&quot; (Go &rArr; Utilities &rArr; Terminal) and issue:</p>
+<pre class="color-command">
+$ <strong>cd /Applications/tomcat/bin</strong>
+$ <strong>./catalina.sh run</strong></pre>
+
+<p>Check for the Tomcat server's TCP port number from the console messages. The default is 8080.</p>
+<p>To verify if the Tomcat server is started, start a browser (Safari) and issue URL <code>http://localhost:8080</code>, suppose that Tomcat is running on the default TCP port number of 8080.</p>
+<p>Also try URL <code>http://localhost:8080/examples</code> which shows the Servlet/JSP examples.</p>
+
+<h5>Step 4: Shutdown the Tomcat Server</h5>
+
+<p>To shutdown the Tomcat server, you can simply press control-c (NOT command-c) on the tomcat console, or issue command:</p>
+<pre class="color-command">
+$ <strong>cd /Applications/tomcat/bin</strong>
+$ <strong>./shutdown.sh</strong></pre>
+
+<h5>Step 5: Servlet API</h5>
+<p>To write Java servlets, you need to COPY the Servlet API JAR file (&quot;<code>servlet-api.jar</code>&quot;) from &quot;<code>/Applications/tomcat/lib</code>&quot; to the JDK's extension directory at &quot;<code>/Library/Java/Extension</code>&quot;.</p>
+
+<h3>Installing GCC and Get Started with C/C++ Programming on Mac</h3>
+
+<p>To install</p>
+<ol>
+<li>Goto <a href="http://connect.apple.com">http://connect.apple.com</a>, and login with your AppleID.</li>
+<li>Download  &quot;Command Line Tools (OS X xxxx) for XCode&quot; Disk Image (DMG).</li>
+<li>Double-click the download disk image (DMG) &rArr; Open &quot;<code>Command Line Tools (xxx).mkpg</code>&quot; &rArr; Follow the instructions to install.</li>
+<li>Eject the disk image.</li>
+</ol>
+
+<p>To verify:</p>
+<pre class="color-command">
+<span class="color-comment">// Show the location of gcc</span>
+$ <strong>which gcc</strong>
+/usr/bin/gcc
+ 
+<span class="color-comment">// Show gcc/g++ version</span>
+$ <strong>gcc --version</strong>
+... (GCC) 4.2.1 ...
+$ <strong>g++ --version</strong>
+... (GCC) 4.2.1 ...
+ 
+<span class="color-comment">// Compile and run a C program</span>
+$ <strong>cd <em>path-to-hello.c</em></strong>
+$ <strong>gcc -o hello hello.c</strong>
+$ <strong>./hello</strong></pre>
+
+<h3>Installing XCode &amp; Get Started</h3>
+
+<p>XCode is the development toolset for Mac, iPhone/iPad, which includes the Mac OS SDK (for Mac) and iOS SDK (for iPhone/iPad).</p>
+<p>To install:</p>
+<ol>
+  <li>Goto <a href="http://connect.apple.com">http://connect.apple.com</a>, and login with your AppleID.</li>
+  <li>Download  &quot;XCode 4.x&quot; Disk Image (DMG) - It is HUGE!</li>
+  <li>Double-click the download disk image (DMG) &rArr; Open &quot;XCode&quot; &rArr; Follow the instructions to install.</li>
+  <li>XCode will be installed in &quot;<code>/Developer/Applications/Xcode</code>&quot;.</li>
+  <li>Eject the disk image.</li>
+</ol>
+<p>To start Xcode, launch &quot;XCode&quot; from &quot;<code>/Developer/Applications</code>&quot;.</p>
+<p>[TODO] Getting Started</p>
+
+
+<h3 id="mac_bash">More on Terminal &amp; Bash Shell</h3>
+
+<p>Goto &quot;<a href="Unix_Basics.html#bash">Terminal &amp; Bash Shell</a>&quot;.</p>
+
+<h3>Mac's Tips &amp; Tweaks</h3>
+
+<h4 id="mac_root">Root (or Superuser, or Administrator)</h4>
+<p>In some cases (such as installing software and starting server), you need to be the so-called <code>root</code> user (or superuser or administrator) of your machine to complete some commands that require high privilege. Put &quot;<code>sudo</code>&quot; (superuser do) in front of your command to run the command as <code>root</code> user, and provide the your password. Only authorized user can issue <code>sudo</code> command. For example, to start the MySQL server:</p>
+
+<pre class="color-command">
+$ <strong>sudo /usr/local/mysql/bin/mysqld_safe --console</strong>
+password: </pre>
+
+<h4>How to View All Files in Finder</h4>
+
+<ol>
+<li>Open a terminal and enter this commands:
+<pre class="color-command">
+$ defaults write com.apple.finder AppleShowAllFiles -bool true</pre></li>
+
+<li>Stop the Finder via:
+<pre class="color-command">
+$ killall Finder</pre></li>
+
+<li>Re-start the Finder. You shall see all the files (including the dot files and dot folders) now.</li>
+</ol>
+
+<h4>Miscellanous</h4>
+
+<ul>
+<li>The equivalent of Windows' &quot;Task Manager&quot; in Mac is called &quot;Activity Monitor&quot; under &quot;Applications/Utilities&quot;.</li>
+<li>The page-up, page-down, home and end keys are fn-up-arrow (or command-up-arrow), fn-down-arrow (or command-down-arrow), fn-left-arrow and fn-right-arrow, respectively.</li>
+</ul>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Contributed by Wang Qiang (WANG0586@e.ntu.edu.sg).</p>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Mac OS X 10.7.5 (Lion)<br />
+Last modified: March, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

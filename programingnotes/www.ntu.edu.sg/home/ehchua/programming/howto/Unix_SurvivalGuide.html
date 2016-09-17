@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Programmer's Survival Guide for  Mac and Ubuntu - Terminal, File System, Users and Editors</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Programmer's Survival Guide for Mac &amp; Ubuntu</h1>
+<h2>Terminal, File System, Users and Editors</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3 id="Terminal_getstarted">Command-line &quot;Terminal&quot;</h3>
+
+<p>Programmers uses a Command-line Shell to issue commands, instead of clicking on Graphical User Interface (GUI). This is because command-line is much more flexible and powerful than graphical interface.</p>
+
+<p>The <em>Terminal</em> is an application that runs a shell program. By default, the Terminal in Ubuntu and Mac OS X runs the so-called <code>bash</code> shell.</p>
+
+<p>To launch a Terminal:</p>
+
+<ul>
+<li>In Mac OS X: Open &quot;Finder&quot; &rArr; Go &rArr; Utilities &rArr; Select &quot;Terminal&quot;.  Drag the &quot;Terminal&quot; to your dock since you need to use it frequently.</li>
+
+<li>In Ubuntu: Open &quot;Dash&quot; &rArr; type &quot;Terminal&quot;; or choose &quot;Applications&quot; lens &rArr; Installed &rArr; Select &quot;Terminal&quot;. Drag the &quot;Terminal&quot; to your Launcher since you need to use it frequently.</li>
+</ul>
+
+<p>A Terminal displays a <em>command prompt</em> ending with a &quot;<code>$</code>&quot; sign, in the form of:</p>
+
+<ul>
+<li> In Mac OS X: &quot;<code><em>ComputerName</em>:<em>CurrentDirectory</em> <em>Username</em>$</code>&quot;</li>
+<li>In Linux: &quot;<code><em>Username</em>@<em>ComputerName</em>:<em>CurrentDirectory</em>$</code>&quot;</li>
+</ul>
+
+<p> You can enter commands after the command prompt. For example, enter &quot;<code>pwd</code>&quot; to print the current working directory:</p>
+<pre class="color-command">
+$ <strong>pwd</strong>
+.......</pre>
+
+<p>In this article, I shall denote the command prompt simply as &quot;<code>$</code>&quot;.</p>
+
+<h3>File System</h3>
+
+<h5>Files and Directories (Folder)</h5>
+
+<p>Files are organized in <em>directories</em> (aka <em>folders</em>). The directories are organized in a hierarchical <em>tree</em> structure, starting from the <em>root</em> directory. A directory may contain sub-directories and files. A sub-directory may contain sub-sub-directories and files.</p>
+
+<h5>Root Directory (<code>/</code>)</h5>
+
+<p>A file is identified via the directories and filename, e.g., &quot;<code>/usr/lib/jvm/jdk1.7.0_07/bin/javac</code>&quot;. The <em>leading</em> &quot;<code>/</code>&quot; (forward slash) denotes the <em>root</em> directory. The sub-directories are also separated by a &quot;<code>/</code>&quot;.</p>
+
+<p>There is only one root directory for the entire Unix's file system. Hard drives are mounted somewhere under the root directory.</p>
+
+<p>Notes: Windows use &quot;<code>\</code>&quot; (back slash) as the directory separator, and may contain multiple root directories - one for each drive (e.g., <code>c:\</code>, <code>d:\</code>).</p>
+
+<h5>Home Directory (<code>~</code>)</h5>
+
+<p>Unix is a <em>multi-user</em> operating system (although most of you, in particular the Mac users, use it as a single-user <em>personal</em> computer). Each user on the system is allocated a directory for storing his files, known as <em>home</em> directory. The users' home directories are allocated under <code>/Users</code> (for Mac OS X), or <code>/home</code> (for Ubuntu), with a sub-directory name the same as the username, e.g. <code>/Users/peter</code>, <code>/Users/paul</code> in Mac OS (or <code>/home/peter</code>, <code>/home/paul</code> in Ubuntu).</p>
+
+<p>Your home directory (<code>/Users/&lt;yourname&gt;</code>) contains sub-directories such as <code>Downloads</code>, <code>Documents</code>. Their full filenames are <code>/Users/&lt;yourname&gt;/Downloads</code>, <code>/Users/&lt;yourname&gt;/Documents</code>, respectively.</p>
+
+<p>You can use a special notation &quot;<code>~</code>&quot; to denote your home directory. In other words, <code>~/Downloads</code> is the same as <code>/Users/&lt;yourname&gt;/Downloads</code>.</p>
+
+<h5>Pathname and Filename</h5>
+
+<p>To reference a file, you need to provide the <em>pathname</em> (directory and sub-directories names) and the <em>filename</em>. For example, in &quot;<code>/usr/lib/jvm/jdk1.7.0_07/bin/javac</code>&quot;, the pathname is &quot;<code>/usr/lib/jvm/jdk1.7.0_07/bin/</code>&quot; and the filename is &quot;<code>javac</code>&quot;.</p>
+
+<p>The pathname can be specified in two ways:</p>
+
+<ol>
+<li>Absolute Pathname: An absolute path begins from the root directory. That is, it  starts with a &quot;<code>/</code>&quot; followed by all the sub-directories, separated with &quot;<code>/</code>&quot; leading to the file, e.g., &quot;<code>/usr/lib/jvm/jdk1.7.0_07/bin/</code>&quot;.<br />
+An absolute path can also begin with the current user's home directory (starts with &quot;~&quot;). For example, &quot;<code>~/Downloads/jdk/</code>&quot; is the same as &quot;<code>/Users/&lt;yourname&gt;/Downloads/jdk/</code>&quot; in Mac OS.</li>
+
+<li>Relative Pathname: A relative path is relative to the so-called <em>current working directory</em>. A relative path does NOT begin with &quot;<code>/</code>&quot; or &quot;<code>~</code>&quot;. For example, if the current working directory is &quot;<code>/usr/lib/jvm/</code>&quot;, then the relative pathname &quot;<code>jdk1.7.0_07/bin/</code>&quot; refers to &quot;<code>/usr/lib/jvm/jdk1.7.0_07/bin/</code>&quot;.</li>
+</ol>
+
+<p>Unix system is case sensitive, a <em>rose</em> is NOT a <em>Rose</em>, and is NOT a <em>ROSE</em>.</p>
+
+<h3>Basic Commands</h3>
+
+<h4><span class="font-code">pwd</span> (Print Current Working Directory)</h4>
+
+<p>The Terminal session maintains a so-called <em>current working directory</em>. All relative pathnames/filenames are relative to the current working directory. To display the current directory, issue command &quot;<code>pwd</code>&quot; (print working directory):</p>
+
+<pre class="color-command">
+<span class="color-comment">// Print Current Working Directory</span>
+$ <strong>pwd</strong>
+......</pre>
+
+<p>When a Terminal is launched, it sets the initial working directory to the <em>home</em> directory of the current login user (denoted as &quot;<code>~</code>&quot;).</p>
+
+<p>The current working directory is often included as part of the command prompt.</p>
+
+<h4 id="cd"><span class="font-code">cd</span> (Change Working Directory)</h4>
+
+<p>To change the current working directory, issue command &quot;<code>cd &lt;new-pathname&gt;</code>&quot;. You can specify <code>new-pathname</code> in two ways: <em>absolute</em> or <em>relative</em>. As explained earlier, an absolute path begins with a &quot;<code>/</code>&quot; (root directory) or &quot;<code>~</code>&quot; (home directory); whereas a relative path is relative to the current working directory and does NOT begin with &quot;<code>/</code>&quot; or &quot;<code>~</code>&quot;. For example,</p>
+
+<pre class="color-command">
+$ <strong>cd /</strong>                <span class="color-comment">// Change directory (absolute) to the root</span>
+$ <strong>cd /usr/local</strong>       <span class="color-comment">// Change directory (absolute) to &quot;/usr/local&quot;</span>
+$ <strong>cd mysql</strong>            <span class="color-comment">// Change directory (relative) to mysql of the current directory</span>
+$ <strong>cd myproject/bin</strong>    <span class="color-comment">// Change directory (relative) to myproject/bin of the current directory</span>
+</pre>
+
+<p>You can <code>cd</code> in multiple stages (e.g., one <code>cd</code> for each sub-directory - recommended), or <code>cd</code> in a single stage with the full pathname.</p>
+
+<pre class="color-command">
+$ <strong>cd /</strong>         <span class="color-comment">// &quot;/&quot;</span>
+$ <strong>cd usr</strong>       <span class="color-comment">// &quot;/usr&quot;</span>
+$ <strong>cd local</strong>     <span class="color-comment">// &quot;/usr/local&quot;</span>
+$ <strong>cd mysql</strong>     <span class="color-comment">// &quot;/usr/local/mysql&quot;</span>
+$ <strong>cd bin</strong>       <span class="color-comment">// &quot;/usr/local/mysql/bin&quot;</span>
+<span class="color-comment"> 
+// Same As</span>
+$ <strong>cd /usr/local/mysql/bin</strong></pre>
+
+<p>You can use &quot;<code>/</code>&quot; to denote the root; &quot;<code>~</code>&quot; to refer to your home directory; &quot;<code>..</code>&quot; (double-dot) to refer to the parent directory; &quot;<code>.</code>&quot; (single-dot) to refer to the current directory; and &quot;<code>-</code>&quot; (dash) to refer to the previous directory. For example,</p>
+
+<pre class="color-command">
+$ <strong>cd ~</strong>            <span class="color-comment">// Change directory to the home directory of the current user</span>
+$ <strong>cd</strong>              <span class="color-comment">// same as above, default for &quot;cd&quot; is home directory</span>
+$ <strong>cd ~/Documents</strong>  <span class="color-comment">// Change directory to the sub-directory &quot;Documents&quot; of the home directory of the current user</span>
+$ <strong>cd ..</strong>           <span class="color-comment">// Change directory to the parent directory of the current working directory</span>
+$ <strong>cd -</strong>            <span class="color-comment">// Change directory to the previous working directory (OLDPWD)</span></pre>
+
+<p>Setting proper working directory can greatly simplify your work. For example, to compile a Java program called &quot;<code>Hello.java</code>&quot; in &quot;<code>~/myproject/java/</code>&quot;:</p>
+
+<ol>
+<li>Set the working directory to &quot;<code>~/myproject/java/</code>&quot;, and reference the file with filename only (without the path):
+<pre class="color-command">
+$ <strong>cd ~/myproject/java</strong>  <span class="color-comment">// Set the working directory</span>
+$ <strong>javac Hello.java</strong>     <span class="color-comment">// Filename only, in current directory</span></pre></li>
+
+<li>You can also refer to a file with its full pathname in any working directory:
+<pre class="color-command"><span class="color-comment">// Any working directory</span>
+$ <strong>javac ~/myproject/java/Hello.java</strong>   <span class="color-comment">// Using fully-qualified filename</span></pre></li>
+</ol>
+
+<h4><span class="font-code">ls</span> (List Directory's Contents)</h4>
+
+<p>You can use command <code>ls</code> to list the contents of the current working directory, e.g.,</p>
+
+<pre class="color-command">
+<span class="color-comment">// List contents of current working directory in short format</span>
+$ <strong>ls</strong>
+Desktop    Downloads         Music     Public     Videos
+Documents  examples.desktop  Pictures  Templates
+ 
+<span class="color-comment">// List in long format</span>
+$ <strong>ls -l</strong>
+total xx
+drwxr-xr-x 2 myuser myuser 1024 Mar 22 21:32 Desktop
+drwxr-xr-x 2 myuser myuser 1024 Mar 22 21:32 Documents
+drwxr-xr-x 2 myuser myuser 1024 Mar 22 21:32 Downloads
+-rw-r--r-- 1 myuser myuser 8445 Mar 22 17:30 examples.desktop
+......</pre>
+
+<h5>Wildcard <code>*</code></h5>
+
+<p>You can list selected files using wildcard <code>*</code>, which matches 0 or more (any) characters. For example,</p>
+
+<pre class="color-command">
+$ <strong>ls *.java</strong>     <span class="color-comment">// List files ending with &quot;.java&quot; in short format (default)</span>
+$ <strong>ls -l *.java</strong>  <span class="color-comment">// List files ending with &quot;.java&quot; in long format</span>
+$ <strong>ls -ld my*</strong>    <span class="color-comment">// List files and directories beginning with &quot;my&quot; in long format</span></pre>
+
+<h5>Graphical Interface</h5>
+<p>You could, of course, view the contents of a directory using a File Manager (such as &quot;Finder&quot; in Mac, or &quot;Home Folder&quot; in Ubuntu) more conveniently.</p>
+
+<h4><span class="font-code">less</span> (Viewing File Contents)</h4>
+
+<p>You can use commands <code>less</code> to display the contents of a text file on console. For example,</p>
+
+<pre class="color-example">
+$ <strong>less /proc/cpuinfo</strong>
+  <span class="color-comment">// Display one page of the file
+  // Use Up|Down|PgUp|PgDown key to scroll, and type &quot;q&quot; to quit</span></pre>
+
+<h4>Shortcut Keys - IMPORTANT</h4>
+
+<p><span class="line-heading">Previous Commands in Command History:</span> You can use the up/down arrow keys to retrieve the previous/next command in the command history.</p>
+
+<p><span class="line-heading">Auto-Complete:</span> You can type the first few characters for the pathname or filename, and press TAB key to auto-complete.</p>
+
+<p><span class="line-heading">Copy/Paste:</span></p>
+
+<ul>
+<li>In Mac OS X: use <code>Cmd+C</code> and <code>Cmd+V</code>.</li>
+
+<li>In Ubuntu: use <code>Shift+Ctrl+C</code> and <code>Shift+Ctrl+V</code>. (The <code>Ctrl+C</code> is used as interrupt signal to break a program, by default.)</li>
+</ul>
+
+<h3>Processes</h3>
+
+<p>You can use GUI applications to view all running processes and terminate a particular process (similar to &quot;Task Manager&quot; in Windows).</p>
+
+<ul>
+<li>In Mac OS X: launch &quot;<strong>Activity Monitor</strong>&quot; (Under /Applications/Utilities) and select &quot;All Processes&quot;.</li>
+<li>In Ubuntu: launch &quot;<strong>System Monitor</strong>&quot; (search from Dash) and select &quot;Processes&quot;.</li>
+</ul>
+
+<h3>If you need to Install Software or Perform System tasks as Administrator</h3>
+
+<p>These require so-called administrator right. To enable a user to perform system task (i.e., with Administrator right):</p>
+
+<ul>
+<li>In Ubuntu: System Settings &rArr; User Accounts &rArr; Select the user &rArr; Unlock &rArr; Set the account type to &quot;Administrator&quot; (instead of &quot;Standard User&quot;), which adds the user to &quot;<code>sudo</code>&quot; group.</li>
+
+<li>In Mac OS X: System Preferences &rArr; Users and Groups &rArr; Select the user &rArr; Unlock &rArr; Check &quot;Allow users to administer this computer&quot;.</li>
+</ul>
+
+<p>To run a command with administrator right, prefix the command with <code>sudo</code> (superuser do). For example,</p>
+
+<pre class="color-command">
+$ <strong>cd /var/log</strong>
+$ <strong>mkdir temp</strong>
+mkdir: cannot create directory ‘temp’: Permission denied
+   <span class="color-comment">// You have no permission to create sub-directory here!</span>
+$ <strong>sudo mkdir temp</strong>
+[sudo] password for &lt;yourname&gt;:
+   <span class="color-comment">// Enter YOUR password</span> 
+   <span class="color-comment">// Now running this command as the administrator</span>
+$ <strong>rmdir temp</strong>
+rmdir: failed to remove ‘temp’: Permission denied
+   <span class="color-comment">// Again, you have no permission to remove sub-directory here!</span>
+$ <strong>sudo rmdir temp</strong>
+   <span class="color-comment">// YOUR password is cached for 15 minutes</span> 
+   <span class="color-comment">// Now running this command as the administrator</span></pre>
+
+<h3>Programming Text Editors</h3>
+
+<p>A <em>program editor</em> (or <em>source code editor</em>) is <em>programming language sensitive</em> and <em>context-aware</em>. It highlights the syntax elements of your programs; and provides many features that aid in your program development (such as auto-complete, compile/build/run, help menu, etc.). On the other hand, a <em>plain text editor</em> is not language-sensitive and, therefore, is NOT suitable for writing programs. For full-scale software development, you should use an appropriate IDE (Integrated Development Environment).</p>
+
+<p>It is important to use a <em>mono-space font</em> (such as &quot;Courier&quot;, &quot;Consola&quot;) for programming, so that the columns are properly aligned.</p>
+
+<h4>Mac's Default Editor - TextEdit</h4>
+
+<p>To use the Mac's default text editor &quot;TextEdit&quot; for programming, you need to choose the option &quot;Make Plain Text&quot; (under &quot;Format&quot;), before editing/saving your file.</p>
+
+<p>TextEdit is NOT a programming text editor, as it does not provide syntax highlighting. You are strongly advise to install a programming editor (to be described in the following sections).</p>
+
+<h4>Graphical Programming Text Editors - <span class="font-code">gedit</span>, <span class="font-code">jedit</span>, Sublime Text, and others</h4>
+
+<p>A good graphical programming text editor, which provides syntax highlighting, is crucial in programming and development.</p>
+
+<ul>
+<li>In Mac OS X, you could try installing <a href="http://www.sublimetext.com/">Sublime Text</a>, <a href="https://wiki.gnome.org/Apps/Gedit">gedit</a>, <a href="http://www.jedit.org/">jedit</a>, among others.</li>
+
+<li>In Ubuntu, the default &quot;gedit&quot; is an excellent programming text editor. You might consider <a href="http://www.sublimetext.com/">Sublime Text</a>.</li>
+</ul>
+
+<h4><span class="font-code">nano</span> - A lightweight Console-based Text Editors</h4>
+
+<p>You should use graphical text editor if possible. Use console-based text editor as the last resort.</p>
+
+<p><code>nano</code> is small, simple and easy-to-use text editor. <code>nano</code> is available for Mac and Unix Systems, and is really handy to create/edit small configuration files.</p>
+
+<p>To start <code>nano</code>, open a Terminal and issue:</p>
+
+<pre class="color-command">
+$ <strong>nano</strong>                <span class="color-comment">// Create a new file</span>
+$ <strong>nano &lt;filename&gt;</strong>     <span class="color-comment">// Edit an existing file</span></pre>
+
+<p>To exist <code>nano</code>, press Ctrl+X, followed by "y" (yes) to save the file.</p>
+
+<p>You can run nano with <code>sudo</code> (as administrator) for editing restricted system files, as follows:</p>
+<pre class="color-command">
+$ <strong>sudo nano &lt;filename&gt;</strong>  <span class="color-comment">// Run nano with superuser to edit an existing system file</span></pre>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<p>[TODO]</p>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Mac OS X 10.7.5 (Lion), Ubuntu 14.04<br />
+Last modified: November, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

@@ -1,0 +1,705 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Web Database Applications</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Java Web Database Applications</h1>
+<h2>&nbsp;</h2>
+
+<h3>Database Connection Pooling in Tomcat with MySQL<a name="TomcatDBCP">&nbsp;</a></h3>
+
+<p>Reference: &quot;Apache Tomcat 7.0 JNDI Datasource How-To&quot; @ <a href="http://tomcat.apache.org/tomcat-7.0-doc/jndi-datasource-examples-howto.html">http://tomcat.apache.org/tomcat-7.0-doc/jndi-datasource-examples-howto.html</a>.</p>
+<p> I shall assume that you are familiar with Tomcat and MySQL. Otherwise, read &quot;<a href="../howto/Tomcat_HowTo.html">How to Install and Get Started with Tomcat</a>&quot; and &quot;<a href="../sql/MySQL_HowTo.html">How to Install and Get Started with MySQL</a>&quot;. I shall denote Tomcat's and MySQL's installed directory as <code>$CATALINA_HOME</code> and <code>$MYSQL_HOME</code> respestively.</p>
+<p>Creating a new <em>database connection</em> for each client request is grossly inefficient, due to the high overhead involved in opening/maintaining/closing the connection. Instead, we usually set up a <em>database connection pool</em>, which maintains a number of database connections. A server-side program, in response to a client request, picks up an already-created connection from the pool. After the request is completed, the connection is not closed, but returned to the pool to handle further request.</p>
+
+<p>To configure Tomcat/MySQL for supporting  Database Connection Pooling (DBCP):</p>
+
+<p><span class="line-heading">Step 1: MySQL Database Driver -</span> Copy the MySQL Connector/J JDBC Driver's jar-file (e.g., <code>mysql-connector-java-5.1.xx-bin.jar</code>) into Tomcat's &quot;<code>lib</code>&quot;, i.e., <code>$CATALINA_HOME/lib</code>.</p>
+
+<p><span class="line-heading">Step 2: Create Web Application -</span> Let's start a new web application called <code>&quot;hellodbcp</code>&quot; to test database connection pooling. Create a directory &quot;<code>hellodbcp</code>&quot; under <code>$CATALINA_HOME/webapps</code>. Create sub-directories &quot;<code>WEB-INF</code>&quot; and &quot;<code>META-INF</code>&quot; under the context root &quot;<code>hellodbcp</code>&quot;. Create sub-sub-directories &quot;<code>src</code>&quot;, &quot;<code>classes</code>&quot;, and &quot;<code>lib</code>&quot; under &quot;<code>WEB-INF</code>&quot;.</p>
+
+<p><span class="line-heading">Step 3: Configure JNDI Datasource -</span> Next, we shall configure the JNDI (Java Naming and Directory Interface) Datasource in &quot;<code>context.xml</code>&quot;.  For application-specific configuration, save it under &quot;<code>webapps\hellodbcp\META-INF</code>&quot;. For server-wide configuration, put the <code>&lt;Resource&gt;</code> element under <code>&lt;GlobalNamingResources&gt;</code> in <code>$CATALINA_HOME\conf\server.xml</code>.</p>
+
+<pre class="code-listing">
+&lt;?xml version='1.0' encoding='ISO-8859-1' ?&gt;
+&lt;Context reloadable=&quot;true&quot;&gt;
+  <span class="code-comment">&lt;!-- 
+    maxActive: Maximum number of dB connections in pool. Set to -1 for no limit.
+    maxIdle: Maximum number of idle dB connections to retain in pool. Set to -1 for no limit.
+    maxWait: Maximum milliseconds to wait for a dB connection to become available
+             Set to -1 to wait indefinitely.
+  --&gt;</span>
+  &lt;Resource <strong>name=&quot;jdbc/TestDB&quot;</strong> auth=&quot;Container&quot; type=&quot;javax.sql.DataSource&quot;
+     maxActive=&quot;100&quot; maxIdle=&quot;30&quot; maxWait=&quot;10000&quot; removeAbandoned=&quot;true&quot;
+     <span class="code-error">username=&quot;myuser&quot; password=&quot;xxxx&quot;</span> driverClassName=&quot;com.mysql.jdbc.Driver&quot;
+     <span class="code-error">url=&quot;jdbc:mysql://localhost:3306/ebookshop&quot;</span> /&gt;
+&lt;/Context&gt;</pre>
+
+<p>The above configuration declares a <em>JNDI resource name</em> called &quot;<code>jdbc/TestDB</code>&quot; corresponds to the MySQL connection &quot;<code>mysql://localhost:3306/ebookshop</code>&quot;.</p>
+
+<p>Check the database-url, username and password. I shall assume that the MySQL server is running on the default port number of 3306, with &quot;<code>ebookshop</code>&quot; as the default database. The database contains a table called <code>books</code>, with 5 columns: <code>id</code>, <code>title</code>, <code>author</code>, <code>price</code> and <code>qty</code>, as illustrated below.</p>
+
+<pre class="code-listing">
+Database: <strong>ebookshop</strong>
+Table: <strong>books</strong>
++-------+----------------------------+---------------+---------+-------+
+| <strong>id</strong>    | <strong>title</strong>                      | <strong>author</strong>        | <strong>price</strong>   | <strong>qty</strong>   |
+| (INT) | (VARCHAR(50))              | (VARCHAR(50)) | (FLOAT) | (INT) |
++-------+----------------------------+---------------+---------+-------+
+| 1001  | Java for dummies           | Tan Ah Teck   | 11.11   |   11  |
+| 1002  | More Java for dummies      | Tan Ah Teck   | 22.22   |   22  |
+| 1003  | More Java for more dummies | Mohammad Ali  | 33.33   |   33  |
+| 1004  | A Cup of Java              | Kumar         | 44.44   |   44  |
+| 1005  | A Teaspoon of Java         | Kevin Jones   | 55.55   |   55  |
++-------+----------------------------+---------------+---------+-------+</pre>
+
+<p>You could use the following SQL script to set up the database.</p>
+
+<pre class="code-listing">
+create database if not exists <strong>ebookshop</strong>;
+use ebookshop;
+
+drop table if exists <strong>books</strong>;
+create table books (
+   <strong>id    </strong> int,
+   <strong>title</strong>  varchar(50),
+   <strong>author</strong> varchar(50),
+   <strong>price</strong>  float,
+   <strong>qty</strong>    int,
+   primary key (id));
+
+insert into books values (1001, 'Java for dummies', 'Tan Ah Teck', 11.11, 11);
+insert into books values (1002, 'More Java for dummies', 'Tan Ah Teck', 22.22, 22);
+insert into books values (1003, 'More Java for more dummies', 'Mohammad Ali', 33.33, 33);
+insert into books values (1004, 'A Cup of Java', 'Kumar', 44.44, 44);
+insert into books values (1005, 'A Teaspoon of Java', 'Kevin Jones', 55.55, 55);</pre>
+
+<p><span class="line-heading">Step 4: Configure &quot;web.xml&quot; -</span> Next, configure the application's deployment descriptors in &quot;<code>hellodbcp\WEB-INF\web.xml</code>&quot;, with a datasource references the JNDI resource name &quot;<code>jdbc/TestDB</code>&quot; defined earlier.</p>
+
+<pre class="code-listing">
+&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;
+    version=&quot;2.4&quot;&gt;
+ 
+   <strong>&lt;resource-ref&gt;
+      &lt;description&gt;DB Connection Pool&lt;/description&gt;
+      &lt;res-ref-name&gt;<span class="underline">jdbc/TestDB</span>&lt;/res-ref-name&gt;
+      &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
+      &lt;res-auth&gt;Container&lt;/res-auth&gt;
+      &lt;res-sharing-scope&gt;Shareable&lt;/res-sharing-scope&gt;
+   &lt;/resource-ref&gt;</strong>
+&lt;/web-app&gt;
+</pre>
+
+<p><span class="line-heading">Step 5: JSP with Connection Pooling -</span> Let's write a JSP page to query the database with connection pooling as follows. Save the codes as &quot;<code>query.jsp</code>&quot; under &quot;<code>hellodbcp</code>&quot;.</p>
+
+<pre class="code-listing">
+&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/sql&quot; prefix=&quot;sql&quot; %&gt;
+&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+ 
+<strong>&lt;sql:setDataSource var=&quot;ds&quot; dataSource=&quot;jdbc/TestDB&quot; /&gt;
+&lt;sql:query sql=&quot;select author, title from books&quot; var=&quot;rs&quot; dataSource=&quot;${ds}&quot; /&gt;</strong> 
+ 
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Test Database Connection Pooling&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;Results&lt;/h2&gt;
+  &lt;table&gt;
+    <strong>&lt;c:forEach var=&quot;row&quot; items=&quot;${rs.rows}&quot;&gt;</strong>
+    &lt;tr&gt;
+    &lt;td&gt;<strong>${row.author}</strong>&lt;/td&gt;
+    &lt;td&gt;<strong>${row.title}</strong>&lt;/td&gt;
+    &lt;/tr&gt;
+    <strong>&lt;/c:forEach&gt;</strong>
+  &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+<p>This JSP page uses the JSTL standard tags, which requires &quot;<code>jstl.jar</code>&quot; and &quot;<code>standard.jar</code>&quot;. You can copy the jar files from &quot;<code>examples\WEB-INF\lib</code>&quot; into &quot;<code>hellodbcp\WEN-INF\lib</code>&quot;.</p>
+
+<p>To invoke the JSP page: Start the Tomcat and MySQL servers, and issue URL <code>http://localhost:8080/hellodbcp/query.jsp</code>. I shall assume that Tomcat is running on port number 8080.</p>
+<p><span class="line-heading">Step 6: Servlet with Connection Pooling -</span> Let's write a servlet called &quot;<code>MySQLDbcpServlet</code>&quot; that uses database connection pool as follow:</p>
+
+<pre class="code-listing">
+<span class="code-comment">// Save as &quot;hellodbcp\WEB-INF\src\mypkg\MySQLDbcpServlet.java&quot;</span>
+package mypkg;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.sql.*;
+import javax.sql.DataSource;
+import javax.naming.*;
+ 
+public class <strong>MySQLDbcpServlet</strong> extends HttpServlet {
+ 
+   <strong>DataSource pool;</strong>  <span class="code-comment">// Database connection pool</span>
+ 
+   @Override
+   public void <strong>init</strong>( ) throws ServletException {
+      try {
+         <span class="code-comment">// Create a JNDI Initial context to be able to lookup the DataSource</span>
+         <strong>InitialContext ctx = new InitialContext();</strong>
+         <span class="code-comment">// Lookup the DataSource, which will be backed by a pool</span>
+         <span class="code-comment">//   that the application server provides.</span>
+         <strong>pool = (DataSource)ctx.lookup(&quot;java:comp/env/jdbc/TestDB&quot;);</strong>
+         if (pool == null)
+            throw new ServletException(&quot;Unknown DataSource 'jdbc/TestDB'&quot;);
+      } catch (NamingException ex) {
+         ex.printStackTrace();
+      }
+   }
+ 
+   @Override
+   public void <strong>doGet</strong>(HttpServletRequest request, HttpServletResponse response)
+               throws IOException, ServletException {
+      <span class="code-comment">// Set the response message's MIME type</span>
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      <span class="code-comment">// Allocate a output writer to write the response message into the network socket</span>
+      PrintWriter out = response.getWriter();
+ 
+      Connection conn = null;
+      Statement  stmt = null;
+      try {
+         out.println(&quot;&lt;!DOCTYPE html&gt;&quot;);
+         out.println(&quot;&lt;html&gt;&quot;);
+         out.println(&quot;&lt;head&gt;&lt;title&gt;Qurey Servlet&lt;/title&gt;&lt;/head&gt;&quot;);
+         out.println(&quot;&lt;body&gt;&quot;);
+ 
+         <span class="code-comment">// Get a connection from the pool</span>
+         <strong>conn = pool.getConnection();</strong>
+ 
+         <span class="code-comment">// Normal JBDC programming hereafter.</span> <span class="code-comment">Close the Connection to return it to the pool</span>
+         stmt = conn.createStatement();
+         ResultSet rset = stmt.executeQuery(&quot;SELECT title, author FROM books&quot;);
+         int count=0;
+         while(rset.next()) {
+            out.println(&quot;&lt;p&gt;&quot; + rset.getString(&quot;title&quot;) + &quot;, &quot;
+                  + rset.getString(&quot;author&quot;) + &quot;&lt;/p&gt;&quot;);
+            ++count;
+         }
+         out.println(&quot;&lt;p&gt;==== &quot; + count + &quot; rows found =====&lt;/p&gt;&quot;);
+         out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+      } catch (SQLException ex) {
+         ex.printStackTrace();
+      } finally {
+         out.close();
+         try {
+            if (stmt != null) stmt.close();
+            if (conn != null) <strong>conn.close()</strong>;  <span class="code-comment">// return to pool</span>
+         } catch (SQLException ex) {
+             ex.printStackTrace();
+         }
+      }
+   }
+}</pre>
+
+<p>Save the &quot;<code>MySQLDbcpServlet.java</code>&quot; under &quot;<code>hellodbcp\WEB-INF\src\mypkg</code>&quot;. Use the following commands to compile the program (so as to place the generated classes in the appropriate directory depicted by the package structure):</p>
+
+<pre class="code-command"><span class="code-comment">-- change directory to &quot;hellodbcp\WEB-INF\classes&quot;</span>
+d:...&gt; <strong>cd \$CATALINA_HOME\webapps\helloservlet\WEB-INF\classes</strong>
+<span class="code-comment">  
+-- Compile the source specifying the destination directory</span>
+d:\$CATALINA_HOME\webapps\hellodbcp\WEB-INF\classes&gt; <strong>javac -d . ..\src\mypkg\MySQLDbcpServlet.java</strong></pre>
+
+<p>Configure the servlet by creating a deployment descriptor in &quot;<code>hellodbcp\WEB-INF\web.xml</code>&quot;:</p>
+
+<pre class="code-listing">
+&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/j2ee&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;
+    version=&quot;2.4&quot;&gt;
+ 
+   &lt;resource-ref&gt;
+      &lt;description&gt;DB Connection Pool&lt;/description&gt;
+      &lt;res-ref-name&gt;jdbc/TestDB&lt;/res-ref-name&gt;
+      &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
+      &lt;res-auth&gt;Container&lt;/res-auth&gt;
+   &lt;/resource-ref&gt;
+ 
+   <strong>&lt;servlet&gt;
+      &lt;servlet-name&gt;MySQLDbcpExample&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;<span class="underline">mypkg.MySQLDbcpServlet</span>&lt;/servlet-class&gt;
+   &lt;/servlet&gt;
+ 
+   &lt;servlet-mapping&gt;
+      &lt;servlet-name&gt;MySQLDbcpExample&lt;/servlet-name&gt;
+      &lt;url-pattern&gt;<span class="underline">/trydbcp</span>&lt;/url-pattern&gt;
+   &lt;/servlet-mapping&gt;</strong>
+ 
+&lt;/web-app&gt;</pre>
+
+  
+<p>To invoke the servlet: Start the Tomcat and MySQL servers, and issue URL <code>http://localhost:8080/hellodbcp/trydbcp</code>.</p>
+
+
+<h3>An MVC EBookShop with Servlets, JSPs, and JavaBeans Deployed in Tomcat</h3>
+<p>MVC (Model-View-Control) is a design pattern (or framework) that aims to separate the <em>application logic</em> (Control) and <em>data</em> (Model) from the <em>presentation</em> (View).</p>
+<p>Let us illustrate the MVC framework with an E-Bookshop example. In this example, JavaBeans (special Java classes) are used as data model to hide the underlying data operations (e.g., database operations); JSPs are used for view (presentation) to present the response to the client; and servlets are used as controller for implementing application logic  and instantiate JavaBeans, as illustrate in the following diagram. HTTP session tracking is enabled via a <code>HTTPSession</code> object.</p>
+
+<img class="image-center" src="images/MVCWebApplication.png" />
+
+<h5>Create a New Web Application</h5>
+
+<p>We shall call our web application &quot;<code>mvc_ebookshop</code>&quot;.</p>
+
+<p>I shall assume that you use an IDE, such as NetBeans or Eclipse, to develop the web application.  An IDE greatly improves on your productivity. It also enables debugging.</p>
+
+<p><strong>(For NetBeans Users)</strong> Create a web application called &quot;<code>mvc_ebookshop</code>&quot;:</p>
+<ol>
+<li>From &quot;File&quot; menu &rArr; choose &quot;New Project...&quot;.</li>
+<li>In &quot;Choose Project&quot; &rArr; Under &quot;Categories&quot;, choose &quot;Java Web&quot; &rArr; Under &quot;Projects&quot;, choose &quot;Web Application&quot; &rArr; &quot;Next&quot;.</li>
+<li>In &quot;Name and Location&quot; &rArr; In &quot;Project Name&quot;, enter &quot;<code>mvc_ebookshop</code>&quot; &rArr;  In &quot;Project Location&quot;, select a suitable directory to save your works &rArr; Check &quot;Set as Main Project&quot;  &rArr; Next.</li>
+<li>In &quot;Server and settings&quot; &rArr; Select your Tomcat server, or &quot;add&quot; a new Tomcat server &rArr; Choose the latest &quot;Java EE Version&quot; &rArr; In &quot;Context Path&quot;, use &quot;<code>/mvc_ebookshop</code>&quot; &rArr; Next.</li>
+<li>In &quot;Frameworks&quot;  &rArr; Select none for pure servlet/JSP application &rArr; Finish.</li>
+</ol>
+
+<h5>Design</h5>
+<img class="image-center" src="images/MVC_EShop_Simple.png" />
+
+<h5>Model: Book Database - &quot;BookDB.java&quot;</h5>
+<p>Instead of using a relational database (such as MySQL) to store the data, we shall simplify the problem by using a Java class called <code>BookDB.java</code> to keep all our books, as follows. We shall keep all our Java classes in a package called <code>mypkg</code>.</p>
+
+<p><strong>(For NetBeans Users)</strong> Expand on your project node &rArr; Right-click on &quot;Source Packages&quot; &rArr; New &rArr; Java Class... &rArr; Enter &quot;<code>BookDB</code>&quot; in Class Name; Enter &quot;<code>mypkg</code>&quot; in Package.</p>
+
+<pre class="code-listing">
+package mypkg;
+<span class="code-comment">/**
+ * Book Database
+ * Keep the title, author and price of books in separate arrays.
+ * The array index is used as the bookID for retrieval.
+ * All the entities are static.  You could use BookDB.getTitle(bookID),
+ * BookDB.getAuthor(bookID) and BookDB.getPrice(bookID) to retrieve the
+ * title, author and price for a particular bookID.
+ */</span>
+public class <strong>BookDB</strong> {
+ 
+   private static String[] titles = {
+      &quot;Java for Dummies&quot;,
+      &quot;More Java for Dummies&quot;,
+      &quot;Java for Idiots&quot;,
+      &quot;Java for More Idiots&quot;
+   };
+ 
+   private static String[] authors = {
+      &quot;Tan Ah Teck&quot;, &quot;Tan Ah Teck&quot;, &quot;Mohd Ali&quot;, &quot;Mohd Ali&quot;
+   };
+ 
+   private static float[] prices = {
+      19.99f, 29.99f, 39.99f, 49.99f
+   };
+ 
+   <span class="code-comment">/** Return the number of books in the database */</span>
+   public static int size() {
+      return titles.length;
+   }
+ 
+   <span class="code-comment">/** Return the title of the given bookID */</span>
+   public static String getTitle(int bookID) {
+      return titles[bookID];
+   }
+ 
+   <span class="code-comment">/** Return the author of the given bookID */</span>
+   public static String getAuthor(int bookID) {
+      return authors[bookID];
+   }
+ 
+   <span class="code-comment">/** Return the price of the given bookID */</span>
+   public static float getPrice(int bookID) {
+      return prices[bookID];
+   }
+}</pre>
+
+<h5>&quot;CartItem.java&quot;</h5>
+
+<p>We need to maintain a <em>shoppng cart</em>, which is an <code>ArrayList</code> of <code>CartItem</code>.  The shopping cart is placed inside an <code>HTTPSession</code> via an attribute &quot;<code>cart</code>&quot;.</p>
+
+<pre class="code-listing">
+package mypkg;
+ 
+public class <strong>CartItem</strong> {
+   private int bookID;
+   private int qtyOrdered;
+ 
+   public CartItem(int bookID, int qtyOrdered) {
+      this.bookID = bookID;
+      this.qtyOrdered = qtyOrdered;
+   }
+ 
+   public int getBookID() {
+      return bookID;
+   }
+ 
+   public void setBookID(int bookID) {
+      this.bookID = bookID;
+   }
+ 
+   public int getQtyOrdered() {
+      return qtyOrdered;
+   }
+ 
+   public void setQtyOrdered(int qtyOrdered) {
+      this.qtyOrdered = qtyOrdered;
+   }
+ 
+   <span class="code-comment">// Returns the author based on this bookID</span>
+   public String getAuthor() {
+      return BookDB.getAuthor(bookID);
+   }
+ 
+   <span class="code-comment">// Returns the author based on this bookID</span>
+   public String getTitle() {
+      return BookDB.getTitle(bookID);
+   }
+ 
+   <span class="code-comment">// Return the price based on this bookID</span>
+   public float getPrice() {
+      return BookDB.getPrice(bookID);
+   }
+}</pre>
+
+<h5>Controller: &quot;ControllerServlet.java&quot;</h5>
+<p>We shall define a URL &quot;<code>/shopping</code>&quot; for for the <code>ControllerServlet</code>.</p>
+
+<p>The controller serves these functions:</p>
+<ul>
+<li>It is the <em>entry point</em> of the web application. A web user issues <code>http://hostname:port/mvc_ebookshop/shopping</code> to start the web application.</li>
+<li>For the first access, it instantiates an <code>HTTPSession</code>, which maintains a shopping cart via an attribute &quot;<code>cart</code>&quot;. It then dispatches to &quot;<code>order.jsp</code>&quot; (<code>todo=null</code>).</li>
+<li>The &quot;<code>order.jsp</code>&quot; page displays the books and shopping cart. User can add or remove a book into/from the cart (via request parameter &quot;<code>todo=add</code>&quot; or &quot;<code>todo=remove</code>&quot;) or check out (via &quot;<code>todo=checkout</code>&quot;). &quot;<code>Order.jsp</code>&quot; submits to this controller.</li>
+<li>For &quot;<code>todo=add</code>&quot; and &quot;<code>todo=remove</code>&quot;, the controller updates the cart (retrieved from the <code>HTTPSession</code>), and dispatches to &quot;<code>order.jsp</code>&quot; for more shopping. For &quot;<code>todo=checkout</code>&quot;, the controller computes the totals and dispatches to &quot;<code>checkout.jsp</code>&quot;.</li>
+</ul>
+
+<p><strong>(NetBeans)</strong> Expand on your project node &rArr; Right-click on &quot;Source Packages&quot; &rArr; New &rArr; Others &rArr; In &quot;Categories&quot;, select &quot;Web&quot; &rArr; In &quot;File Types&quot;, select &quot;Servlet&quot; &rArr; In &quot;Class Name&quot;, enter &quot;<code>ControllerServlet</code>&quot; &rArr; In &quot;Package&quot;, enter &quot;<code>mypkg</code>&quot; &rArr; Next &rArr; Check &quot;Add Information to deployment descriptor (web.xml)&quot; &rArr; In &quot;URL Pattern&quot;, enter &quot;<code>/shopping</code>&quot; &rArr; &quot;Finish&quot;.</p>
+
+
+
+<pre class="code-listing">
+package mypkg;
+ 
+import java.io.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+ 
+@WebServlet(&quot;/shopping&quot;)  <span class="code-comment">// Define URL pattern (for servlet 3.0 only)</span>
+public class ControllerServlet extends HttpServlet {
+   private static final long serialVersionUID = 1L;
+ 
+   @Override
+   public void init(ServletConfig conf) throws ServletException {
+      super.init(conf);
+   }
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+         throws ServletException, IOException {
+      doPost(request, response);  <span class="code-comment">// Same as doPost()</span>
+   }
+ 
+   @Override
+   protected void doPost(HttpServletRequest request,
+         HttpServletResponse response) throws ServletException, IOException {
+      <span class="code-comment">// Retrieve the current session, or create a new session if no session exists.</span>
+      HttpSession session = request.getSession(true);
+ 
+      <span class="code-comment">// Retrieve the shopping cart of the current session.</span>
+      List&lt;CartItem&gt; theCart = (ArrayList&lt;CartItem&gt;) session.getAttribute(&quot;cart&quot;);
+ 
+      <span class="code-comment">// For dispatching the next Page</span>
+      String nextPage = &quot;&quot;;
+      String todo = request.getParameter(&quot;todo&quot;);
+ 
+      if (todo == null) {
+         <span class="code-comment">// First access - redirect to order.jsp</span>
+         nextPage = &quot;/order.jsp&quot;;
+      } else if (todo.equals(&quot;add&quot;)) {
+         <span class="code-comment">// Submitted by order.jsp, with request parameters bookID and qty.</span>
+         <span class="code-comment">// Create a CartItem for the selected book, and add it into the cart</span>
+         CartItem newCartItem = new CartItem(
+                 Integer.parseInt(request.getParameter(&quot;bookID&quot;)),
+                 Integer.parseInt(request.getParameter(&quot;qty&quot;)));
+         if (theCart == null) { <span class="code-comment">// shopping cart is empty</span>
+            theCart = new ArrayList&lt;&gt;();
+            theCart.add(newCartItem);
+            session.setAttribute(&quot;cart&quot;, theCart);  <span class="code-comment">// binds cart to session</span>
+         } else {
+            <span class="code-comment">// Check if this book is already in the cart.</span>
+            <span class="code-comment">// If so, update the qty ordered. Otherwise, add it to the cart.</span>
+            boolean found = false;
+            Iterator iter = theCart.iterator();
+            while (!found &amp;&amp; iter.hasNext()) {
+               CartItem aCartItem = (CartItem)iter.next();
+               if (aCartItem.getBookID() == newCartItem.getBookID()) {
+                  aCartItem.setQtyOrdered(aCartItem.getQtyOrdered()
+                        + newCartItem.getQtyOrdered());
+                  found = true;
+               }
+            }
+            if (!found) { <span class="code-comment">// Add it to the cart</span>
+               theCart.add(newCartItem);
+            }
+         }
+         <span class="code-comment">// Back to order.jsp for more order</span>
+         nextPage = &quot;/order.jsp&quot;;
+      } else if (todo.equals(&quot;remove&quot;)) {
+         <span class="code-comment">// Submitted by order.jsp, with request parameter cartIndex.</span>
+         <span class="code-comment">// Remove the CartItem of cartIndex in the cart</span>
+         int cartIndex = Integer.parseInt(request.getParameter(&quot;cartIndex&quot;));
+         theCart.remove(cartIndex);
+         <span class="code-comment">// Back to order.jsp for more order</span>
+         nextPage = &quot;/order.jsp&quot;;
+      } else if (todo.equals(&quot;checkout&quot;)) {
+         <span class="code-comment">// Submitted by order.jsp.</span>
+         <span class="code-comment">// Compute the total price for all the items in the cart</span>
+         float totalPrice = 0;
+         int totalQtyOrdered = 0;
+         for (CartItem item: theCart) {
+            float price = item.getPrice();
+            int qtyOrdered = item.getQtyOrdered();
+            totalPrice += price * qtyOrdered;
+            totalQtyOrdered += qtyOrdered;
+         }
+         <span class="code-comment">// Format the price in float to 2 decimal places</span>
+         StringBuilder sb = new StringBuilder();
+         Formatter formatter = new Formatter(sb);  <span class="code-comment">// Send all output to sb</span>
+         formatter.format(&quot;%.2f&quot;, totalPrice);     <span class="code-comment">// 2 decimal places</span>
+         <span class="code-comment">// Put the total price and qty in request header</span>
+         request.setAttribute(&quot;totalPrice&quot;, sb.toString());
+         request.setAttribute(&quot;totalQtyOrdered&quot;, totalQtyOrdered + &quot;&quot;);
+         <span class="code-comment">// Dispatch to checkout.jsp</span>
+         nextPage = &quot;/checkout.jsp&quot;;
+      }
+ 
+      ServletContext servletContext = getServletContext();
+      RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(nextPage);
+      requestDispatcher.forward(request, response);
+   }
+}</pre>
+
+<p>In <code>web.xml</code>, map this servlet to URL pattern <code>/shopping</code>.</p>
+<pre class="code-listing">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app version=&quot;2.5&quot; xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+      xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;eBookShop&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;<strong>mypkg.ControllerServlet</strong>&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;eBookShop&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;<strong>/shopping</strong>&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;</pre>
+
+<p>Note: In servlet 3.0 (Tomcat 7), you could use annotation <code>@WebServlet(&quot;/shopping&quot;)</code> (which is commented-out) to configure the URL pattern instead of using <code>web.xml</code>.</p>
+
+<h5>View: Order Page - &quot;order.jsp&quot;</h5>
+
+<pre class="code-listing">
+<span class="code-comment">&lt;%-- Order Page  --%&gt;</span>
+&lt;%@page contentType=&quot;text/html&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@page session=&quot;true&quot; import=&quot;java.util.*, mypkg.*&quot; %&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+   &lt;head&gt;
+      &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+      &lt;title&gt;E-BookShop Order&lt;/title&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+      &lt;h2&gt;Yet Another E-Bookshop&lt;/h2&gt;
+      &lt;hr /&gt;&lt;br /&gt;
+ 
+      &lt;p&gt;&lt;strong&gt;Choose a book and enter the quantity:&lt;/strong&gt;&lt;/p&gt;
+      &lt;form name=&quot;AddForm&quot; action=&quot;shopping&quot; method=&quot;POST&quot;&gt;
+         &lt;input type=&quot;hidden&quot; name=&quot;todo&quot; value=&quot;add&quot;&gt;
+         Select Book: &lt;select name=bookID&gt;
+            &lt;%
+            <span class="code-comment">// Scriptlet 1: Populate the books into the &quot;select&quot; control.</span>
+            for (int i = 0; i &lt; BookDB.size(); ++i) {
+               out.println(&quot;&lt;option value='&quot; + i + &quot;'&gt;&quot;);
+               out.println(BookDB.getTitle(i) + &quot; | &quot; + BookDB.getAuthor(i)
+                       + &quot; | &quot; + BookDB.getPrice(i));
+               out.println(&quot;&lt;/option&gt;&quot;);
+            }
+            %&gt;
+         &lt;/select&gt;
+           Enter Quantity: &lt;input type=&quot;text&quot; name=&quot;qty&quot; size=&quot;10&quot; value=&quot;1&quot;&gt;
+         &lt;input type=&quot;submit&quot; value=&quot;Add to Shopping Cart&quot;&gt;
+      &lt;/form&gt;
+      &lt;br /&gt;&lt;hr /&gt;&lt;br /&gt;
+ 
+      &lt;%
+      <span class="code-comment">// Scriptlet 2: Check whether the shopping cart is empty.</span>
+      List&lt;CartItem&gt; theCart = (List&lt;CartItem&gt;) session.getAttribute(&quot;cart&quot;);
+      if (theCart != null &amp;&amp; theCart.size() &gt; 0) {
+      %&gt;
+      &lt;p&gt;&lt;strong&gt;Your shopping cart contains:&lt;/strong&gt;&lt;/p&gt;
+      &lt;table border=&quot;1&quot; cellspacing=&quot;0&quot; cellpadding=&quot;5&quot;&gt;
+         &lt;tr&gt;
+            &lt;th&gt;Title&lt;/th&gt;
+            &lt;th&gt;Author&lt;/th&gt;
+            &lt;th&gt;Price&lt;/th&gt;
+            &lt;th&gt;Quantity&lt;/th&gt;
+            &lt;th&gt;&amp;nbsp;&lt;/th&gt;
+         &lt;/tr&gt;
+         &lt;%
+         <span class="code-comment">// Scriptlet 3: display the books in the shopping cart.</span>
+         for (int i = 0; i &lt; theCart.size(); ++i) {
+            CartItem aCartItem = theCart.get(i);
+         %&gt;
+         &lt;tr&gt;
+            &lt;form name=&quot;removeForm&quot; action=&quot;shopping&quot; method=&quot;POST&quot;&gt;
+               &lt;input type=&quot;hidden&quot; name=&quot;todo&quot; value=&quot;remove&quot;&gt;
+               &lt;input type=&quot;hidden&quot; name=&quot;cartIndex&quot; value=&quot;&lt;%= i %&gt;&quot;&gt;
+               &lt;td&gt;&lt;%= aCartItem.getTitle() %&gt;&lt;/td&gt;
+               &lt;td&gt;&lt;%= aCartItem.getAuthor() %&gt;&lt;/td&gt;
+               &lt;td align=&quot;right&quot;&gt;$&lt;%= aCartItem.getPrice() %&gt;&lt;/td&gt;
+               &lt;td align=&quot;right&quot;&gt;&lt;%= aCartItem.getQtyOrdered() %&gt;&lt;/td&gt;
+               &lt;td&gt;&lt;input type=&quot;submit&quot; value=&quot;Remove from Shopping Cart&quot;&gt;&lt;/td&gt;
+            &lt;/form&gt;
+         &lt;/tr&gt;
+         &lt;%
+         } <span class="code-comment">// for loop</span>
+         %&gt;
+       &lt;/table&gt;&lt;br /&gt;
+ 
+      &lt;form name=&quot;checkoutForm&quot; action=&quot;shopping&quot; method=&quot;POST&quot;&gt;
+         &lt;input type=&quot;hidden&quot; name=&quot;todo&quot; value=&quot;checkout&quot;&gt;
+         &lt;input type=&quot;submit&quot; value=&quot;Checkout&quot;&gt;
+      &lt;/form&gt;
+      &lt;%
+      }  <span class="code-comment">// if</span>
+      %&gt;
+   &lt;/body&gt;
+&lt;/html&gt;</pre>
+
+<h5>View: Checkout Page - &quot;checkout.jsp&quot;</h5>
+
+<pre class="code-listing">
+<span class="code-comment">&lt;%-- Checkout Page  --%&gt;</span>
+&lt;%@page contentType=&quot;text/html&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@page session=&quot;true&quot; import=&quot;java.util.*, mypkg.*&quot; %&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+   &lt;head&gt;
+      &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+      &lt;title&gt;E-BookShop Checkout&lt;/title&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+      &lt;h2&gt;Yet Another E-Bookshop - Checkout&lt;/h2&gt;
+      &lt;hr /&gt;&lt;br /&gt;
+ 
+      &lt;p&gt;&lt;strong&gt;You have ordered the following book(s):&lt;/strong&gt;&lt;/p&gt;
+      &lt;table border=&quot;1&quot; cellspacing=&quot;0&quot; cellpadding=&quot;5&quot;&gt;
+         &lt;tr&gt;
+            &lt;th&gt;Title&lt;/th&gt;
+            &lt;th&gt;Author&lt;/th&gt;
+            &lt;th&gt;Price&lt;/th&gt;
+            &lt;th&gt;Quantity&lt;/th&gt;
+         &lt;/tr&gt;
+         &lt;%
+         <span class="code-comment">// Scriptlet 1: Display the items in shopping cart</span>
+         List&lt;CartItem&gt; theCart = (List&lt;CartItem&gt;) session.getAttribute(&quot;cart&quot;);
+         for (CartItem item : theCart) {
+         %&gt;
+         &lt;tr&gt;
+            &lt;td&gt;&lt;%= item.getTitle()%&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= item.getAuthor()%&gt;&lt;/td&gt;
+            &lt;td align=&quot;right&quot;&gt;$&lt;%= item.getPrice()%&gt;&lt;/td&gt;
+            &lt;td align=&quot;right&quot;&gt;&lt;%= item.getQtyOrdered()%&gt;&lt;/td&gt;
+         &lt;/tr&gt;
+         &lt;%
+         } <span class="code-comment">// for</span>
+         session.invalidate();
+         %&gt;
+         &lt;tr&gt;
+            &lt;th align=&quot;right&quot; colspan=&quot;2&quot;&gt;Total&lt;/th&gt;
+            &lt;th align=&quot;right&quot;&gt;$<strong>&lt;%= request.getAttribute(&quot;totalPrice&quot;)%&gt;</strong>&lt;/th&gt;
+            &lt;th align=&quot;right&quot;&gt;<strong>&lt;%= request.getAttribute(&quot;totalQtyOrdered&quot;)%&gt;</strong>&lt;/th&gt;
+         &lt;/tr&gt;
+      &lt;/table&gt;
+      &lt;br /&gt;
+ 
+      &lt;a href=&quot;shopping&quot;&gt;Click here to buy more books!&lt;/a&gt;
+   &lt;/body&gt;
+&lt;/html&gt;</pre>
+
+<p>Take note that JSP deals with the view (presentation). The codes are rather slight forward. [TODO more]</p>
+
+<h5>Configuring &quot;web.xml&quot;</h5>
+<p>In &quot;<code>mvc_ebookshop\WEB-INF\web.xml</code>&quot;, configure the URL path &quot;<code>\shopping</code>&quot; for &quot;<code>ControllerSevlet</code>&quot;; and set the URL &quot;<code>\shopping</code>&quot; as the welcome page for directory request, as follows:</p>
+
+<pre class="code-listing">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app version=&quot;2.5&quot; xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; 
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+    xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;Controller&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;<strong>mypkg.ControllerServlet</strong>&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;Controller&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;<strong>/shopping</strong>&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;session-config&gt;
+        &lt;session-timeout&gt;
+            30
+        &lt;/session-timeout&gt;
+    &lt;/session-config&gt;
+
+    &lt;welcome-file-list&gt;
+        &lt;welcome-file&gt;<strong>shopping</strong>&lt;/welcome-file&gt;
+    &lt;/welcome-file-list&gt;
+&lt;/web-app&gt;</pre>
+
+
+<h5>Run the Web Application</h5>
+
+<p>Start Tomcat, and issue URL <code>http://hostname:port/mvc_ebookshop</code> (using the welcome page of the directory) or <code>http://hostname:port/mvc_ebookshop/shopping</code>.</p>
+
+<p><strong>(For NetBeans User)</strong> Right-click on the project &rArr; &quot;Clean and Build&quot; &rArr; &quot;Deploy&quot; (take note of the URL of the web application) &rArr; &quot;Run&quot;.</p>
+
+<h3>MVC with MySQL Database</h3>
+
+<p>Let us rewrite the above application with data maintained in MySQL database. Let's call our new application &quot;<code>mvcdb_ebookshop</code>&quot;.</p>
+
+<p>[TODO]</p>
+
+
+
+
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>TODO</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: NetBeans 7.0 with Tomcat 7.0.21, Eclipse JavaEE 3.6 with Tomcat 7.0<br />
+Last modified: September, 2011</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

@@ -1,0 +1,1720 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OOP Exercises - Java Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>OOP Exercises</h2>
+</div>
+
+<div id="content-main">
+
+<h3 id="ExerciseClass">Exercises on Classes</h3>
+
+<h4 class="float-clear">Ex: The <span class="font-code">Circle</span> Class (An Introduction to Classes and Instances)</h4>
+
+<p>This first exercise shall lead you through all the <em>basic concepts</em> in OOP.</p>
+
+<img src="images/ExerciseOOP_Circle.png" alt="ExerciseOOP_Circle.png" />
+
+<p>A class called <strong><code>circle</code></strong> is designed as shown in the following class diagram. It contains:</p>
+
+<ul>
+<li>Two <code>private</code> instance variables: <code>radius</code> (of the type <code>double</code>) and <code>color</code> (of the type <code>String</code>), with default value of <code>1.0</code> and &quot;<code>red</code>&quot;, respectively.</li>
+<li>Two <em>overloaded</em> constructors - a <em>default</em> constructor with no argument, and a constructor which takes a double argument for radius.</li>
+<li>Two <code>public</code> methods: <code>getRadius()</code> and <code>getArea()</code>, which return the radius and area of this  instance, respectively.</li>
+</ul>
+
+<p>The source codes for <code>Circle.java</code> is as follows:</p>
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Circle class models a circle with a radius and color.
+ */</span>
+public class <strong>Circle</strong> {  <span class="color-comment">// Save as &quot;Circle.java&quot;</span>
+   <span class="color-comment">// private instance variable, not accessible from outside this class</span>
+   private double radius;
+   private String color;
+   
+   <span class="color-comment">// The default constructor with no argument.
+   // It sets the radius and color to their default value.</span>
+   public Circle() {
+      radius = 1.0;
+      color = &quot;red&quot;;
+   }
+   
+   <span class="color-comment">// 2nd constructor with given radius, but color default</span>
+   public Circle(double r) {
+      radius = r;
+      color = &quot;red&quot;;
+   }
+   
+   <span class="color-comment">// A public method for retrieving the radius</span>
+   public double getRadius() {
+     return radius; 
+   }
+   
+   <span class="color-comment">// A public method for computing the area of circle</span>
+   public double getArea() {
+      return radius*radius*Math.PI;
+   }
+}</pre>
+
+<p>Compile &quot;<code>Circle.java</code>&quot;. Can you run the <code>Circle</code> class?  Why?</p>
+<p>This <code>Circle</code> class does not have a <code>main()</code> method.  Hence, it cannot be run directly.  This <code>Circle</code> class is a “building block” and is meant to be used in another program.</p>
+<p>Let us write a <em>test program</em> called <code>TestCircle</code> (in another source file called <code>TestCircle.java</code>) which uses the <code>Circle</code> class, as follows:</p>
+
+<pre class="color-example">
+public class <strong>TestCircle</strong> {  <span class="color-comment">// Save as &quot;TestCircle.java&quot;</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Declare an instance of Circle class called c1.
+      // Construct the instance c1 by invoking the &quot;default&quot; constructor
+      // which sets its radius and color to their default value.</span>
+      Circle c1 = new Circle();
+      <span class="color-comment">// Invoke public methods on instance c1, via dot operator.</span>
+      System.out.println(&quot;The circle has radius of &quot; 
+         + c1.getRadius() + &quot; and area of &quot; + c1.getArea());
+   
+      <span class="color-comment">// Declare an instance of class circle called c2.
+      // Construct the instance c2 by invoking the second constructor
+      // with the given radius and default color.</span>
+      Circle c2 = new Circle(2.0);
+      <span class="color-comment">// Invoke public methods on instance c2, via dot operator.</span>
+      System.out.println(&quot;The circle has radius of &quot; 
+         + c2.getRadius() + &quot; and area of &quot; + c2.getArea());
+   }
+}</pre>
+
+<p>Now, run the <code>TestCircle</code> and study the results.</p>
+
+<h5>More Basic OOP Concepts</h5>
+
+<ol>
+<li><span class="line-heading">Constructor:</span> Modify the class <code>Circle</code> to include a third constructor for constructing a <code>Circle</code> instance with two arguments - a <code>double</code> for <code>radius</code> and a <code>String</code> for <code>color</code>.
+<pre class="color-syntax">
+<span class="color-comment">// 3rd constructor to construct a new instance of Circle with the given radius and color</span>
+public Circle (double r, String c) { ...... }</pre>
+	
+Modify the test program <code>TestCircle</code> to construct an instance of <code>Circle</code> using this constructor.</li>
+
+<li><span class="line-heading">Getter:</span> Add a getter for variable <code>color</code> for retrieving the <code>color</code> of this instance.
+  <pre class="color-syntax">
+<span class="color-comment">// Getter for instance variable color</span>
+public String getColor() { ...... }</pre>
+
+Modify the test program to test this method.</li>
+
+<li><span class="line-heading"><span class="font-code">public</span> vs. <span class="font-code">private</span>:</span> In <code>TestCircle</code>, can you access the instance variable <code>radius</code> directly (e.g., <code>System.out.println(c1.radius)</code>); or assign a new value to <code>radius</code> (e.g., <code>c1.radius=5.0</code>)?  Try it out and explain the error messages.</li>
+
+<li><span class="line-heading">Setter:</span> Is there a need to change the values of <code>radius</code> and <code>color</code> of a <code>Circle</code> instance after it is constructed?  If so, add two <code>public</code> methods called <em>setters</em> for changing the <code>radius</code> and <code>color</code> of a <code>Circle</code> instance as follows:
+<pre class="color-syntax">
+<span class="color-comment">// Setter for instance variable radius</span>
+public void setRadius(double newRadius) {
+   radius = newRadius;
+}
+ 
+<span class="color-comment">// Setter for instance variable color</span>
+public void setColor(String newColor) { ...... }</pre>
+
+Modify the <code>TestCircle</code> to test these methods, e.g.,
+<pre class="color-example">
+Circle c4 = new Circle();   <span class="color-comment">// construct an instance of Circle</span>
+c4.setRadius(5.0);          <span class="color-comment">// change radius</span>
+System.out.println(&quot;radius is: &quot; + c4.getRadius()); <span class="color-comment">// Print radius via getter</span>
+c4.setColor(......);        <span class="color-comment">// Change color</span>
+System.out.println(&quot;color is: &quot; + c4.getColor());   <span class="color-comment">// Print color via getter</span>
+
+<span class="color-comment">// You cannot do the following because setRadius() returns void,
+// which cannot be printed.</span>
+System.out.println(c4.setRadius(4.0));</pre>
+</li>
+
+<li><span class="line-heading">Keyword &quot;<span class="font-code">this</span>&quot;:</span> Instead of using variable names such as <code>r</code> (for <code>radius</code>) and <code>c</code> (for <code>color</code>) in the methods' arguments, it is better to use variable names <code>radius</code> (for <code>radius</code>) and <code>color</code> (for <code>color</code>) and use the special keyword &quot;<code>this</code>&quot; to resolve the conflict between instance variables and methods' arguments.  For example,
+  <pre class="color-example">
+<span class="color-comment">// Instance variable</span>
+private double radius;
+
+<span class="color-comment">// Constructor</span>
+public Circle(double radius) {
+   this.radius = radius;   <span class="color-comment">// &quot;this.radius&quot; refers to the instance variable
+                           // &quot;radius&quot; refers to the method's parameter</span>
+   color = .......   
+}
+
+<span class="color-comment">// Setter of radius</span>
+public void setRadius(double radius) {
+   this.radius = radius;   <span class="color-comment">// &quot;this.radius&quot; refers to the instance variable
+                           // &quot;radius&quot; refers to the method's argument</span>
+}</pre>
+
+Modify ALL the constructors and setters in the <code>Circle</code> class to use the keyword &quot;<code>this</code>&quot;.</li>
+
+<li><span class="line-heading">Method <span class="font-code">toString()</span>:</span> Every well-designed Java class should contain a <code>public</code> method called <code>toString()</code> that returns a short description of the instance (in a return type of <code>String</code>).  The <code>toString()</code> method can be called explicitly (via <code><em>instanceName</em>.toString()</code>) just like any other method; or implicitly through <code>println()</code>.  If an instance is passed to the <code>println(<em>anInstance</em>)</code> method, the <code>toString()</code> method of that instance will be invoked implicitly. For example, include the following <code>toString()</code> methods to the <code>Circle</code> class:
+  <pre class="color-example">
+<span class="color-comment">// Return a description of this instance in the form of
+// Circle[radius=r,color=c]</span>
+public String toString() {
+   return &quot;Circle[radius=&quot; + radius + &quot; color=&quot; + color + &quot;]&quot;;
+}</pre>
+
+Try calling <code>toString()</code> method explicitly, just like any other method:
+<pre class="color-example">
+Circle c1 = new Circle(5.0);
+System.out.println(c1.toString());   <span class="color-comment">// explicit call</span></pre>
+
+<code>toString()</code> is called implicitly when an instance is passed to <code>println()</code> method, for example,
+<pre class="color-example">
+Circle c2 = new Circle(1.2);
+System.out.println(c2.toString());  <span class="color-comment">// explicit call</span>
+System.out.println(c2);             <span class="color-comment">// println() calls toString() implicitly, same as above</span>
+System.out.println(&quot;Operator '+' invokes toString() too: &quot; + c2);  <span class="color-comment">// '+' invokes toString() too</span></pre>
+</li>
+</ol>
+
+<p>The final class diagram for the <code>Circle</code> class is as follows:</p>
+<img src="images/ExerciseOOP_Circle_Final.png" alt="ExerciseOOP_Circle_Final.png" />
+
+<h4>Ex: A Simplified <span class="font-code">Circle</span> Class</h4>
+
+<img src="images/ExerciseOOP_Circle_Simplified.png" alt="ExerciseOOP_Circle_Simplified.png" />
+
+<h4>Ex: The <span class="font-code">Rectangle</span> Class</h4>
+
+<img src="images/ExerciseOOP_Rectangle.png" alt="ExerciseOOP_Rectangle.png" />
+
+<h4>Ex: The <span class="font-code">Employee</span> Class</h4>
+
+<img src="images/ExerciseOOP_Employee.png" alt="ExerciseOOP_Employee.png" />
+
+<h4>Ex: The <span class="font-code">InvoiceItem</span> Class</h4>
+
+<img src="images/ExerciseOOP_InvoiceItem.png" alt="ExerciseOOP_InvoiceItem.png" />
+
+<h4>Ex: The <span class="font-code">Account</span> Class</h4>
+
+<img src="images/ExerciseOOP_Account.png" alt="ExerciseOOP_Account.png" />
+
+<h4>Ex: The <span class="font-code">Date</span> Class</h4>
+
+<img src="images/ExerciseOOP_Date.png" alt="ExerciseOOP_Date.png" />
+
+<h4>Ex: The <span class="font-code">Time</span> Class</h4>
+
+<img src="images/ExerciseOOP_Time.png" alt="ExerciseOOP_Time.png" />
+
+<h3 id="ExerciseComposition">Exercises on Composition</h3>
+
+<h4 id="bookauthor">Ex: The <span class="font-code">Author</span> and <span class="font-code">Book</span> Classes (An Introduction to OOP Composition)</h4>
+
+<p>This first exercise shall lead you through all the concepts involved in OOP Composition.</p>
+
+<img src="images/ExerciseOOP_Author.png" alt="ExerciseOOP_Author.png" />
+
+<p>A class called <code>Author</code> (as shown in the class diagram) is designed to model a book's author. It contains:</p>
+
+<ul>  
+<li>Three <code>private</code> instance variables: <code>name</code> (<code>String</code>), <code>email</code> (<code>String</code>), and <code>gender</code> (<code>char</code> of either <code>'m'</code> or <code>'f'</code>);</li>
+
+<li>One constructor to initialize the <code>name</code>, <code>email</code> and <code>gender</code> with the given values;
+<pre class="color-syntax">
+public Author (String name, String email, char gender) {......}</pre>
+
+(There is no default constructor for Author, as there are no defaults for name, email and gender.)</li>
+
+<li><code>public</code> getters/setters: <code>getName()</code>, <code>getEmail()</code>, <code>setEmail()</code>, and <code>getGender()</code>;<br />
+(There are no setters for <code>name</code> and <code>gender</code>, as these attributes cannot be changed.)</li>
+<li>A <code>toString()</code> method that returns &quot;<code>Author[name=?,email=?,gender=?]</code>&quot;, e.g., &quot;<code>Author[name=Tan Ah Teck,email=ahTeck@somewhere.com,gender=m]</code>&quot;.</li>
+</ul>
+
+<p>Write the  <code>Author</code> class.  Also write a <em>test driver</em> called <code>TestAuthor</code> to test all the <code>public</code> methods, e.g.,</p>
+<pre class="color-example">
+Author ahTeck = new Author(&quot;Tan Ah Teck&quot;, &quot;ahteck@nowhere.com&quot;, 'm'); <span class="color-comment">// Test the constructor</span>
+System.out.println(ahTeck);  <span class="color-comment">// Test toString()</span>
+ahTeck.setEmail(&quot;paulTan@nowhere.com&quot;);  <span class="color-comment">// Test setter</span>
+System.out.println("name is: " + ahTeck.getName());     <span class="color-comment">// Test getter</span>
+System.out.println("eamil is: " + ahTeck.getEmail());   <span class="color-comment">// Test getter</span>
+System.out.println("gender is: " + ahTeck.getGender()); <span class="color-comment">// Test gExerciseOOP_MyPolynomial.pngetter</span>
+</pre>
+
+<br />
+<img src="images/ExerciseOOP_Book.png" alt="ExerciseOOP_Book.png" />
+
+<p>A class called <code>Book</code> is designed (as shown in the class diagram) to model  a book written by <em>one</em> author. It contains:</p>
+
+<ul>
+<li>Four <code>private</code> instance variables: <code>name</code> (<code>String</code>), <code>author</code> (of the class <code>Author</code> you have just created, assume that a book has one and only one author), <code>price</code> (<code>double</code>), and <code>qty</code> (<code>int</code>);</li>
+
+<li>Two constructors:
+<pre class="color-syntax">
+public Book (String name, Author author, double price) { ...... }
+public Book (String name, Author author, double price, int qty) { ...... }</pre></li>
+
+<li>public methods <code>getName()</code>, <code>getAuthor()</code>, <code>getPrice()</code>, <code>setPrice()</code>, <code>getQty()</code>, <code>setQty()</code>.</li>
+
+<li>A <code>toString()</code> that returns &quot;<code>Book[name=?,Author[name=?,email=?,gender=?],price=?,qty=?</code>&quot;.  You should reuse  <code>Author</code>&rsquo;s <code>toString()</code>.</li></ul>
+
+<p>Write the  <code>Book</code> class (which uses the <code>Author</code> class written earlier).  Also write a test driver called <code>TestBook</code> to test all the <code>public</code> methods in the class <code>Book</code>.  Take Note that you have to construct an instance of <code>Author</code> before you can construct an instance of <code>Book</code>.  E.g.,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Construct an author instance</span>
+Author ahTeck = new Author("Tan Ah Teck", "ahteck@nowhere.com", 'm');
+System.out.println(ahTeck);  <span class="color-comment">// Author's toString()</span>
+
+Book dummyBook = new Book("Java for dummy", ahTeck, 19.95, 99);  <span class="color-comment">// Test Book's Constructor</span>
+System.out.println(dummyBook);  <span class="color-comment">// Test Book's toString()</span>
+
+<span class="color-comment">// Test Getters and Setters</span>
+dummyBook.setPrice(29.95);
+dummyBook.setQty(28);
+System.out.println("name is: " + dummyBook.getName());
+System.out.println("price is: " + dummyBook.getPrice());
+System.out.println("qty is: " + dummyBook.getQty());
+System.out.println("Author is: " + dummyBook.getAuthor());  <span class="color-comment">// Author's toString()</span>
+System.out.println("Author's name is: " + dummyBook.getAuthor().getName());
+System.out.println("Author's email is: " + dummyBook.getAuthor().getEmail());
+
+<span class="color-comment">// Use an anonymous instance of Author to construct a Book instance</span>
+Book anotherBook = new Book("more Java", 
+      new Author("Paul Tan", "paul@somewhere.com", 'm'), 29.95);
+System.out.println(anotherBook);  <span class="color-comment">// toString()</span></pre>
+
+<p>Take note that both <code>Book</code> and <code>Author</code> classes have a variable called <code>name</code>. However, it can be differentiated via the referencing instance. For a <code>Book</code> instance says <code>aBook</code>, <code>aBook.name</code> refers to the <code>name</code> of the book; whereas for an <code>Author</code>'s instance say <code>auAuthor</code>, <code>anAuthor.name</code> refers to the <code>name</code> of the author. There is no need (and not recommended) to call the variables <code>bookName</code> and <code>authorName</code>.</p>
+
+<p>TRY:</p>
+<ol>
+<li>Printing the <code>name</code> and <code>email</code> of the author from a <code>Book</code> instance. (Hint: <code>aBook.getAuthor().getName()</code>,  <code>aBook.getAuthor().getEmail()</code>).</li>
+
+<li>Introduce new methods called <code>getAuthorName()</code>, <code>getAuthorEmail()</code>, <code>getAuthorGender()</code> in the <code>Book</code> class to return the <code>name</code>, <code>email</code> and <code>gender</code> of the author of the book. For example,
+
+<pre class="color-example">
+public String getAuthorName() {
+   return author.getName();
+      <span class="color-comment">// cannot use author.name as name is private in Author class</span>
+}</pre>
+</li>
+</ol>
+
+<h4>Exercise (Advanced): <span class="font-code">Book</span> and <span class="font-code">Author</span> Classes Again - An Array of Objects as an Instance Variable</h4>
+
+<img src="images/ExerciseOOP_BookAuthorAgain.png" alt="ExerciseOOP_BookAuthorAgain.png" />
+<p>In the <a href="#bookauthor">earlier exercise</a>, a book is written by one and only one author.  In reality, a book can be written by one or more author.  Modify the <code>Book</code> class to support one or more authors by changing the instance variable <code>authors</code> to an <code>Author</code> array.</p>
+
+<p>Notes:</p>
+<ul>
+<li>The constructors take an array of <code>Author</code> (i.e., <code>Author[]</code>), instead of an <code>Author</code> instance. In this design, once a <code>Book</code> instance is constructor, you cannot add or remove author.</li>
+<li>The <code>toString()</code> method shall return &quot;<code>Book[name=?,authors={Author[name=?,email=?,gender=?],......},price=?,qty=?]</code>&quot;.</li>
+</ul>
+ 
+<p>You are required to:</p>
+<ol>
+<li>Write the code for the <code>Book</code> class. You shall re-use the <code>Author</code> class written earlier.</li>
+<li>Write a test driver (called <code>TestBook</code>) to test the <code>Book</code> class.</li>
+</ol>
+
+<p><strong>Hints</strong>:</p>
+<pre class="color-example">
+<span class="color-comment">// Declare and allocate an array of Authors</span>
+Author[] authors = new Author[2];
+authors[0] = new Author("Tan Ah Teck", "AhTeck@somewhere.com", 'm');
+authors[1] = new Author("Paul Tan", "Paul@nowhere.com", 'm');
+
+<span class="color-comment">// Declare and allocate a Book instance</span>
+Book javaDummy = new Book("Java for Dummy", authors, 19.99, 99);
+System.out.println(javaDummy);  <span class="color-comment">// toString()</span></pre>
+
+
+<h4>Ex: The <span class="font-code">MyPoint</span> Class</h4>
+
+<img src="images/ExerciseOOP_MyPoint.png" alt="ExerciseOOP_MyPoint.png" />
+<p>A class called <code>MyPoint</code>, which models a 2D point with <code>x</code> and <code>y</code> coordinates, is designed as shown in the class diagram. It contains:</p>
+
+<ul>
+<li>Two instance variables <code>x</code> (<code>int</code>) and <code>y</code> (<code>int</code>).</li>
+<li>A default (or &quot;no-argument&quot; or &quot;no-arg&quot;) constructor that construct a point at the default location of <code>(0, 0)</code>.</li>
+<li>A overloaded constructor that constructs a point with the given <code>x</code> and <code>y</code> coordinates.</li>
+<li>Getter and setter for the instance variables <code>x</code> and <code>y</code>.</li>
+<li>A method <code>setXY()</code> to set both <code>x</code> and <code>y</code>.</li>
+<li>A method <code>getXY()</code> which returns  the x and y in a 2-element <code>int</code> array.</li>
+<li>A <code>toString()</code> method that returns a string description of the instance in the format &quot;<code>(<em>x</em>, <em>y</em>)</code>&quot;.</li>
+<li>A method called <code>distance(int x, int y)</code> that returns the distance from <em>this</em> point to another point at the given <code>(x, y)</code> coordinates, e.g.,
+<pre class="color-example">
+MyPoint p1 = new MyPoint(3, 4);
+System.out.println(p1.distance(5, 6));</pre>
+</li>
+<li>An overloaded <code>distance(MyPoint another)</code> that returns the distance from <em>this</em> point to the given <code>MyPoint</code> instance (called <code>another</code>), e.g.,
+<pre class="color-example">
+MyPoint p1 = new MyPoint(3, 4);
+MyPoint p2 = new MyPoint(5, 6);
+System.out.println(p1.distance(p2));</pre>
+</li>
+
+<li>Another overloaded <code>distance()</code> method that returns the distance from <code>this</code> point to the origin <code>(0,0)</code>, e.g.,
+<pre class="color-example">
+MyPoint p1 = new MyPoint(3, 4);
+System.out.println(p1.distance());</pre></li>
+</ul>
+
+<p>You are required to:</p>
+
+<ol>
+<li>Write the code for the class <code>MyPoint</code>. Also write a test program (called <code>TestMyPoint</code>) to test all the methods defined in the class.<br />
+
+Hints:
+<pre class="color-example">
+<span class="color-comment">// Overloading method distance()</span>
+<span class="color-comment">// This version takes two ints as arguments</span>
+public double distance(int x, int y) {
+   int xDiff = this.x – x;
+   int yDiff = ......
+   return Math.sqrt(xDiff*xDiff + yDiff*yDiff);
+}
+  
+<span class="color-comment">// This version takes a MyPoint instance as argument</span>
+public double distance(MyPoint another) {
+   int xDiff = this.x – another.x;
+   .......
+}</pre>
+
+<pre class="color-example">
+<span class="color-comment">// Test program to test all constructors and public methods</span>
+MyPoint p1 = new MyPoint();  <span class="color-comment">// Test constructor</span>
+System.out.println(p1);      <span class="color-comment">// Test toString()</span>
+p1.setX(8);   <span class="color-comment">// Test setters</span>
+p1.setY(6);
+System.out.println("x is: " + p1.getX());  <span class="color-comment">// Test getters</span>
+System.out.println("y is: " + p1.getY());
+p1.setXY(3, 0);   <span class="color-comment">// Test setXY()</span>
+System.out.println(p1.getXY()[0]);  <span class="color-comment">// Test getXY()</span>
+System.out.println(p1.getXY()[1]);
+System.out.println(p1);
+
+MyPoint p2 = new MyPoint(0, 4);  <span class="color-comment">// Test another constructor</span>
+System.out.println(p2);
+<span class="color-comment">// Testing the overloaded methods distance()</span>
+System.out.println(p1.distance(p2));    <span class="color-comment">// which version?</span>
+System.out.println(p2.distance(p1));    <span class="color-comment">// which version?</span>
+System.out.println(p1.distance(5, 6));  <span class="color-comment">// which version?</span>
+System.out.println(p1.distance());      <span class="color-comment">// which version?</span>
+</pre>
+</li>
+
+<li>Write a program that allocates <code>10</code> points in an array of <code>MyPoint</code>, and initializes to <code>(1, 1)</code>, <code>(2, 2)</code>, ... <code>(10, 10)</code>.<br />
+
+  <strong>Hints</strong>: You need to allocate the array, as well as each of  the 10 <code>MyPoint</code> instances.  In  other words, you need to issue 11 <code>new</code>, 1  for the array and 10 for the <code>MyPoint</code> instances.
+<pre class="color-example">
+MyPoint[] points = new MyPoint[10];  <span class="color-comment">// Declare and allocate an array of MyPoint</span>
+for (int i = 0; i &lt; points.length; i++) {
+   points[i] = new MyPoint(...);    <span class="color-comment">// Allocate each of MyPoint instances</span>
+}
+<span class="color-comment">// use a loop to print all the points</span>
+</pre>
+</li>
+</ol>
+
+<p><strong>Notes</strong>: Point is such a common entity that JDK certainly provided for in all flavors.</p>
+
+<h4>Ex: The <span class="font-code">MyCircle</span> and <span class="font-code">MyPoint</span> Classes</h4>
+<img src="images/ExerciseOOP_MyCircle.png" alt="ExerciseOOP_MyCircle.png" />
+<p>A class called <code>MyCircle</code>, which models a circle with a <code>center</code> <code>(x,y)</code> and a <code>radius</code>, is designed as shown in the class diagram. The <code>MyCircle</code> class uses an instance of <code>MyPoint</code> class (created in the previous exercise) as its <code>center</code>.</p>
+
+<p>The class contains:</p>
+
+<ul>
+<li>Two <code>private</code> instance variables: <code>center</code> (an instance of <code>MyPoint</code>) and <code>radius</code> (<code>int</code>).</li>
+
+<li>A constructor that constructs a circle with the given center's (<code>x</code>, <code>y</code>) and <code>radius</code>.</li>
+
+<li>An overloaded constructor that constructs a <code>MyCircle</code> given a <code>MyPoint</code> instance as <code>center</code>, and <code>radius</code>.</li>
+<li>A <em>default</em> constructor that construct a circle with center at <code>(0,0)</code> and radius of <code>1</code>.</li>
+
+<li>Various getters and setters.</li>
+
+<li>A <code>toString()</code> method that returns a string description of this instance in the format &quot;<code>MyCircle[radius=<em>r</em>,center=(<em>x</em>,<em>y</em>)]</code>&quot;. You shall reuse the <code>toString()</code> of <code>MyPoint</code>.</li>
+
+<li><code>getArea()</code> and <code>getCircumference()</code> methods that return the area and circumference of <code>this</code> circle in <code>double</code>.</li>
+<li>A <code>distance(MyCircle another)</code> method that returns the distance of the centers from  <code>this</code> instance and the given <code>MyCircle</code> instance.  You should use <code>MyPoint</code>&rsquo;s <code>distance()</code> method to compute this distance.</li>
+</ul>
+
+<p>Write the <code>MyCircle</code> class.  Also write a test driver (called <code>TestMyCircle</code>) to test all the public methods defined in the class.</p>
+
+<p><strong>Hints</strong>:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Constructors</span>
+public MyCircle(int x, int y, int radius) {
+   <span class="color-comment">// Need to construct an instance of MyPoint for the variable center</span>
+   center = new MyPoint(x, y);
+   this.radius = radius;
+}
+public MyCircle(MyPoint center, int radius) {
+   <span class="color-comment">// An instance of MyPoint already constructed by caller; simply assign.</span>
+   this.center = center;
+   ......
+}
+public MyCircle() {
+   center = new MyPoint(.....);  <span class="color-comment">// construct MyPoint instance</span>
+   this.radius = ......
+}
+
+<span class="color-comment">// Returns the x-coordinate of the center of this MyCircle</span>
+public int getCenterX() {
+   return center.getX();   <span class="color-comment">// cannot use center.x and x is private in MyPoint</span>
+}
+
+<span class="color-comment">// Returns the distance of the center for this MyCircle and another MyCircle</span>
+public double distance(MyCircle another) {
+   return center.distance(another.center); <span class="color-comment">// use distance() of MyPoint</span>
+}</pre>
+
+
+<h4 class="float-clear">Ex: The <span class="font-code">MyTriangle</span> and <span class="font-code">MyPoint</span> Classes</h4>
+<img src="images/ExerciseOOP_MyTriangle.png" alt="ExerciseOOP_MyTriangle.png" />
+
+<p>A class called <code>MyTriangle</code>, which models a triangle with 3 vertices, is designed as shown. The <code>MyTriangle</code> class uses three <code>MyPoint</code> instances (created in the earlier exercise) as its three vertices.</p>
+
+<p>It contains:</p>
+<ul>
+<li>Three <code>private</code> instance variables <code>v1</code>, <code>v2</code>, <code>v3</code> (instances of <code>MyPoint</code>), for the three vertices.</li>
+
+<li>A constructor that constructs a <code>MyTriangle</code> with three set of coordinates, <code>v1=(x1, y1)</code>, <code>v2=(x2, y2)</code>, <code>v3=(x3, y3)</code>.</li>
+
+<li>An overloaded constructor that constructs a <code>MyTriangle</code> given three instances of <code>MyPoint</code>.</li>
+
+<li>A <code>toString()</code> method that returns a string description of the instance in the format &quot;<code>MyTriangle[v1=(<em>x</em>1,<em>y</em>1),v2=(<em>x</em>2,<em>y</em>2),v3=(<em>x</em>3,<em>y</em>3)]</code>&quot;.</li>
+
+<li>A <code>getPerimeter()</code> method that returns the length of the perimeter in double. You should use the <code>distance()</code> method of <code>MyPoint</code> to compute the perimeter.</li>
+
+<li>A method <code>printType()</code>, which prints &quot;<code>equilateral</code>&quot; if all the three sides are equal, &quot;<code>isosceles</code>&quot; if any two of the three sides are equal, or &quot;<code>scalene</code>&quot; if the three sides are different.</li>
+</ul>
+
+<p>Write the <code>MyTriangle</code> class.  Also write a test driver (called <code>TestMyTriangle</code>) to test all the <code>public</code> methods defined in the class.</p>
+
+<h4 class="float-clear">Ex: The <span class="font-code">MyRectangle</span> and <span class="font-code">MyPoint</span> Classes</h4>
+
+<p>Design a <code>MyRectangle</code> class which is composed of two <code>MyPoint</code> instances as its <em>top-left</em> and <em>bottom-right</em> corners. Draw the class diagrams, write the codes, and write the test drivers.</p>
+
+
+<h4>Ex: The <span class="font-code">Customer</span> and <span class="font-code">Invoice</span> classes</h4>
+
+<img src="images/ExerciseOOP_Customer.png" alt="ExerciseOOP_Customer.png" />
+<p>The <code>Customer</code> class models a customer is design as shown in the class diagram. Write the codes for the <code>Customer</code> class and a test driver to test all the <code>public</code> methods.</p>
+
+<img src="images/ExerciseOOP_Invoice.png" alt="ExerciseOOP_Invoice.png" />
+
+<p>The <code>Invoice</code> class, design as shown in the class diagram, composes a <code>Customer</code> instance (written earlier) as its member. Write the codes for the <code>Invoice</code> class and a test driver to test all the <code>public</code> methods.</p>
+
+
+<h4>Ex: The <span class="font-code">Customer</span> and <span class="font-code">Account</span> classes</h4>
+
+<img src="images/ExerciseOOP_CustomerAccount.png" alt="ExerciseOOP_CustomerAccount.png" />
+<p>The <code>Customer</code> class models a customer is design as shown in the class diagram. Write the codes for the <code>Customer</code> class and a test driver to test all the <code>public</code> methods.</p>
+
+<img src="images/ExerciseOOP_AccountCustomer.png" alt="ExerciseOOP_AccountCustomer.png" />
+
+<p>The <code>Account</code> class models a bank account, design as shown in the class diagram, composes a <code>Customer</code> instance (written earlier) as its member. Write the codes for the <code>Account</code> class and a test driver to test all the <code>public</code> methods.</p>
+
+<h3 id="ExerciseMoreClasses">More Exercises on Classes</h3>
+
+
+<h4>Ex: The <span class="font-code">MyComplex</span> class</h4>
+
+<img src="images/ExerciseOOP_MyComplex.png" alt="ExerciseOOP_MyComplex.png" />
+
+<p>A class called <code>MyComplex</code>, which models complex numbers <code>x+yi</code>, is designed as shown in the class diagram. It contains:</p>
+<ul>
+<li>Two instance variable named <code>real</code> (<code>double</code>) and <code>imag</code> (<code>double</code>) which stores the real and imaginary parts of the complex number, respectively.</li>
+<li>A constructor that creates a <code>MyComplex</code> instance with the given real and imaginary values.</li>
+<li>A default constructor that create a MyComplex  at <code>0.0 + 0.0i</code>.</li>
+<li>Getters and setters for instance variables <code>real</code> and <code>imag</code>.</li>
+<li>A method <code>setValue()</code> to set the value of the complex number.</li>
+<li>A <code>toString()</code> that returns &quot;<code>(x + yi)</code>&quot; where <code>x</code> and <code>y</code> are the real and imaginary parts, respectively.</li>
+<li>Methods <code>isReal()</code> and <code>isImaginary()</code> that returns <code>true</code> if this complex number is real or imaginary, respectively. <br />
+  Hints:
+    <pre class="color-example">
+<span class="color-comment"></span>return (imag == 0);</pre></li>
+
+<li>A method <code>equals(double real, double imag)</code> that returns <code>true</code> if <code>this</code> complex number is equal to the given complex number (real, imag).<br />
+Hints:
+<pre class="color-example">
+return (this.real == real &amp;&amp; this.imag == imag);</pre>
+</li>
+<li>An overloaded <code>equals(MyComplex another)</code> that returns <code>true</code> if <em>this</em> complex number is equal to the given <code>MyComplex</code> instance <code>another</code>.<br />
+Hints:
+<pre class="color-example">
+return (this.real == another.real &amp;&amp; this.imag == another.imag);</pre>
+</li>
+<li>A method <code>magnitude()</code> that returns the magnitude of this complex number.
+<pre class="color-syntax">
+magnitude(x+yi) = Math.sqrt(x*x + y*y)</pre></li>
+<li>Methods <code>argument()</code> that returns the argument of this complex number in radians (<code>double</code>).
+  <pre class="color-syntax">
+arg(x+yi) = Math.atan2(y, x) (in radians)</pre>
+Note: The <code>Math</code> library has two arc-tangent methods, <code>Math.atan(double)</code> and <code>Math.atan2(double, double)</code>.  We commonly use the <code>Math.atan2(y, x)</code> instead of <code>Math.atan(y/x)</code> to avoid division by zero.  Read the documentation of <code>Math</code> class in package <code>java.lang</code>.</li>
+<li>Methods <code>add(MyComplex right)</code> and <code>subtract(MyComplex right)</code> that adds and subtract the given <code>MyComplex</code> instance (called <code>right</code>), into/from  <code>this</code> instance and returns <code>this</code> instance.
+  <pre class="color-syntax">
+(a + bi) + (c + di) = (a+c) + (b+d)i
+(a + bi) - (c + di) = (a-c) + (b-d)i</pre>
+Hints:
+<pre class="color-example">
+return this;  <span class="color-comment">// return &quot;this&quot; instance</span></pre></li>
+
+<li>Methods <code>addNew(MyComplex right)</code> and <code>subtractNew(MyComplex right)</code> that adds and subtract <code>this</code> instance with the given <code>MyComplex</code> instance called <code>right</code>, and returns a new <code>MyComplex</code> instance containing the result.<br />
+Hint:
+<pre class="color-example">
+<span class="color-comment">// construct a new instance and return the constructed instance</span>
+return new MyComplex(..., ...);</pre></li>
+
+<li>Methods <code>multiply(MyComplex right)</code> and <code>divide(MyComplex right)</code> that multiplies and divides <code>this</code> instance with the given <code>MyComplex</code> instance <code>right</code>, and keeps the result in <code>this</code> instance, and returns this instance.
+<pre class="color-syntax">
+(a + bi) * (c + di) = (ac - bd) + (ad + bc)i
+(a + bi) / (c + di) = [(a + bi) * (c – di)] / (c*c + d*d)</pre></li>
+<li>A method <code>conjugate()</code> that operates on <code>this</code> instance and returns <code>this</code> instance  containing the <em>complex conjugate</em>.
+<pre class="color-syntax">
+conjugate(x+yi) = x - yi</pre></li>
+</ul>
+
+<p>You are required to:</p>
+<ol>
+<li>Write the <code>MyComplex</code> class.</li>
+<li>Write a test driver to test all the <code>public</code> methods defined in the class.</li>
+<li>Write an application called <code>MyComplexApp</code> that uses the <code>MyComplex</code> class. The application shall prompt the user for two complex numbers, print their values, check for real, imaginary and equality, and carry out all the arithmetic operations.
+<pre class="output">
+Enter complex number 1 (real and imaginary part): <strong>1.1 2.2</strong>
+Enter complex number 2 (real and imaginary part): <strong>3.3 4.4</strong>
+  
+Number 1 is: (1.1 + 2.2i)
+(1.1 + 2.2i) is NOT a pure real number
+(1.1 + 2.2i) is NOT a pure imaginary number
+  
+Number 2 is: (3.3 + 4.4i)
+(3.3 + 4.4i) is NOT a pure real number
+(3.3 + 4.4i) is NOT a pure imaginary number
+   
+(1.1 + 2.2i) is NOT equal to (3.3 + 4.4i)
+(1.1 + 2.2i) + (3.3 + 4.4i) = (4.4 + 6.6000000000000005i)
+(1.1 + 2.2i) - (3.3 + 4.4i) = (-2.1999999999999997 + -2.2i)</pre></li>
+</ol>
+
+<p>Take note that there are a few flaws in the design of this class, which was introduced solely for teaching purpose:</p>
+<ul>
+<li>Comparing <code>double</code>s in <code>equal()</code> using &quot;<code>==</code>&quot; may produce unexpected outcome.  For example, <code>(2.2+4.4)==6.6</code> returns <code>false</code>. It is common to define a small threshold called <code>EPSILON</code> (set to about <code>10^-8</code>) for comparing floating point numbers.</li>
+<li>The method <code>addNew()</code>, <code>subtractNew()</code> produce new instances, whereas <code>add()</code>, <code>subtract()</code>, <code>multiply()</code>, <code>divide()</code> and <code>conjugate()</code> modify <code>this</code> instance. There is inconsistency in the design (introduced for teaching purpose).</li>
+</ul>
+
+<p>Also take note that methods such as <code>add()</code> returns an instance of <code>MyComplex</code>.  Hence, you can place the result inside a <code>System.out.println()</code> (which implicitly invoke the <code>toString()</code>).  You can also chain the operations, e.g., <code>c1.add(c2).add(c3)</code> (same as <code>(c1.add(c2)).add(c3))</code>, or <code>c1.add(c2).subtract(c3)</code>.</p>
+
+<h4>Ex: The <span class="font-code">MyPolynomial</span> Class</h4>
+
+<img src="images/ExerciseOOP_MyPolynomial.png" alt="ExerciseOOP_MyPolynomial.png" />
+
+<p>A class called <code>MyPolynomial</code>, which models polynomials of degree-<code><em>n</em></code> (see equation), is designed as shown in the class diagram.</p>
+<img class="image-left" src="images/ExerciseOOP_MyPolynomialEqn.png" alt="ExerciseOOP_MyPolynomialEqn.png" />
+
+<p>It contains:</p>
+<ul>
+<li>An instance variable named <code>coeffs</code>, which stores the coefficients of the <em>n</em>-degree polynomial in a <code>double</code> array of size <code>n+1</code>, where c<sub>0</sub> is kept at index 0.</li>
+<li>A constructor <code>MyPolynomial(coeffs:double...)</code> that takes a variable number of doubles to initialize the coeffs array, where the first argument corresponds to c<sub>0</sub>.
+  <br />
+  The three dots is known as <em>varargs</em> (variable number of arguments), which is a new feature introduced in JDK 1.5.  It accepts an array or a sequence of comma-separated arguments.  The compiler automatically packs the comma-separated arguments in an array. The three dots can only be used for the last argument of the method.<br />
+
+Hints:
+<pre class="color-syntax">
+public class MyPolynomial {
+   private double[] coeffs;
+   public MyPolynomial(double... coeffs) {  <span class="color-comment">// varargs</span>
+      this.coeffs = coeffs;                 <span class="color-comment">// varargs is treated as array</span>
+   }
+   ......
+}
+   
+<span class="color-comment">// Test program
+// Can invoke with a variable number of arguments</span>
+MyPolynomial p1 = new MyPolynomial(1.1, 2.2, 3.3);
+MyPolynomial p1 = new MyPolynomial(1.1, 2.2, 3.3, 4.4, 5.5);
+<span class="color-comment">// Can also invoke with an array</span>
+Double coeffs = {1.2, 3.4, 5.6, 7.8}
+MyPolynomial p2 = new MyPolynomial(coeffs);</pre></li>
+
+<li>A method <code>getDegree()</code> that returns the degree of this polynomial.</li>
+<li>A method <code>toString()</code> that returns &quot;c<sub>n</sub>x^n+c<sub>n-1</sub>x^(n-1)+...+c<sub>1</sub>x+c<sub>0</sub>&quot;.</li>
+<li>A method <code>evaluate(double x)</code> that evaluate the polynomial for the given <code>x</code>, by substituting the given <code>x</code> into the polynomial expression.</li>
+<li>Methods <code>add()</code> and <code>multiply()</code> that adds and multiplies this polynomial with the given <code>MyPolynomial</code> instance <code>another</code>, and returns <code>this</code> instance that contains the result.</li>
+</ul>
+
+<p>Write the <code>MyPolynomial</code> class.  Also write a test driver (called <code>TestMyPolynomial</code>) to test all the <code>public</code> methods defined in the class.</p>
+
+<p>Question: Do you need to keep the degree of the polynomial as an instance variable in the <code>MyPolynomial</code> class in Java? How about C/C++? Why?</p>
+
+<h4>Ex: Using  JDK's <span class="font-code">BigInteger</span> Class</h4>
+<p>Recall that primitive integer type <code>byte</code>, <code>short</code>, <code>int</code> and <code>long</code> represent 8-, 16-, 32-, and 64-bit signed integers, respectively. You cannot use them for integers bigger than 64 bits.  Java API provides a class called <code>BigInteger</code> in a package called <code>java.math</code>.  Study the API of the <code>BigInteger</code> class (Java API &rArr; From &quot;Packages&quot;, choose &quot;java.math&quot; &quot; From &quot;classes&quot;, choose &quot;BigInteger&quot; &quot; Study the constructors (choose &quot;CONSTR&quot;) on how to construct a <code>BigInteger</code> instance, and the public methods available (choose &quot;METHOD&quot;). Look for methods for adding and multiplying two <code>BigIntegers</code>.</p>
+
+<p>Write a program called <code>TestBigInteger</code> that:</p>
+<ol>
+<li>adds &quot;11111111111111111111111111111111111111111111111111111111111111&quot; to &quot;22222222222222222222222222222222222222222222222222&quot; and prints the result.</li>
+<li>multiplies the above two number and prints the result.</li>
+</ol>
+<p>Hints:</p>
+<pre class="color-example">
+import java.math.BigInteger
+public class <strong>TestBigInteger</strong> {
+   public static void main(String[] args) {
+      BigInteger i1 = new BigInteger(...);
+      BigInteger i2 = new BigInteger(...);
+      System.out.println(i1.add(i2));
+      .......
+   }
+}</pre>
+
+<h4>Ex: The <span class="font-code">MyTime</span> Class</h4>
+
+<img src="images/ExerciseOOP_MyTime.png" alt="ExerciseOOP_MyTime.png" />
+
+<p>A class called <code>MyTime</code>, which models a time instance, is designed as shown in the class diagram.</p>
+
+<p>It contains the following <code>private</code> instance variables:</p>
+<ul>
+<li><code>hour</code>: between 0 to 23.</li>
+<li><code>minute</code>: between 0 to 59.</li>
+<li><code>Second</code>: between 0 to 59.</li>
+</ul>
+
+<p>You are required to perform <em>input validation</em>.</p>
+<p>It contains the following <code>public</code> methods:</p>
+<ul>
+  <li><code>setTime(int hour, int minute, int second)</code>: It shall check if the given <code>hour</code>, <code>minute</code> and <code>second</code> are valid before setting the instance variables.<br />
+(Advanced: Otherwise, it shall throw an <code>IllegalArgumentException</code> with the message &quot;Invalid hour, minute, or second!&quot;.)</li>
+
+<li>Setters <code>setHour(int hour)</code>, <code>setMinute(int minute)</code>, <code>setSecond(int second)</code>: It shall check if the parameters are valid, similar to the above.</li>
+
+<li>Getters <code>getHour()</code>, <code>getMinute()</code>, <code>getSecond()</code>.</li>
+
+<li><code>toString()</code>: returns &quot;<code>HH:MM:SS</code>&quot;.</li>
+
+<li><code>nextSecond()</code>: Update this instance to the next second and return this instance.  Take note that the <code>nextSecond()</code> of <code>23:59:59</code> is <code>00:00:00</code>.</li>
+
+<li><code>nextMinute()</code>, <code>nextHour()</code>, <code>previousSecond()</code>, <code>previousMinute()</code>, <code>previousHour()</code>: similar to the above.</li>
+</ul>
+
+<p>Write the code for the <code>MyTime</code> class. Also write a test driver (called <code>TestMyTime</code>) to test all the <code>public</code> methods defined in the <code>MyTime</code> class.</p>
+
+<h4>Ex: The <span class="font-code">MyDate</span> Class</h4>
+<img src="images/ExerciseOOP_MyDate.png" alt="ExerciseOOP_MyDate.png" />
+
+<p>A class called <code>MyDate</code>, which models a date instance, is defined as shown in the class diagram.</p>
+
+<p>The <code>MyDate</code> class contains the following <code>private</code> instance variables:</p>
+<ul>
+<li><code>year</code> (<code>int</code>): Between <code>1</code> to <code>9999</code>.</li>
+<li><code>month</code> (<code>int</code>): Between <code>1</code> (Jan) to <code>12</code> (Dec).</li>
+<li><code>day</code> (<code>int</code>): Between <code>1</code> to <code>28|29|30|31</code>, where the last day depends on the month and whether it is a leap year for Feb (<code>28|29</code>).</li>
+</ul>
+
+<p>It also contains the following <code>private</code> <code>static</code> variables (drawn with underlined in the class diagram):</p>
+<ul>
+<li><code>strMonths</code> (<code>String[]</code>), <code>strDays</code> (<code>String[]</code>), and <code>dayInMonths</code> (<code>int[]</code>): <code>static</code> variables, initialized as shown, which are used in the methods.</li>
+</ul>
+ 
+<p>The <code>MyDate</code> class has the following <code>public</code> <code>static</code> methods (drawn with underlined in the class diagram):</p>
+
+<ul>
+<li><code>isLeapYear(int year)</code>: returns <code>true</code> if the given <code>year</code> is a leap year. A year is a leap year if it is divisible by 4 but not by 100, or it is divisible by 400.</li>
+
+<li><code>isValidDate(int year, int month, int day)</code>: returns <code>true</code> if the given <code>year</code>, <code>month</code>, and <code>day</code> constitute a valid date.  Assume that <code>year</code> is between <code>1</code> and <code>9999</code>, <code>month</code> is between <code>1</code> (Jan) to <code>12</code> (Dec) and <code>day</code> shall be between <code>1</code> and <code>28|29|30|31</code> depending on the <code>month</code> and whether it is a leap year on Feb.</li>
+
+<li><code>getDayOfWeek(int year, int month, int day)</code>: returns the day of the week, where <code>0</code> for Sun, <code>1</code> for Mon, ..., <code>6</code> for Sat, for the given date. Assume that the date is valid.  Read the <a href="J2a_BasicsExercises.html#dateutil">earlier exercise on how to determine the day of the week</a> (or Wiki &quot;Determination of the day of the week&quot;).</li>
+
+</ul>
+
+<p>The <code>MyDate</code> class has one constructor, which takes 3 parameters: <code>year</code>, <code>month</code> and <code>day</code>.  It shall invoke <code>setDate()</code> method (to be described later) to set the instance variables.</p>
+
+<p>The <code>MyDate</code> class has the following <code>public</code> methods:</p>
+
+<ul>
+<li><code>setDate(int year, int month, int day)</code>: It shall invoke the <code>static</code> method <code>isValidDate()</code> to verify that the given <code>year</code>, <code>month</code> and <code>day</code> constitute a valid date.<br />
+(Advanced: Otherwise, it shall throw an <code>IllegalArgumentException</code> with the message &quot;Invalid year, month, or day!&quot;.)</li>
+
+<li><code>setYear(int year)</code>: It shall verify that the given <code>year</code> is between <code>1</code> and <code>9999</code>.<br />
+(Advanced: Otherwise, it shall throw an <code>IllegalArgumentException</code> with the message &quot;Invalid year!&quot;.)</li>
+
+<li><code>setMonth(int month)</code>: It shall verify that the given <code>month</code> is between <code>1</code> and <code>12</code>.<br />
+(Advanced: Otherwise, it shall throw an <code>IllegalArgumentException</code> with the message &quot;Invalid month!&quot;.)</li>
+
+<li><code>setDay(int day)</code>: It shall verify that the given <code>day</code> is between <code>1</code> and <code>dayMax</code>, where <code>dayMax</code> depends on the <code>month</code> and whether it is a leap year for Feb.<br />
+(Advanced: Otherwise, it shall throw an <code>IllegalArgumentException</code> with the message &quot;Invalid month!&quot;.)</li>
+
+<li><code>getYear()</code>, <code>getMonth()</code>, <code>getDay()</code>: return the value for the <code>year</code>, <code>month</code> and <code>day</code>, respectively.</li>
+
+<li><code>toString()</code>: returns a date string in the format &quot;<code>xxxday d mmm yyyy</code>&quot;, e.g., &quot;Tuesday 14 Feb 2012&quot;.</li>
+
+<li><code>nextDay()</code>: update <code>this</code> instance to the next day and return <code>this</code> instance. Take note that <code>nextDay()</code> for <code>31 Dec 2000</code> shall be <code>1 Jan 2001</code>.</li>
+
+<li><code>nextMonth()</code>: update <code>this</code> instance to the next month and return <code>this</code> instance. Take note that <code>nextMonth()</code> for <code>31 Oct 2012</code> shall be <code>30 Nov 2012</code>.</li>
+
+<li><code>nextYear()</code>: update <code>this</code> instance to the next year and return <code>this</code> instance. Take note that <code>nextYear()</code> for <code>29 Feb 2012</code> shall be <code>28 Feb 2013</code>.<br />
+(Advanced: throw an <code>IllegalStateException</code> with the message &quot;Year out of range!&quot; if year &gt; 9999.)</li>
+
+<li><code>previousDay()</code>, <code>previousMonth()</code>, <code>previousYear()</code>: similar to the above.</li>
+</ul>
+
+<p>Write the code for the <code>MyDate</code> class.</p>
+
+<p>Use the following test statements to test the <code>MyDate</code> class:</p>
+
+<pre  class="color-example">
+MyDate d1 = new MyDate(2012, 2, 28);
+System.out.println(d1);             <span class="color-comment">// Tuesday 28 Feb 2012</span>
+System.out.println(d1.nextDay());   <span class="color-comment">// Wednesday 29 Feb 2012</span>
+System.out.println(d1.nextDay());   <span class="color-comment">// Thursday 1 Mar 2012</span>
+System.out.println(d1.nextMonth()); <span class="color-comment">// Sunday 1 Apr 2012</span>
+System.out.println(d1.nextYear());  <span class="color-comment">// Monday 1 Apr 2013</span>
+
+MyDate d2 = new MyDate(2012, 1, 2);
+System.out.println(d2);                 <span class="color-comment">// Monday 2 Jan 2012</span>
+System.out.println(d2.previousDay());   <span class="color-comment">// Sunday 1 Jan 2012</span>
+System.out.println(d2.previousDay());   <span class="color-comment">// Saturday 31 Dec 2011</span>
+System.out.println(d2.previousMonth()); <span class="color-comment">// Wednesday 30 Nov 2011</span>
+System.out.println(d2.previousYear());  <span class="color-comment">// Tuesday 30 Nov 2010</span>
+
+MyDate d3 = new MyDate(2012, 2, 29);
+System.out.println(d3.previousYear());  <span class="color-comment">// Monday 28 Feb 2011</span>
+
+// MyDate d4 = new MyDate(2099, 11, 31); <span class="color-comment">// Invalid year, month, or day!</span>
+// MyDate d5 = new MyDate(2011, 2, 29);  <span class="color-comment">// Invalid year, month, or day!</span></pre>
+
+<p>Write a test program that tests the <code>nextDay()</code> in a loop, by printing the dates from <code>28 Dec 2011</code> to <code>2 Mar 2012</code>.</p>
+
+<h4>Ex: Bouncing Balls - <span class="font-code">Ball</span> and <span class="font-code">Container</span> Classes</h4>
+<img src="images/ExerciseOOP_Ball.png" alt="ExerciseOOP_Ball.png" />
+<p>A class called <code>Ball</code> is designed as shown in the class diagram.</p>
+
+<p>The <code>Ball</code> class contains the following <code>private</code> instance variables:</p>
+<ul>
+<li><code>x</code>, <code>y</code> and <code>radius</code>, which represent the ball's center <code>(x, y)</code> co-ordinates and the radius, respectively.</li>
+<li><code>xDelta</code> (<code>&Delta;x</code>) and <code>yDelta</code> (<code>&Delta;y</code>), which represent the displacement (movement) per step, in the <code>x</code> and <code>y</code> direction respectively.</li>
+</ul>
+ 
+<p>The <code>Ball</code> class contains the following <code>public</code> methods:</p>
+<ul>
+<li>A constructor which accepts <code>x</code>, <code>y</code>, <code>radius</code>, <code>speed</code>, and <code>direction</code> as arguments.  For user friendliness, user specifies <code>speed</code> (in pixels per step) and <code>direction</code> (in degrees in the range of <code>(-180&deg;, 180&deg;]</code>). For the internal operations, the <code>speed</code> and <code>direction</code> are to be converted to <code>(&Delta;x, &Delta;y)</code> in the internal representation. Note that the y-axis of the Java graphics coordinate system is inverted, i.e., the origin <code>(0, 0)</code> is located at the top-left corner.<br />
+<img class="image-left" src="images/ExerciseOOP_BallCoord.png" alt="ExerciseOOP_BallCoord.png" />
+<pre class="color-syntax">
+&Delta;x = d &times; cos(&theta;)
+&Delta;y = -d &times; sin(&theta;)</pre></li>
+
+<li>Getter and setter for all the instance variables.</li>
+<li>A method <code>move()</code> which move the ball by one step.
+<pre class="color-syntax">
+x += &Delta;x
+y += &Delta;y</pre></li>
+
+<li><code>reflectHorizontal()</code> which reflects the ball horizontally (i.e., hitting a vertical wall)
+<pre class="color-syntax">
+&Delta;x = -&Delta;x
+&Delta;y no changes</pre></li>
+
+<li><code>reflectVertical()</code> (the ball hits a horizontal wall).
+<pre class="color-syntax">
+&Delta;x no changes
+&Delta;y = -&Delta;y</pre></li>
+
+<li><code>toString()</code> which prints the message &quot;<code>Ball at (x, y) of velocity (&Delta;x, &Delta;y)</code>&quot;.</li>
+</ul>
+
+<p>Write the <code>Ball</code> class.  Also write a test program to test all the methods defined in the class.</p>
+
+<br />
+<img src="images/ExerciseOOP_Container.png" alt="ExerciseOOP_Container.png" />
+<p>A  class called <code>Container</code>, which represents the enclosing box for the ball, is designed as shown in the class diagram. It contains:</p>
+<ul>
+  <li>Instance variables <code>(x1, y1)</code> and <code>(x2, y2)</code> which denote the top-left and bottom-right corners of the rectangular box.</li>
+<li>A constructor which accepts <code>(x, y)</code> of the top-left corner, <code>width</code> and <code>height</code> as argument, and converts them into the internal representation (i.e., <code>x2=x1+width-1</code>).  <code>Width</code> and <code>height</code> is used in the argument for safer operation (there is no need to check the validity of <code>x2&gt;x1</code> etc.).</li>
+<li>A <code>toString()</code> method that returns &quot;<code>Container at (x1,y1) to (x2, y2)</code>&quot;.</li>
+<li>A <code>boolean</code> method called <code>collidesWith(Ball)</code>, which check if the given <code>Ball</code> is outside the bounds of the container box.  If so, it invokes the <code>Ball</code>'s <code>reflectHorizontal()</code> and/or <code>reflectVertical()</code> to change the movement direction of the ball, and returns <code>true</code>.
+<pre class="color-example">
+public boolean collidesWith(Ball ball) {
+   if (ball.getX() - ball.getRadius() &lt;= this.x1 ||
+       ball.getX() - ball.getRadius() &gt;= this.x2) {
+      ball.reflectHorizontal();
+      return true;
+   }
+   ......
+}</pre>
+</li>
+</ul>
+
+<p>Use the following statements to test your program:</p>
+<pre class="color-example">
+Ball ball = new Ball(50, 50, 5, 10, 30);
+Container box = new Container(0, 0, 100, 100);
+for (int step = 0; step &lt; 100; ++step) {
+   ball.move();
+   box.collidesWith(ball);
+   System.out.println(ball); <span class="color-comment">// manual check the position of the ball</span>
+}</pre>
+
+<h4>Ex: The <span class="font-code">Ball</span> and <span class="font-code">Player</span> Classes</h4>
+<img src="images/ExerciseOOP_BallPlayer.png" alt="ExerciseOOP_BallPlayer.png" />
+
+<p>The <code>Ball</code> class, which models the ball in a soccer game, is designed as shown in the class diagram. Write the codes for the <code>Ball</code> class and a test driver to test all the <code>public</code> methods.</p>
+
+<img src="images/ExerciseOOP_PlayerBall.png" alt="ExerciseOOP_PlayerBall.png" />
+<p>The <code>Player</code> class, which models the players in a soccer game, is designed as shown in the class diagram. The Player interacts with the Ball (written earlier). Write the codes for the <code>Player</code> class and a test driver to test all the <code>public</code> methods. Make your assumption for the <code>kick()</code>.</p>
+<p>Can you write a very simple soccer game with 2 teams of players and a ball, inside a soccer field?</p>
+
+<h3 id="ExerciseInheritance">Exercises on Inheritance</h3>
+
+<h4>Ex: The <span class="font-code">Circle</span> and <span class="font-code">Cylinder</span> Classes</h4>
+
+<p>This exercise shall guide you through the important concepts in inheritance.</p>
+
+<img src="images/ExerciseOOP_CircleCylinder.png" alt="ExerciseOOP_CircleCylinder.png" />
+
+<p>In this exercise, a subclass called <code>Cylinder</code> is derived from the superclass <code>Circle</code> as shown in the  class diagram (where an an arrow pointing up from the subclass to its superclass). Study how the subclass <code>Cylinder</code> invokes the superclass' constructors (via <code>super()</code> and <code>super(radius)</code>) and inherits the variables and methods from the superclass <code>Circle</code>.</p>
+
+<p>You can reuse the <code>Circle</code> class that you have created in the previous exercise. Make sure that you keep &quot;<code>Circle.class</code>&quot; in the same directory.</p>
+
+<pre class="color-example">
+public class <strong>Cylinder extends Circle</strong> {  <span class="color-comment">// Save as &quot;Cylinder.java&quot;</span>
+   private double height;  <span class="color-comment">// private variable</span>
+   
+   <span class="color-comment">// Constructor with default color, radius and height</span>
+   public Cylinder() {
+      super();        <span class="color-comment">// call superclass no-arg constructor Circle()</span>
+      height = 1.0; 
+   }
+   <span class="color-comment">// Constructor with default radius, color but given height</span>
+   public Cylinder(double height) {
+      super();        <span class="color-comment">// call superclass no-arg constructor Circle()</span>
+      this.height = height;
+   }
+   <span class="color-comment">// Constructor with default color, but given radius, height</span>
+   public Cylinder(double radius, double height) {
+      super(radius);  <span class="color-comment">// call superclass constructor Circle(r)</span>
+      this.height = height;
+   }
+   
+   <span class="color-comment">// A public method for retrieving the height</span>
+   public double getHeight() {
+      return height; 
+   }
+  
+   <span class="color-comment">// A public method for computing the volume of cylinder
+   //  use superclass method getArea() to get the base area</span>
+   public double getVolume() {
+      return getArea()*height; 
+   }
+}</pre>
+
+<p>Write a test program (says <code>TestCylinder</code>) to test the <code>Cylinder</code> class created, as follow:</p>
+<pre class="color-example">
+public class <strong>TestCylinder</strong> {  <span class="color-comment">// save as &quot;TestCylinder.java&quot;</span>
+   public static void main (String[] args) {
+      <span class="color-comment">// Declare and allocate a new instance of cylinder
+      //   with default color, radius, and height</span>
+      Cylinder c1 = new Cylinder();
+      System.out.println(&quot;Cylinder:&quot;
+            + &quot; radius=&quot; + c1.getRadius()
+            + &quot; height=&quot; + c1.getHeight()
+            + &quot; base area=&quot; + c1.getArea()
+            + &quot; volume=&quot; + c1.getVolume());
+   
+      <span class="color-comment">// Declare and allocate a new instance of cylinder
+      //   specifying height, with default color and radius</span>
+      Cylinder c2 = new Cylinder(10.0);
+      System.out.println(&quot;Cylinder:&quot;
+            + &quot; radius=&quot; + c2.getRadius()
+            + &quot; height=&quot; + c2.getHeight()
+            + &quot; base area=&quot; + c2.getArea()
+            + &quot; volume=&quot; + c2.getVolume());
+   
+      <span class="color-comment">// Declare and allocate a new instance of cylinder
+      //   specifying radius and height, with default color</span>
+      Cylinder c3 = new Cylinder(2.0, 10.0);
+      System.out.println(&quot;Cylinder:&quot;
+            + &quot; radius=&quot; + c3.getRadius()
+            + &quot; height=&quot; + c3.getHeight()
+            + &quot; base area=&quot; + c3.getArea()
+            + &quot; volume=&quot; + c3.getVolume());
+   }
+}</pre>
+
+<p><span class="line-heading">Method Overriding and &quot;Super&quot;:</span> The subclass <code>Cylinder</code> inherits <code>getArea()</code> method from its superclass Circle.  Try <em>overriding</em> the <code>getArea()</code> method in the subclass <code>Cylinder</code> to compute the surface area (=2&pi;&times;radius&times;height + 2&times;base-area) of the cylinder instead of base area.  That is, if <code>getArea()</code> is called by a <code>Circle</code> instance, it returns the area.  If <code>getArea()</code> is called by a <code>Cylinder</code> instance, it returns the surface area of the cylinder.</p>
+
+<p>If you override the <code>getArea()</code> in the subclass <code>Cylinder</code>, the <code>getVolume()</code> no longer works.  This is because the <code>getVolume()</code> uses the <em>overridden</em> <code>getArea()</code> method found in the same class.  (Java runtime will search the superclass only if it cannot locate the method in this class).  Fix the <code>getVolume()</code>.</p>
+<p>Hints:  After overridding the <code>getArea()</code> in subclass <code>Cylinder</code>, you can choose to invoke the <code>getArea()</code> of the superclass <code>Circle</code> by calling <code>super.getArea()</code>.</p>
+
+<p>TRY:</p>
+<p>Provide a <code>toString()</code> method to the <code>Cylinder</code> class, which overrides the <code>toString()</code> inherited from the superclass <code>Circle</code>, e.g.,</p>
+<pre class="color-example">
+@Override
+public String toString() {      <span class="color-comment">// in Cylinder class</span>
+   return &quot;Cylinder: subclass of &quot; + super.toString()  <span class="color-comment">// use Circle's toString()</span>
+          + &quot; height=&quot; + height;
+}</pre>
+
+<p>Try out the <code>toString()</code> method in <code>TestCylinder</code>.</p>
+
+<p>Note: <code>@Override</code> is known as <em>annotation</em> (introduced in JDK 1.5), which asks compiler to check whether there is such a method in the superclass to be overridden.  This helps greatly if you misspell the name of the <code>toString()</code>.  If <code>@Override</code> is not used and <code>toString()</code> is misspelled as <code>ToString()</code>, it will be treated as a new method in the subclass, instead of overriding the superclass.  If <code>@Override</code> is used, the compiler will signal an error.  <code>@Override</code> annotation is optional, but certainly nice to have.</p>
+
+<h4>Ex: Superclass <span class="font-code">Person</span> and its subclasses</h4>
+
+<img class="image-center" src="images/ExerciseOOP_PersonAndSubclasses.png" alt="ExerciseOOP_PersonAndSubclasses.png" />
+
+<h4>Ex: <span class="font-code">Point2D</span> and <span class="font-code">Point3D</span></h4>
+
+<img class="image-center" src="images/ExerciseOOP_Point2DPoint3D.png" alt="ExerciseOOP_Point2DPoint3D.png" />
+
+<h4>Ex: <span class="font-code">Point</span> and <span class="font-code">MovablePoint</span></h4>
+
+<img class="image-center" src="images/ExerciseOOP_PointMovablePoint.png" alt="ExerciseOOP_PointMovablePoint.png" />
+
+
+<h4>Ex: Superclass <span class="font-code">Shape</span> and its subclasses <span class="font-code">Circle</span>, <span class="font-code">Rectangle</span> and <span class="font-code">Square</span></h4>
+
+<img class="image-center" src="images/ExerciseOOP_ShapeAndSubclasses.png" alt="ExerciseOOP_ShapeAndSubclasses.png" />
+
+<p>Write a superclass called <code>Shape</code> (as shown in the class diagram), which contains:</p>
+
+<ul>
+<li>Two instance variables <code>color</code> (<code>String</code>) and <code>filled</code> (<code>boolean</code>).</li>
+<li>Two constructors: a no-arg (no-argument) constructor that initializes the <code>color</code> to &quot;green&quot; and <code>filled</code> to <code>true</code>, and a constructor that initializes the <code>color</code> and <code>filled</code> to the given values.</li>
+<li>Getter and setter for all the instance variables.  By convention, the getter for a <code>boolean</code> variable <code>xxx</code> is called <code>isXXX()</code> (instead of <code>getXxx()</code> for all the other types).</li>
+<li>A <code>toString()</code> method that returns &quot;<code>A Shape with color of xxx and filled/Not filled</code>&quot;.</li>
+</ul>
+
+<p>Write a test program to test all the methods defined in <code>Shape</code>.</p>
+
+<p>Write two subclasses of <code>Shape</code> called <code>Circle</code> and <code>Rectangle</code>, as shown in the class diagram.</p>
+
+<p>The <code>Circle</code> class contains:</p>
+<ul>
+<li>An instance variable <code>radius</code> (<code>double</code>).</li>
+<li>Three constructors as shown.  The no-arg constructor initializes the radius to <code>1.0</code>.</li>
+<li>Getter and setter for the instance variable <code>radius</code>.</li>
+<li>Methods <code>getArea()</code> and <code>getPerimeter()</code>.</li>
+<li>Override the <code>toString()</code> method inherited, to return &quot;<code>A Circle with radius=xxx, which is a subclass of yyy</code>&quot;, where <code>yyy</code> is the output of the <code>toString()</code> method from the superclass.</li>
+</ul>
+
+<p>The <code>Rectangle</code> class contains:</p>
+<ul>
+<li>Two instance variables <code>width</code> (<code>double</code>) and <code>length</code> (<code>double</code>).</li>
+<li>Three constructors as shown.  The no-arg constructor initializes the <code>width</code> and <code>length</code> to <code>1.0</code>.</li>
+<li>Getter and setter for all the instance variables.</li>
+<li>Methods <code>getArea()</code> and <code>getPerimeter()</code>.</li>
+<li>Override the <code>toString()</code> method inherited, to return &quot;<code>A Rectangle with width=xxx and length=zzz, which is a subclass of yyy</code>&quot;, where <code>yyy</code> is the output of the <code>toString()</code> method from the superclass.</li>
+</ul>
+
+<p>Write a class called <code>Square</code>, as a subclass of <code>Rectangle</code>.  Convince yourself that <code>Square</code> can be modeled as a subclass of <code>Rectangle</code>.  <code>Square</code> has no instance variable, but inherits the instance variables width and length from its superclass Rectangle.</p>
+<ul>
+<li>Provide the appropriate constructors (as shown in the class diagram).
+Hint:
+<pre class="color-example">
+public Square(double side) {
+   super(side, side);  <span class="color-comment">// Call superclass Rectangle(double, double)</span>
+}</pre></li>
+
+<li>Override the <code>toString()</code> method to return &quot;<code>A Square with side=xxx, which is a subclass of yyy</code>&quot;, where <code>yyy</code> is the output of the <code>toString()</code> method from the superclass.</li>
+<li>Do you need to override the <code>getArea()</code> and <code>getPerimeter()</code>? Try them out.</li>
+<li>Override the <code>setLength()</code> and <code>setWidth()</code> to change both the <code>width</code> and <code>length</code>, so as to maintain the square geometry.</li>
+</ul>
+
+<h3 id="ExerciseCompInherit">Exercises on Composition vs Inheritance</h3>
+
+<p>They are two ways to reuse a class in your applications: <em>composition</em> and <em>inheritance</em>.</p>
+
+<h4>Ex: The <span class="font-code">Point</span> and <span class="font-code">Line</span> Classes</h4>
+
+<p>Let us begin with <em>composition</em> with the statement &quot;a line composes of two points&quot;.</p>
+
+<p>Complete the definition of the following two classes: <code>Point</code> and <code>Line</code>. The class <code>Line</code> composes 2 instances of class <code>Point</code>, representing the beginning and ending points of the line. Also write test classes for <code>Point</code> and <code>Line</code> (says <code>TestPoint</code> and <code>TestLine</code>).</p>
+
+<pre class="color-example">
+public class <strong>Point</strong> {
+   <span class="color-comment">// Private variables</span>
+   private int x;    <span class="color-comment">// x co-ordinate</span>
+   private int y;    <span class="color-comment">// y co-ordinate</span>
+   
+   <span class="color-comment">// Constructor</span>
+   public Point (int x, int y) {......}
+   
+   <span class="color-comment">// Public methods</span>
+   public String toString() {
+      return &quot;Point: (&quot; + x + &quot;,&quot; + y + &quot;)&quot;;
+   }
+   
+   public int getX() {......}
+   public int getY() {......}
+   public void setX(int x) {......}
+   public void setY(int y) {......}
+   public void setXY(int x, int y) {......}
+}</pre>
+
+<pre class="color-example">
+public class <strong>TestPoint</strong> {
+   public static void main(String[] args) {
+      Point p1 = new Point(10, 20);   <span class="color-comment">// Construct a Point</span>
+      System.out.println(p1);
+      <span class="color-comment">// Try setting p1 to (100, 10).</span>
+      ......
+   }
+}</pre>
+
+<pre class="color-example">
+public class <strong>Line</strong> {
+   <span class="color-comment">// A line composes of two points (as instance variables)</span>
+   private Point begin;    <span class="color-comment">// beginning point</span>
+   private Point end;      <span class="color-comment">// ending point</span>
+   
+   <span class="color-comment">// Constructors</span>
+   public Line (Point begin, Point end) {  <span class="color-comment">// caller to construct the Points</span>
+      this.begin = begin;
+      ......
+   }
+   public Line (int beginX, int beginY, int endX, int endY) {
+      begin = new Point(beginX, beginY);   <span class="color-comment">// construct the Points here</span>
+      ......
+   }
+   
+   <span class="color-comment">// Public methods</span>
+   public String toString() { ...... }
+   
+   public Point getBegin() { ...... }
+   public Point getEnd() { ...... }
+   public void setBegin(......) { ...... }
+   public void setEnd(......) { ...... }
+   
+   public int getBeginX() { ...... }
+   public int getBeginY() { ...... }
+   public int getEndX() { ...... }
+   public int getEndY() { ...... }
+   
+   public void setBeginX(......) { ...... }
+   public void setBeginY(......) { ...... }
+   public void setBeginXY(......) { ...... }
+   public void setEndX(......) { ...... }
+   public void setEndY(......) { ...... }
+   public void setEndXY(......) { ...... }
+   
+   public int getLength() { ...... } <span class="color-comment">// Length of the line
+                                     // Math.sqrt(xDiff*xDiff + yDiff*yDiff)</span>
+   public double getGradient() { ...... } <span class="color-comment">// Gradient in radians
+                                          // Math.atan2(yDiff, xDiff)</span>
+}</pre>
+
+<pre class="color-example">
+public class <strong>TestLine</strong> {
+   public static void main(String[] args) {
+      Line l1 = new Line(0, 0, 3, 4);
+      System.out.println(l1);
+   
+      Point p1 = new Point(...);
+      Point p2 = new Point(...);
+      Line l2 = new Line(p1, p2);
+      System.out.println(l2);
+      ...
+   }
+}</pre>
+
+<p>The class diagram for <em>composition</em> is as follows (where a diamond-hollow-head arrow pointing to its constituents):</p>
+<img class="image-center" src="images/ExerciseOOP_PointLineComp.png" alt="ExerciseOOP_PointLineComp.png" />
+
+<p>Instead of <em>composition</em>, we can design a <code>Line</code> class using <code>inheritance</code>. Instead of &quot;a line composes of two points&quot;, we can say that &quot;a line is a point extended by another point&quot;, as shown in the following class diagram:</p>
+<img class="image-center" src="images/ExerciseOOP_PointLineInherit.png" alt="ExerciseOOP_PointLineInherit.png" />
+
+<p>Let's re-design the <code>Line</code> class (called <code>LineSub</code>) as a subclass of class <code>Point</code>.  <code>LineSub</code> inherits the starting point from its superclass <code>Point</code>, and adds an ending point.  Complete the class definition.  Write a testing class called <code>TestLineSub</code> to test <code>LineSub</code>.</p>
+
+<pre class="color-example">
+public class <strong>LineSub extends Point</strong> {
+   <span class="color-comment">// A line needs two points: begin and end.
+   // The begin point is inherited from its superclass Point.
+   // Private variables</span>
+   Point end;               <span class="color-comment">// Ending point</span>
+   
+   <span class="color-comment">// Constructors</span>
+   public LineSub (int beginX, int beginY, int endX, int endY) {
+      super(beginX, beginY);             <span class="color-comment">// construct the begin Point</span>
+      this.end = new Point(endX, endY);  <span class="color-comment">// construct the end Point</span>
+   }
+   public LineSub (Point begin, Point end) {  <span class="color-comment">// caller to construct the Points</span>
+      super(begin.getX(), begin.getY());      <span class="color-comment">// need to reconstruct the begin Point</span>
+      this.end = end;
+   }
+   
+   <span class="color-comment">// Public methods
+   // Inherits methods getX() and getY() from superclass Point</span>
+   public String toString() { ... }
+   
+   public Point getBegin() { ... }
+   public Point getEnd() { ... }
+   public void setBegin(...) { ... }
+   public void setEnd(...) { ... }
+   
+   public int getBeginX() { ... }
+   public int getBeginY() { ... }
+   public int getEndX() { ... }
+   public int getEndY() { ... }
+   
+   public void setBeginX(...) { ... }
+   public void setBeginY(...) { ... }
+   public void setBeginXY(...) { ... }
+   public void setEndX(...) { ... }
+   public void setEndY(...) { ... }
+   public void setEndXY(...) { ... }
+   
+   public int getLength() { ... }       <span class="color-comment">// Length of the line</span>
+   public double getGradient() { ... }  <span class="color-comment">// Gradient in radians</span>
+}</pre>
+
+<p>Summary: There are two approaches that you can design a line, <code>composition</code> or <code>inheritance</code>.  &quot;A line composes two points&quot; or &quot;A line is a point extended with another point&quot;”.  Compare the <code>Line</code> and <code>LineSub</code> designs: <code>Line</code> uses <em>composition</em> and <code>LineSub</code> uses <em>inheritance</em>.  Which design is better?</p>
+
+<h4>Ex: The <span class="font-code">Circle</span> and <span class="font-code">Cylinder</span> Classes Using Composition</h4>
+<img src="images/ExerciseOOP_CircleCylinderComp.png" alt="ExerciseOOP_CircleCylinderComp.png" />
+
+<p>Try rewriting the <code>Circle-Cylinder</code> of the previous exercise using <em>composition</em> (as shown in the  class diagram) instead of <em>inheritance</em>.  That is, &quot;a cylinder is composed of a base circle and a height&quot;.</p>
+
+<pre class="color-example">
+public class <strong>Cylinder</strong> {
+   private Circle base;   <span class="color-comment">// Base circle, an instance of Circle class</span>
+   private double height;
+   
+   <span class="color-comment">// Constructor with default color, radius and height</span>
+   public Cylinder() {
+      base = new Circle(); <span class="color-comment">// Call the constructor to construct the Circle</span>
+      height = 1.0; 
+   }
+   ......
+}</pre>
+
+<p>Which design (inheritance or composition) is better?</p>
+
+<h3 id="ExercisePolymorphism">Exercises on Polymorphism, Abstract Classes and Interfaces</h3>
+
+<h4>Ex: Abstract Superclass <span class="font-code">Shape</span> and Its Concrete Subclasses</h4>
+<p>Rewrite the superclass <code>Shape</code> and its subclasses <code>Circle</code>, <code>Rectangle</code> and <code>Square</code>, as shown in the class diagram.</p>
+<img class="image-center" src="images/ExerciseOOP_ShapeAbstract.png" alt="ExerciseOOP_ShapeAbstract.png" />
+
+<p>In this exercise, <code>Shape</code> shall be defined as an <code>abstract</code> class, which contains:</p>
+<ul>
+<li>Two <code>protected</code> instance variables <code>color</code>(<code>String</code>) and <code>filled</code>(<code>boolean</code>).  The <code>protected</code> variables can be accessed by its subclasses and classes in the same package.  They are denoted with a <code>'#'</code> sign in the class diagram.</li>
+<li>Getter and setter for all the instance variables, and <code>toString()</code>.</li>
+<li>Two <code>abstract</code> methods <code>getArea()</code> and <code>getPerimeter()</code> (shown in italics in the class diagram).</li>
+</ul>
+
+<p>The subclasses <code>Circle</code> and <code>Rectangle</code> shall <em>override</em> the <code>abstract</code> methods <code>getArea()</code> and <code>getPerimeter()</code> and provide the proper implementation.  They also <em>override</em> the <code>toString()</code>.</p>
+
+<p>Write a test class to test these statements involving polymorphism and explain the outputs.  Some statements may trigger compilation errors.  Explain the errors, if any.</p>
+
+<pre class="color-example">
+Shape s1 = new Circle(5.5, &quot;RED&quot;, false);  <span class="color-comment">// Upcast Circle to Shape</span>
+System.out.println(s1);                    <span class="color-comment"><code>// which version?</code></span>
+System.out.println(s1.getArea());          <span class="color-comment">// which version?</span>
+System.out.println(s1.getPerimeter());     <span class="color-comment">// which version?</span>
+System.out.println(s1.getColor());
+System.out.println(s1.isFilled());
+System.out.println(s1.getRadius());
+   
+Circle c1 = (Circle)s1;                   <span class="color-comment">// Downcast back to Circle</span>
+System.out.println(c1);
+System.out.println(c1.getArea());
+System.out.println(c1.getPerimeter());
+System.out.println(c1.getColor());
+System.out.println(c1.isFilled());
+System.out.println(c1.getRadius());
+   
+Shape s2 = new Shape();
+   
+Shape s3 = new Rectangle(1.0, 2.0, &quot;RED&quot;, false);   <span class="color-comment">// Upcast</span>
+System.out.println(s3);
+System.out.println(s3.getArea());
+System.out.println(s3.getPerimeter());
+System.out.println(s3.getColor());
+System.out.println(s3.getLength());
+   
+Rectangle r1 = (Rectangle)s3;   <span class="color-comment">// downcast</span>
+System.out.println(r1);
+System.out.println(r1.getArea());
+System.out.println(r1.getColor());
+System.out.println(r1.getLength());
+   
+Shape s4 = new Square(6.6);     <span class="color-comment">// Upcast</span>
+System.out.println(s4);
+System.out.println(s4.getArea());
+System.out.println(s4.getColor());
+System.out.println(s4.getSide());
+  
+<span class="color-comment">// Take note that we downcast Shape s4 to Rectangle, 
+//  which is a superclass of Square, instead of Square</span>
+Rectangle r2 = (Rectangle)s4;
+System.out.println(r2);
+System.out.println(r2.getArea());
+System.out.println(r2.getColor());
+System.out.println(r2.getSide());
+System.out.println(r2.getLength());
+   
+<span class="color-comment">// Downcast Rectangle r2 to Square</span>
+Square sq1 = (Square)r2;
+System.out.println(sq1);
+System.out.println(sq1.getArea());
+System.out.println(sq1.getColor());
+System.out.println(sq1.getSide());
+System.out.println(sq1.getLength());</pre>
+
+<p>What is the usage of the <code>abstract</code> method and <code>abstract</code> class?</p>
+
+<h4>Ex: Polymorphism</h4>
+<p>Examine the following codes and draw the class diagram.</p>
+
+<pre class="color-example">
+abstract public class <strong>Animal</strong> {
+   abstract public void greeting();
+}</pre>
+   
+<pre class="color-example">
+public class <strong>Cat extends Animal</strong> {
+   @Override
+   public void greeting() {
+      System.out.println(&quot;Meow!&quot;);
+   }
+}</pre>
+   
+<pre class="color-example">
+public class <strong>Dog extends Animal</strong> {
+   @Override
+   public void greeting() {
+      System.out.println(&quot;Woof!&quot;);
+   }
+   
+   public void greeting(Dog another) {
+      System.out.println(&quot;Woooooooooof!&quot;);
+   }
+}</pre>
+   
+<pre class="color-example">
+public class <strong>BigDog extends Dog</strong> {
+   @Override
+   public void greeting() {
+      System.out.println(&quot;Woow!&quot;);
+   }
+   
+   @Override
+   public void greeting(Dog another) {
+      System.out.println(&quot;Woooooowwwww!&quot;);
+   }
+}</pre>
+
+<p>Explain the outputs (or error) for the following test program.</p>
+
+<pre class="color-example">
+public class <strong>TestAnimal</strong> {
+   public static void main(String[] args) {
+      <span class="color-comment">// Using the subclasses</span>
+      Cat cat1 = new Cat();
+      cat1.greeting();
+      Dog dog1 = new Dog();
+      dog1.greeting();
+      BigDog bigDog1 = new BigDog();
+      bigDog1.greeting();
+       
+      <span class="color-comment">// Using Polymorphism</span>
+      Animal animal1 = new Cat();
+      animal1.greeting();
+      Animal animal2 = new Dog();
+      animal2.greeting();
+      Animal animal3 = new BigDog();
+      animal3.greeting();
+      Animal animal4 = new Animal();
+      
+      <span class="color-comment">// Downcast</span>
+      Dog dog2 = (Dog)animal2;
+      BigDog bigDog2 = (BigDog)animal3;
+      Dog dog3 = (Dog)animal3;
+      Cat cat2 = (Cat)animal2;
+      dog2.greeting(dog3);
+      dog3.greeting(dog2);
+      dog2.greeting(bigDog2);
+      bigDog2.greeting(dog2);
+      bigDog2.greeting(bigDog1);
+   }
+}</pre>
+
+<h4>Ex: Interface <span class="font-code">Movable</span> and its implementations <span class="font-code">MovablePoint</span> and <span class="font-code">MovableCircle</span></h4>
+
+<p>Suppose that we have a set of objects with some common behaviors:  they could move up, down, left or right. The exact behaviors (such as how to move and how far to move) depend on the objects themselves.  One common way to model these common behaviors is to define an <em>interface</em> called <code>Movable</code>, with <code>abstract</code> methods <code>moveUp()</code>, <code>moveDown()</code>, <code>moveLeft()</code> and <code>moveRight()</code>. The classes that implement the <code>Movable</code> interface will provide actual implementation to these <code>abstract</code> methods.</p>
+
+<p>Let's write two concrete classes - <code>MovablePoint</code> and <code>MovableCircle</code> - that implement the Movable interface.</p>
+<img class="image-center" src="images/ExerciseOOP_Movable.png" alt="ExerciseOOP_Movable.png" />
+
+<p>The code for the interface <code>Movable</code> is straight forward.</p>
+<pre class="color-example">
+public interface <strong>Movable</strong> {  <span class="color-comment">// saved as &quot;Movable.java&quot;</span>
+   public void moveUp();
+   ......
+}</pre>
+
+<p>For the <code>MovablePoint</code> class, declare the instance variable <code>x</code>, <code>y</code>, <code>xSpeed</code> and <code>ySpeed</code> with package access as shown with <code>'~'</code> in the class diagram (i.e., classes in the same package can access these variables directly).  For the <code>MovableCircle</code> class, use a <code>MovablePoint</code> to represent its center (which contains four variable <code>x</code>, <code>y</code>, <code>xSpeed</code> and <code>ySpeed</code>).  In other words, the <code>MovableCircle</code> composes a <code>MovablePoint</code>, and its <code>radius</code>.</p>
+
+<pre class="color-example">
+public class <strong>MovablePoint implements Movable</strong> { <span class="color-comment">// saved as &quot;MovablePoint.java&quot;</span>
+   <span class="color-comment">// instance variables</span>
+   int x, y, xSpeed, ySpeed;     <span class="color-comment">// package access</span>
+   
+   <span class="color-comment">// Constructor</span>
+   public MovablePoint(int x, int y, int xSpeed, int ySpeed) {
+      this.x = x;
+      ......
+   }
+   ......
+   
+   <span class="color-comment">// Implement abstract methods declared in the interface Movable</span>
+   @Override
+   public void moveUp() {
+      y -= ySpeed;   <span class="color-comment">// y-axis pointing down for 2D graphics</span>
+   }
+   ......
+}</pre>
+
+<pre class="color-example">
+public class <strong>MovableCircle implements Movable</strong> { <span class="color-comment">// saved as &quot;MovableCircle.java&quot;</span>
+   <span class="color-comment">// instance variables</span>
+   private MovablePoint center;   <span class="color-comment">// can use center.x, center.y directly
+                                  //  because they are package accessible</span>
+   private int radius;
+   
+   <span class="color-comment">// Constructor</span>
+   public MovableCircle(int x, int y, int xSpeed, int ySpeed, int radius) {
+      <span class="color-comment">// Call the MovablePoint's constructor to allocate the center instance.</span>
+      center = new MovablePoint(x, y, xSpeed, ySpeed);
+      ......
+   }
+   ......
+   
+   <span class="color-comment">// Implement abstract methods declared in the interface Movable</span>
+   @Override
+   public void moveUp() {
+      center.y -= center.ySpeed;
+   }
+   ......
+}</pre>
+
+<p>Write a test program and try out these statements:</p>
+<pre class="color-example">
+Movable m1 = new MovablePoint(5, 6, 10);     <span class="color-comment">// upcast</span>
+System.out.println(m1);
+m1.moveLeft();
+System.out.println(m1);
+   
+Movable m2 = new MovableCircle(2, 1, 2, 20); <span class="color-comment">// upcast</span>
+System.out.println(m2);
+m2.moveRight();
+System.out.println(m2);</pre>
+
+<p>Write a new class called <code>MovableRectangle</code>, which composes two <code>MovablePoints</code> (representing the top-left and bottom-right corners) and implementing the <code>Movable</code> Interface.  Make sure that the two points has the same speed.</p>
+
+<img class="image-center" src="images/ExerciseOOP_MovableRectangle.png" alt="ExerciseOOP_MovableRectangle.png" />
+
+<p>What is the difference between an interface and an abstract class?</p>
+
+<h4>Ex: Interfaces <span class="font-code">GeometricObject</span> and <span class="font-code">Resizable</span></h4>
+
+<img class="image-center" src="images/ExerciseOOP_GeometricObject.png" alt="ExerciseOOP_GeometricObject.png" />
+<ol>
+<li>Write the <code>interface</code> called <code>GeometricObject</code>, which declares two <code>abstract</code> methods: <code>getParameter()</code> and <code>getArea()</code>, as specified in the class diagram.<br />
+
+Hints:
+<pre class="color-example">
+public interface <strong>GeometricObject</strong> {
+   public double getPerimeter();
+   ......
+}</pre></li>
+
+<li>Write the implementation class <code>Circle</code>, with a protected variable <code>radius</code>, which implements the interface <code>GeometricObject</code>.<br />
+Hints:
+<pre class="color-example">
+public class <strong>Circle</strong> implements GeometricObject {
+   <span class="color-comment">// Private variable</span>
+   ......
+
+   <span class="color-comment">// Constructor</span>
+   ......
+
+   <span class="color-comment">// Implement methods defined in the interface GeometricObject</span>
+   @Override
+   public double getPerimeter() { ...... }
+
+   ......
+}</pre></li>
+
+<li>Write a test program called <code>TestCircle</code> to  test the methods defined in <code>Circle</code>.</li>
+
+<li>The class <code>ResizableCircle</code> is defined as a subclass of the class <code>Circle</code>, which also implements an interface called <code>Resizable</code>, as shown in class diagram. The interface <code>Resizable</code> declares an <code>abstract</code> method <code>resize()</code>, which modifies the dimension (such as <code>radius</code>) by the given percentage.  Write the interface <code>Resizable</code> and the class <code>ResizableCircle</code>.<br />
+
+Hints:
+<pre class="color-example">
+public interface <code>Resizable</code> {
+   public double resize(...);
+}</pre>
+
+<pre class="color-example">
+public class <code>ResizableCircle</code> extends Circle implements Resizeable {
+ 
+   <span class="color-comment">// Constructor</span>
+   public ResizableCircle(double radius) {
+      super(...);
+   }
+ 
+   <span class="color-comment">// Implement methods defined in the interface Resizable</span>
+   @Override
+   public double resize(int percent) { ...... }
+}</pre></li>
+
+<li>Write a test program called <code>TestResizableCircle</code> to  test the methods defined in <code>ResizableCircle</code>.</li>
+</ol>
+
+
+
+<h3 id="ExerciseMoreOOP">More Exercises on OOP</h3>
+
+<h4>Ex: The Discount System</h4>
+<p>You are asked to write a discount system for a beauty saloon, which provides services and sells beauty products. It offers 3 types of memberships: Premium, Gold and Silver. Premium, gold and silver members receive a discount of 20%, 15%, and 10%, respectively, for all services provided. Customers without membership receive no discount. All members receives a flat 10% discount on products purchased (this might change in future). Your system shall consist of three classes: <code>Customer</code>, <code>Discount</code> and <code>Visit</code>, as shown in the class diagram. It shall compute the total bill if a customer purchases $x of products and $y of services, for a visit. Also write a test program to exercise all the classes.</p>
+
+<img class="image-center" src="images/ExerciseOOP_Discount.png" alt="ExerciseOOP_Discount.png" />
+
+<p>The class <code>DiscountRate</code> contains only <code>static</code> variables and methods (underlined in the class diagram).</p>
+
+<h4>Ex: <span class="font-code">Polyline</span> of <span class="font-code">Point</span>s with <span class="font-code">ArrayList</span></h4>
+<img src="images/ExerciseOOP_Polyline.png" alt="ExerciseOOP_Polyline.png" />
+
+<p>A polyline is a line with segments formed by points. Let's use the <code>ArrayList</code> (dynamically allocated array) to keep the points, but upcast to <code>List</code> in the instance variable. (Take note that array is of fixed-length, and you need to set the initial length).</p>
+
+<pre class="color-example">
+public class <strong>Point</strong> {
+   private int x;
+   private int y;
+   public Point(int x, int y) { ...... }
+   public int getX() { ...... }
+   public int getY() { ...... }
+   public void setX(int x) { ...... }
+   public void setY(int y) { ...... }
+   public int[] getXY() { ...... }
+   public void setXY(int x, int y) { ...... }
+   public String toString() { ...... }
+   public double distance(Point another) { ...... }
+}</pre>
+
+<pre class="color-example">
+import java.util.*;
+public class <strong>PolyLine</strong> {
+   private List&lt;Point&gt; points;   <span class="color-comment">// List of Point instances</span>
+
+   <span class="color-comment">// Constructors</span>   
+   public PolyLine() {  <span class="color-comment">// default constructor</span>
+      points = new ArrayList&lt;Point&gt;();  <span class="color-comment">// implement with ArrayList</span>
+   }
+   public PolyLine(List&lt;Point&gt; points) {
+      this.points = points;
+   }
+ 
+   <span class="color-comment">// Append a point (x, y) to the end of this polyline</span>
+   public void appendPoint(int x, int y) {
+      Point newPoint = new Point(x, y);
+      points.add(newPoint);
+   }
+ 
+   <span class="color-comment">// Append a point instance to the end of this polyline</span>
+   public void appendPoint(Point point) {
+      points.add(point);
+   }
+ 
+   <span class="color-comment">// Return {(x1,y1)(x2,y2)(x3,y3)....</span>}
+   public String toString() {
+      <span class="color-comment">// Use a StringBuilder to efficiently build the return String</span>
+      StringBuilder sb = new StringBuilder(&quot;{&quot;);
+      for (Point aPoint : points) {
+          sb.append(aPoint.toString());
+      }
+      sb.append(&quot;}&quot;);
+      return sb.toString();
+   }
+
+   <span class="color-comment">// Return the total length of this polyline</span>
+   public double getLength() { ...... }
+}</pre>
+
+<pre class="color-example">
+<span class="color-comment">/* 
+ * A Test Driver for the PolyLine class.
+ */</span>
+import java.util.*;
+public class TestPolyLine {
+   public static void main(String[] args) {
+      <span class="color-comment">// Test default constructor and toString()</span>
+      PolyLine l1 = new PolyLine();
+      System.out.println(l1);  <span class="color-comment">// {}</span>
+
+      <span class="color-comment">// Test appendPoint()</span>
+      l1.appendPoint(new Point(1, 2));
+      l1.appendPoint(3, 4);
+      l1.appendPoint(5, 6);
+      System.out.println(l1);  <span class="color-comment">// {(1,2)(3,4)(5,6)}</span>
+
+      <span class="color-comment">// Test constructor 2</span>
+      List&lt;Point&gt; points = new ArrayList&lt;Point&gt;();
+      points.add(new Point(11, 12));
+      points.add(new Point(13, 14));
+      PolyLine l2 = new PolyLine(points);
+      System.out.println(l2);  <span class="color-comment">// {(11,12)(13,14)}</span>
+   }
+}</pre>
+
+
+<h3>Exercises on Data Structures</h3>
+
+<h4>Ex: <span class="font-code">MyIntStack</span></h4>
+
+<p>A stack is a first-in-last-out queue. Write a program called <code>MyIntStack</code>, which uses an array to store the contents, restricted to <code>int</code>.</p>
+
+<img src="images/OOP_MyIntStack.java" alt="OOP_MyIntStack.java" />
+
+<p>Write a test program.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre>
+</td>
+<td>
+<pre>
+public class MyIntStack {
+   private int[] contents;
+   private int tos;  <span class="color-comment">// Top of the stack</span>
+ 
+   <span class="color-comment">// constructors</span>
+   public MyIntStack(int capacity) {
+      contents = new int[capacity];
+      tos = -1;
+   }
+ 
+   public void push(int element) {
+      contents[++tos] = element;
+   }
+ 
+   public int pop() {
+      return contents[tos--];
+   }
+ 
+   public int peek() {
+      return contents[tos];
+   }
+ 
+   public boolean isEmpty() {
+      return tos &lt; 0;
+   }
+ 
+   public boolean isFull() {
+      return tos == contents.length - 1;
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Try:</p>
+<ol>
+<li>Modify the <code>push()</code> method to throw an <code>IllegalStateException</code> if the stack is full.</li>
+<li>Modify the <code>push()</code> to return <code>true</code> if the operation is successful, or <code>false</code> otherwise.</li>
+<li>Modify the <code>push()</code> to increase the capacity by reallocating another array, if the stack is full.</li>
+</ol>
+
+<p><span class="line-heading">Exercise (Nodes, Link Lists, Trees, Graphs):</span></p>
+<p>[TODO]</p>
+<ul>
+<li>Study the existing open source codes, including JDK.</li>
+<li>Specialized algorithms, such as shortest path.</li>
+</ul>
+
+<br />
+<p><span class="line-heading">Exercise (Maps):</span></p>
+<p>[TODO]</p>
+<ul>
+<li>Representation of map data.</li>
+<li>Specialized algorithms, such as shortest path.</li>
+</ul>
+
+
+<br />
+<p><span class="line-heading">Exercise (Matrix Operations for 3D Graphics):</span></p>
+<p>[TODO]</p>
+<ul>
+<li>Study the existing open source codes, including JDK's 2D Graphics and JOGL's 3D Graphics.</li>
+<li>Efficient and specialized codes for 3D Graphics (4D matrices). Handle various primitive types such as <code>int</code>, <code>float</code> and <code>double</code> efficiently.</li>
+</ul>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.8.0<br />
+Last modified: April, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

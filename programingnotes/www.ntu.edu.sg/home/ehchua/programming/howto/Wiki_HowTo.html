@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Get Started with Wiki Text</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>How to Write Wiki Text</h1>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction</h3>
+
+<p>Wiki text is best suit writing documentation during software development, because:</p>
+<ul>
+<li>It has only a few markups (compared with hundreds of markups in HTML), for marking up heading, paragraph, list,  link, table and image. During software development, you really have no time (and no energy) to write a proper HTML documentation. On the other hand, writing plain text with text editor is not really readable. Wiki text strikes a balance between HTML and plain text.</li>
+<li>[TODO] more.</li>
+</ul>
+
+<p>There are many markup format for wiki text. I shall describe the &quot;textile&quot; format, which is supported by Eclipse.</p>
+
+<h3>Eclipse Mylyn WikiText (for Textile Markup)</h3>
+
+<h4>Installation</h4> 
+
+<p>Eclipse comes with Mylyn WikiText for creating wiki pages. Read &quot;Mylyn WikiText User Guide&quot; @ eclipse &quot;Help&quot; &rArr; &quot;Help Contents&quot;.</p>
+
+<p>On my Ubuntu 13.04, the preview pane is missing. I could fix it by installing &quot;<code>libwebkitgtk-1.0-0</code>&quot;. However, that causes Eclipse to crash frequently. I have yet to fix this problem.</p>
+
+<h4>Setting up Wiki Locally in Eclipse with Remote Repo</h4>
+
+<p><span class="line-heading">Step 1</span>: In the remote repo, enable &quot;wiki&quot; for your project.</p>
+
+<p><span class="line-heading">Step 2</span>: Create a local folder for the wiki documentation (says &quot;<code>olas-doc</code>&quot;).</p>
+
+<p><span class="line-heading">Step 3</span>: Clone the Wiki GIT from remote Repo into &quot;<code>olas-doc</code>&quot;.</p>
+
+<pre class="color-command">
+$ cd /path/to/olas-doc
+$ git clone https://xxxx@xxxx.org/xxxx/olas.git/wiki</pre>
+
+<p><span class="line-heading">Step 4</span>: In Eclipse, create a project (File &rArr; New &rArr; Project... &rArr; General &rArr; Project) called &quot;<code>olas-doc</code>&quot; at the &quot;<code>olas-doc</code>&quot; folder. All the existing files will be pulled into the project.</p>
+
+<p><span class="line-heading">Step 5</span>: Create new wiki pages (File &rArr; New &rArr; File &rArr; &quot;<code>test.textile</code>&quot;).</p>
+
+<p><span class="line-heading">Step 6</span> Commit.</p>
+
+<pre class="color-command">
+$ cd /path/to/olas-doc
+$ git status
+$ git add *.textile
+$ git commit -m "First commit"</pre>
+
+<p><span class="line-heading">Step 7</span>: Push to remote Repo.</p>
+
+<pre class="color-command">
+<span class="color-comment">// The remote name &quot;origin&quot; created after clone.
+$ git push -u origin master</span></pre>
+
+<p><span class="line-heading">Step 8</span>: View your new pages at the remote repo.</p>
+
+<p><span class="line-heading">Step 9</span>: Rename &quot;<code>Home.md</code>&quot; to &quot;<code>Home.textile</code>&quot; (if textile markup is to be used for the Home page), and tailor the page.</p>
+
+<h4>Example</h4>
+
+<p>[TODO]</p>
+
+<h4>Commonly-used Markup Tags for Textile markup</h4>
+
+<p>In Eclipse, push F1 to get the WikiText cheat-sheet.</p>
+
+<pre class="example">
+_emphasis_  emphasis 
+__italic__  italic   
+*strong*    strong   
+**bold**    bold  
+@code@      code  
+hn.         Heading  
+p.          Paragraph (optional)    
+pre.        Pre-formatted  
+bc.         pre code
+# ## ###    Numeric list   
+* ** ***    Bullet list  
+"title":http://www.example.com             Link
+!images/logo.png!                          Image
+!images/logo.png!:http://www.example.com   Image Link
+|_. a|_. table|_. header|                  Table
+|a|table|row|
+|a|table|row|</pre>
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>Wiki &quot;Textile&quot; @ <a href="http://en.wikipedia.org/wiki/Textile_%28markup_language%29">http://en.wikipedia.org/wiki/Textile_%28markup_language%29</a>.</li>
+<li>&quot;Mylyn WikiText User Guide&quot; @ Eclipse's &quot;Help&quot;.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Last modified: October, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

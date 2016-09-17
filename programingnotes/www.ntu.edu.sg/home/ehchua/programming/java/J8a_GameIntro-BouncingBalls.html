@@ -1,0 +1,1430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>The world of Bouncing Balls - An introduction to Java Game Programming</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Java Game Programming</h1>
+<h2>Introduction - The World Of Bouncing Balls</h2>
+
+<p>Let us begin by getting some balls bouncing, as an introduction to game programming.</p>
+
+<h3>Demos</h3>
+<p>Click the image to run the DEMO Applets:</p>
+<a href="Applet_BallEx7Obstacles.html" target="_blank"><img src="images/GameBall_Ex7Obstacles.png" height="250"/></a>
+&nbsp;&nbsp;&nbsp;
+<a href="Applet_BallEx6aCircleMany.html" target="_blank"><img src="images/GameBall_Ex6aCircleMany.png" height="250"/></a>
+&nbsp;&nbsp;&nbsp;
+<a href="../opengl/Applet3DBouncingBallManytest.html" target="_blank"
+><img src="../opengl/images/Applet3DBouncingBall.png" height="250" /></a>
+
+<h3>Example 1: Getting Started with One Bouncing Ball</h3>
+
+<p><span class="line-heading">BouncingBallSimple.java:</span> Writing a single ball bouncing inside a rectangular container box is straight forward, and can be accomplished with very few lines of codes, as follows:</p>
+
+<pre class="code-listing">
+import java.awt.*;
+import java.util.Formatter;
+import javax.swing.*;
+<span class="code-comment">/**
+ * One ball bouncing inside a rectangular box. 
+ * All codes in one file. Poor design!
+ */</span>
+<span class="code-comment">// Extends JPanel, so as to override the paintComponent() for custom rendering codes.</span> 
+public class <strong>BouncingBallSimple extends JPanel</strong> {
+   <span class="code-comment">// Container box's width and height</span>
+   private static final int BOX_WIDTH = 640;
+   private static final int BOX_HEIGHT = 480;
+  
+   <span class="code-comment">// Ball's properties</span>
+   private float ballRadius = 200; <span class="code-comment">// Ball's radius</span>
+   private float ballX = ballRadius + 50; <span class="code-comment">// Ball's center (x, y)</span>
+   private float ballY = ballRadius + 20; 
+   private float ballSpeedX = 3;   <span class="code-comment">// Ball's speed for x and y</span>
+   private float ballSpeedY = 2;
+  
+   private static final int UPDATE_RATE = 30; <span class="code-comment">// Number of refresh per second</span>
+  
+   <span class="code-comment">/** Constructor to create the UI components and init game objects. */</span>
+   public BouncingBallSimple() {
+      this.setPreferredSize(new Dimension(BOX_WIDTH, BOX_HEIGHT));
+  
+      <span class="code-comment">// Start the ball bouncing (in its own thread)</span>
+      Thread gameThread = new Thread() {
+         public void run() {
+            while (true) { <span class="code-comment">// Execute one update step</span>
+               <span class="code-comment">// Calculate the ball's new position</span>
+               ballX += ballSpeedX;
+               ballY += ballSpeedY;
+               <span class="code-comment">// Check if the ball moves over the bounds
+               // If so, adjust the position and speed.</span>
+               if (ballX - ballRadius &lt; 0) {
+                  ballSpeedX = -ballSpeedX; <span class="code-comment">// Reflect along normal</span>
+                  ballX = ballRadius; <span class="code-comment">// Re-position the ball at the edge</span>
+               } else if (ballX + ballRadius &gt; BOX_WIDTH) {
+                  ballSpeedX = -ballSpeedX;
+                  ballX = BOX_WIDTH - ballRadius;
+               }
+               <span class="code-comment">// May cross both x and y bounds</span>
+               if (ballY - ballRadius &lt; 0) {
+                  ballSpeedY = -ballSpeedY;
+                  ballY = ballRadius;
+               } else if (ballY + ballRadius &gt; BOX_HEIGHT) {
+                  ballSpeedY = -ballSpeedY;
+                  ballY = BOX_HEIGHT - ballRadius;
+               }
+               <span class="code-comment">// Refresh the display</span>
+               repaint(); <span class="code-comment">// Callback paintComponent()</span>
+               <span class="code-comment">// Delay for timing control and give other threads a chance</span>
+               try {
+                  Thread.sleep(1000 / UPDATE_RATE);  <span class="code-comment">// milliseconds</span>
+               } catch (InterruptedException ex) { }
+            }
+         }
+      };
+      gameThread.start();  <span class="code-comment">// Callback run()</span>
+   }
+  
+   <span class="code-comment">/** Custom rendering codes for drawing the JPanel */</span>
+   @Override
+   public void paintComponent(Graphics g) {
+      super.paintComponent(g);    <span class="code-comment">// Paint background</span>
+  
+      <span class="code-comment">// Draw the box</span>
+      g.setColor(Color.BLACK);
+      g.fillRect(0, 0, BOX_WIDTH, BOX_HEIGHT);
+  
+      <span class="code-comment">// Draw the ball</span>
+      g.setColor(Color.BLUE);
+      g.fillOval((int) (ballX - ballRadius), (int) (ballY - ballRadius),
+            (int)(2 * ballRadius), (int)(2 * ballRadius));
+  
+      <span class="code-comment">// Display the ball's information</span>
+      g.setColor(Color.WHITE);
+      g.setFont(new Font(&quot;Courier New&quot;, Font.PLAIN, 12));
+      StringBuilder sb = new StringBuilder();
+      Formatter formatter = new Formatter(sb);
+      formatter.format(&quot;Ball @(%3.0f,%3.0f) Speed=(%2.0f,%2.0f)&quot;, ballX, ballY,
+            ballSpeedX, ballSpeedY);
+      g.drawString(sb.toString(), 20, 30);
+   }
+  
+   <span class="code-comment">/** main program (entry point) */</span>
+   public static void main(String[] args) {
+      <span class="code-comment">// Run GUI in the Event Dispatcher Thread (EDT) instead of main thread.</span>
+      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+         public void run() {
+            <span class="code-comment">// Set up main window (using Swing's Jframe)</span>
+            JFrame frame = new JFrame(&quot;A Bouncing Ball&quot;);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setContentPane(new BouncingBallSimple());
+            frame.pack();
+            frame.setVisible(true);
+         }
+      });
+   }
+}</pre>
+
+<p><span class="line-heading">Dissecting BouncingBallSimple.java:</span> </p>
+<p>I assume that you understand Java Graphics programming (AWT/Swing and custom painting), and the multi-threading issues involved.</p>
+<p></p>
+<ul>
+  <li>Our main class extends the <code>JPanel</code>, so as to override the <code>paintComponent()</code> for our custom rendering codes.</li>
+<li>In the constructor, we setup the UI components (set the preferred size for the <code>JPanel</code>). We then start a new thread to run the game update (moving the ball).</li>
+<li>For each update step, we move the ball according to its speed and check for <em>collision</em>. If it exceeds the bound, we <em>react</em> by adjusting the ball's new position and speed. In this simple case, the ball reflects horizontally if it exceeds the x-bound, and reflects vertically if it exceeds the y-bound. We then invoke <code>repaint()</code> to refresh the screen, which in turn calls the <code>paintComponent()</code>.</li>
+<li>We override <code>paintComponent()</code> to perform our custom rendering. We use <code>fillRect()</code> to draw the rectangular container box; <code>fillOval()</code> to draw the round ball, and <code>drawString()</code> to display a status message.</li>
+<li>In the <code>main()</code> method, we construct a <code>JFrame</code> as the application's main window. We set our custom <code>JPanel</code> as the content pane for the <code>JFrame</code>. The UI codes are run in the Event Dispatcher Thread (EDT), via <code>javax.swing.SwingUtilities.invokeLater()</code>, as recommended by Swing developers.</li>
+</ul>
+
+<p>This program, although works, is  poor in design (in terms of modularity, reusability and expansibility). Moreover, the<em> collision detection and response</em> algorithm is crude. There is also no timing control.</p>
+
+<h3>Example 2: Bouncing Ball in Object-Oriented Design</h3>
+<p>Click the image to run the DEMO. Click <a href="codes/ball_ex2_oo.jar">HERE</a> to download the source codes for this example (unzip the downloaded JAR file).</p>
+<a href="Applet_BallEx2OO.html" target="_blank"><img src="images/GameBall_Ex2OO.png" /></a>
+
+<p>Let us re-write the bouncing-ball program with proper Object-Oriented Design, which consists of the following classes:</p>
+<h4>The Box Class</h4>
+<img class="image-left" src="images/GameBall_BoxClass.png" />
+
+<p>The <code>Box</code> class has the following instance variables:</p>
+<ul>
+<li><code>minX</code>, <code>minY</code>, <code>maxX</code> and <code>maxY</code>, which represent the box's bounds, with package access.</li>
+</ul>
+
+<p>Take note that Java (and also Windows) Graphics Coordinates is <em>inverted</em> vertically, with origin (0, 0) at the top-left corner, as shown:</p>
+<img class="image-left" src="images/GameBall_Coordinates.png" />
+
+<p>The <code>Box</code> class has the following public methods:</p>
+<ul>
+<li>A constructor which accept the top-left corner (<code>x</code>, <code>y</code>), <code>width</code>, <code>height</code> and <code>color</code>. It is safer to use <code>x</code>, <code>y</code>, <code>width</code> and <code>height</code>, instead of <code>minX</code>, <code>minY</code>, <code>maxX</code> and <code>maxY</code>, to define a rectangle.</li>
+<li>A <code>set()</code> method to set or reset its bounds.</li>
+<li>A <code>draw(g)</code> method, to draw itself with the given graphics context <code>g</code> (of <code>java.awt.Graphics</code>).</li>
+</ul>
+
+<pre class="code-listing">
+import java.awt.*;
+<span class="code-comment">/**
+ * A rectangular container box, containing the bouncing ball.  
+ */</span>
+public class <strong>ContainerBox</strong> {
+   int minX, maxX, minY, maxY;  <span class="code-comment">// Box's bounds (package access)</span>
+   private Color colorFilled;   <span class="code-comment">// Box's filled color (background)</span>
+   private Color colorBorder;   <span class="code-comment">// Box's border color</span>
+   private static final Color DEFAULT_COLOR_FILLED = Color.BLACK;
+   private static final Color DEFAULT_COLOR_BORDER = Color.YELLOW;
+   
+   <span class="code-comment">/** Constructors */</span>
+   public ContainerBox(int x, int y, int width, int height, Color colorFilled, Color colorBorder) {
+      minX = x;
+      minY = y;
+      maxX = x + width - 1;
+      maxY = y + height - 1;
+      this.colorFilled = colorFilled;
+      this.colorBorder = colorBorder;
+   }
+   
+   <span class="code-comment">/** Constructor with the default color */</span>
+   public ContainerBox(int x, int y, int width, int height) {
+      this(x, y, width, height, DEFAULT_COLOR_FILLED, DEFAULT_COLOR_BORDER);
+   }
+   
+   <span class="code-comment">/** Set or reset the boundaries of the box. */</span>
+   public void set(int x, int y, int width, int height) {
+      minX = x;
+      minY = y;
+      maxX = x + width - 1;
+      maxY = y + height - 1;
+   }
+
+   <span class="code-comment">/** Draw itself using the given graphic context. */</span>
+   public void draw(Graphics g) {
+      g.setColor(colorFilled);
+      g.fillRect(minX, minY, maxX - minX - 1, maxY - minY - 1);
+      g.setColor(colorBorder);
+      g.drawRect(minX, minY, maxX - minX - 1, maxY - minY - 1);
+   }
+}</pre>
+
+<h4>The Ball Class</h4>
+<img class="image-left" src="images/GameBall_BallClass.png" />
+
+<p>The <code>Ball</code> class has the following instance variables:</p>
+<ul>
+<li><code>x</code>, <code>y</code>, <code>radius</code> and <code>color</code>,  which represent the ball's center (x, y) coordinates, radius and color, respectively.</li>
+<li> <code>speedX</code> and <code>speedY</code>, which represent the speed in the x and y directions, measured in pixels per time-step.</li>
+</ul>
+<p>Internally, all numbers are expressed in <code>float</code> to ensure <em> smoothness</em> in rendering, especially in the trigonometric operations. The numbers will be truncated to integral pixel values for  display. (32-bit single-precision <code>float</code> is sufficient for most of the games, <code>double</code> is probably an overkill!) </p>
+
+<p>The <code>Ball</code> class has the following public methods:</p>
+<ul>
+<li>A constructor that accepts <code>x</code>, <code>y</code>,<code>radius</code>, velocity in the polar coordinates of <code>speed</code> and <code>moveAngle</code> (because it is easier and more intuitive for user to specify velocity this way), and <code>color</code>.<img class="image-left" src="images/GameBall_Velocity.png" />
+</li>
+
+<li>A <code>draw(g)</code> method to draw itself with the given graphics context.</li>
+<li>A <code>toString()</code> to describe itself, which is used in printing the ball's status.</li>
+<li>A <code>moveOneStepWithCollisionDetection(Box box)</code> which moves the ball by one step, with collision detection and response.</li>
+</ul>
+
+
+<p>Below is the listing of the <code>Ball</code> class:</p>
+<pre class="code-listing">
+import java.awt.*;
+import java.util.Formatter;
+<span class="code-comment">/**
+ * The bouncing ball.
+ */</span>
+public class <strong>Ball</strong> {
+   float x, y;           <span class="code-comment">// Ball's center x and y (package access)</span>
+   float speedX, speedY; <span class="code-comment">// Ball's speed per step in x and y (package access)</span>
+   float radius;         <span class="code-comment">// Ball's radius (package access)</span>
+   private Color color;  <span class="code-comment">// Ball's color</span>
+   private static final Color DEFAULT_COLOR = Color.BLUE;
+  
+   <span class="code-comment">/**
+    * Constructor: For user friendliness, user specifies velocity in speed and
+    * moveAngle in usual Cartesian coordinates. Need to convert to speedX and
+    * speedY in Java graphics coordinates for ease of operation.
+    */</span>
+   public Ball(float x, float y, float radius, float speed, float angleInDegree,
+         Color color) {
+      this.x = x;
+      this.y = y;
+      <span class="code-comment">// Convert (speed, angle) to (x, y), with y-axis inverted</span>
+      this.speedX = (float)(speed * Math.cos(Math.toRadians(angleInDegree)));
+      this.speedY = (float)(-speed * (float)Math.sin(Math.toRadians(angleInDegree)));
+      this.radius = radius;
+      this.color = color;
+   }
+   <span class="code-comment">/** Constructor with the default color */</span>
+   public Ball(float x, float y, float radius, float speed, float angleInDegree) {
+      this(x, y, radius, speed, angleInDegree, DEFAULT_COLOR);
+   }
+   
+   <span class="code-comment">/** Draw itself using the given graphics context. */</span>
+   public void draw(Graphics g) {
+      g.setColor(color);
+      g.fillOval((int)(x - radius), (int)(y - radius), (int)(2 * radius), (int)(2 * radius));
+   }
+   
+   <span class="code-comment">/** 
+    * Make one move, check for collision and react accordingly if collision occurs.
+    * 
+    * @param box: the container (obstacle) for this ball. 
+    */</span>
+   public void moveOneStepWithCollisionDetection(ContainerBox box) {
+      <span class="code-comment">// Get the ball's bounds, offset by the radius of the ball</span>
+      float ballMinX = box.minX + radius;
+      float ballMinY = box.minY + radius;
+      float ballMaxX = box.maxX - radius;
+      float ballMaxY = box.maxY - radius;
+   
+      <span class="code-comment">// Calculate the ball's new position</span>
+      x += speedX;
+      y += speedY;
+      <span class="code-comment">// Check if the ball moves over the bounds. If so, adjust the position and speed.</span>
+      if (x &lt; ballMinX) {
+         speedX = -speedX; <span class="code-comment">// Reflect along normal</span>
+         x = ballMinX;     <span class="code-comment">// Re-position the ball at the edge</span>
+      } else if (x &gt; ballMaxX) {
+         speedX = -speedX;
+         x = ballMaxX;
+      }
+      <span class="code-comment">// May cross both x and y bounds</span>
+      if (y &lt; ballMinY) {
+         speedY = -speedY;
+         y = ballMinY;
+      } else if (y &gt; ballMaxY) {
+         speedY = -speedY;
+         y = ballMaxY;
+      }
+   }
+   
+   <span class="code-comment">/** Return the magnitude of speed. */</span>
+   public float getSpeed() {
+      return (float)Math.sqrt(speedX * speedX + speedY * speedY);
+   }
+   
+   <span class="code-comment">/** Return the direction of movement in degrees (counter-clockwise). */</span>
+   public float getMoveAngle() {
+      return (float)Math.toDegrees(Math.atan2(-speedY, speedX));
+   }
+   
+   <span class="code-comment">/** Return mass */</span>
+   public float getMass() {
+      return radius * radius * radius / 1000f;  // Normalize by a factor
+   }
+   
+   <span class="code-comment">/** Return the kinetic energy (0.5mv^2) */</span>
+   public float getKineticEnergy() {
+      return 0.5f * getMass() * (speedX * speedX + speedY * speedY);
+   }
+  
+   <span class="code-comment">/** Describe itself. */</span>
+   public String toString() {
+      sb.delete(0, sb.length());
+      formatter.format("@(%3.0f,%3.0f) r=%3.0f V=(%2.0f,%2.0f) " +
+            "S=%4.1f \u0398=%4.0f KE=%3.0f", 
+            x, y, radius, speedX, speedY, getSpeed(), getMoveAngle(),
+            getKineticEnergy());  <span class="code-comment">// \u0398 is theta</span>
+      return sb.toString();
+   }
+   <span class="code-comment">// Re-use to build the formatted string for toString()</span>
+   private StringBuilder sb = new StringBuilder();
+   private Formatter formatter = new Formatter(sb);
+}</pre>
+
+<h4>The Control Logic and Main Display Class BallWorld</h4>
+
+<img class="image-left" src="images/GameBall_BallWorldClass.png" />
+
+<p>The <code>BallWorld</code> class provides the <em>Control</em> Logic (C) (<code>gameStart()</code>, <code>gameUpdate()</code>), as well as the <em>Presentation View</em> (V) by extending the <code>JPanel</code>.</p>
+
+<pre class="code-listing">
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Random;
+import javax.swing.*;
+<span class="code-comment">/**
+ * The control logic and main display panel for game.
+ */</span>
+public class BallWorld extends JPanel {
+   private static final int UPDATE_RATE = 30;  <span class="code-comment">// Frames per second (fps)</span>
+   
+   private Ball ball;         <span class="code-comment">// A single bouncing Ball's instance</span>
+   private ContainerBox box;  <span class="code-comment">// The container rectangular box</span>
+  
+   private DrawCanvas canvas; <span class="code-comment">// Custom canvas for drawing the box/ball</span>
+   private int canvasWidth;
+   private int canvasHeight;
+  
+   <span class="code-comment">/**
+    * Constructor to create the UI components and init the game objects.
+    * Set the drawing canvas to fill the screen (given its width and height).
+    * 
+    * @param width : screen width
+    * @param height : screen height
+    */</span>
+   public BallWorld(int width, int height) {
+  
+      canvasWidth = width;
+      canvasHeight = height;
+      
+      <span class="code-comment">// Init the ball at a random location (inside the box) and moveAngle</span>
+      Random rand = new Random();
+      int radius = 200;
+      int x = rand.nextInt(canvasWidth - radius * 2 - 20) + radius + 10;
+      int y = rand.nextInt(canvasHeight - radius * 2 - 20) + radius + 10;
+      int speed = 5;
+      int angleInDegree = rand.nextInt(360);
+      ball = new Ball(x, y, radius, speed, angleInDegree, Color.BLUE);
+     
+      <span class="code-comment">// Init the Container Box to fill the screen</span>
+      box = new ContainerBox(0, 0, canvasWidth, canvasHeight, Color.BLACK, Color.WHITE);
+     
+      <span class="code-comment">// Init the custom drawing panel for drawing the game</span>
+      canvas = new DrawCanvas();
+      this.setLayout(new BorderLayout());
+      this.add(canvas, BorderLayout.CENTER);
+      
+      <span class="code-comment">// Handling window resize.</span>
+      this.addComponentListener(new ComponentAdapter() {
+         @Override
+         public void componentResized(ComponentEvent e) {
+            Component c = (Component)e.getSource();
+            Dimension dim = c.getSize();
+            canvasWidth = dim.width;
+            canvasHeight = dim.height;
+            <span class="code-comment">// Adjust the bounds of the container to fill the window</span>
+            box.set(0, 0, canvasWidth, canvasHeight);
+         }
+      });
+  
+      <span class="code-comment">// Start the ball bouncing</span>
+      gameStart();
+   }
+   
+   <span class="code-comment">/** Start the ball bouncing. */</span>
+   public void gameStart() {
+      <span class="code-comment">// Run the game logic in its own thread.</span>
+      Thread gameThread = new Thread() {
+         public void run() {
+            while (true) {
+               <span class="code-comment">// Execute one time-step for the game </span>
+               gameUpdate();
+               <span class="code-comment">// Refresh the display</span>
+               repaint();
+               <span class="code-comment">// Delay and give other thread a chance</span>
+               try {
+                  Thread.sleep(1000 / UPDATE_RATE);
+               } catch (InterruptedException ex) {}
+            }
+         }
+      };
+      gameThread.start();  <span class="code-comment">// Invoke GaemThread.run()</span>
+   }
+   
+   <span class="code-comment">/** 
+    * One game time-step. 
+    * Update the game objects, with proper collision detection and response.
+    */</span>
+   public void gameUpdate() {
+      ball.moveOneStepWithCollisionDetection(box);
+   }
+   
+   <span class="code-comment">/** The custom drawing panel for the bouncing ball (inner class). */</span>
+   class DrawCanvas extends JPanel {
+      <span class="code-comment">/** Custom drawing codes */</span>
+      @Override
+      public void paintComponent(Graphics g) {
+         super.paintComponent(g);    <span class="code-comment">// Paint background</span>
+         <span class="code-comment">// Draw the box and the ball</span>
+         box.draw(g);
+         ball.draw(g);
+         <span class="code-comment">// Display ball's information</span>
+         g.setColor(Color.WHITE);
+         g.setFont(new Font("Courier New", Font.PLAIN, 12));
+         g.drawString("Ball " + ball.toString(), 20, 30);
+      }
+  
+      <span class="code-comment">/** Called back to get the preferred size of the component. */</span>
+      @Override
+      public Dimension getPreferredSize() {
+         return (new Dimension(canvasWidth, canvasHeight));
+      }
+   }
+}</pre>
+
+<p>The class <code>BallWorld</code> extends <code>JPanel</code>, as the <em>master view</em> panel. The master panel may contain many sub-panels. In this example, it contains only a custom drawing panel. I shall include a control panel in the later exercises.</p>
+<p>The <code>BallWorld</code>  also contains the <em>control logic</em>: <code>gameStart()</code>, <code>gameUpdate()</code>.</p>
+<p> It has three instance variables: a <code>Ball</code>, a <code>Box</code>, and a <code>DrawCanvas</code> (for drawing the bouncing ball).</p>
+
+<p>The constructor sets up the UI components, game objects, and starts the ball bouncing by invoking <code>gameStart()</code>. It accepts two argument, <code>width</code> and <code>height</code>, which is used to set the dimension of the the drawing canvas, via callback method <code>getPreferredSize()</code> in the <code>DrawCanvas</code>. I also included the codes for handling window resize in <code>componentResized()</code> callback handler, which shall resize the box to fill the window.</p>
+<p><em>Custom drawing</em> is carried out in a <code>DrawCanvas</code>, which is derived from <code>JPanel</code>, by overriding the <code>paintComponent(Graphics)</code> method to program custom rendering. <code>paintComponent()</code> is not supposed to be called directly, but called-back via <code>repaint()</code>. <code>DrawCanvas</code> is designed to be an <em>inner class</em> of the main class, so as to access the private variables of outer class - in particular, the game objects.</p>
+
+<p>The <code>gameStart()</code> start the game loop in a separate thread. The game loop repetitively (a) detect collision in the coming time-step and compute the proper responses, (a) synchronously update the position and state of all the game objects, (c) render graphics and refresh the display, (d) delay to control the refresh timing and yield control to other threads.</p>
+
+<img class="image-center" src="images/GameBall_GameLoop.png" />
+
+<p>The game loop is running in its own thread (<code>GameThread</code>), by sub-classing <code>Thread</code> and overriding the <code>run()</code> method to program the running behavior. Multithread is necessary for game programming, as the graphics subsystem uses a so-called <em>Event Dispatch Thread</em> (EDT) to monitor the input events (such as key-press, mouse-click), run the event handlers, and refreshes the display. If the Event Dispatch Thread is starved (e.g., the <code>GameThread</code> does not yield control), the screen freezes and no inputs can be processed, resulted in the infamous <em>unresponsive user-interface</em> problem.</p>
+<p>Method  <code>run()</code> is not supposed to be called directly, but called-back via the <code>Thread</code>'s <code>method start()</code>. The static method <code>Thread.sleep()</code> suspends this game thread by the specified milliseconds. The <code>sleep()</code> serves two purposes: It provides the necessary delay to achieve the target update (or refresh) rate, and also yields control to other threads to do their assigned tasks, in particular, the GUI Event Dispatch Thread which refreshes the screen and processes the inputs.</p>
+<p>The game loop, in this case, is straight-forward. For each step, it moves the ball and checks if collision occurs. If so, it computes the proper response. It refreshes the display by invoking <code>repaint()</code>, which calls-back <code>paintComponent()</code> of the <code>DrawCanvas</code> to carry out the custom drawing.</p>
+
+<h4>The Main class</h4>
+
+<pre class="code-listing">
+import javax.swing.JFrame;
+<span class="code-comment">/**
+ * Main Program for running the bouncing ball as a standalone application.
+ */</span>
+public class Main {
+   <span class="code-comment">// Entry main program</span>
+   public static void main(String[] args) {
+      <span class="code-comment">// Run UI in the Event Dispatcher Thread (EDT), instead of Main thread</span>
+      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+         public void run() {
+            JFrame frame = new JFrame(&quot;A World of Balls&quot;);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setContentPane(new BallWorld(640, 480)); <span class="code-comment">// BallWorld is a JPanel</span>
+            frame.pack();            <span class="code-comment">// Preferred size of BallWorld</span>
+            frame.setVisible(true);  <span class="code-comment">// Show it</span>
+         }
+      });
+   }
+}</pre>
+
+<p>The <code>Main</code> class provides the <code>main()</code> method to start the application, which allocates and sets up a <code>JFrame</code>. An instance of <code>BallWorld</code> is constructed and set as the content pane for the <code>JFrame</code>.</p>
+<p>The <code>main()</code> uses the standard procedure to construct the UI in the Event Dispatch Thread to ensure thread-safety (see Java Swing online tutorial @ <a href="http://java.sun.com/docs/books/tutorial/uiswing">http://java.sun.com/docs/books/tutorial/uiswing</a>).</p>
+<p>For this example, you could include the <code>main()</code> method in the <code>BallWorld</code> class, and discard the <code>Main</code> class.</p>
+<p>Try running the program and resizing the window.</p>
+
+<h4>Running as an Applet</h4>
+<p>Instead of the <code>Main</code> class, we could use a <code>MainApplet</code> class to run this program as an Java applet.</p>
+
+<pre class="code-listing">import javax.swing.JApplet;
+<span class="code-comment">/**
+ * Main Program to run as an applet
+ * The display area is 640x480. 
+ */</span>
+public class <strong>MainApplet</strong> extends JApplet {
+   @Override
+   public void init() {
+      <span class="code-comment">// Run UI in the Event Dispatcher Thread</span>
+      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+         public void run() {
+            setContentPane(new BallWorld(640, 480)); <span class="code-comment">// BallWorld is a JPanel</span>
+         }
+      });
+   }
+}</pre>
+
+<p>Applet extends from <code>JApplet</code> (or <code>Applet</code>), and uses <code>init()</code> instead of <code>main()</code> to begin operation.</p>
+
+<h4>Distribute Application/Applet in a JAR file</h4>
+
+<p>Our program contains many classes. How to distribute these classes? The answer is via a single JAR file. JAR is similar to ZIP, which compresses the contents (you can use WinZip or WinRAR to unzip a JAR file). Furthermore, JRE can run directly from a JAR file, without explicitly decompress it.</p>
+
+<p>We shall prepare a JAR file such that we can run our program as a standalone application (via <code>Main.class</code>) as well as an applet (via <code>MainApplet.class</code>).</p>
+
+<p><span class="line-heading">Distribute Stand-alone Application in a JAR file:</span> To run a standalone program from a jar file, we need to prepare a so-called <em>manifest</em> (says &quot;<code>BallWorld.manifest</code>&quot;) to specify the application's main class, as follows (On the other hand, applet's main class is specified in the attribute &quot;<code>code</code>&quot; of the <code>&lt;applet&gt;</code> tag, no manifest needed for applet):</p>
+<pre class="code-listing">Manifest-Version: 1.0
+Main-Class: Main</pre>
+
+<p>Run the JDK's <code>jar</code> utility from a <code>cmd</code> shell to jar-up all the classes as follow (the command-line options are: '<code>c</code>' for create, '<code>v</code>' for verbose, '<code>m</code>' for manifest, '<code>f</code>' for jar's filename):</p>
+<pre class="code-command"><span class="code-comment">... change the current working directory to the application's base directory ...</span>
+&gt; jar cvmf BallWorld.manifest ballworld.jar *.class
+</pre>
+
+<p>In Eclipse, right-click the project &rArr; Export... &rArr; Java ⇒ JAR file ⇒ Next ⇒ Check &quot;Export generated class files and resources&quot;  (you may also export the source files)  ⇒ Next ⇒ Next ⇒ Check &quot;Generate the manifest file&quot; ⇒ In &quot;Main class&quot;, enter your main class ⇒ Finish.</p>
+
+<p>You can use the Java runtime with &quot;<code>-jar</code>&quot; option to run the standalone application from the JAR file (as follow)  or simply double-click the JAR file. The embedded manifest specifies the main class to start the application.</p>
+<pre class="code-command">&gt; java -jar ballworld.jar
+</pre>
+
+<p>If your program (in the JAR file) requires other JAR files, include a &quot;<code>Class-Path</code>&quot; in the manifest as follows. The JAR files are separated by space(?!). There is no need to include the current directory(?!).</p>
+<pre class="code-listing">
+Manifest-Version: 1.0
+Main-Class: Main
+Class-Path: collisionphysics.jar another.jar</pre>
+
+<p><span class="line-heading">Distribute Applet in a JAR file:</span> To run an applet from a JAR file, provide an HTML script with attribute &quot;<code>archive</code>&quot; selecting the JAR file and attribute &quot;<code>code</code>&quot; selecting the applet class:</p>
+<pre class="code-listing">
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;A Bouncing Ball&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;A Bouncing Ball&lt;/h2&gt;
+  &lt;applet code=&quot;<strong>MainApplet.class</strong>&quot; 
+        width=&quot;640&quot; height=&quot;480&quot;
+        archive=&quot;<strong>ballworld.jar</strong>&quot;&gt;
+  &lt;/applet&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>You may include additional JAR files in the archive attribute. The jar files are separated by commas.</p>
+<p><span class="line-heading">Summary:</span> For a standalone application, the main class is specified in the manifest; for an applet, the main class is specified in the <code>&lt;applet&gt;</code>'s <code>code</code> attribute, no manifest needed. For an application, additional JAR files are specified in the manifest; for an applet, they are added in the <code>&lt;applet&gt;</code>'s <code>archive</code> attribute.</p>
+
+<h4>Running in Full-Screen Mode</h4>
+<pre class="code-listing">
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+<span class="code-comment">/**
+ * Main Program for running the bouncing ball as a standalone application,
+ * in Full-Screen mode (if full-screen mode is supported).
+ * Use ESC Key to quit (need to handle key event). 
+ */</span>
+public class <strong>MainFullScreenOnly</strong> extends JFrame {
+  
+   <span class="code-comment">/** Constructor to initialize UI */</span>
+   public MainFullScreenOnly() {
+      <span class="code-comment">// Get the default graphic device and try full screen mode</span>
+      GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment()
+            .getDefaultScreenDevice();
+      if (device.isFullScreenSupported()) { <span class="code-comment">// Go for full-screen mode</span>
+         this.setUndecorated(true);         <span class="code-comment">// Don't show title and border</span>
+         this.setResizable(false);
+         //this.setIgnoreRepaint(true);     <span class="code-comment">// Ignore OS re-paint request</span>
+         device.setFullScreenWindow(this);
+      } else {    <span class="code-comment">// Run in windowed mode if full screen is not supported</span>
+         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();<br />         this.setSize(dim.width, dim.height - 40); <span class="code-comment">// minus task bar</span><br />         this.setResizable(true);<br />      }
+      
+      <span class="code-comment">// Allocate the game panel to fill the current screen</span> 
+      BallWorld ballWorld = new BallWorld(this.getWidth(), this.getHeight());
+      this.setContentPane(ballWorld); <span class="code-comment">// Set as content pane for this JFrame</span>
+  
+      <span class="code-comment">// To handle key events</span>
+      this.addKeyListener(new KeyAdapter() {
+         @Override
+         public void keyPressed(KeyEvent e) {
+            int keyCode = e.getKeyCode();
+            switch (keyCode) {
+            case KeyEvent.VK_ESCAPE:   <span class="code-comment">// ESC to quit</span>
+               System.exit(0);
+               break;
+            }
+         }
+      });
+      this.setFocusable(true);  <span class="code-comment">// To receive key event</span>
+  
+      this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      this.setTitle("A World of Balls");
+      this.pack();            <span class="code-comment">// Pack to preferred size</span>
+      this.setVisible(true);  <span class="code-comment">// Show it</span>
+   }
+   
+   <span class="code-comment">/** Entry main program */</span>
+   public static void main(String[] args) {
+      <span class="code-comment">// Run UI in the Event Dispatcher Thread (EDT), instead of Main thread</span>
+      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+         public void run() {
+            new MainFullScreenOnly();
+         }
+      });
+   }
+}</pre>
+
+<p>The above main program runs the bouncing ball in full-screen mode, if full-screen mode is supported. It first queries <code>GraphicsDevice.isFullScreenSupported()</code>, and switches into full-screen mode via <code>GraphicsDevice.setFullScreenWindow(this)</code>.</p>
+<p>If full-screen mode is not available, the program runs in windowed mode, using the maximum window size. We use <code>Toolkit.getDefaultToolkit().getScreenSize()</code> to find the current screen size.</p>
+<p>I also set up the key-event handler, so that we could use ESC key to quit the program in full-screen mode.</p>
+
+
+<h3>Example 3: Collision Detection and Response</h3>
+
+<p>Click <a href="codes/ball_ex3_collision.jar">HERE</a> to download the source codes  for this example (unzip the downloaded JAR file).</p>
+
+<p>Let's take a closer look at <em>collision detection and response</em> for our single bouncing ball. In our special case, the bounds are either horizontal or vertical.</p>
+<p>The ball  collides with the container if it touches or moves over its bounds, in the up-coming time-step.</p>
+<p>Detecting collision of a moving circle with a vertical line or a horizontal line is simple (a very special case!) as illustrated below. Computing the response for this special case is also trivial - simply reflect the ball either horizontally or vertically. If collision occurs, we need to position the ball at the point of impact. Do not cross the bound, which may result in a deadlock where the ball sticks to the wall or simply flies away in the next step.</p>
+<img class="image-left" src="images/GameBallCollision_VHLine.png" />
+
+<p>As illustrated, the radius of the ball effectively reduces the boundaries of the box by that amount, or shorten the collision time. Hence, by moving the boundaries of the box, we can simplify the ball to a point. This simplification is important in a  complex situation.</p>
+
+<p><span class="line-heading">Package collisionphysics:</span> In order to handle collision detection and response for many situations, I created a package called <code>collisionphysics</code>, which includes <code>static</code> methods for detecting collision and computing responses.</p>
+
+<p><span class="line-heading">CollisionResponse.java:</span> If collision occurs, the collision <code>time</code> and responses (<code>newSpeedX</code>, <code>newSpeedY</code>) are kept in an object of <code>CollisionResponse</code>. My collision detection algorithms are based on <em>ray tracing</em> and uses parametric equation to find the earliest positive collision time.</p>
+
+<pre class="code-listing">
+package collisionphysics;
+<span class="code-comment">/**
+ * If collision occurs, this object stores the collision time and
+ * the computed responses, new speed (newSpeedX, newSpeedY).
+ */</span>
+public class <strong>CollisionResponse</strong> {
+   <span class="code-comment">/** Detected collision time, reset to Float.MAX_VALUE */</span>
+   public float t;
+   <span class="code-comment">// Time threshold to be subtracted from collision time
+   // to prevent moving over the bound. Assume that t &lt;= 1.</span>
+   private static final float T_EPSILON = 0.005f;
+   
+   <span class="code-comment">/** Computed speed in x-direction after collision */</span>
+   public float newSpeedX;
+   <span class="code-comment">/** Computed speed in y-direction after collision */</span>
+   public float newSpeedY;
+   
+   <span class="code-comment">/** Constructor which resets the collision time to infinity. */</span>
+   public CollisionResponse() {
+      reset();  <span class="code-comment">// Reset detected collision time to infinity</span>
+   }
+   
+   <span class="code-comment">/** Reset the detected collision time to infinity. */</span>
+   public void reset() {
+      this.t = Float.MAX_VALUE;
+   }
+   
+   <span class="code-comment">/** Copy this instance to another, used to find the earliest collision. */</span>
+   public void copy(CollisionResponse another) {
+      this.t = another.t;
+      this.newSpeedX = another.newSpeedX;
+      this.newSpeedY = another.newSpeedY;
+   }
+  
+   <span class="code-comment">/** Return the x-position after impact. */</span>
+   public float getNewX(float currentX, float speedX) {
+      <span class="code-comment">// Subtract by a small thread to make sure that it does not cross the bound.</span>
+      if (t &gt; T_EPSILON) {
+         return (float)(currentX + speedX * (t - T_EPSILON));
+      } else {
+         return currentX;
+      }
+   }
+   
+   <span class="code-comment">/** Return the y-position after impact. */</span>
+   public float getNewY(float currentY, float speedY) {
+      <span class="code-comment">// Subtract by a small thread to make sure that it does not cross the bound.</span>
+      if (t &gt; T_EPSILON) {
+         return (float)(currentY + speedY * (t - T_EPSILON));
+      } else {
+         return currentY;
+      }
+   }
+}</pre>
+
+<p>The method <code>reset()</code> sets the collision <code>time</code> to positive infinity (<code>Float.MAX_VALUE</code>).</p>
+
+<p>In a complex systems (e.g., multiple balls), we need to look for the <em>earliest</em> collision in the entire system. The <code>copy()</code> method can be used to transfer the current response to the earliest response, if it has a smaller time.</p>
+
+<p><span class="line-heading">CollisionPhsyics.java:</span> The main class (modeled after <code>java.lang.Math</code>), which provides static methods for collision detection and response. </p>
+
+<pre class="code-listing">
+package collisionphysics;
+
+public class <strong>CollisionPhysics</strong> {
+   <span class="code-comment">// Working copy for computing response in intersect(ContainerBox box), 
+   // to avoid repeatedly allocating objects.</span>
+   private static CollisionResponse tempResponse = new CollisionResponse(); 
+   
+   <span class="code-comment">/**
+    * Detect collision for a moving point bouncing inside a rectangular container,
+    * within the given timeLimit.
+    * If collision is detected within the timeLimit, compute collision time and 
+    * response in the given CollisionResponse object. Otherwise, set collision time
+    * to infinity.
+    * The result is passed back in the given CollisionResponse object.
+    */</span>
+   public static void <strong>pointIntersectsRectangleOuter</strong>(
+         float pointX, float pointY, float speedX, float speedY, float radius,
+         float rectX1, float rectY1, float rectX2, float rectY2,
+         float timeLimit, CollisionResponse response) {
+      
+      response.reset();  <span class="code-comment">// Reset detected collision time to infinity</span>
+      
+      <span class="code-comment">// A outer rectangular container box has 4 borders. 
+      // Need to look for the earliest collision, if any.</span>
+  
+      <span class="code-comment">// Right border</span>
+      pointIntersectsLineVertical(pointX, pointY, speedX, speedY, radius,
+            rectX2, timeLimit, tempResponse);
+      if (tempResponse.t &lt; response.t) {
+         response.copy(tempResponse);  <span class="code-comment">// Copy into resultant response</span>
+      }
+      <span class="code-comment">// Left border</span>
+      pointIntersectsLineVertical(pointX, pointY, speedX, speedY, radius,
+            rectX1, timeLimit, tempResponse);
+      if (tempResponse.t &lt; response.t) {
+         response.copy(tempResponse);
+      }
+      <span class="code-comment">// Top border</span>
+      pointIntersectsLineHorizontal(pointX, pointY, speedX, speedY, radius,
+            rectY1, timeLimit, tempResponse);
+      if (tempResponse.t &lt; response.t) {
+         response.copy(tempResponse);
+      }
+      <span class="code-comment">// Bottom border</span>
+      pointIntersectsLineHorizontal(pointX, pointY, speedX, speedY, radius,
+            rectY2, timeLimit, tempResponse);
+      if (tempResponse.t &lt; response.t) {
+         response.copy(tempResponse);
+      }
+   }
+   
+   <span class="code-comment">/**
+    * Detect collision for a moving point hitting a horizontal line,
+    * within the given timeLimit.
+    */</span>
+   public static void <strong>pointIntersectsLineVertical</strong>(
+         float pointX, float pointY, float speedX, float speedY, float radius,
+         float lineX, float timeLimit, CollisionResponse response) {
+  
+      response.reset();  <span class="code-comment">// Reset detected collision time to infinity</span>
+  
+      <span class="code-comment">// No collision possible if speedX is zero</span>
+      if (speedX == 0) {
+         return;
+      }
+  
+      <span class="code-comment">// Compute the distance to the line, offset by radius.</span>
+      float distance;
+      if (lineX &gt; pointX) {
+         distance = lineX - pointX - radius; 
+      } else {
+         distance = lineX - pointX + radius; 
+      }
+      
+      float t = distance / speedX;  <span class="code-comment">// speedX != 0</span>
+      <span class="code-comment">// Accept 0 &lt; t &lt;= timeLimit</span>
+      if (t &gt; 0 &amp;&amp; t &lt;= timeLimit) {
+         response.t = t;
+         response.newSpeedX = -speedX;  <span class="code-comment">// Reflect horizontally</span>
+         response.newSpeedY = speedY;   <span class="code-comment">// No change vertically</span>
+      }
+   }
+  
+   <span class="code-comment">/**
+    * @see movingPointIntersectsLineVertical().
+    */</span>
+   public static void <strong>pointIntersectsLineHorizontal</strong>(
+         float pointX, float pointY, float speedX, float speedY, float radius,
+         float lineY, float timeLimit, CollisionResponse response) {
+
+      response.reset();  <span class="code-comment">// Reset detected collision time to infinity</span>
+  
+      <span class="code-comment">// No collision possible if speedY is zero</span>
+      if (speedY == 0) {
+         return;
+      }
+  
+      <span class="code-comment">// Compute the distance to the line, offset by radius.</span>
+      float distance;
+      if (lineY &gt; pointY) {
+         distance = lineY - pointY - radius; 
+      } else {
+         distance = lineY - pointY + radius; 
+      }
+      
+      float t = distance / speedY;  <span class="code-comment">// speedY != 0</span>
+      <span class="code-comment">// Accept 0 &lt; t &lt;= timeLimit</span>
+      if (t &gt; 0 &amp;&amp; t &lt;= timeLimit) {
+         response.t = t;
+         response.newSpeedY = -speedY;  <span class="code-comment">// Reflect vertically</span>
+         response.newSpeedX = speedX;   <span class="code-comment">// No change horizontally</span>
+      }
+   }
+}</pre>
+
+<p>The <code>pointIntersectsLineXxx()</code> methods take a moving ball (<code>currentX</code>, <code>currentY</code>, <code>speedX</code>, <code>speedY</code>, <code>radius</code>), a vertical/horizontal line  (<code>lineX|lineY</code>), a time limit (<code>timeLimit</code>), and a <code>CollisionResponse</code> object. If a collision is detected within the given time limit, it computes the collision time and responses (<code>newSpeedX</code>, <code>newSpeedY</code>) and stores them back to the given <code>CollisionResponse</code> object.</p>
+<p>The <code>pointIntersectsRectangleOuter()</code> uses the above methods to detect the earliest collision to the 4 borders of the container box. Only the first collision matters, which nullifies all the subsequent detected collisions. It positions the ball accurately after the collision at the point of impact.</p>
+
+<p><span class="line-heading">Ball.java: </span>We shall prepare for the multiple-ball case, where only the earliest collision matters. Each ball shall detect probable collision to all the other objects in the system. It shall maintain information about its earlier collision detected.</p>
+
+<img class="image-left" src="images/GameBall_BallClassCollision.png"  />
+
+<pre class="code-listing">
+......
+public class <strong>Ball</strong> {
+   ......
+   
+   <span class="code-comment">// For collision detection and response
+   // Maintain the response of the earliest collision detected 
+   //  by this ball instance. (package access)</span>
+   CollisionResponse earliestCollisionResponse = new CollisionResponse();
+   
+   ......
+   
+   <span class="code-comment">// Working copy for computing response in intersect(ContainerBox box), 
+   // to avoid repeatedly allocating objects.</span>
+   private CollisionResponse tempResponse = new CollisionResponse(); 
+  
+   <span class="code-comment">/**
+    * Check if this ball collides with the container box in the coming time-step.
+    * 
+    * @param box: container (obstacle) for this ball
+    */</span>
+   public void intersect(ContainerBox box) {
+      <span class="code-comment">// Call movingPointIntersectsRectangleOuter, which returns the 
+      // earliest collision to one of the 4 borders, if collision detected.</span>
+      CollisionPhysics.pointIntersectsRectangleOuter(
+            this.x, this.y, this.speedX, this.speedY, this.radius,
+            box.minX, box.minY, box.maxX, box.maxY,
+            1.0f, tempResponse);
+      if (tempResponse.t &lt; earliestCollisionResponse.t) {
+         earliestCollisionResponse.copy(tempResponse);
+      }
+   }
+   
+   <span class="code-comment">/** 
+    * Update the states of this ball for one time-step.
+    * Move for one time-step if no collision occurs; otherwise move up to 
+    * the earliest detected collision. 
+    */</span>
+   public void update() {
+      <span class="code-comment">// Check the earliest collision detected for this ball stored in
+      // earliestCollisionResponse.</span>
+      if (earliestCollisionResponse.t &lt;= 1.0f) {  <span class="code-comment">// Collision detected</span>
+         // This ball collided, get the new position and speed
+         this.x = earliestCollisionResponse.getNewX(this.x, this.speedX);
+         this.y = earliestCollisionResponse.getNewY(this.y, this.speedY);
+         this.speedX = (float)earliestCollisionResponse.newSpeedX;
+         this.speedY = (float)earliestCollisionResponse.newSpeedY;
+      } else {  <span class="code-comment">// No collision in this coming time-step</span>
+         <span class="code-comment">// Make a complete move</span>
+         this.x += this.speedX;         
+         this.y += this.speedY;         
+      }
+      <span class="code-comment">// Clear for the next collision detection</span>
+      earliestCollisionResponse.reset(); 
+   }
+}</pre>
+
+<p><span class="line-heading">BallWorld.java:</span> </p>
+
+<pre class="code-listing">
+......
+public class <strong>BallWorld extends JPanel</strong> {
+   ......
+   
+   public void gameUpdate() {
+      <span class="code-comment">// Detect collision for this ball with the container box.</span>
+      ball.intersect(box);
+      <span class="code-comment">// Update the ball's state with proper collision response if collided.</span>
+      ball.update();
+   }
+}</pre>
+
+<p>Run this example and compare with previous example. Closely observe the collision by reducing the refresh rate and increase the ball's speed.</p>
+
+<h3>Example 4: Timing Control</h3>
+
+<p>Click <a href="codes/ball_ex4_timing.jar">HERE</a> to download the source codes (Unzip the downloaded JAR file).</p>
+
+<p>So far, we have ignored the timing control. In many computer games, we define a so-called time-step, which is closely related to the screen refresh rate, to <em>synchronously</em> update all the game objects before refresh the display.</p>
+
+<p>For our bouncing ball, it probably hits the box in between the time-step, and need to continuously move in the new direction for the <em>remaining of the time-step</em> for accurate timing control. Collisions may again occur in the remaining of the time-step.</p>
+<p>Normalize each time-step to 1, we need to compute the fraction of times (<code>t</code>) taken up to the first collision, and let the ball continues its journey for the remaining time fraction <code>1-t</code>.</p>
+<p>In a complex situation (e.g., multiple moving balls), it is important to detect the &quot;earliest&quot; collision among all the moving objects, and move all the objects up to this collision time, and repeat the process until the time-step is over. Take note that only the first collision matters!</p>
+
+<p><span class="line-heading">Ball.java:</span></p>
+
+<pre class="code-listing">
+......
+public class <strong>Ball</strong> {
+   ......
+
+   <span class="code-comment">// For collision detection and response
+   // Maintain the response of the earliest collision detected 
+   //  by this ball instance. Only the first collision matters!</span>
+   CollisionResponse earliestCollisionResponse = new CollisionResponse();
+
+   ......
+
+   <span class="code-comment">// Working copy for computing response in intersect(box, timeLimit), 
+   // to avoid repeatedly allocating objects.</span>
+   private CollisionResponse tempResponse = new CollisionResponse(); 
+
+   <span class="code-comment">/**
+    * Check if this ball collides with the container box in the interval 
+    * (0, timeLimit].
+    */</span>
+   public boolean intersect(ContainerBox box, <strong>float timeLimit</strong>) {
+      <span class="code-comment">// Call movingPointIntersectsRectangleOuter, which returns the 
+      // earliest collision to one of the 4 borders, if collision detected.</span>
+      CollisionPhysics.pointIntersectsRectangleOuter(x, y, speedX, speedY, radius,
+            box.minX, box.minY, box.maxX, box.maxY, timeLimit, tempResponse);
+      if (tempResponse.t &lt; earliestCollisionResponse.t) {
+         earliestCollisionResponse.copy(tempResponse);
+      }
+   }
+   
+   public void update(<strong>float time</strong>) {
+      <span class="code-comment">// Check if this ball is responsible for the first collision?</span>
+      if (earliestCollisionResponse.t &lt;= time) {
+         // This ball collided, get the new position and speed
+         this.x = earliestCollisionResponse.getNewX(this.x, this.speedX);
+         this.y = earliestCollisionResponse.getNewY(this.y, this.speedY);
+         this.speedX = (float)earliestCollisionResponse.newSpeedX;
+         this.speedY = (float)earliestCollisionResponse.newSpeedY;
+      } else {
+         // This ball does not involve in a collision. Move straight.
+         this.x += this.speedX * time;         
+         this.y += this.speedY * time;         
+      }
+      <span class="code-comment">// Clear for the next collision detection</span>
+      earliestCollisionResponse.reset();
+   }
+}</pre>
+
+
+<p><span class="line-heading">BallWorld.java:</span> Modify the <code>gameUpdate()</code> method in the class <code>BallWorld</code> to make use of the <code>intersect()</code> to consume one full time-step of movement, even after possibly multiple collisions.  Also modify the game loop to control one time-step precisely.</p>
+
+<pre class="code-listing">
+......
+public class <strong>BallWorld extends JPanel</strong> {
+   private static final float <strong>EPSILON_TIME</strong> = 1e-2f;  <span class="code-comment">// Threshold for zero time</span>
+
+   ......
+   
+   public void <strong>gameStart()</strong> {
+      <span class="code-comment">// Run the game logic in its own thread.</span>
+      Thread gameThread = new Thread() {
+         public void run() {
+            while (true) {
+               <strong>long beginTimeMillis, timeTakenMillis, timeLeftMillis;
+               beginTimeMillis = System.currentTimeMillis();</strong>
+               
+               <span class="code-comment">// Execute one game step</span>
+               gameUpdate();
+               <span class="code-comment">// Refresh the display</span>
+               repaint();
+               
+               <strong><span class="code-comment">// Provide the necessary delay to meet the target rate</span>
+               timeTakenMillis = System.currentTimeMillis() - beginTimeMillis;
+               timeLeftMillis = 1000L / UPDATE_RATE - timeTakenMillis;
+               if (timeLeftMillis &lt; 5) timeLeftMillis = 5; <span class="code-comment">// Set a minimum</span></strong>
+               
+               <span class="code-comment">// Delay and give other thread a chance</span>
+               try {
+                  Thread.sleep(<strong>timeLeftMillis</strong>);
+               } catch (InterruptedException ex) {}
+            }
+         }
+      };
+      gameThread.start();  <span class="code-comment">// Invoke GaemThread.run()</span>
+   }
+   
+   <span class="code-comment">/** 
+    * One game time-step. 
+    * Update the game objects, with proper collision detection and response.
+    */</span>
+   public void <strong>gameUpdate()</strong> {
+      <strong>float timeLeft = 1.0f;  <span class="code-comment">// One time-step to begin with</span>
+      
+      <span class="code-comment">// Repeat until the one time-step is up</span> 
+      do {
+         <span class="code-comment">// Need to find the earliest collision time among all objects</span>
+         float earliestCollisionTime = timeLeft;
+          <span class="code-comment">// Special case here as there is only one moving ball.</span>
+         ball.intersect(box, timeLeft);
+         if (ball.earliestCollisionResponse.t &lt; earliestCollisionTime) {
+            earliestCollisionTime = ball.earliestCollisionResponse.t;   
+         }
+
+         <span class="code-comment">// Update all the objects for earliestCollisionTime</span>
+         ball.update(earliestCollisionTime);
+         
+         <span class="code-comment">// Testing Only - Show collision position</span>
+         if (earliestCollisionTime &gt; 0.05) { <span class="code-comment">// Do not display small changes</span>
+            repaint();
+            try {
+               Thread.sleep((long)(1000L / UPDATE_RATE * earliestCollisionTime));
+            } catch (InterruptedException ex) {}
+         }
+     
+         timeLeft -= earliestCollisionTime;  <span class="code-comment">// Subtract the time consumed and repeat</span>
+      } while (timeLeft &gt; EPSILON_TIME);     <span class="code-comment">// Ignore remaining time less than threshold</span></strong>
+   }
+}</pre>
+
+<p>Again, compare the output of example 2, 3, and 4. Closely observe the collisions by reducing the refresh rate and increase the ball's speed.</p>
+
+<h3>Example 5: Control Panel</h3>
+<p>Let us add a control panel, with a &quot;pause&quot; checkbox, a &quot;speed&quot; slider and a &quot;radius&quot; slider.</p>
+<img class="image-left"  src="images/GameBall_ControlPanel.png" />
+
+<p>Click the image to run the DEMO. Click <a href="codes/ball_ex5_control.jar">HERE</a> to download the source codes  for this example (unzip the downloaded JAR file).</p>
+<a href="Applet_BallEx5Control.html" target="_blank"><img src="images/GameBall_Ex5Control.png" /></a>
+
+<p>Modify the <code>BallWorld</code> class to include a <code>ControlPanel</code> inner class, which maintains the  control UI components (checkbox, slider, button):</p>
+<pre class="code-listing">public class <strong>BallWorld extends JPanel</strong> {
+   ......
+   ......
+   
+   <strong>private ControlPanel control; <span class="code-comment">// The control panel of buttons and sliders.</span></strong>
+   
+   <span class="code-comment">/** Constructor to create the UI components and init the game objects. */</span>
+   public BallWorld() {
+      .......
+   
+      <span class="code-comment">// Control panel</span>
+      <strong>control = new ControlPanel();
+      
+      <span class="code-comment">// Layout the drawing panel and control panel</span>   
+      this.setLayout(new BorderLayout());
+      this.add(canvas, BorderLayout.CENTER);
+      this.add(control, BorderLayout.SOUTH);
+</strong>   
+      <span class="code-comment">// Start the ball bouncing</span>
+      gameStart();
+   }
+   
+   ......
+   ......
+   
+   <span class="code-comment">/** The control panel (inner class). */</span>
+   class <strong>ControlPanel extends JPanel</strong> {
+   
+      <span class="code-comment">/** Constructor to initialize UI components of the controls */</span>
+      public ControlPanel() {
+         <span class="code-comment">// A checkbox to toggle pause/resume movement</span>
+         JCheckBox pauseControl = new JCheckBox();
+         this.add(new JLabel("Pause"));
+         this.add(pauseControl);
+         pauseControl.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+               paused = !paused;  <span class="code-comment">// Toggle pause/resume flag</span>
+            }
+         });
+      
+         <span class="code-comment">// A slider for adjusting the speed of the ball</span>
+         int minSpeed = 2;
+         int maxSpeed = 20;
+         JSlider speedControl = new JSlider(JSlider.HORIZONTAL, minSpeed, maxSpeed,
+               (int)ball.getSpeed());
+         this.add(new JLabel(&quot;Speed&quot;));
+         this.add(speedControl);
+         speedControl.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+               JSlider source = (JSlider)e.getSource();
+               if (!source.getValueIsAdjusting()) {
+                  int newSpeed = (int)source.getValue();
+                  int currentSpeed = (int)ball.getSpeed();
+                  ball.speedX *= (float)newSpeed / currentSpeed ;
+                  ball.speedY *= (float)newSpeed / currentSpeed;
+               }
+            }
+         });
+     
+         <span class="code-comment">// A slider for adjusting the radius of the ball</span>
+         int minRadius = 10;
+         int maxRadius = ((canvasHeight &gt; canvasWidth) ? canvasWidth: canvasHeight) / 2 - 8;
+         radiusControl = new JSlider(JSlider.HORIZONTAL, minRadius,
+               maxRadius, (int)ball.radius);
+         this.add(new JLabel("Ball Radius"));
+         this.add(radiusControl);
+         radiusControl.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+               JSlider source = (JSlider)e.getSource();
+               if (!source.getValueIsAdjusting()) {
+                  float newRadius = source.getValue();
+                  ball.radius = newRadius;
+                  <span class="code-comment">// Reposition the ball such as it is inside the box</span>
+                  if (ball.x - ball.radius &lt; box.minX) {
+                     ball.x = ball.radius + 1;
+                  } else if (ball.x + ball.radius &gt; box.maxX) {
+                     ball.x = box.maxX - ball.radius - 1;
+                  }
+                  if (ball.y - ball.radius &lt; box.minY) {
+                     ball.y = ball.radius + 1;
+                  } else if (ball.y + ball.radius &gt; box.maxY) {
+                     ball.y = box.maxY - ball.radius - 1;
+                  }
+               }
+            }
+         });
+      }
+   }
+}</pre>
+
+<p>Modify the <code>gameThread</code> of <code>BallWorld</code> class to program to support pause/resume operation:</p>
+<pre class="code-listing">public class <strong>BallWorld</strong> {
+   ......
+   ......
+   public void <strong>gameStart</strong>() {
+      Thread gameThread = new Thread() {
+         public void run() {
+            while (true) {
+               long beginTimeMillis, timeTakenMillis, timeLeftMillis;
+               beginTimeMillis = System.currentTimeMillis();
+               
+               <strong>if (!paused) {
+                  <span class="code-comment">// Execute one game step</span>
+                  gameUpdate();
+                  <span class="code-comment">// Refresh the display</span>
+                  repaint();
+               }</strong>
+   ......
+   ......            
+}</pre>
+
+
+
+<h3>Example 6: Many Balls of Different Sizes</h3>
+<p>Let us now consider the case of many balls of different sizes. Click the image to run the DEMO. Click <a href="codes/ball_ex6_many.jar">HERE</a> to download the source codes  for this example (unzip the downloaded JAR file) and <a href="codes/collisionphysics.jar">CollisonPhysiscs</a> package.</p>
+
+<a href="Applet_BallEx6Many.html" target="_blank"><img src="images/GameBall_Ex6Many.png" /></a>
+
+<h4>Collision Detection</h4>
+<p>Collision occurs if the distance between the two balls is equal to the sum of their radiuses.</p>
+<img class="image-left" src="images/GameBallCollision_Balls.png" />
+<img class="image-left" src="images/GameBallCollision_BallsEqn.png" />
+
+<img class="image-left" src="images/GameBallCollision_BallsEq1.png" />
+
+<h4>Collision Response</h4>
+<img class="image-left" src="images/GameBallCollision_BallsResponse.png" />
+<img class="image-left" src="images/GameBallCollision_Rotation.png" />
+<p>We first dissolve the velocities (<code>V1</code> and <code>V2</code>) along the axes of collision, <code>p</code> and <code>q</code> (as illustrated). We then apply the laws of conservation of momentum and energy  to compute the velocities after collision, along the axis of collision <code>p</code>. The velocities perpendicular to the axis of collision <code>q</code> remains unchanged.</p> 
+
+<h4>Laws of Conservation of Momentum &amp; Energy</h4>
+
+<p>To compute the two velocities after collision (<code>v3</code> and <code>v4</code>), two formulas are required. The two formulas can be found from the law of conservation of momentum (along the collision axis), and the law of conservation of kinetic energy (in scalar quantities). We make the following assumptions:</p>
+<ul>
+<li>Energy losses (due to friction) are ignored.</li>
+<li>The balls are rigid body.</li>
+<li>The balls have the same density. Hence, their mass are proportional to their volume (<code>= 4/3 &pi;r^3</code>).</li>
+</ul>
+
+
+<img src="images/GameBallCollision_DifferentMass.png" /><br />
+
+<img src="images/GameBallCollision_DifferentMassFormula.png" />
+
+<p><span class="line-heading">Collision Detection and Response for Two Moving Balls:</span> In CollisionPhysics, method <code>movingPointIntersectsMovingPoint()</code> and its helper methods  <code>movingPointIntersectsMovingPointDetection()</code> and <code>movingPointIntersectsMovingPointResponse()</code>.</p>
+
+<p><span class="line-heading">Ball.java:</span> A method called <code>intersect(Ball another, float timeLimit)</code> is added to detect collision between two balls (<code>this</code> and the given <code>another</code>), and compute the proper response if collision is detected.</p>
+
+<pre class="code-listing">
+public class <strong>Ball</strong> {
+   ......
+   ......
+   <span class="code-comment">// Working copy for computing response in intersect(Ball, timeLimit), 
+   // to avoid repeatedly allocating objects.</span>
+   private CollisionResponse thisResponse = new CollisionResponse(); 
+   private CollisionResponse anotherResponse = new CollisionResponse(); 
+  
+   <span class="code-comment">/**
+    * Check if this ball collides with the given another ball in the interval 
+    * (0, timeLimit].
+    */</span>
+   public void intersect(Ball another, float timeLimit) {
+      <span class="code-comment">// Call movingPointIntersectsMovingPoint() with timeLimit.
+      // Use thisResponse and anotherResponse, as the working copies, to store the
+      // responses of this ball and another ball, respectively.
+      // Check if this collision is the earliest collision, and update the ball's
+      // earliestCollisionResponse accordingly.</span>
+      CollisionPhysics.pointIntersectsMovingPoint(
+            this.x, this.y, this.speedX, this.speedY, this.radius,
+            another.x, another.y, another.speedX, another.speedY, another.radius,
+            timeLimit, thisResponse, anotherResponse);
+      
+      if (anotherResponse.t &lt; another.earliestCollisionResponse.t) {
+            another.earliestCollisionResponse.copy(anotherResponse);
+      }
+      if (thisResponse.t &lt; this.earliestCollisionResponse.t) {
+            this.earliestCollisionResponse.copy(thisResponse);
+      }
+   }
+}</pre>
+
+<p><span class="line-heading">BallWorld.java:</span> The <code>gameUpdate()</code> method is modified to detect collision between any pair of  balls and collision between the ball the the container box. The controls are also modified. A new button is added to launch new balls.</p>
+
+<pre class="code-listing">public class <strong>BallWorld extends JPanel</strong> {
+   ......
+   ......
+   <span class="code-comment">// Balls</span>
+   private static final int MAX_BALLS = 25; <span class="code-comment">// Max number allowed</span>
+   private int currentNumBalls;             <span class="code-comment">// Number currently active</span>
+   private Ball[] balls = new Ball[MAX_BALLS];
+   
+   <span class="code-comment">/** Constructor to create the UI components and init the game objects. */</span>
+   public BallWorld() {
+      ......
+      ......
+
+      currentNumBalls = 11;
+      balls[0] = new Ball(100, 410, 25, 3, 34, Color.YELLOW);
+      balls[1] = new Ball(80, 350, 25, 2, -114, Color.YELLOW);
+      balls[2] = new Ball(530, 400, 30, 3, 14, Color.GREEN);
+      balls[3] = new Ball(400, 400, 30, 3, 14, Color.GREEN);
+      balls[4] = new Ball(400, 50, 35, 1, -47, Color.PINK);
+      balls[5] = new Ball(480, 320, 35, 4, 47, Color.PINK);
+      balls[6] = new Ball(80, 150, 40, 1, -114, Color.ORANGE);
+      balls[7] = new Ball(100, 240, 40, 2, 60, Color.ORANGE);
+      balls[8] = new Ball(250, 400, 50, 3, -42, Color.BLUE);
+      balls[9] = new Ball(200, 80, 70, 6, -84, Color.CYAN);
+      balls[10] = new Ball(500, 170, 90, 6, -42, Color.MAGENTA);
+      
+      <span class="code-comment">// The rest of the balls, that can be launched using the launch button</span>
+      for (int i = currentNumBalls; i &lt; MAX_BALLS; ++i) {
+         balls[i] = new Ball(20, CANVAS_HEIGHT - 20, 15, 5, 45, Color.RED);
+      }
+      ......
+   }
+   
+   <span class="code-comment">/** Update the game objects, detect collision and provide response. */</span>
+   public void gameUpdate() {
+      float timeLeft = 1.0f;  <span class="code-comment">// One time-step to begin with</span>
+      
+      <span class="code-comment">// Repeat until the one time-step is up</span>
+      do {
+         <span class="code-comment">// Find the earliest collision up to timeLeft among all objects</span>
+         float tMin = timeLeft;
+         
+         <span class="code-comment">// Check collision between two balls</span>
+         for (int i = 0; i &lt; currentNumBalls; ++i) {
+            for (int j = 0; j &lt; currentNumBalls; ++j) {
+               if (i &lt; j) {
+                  balls[i].intersect(balls[j], tMin);
+                  if (balls[i].earliestCollisionResponse.t &lt; tMin) {
+                     tMin = balls[i].earliestCollisionResponse.t;
+                  }
+               }
+            }
+         }
+         <span class="code-comment">// Check collision between the balls and the box</span>
+         for (int i = 0; i &lt; currentNumBalls; ++i) {
+            balls[i].intersect(box, tMin);
+            if (balls[i].earliestCollisionResponse.t &lt; tMin) {
+               tMin = balls[i].earliestCollisionResponse.t;
+            }
+         }
+     
+         <span class="code-comment">// Update all the balls up to the detected earliest collision time tMin,
+         // or timeLeft if there is no collision.</span>
+         for (int i = 0; i &lt; currentNumBalls; ++i) {
+            balls[i].update(tMin);
+         }
+     
+         timeLeft -= tMin;                <span class="code-comment">// Subtract the time consumed and repeat</span>
+      } while (timeLeft &gt; EPSILON_TIME);  <span class="code-comment">// Ignore remaining time less than threshold</span>
+   }
+   ......
+   ......
+
+   <span class="code-comment">/** The control panel (inner class). */</span>
+   class ControlPanel extends JPanel {
+     
+      <span class="code-comment">/** Constructor to initialize UI components */</span>
+      public ControlPanel() {
+         <span class="code-comment">// A checkbox to toggle pause/resume all the balls' movement</span>
+         JCheckBox pauseControl = new JCheckBox();
+         this.add(new JLabel("Pause"));
+         this.add(pauseControl);
+         pauseControl.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+               paused = !paused;  <span class="code-comment">// Toggle pause/resume flag</span>
+            }
+         });
+  
+         <span class="code-comment">// A slider for adjusting the speed of all the balls by a factor</span>
+         final float[] ballSavedSpeedXs = new float[MAX_BALLS];
+         final float[] ballSavedSpeedYs = new float[MAX_BALLS];
+         for (int i = 0; i &lt; currentNumBalls; ++i) {
+            ballSavedSpeedXs[i] = balls[i].speedX;
+            ballSavedSpeedYs[i] = balls[i].speedY;
+         }
+         int minFactor = 5;    <span class="code-comment">// percent</span>
+         int maxFactor = 200;  <code>// percent</code>
+         JSlider speedControl = new JSlider(JSlider.HORIZONTAL, minFactor, maxFactor, 100);
+         this.add(new JLabel(&quot;Speed&quot;));
+         this.add(speedControl);
+         speedControl.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+               JSlider source = (JSlider)e.getSource();
+               if (!source.getValueIsAdjusting()) {
+                  int percentage = (int)source.getValue();
+                  for (int i = 0; i &lt; currentNumBalls; ++i) {
+                     balls[i].speedX = ballSavedSpeedXs[i] * percentage / 100.0f;
+                     balls[i].speedY = ballSavedSpeedYs[i] * percentage / 100.0f;
+                  }
+               }
+            }
+         });
+  
+         <span class="code-comment">// A button for launching the remaining balls</span>
+         final JButton launchControl = new JButton(&quot;Launch New Ball&quot;);
+         this.add(launchControl);
+         launchControl.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               if (currentNumBalls &lt; MAX_BALLS) {
+                  ++currentNumBalls;
+                  if (currentNumBalls == MAX_BALLS) {
+                     <span class="code-comment">// Disable the button, as there is no more ball</span>
+                     launchControl.setEnabled(false);
+                  }
+               }
+            }
+         });
+      }
+   }
+}</pre>
+
+<h3>Example 6a: Circular Container</h3>
+<p>Click the image to run the DEMO. Click <a href="codes/ball_ex6a_circlemany.jar">HERE</a> to download the source codes  for this example (unzip the downloaded JAR file) and <a href="codes/collisionphysics.jar">CollisonPhysiscs</a> package.</p>
+<a href="Applet_BallEx6aCircleMany.html" target="_blank"><img src="images/GameBall_Ex6aCircleMany.png" width="300"/></a>
+
+<h4>Collision Detection and Response</h4>
+<img class="image-left" src="images/GameBallCollision_BallInSphere.png" />
+<img class="image-left" src="images/GameBallCollision_BallInSphereEqn.png" />
+
+<h3>Example 7: More Shapes and Obstacles</h3>
+<p>Click the image to run the DEMO. Click <a href="codes/ball_ex7_obstacles.jar">HERE</a> to download the source codes  for this example (unzip the downloaded JAR file) and <a href="codes/collisionphysics.jar">CollisonPhysiscs</a> package.</p>
+<a href="Applet_BallEx7Obstacles.html" target="_blank"><img src="images/GameBall_Ex7Obstacles.png" width="300"/></a>
+
+<h4>Collision - A Moving Ball hitting a Line Segment</h4>
+<img class="image-left" src="images/GameBallCollision_BallLine.png" />
+
+<img class="image-left" src="images/GameBallCollision_BallLineEqn.png" />
+
+<h4>Collision - A Moving Ball hitting an End-Point of a Line Segment</h4>
+
+<img class="image-left" src="images/GameBallCollision_BallLineEnd.png" />
+
+<p><img class="image-left" src="images/GameBallCollision_BallLineEndEqn.png" /></p>
+<p>[PENDING] Some Explanation?</p>
+
+
+<h3>A Pong Game</h3>
+
+<img class="image-center" src="images/GamePong_CourtDesign.png" />
+<p>[PENDING]</p>
+
+
+
+<h3>Brick, Billiards, Pinball</h3>
+<p>[PENDING]</p>
+
+
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>[PENDING]</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: JDK 1.6<br />
+Last modified: October, 2010</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Programming tips</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container div -->
+<div id="container">
+
+<!-- begin main content div -->
+<div id="content">
+
+<h1>PROGRAMMING</h1>
+<h2>TIPS, TRICKS &amp; TWEAKS</h2>
+<p class="p-last-modified">Last modified: September 14, 2007</p>
+
+<h3>(C/C++) Avoiding &quot;if (i=0) {...}&quot; error &ndash; This is probably C++ Tips Number 1</h3>
+<p> If you are comparing with a constant, you could place the constant on the LHS (instead of the usual RHS).  That is, instead of writing <code>&quot;if (i == 0) {...}</code>&quot;, write &quot;<code>if (0 == i) {...}</code>&quot;. The compiler will flag out a syntax error if you inadvertently write <code>&quot;if (0 = i) {...}&quot;</code>. [Java introduces a new data type called <code>boolean</code>, which kills this problem.]</p>
+<p class="p-last-modified">[Contributed by Nguyen Trung Nghia]</p>
+
+<h3>(C/C++/Java) switch is better than nested-if</h3>
+<p>Instead of writing:</p>
+<pre class="code-listing">
+if (0 == i)
+   //do something
+else if (1 == i)
+   //do something
+else if (2 == i)
+   //do something
+else if (3 == i)
+   //do something
+else
+   //do something
+</pre>
+<p>It is better to write:</p>
+<pre class="code-listing">
+switch(i) {  // for int and char only
+   case 0:
+      //do something
+      break;
+   case 1:
+      //do something
+      break;
+   case 2:
+      //do something
+      break;
+   case 3: 
+      //do something
+      break;
+   default:
+      //do something
+}
+</pre>
+<p class="p-last-modified">[Contributed by Nguyen Trung Nghia]</p>
+
+<h3>(C/C++) The dreaded <span style="text-transform:none">#define</span></h3>
+<p>Nghia recommends the following <code>#define</code> to speed up your programming in the contest:</p>
+<pre class="code-listing">
+#define REP(i,a) for(i=0;i&lt;a;i++)
+#define FOR(i,a,b) for(i=a;i&lt;b;i++)
+#define VE vector&lt;int&gt;
+#define SZ size()
+#define PB push_back
+</pre>
+<p><strong>My Note</strong>: Beware of <code>#define</code> in <em>normal</em> programming. You could use <code>#define</code> to change the C++ language into C<code>--</code>, a useless language that only you can understand (in other words, this is not a good software engineering practice).</p>
+<br />
+
+<h3>(C/C++/Java) Bit Manipulation</h3>
+<p>From <a href="http://en.wikipedia.org/wiki/Bit_manipulation">http://en.wikipedia.org/wiki/Bit_manipulation</a>:</p>
+
+<p>To &quot;set&quot; a bit (where n is the bit number, and bit 0 is the least significant bit):</p>
+<pre class="code-listing">
+unsigned char a |= (1 &lt;&lt; n);   // '|' is bitwise OR, '&lt;&lt;' is bit left-shift
+</pre>
+<p>To &quot;clear&quot; a bit:</p>
+<pre class="code-listing">
+unsigned char b &amp;= ~(1 &lt;&lt; n);  // '&amp;' is bitwise AND
+</pre>
+<p>To &quot;toggle&quot; a bit:</p>
+<pre class="code-listing">
+unsigned char c ^= (1 &lt;&lt; n);   // '^' is bitwise XOR
+</pre>
+<p>To &quot;test&quot; a bit:</p>
+<pre class="code-listing">
+unsigned char e = d &amp; (1 &lt;&lt; n); //d has the byte value.
+</pre>
+<br />
+
+<h3>(Training Problem) Prime Numbers</h3>
+<p>The simplest, most elegant algorithm is perhaps the sieve of Eratosthenes. This pseudo-code is given in <a href="http://en.wikipedia.org/wiki/Prime_number">http://en.wikipedia.org/wiki/Prime_number</a>:</p>
+
+<pre class="code-listing">
+// arbitrary search limit
+limit &larr; 1000000                   
+ 
+// assume all numbers are prime at first
+is_prime(i) &larr; true, i &isin; [2, limit] 
+ 
+for n in [2, &radic;limit]:
+   if is_prime(n):
+      // eliminate multiples of each prime,
+      // starting with its square
+      // 2n, 3n, ..., (n-1)n already eliminated 
+      // nn, (n+1)n, (n+2)n, ... to be eliminated 
+      is_prime(i) &larr; false, i &isin; {n^2, n^2+n, n^2+2n, ..., limit}
+ 
+for n in [2, limit]:
+   if is_prime(n): print n
+</pre>
+
+<p>Nghia wrote: with this simple algorithm, you can solve quite a number of problems in acm.uva.es. You should use bit operations to reduce the size of memory used.</p>
+<ul>
+<li>http://acm.uva.es/p/v1/136.html (warming up)</li>
+<li>http://acm.uva.es/p/v1/160.html</li>
+<li>http://acm.uva.es/p/v4/406.html</li>
+<li>http://acm.uva.es/p/v5/583.html</li>
+<li>http://acm.uva.es/p/v103/10394.html</li>
+<li>http://acm.uva.es/p/v105/10539.html</li>
+<li>http://acm.uva.es/p/v108/10858.html</li>
+<li>http://acm.uva.es/p/v108/10856.html  (this problem needs prime generator + very simple DP + very useful and basic search technique)</li>
+</ul>
+<br />
+
+<h3>(Training Problem) To find B^P mod M</h3>  
+<p>B^P means B raise to the power of P. B and P are integers in the range 0 to 2147483647 inclusive. M is an integer in the range 1 to 46340 inclusive.</p> 
+
+<p>Hint:</p>
+<ul>
+<li>P = a0 x 2^0 + a1 x 2^1 + a2 x 2^2 + a3 x 2^3 + ... + an x 2^n (n&lt;32)</li>  
+<li>Find B^a0 mod m, B^a1 mod m, B^a2 mod m, B^a3 mod m, ..., B^an mod m (32 term only)</li>
+<li>B^ai mod m can be found by using the result from B^aj mod m, j = i - 1 (this is called Dynamic Programming)</li>
+<li>Please remember (axb) mod m = ((a mod m) x (b mod m)) mod m (to avoid overflow errors)</li>
+<li>The complexity of this algorithm is log(P)</li>
+<li>try to make your source code as short as possible. In order to do that, you may need to use bit operation and only one for/while loop.</li>
+</ul>
+<p>Try these problems:</p> 
+<ul>
+<li>http://acm.uva.es/p/v3/374.html</li>
+<li>http://online-judge.uva.es/p/v102/10229.html  ( try to represent f[n] as = [ a b ; c d ]^n )</li>
+</ul>
+<br />
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+
+</div>  <!-- End the container division -->
+
+</body>
+</html>

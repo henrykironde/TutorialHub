@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Test</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h2>JOGL Applet</h2>
+
+<applet code="org.jdesktop.applet.util.JNLPAppletLauncher"
+  width=640
+  height=480
+  archive="http://download.java.net/media/applet-launcher/applet-launcher.jar,
+ http://download.java.net/media/jogl/builds/archive/jsr-231-1.x-webstart-current/gluegen-rt-natives-windows-i586.jar,
+    http://download.java.net/media/jogl/builds/archive/jsr-231-1.x-webstart-current/jogl-natives-windows-i586.jar,
+    http://download.java.net/media/jogl/builds/archive/jsr-231-1.x-webstart-current/jogl.jar,
+    http://download.java.net/media/jogl/builds/archive/jsr-231-1.x-webstart-current/gluegen-rt.jar,
+    http://download.java.net/media/java3d/webstart/release/vecmath/1.5.2/vecmath.jar,
+    codes/ball3d.jar">
+  <param name="codebase_lookup" value="false" />
+  <param name="subapplet.classname" value="ball3d_jogl_v1.MainApplet" />
+  <param name="subapplet.displayname" value="Test JOGL Applet" />
+  <param name="noddraw.check" value="true" />
+  <param name="progressbar" value="true" />
+  <param name="jnlpNumExtensions" value="1" />
+  <param name="jnlpExtension1"
+     value="http://download.java.net/media/jogl/builds/archive/jsr-231-1.x-webstart-current/jogl.jnlp" />
+</applet>
+
+<ul>
+<li>Use the mouse to rotate the cube.</li>
+<li>Keys: UP, DOWN, LEFT, RIGHT, PgUp, PgDown to change the rotational speed.</li>
+<li>Keys: 'a', 'd', 'w', 's', 'q', 'z' to reposition the cube.</li>
+<li>Keys: 'b' to toggle bending, 'p' to toggle pause/resume ratotion.</li>
+</ul>
+
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

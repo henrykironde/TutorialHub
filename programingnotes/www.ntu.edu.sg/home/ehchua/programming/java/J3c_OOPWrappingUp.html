@@ -1,0 +1,2024 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OOP Wrapping Up - Java Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>OOP - Wrapping Up</h2>
+</div>
+
+<div id="content-main">
+
+<h3>The &quot;<span class="font-code">static</span>&quot; Variables and Methods</h3>
+<p>You can apply modifier &quot;<code>static</code>&quot; to variables and methods.</p>
+<ul>
+<li>A <code>static</code> variable/method belongs to the class, and is shared by all instances. Hence, it is also called a <em>class variable/method</em>.</li>
+<li>On the other hand, a non-<code>static</code> variable/method (absence of keyword <code>static</code>) belongs to a specific instance of a class, also called an <em>instance variable/method</em>.</li>
+</ul>
+
+
+<p>Each instance maintains its own storage. As the result, each instance variable/method has its own copy in the instances and not shared among different instances.  To reference an instance variable/method, you need to identify the instance, and reference it via <em><code>anInstanceName.aVaraibleName</code></em> or <code><em>anInstanceName.aMethodName</em>()</code>.</p>
+
+<p>A <code>static</code> variable/method has a single common memory location kept in the class and shared by all the instances.  The JVM allocates <code>static</code> variable during the class loading. The <code>static</code> variable exists even if no instance is created and regardless of the number of instances created.  A <code>static</code> variable/method can be referenced via <em><code>AClassName.aVariableName</code></em> or <code><em>AClassName.aMethodName</em>()</code>.  It can also be referenced from any of its instances (but not recommended), e.g., <em><code>instance1.aVaraibleName</code></em> or <em><code>instance2.aVaraibleName</code></em> or <code><em>instance3.aVaraibleName</em></code>.</p>
+
+<p>Non-<code>static</code> variables/methods belong to the instances.  To use a non-<code>static</code> variable/method, an instance must first be constructed.  On the other hand, <code>static</code> variables/methods belong to the class, they are global in nature.  You need not construct any instance before using them.</p>
+
+<p>One usage of <code>static</code> variables/methods to provide a &quot;<em>global</em>&quot; variable, which is applicable to all the instances of that particular class (for purpose such as counting the number of instances, resource locking among instances, and etc).</p>
+
+<p><span class="line-heading">UML Notation:</span> <code>static</code> variables/methods are underlined in the class diagram.</p>
+
+<h4>Example</h4>
+
+<h5>Instance variable won't work!</h5>
+<p>Suppose that we want to count the number of instances created. The following codes just don't work?!</p>
+
+<pre class="color-example">
+public class <strong>Circle</strong> {
+   public <span class="color-new">int count = 0</span>;  <span class="color-comment">// To count the number of instances created.
+                          // Set to public to simplify access.</span>
+   private double radius;
+   public Circle(double radius) {
+      this.radius = radius;
+      <span class="color-new">++count</span>;
+   }
+}</pre>
+
+<pre class="color-example">
+public class <strong>TestCircle</strong> {
+   public static void main(String[] args) {
+      Circle c1 = new Circle(1.1);
+      System.out.println(<span class="color-new">c1.count</span>);  <span class="color-comment">// Output: 1</span>
+      Circle c2 = new Circle(2.2);
+      System.out.println(<span class="color-new">c2.count</span>);  <span class="color-comment">// Output: 1</span>
+      Circle c3 = new Circle(3.3);
+      System.out.println(<span class="color-new">c3.count</span>);  <span class="color-comment">// Output: 1</span>
+   }
+}</pre>
+
+<p>This is because <code>count</code> is an instance variable. Each instance maintains its own <code>count</code>. When an new instance is created, <code>count</code> is always initialized to 0, then increment to 1.</p>
+
+<h5>Using a <span class="font-code">static</span> variable</h5>
+
+<p>We need to use &quot;<code>static</code>&quot; variable, or class variable which is shared by all instances, to handle the <code>count</code>.</p>
+
+
+<img class="image-float-left" src="images/OOP_StaticVariable.png" alt="OOP_StaticVariable.png" />
+
+<h5 class="font-code float-clear">CircleWithStaticCount.java</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></td>
+<td>
+<pre>
+public class <strong>CircleWithStaticCount</strong> {
+   public <span class="color-new">static</span> int count = 0;  <span class="color-comment">// A static variable to count the number of instances created</span>
+                                 <span class="color-comment">// shared by all the instances
+                                 // Set to public to simplify access</span>
+   private double radius; <span class="color-comment">// An instance variable for each circle to maintain its own radius</span>
+   public CircleWithStaticCount(double radius) {
+      this.radius = radius;
+      ++count;         <span class="color-comment">   // one more instance created</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>A Test Driver</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+</td>
+<td>
+<pre>
+public class <strong>TestCircleWithStaticCount</strong> {
+   public static void main(String[] args) {
+      CircleWithStaticCount c1 = new CircleWithStaticCount(1.1);
+      System.out.println(<span class="color-new">c1.count</span>);   <span class="color-comment">// 1</span>
+      System.out.println(<span class="color-new">CircleWithStaticCount.count</span>);  <span class="color-comment">// Can access static variable via classname too</span>
+      CircleWithStaticCount c2 = new CircleWithStaticCount(2.2);
+      System.out.println(<span class="color-new">CircleWithStaticCount.count</span>);  <span class="color-comment">// 2</span>
+      System.out.println(<span class="color-new">c1.count</span>);  <span class="color-comment">// 2</span>
+      System.out.println(<span class="color-new">c2.count</span>);  <span class="color-comment">// 2</span>
+      CircleWithStaticCount c3 = new CircleWithStaticCount(3.3);
+      System.out.println(<span class="color-new">CircleWithStaticCount.count</span>);  <span class="color-comment">// 3</span>
+      System.out.println(<span class="color-new">c1.count</span>);  <span class="color-comment">// 3</span>
+      System.out.println(<span class="color-new">c2.count</span>);  <span class="color-comment">// 3</span>
+      System.out.println(<span class="color-new">c3.count</span>);  <span class="color-comment">// 3</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">static</span> variables/methods as Class variables/methods</h5>
+
+<p>Another usage of &quot;<code>static</code>&quot; modifier is to provide <em>global variables</em> and <em>global methods</em>, that are accessible by other classes, without the need to create an instance of that providing class. For example, the class <code>java.lang.Math</code> composes purely <code>public static</code> variables and methods.  To use the <code>static</code> variable in <code>Math</code> class (such as <code>PI</code> and <code>E</code>) or <code>static</code> methods (such as <code>random()</code> or <code>sqrt()</code>), you do not have to create an instance of <code>Math</code> class.  You can invoke them directly via the class name, e.g., <code>Math.PI</code>, <code>Math.E</code>, <code>Math.random()</code>, <code>Math.sqrt()</code>.</p>
+
+<p>Non-<code>static</code> (instance) methods: Although from the OOP view point, each instance has its own copy of instance methods. In practice, the instances do not need their own copy, as methods do not have states and the implementation is exactly the same for all the instances. For efficiency, all instances use the copy stored in the class.</p>
+
+<p>A <code>static</code> method can access only <code>static</code> variables/methods. It cannot access non-<code>static</code> variables/methods, before they are different in scope! On the other hand, an instance method can access <code>static</code> and non-<code>static</code> variables/methods. For example,</p>
+
+<pre class="color-example">
+public class Hello {
+   private static String msgStatic = &quot;Hello from static&quot;;
+   private String msgInstance = &quot;Hello from non-static&quot;;
+   public static void main(String[] args) {
+      System.out.println(msgStatic);  <span class="color-comment">// Okay</span>
+      // System.out.println(msgInstance);
+         <span class="color-comment">// Compilation error: non-static variable xxx cannot be referenced from a static context</span>
+   }
+}</pre>
+
+
+<p>If a class has only one single instance (singleton design pattern?), it could be more efficient to use <code>static</code> variable/method for that particular one-instance class?!</p>
+
+<p><code>static</code> variable or methods cannot be hidden or overridden in the subclass as non-<code>static</code>.</p>
+
+<p>This keyword <code>static</code> is inherited from C/C++, which denotes a certain variable retains its value instead of re-initializes. Similarly, a <code>static</code> variable in Java retains its value even if new instances are created.</p>
+
+<h4>Static Initializer</h4>
+
+<p>A <em>static initializer</em> is a block of codes labeled <code>static</code>. The codes are executed <em>exactly once</em>, when the class is loaded. For example,</p>
+
+<pre class="color-example">
+public class Foo {
+   <strong>static</strong> int number;      <span class="color-comment">// a static variable</span>
+   <strong>static</strong> {                <span class="color-comment">// a static initializer block - run only once when the class is loaded</span>
+      number = 88;
+      System.out.println(&quot;loading class...&quot;);    
+   }
+   .......
+}</pre>
+
+<p>During the class loading, JVM allocates the <code>static</code> variables and then runs the <code>static</code> initializer. The <code>static</code> initializer could be used to initialize <code>static</code> variables or perform an one-time tasks for the class.</p>
+
+<h4>Class Loader</h4>
+<p>Every JVM has a built-in <em>class loader</em> (of type <code>java.lang.ClassLoader</code>) that is responsible for loading classes into the memory of a Java program. Whenever a class is referenced in the program, the class loader searches the classpath for the class file, loads the bytecode into memory, and instantiates a <code>java.lang.Class</code> object to maintain the loaded class.</p>
+
+<p>The class loader loads a class only once, so there is only one <code>java.lang.Class</code> object for each class that used in the program. This <code>Class</code> object stores the static variables and methods. </p>
+<p>During the class loading, the class loader also allocates the <code>static</code> variables, and invokes the explicit initializers and <code>static</code> initializers (in the order of appearance).</p>
+
+<pre class="color-example">
+public class Hello {
+   private static int number1 = 11;  <span class="color-comment">// explicit initializer</span>
+   static {                          <span class="color-comment">// static initializer</span>
+      number1 = 99;
+      number2 = 88;
+   }
+   private static int number2 = 22;  <span class="color-comment">// explicit initializer</span>
+ 
+   public static void main(String[] args) {
+      System.out.println(&quot;number1 is &quot; + number1);  <span class="color-comment">// 99</span>
+      System.out.println(&quot;number2 is &quot; + number2);  <span class="color-comment">// 22</span>
+   }
+}</pre>
+
+<h4>Instance Initializer</h4>
+<p>Similarly, you could use the so-called instance initializer, which runs during the instantiation process, to initialize an instance. Instance initializer is rarely-used. For example,</p>
+
+<pre class="color-example">public class Foo {
+   int number;     <span class="color-comment">// an instance variable</span>
+   {               <span class="color-comment">// an instance initializer block - run once per instantiation</span>
+      number = 88;
+      System.out.println(&quot;Creating an instance...&quot;);
+   }
+
+   public Foo() {  <span class="color-comment">// Constructor</span>
+      super();
+      <span class="color-comment">// run instance initializer before the body of the constructor</span>
+      ......
+   }
+}</pre>
+
+<h4>Instantiation Process</h4>
+
+<p>The sequence of events when a new object is instantiated via the <code>new</code> operator (known as the instantiation process) is as follows:</p>
+
+<ol>
+<li>JVM allocates memory for the instance in the help.</li>
+<li>JVM initializes the instance variables to their assigned values or default values.</li>
+<li>JVM invokes the constructor.</li>
+<li>The first statement of the constructor is always a call to its immediate superclass' constructor. JVM invokes the selected superclass' constructor.</li>
+<li>JVM executes the instance initializers in the order of appearance.</li>
+<li>JVM executes the body of the constructor.</li>
+<li>The <code>new</code> operator returns a reference to the new object.</li>
+</ol>
+
+<p>For example,</p>
+
+<pre class="color-example">
+public class Hello {
+   private int number1 = 11;  <span class="color-comment">// explicit initializer</span>
+   {                          <span class="color-comment">// instance initializer</span>
+      number1 = 99;
+      number2 = 88;
+   }
+   private int number2 = 22;  <span class="color-comment">// explicit initializer</span>
+ 
+   public Hello() { }
+ 
+   public Hello(int number1, int number2) { <span class="color-comment">// Constructor</span>
+      this.number1 = number1;               <span class="color-comment">// Run after initializers</span>
+      this.number2 = number2;
+   }
+ 
+   public static void main(String[] args) {
+      Hello h = new Hello();
+      System.out.println(&quot;number1 is &quot; + h.number1);  <span class="color-comment">// 99</span>
+      System.out.println(&quot;number2 is &quot; + h.number2);  <span class="color-comment">// 22</span>
+ 
+      Hello h2 = new Hello(55, 66);
+      System.out.println(&quot;number1 is &quot; + h2.number1);  <span class="color-comment">// 55</span>
+      System.out.println(&quot;number2 is &quot; + h2.number2);  <span class="color-comment">// 66</span>
+   }
+}</pre>
+
+
+<h3>&quot;<span class="font-code">final</span>&quot; Class/Variable/Method</h3>
+<p>You can declare a class, a variable or a method to be <code>final</code>.</p>
+<ul>
+<li>A <code>final</code> class cannot be sub-classed (or extended).</li>
+<li>A <code>final</code> method cannot be overridden in the subclass.</li>
+
+<li>A <code>final</code> variable cannot be <em>re-assigned</em> a new value.
+<ul>
+<li>A <code>final</code> variable of primitive type is a constant, whose value cannot be changed.
+<br />
+
+<p>A &quot;<code>public final static</code>&quot; variable of primitive type is a <em>global constant</em>, whose value cannot be changed. For example,</p>
+<pre class="color-example">
+<span class="color-comment">// class java.lang.Math</span>
+public static final double PI = 3.141592653589793;
+public static final double E = 2.718281828459045;
+<span class="color-comment">// class java.lang.Integer</span>
+public static final int MAX_VALUE = 2147483647;
+public static final int MIN_VALUE = -2147483648;
+public static final int SIZE = 32;</pre></li>
+
+<li>A <code>final</code> variable of a reference type (e.g., an instance of a class or an array) cannot be re-assigned a new value (reference). That is, you can modify the content of the instance, but cannot re-assign the variable to another instance. For example,
+
+  <pre class="color-example">
+public class TestFinalReference {
+   public static void main(String[] args) {
+      final StringBuffer sb = new StringBuffer(&quot;Hello&quot;); <span class="color-comment">// final reference type</span>
+      sb.append(&quot;, world!&quot;);   <span class="color-comment">// can change the contents of the reference</span>
+      System.out.println(&quot;The object is \&quot;&quot; + sb + &quot;\&quot;&quot;);
+ 
+      <span class="color-comment">// Compilation Error: cannot assign a value to final variable</span>
+      sb = new StringBuffer(&quot;World Peace!&quot;);
+   }
+}</pre></li>
+</ul></li>
+
+</ul>
+
+<p><span class="line-heading">Constant Naming Convention:</span> a noun, or noun phrase made up of several words. All words are in uppercase separated by underscore <code>'_'</code>. For examples, <code>MIN_WIDTH</code>, <code>MAX_VALUE</code>, <code>PI</code>, <code>RED</code>.</p>
+
+<p><span class="line-heading"><span class="font-code">final</span> vs. <span class="font-code">abstract</span>:</span> <code>final</code> is opposite to <code>abstract</code>. A <code>final</code> class cannot be extended; while an <code>abstract</code> class must be extended and the extended class can then be instantiated. A <code>final</code> method cannot be overridden; while an <code>abstract</code> method must be overridden to complete its implementation. [<code>abstract</code> modifier is  applicable to class and method only.]</p>
+
+<h3>Package, Import, Classpath &amp; JAR</h3>
+<p>If I have a class called <code>Circle</code> and you also have a class called <code>Circle</code>.  Can the two <code>Circle</code> classes co-exist or even be used in the same program?  The answer is yes, provided that the two <code>Circle</code> classes are placed in two different <em>packages</em>.</p>
+
+<img class="image-float-right" src="images/OOP_UMLPackage.png" alt="OOP_UMLPackage.png" />
+
+<p>A <em>package</em>, like a library, is <em>a collection of classes</em>, and other related entities such as interfaces, errors, exceptions, annotations, and enums.</p>
+
+<p><span class="line-heading">UML Notation:</span> Packages are represented in <acronym title="Unified Modelling Language">UML</acronym> notation as <em>tabbed folders</em>, as illustrated.</p>
+<p>Package name (e.g., <code>java.util</code>) and classname (e.g., <code>Scanner</code>) together form the so-called <em>fully-qualified name</em> in the form of <code><em>packagename.classname</em></code> (e.g., <code>java.util.Scanner</code>), which unambiguously identifies a class.</p>
+<p> Packages are used for:</p>
+<ol>
+<li><em>Organizing</em> classes and related entities.</li>
+<li><em>Managing namespaces</em> -  Each package is a <em>namespace</em>.</li>
+<li><em>Resolving naming conflict</em>s. For example, <code>com.zzz.Circle</code> and <code>com.yyy.Circle</code> are treated as two distinct classes.  Although they share the same classname <code>Circle</code>, they belong to two different packages: <code>com.zzz</code> and <code>com.yyy</code>.  These two classes can co-exist and can even be used in the same program via the fully-qualified names.</li>
+<li><em>Access control</em>: Besides <code>public</code> and <code>private</code>, you can grant access of a class/variable/method to classes within the same package only.</li>
+<li><em>Distributing Java classes</em>: All entities in a package can be combined and compressed into a single file, known as JAR (Java Archive) file, for distribution.</li>
+</ol>
+
+<h5>Package Naming Convention</h5>
+<p>A package name is made up of the <em>reverse</em> of the domain Name (to ensures uniqueness) plus your own organization's  project name <em>separated by dots</em>.  Package names are in lowercase.  For example, suppose that your Internet Domain Name is &quot;<code>zzz.com</code>&quot;, you can name your package as &quot;<code>com.zzz.project1.subproject2</code>&quot;.</p>
+<p>The prefix &quot;<code>java</code>&quot; and &quot;<code>javax</code>&quot; are reserved for the core Java packages and Java extensions, e.g., <code>java.lang</code>, <code>java.util</code>, and <code>java.net</code>, <code>javax.net</code>.</p>
+
+<h5>Package Directory Structure</h5>
+
+<p>The &quot;dots&quot; in a package name correspond to the directory structure for storing the class files. For example, the <code>com.zzz.Cat</code> is stored in directory &quot;<code>...\com\zzz\Cat.class</code>&quot; and <code>com.yyy.project1.subproject2.Orange</code> is stored in directory &quot;<code>...\com\yyy\project1\subproject2\Orange.class</code>&quot;, where &quot;<code>...</code>&quot; denotes the <em>base directory of the package</em>.</p>
+
+<p>JVM can locate your class files only if the <em>package base directory</em> and the <em>fully-qualified name</em> are given. The <em>package base directory</em> is provided in the so-called <em>classpath</em> (to be discussed later).</p>
+
+<p>The &quot;dot&quot; does not mean sub-package (there is no such thing as sub-package). For example, <code>java.awt</code> and <code>java.awt.event</code> are two <em>distinct</em> packages. Package <code>java.awt</code> is kept in &quot;<code>...\java\awt</code>&quot;; whereas package <code>java.awt.event</code> is stored in &quot;<code>...\java\awt\event</code>&quot;.</p>
+
+<h4>The &quot;<span class="font-code">import</span>&quot; Statement</h4>
+<p>There are two ways to reference a class in your source codes:</p>
+<ol>
+<li>Use the <em>fully-qualified name</em> in the form of <em> <code>packagename.classname</code></em><code></code> (such as <code>java.util.Scanner</code>).  For example,
+
+  <pre class="color-example">
+public class ScannerNoImport {
+   public static void main(String[] args) {
+      <span class="color-comment">// Use fully-qualified name in &quot;ALL&quot; the references</span>
+      <span class="color-new">java.util.Scanner</span> in = new <span class="color-new">java.util.Scanner</span>(System.in);
+      System.out.print(&quot;Enter a integer: &quot;);
+      int number = in.nextInt();
+      System.out.println(&quot;You have entered: &quot; + number);
+   }
+}</pre>
+
+Take note that you need to use the <em>fully-qualified name</em> for ALL the references to the class. This is clumpy!</li>
+
+<li>Add an &quot;<code>import <em>fully-qualified-name</em></code>&quot; statement at the beginning of the source file. You can then use the classname alone (without the package name) in your source codes.  For example,
+
+  <pre class="color-example">
+<span class="color-new">import java.util.Scanner;</span>
+public class ScannerWithImport {
+   public static void main(String[] args) {
+      <span class="color-comment">// Package name can be omitted for an imported class
+      // Java compiler searches the import statements</span> <span class="color-comment">for the fully-qualified name</span>
+      <span class="color-new">Scanner</span> in = new <span class="color-new">Scanner</span>(System.in);  <span class="color-comment">// classname only</span>
+      System.out.print(&quot;Enter a integer: &quot;);
+      int number = in.nextInt();
+      System.out.println(&quot;You have entered: &quot; + number);
+   }
+}</pre></li>
+
+</ol>
+
+<p>The compiler, when encounter a unresolved classname, will search the <code>import</code> statements for the fully-qualified name.</p>
+
+<p>The <code>import</code> statement provides us a <em>convenient way </em> for referencing classes without using the fully-qualified name. &quot;Import&quot; does not <em>load</em> the class, which is carried out by the so-called <em>class loader</em> at runtime.  It merely resolves a classname to its fully-qualified name, or <em>brings the classname into the namespace</em>. &quot;Import&quot; is strictly a compiled-time activity. The Java compiler replaces the classnames with their fully-qualified names, and removes all the <code>import</code> statements in the compiled bytecode. There is a slight compile-time cost but no runtime cost.</p>
+
+<p>The <code>import</code> statement(s) must be placed after the <code>package</code> statement but before the class declaration. It takes the following syntax:</p>
+<pre class="color-syntax">
+import <em>packagename.classname</em>;
+import <em>packagename</em>.*</pre>
+
+<p>You can <code>import</code> a <em>single class</em> in an <code>import</code> statement by providing its fully-qualified name, e.g.,</p>
+<pre class="color-example">
+import java.util.Scanner;  <span class="color-comment">// import the class Scanner in package java.util</span>
+import java.awt.Graphics;  <span class="color-comment">// import the class Graphics in package java.awt</span>
+</pre>
+<p>You can also <code>import</code> <em>all the classes in a package</em> using the <em>wildcard</em> <code>*</code>. The compiler will search the entire package to resolve classes referenced in the program. E.g.,</p>
+<pre class="color-example">
+import java.util.*;       <span class="color-comment">// import all classes in package java.util</span>
+import java.awt.*;        <span class="color-comment">// import all classes in package java.awt</span>
+import java.awt.event.*;  <span class="color-comment">// import all classes in package java.awt.event</span>
+</pre>
+
+<p>Using wildcard may result in slightly fewer source lines. It has no impact on the resultant bytecode. It is not recommended as it lacks clarity and it may lead to ambiguity if two packages have classes of the same names.</p>
+
+<p>The Java core language package <code>java.lang</code> is <em>implicitly imported to every Java program</em>.  Hence no explicit <code>import</code> statements are needed for classes inside the <code>java.lang</code> package, such as <code>System</code>, <code>String</code>, <code>Math</code>, <code>Integer</code> and  <code>Object</code>.</p>
+
+<p>There is also no need for <code>import</code> statements for classes within the <em>same package</em>.</p>
+
+<h4>The &quot;<span class="font-code">import</span> <span class="font-code">static</span>&quot; Statement (JDK 1.5)</h4>
+
+<p>Prior to JDK 1.5, only classes can be &quot;imported&quot; - you can omit the <em>package name</em> for an imported class. In JDK 1.5, the <code>static</code> variables and methods of a class can also be &quot;imported&quot; via the &quot;<code>import static</code>&quot; declaration - you can omit the <em>classname</em> for an imported <code>static</code> variable/method.  For example:</p>
+
+<table class="table-program">
+  <col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre>
+</td>
+<td>
+<pre>
+<span class="color-new">import static java.lang.System.out;</span> <span class="color-comment">// import static variable &quot;out&quot; of &quot;System&quot; class</span>
+<span class="color-new">import static java.lang.Math.*;</span>     <span class="color-comment">// import &quot;ALL&quot; static variables/methods in &quot;Math&quot; class</span>
+ 
+public class TestImportStatic {
+   public static void main(String[] args) {
+      <span class="color-comment">// Classname can be omitted for imported static variables/methods</span>
+      <span class="color-new">out</span>.println(&quot;Hello, PI is &quot; + <span class="color-new">PI</span>);
+      <span class="color-new">out</span>.println(&quot;Square root of PI is &quot; + <span class="color-new">sqrt</span>(<span class="color-new">PI</span>));
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The <code>import static</code> statement takes the following syntax:</p>
+<pre class="color-syntax">
+import static <em>packagename.classname.staticVariableName</em>;
+import static <em>packagename.classname.staticMethodName</em>;
+import static <em>packagename.classname</em>.*;   <span class="color-comment">// wildcard * denotes all static variables/methods of the class</span></pre>
+
+<h5>Usage of <span class="font-code">import</span> <span class="font-code">static</span></h5>
+<p>The <code>static import</code> is  handy in this situation:</p>
+<p>Suppose that you need to define a set of <em>constants</em> in your program. You could do so by defining a constant-only <code>interface</code>, which is not really appropriate for the use of <code>interface</code>. Instead, you could define the constants (e.g., <code>ROWS</code>, <code>COLS</code>) in one of the class, (e.g., <code>GameMain</code>), and include <code>import static</code> statements in all the other classes (e.g., <code>import static GameMain.ROWS</code>).</p>
+
+<pre class="color-example">
+public class GameMain {
+   public static final ROWS = 3;
+   public static final COLS = 3;
+   .....
+   .....
+}</pre>
+<pre class="color-example">
+import static GameMain.ROWS;
+import static GameMain.COLS;
+   <span class="color-comment">// Change the import static statements if these constants are moved</span>
+  
+public class GamePanel {
+   <span class="color-comment">// Can use ROWS and COLS in the class without the classname GameMain</span>
+   int[][] score = int[ROWS][COLS];
+   ......
+   for (int row = 0; row &lt; ROWS; ++row) {
+      for (int col = 0; col &lt; COLS; ++col) {
+         ......
+      }
+   }
+   ......
+}</pre>
+
+<p>The advantages are:</p>
+<ol>
+<li>These constants (e.g., <code>ROWS</code>) can be used in the classes without the classname (e.g., <code>ROWS</code> instead of <code>GameMain.ROWS</code>).</li>
+<li>If you need to move the constants to anther class, you merely need to change the <code>import static</code> statements, not the programming codes.</li>
+</ol>
+
+<h4>Creating Packages</h4>
+<p>To put a class as part of a package, include a <code>package</code> statement before the class definition (as the first statement in your program). For example,</p>
+
+<pre class="color-example">
+<span class="color-new">package com.zzz.test;</span>
+ 
+public class HelloPackage {
+   public static void main(String[] args) {
+      System.out.println(&quot;Hello from a package...&quot;);
+   }
+}</pre>
+
+<p>You can create and use package in IDE (such as Eclipse/NetBeans) easily, as the IDE takes care of the details. You can simply create a new package, and then create a new class inside the package.</p>
+
+<h5>Compiling Classes in Package</h5>
+
+<p>To compile classes in package using JDK, you need to use &quot;<code>-d</code>&quot; flag to specify the <em>destination package base directory</em>, for example,</p>
+<pre class="color-command">
+<span class="color-comment">// Set the current working directory to the directory containing HelloPackage.java</span>
+&gt; javac <strong>-d e:\myproject</strong> HelloPackage.java
+</pre>
+
+<p>The &quot;<code>-d</code>&quot; option instructs the compiler to place the class file in the given package base directory, as well as to create the necessary directory structure for the package. Recall that the dot <code>'.'</code> in the package name corresponds to sub-directory structure. The compiled bytecode for <code>com.zzz.test.HelloPackage</code> will be placed at &quot;<code>e:\myproject\com\zzz\test\HelloPackage.class</code>&quot;</p>
+
+<h5>Running Classes in Package</h5>
+
+<p>To run the program, you need to set your current working directory at the package base directory (in this case &quot;<code>e:\myproject</code>&quot;), and provide the <em>fully-qualify name</em>:</p>
+<pre class="color-command">
+<span class="color-comment">// Set the current working directory to the package base directory</span>
+e:\myproject&gt; java com.zzz.test.HelloPackage
+</pre> 
+
+<p>It is important to take note that you shall always work in the <em>package base director</em>u and issue <em>fully-qualified name</em>.</p>
+<p>As mentioned, if you use an IDE, you can compile/run the classes as usual. IDE will take care of the details.</p>
+
+<h4>The Default Unnamed Package</h4>
+<p>So far, all our examples do not use a <code>package</code> statement.  These classes belong to a so-called <em>default unnamed</em> package. Use of the default unnamed package is not recommended should be restricted to toy programs only, as they cannot be &quot;imported&quot; into another application. For production, you should place your classes in proper packages.</p>
+
+<h4>Java Archive (JAR)</h4>
+<p>An Java application typically involves many classes. For ease of distribution, you could bundles all the class files and relevant resources into a single file, called JAR (Java Archive) file.</p>
+
+<p>JAR uses the famous &quot;zip&quot; algorithm for compression. It is modeled after Unix's &quot;tar&quot; (Tape ARchive) utility. You can also include your digital signature (or certificate) in your JAR file for authentication by the recipients.</p>
+
+<p>JDK provides an utility called &quot;<code>jar</code>&quot; to create and manage JAR files. For example, to create a JAR file, issue the following command:</p>
+<pre class="color-command">
+<span class="color-comment"></span><span class="color-comment">// To create a JAR file from c1 ... cn classes (c:create, v:verbose, f:filename):</span>
+&gt; jar cvf myjarfile.jar c1.class ... cn.class</pre>
+
+<h5>Example</h5>
+<p>To place the earlier class <code>com.zzz.test.HelloPackage</code> (and possible more related classes and resources) in a JAR file called <code>hellopackage.jar</code>:</p>
+
+<pre class="color-command">
+<span class="color-comment">// Set the current working directory to the package base directory (i.e., e:\myproject)</span>
+e:\myproject&gt; <strong>jar cvf hellopackage.jar com\zzz\test\HelloPackage.class</strong>
+added manifest
+adding: com/zzz/test/HelloPackage.class(in = 454) (out= 310)(deflated 31%)</pre>
+
+<p>Read &quot;<a href="J9d_Jar.html">Java Archive (JAR)</a>&quot; for more details.</p>
+
+<h4>Classpath - Locating Java Class Files</h4>
+
+<p>Java allows you to store your class files anywhere in your file system. To locate a class, you need to provide the <em>package base directory</em> called <em>classpath </em>(short for <em>user class search path</em>) and the <em>fully-qualified name</em>. For example, given that the package base directory is <code>e:\myproject</code>, the class <code>com.zzz.test.HelloPackage</code> can be found in <code>e:\myproject\com\zzz\test\HelloPackage.class</code>.</p>
+
+<p>When the Java compiler or runtime needs a class (given its fully-qualified name), it searches for it from the <em>classpath</em>. You could specify the <em>classpath</em> via the command-line option <code>-cp</code> (or <code>-classpath</code>); or the environment variable <code>CLASSPATH</code>.</p>
+<p>A classpath may contain many entries (separated by <code>';'</code> in Windows or <code>':'</code> in Unixes/Mac). Each entry shall be a package base directory (which contains many Java classes), or a JAR file (which is a single-file archives of many Java classes).</p>
+
+<h4>Example on Package, Classpath and JAR</h4>
+
+<img class="image-float-right" src="images/OOP_PackageExample.png" alt="OOP_PackageExample.png" />
+<p>In this example, we shall kept the source files and class files in separate directories - &quot;<code>src</code>&quot; and &quot;<code>bin</code>&quot; - for ease of distribution minus the source.</p>
+
+<h5><span class="font-code">com.zzz.geometry.Circle</span></h5>
+<p>Let's create a class called <code>Circle</code> in package <code>com.zzz.geometry</code>. We shall keep the source file as <code>d:\zzzpackages\<strong>src</strong>\com\zzz\geometry\Circle.java</code> and the class file in <em>package base directory</em> of <code>d:\zzzpackages\<strong>bin</strong></code>.</p>
+
+<pre class="color-example">
+package <span class="color-new">com.zzz.geometry</span>;
+public class <span class="color-new">Circle</span> {      <span class="color-comment">// save as d:\zzzpackages\src\com\zzz\geometry\Circle.java</span>
+   public String toString() {
+      return &quot;This is a Circle&quot;;
+   }
+}</pre>
+
+<p>To compile the <code>Circle</code> class, use <code>javac</code> with <code>-d</code> option to specify the destination package base directory.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Set current working directory to source file (d:\zzzpackages\src\com\zzz\geometry)</span>
+&gt; javac <span class="color-new">-d d:\zzzpackages\bin</span> Circle.java
+<span class="color-comment">// Output class file is d:\zzzpackages\bin\com\zzz\geometry\Circle.class</span></pre>
+
+<h5><span class="font-code">com.zzz.geometry.Cylinder</span></h5>
+
+<p>Next, create a class called <code>Cylinder</code> in the same package (<code>com.zzz.geometry</code>) that extends <code>Circle</code>.</p>
+
+<pre class="color-example">
+package <span class="color-new">com.zzz.geometry</span>;
+public class <span class="color-new">Cylinder extends Circle</span> {  <span class="color-comment">// save as d:\zzzpackages\src\com\zzz\geometry\Cylinder.java</span>
+   public String toString() {
+      return &quot;This is a Cylinder&quot;;
+   }
+}</pre>
+
+<p>No <code>import</code> statement for <code>Circle</code> is needed in <code>Cylinder</code>, because they are in the same package.</p>
+<p>To compile the <code>Cylinder</code> class, we need to provide a classpath to the <code>Circle</code> class via option <code>-cp</code> (or <code>-classpath</code>), because <code>Cylinder</code> class references <code>Circle</code> class.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Set current working directory to source file (d:\zzzpackages\src\com\zzz\geometry)</span>
+&gt; javac -d d:\zzzpackages\bin <span class="color-new">-cp d:\zzzpackages\bin</span> Cylinder.java
+<span class="color-comment">// Output class file is d:\zzzpackages\bin\com\zzz\geometry\Cylinder.class</span></pre>
+
+<h5><span class="font-code">com.yyy.animal.Cat</span></h5>
+
+<p>Create another class called <code>Cat</code> in another package (<code>com.yyy.animal</code>). We shall keep the source file as <code>d:\yyypackages\src\com\yyy\animal\Cat.java</code> and the class file in package base directory of <code>d:\yyypackages\bin</code>.</p>
+
+<pre class="color-example">
+package <span class="color-new">com.yyy.animal</span>;
+public class <span class="color-new">Cat</span> {   <span class="color-comment">// save as d:\yyypackages\src\com\yyy\animal\Cat.java</span>
+   public String toString() {
+      return &quot;This is a Cat!&quot;;
+   }
+}</pre>
+
+<p>Again, use <code>-d</code> option to compile the <code>Cat</code> class. No classpath needed as the <code>Cat</code> class does not reference other classes.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Set current working directory to source file (d:\yyypackages\src\com\yyy\animal)</span>
+&gt; javac <span class="color-new">-d d:\yyypackages\bin</span> Cat.java
+<span class="color-comment">// Output class file is d:\yyypackages\bin\com\yyy\animal\Cat.class</span></pre>
+
+<h5><span class="font-code">myTest.test</span></h5>
+
+<p>We shall write a <code>Test</code> class (in package <code>myTest</code>) to use all the classes. We shall keep the source file as <code>d:\testpackages\src\mytest\Test.java</code> and the class file in package base directory of <code>d:\testpackages\bin</code>.</p>
+
+<pre class="color-example">
+package <span class="color-new">mytest</span>;
+ 
+import com.zzz.geometry.Circle;
+import com.zzz.geometry.Cylinder;
+import com.yyy.animal.Cat;
+ 
+public class <span class="color-new">Test</span> {   <span class="color-comment">// save as d:\testpackages\src\mytest\Test.java</span>
+   public static void main(String[] args) {
+      Circle circle = new Circle();
+      System.out.println(circle);
+      Cylinder cylinder = new Cylinder();
+      System.out.println(cylinder);
+      Cat cat = new Cat();
+      System.out.println(cat);
+   }
+}</pre>
+
+<p>To compile the <code>Test</code> class, we need <code>-d</code> option to specify the destination and <code>-cp</code> to specify the package base directories of <code>Circle</code> and <code>Cylinder</code> (<code>d:\zzzpackages\bin</code>) and <code>Cat</code> (<code>d:\yyypackages\bin</code>).</p>
+
+<pre class="color-command">
+<span class="color-comment">// Set current working directory to source file (d:\testpackages\src\mytest)</span>
+&gt; javac -d d:\testpackages\bin <span class="color-new">-cp d:\zzzpackages\bin;d:\yyypackages\bin</span> Test.java
+<span class="color-comment">// Output class file is d:\testpackages\bin\mytest\Test.class</span></pre>
+
+<p>To run the <code>myTest.Test</code> class, set the current working directory to the package base directory of <code>mytest.Test</code> (<code>d:\testpackages\bin</code>) and provide classpath for <code>Circle</code> and <code>Cylinder</code> (<code>d:\zzzpackages\bin</code>), <code>Cat</code> (<code>d:\yyypackages\bin</code>) and the current directory (for <code>mytest.Test</code>).</p>
+
+<pre class="color-command">
+<span class="color-comment">// Set current working directory to package base directory (d:\testpackages\bin)</span>
+&gt; java <span class="color-new">-cp .;d:\zzzpackages\bin;d:\yyypackages\bin</span> mytest.Test</pre>
+
+<h5>Jarring-up <span class="font-code">com.zzz.geometry</span> package</h5>
+<p>Now, suppose that we decided to jar-up the <code>com.zzz.geometry</code> package into a single file called <code>geometry.jar</code> (and kept in <code>d:\jars</code>):</p>
+
+<pre class="color-command">
+<span class="color-comment">// Set current working directory to package base directory (d:\zzzpackages\bin)</span>
+<span class="color-comment">// 'c' to create, 'v' for verbose, 'f' follows by jar filename</span>
+&gt; <strong>jar cvf d:\jars\geometry.jar com\zzz\geometry\*.class</strong>
+added manifest
+adding: com/zzz/geometry/Circle.class(in = 300) (out= 227)(deflated 24%)
+adding: com/zzz/geometry/Cylinder.class(in = 313) (out= 228)(deflated 27%)
+<span class="color-comment">// Output is d:\jars\geometry.jar</span>
+ 
+<span class="color-comment">// OR</span>
+<span class="color-comment">// Set current working directory to package base directory (d:\zzzpackages\bin)</span>
+<span class="color-comment">// jar the current directory (.) and its sub-directories</span>
+&gt; <strong>jar cvf d:\jars\geometry.jar .</strong>
+added manifest
+adding: com/(in = 0) (out= 0)(stored 0%)
+adding: com/zzz/(in = 0) (out= 0)(stored 0%)
+adding: com/zzz/geometry/(in = 0) (out= 0)(stored 0%)
+adding: com/zzz/geometry/Circle.class(in = 300) (out= 227)(deflated 24%)
+adding: com/zzz/geometry/Cylinder.class(in = 313) (out= 228)(deflated 27%)</pre>
+
+<p>To run <code>mytest.Test</code> with the JAR file, set the classpath to the JAR file (classpath accepts both directories and JAR files).</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Set current working directory to package base directory (d:\testpackages\bin)</span>
+&gt; java -cp .;<span class="color-new">d:\jars\geometry.jar</span>;d:\yyypackages\bin mytest.Test</pre>
+
+<h5>Separating Source Files and Classes</h5>
+<p>For ease of distribution (without source files), the source files and class files are typically kept in separate directories.</p>
+<ol>
+<li>Eclipse keeps the source files under &quot;<code>src</code>&quot;, class files under &quot;<code>bin</code>&quot;, and jar files and native libraries under &quot;<code>lib</code>&quot;.</li>
+<li>NetBeans keeps the source files under &quot;<code>src</code>&quot;, class files under &quot;<code>build\classes</code>&quot;, jar files and native libraries under &quot;<code>build\lib</code>&quot;.</li>
+</ol>
+
+<h5>Two Classes of the Same Classname?</h5>
+<p>Suppose that we have two <code>Circle</code> classes in two different packages, can we use both of them in one program?  Yes, however, you need to use fully-qualified name for both of them.  Alternatively, you may also import one of the classes, and use fully-qualified name for the other.  But you cannot import both, which triggers a compilation error.</p>
+<h4>How JVM Find Classes</h4>
+
+<p><strong>Reference</strong>: JDK documentation on &quot;<a href="http://docs.oracle.com/javase/7/docs/technotes/tools/findingclasses.html">How classes are found</a>&quot;.</p>
+<p>To locate a class (given its fully-qualified name), you need to locate the base directory or the JAR file.</p>
+<p>The JVM searches for classes in this order:</p>
+<ol>
+<li>Java Bootstrap classes: such as &quot;<code>rt.jar</code>&quot; (runtime class), &quot;<code>i18n.jar</code>&quot; (internationalization class), <code>charsets.jar</code>, <code>jre/classes</code>, and others.</li>
+<li>Java Standard Extension classes: JAR files located in &quot;<code>$JDK_HOME\jre\lib\ext</code>&quot; directory (for Windows and Ubuntu); &quot;<code>/Library/Java/Extensions</code>&quot; and &quot;<code>/System/Library/Java/Extensions</code>&quot; (for Mac). The location of Java's Extension Directories is kept in Java's System Property &quot;<code>java.ext.dirs</code>&quot;.</li>
+<li>User classes.</li>
+</ol>
+
+
+<p>The user classes are searched in this order:</p>
+<ol>
+<li>The default <code>&quot;.&quot;</code>, i.e., the current working directory.</li>
+<li>The <code>CLASSPATH</code> environment variable, which overrides the default.</li>
+<li>The command-line option <code>-cp</code> (or <code>-classpath</code>), which overrides the <code>CLASSPATH</code> environment variable and default.</li>
+<li>The runtime command-line option <code>-jar</code>, which override all the above.</li>
+</ol>
+
+<p>The JVM puts the classpath is the system property <code>java.class.path</code>. Try running the following line with a <code>-cp</code> option and without <code>-cp</code> (which uses <code>CLASSPATH</code> environment variable) to display the program classpath:</p>
+
+<pre class="color-example">
+System.out.println(System.getProperty(&quot;java.class.path&quot;));</pre>
+
+
+<h5><span class="font-code">javac|java</span>'s command-line option <span class="font-code">-classpath</span> or <span class="font-code">-cp</span></h5>
+
+<p>I have demonstrated the command-line option <code>-classpath</code> (or <code>-cp</code>) in the earlier example.</p>
+
+<h5>The <span class="font-code">CLASSPATH</span> Environment Variable</h5>
+<p>Alternatively, you could also provide your classpath entries in the <code>CLASSPATH</code> <em>environment variable</em>. Take note that if <code>CLASSPATH</code> is not set, the default classpath is the current working directory. However, if you set the <code>CLASSPATH</code> environment variable, you must include the current directory in the <code>CLASSPATH</code>, or else it will not be searched.</p>
+
+<p>Read &quot;<a href="../howto/Environment_Variables.html#JavaEnv">Environment Variables (PATH, CLASSPATH, JAVA_HOME)</a>&quot; for more details about <code>CLASSPATH</code> environment variable.</p>
+
+<p>It is recommended that you use the <code>-cp</code> (<code>-classpath</code>) command-line option (customized for each of your applications), instead of setting a permanent <code>CLASSPATH</code> environment for all the Java applications. IDE (such as Eclipse/NetBeans) manages <code>-cp</code> (<code>-classpath</code>) for each of the applications and does not rely on the <code>CLASSPATH</code> environment.</p>
+
+<h4>More Access Control Modifiers – <span class="font-code">protected</span> and default</h4>
+
+<p>Java has four <em>access control modifiers</em> for class/variable/method.  Besides the <code>public</code> (available to all outside classes) and <code>private</code> (available to this class only), they are two modifiers with visibility in between <code>public</code> and <code>private</code>:</p>
+<ul>
+<li><code>protected</code>:  available to all classes in the same package and the subclasses derived from it.</li>
+<li><em>default</em>:  If the access control modifier is omitted, by default, it is available to classes in the same package only.  This is also called <em>package</em> or <em>friendly</em> accessibility.</li>
+</ul>
+
+
+<h3>Java Source File</h3>
+
+<p>A Java source file must have the file type of &quot;<code>.java</code>&quot;. It can contain at most one top-level <code>public</code> class, but may contain many non-<code>public</code> classes (not recommended). The file name shall be the same as the top-level <code>public</code> classname.</p>
+
+<p>The source file shall contain statements in this order:</p>
+<ol>
+<li>Begins with one optional <code>package</code> statement. If the <code>package</code> statement is omitted, the default package (<code>.</code>) is used. Use of default package is not recommended.</li>
+<li>Follows by optional <code>import</code> or  <code>import</code> <code>static</code> statement(s).</li>
+<li>Follows by <code>class</code>, <code>interface</code> or <code>enum</code> definitions.</li>
+</ol>
+
+<p>Each <code>class</code>, <code>interface</code> or <code>enum</code> is compiled into its own &quot;<code>.class</code>&quot; file.</p>
+
+<p>The top-level class must be either <code>public</code> or <em>default</em>. It cannot be <code>private</code> (no access to other classes including JVM?!) nor <code>protected</code> (meant for member variables/methods accessible by subclasses), which triggers compilation error &quot;modifier <code>private|protected</code> not allowed here&quot;.</p>
+
+
+<h3>Dissecting the Hello-world</h3>
+<p>Let us re-visit the &quot;Hello-world&quot; program, which is reproduced below:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5</pre>
+</td>
+<td>
+<pre>
+public class Hello {
+   public static void main(String[] args) {
+      System.out.println(&quot;Hello, world!&quot;);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>The class <code>Hello</code> is declared <code>public</code> to be accessible by any other classes. In this case, the JRE need to access the <code>Hello</code> class to run the <code>main()</code>.<br />
+Try declaring the <code>Hello</code> class <code>private</code>/<code>protected</code>/<em>package</em> and run the program. (<code>private</code> and <code>protected</code> are not allowed for outer class - compilation error. <em>package</em> is fine and JRE can also run the program?! What is the use of a <code>private</code> class, which is not accessible to others?  I will explain the usage of <code>private</code> class later in the so-called <em>inner class</em>.)</p>
+
+<p>Similarly, the <code>main()</code> method is declared <code>public</code>, so that JRE can access and invoke the method.<br />
+Try declaring the <code>main()</code> method <code>private</code>/<code>protected</code>/<em>package</em>. (You can compile the <code>main()</code> with <code>private</code>/<code>protected</code>/<em>package</em>, but cannot run the <code>main()</code> method.)</p> 
+
+<p>The <code>main()</code> method is declared <code>static</code>.  Remember that a <code>static</code> variable/method belongs to the <em>class</em> instead of a particular <em>instance</em>. There is no need to create an instance to use a <code>static</code> variable/method. A <code>static</code> method can be invoked via the classname, in the form of <code><em>ClassName.aStaticMethod</em>()</code>. JRE can invoke the <code>static main()</code> method, by calling <code>Hello.main()</code> from the class directly. Note that we did not create any  instance of the <code>Hello</code> class.<br />
+Try omitting the <code>static</code> keyword and observe/explain the error message. (Can compile but cannot run the <code>main()</code> method.)</p>
+
+<p>The <code>main()</code> method takes an argument of a <code>String</code> array (corresponds to the command-line arguments supplied by the user), performs the program operations, and return <code>void</code> (or nothing) to the JRE.<br />
+Try omitting the argument <code>(String[] args)</code> from the <code>main()</code> method. (You can compile, but JRE cannot find the <em>matching</em> <code>main(String[])</code>.) </p>
+
+<p>In C language, the signature of <code>main()</code> function is:</p>
+<pre class="color-example">
+main(int argc, char *argv[]) { ...... }</pre>
+<p>Two parameters are used for the command-line argument – <code>int argc</code> to spell out the number of arguments and string-array <code>argv</code> to keep each of the argument. In Java, only one parameter – a <code>String</code> array is needed, as the Java array contains the length internally.  The number of arguments can be retrieved via <code>args.length</code>. Furthermore, in C, the name of the program is passed as the first command-line argument.  In Java, the program name is not passed, as the class name is kept with the object.  You can retrieve the class name via <code>this.getClass().getName()</code>.</p>
+
+
+<h5 class="font-code">System.out.println()</h5>
+
+<img class="image-float-right" src="images/OOP_SystemOutPrintln.png" alt="OOP_SystemOutPrintln.png" />
+
+<p> If you check the JDK API specification, you will find that:</p>
+<ul>
+<li>&quot;<code>System</code>&quot; is a class in the package <code>java.lang</code>.</li>
+<li>&quot;<code>out</code>&quot; is a <code>static public</code> variable of the class <code>java.lang.System</code>.</li>
+<li>&quot;<code>out</code>&quot; is an instance of class &quot;<code>java.io.PrintStream</code>&quot;.</li>
+<li>The class <code>java.io.PrintStream</code> provides a <code>public</code> method called &quot;<code>println()</code>&quot;.</li>
+</ul>
+<p>The figure illustrate the  classes involved in <code>System.out.println()</code>.</p>
+<p>Take note that each of the dot (<code>.</code>) opens a 3-compartment box!!!</p>
+
+<h5 class="float-clear">Example</h5>
+<img class="image-float-right" src="images/OOP_DotDotExample.png" alt="OOP_DotDotExample.png" />
+
+<p>As an example, the reference &quot;<code>A.b.c().d.e()</code>&quot; can be interpreted as follows:</p>
+<ul>
+<li>&quot;<code>A</code>&quot; is a class.</li>
+<li>&quot;<code>b</code>&quot; is a <code> static</code> variable of class &quot;<code>A</code>&quot; (because it is referenced via the classname)..</li>
+<li>The variable &quot;<code>b</code>&quot; belongs to a class says &quot;<code>X</code>&quot;.</li>
+<li>The class &quot;<code>X</code>&quot; provides a public method &quot;<code>c()</code>&quot;.</li>
+<li>The &quot;<code>c()</code>&quot; method returns an instance &quot;<code>y</code>&quot; of class says &quot;<code>Y</code>&quot;.</li>
+<li>The &quot;<code>Y</code>&quot; class has a<code> </code>variable <code></code>called &quot;<code>d</code>&quot;.</li>
+<li>The variable &quot;<code>d</code>&quot; belongs to a class says &quot;<code>Z</code>&quot;.</li>
+<li>The class &quot;<code>Z</code>&quot; provides a <code>public</code> method called &quot;<code>e()</code>&quot;.</li>
+</ul>
+
+<h3>Nested and Inner Classes</h3>
+<p>Read &quot;<a href="J4a_GUI.html#innerclass">Nested and Inner Classes</a>&quot;.</p>
+
+<h3>Scope of Variables &amp; Garbage Collector</h3>
+
+<h4>Types of Variables</h4>
+<p>The <em>type</em> of a variable determines what kinds of <em>value</em> the variable can hold and what operations can be performed on the variable.  Java is a &quot;strong-type&quot; language, which means that the type of the variables must be known at compile-time.</p>
+<p>Java has three kinds of types:</p>
+<ol>
+<li>Primitive type: There are eight primitive types in Java: <code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code>, <code>char</code>,  and <code>boolean</code>. A primitive-type variable  holds   a <em>simple value</em>.</li>
+<li>Reference type: Reference types include <code>class</code>, <code>interface</code>, <code>enum</code> and <em>array</em>. A reference-type variable holds a <em>reference</em> to an object or array. </li>
+<li>A special <code>null</code> type, holding a special <code>null</code> reference. It could be assigned to a reference variable that does not reference any object.</li>
+</ol>
+
+<img class="image-center" src="images/Type_All.png" alt="Type_All.png" />
+
+<p>A primitive variable holds a primitive value (in this storage).  A reference variable holds a reference to an object or array in the heap, or <code>null</code>.  A references variable can hold a reference of the type or its sub-type (polymorphism). The value <code>null</code> is assigned to a reference variable after it is declared.  A reference is assigned after the instance is constructed. An object (instance) resides in the heap. It must be accessed via a reference.</p>
+
+<img class="image-center" src="images/OOP_PrimitiveVsClass.png" alt="OOP_PrimitiveVsClass.png" />
+
+<p>Java implicitly defines a reference type for each possible array type - one for each of the
+eight primitive types and an object array.</p>
+
+<img class="image-center" src="images/Type_Array.png" alt="Type_Array.png" />
+
+<h4>Scope &amp; Lifetime of Variables</h4>
+
+<p>The <em>scope</em> of a variable refers to the portion of the codes that the variable can be accessed. The <em>lifetime</em> refers to the span the variable is created in the memory until it is destroyed (garbage collected). A variable may exist in memory but not accessible by certain codes.</p>
+<p>Java supports three types of variables of different lifetimes:</p>
+
+<p><span class="line-heading">Automatic variable (or Local variable):</span> <em>Automatic variables </em>include method's local variables and method's parameters. Automatic variables are created on entry to the method and are destroyed when the method exits. The scope of automatic variables of a method is inside the block where they are defined. Local variable cannot have access modifier (such as <code>private</code> or <code>public</code>). The only modifier applicable is <code>final</code>.</p>
+
+<p>For example,</p>
+<pre class="color-example">
+public static void main(String[] args) {  <span class="color-comment">// Scope of method parameter args is within this method</span>
+   for (int i = 0; i &lt; 10; ++i) {  <span class="color-comment">// Scope of i is within the for-loop</span>
+      .....
+   }
+   System.out.println(i);         <span class="color-comment">// Compilation error, i has gone out of scope</span>
+   
+   int j = 0;                     <span class="color-comment">// Scope of j is within the method, from this point onwards</span>
+   for (j = 0; j &lt; 10; ++j) {  
+      .....
+   }
+   System.out.println(j);        <span class="color-comment">// okay</span>
+ 
+   int k = 1;
+   do {
+      int x = k*k;    <span class="color-comment">// The scope of x is within the block (per iteration?!)</span>
+      ++k;
+      .....
+   } while (x &lt; 100);  <span class="color-comment">// compilation error!</span>
+}</pre>
+
+
+<p><span class="line-heading">Class member variable (or Instance variable):</span> A <em>member variable of a class</em> is created when an instance is created, and it is destroyed when the object is destroyed (garbage collected).</p>
+
+<p><span class="line-heading">Class static variable (or Class variable):</span> A <em><code>static</code> variable of a class</em> is created when the class is loaded (by the JVM's class loader) and is destroyed when the class is unloaded. There is only one copy for a <code>static</code> variable, and it exists regardless of the number of instances created, even if the class is not instantiated. Take note that <code>static</code> variables are created (during class loading) before instance variables (during instantiation).</p>
+
+<h4>Variable Initialization</h4>
+
+<p>All class member and <code>static</code> variables that are not explicitly assigned a value upon declaration are assigned a default initial value:</p>
+<ul>
+<li>&quot;zero&quot; for numeric primitive types: <code>0</code> for <code>int</code>, <code>byte</code>, <code>short</code> and <code> long</code>, <code>0.0f</code> for <code>float</code>, <code>0.0</code> for <code>double</code>;</li>
+<li><code>'\u0000'</code> (null character) for <code>char</code>;</li>
+<li><code>false</code> for <code>boolean</code>;</li>
+<li><code>null</code> for reference type (such as array and object).</li></ul>
+<p>You can use them without assigning an initial value.</p>
+
+<p>Automatic variables are not initialized, and must be explicitly assigned an initial value before it can be referenced. Failure to do so triggers a compilation error &quot;variable <em>xxx</em> might not have been initialized&quot;.</p>
+
+<h4>Array Initializer</h4>
+
+<p>Array's elements are also initialized once the array is allocated (via the <code>new</code> operator). Like member variables, elements of primitive type are initialized to zero or <code>false</code>; while reference type are initialized to <code>null</code>. [Take note that C/C++ does not initialize array's elements.] For example,</p>
+
+<pre class="color-example">
+String[] strArray = new String[3];
+for (String str: strArray) {
+   System.out.println(str);  <span class="color-comment">// null, null, null</span>
+}</pre>
+
+<p>You can also use the so-called <em>array initializer</em> to initialize the array during declaration. For example,</p>
+
+<pre class="color-example">
+int[] numbers = {11, 22, 33};
+String[] days = {&quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;};
+Circle[] circles = {new Circle(1.1), new Circle(2.2), new Circle(3.3)};
+float[][] table = {{1.1f, 2.2f, 3.3f}, {4.4f, 5.5f, 6.6f}, {7.7f, 8.8f, 9.9f}};
+int[][] data = {{1, 4, 8}, {2, 3}, {4, 8, 1, 5}};</pre>
+
+<h4>Garbage Collector</h4>
+
+<h4>Where Primitives and Objects Live?</h4>
+<p>Primitive types, such as <code>int</code> and  <code>double</code> are created in the program stack during compiled time for efficiency (less storage and fast access). Java's designer retained primitives in a object-oriented language for its efficiency.</p>
+
+<p>Reference types, such as objects and arrays, are created in the  &quot;heap&quot; at runtime (via the <code>new</code> operator), and accessed via a reference.  Heap is less efficient as stack, as complex memory management is required to allocate, manage and release storage.</p>
+<p>For automatic variable of reference type: the reference is local (allocated in the method stack), but the object referenced is allocated in the heap.</p>
+
+<p>Stack and heap are typically located at the opposite ends of the data memory, to facilitate expansion.</p>
+
+<h4>Object References</h4>
+<p>When a Java object is constructed via the <code>new</code> operator and constructor, the constructor returns a value, which is a bit pattern that uniquely identifies the object. This value is known as the <em>object reference</em>.</p>
+
+<p>In some JVM implementations, this object reference is simply the <em>address</em> of the object in the heap. However, the JVM specification does not specify how the object reference shall be implemented as long as it can uniquely identify the object. Many JVM implementations use so-called <em>double indirection</em>, where the object reference is the address of an address. This approach facilitates the garbage collector (to be explained next) to relocate objects in the heap to reduce memory fragmentation.</p>
+
+<p>Objects are created via the <code>new</code> operator and the constructor. The <code>new</code> operator:</p>
+<ol>
+<li>creates a new instance of the given class, and allocate memory dynamically from the  heap;</li>
+<li>calls one of the overloaded constructors to initialize the object created; and</li>
+<li>returns the reference.</li>
+</ol>
+
+<p>For primitives stored in the stack, compiler can determine how long the item lasts and destroy it once it is out of  scope.  For object in heap, the compiler has no knowledge of the creation and lifetime of the object.</p>
+
+<p>In C++, you must destroy the heap's objects yourself in your program once the objects are no longer in use (via <code>delete</code> operator).  Otherwise, it leads to a common bug known as &quot;memory leak&quot; - the dead objects pile-up and consume all the available storage. On the other hand, destroying an object too early, while it is still in use, causes runtime error. Managing memory explicitly is tedious and error prone, although the programs can be more efficient.</p>
+
+<p>In Java, you don't have to destroy and de-allocate the objects yourself. JVM has a built-in process called <em>garbage collector</em> that automatically releases the memory for an object when there is <em>no more reference</em> to that object. The garbage collector runs in a low priority thread.</p>
+
+<p>An object is eligible for garbage collection when there is no more reference to that object.  Reference that is held in a variable is dropped when the variable has gone out of its scope.  You may also explicitly drop an object reference by setting the object reference to <code>null</code> to signal to the garbage collector it is available for collection. However, it may or may not get garbage collected because there is no guarantee on when the garbage collector will be run or it will be run at all. The garbage collector calls the object's destructor (a method called <code>finalize()</code>), if it is defined, before releasing the memory back to the heap for re-use.</p>
+
+<p>If a new reference is assigned to a reference variable (e.g., via <code>new</code> and constructor), the previous object will be available for garbage collection (if there is no other references). For example,</p>
+
+<pre class="color-example">
+String str = &quot;Hello&quot;;
+str += &quot; world&quot;;   
+  <span class="color-comment">// str has a new reference to &quot;Hello world&quot;
+  // &quot;Hello&quot; is now available for garbage collection</span></pre>
+
+<h5><span class="font-code">System.gc()</span> &amp; <span class="font-code">Runtime.gc()</span></h5>
+
+<p>You can explicitly ask for garbage collection by calling static methods <code>System.gc()</code> or <code>Runtime.gc()</code>.  However, the behavior of these methods is JVM dependent. Some higher priority thread may prevent garbage collector from being run. You cannot rely on the <code>gc()</code> methods to perform garbage collection as the JVM specification merely states that &quot;calling this method suggests that the Java Virtual Machine expends effort toward recycling unused objects&quot;. So the critical question &quot;When the storage is recovered?&quot; cannot be answered in Java.</p>
+
+<h5>Pitfalls of Java</h5>
+
+<p>Java's garbage collector frees you from worrying about memory management of objects (no more <code>free</code> or <code>delete</code>) so that you can focus on more productive works.  It also insure against so called &quot;memory leak&quot; (i.e., used objects were not de-allocated from memory and slowly fill up the precious memory space); or releasing object too early which results in runtime error. These are common problems in C/C++ programs.</p>
+
+<p>However, garbage collector does has its drawbacks:</p>
+<ol>
+<li>Garbage collector consumes computational resources and resulted in runtime overhead.</li>
+<li>The rate of execution is not guarantee and can be inconsistent.  This is because JVM specification does not spell out when and how long the garbage collector should be run.  This may have an impact on real-time programs, when a response is expected within a certain time, which cannot be interrupted by the garbage collector.</li>
+</ol>
+
+<p>Many programmers prefer to use C++ for game programming and animation, as these programs could create millions of objects in a short span. Managing memory efficiently is critical, instead of relying on garbage collector.</p>
+
+<p>There are some (imperfect) solutions to memory management in Java, e.g.,</p>
+
+<ol>
+<li>Pre-allocate and re-use the objects, instead of creating new objects. This requires effort from programmers.</li>
+<li>The author of &quot;jBullet&quot;, which is a Java port of the famous Collision Physics library &quot;Bullet Physics&quot;, created a library called <code>jStackAlloc</code>, which allocates objects on the   method's stack instead of program heap. This improves real-time   performance by reducing the frequency of garbage collection.</li>
+</ol>
+
+<p>This solution shall remain imperfect until the Java designers decided to allow programmers to manage the storage, which is not likely.</p>
+
+<h3>Passing Argument into Methods</h3>
+<p>Recall that a method takes <em>arguments</em>, performs operation defined in the method body, and returns a piece of result or void to the caller.</p>
+
+<p>To differentiate the parameters inside and outside the method, we have:</p>
+<ul>
+<li><em>Actual parameters</em> (or <em>argument</em>s): The actual values passed into the method and used inside the method.</li>
+<li><em>Formal parameters</em> (or <em>method parameters</em>): The <em>placeholders</em> used in the method definition, which are replaced by the actual parameters when the method is invoked.</li>
+</ul>
+
+<p>For example:</p>
+<pre class="color-example">
+public static double getArea(double radius) {
+   return radius * radius * Math.PI;
+}
+
+public static void main(String[] args) {
+   double r = 1.2;
+   getArea(r);    <span class="color-comment">// invoke method with a variable</span>
+   getArea(3, 4); <span class="color-comment">// invoke method with a literal value</span>
+}</pre>
+
+<p>In the above method definition, <code>radius</code> is a <em>parameter placeholder</em> or <em>formal parameter</em>.  If we invoke the method with a variable <code>r</code> with value of <code>1.2</code>, i.e., <code>getArea(r)</code>, <code>r</code> (<code>1.2</code>) is the actual parameter.</p>
+
+<h5>Passing Primitive-Type Argument into Method - Pass-by-Value</h5>
+
+
+<p>If the argument is a primitive type (e.g., <code>int</code> or  <code>double</code>), a <em>copy</em> of identical value is created and passed into the method. The method operates on the <em>cloned copy</em>. It does not have access to the original copy. If the value of the argument is changed inside the method, the original copy is not affected. This is called <em>pass-by-value</em> (passing a cloned value into the method).</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+public class TestPassingPrimitive {
+   public static void main(String[] args) {
+      int number = 10;              <span class="color-comment">// primitive type</span>
+      System.out.println(&quot;In caller, before calling the method, the value is: &quot; + number);
+      aMethodWithPrimitive(number); <span class="color-comment">// invoke method</span>
+      System.out.println(&quot;In caller, after calling the method, the value is: &quot; + number);
+   }
+ 
+   public static void aMethodWithPrimitive(int number) {
+      System.out.println(&quot;Inside method, before operation, the value is &quot; + number);
+      ++number;  <span class="color-comment">// change the parameter</span>
+      System.out.println(&quot;Inside method, after operation, the value is &quot; + number);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+In caller, before calling the method, the value is: 10
+Inside method, before operation, the value is 10
+Inside method, after operation, the value is 11
+In caller, after calling the method, the value is: 10</pre>
+
+<p>Although the variables are called number in the caller as well as in the method's formal parameter, they are two different copies with their own scope.</p>
+
+<h5>Passing Reference-Type Argument into Method - Also Pass-by-Value</h5>
+
+<p>If the argument is a reference type (e.g., an array or an instance of a class), a <em>copy of the reference</em> is created and passed into the method. Since the caller's object and the method's parameter have the same reference,  if the method changes the member variables of the object, the changes are permanent and take effect outside the method.</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+public class TestParameterReference {
+   public static void main(String[] args) {
+      StringBuffer sb = new StringBuffer(&quot;Hello&quot;);
+      System.out.println(&quot;In caller, before calling the method, the object is \&quot;&quot; + sb + &quot;\&quot;&quot;);
+      aMethodOnReference(sb);  <span class="color-comment">// invoke method with side-effect</span>
+      System.out.println(&quot;In caller, after calling the method, the object is \&quot;&quot; + sb + &quot;\&quot;&quot;);
+   }
+ 
+   public static void aMethodOnReference(StringBuffer sb) {
+      System.out.println(&quot;Inside method, before change, the object is \&quot;&quot; + sb + &quot;\&quot;&quot;);
+      sb.append(&quot;, world&quot;);  <span class="color-comment">// change parameter</span>
+      System.out.println(&quot;Inside method, after change, the object is \&quot;&quot; + sb + &quot;\&quot;&quot;);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+In caller, before calling the method, the object is &quot;Hello&quot;
+Inside method, before change, the object is &quot;Hello&quot;
+Inside method, after change, the object is &quot;Hello, world&quot;
+In caller, after calling the method, the object is &quot;Hello, world&quot;</pre>
+
+<p>If a method affect values outside the method itself other than the value returned, we say that the method has <em>side-effect</em>.  Side effects may not be obvious by reading the method's codes, and must be handled with extreme care, and should be avoided if feasible. Proper comments should be provided in the method's header.</p>
+
+<h5>Re-assigning the Reference Inside the Method</h5>
+
+<p>Since <em>a copy of the reference</em> is passed into the method, if the method <em>re-assigns</em> the reference to the argument, the caller's object and the argument will not have the same reference. Change in the argument will not be reflected in the caller's object.</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre>
+</td>
+<td>
+<pre>
+public class TestParameterReferenceReassign {
+   public static void main(String[] args) {
+      StringBuffer sb = new StringBuffer(&quot;Hello&quot;);
+      System.out.println(&quot;In caller, before calling the method, the object is \&quot;&quot; + sb + &quot;\&quot;&quot;);
+      aMethodOnReference(sb);  <span class="color-comment">// invoke method with side-effect</span>
+      System.out.println(&quot;In caller, after calling the method, the object is \&quot;&quot; + sb + &quot;\&quot;&quot;);
+   }
+ 
+   public static void aMethodOnReference(StringBuffer sb) {
+      System.out.println(&quot;Inside method, before change, the object is \&quot;&quot; + sb + &quot;\&quot;&quot;);
+      sb = new StringBuffer(&quot;world&quot;); <span class="color-comment">// re-assign the reference to the parameter</span>
+      sb.append(&quot; peace&quot;);            <span class="color-comment">// the re-assigned parameter</span>
+      System.out.println(&quot;Inside method, after change, the object is \&quot;&quot; + sb + &quot;\&quot;&quot;);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+In caller, before calling the method, the object is &quot;Hello&quot;
+Inside method, before change, the object is &quot;Hello&quot;
+Inside method, after change, the object is &quot;world peace&quot;
+In caller, after calling the method, the object is &quot;Hello&quot;</pre>
+
+<h5>Reference-Type Argument - Pass-by-Reference or Pass-by-value?</h5>
+<p>As the object parameter can be modified inside the method, some people called it <em>pass-by-reference</em>. However, in Java, <em>a copy of reference</em> is passed into the method, hence, Java designers called it <em>pass-by-value</em>.</p>
+
+<h5>Passing a Primitive as a One-Element Array?</h5>
+<p>Primitive-type parameters are passed-by-value. Hence, the method is not able to modify the caller's copy. If you wish to let the method to modify the caller's copy, you might pass the primitive-type parameter as a one-element array.</p>
+
+<h3>Method Overloading vs. Overriding</h3>
+
+<p>An overriding method must have the same argument list; while an overloading method must have different argument list. You override a method in the subclass. You typically overload a method in the same class, but you can also overload a method in the subclass.</p>
+
+<p>A overriding method:</p>
+<ol>
+<li>must have the same parameter list as it original.</li>
+<li>must have the same return-type or sub-type of its original return-type (since JDK 1.5 - called <em>convariant return-type</em>).</li>
+<li>cannot have more restrictive access modifier than its original, but can be less restrictive, e.g., you can override a <code>protected</code> method  as a <code>public</code> method.</li>
+<li>cannot throw more exceptions than that declared in its original, but can throw less exceptions. It can throw exceptions that is declared in its original or their sub-types.</li>
+<li>overriding a <code>private</code> method does not make sense, as private methods are not really inherited by its subclasses.</li>
+<li>You cannot override a non-<code>static</code> method as <code>static</code>, and vice versa.</li>
+<li>Technically, a subclass does not override a <code>static</code> method, but merely hides it. Both the superclass' and subclass' versions can still be accessed via the classnames.</li>
+<li>A <code>final</code> method cannot be overridden. An <code>abstract</code> method must be overridden in an implementation subclass (otherwise, the subclass remains <code>abstract</code>).</li></ol>
+
+<p>A overloading method:</p>
+<ol>
+<li>must be differentiated by its parameter list. It shall not be differentiated by return-type, exception list or access modifier (which generates  compilation error). It could have any return-type, exception list or access modifier, as long as it has a different parameter list than the others.</li>
+<li>can exist in the original class or its sub-classes.</li>
+</ol>
+
+
+<h3>Frequently-Used Packages in JDK API</h3>
+<p>JDK API is huge and consists of many packages (refer to JDK API specification).  These are the frequently-used packages:</p>
+<ul>
+<li><code>java.lang</code> (the core package):  contains classes that are core to the language itself, e.g., <code>System</code>, <code>String</code>, <code>Math</code>, <code>Object</code>, <code></code>etc.</li>
+<li><code>java.util</code>:  contains utilities such as <code>Scanner</code>, <code>Random</code>, <code>Date</code>, <code>ArrayList</code>, <code>Vector</code>, <code>Hashtable</code>.</li>
+<li><code>java.io</code>:  contains input and output classes for reading files and I/O streams, such as <code>File</code>.</li>
+<li><code>java.net</code>:  contains networking support, such as <code>Socket</code> and <code>URL</code>.</li>
+<li><code>java.awt</code> (Abstract Windowing Toolkit):  contains classes for implementing a graphical user interface, including classes like <code>Frame</code>, <code> Button</code>, <code>CheckBox</code>.</li>
+<li><code>java.awt.event</code>:  contains event handling classes, such as key-press, mouse-click etc.</li>
+<li><code>java.swing</code>:  Advanced GUI classes, e.g., <code>JFrame</code>, <code>JButton</code>, <code>JApplet</code>, etc.</li>
+<li><code>java.applet</code>:  contains classes for implementing Java applets.</li>
+<li><code>java.sql</code>: contains classes for database programming, such as <code>Connection</code>, <code>Statement</code>, <code>ResultSet</code>.</li>
+<li>Many others.</li>
+</ul>
+
+
+
+<h3>Package <span class="font-code">java.lang</span> - Frequently-used  Classes</h3>
+<p>&quot;<code>java.lang</code>&quot; is the Java <em>core language package</em>, which contains class central to the Java language, such as <code>Object</code>, <code>System</code> and <code>String</code>. It is implicitly &quot;<code>import</code>ed&quot; into every Java program.  That is, no explicit &quot;<code>import</code>&quot; statement required for using classes in <code>java.lang</code>.  Frequently-used classes in &quot;<code>java.lang</code>&quot; are:</p>
+<ul>
+<li><code>String</code>, <code>StringBuffer</code> and <code>StringBuilder</code>: <code>String</code> is immutable whereas <code>StringBuffer</code>/<code>StringBuilder</code> is mutable. <code>StringBuffer</code> is thread safe; while <code>StringBuilder</code> is not thread safe and is meant for single-thread operations.</li>
+<li><code>Math</code>: contains <code>public static</code> fields <code>PI</code> and <code>E</code>, and many <code>public static</code> methods such as <code>random()</code>, <code>square()</code>, <code>sqrt()</code>, <code>sin()</code>, <code>cos()</code>, <code>asin()</code>, <code>acos()</code>, <code>log()</code>, <code>exp()</code>, <code>floor()</code>, <code>ceil()</code>, <code>pow()</code>, and etc.</li>
+<li>Wrapper class for primitive types:  <code>Byte</code>, <code>Integer</code>, <code>Short</code>, <code>Long</code>, <code>Float</code>, <code>Double</code>, <code>Character</code>, <code>Boolean</code>.  The wrapper class is used to wrap a primitive  type into a Java class.  They are used when a class is needed for purpose such as using multithreading, synchronization and collection.</li>
+<li><code>System</code>:  contains the <code>public static</code> variables <code>in</code>, <code>out</code>, and <code>err</code>, corresponds to the standard input, output, and error streams.</li>
+<li><code>Object</code>: the common root class for all the Java classes.  This common root class defines the baseline behaviors needed to support features like multithreading (lock and monitor), synchronization (<code>wait()</code>, <code>notify()</code>, <code>notifyAll()</code>), garbage collection, <code>equals()</code>, <code>hashcode()</code> and <code>toString()</code>.</li>
+</ul>
+
+<h4><span class="font-code">java.lang.String</span>, <span class="font-code">StringBuilder</span> &amp; <span class="font-code">StringBuffer</span></h4>
+
+<p>Read &quot;<a href="J3d_String.html">Java String is Special</a>&quot;.</p>
+
+<h4>Wrapper Classes for Primitive Types</h4>
+
+<img class="image-float-right" src="images/OOP_WrapperClass.png" alt="OOP_WrapperClass.png" />
+
+<p>The designers of Java language retain the primitive types in an object-oriented language, instead of making everything object, so as to improve the runtime performance. However, in some situations, an object is required instead of a primitive value.  For example,</p>
+<ul>
+<li>The data structures in the <code>Collection</code> framework, such as the &quot;dynamic array&quot; <code>ArrayList</code> and <code>Vector</code>, stores only objects (reference types) and not primitive types.</li>
+<li>Object is needed to support synchronization in multithreading.</li>
+<li>Objects are needed, if you wish to modify the arguments passed into a method (because primitive types are passed by value).</li>
+</ul>
+
+<p>JDK provides the so-called <em>wrapper classes</em> that wrap primitive values into objects, for each primitive type - <code>Byte</code> for <code>byte</code>, <code>Short</code> for <code>short</code>, <code>Integer</code> for <code>int</code>, <code>Long</code> for <code>long</code>, <code>Float</code> for <code>float</code>, <code>Double</code> for <code>double</code>, <code>Character</code> for <code>char</code>, and <code>Boolean</code> for <code>boolean</code>, as shown in the class diagram.</p>
+
+<p>Each of the wrapper classes contains a private member variable that holds the primitive value it wraps. The wrapped value cannot be changed.</p>
+
+<h5>Wrap via Constructors</h5>
+
+<p>Each of the wrapper classes has a constructor that takes in the data type it wraps.  For examples:</p>
+<pre class="color-example">
+<span class="color-comment">// Wrap an int primitive value into an Integer object</span>
+Integer aIntObj = new Integer(5566);
+<span class="color-comment">// Wrap a double primitive value into a Double object</span>
+Double aDoubleObj = new Double(55.66);
+<span class="color-comment">// Wrap a char primitive value into a Character object</span>
+Character aCharObj = new Character('z');
+<span class="color-comment">// Wrap a boolean primitive value into a Boolean object</span>
+Boolean aBooleanObj = new Boolean(true);</pre>
+
+<p>All wrapper classes, except Character, also have a constructor that takes a String, and parse the String into the primitive value to be wrapped.</p>
+
+<h5>Unwrap via <span class="font-code">xxxValue()</span> methods</h5>
+<p>The <code>abstract</code> superclass <code>Number</code> defines the following <code>xxxValue()</code> methods to unwrap, which are implemented in concrete subclasses <code>Byte</code>, <code>Short</code>, <code>Integer</code>, <code>Long</code>, <code>Float</code>, <code>Double</code>.</p>
+<pre class="color-syntax">
+<span class="color-comment">// In classes Byte, Short, Integer, Long, Float and Double</span>
+public byte byteValue()              <span class="color-comment">// returns the wrapped &quot;numeric&quot; value as a byte</span>
+public short shortValue()            <span class="color-comment">//             ...                     as a short</span>
+public abstract int intValue()       <span class="color-comment">//             ...                     as an int</span>
+public abstract long longValue()     <span class="color-comment">//             ...                     as a long</span>
+public abstract float floatValue()   <span class="color-comment">//             ...                     as a float</span>
+public abstract double doubleValue() <span class="color-comment">//             ...                     as a double</span></pre>
+
+<p>Similarly, the <code>Character</code> and <code>Boolean</code> classes have a <code>charValue()</code> and <code>booleanValue()</code>, respectively.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// In Character class</span>
+public char charValue()         <span class="color-comment">// Returns as char</span>
+<span class="color-comment">// In Boolean class</span>
+public boolean booleanValue()   <span class="color-comment">// Returns as boolean</span></pre>
+
+<h5>Example</h5>
+<pre class="color-example">
+<span class="color-comment">// Wrap a primitive int into an Integer object</span>
+Integer intObj = new Integer(556677);
+<span class="color-comment">// Unwrap</span>
+int i = intObj.intValue();
+short s = intObj.shortValue();  <span class="color-comment">// truncate</span>
+byte b = intObj.byteValue();    <span class="color-comment">// truncate</span>
+<span class="color-comment">   
+// Wrap a primitive double into an Double object</span>
+Double doubleObj = new Double(55.66);
+<span class="color-comment">// Unwrap</span>
+double d = doubleObj.doubleValue();
+int i1 = doubleObj.intValue();  <span class="color-comment">// truncate</span>
+<span class="color-comment">   
+// Wrap a primitive char into an Character object</span>
+Character charObj = new Character('z');
+<span class="color-comment">// Unwrap</span>
+char c = charObj.charValue();
+   
+<span class="color-comment">// Wrap a primitive boolean into a Boolean object</span>
+Boolean booleanObj = new Boolean(false);
+<span class="color-comment">// Unwrap</span>
+boolean b1 = booleanObj.booleanValue();</pre>
+
+<h5>Constants - <span class="font-code">MIN_VALUE</span>, <span class="font-code">MAX_VALUE</span> and <span class="font-code">SIZE</span></h5>
+<p>All wrapper classes (except <code>Boolean</code>) contain the following constants, which give the minimum, maximum, and bit-length.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// All except Boolean</span>
+public static final <em>type</em> MIN_VALUE   <span class="color-comment">// Minimum value</span>
+public static final <em>type</em> MAX_VALUE   <span class="color-comment">// Maximum value</span>
+public static final int SIZE         <span class="color-comment">// Number of bits</span>
+<span class="color-comment">// Float and Double only</span>
+public static final int MAX_EXPONENT <span class="color-comment">// Maximum exponent </span>
+public static final int MIN_EXPONENT <span class="color-comment">// Maximum exponent</span></pre>
+
+<p>For examples:</p>
+<pre class="color-example">
+<span class="color-comment">// Integer class</span>
+System.out.println(Integer.MAX_VALUE);   <span class="color-comment">// 2147483647</span>
+System.out.println(Integer.MIN_VALUE);   <span class="color-comment">// -2147483648</span>
+System.out.println(Integer.SIZE);        <span class="color-comment">// 32</span>
+<span class="color-comment">// Double class</span>
+System.out.println(Double.MAX_VALUE);    <span class="color-comment">// 1.7976931348623157E308</span>
+System.out.println(Double.MIN_VALUE);    <span class="color-comment">// 4.9E-324</span>
+System.out.println(Double.SIZE);         <span class="color-comment">// 64</span>
+System.out.println(Double.MAX_EXPONENT); <span class="color-comment">// 1023</span>
+System.out.println(Double.MIN_EXPONENT); <span class="color-comment">// -1022</span></pre>
+
+<h5>Static Methods for Parsing Strings</h5>
+<p>Each of the wrapper classes (except <code>Character</code>) also contain a <code>static</code> method to parse a given <code>String</code> into its respective primitive value:</p>
+<pre class="color-syntax">
+<span class="color-comment">// Byte class</span>
+public static byte parseByte(String s) throws NumberFormatException
+<span class="color-comment">// Short class</span>
+public static short parseShort(String s) throws NumberFormatException
+<span class="color-comment">// Integer class</span>
+public static int parseInt(String s) throws NumberFormatException
+<span class="color-comment">// Long class</span>
+public static long parseLong(String s) throws NumberFormatException
+<span class="color-comment">// Float class</span>
+public static float parseFloat(String s) throws NumberFormatException
+<span class="color-comment">// Double class</span>
+public static double parseDouble(String s) throws NumberFormatException
+<span class="color-comment">// Boolean class</span>
+public static boolean parseBoolean(String s)  
+    <span class="color-comment">// returns true for string &quot;true&quot; (case insensitive); returns false otherwise</span></pre>
+
+<p>For examples:</p>
+<pre class="color-example">
+<span class="color-comment">// Parse a String into int. Throw NumberFormatException if the String is not valid</span>
+int i = Integer.parseInt(&quot;5566&quot;);
+i = Integer.parseInt(&quot;abcd&quot;);       <span class="color-comment">// Runtime Error: NumberFormatException</span>
+i = Integer.parseInt(&quot;55.66&quot;);      <span class="color-comment">// Runtime Error: NumberFormatException</span>
+ 
+<span class="color-comment">// Parse a String into double</span>
+double d = Double.parseDouble(&quot;55.66&quot;);</pre>
+
+<h4>Auto-Boxing &amp; Auto-Unboxing (JDK 1.5)</h4>
+<p>Prior to JDK 1.5, the programmers have to explicitly wrap a primitive value into an object, and explicitly unwrap an object to get a primitive value. For example,</p>
+<pre class="color-example">
+<span class="color-comment">// Pre-JDK 1.5</span>
+Integer intObj = new Integer(5566);    <span class="color-comment">// wrap int to Integer</span>
+int i = intObj.intValue();             <span class="color-comment">// unwrap Integer to int</span>
+&nbsp;
+Double doubleObj = new Double(55.66);  <span class="color-comment">// wrap double to Double</span>
+double d = doubleObj.doubleValue();    <span class="color-comment">// unwrap Double to double</span></pre>
+
+<p>The pre-JDK 1.5 approach involves quite a bit of code to do the wrapping and unwrapping. Why not ask the compiler to do the wrapping and unwrapping automatically?  JDK 1.5 introduces a new feature called <em>auto-boxing and unboxing</em>, where the compiler could do the wrapping and unwrapping automatically for you based on their contexts.  For example:</p>
+<pre class="color-example">
+<span class="color-comment">// Java SE 5.0</span>
+Integer intObj = 5566;    <span class="color-comment">// autobox from int to Integer</span>
+int i = intObj;           <span class="color-comment">// auto-unbox from Integer to int</span>
+&nbsp;
+Double doubleObj = 55.66; <span class="color-comment">// autoboxing from double to Double</span>
+double d = doubleObj;     <span class="color-comment">// atuo-unbox from Double to double</span></pre>
+
+<p>With the auto-boxing and unboxing, your can practically ignore the distinction between a primitive and its wrapper object.</p>
+
+<h4><span class="font-code">java.lang.Math</span> - Mathematical Functions &amp; Constants</h4>
+<p>The <code>java.lang.Math</code> class provides mathematical constants (<code>PI</code> and <code>E</code>) and functions (such as <code>random()</code>, <code>sqrt()</code>).  A few functions are listed below for references.  Check the JDK API specification for details.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// static constants</span>
+public static double Math.PI;             <span class="color-comment">// constant &pi;</span>
+public static double Math.E;          <span class="color-comment">    // constant e</span><span class="color-comment">
+// static methods</span>
+public static double Math.random();   <span class="color-comment">    // generate a random number btw 0.0 &amp; 1.0</span>
+public static double Math.sin(double x);  <span class="color-comment">// sine function</span>
+public static double Math.exp(double x);  <span class="color-comment">// exponential function</span>
+public static double Math.log(double x);  <span class="color-comment">// natural logarithm of x</span>
+public static double Math.pow(double x, double y);  <span class="color-comment">// x raised to power of y</span>
+public static double Math.sqrt(double x); <span class="color-comment">// square root of x</span></pre>
+
+<p>For examples:</p>
+<pre class="color-example">
+double radius = 1.1;
+double area = radius * radius * Math.PI;
+int number = (int)Math.pow(2, 3);  <span class="color-comment">// int 2 and 3 implicitly promoted to double</span>
+                                   <span class="color-comment">// invoke pow(double, double) which return a double</span>
+                                   <span class="color-comment">// cast the result back to an int</span></pre>
+
+<p>Take note that <code>Math</code> class is <code>final</code> - you cannot create subclasses. The constructor of <code>Math</code> class is <code>private</code> - you cannot create instances.</p>
+
+<h4><span class="font-code">java.lang.Object</span> - The Common Java Root Class</h4>
+<p><code>java.lang.Object</code> is the superclass of all Java classes. In other words, all classes are subclass of <code>Object</code> - directly or indirectly. A reference of class <code>Object</code> can hold any Java object, because all Java classes are subclasses of <code>Object</code>.  In other word, every Java class <em>is-a</em> <code>Object</code>.</p>
+
+<p>Java adopts <em>a single common root class</em> approach in its design, to ensure that all Java classes have a set of common baseline properties.  The Object class defines and implements all these common attributes and behaviors that are necessary of all the Java objects running under the JVM.  For example,</p>
+<ul>
+<li>Ability to compare itself to another object, via <code>equals()</code> and <code>hashcode()</code>.</li>
+<li>Provides a text string description, via <code>toString()</code>.</li>
+<li>Inter-thread communication, via <code>wait()</code>, <code>notify()</code> and <code>notifyAll()</code>.</li>
+<li>Automatic garbage collection.</li>
+</ul>
+
+<p>The  <code>Object</code> class has the following <code>public</code> methods:</p>
+<pre class="color-syntax">
+<span class="color-comment">// The following methods must be overridden to be used</span>
+public boolean equals(Object obj);
+public int hashCode();
+<span class="color-comment">// The following methods may be overridden</span>
+protected Object clone();
+protected void finalize();
+public String toString();
+<span class="color-comment">// The following methods are final and cannot be overridden</span>
+public final Class getClass();
+public final void wait(...);
+public final void notify();
+public final void notifyAll();</pre>
+
+<p>The method <code>getClass()</code> returns a runtime representation of the class in a <code>Class</code> object.  A <code>Class</code> object exists for all the objects in Java.  It can be used, for example, to discover the fully-qualified name of a class, its members, its immediate superclass, and the interfaces that it implemented.  For example,</p>
+
+<pre class="color-example">
+objectName.getClass().getName()      <span class="color-comment">// retrieve the class name</span>
+objectName.getClass().newInstance()  <span class="color-comment">// create a new instance</span></pre>
+
+<p>The method <code>toString()</code> returns a text string description of the object's current state, which is extremely useful for debugging. The <code>toString()</code> is implicitly called by <code>println()</code> and the string concatenation operator <code>'+'</code>. The default implementation in <code>Object</code> returns the classname followed by it hash code (in hexadecimal) (e.g., <code>java.lang.Object@1e78fc6</code>). This method is meant to be overridden in the subclasses.</p>
+
+<p>The method <code>equals()</code> defines a notion of object equality, based on the object's contents rather than their references. However, the default implementation in <code>Object</code> class use &quot;<code>==</code>&quot; which compares the object's references. This method is meant to be overridden in the subclasses to compare the content via &quot;deep&quot; comparison, rather than references. The <code>equals()</code> shall be reflective and transitive, i.e., <code>a.equals(b)</code> is <code>true</code>, <code>b.equals(a)</code> shall be <code>true</code>; if <code>a.equals(b)</code> and <code>b.equals(c)</code> are <code>true</code>, then <code>a.equals(c)</code> shall be <code>true</code>.</p>
+
+<p>The method <code>hashCode()</code> maps an object into a hash value.  The same object must always produce the same hash value. Two objects which are <code>equals()</code> shall also produce the same hash value. The reverse is, however, not valid.</p>
+
+<p>The method <code>clone()</code> is used to make a duplicate of an object.  It creates an object of the same type from an existing object, and initializes the new object’s member variables to have the same value as the original object.  For example,</p>
+<pre class="color-example">
+<em>aCloneableObject</em>.clone()</pre>
+
+<p>The object to be cloned must implement <code>Cloneable</code> interface.  Otherwise, a <code>CloneNotSupportedException</code> will be thrown.  For reference type variable, only the reference is cloned, not the actual object.</p>
+
+<p>The methods <code>wait()</code>, <code>notify()</code>, <code>notifyAll()</code> are used in concurrent (multithreading) programming.  These methods are declared <code>final</code> and cannot be overridden in the subclasses.</p>
+
+<p>The method <code>finalize()</code> is run before an object is destroyed (i.e., destructor).  It can be used for cleanup operation before the object is garbage-collected.</p>
+
+
+<h4><span class="font-code">java.lang.System</span></h4>
+<p>The <code>System</code> class contains three <code>static</code> variables <code>System.in</code>, <code>System.out</code> and <code>System.err</code>, corresponding to the <em>standard input</em>, <em>output</em> and <em>error streams</em>, respectively.</p>
+
+The <code>System</code> class also contains many useful <code>static</code> methods, such as:
+<ul>
+<li><code>System.exit(returnCode)</code>: terminate the program with the return code.</li>
+<li><code>System.CurrentTimeMillis()</code> &amp; <code>System.nanoTime()</code>: get the current time in milliseconds and nanoseconds. These methods can be used for accurate timing control.</li>
+<li><code>System.getProperties()</code>: retrieving all the system properties.</li>
+</ul>
+
+<h4><span class="font-code">java.lang.Runtime</span></h4>
+
+<p>Every Java program is associated with an instance of <code>Runtime</code>, which can be obtained via the static method <code>Runtime.getRuntime()</code>.  You can interface with the operating environment via this <code>Runtime</code>, e.g., <code>exec(String <em>command</em>)</code> launches the <em><code>command</code></em> in a separate process.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// Call up another program</span>
+import java.io.IOException;
+   
+public class ExecTest {
+   public static void main(String[] args) {
+      try {
+         Runtime.getRuntime().exec(&quot;calc.exe&quot;);
+      } catch (java.io.IOException ex) {
+         ex.printStackTrace();
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Package <span class="font-code">java.util</span> - Frequently-Used Classes</h3>
+
+<h4><span class="font-code">java.util.Random</span></h4>
+<p>Although <code>Math.random()</code> method can be used to generate a random double between <code>[0.0, 1.0)</code>, the <code>java.util.Random</code> class provides more extensive operations on random number, e.g., you can set a random number generator with a initial seed value, to generate the same sequence of random values repeatedly.</p>
+
+<h5>EXAMPLE</h5>
+<pre class="color-example">
+import java.util.Random;
+public class <strong>TestRandomClass</strong> {
+   public static void main(String[] args) {
+      <span class="color-comment">// Allocate a pseudo-random number generator with default random seed</span>
+      Random random = new Random();
+         
+      <span class="color-comment">// Generate the next 10 pseudo-random uniformly distributed int value 
+      //   between 0(inclusive) and 100(exclusive) </span>
+      for (int i = 0; i &lt; 10; ++i) { 
+         System.out.print(random.nextInt(100) + &quot; &quot;);
+      }
+      System.out.println();
+      
+      <span class="color-comment">// Generate the next pseudo-random uniformly distributed double/float value 
+      //   between 0.0(inclusive) and 1.0(exclusive)</span> 
+      System.out.println(random.nextDouble());
+      System.out.println(random.nextFloat());
+      
+      <span class="color-comment">// Allocate a pseudo-random number generator with the specified seed value</span>
+      Random anotherRandom = new Random(12345);
+      <span class="color-comment">// Generate the &quot;same&quot; sequence of 10 integers</span>
+      for (int i = 0; i &lt; 10; ++i) { 
+         System.out.print(anotherRandom.nextInt(100) + &quot; &quot;);
+      }
+      System.out.println();
+   }
+}</pre>
+
+<p><span class="line-heading">EXAMPLE:</span> Simulating throw of 3 dice.</p>
+<pre class="color-example">
+<span class="color-comment">/*
+ * Throw 3 dices and get the total score.
+ * Also examine for 
+ * - 3-of-a-kind (all 3 dice are the same);
+ * - pair (any two dice are the same);
+ * - special (one dice is more than the sum of the other two)
+ */</span>
+import java.util.Random;
+public class DiceSimulation {
+   public static void main(String[] args) {
+      Random random = new Random();   <span class="color-comment">// Allocate a random generator</span>
+      int[] diceScores = new int[3];  <span class="color-comment">// Allocate 3 dice</span>
+      int totalScore = 0;
+      
+      <span class="color-comment">// Throw the dice</span>
+      for (int i = 0; i &lt; diceScores.length; ++i) {
+         diceScores[i] = random.nextInt(6) + 1;  <span class="color-comment">// 1 to 6</span>
+      }
+      
+      <span class="color-comment">// Compute total score</span>
+      System.out.print(&quot;The dice are:&quot;);
+      for (int diceScore : diceScores) {
+         totalScore += diceScore;
+         System.out.print(&quot; &quot; + diceScore);
+      }
+      System.out.println();
+      System.out.println(&quot;The total score is &quot; + totalScore);
+      
+      <span class="color-comment">// Check for 3-of-a-kind and pair</span>
+      if (diceScores[0] == diceScores[1]) {
+         if (diceScores[0] == diceScores[2]) {
+            System.out.println(&quot;It's a 3-of-a-kind&quot;);
+         } else {
+            System.out.println(&quot;It's a pair&quot;);
+         }
+      } else {
+         if (diceScores[0] == diceScores[2] || diceScores[1] == diceScores[2]) {
+            System.out.println(&quot;It's a pair&quot;);
+         }
+      }
+      
+      <span class="color-comment">// Check for special</span>
+      if ((diceScores[0] &gt; diceScores[1] + diceScores[2]) ||
+          (diceScores[1] &gt; diceScores[0] + diceScores[2]) ||
+          (diceScores[2] &gt; diceScores[0] + diceScores[1])) {
+         System.out.println(&quot;It's a special&quot;);
+      }
+   }
+}</pre>
+
+<h4><span class="font-code">java.util.Scanner</span> &amp; <span class="font-code">java.util.Formatter</span> (JDK 1.5)</h4>
+
+<p>Read &quot;<a href="J5b_IO.html#formattedtextio">Formatted-text I/O</a>&quot;.</p>
+
+<h4><span class="font-code">java.util.Arrays</span></h4>
+
+<p>The <code>Arrays</code> class contains various <code>static</code> methods for manipulating arrays, such as comparison, sorting and searching.</p>
+
+<p>For examples,</p>
+<ul>
+<li>The <code>static</code> method <code>boolean Arrays.equals(int[] a, int[] b)</code>, compare the contents of two <code>int</code> arrays and return boolean <code>true</code> or <code>false</code>.</li>
+<li>The static method <code>void Arrays.sort(int[] a)</code> sorts the given array in ascending numerical order.</li>
+<li>The static method <code>int binarySearch(int[] a, int key)</code> searches the given array for the specified value using the binary search algorithm.</li>
+<li>others</li>
+</ul>
+
+<p>[TODO] Example</p>
+
+<h3>Package <span class="font-code">java.text</span> - Frequently-Used Classes</h3>
+
+<p>The <code>java.text</code> package contains classes and interfaces for handling text, dates,  numbers and currencies with locale (internationalization) support.</p>
+<p>[TODO] compare with (JDK 1.5) <code>String.format()</code> and format specifiers and <code>Formatter</code>/<code>Sacnner</code> - check for locale support.</p>
+
+<p>The <code>NumberFormat</code>/<code>DecimalFormat</code> and <code>DateFormat</code>/<code>SimpleDateFormat</code> supports both output formatting (number/date -&gt; string) and input parsing (string -&gt; number/date) in a <em>locale-sensitive</em> manner for internationalization (i18n).</p>
+
+<h4><span class="font-code">java.text.NumberFormat</span></h4>
+<p>The <code>NumberFormat</code> class can be used to format numbers and currencies for any locale. To format a number for the current Locale, use one of the static factory methods:</p>
+
+<pre class="color-example">
+String myString = NumberFormat.getInstance().format(myNumber);</pre>
+
+<p>The available factory methods are:</p>
+
+<pre class="color-syntax">
+public static final NumberFormat getInstance();                <span class="color-comment">// Returns a general-purpose number format</span>
+public static final NumberFormat getInstance(Locale l);
+public static final NumberFormat getNumberInstance();          <span class="color-comment">// Returns a general-purpose number format</span>
+public static final NumberFormat getNumberInstance(Locale l); 
+public static final NumberFormat getIntegerInstance();         <span class="color-comment">// Returns a integer number format</span>
+public static final NumberFormat getIntegerInstance(Locale l);
+public static final NumberFormat getCurrencyInstance();        <span class="color-comment">// Returns a currency number format</span>
+public static final NumberFormat getCurrencyInstance(Locale l);
+public static final NumberFormat getPercentInstance();         <span class="color-comment">// Returns a percent number format</span>
+public static final NumberFormat getPercentInstance(Locale l);</pre>
+
+<p>The default currency format rounds the number to two decimal places; the default percent format rounds to the nearest integral percent; the default integer format rounds to the nearest integer.</p>
+
+<h5>Example 1</h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+import java.text.NumberFormat;
+import java.util.Locale;
+ 
+public class TestNumberCurrencyFormat {
+   public static void main(String[] args) {
+      Locale[] locales = { Locale.US, Locale.FRANCE, Locale.JAPAN };
+ 
+      for (Locale loc:locales) {
+         NumberFormat formatter = NumberFormat.getInstance(loc);
+         String formattedNumber = formatter.format(123456789.12345);
+         System.out.format(&quot;%15s: %s\n&quot;, loc.getDisplayCountry(), formattedNumber);
+      }
+ 
+      for (Locale loc:locales) {
+         NumberFormat formatter = NumberFormat.getCurrencyInstance(loc);
+         String formattedNumber = formatter.format(123456789.12345);
+         System.out.format(&quot;%15s: %s\n&quot;, loc.getDisplayCountry(), formattedNumber);
+      }
+ 
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+  United States: 123,456,789.123
+         France: 123 456 789,123
+          Japan: 123,456,789.123
+  United States: $123,456,789.12
+         France: 123 456 789,12 €
+          Japan: ￥123,456,789</pre>
+
+<h5>Example 2</h5>
+<p>In this example, we use <code>static</code> method <code>NumberFormat.getAvailableLocales()</code> to retrieve all supported locales, and try out <code>getInstance()</code>, <code>getIntegerInstance()</code>, <code>getCurrencyInstance()</code>, <code>getPercentInstance()</code>.</p>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44</pre>
+</td>
+<td>
+<pre>
+import java.util.Locale;
+import java.text.NumberFormat;
+ 
+public class NumberFormatTest {
+   public static void main(String[] args) {
+      <span class="color-comment">// Print a number using the localized number, integer, currency,</span>
+      <span class="color-comment">//  and percent format for each available locale</span>
+      Locale[] locales = NumberFormat.getAvailableLocales();
+      double myNumber = -1234.56;
+      NumberFormat format;
+ 
+      <span class="color-comment">// General Number format</span>
+      System.out.println(&quot;General Format:&quot;);
+      for (Locale locale : locales) {
+         if (locale.getCountry().length() == 0) continue;  <span class="color-comment">// Skip language-only locales</span>
+         format = NumberFormat.getInstance(locale);
+         System.out.printf(&quot;%40s -&gt; %s%n&quot;, locale.getDisplayName(), format.format(myNumber));
+      }
+ 
+      <span class="color-comment">// Integer format</span>
+      System.out.println(&quot;Integer Format:&quot;);
+      for (Locale locale : locales) {
+         if (locale.getCountry().length() == 0) continue;  <span class="color-comment">// Skip language-only locales</span>
+         format = NumberFormat.getIntegerInstance(locale);
+         System.out.printf(&quot;%40s -&gt; %s%n&quot;, locale.getDisplayName(), format.format(myNumber));
+      }
+ 
+      <span class="color-comment">// Currency format</span>
+      System.out.println(&quot;Currency Format:&quot;);
+      for (Locale locale : locales) {
+         if (locale.getCountry().length() == 0) continue;  <span class="color-comment">// Skip language-only locales</span>
+         format = NumberFormat.getCurrencyInstance(locale);
+         System.out.printf(&quot;%40s -&gt; %s%n&quot;, locale.getDisplayName(), format.format(myNumber));
+      }
+ 
+      <span class="color-comment">// Percent format</span>
+      System.out.println(&quot;Percent Format:&quot;);
+      for (Locale locale : locales) {
+         if (locale.getCountry().length() == 0) continue;  <span class="color-comment">// Skip language-only locales</span>
+         format = NumberFormat.getPercentInstance(locale);
+         System.out.printf(&quot;%40s -&gt; %s%n&quot;, locale.getDisplayName(), format.format(myNumber));
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>You can also use the <code>NumberFormat</code> to parse an input string (represent in the locale) to a <code>Number</code>:</p>
+<pre class="color-syntax">
+public Number parse(String source) throws ParseException</pre>
+
+
+<h4><span class="font-code">java.text.DecimalFormat</span></h4>
+
+<p>The <code>DecimalFormat</code> class is a subclass of <code>NumberFormat</code>, which adds support for formatting floating-point numbers, such as specifying precision, leading and trailing zeros, and prefixes and suffixes. A <code>DecimalFormat</code> object has a pattern to represent the format of the decimal number, e.g.,  &quot;<code>#,###,##0.00</code>&quot;, where <code>0</code> denotes zero padding, and <code>#</code> without the zero-padding.</p>
+
+<p>To use a <code>DecimalFormat</code> with the default locale, invoke its constructor with the pattern, e.g.,</p>
+
+<pre class="color-example">
+double d = -12345.789
+DecimalFormat format = new DecimalFormat("$#,###,##0.00"); <span class="color-comment">// default locale</span>
+System.out.println(format.format(d));                      <span class="color-comment">// -$12,345.79</span>
+ 
+format.applyPattern(&quot;#,#00.0#;(#,#00.0#)&quot;); <span class="color-comment">// &quot;positive;negative&quot;</span><br />System.out.println(format.format(d));       <span class="color-comment">// (12,345.79)</span>
+</pre>
+
+<p>To use a <code>DecimalFormat</code> with locale, get a <code>NumberFormat</code> by calling the <code>getInstance()</code> and downcast it to <code>DecimalFormat</code>. For example,</p>
+
+<pre class="color-example">
+double d = -12345.789;
+NumberFormat nf = NumberFormat.getInstance(Locale.GERMAN);
+if(nf instanceof DecimalFormat) {
+   DecimalFormat df = (DecimalFormat) nf;
+   df.applyPattern(&quot;##,#00.00#&quot;);
+   System.out.println(df.format(d));  <span class="color-comment">// -12.345,789</span>
+}</pre>
+
+<h4><span class="font-code">java.text.DateFormat</span></h4>
+
+<p>The <code>DateFormat</code> class can be used to format a date instance with locale.</p>
+<p>Read &quot;<a href="DateTimeCalendar.html">Date and Time</a>&quot;.</p>
+
+<p>To format a date/time for the current locale, use one of the <code>static</code> factory methods:</p>
+<pre class="color-example">
+myString = DateFormat.getDateInstance().format(myDate);</pre>
+
+<p>The available factory methods for getting a <code>DateFormat</code> instance are:</p>
+<pre class="color-syntax">
+public static final DateFormat getTimeInstance();
+public static final DateFormat getTimeInstance(int timeStyle);   <span class="color-comment">// DateFormat.FULL, LONG, MEDIUM and SHORT</span>
+public static final DateFormat getTimeInstance(int timeStyle, Locale l)
+public static final DateFormat getDateInstance();
+public static final DateFormat getDateInstance(int dateStyle);
+public static final DateFormat getDateInstance(int dateStyle, Locale l)
+public static final DateFormat getDateTimeInstance();
+public static final DateFormat getDateTimeInstance(int dateStyle, int timeStyle);
+public static final DateFormat getDateTimeInstance(int dateStyle, int timeStyle, Locale l);
+public static final DateFormat getInstance();    <span class="color-comment">// default DateTime formatter in SHORT style</span></pre>
+
+<p>The exact display for each style depends on the locales, but in general,</p>
+<ul>
+<li><code>DateFormat.SHORT</code> is completely numeric, such as 12.13.52 or 3:30pm</li>
+<li><code>DateFormat.MEDIUM</code> is longer, such as Jan 12, 1952</li>
+<li><code>DateFormat.LONG</code> is longer, such as January 12, 1952 or 3:30:32pm</li>
+<li><code>DateFormat.FULL</code> is pretty completely specified, such as Tuesday, April 12, 1952 AD or 3:30:42pm PST.</li>
+</ul>
+
+<p>You can also use the <code>DateFormat</code> to parse an input string containing a date in the locale to a <code>Date</code> object.</p>
+<pre class="color-syntax">
+public Date parse(String source) throws ParseException</pre>
+
+<h4><span class="font-code">java.text.SimpleDateFormat</span></h4>
+
+<p>The <code>SimpleDateFormat</code> is a concrete subclass of <code>DataFormat</code> for formatting and parsing dates in a locale-sensitive manner. It supports output formatting (date to string), input parsing (string to date), and normalization.</p>
+
+<p>You can construct a <code>SimpleDateFormat</code> via one of its constructors:</p>
+<pre class="color-syntax">
+public SimpleDateFormat(String pattern);
+public SimpleDateFormat(String pattern, Locale locale);</pre>
+
+<p>For example, [TODO]</p>
+
+<h3>Writing Javadoc</h3>
+
+<p>A great feature in Java is the documentation can be integrated with the source codes, via the so-called JavaDoc (Java Documentation) comments.  In other languages, documentation typically is written in another file, which easily gets out-of-sync with the source codes.</p>
+
+<p>JavaDoc comments begin with <code>/**</code> and end with <code>*/</code>.  They are meant for providing API documentation to the users of the class. JavaDoc comments should be provided to describe the class itself; and the <code>public</code> variables, constructors, and methods.</p>
+
+<p>You can use JDK utility <code>javadoc</code> to extract these comments automatically and produce API documentation in a standard format.</p>
+
+<p>With JavaDoc comments, you can keep the program documentation inside the same source file instead of using another documentation file. This provides ease in synchronization.</p>
+
+<p>JavaDoc comments and API documentation are important for others to re-use your program.  Write JavaDoc comments while you are writing the program.  Do not leave them as after-thought.</p>
+
+<h5>Example</h5>
+
+<p>Let's add the JavaDoc comments to all the <code>public</code> entities of our <code>Circle</code> class.</p>
+
+<pre class="color-example">
+<span class="color-comment">/**
+ * The Circle class models a circle with a radius and color.
+ *
+ * @author CHC
+ */</span>
+public class Circle {
+
+   <span class="color-comment">// private instance variables</span>
+   private double radius;
+   private String color;
+
+   <span class="color-comment">/**
+    * Construct a circle with default radius of 1.0 and color of blue.
+    */</span>
+   public Circle() {
+      radius = 1.0;
+      color = "blue";
+   }
+
+   <span class="color-comment">/** Construct a circle with the given radius and color.
+    *  @param radius  The radius of the circle
+    *  @param color   The color of the circle
+    */
+   </span>public Circle(double radius, String color) {
+      this.radius = radius;
+      this.color = color;
+   }
+
+   <span class="color-comment">/** Return the radius of the circle.
+    *  @return  The radius of the circle.
+    */</span>
+   public double getRadius() {
+      return radius;
+   }
+
+   <span class="color-comment">/** Set the radius of the circle.
+    *  @param radius  The radius of the circle to be set.
+    */
+   </span>public void setRadius(double radius) {
+      this.radius = radius;
+   }
+
+   <span class="color-comment">/** Return the color of the circle.
+    *   @return  The color of the circle.
+    */</span>
+   public String getColor() {
+      return color;
+   }
+
+   <span class="color-comment">/** Set the color of the circle.
+    *   @param color  The color of the circle to be set.
+    */</span>
+   public void setColor(String color) {
+      this.color = color;
+   }
+
+   <span class="color-comment">/** Return the area of the circle.
+    *  @return  The area of the circle.
+    */
+   </span>public double getArea() {
+      return radius * radius * Math.PI;
+   }
+
+   <span class="color-comment">/** Return a short description of this instance.
+    *  @return  A short string description.
+    */
+   </span>public String toString() {
+      return "Circle[radius=" + radius + ", color=" + color + "]";
+   }
+}</pre>
+
+<p>You can produce the standard API documentation, via JDK utility <code>javadoc</code>, as follows:</p>
+
+<pre class="color-command">
+<span class="color-comment">// cd to the source directory</span>
+javadoc Circle.java</pre>
+
+<p>Browse the resultant API, by opening the &quot;<code>index.html</code>&quot;.</p>
+
+
+  
+<a class="references" href="../howto/References.html#java">LINK TO JAVA REFERENCES &amp; RESOURCES</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.8.0<br />
+Last modified: April, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

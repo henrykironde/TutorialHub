@@ -1,0 +1,1508 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Object-Oriented Programming (OOP) in PHP</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Object-Oriented Programming (OOP) in PHP</h1>
+<h2>(not for the dummies)</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<p>I shall assume that you are familiar with Object-oriented Programming (OOP) concepts and terminologies. Otherwise, read &quot;Java OOP&quot; or &quot;C++ OOP&quot;.</p>
+
+<h3>Getting started by Examples</h3>
+
+<p>Let's get started with examples on:</p>
+<ul>
+<li>Defining a class with private member variables, constructor, destructor, public getters/setters and public methods;</li>
+<li>Allocating instances instances of the class;</li>
+<li>Accessing instance's variable/functions.</li>
+</ul>
+
+<h4>Example: <span class="font-code">MyCircle</span> Class</h4>
+
+<p>We shall begin with a class called <code>MyCircle</code>, which models a circle with a specific radius, as shown in the following class diagram.</p>
+
+<img src="images/PhpMyCircleClass.png" alt="Circle Class" class="image-center" />
+
+<h5 class="font-code">MyCircle.php</h5>
+<p>The definition of the <code>MyCircle</code> class.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</pre>
+</td>
+<td>
+<pre>
+&lt;?php   <span class="color-comment"> // MyCircle.php</span>
+<span class="color-comment">/**
+ * The MyCircle class models a Circle with a specific radius.
+ */</span>
+class MyCircle {
+  <span class="color-comment"> // private variable</span>
+   private $radius;  <span class="color-comment"> // radius of the circle</span>
+ 
+   <span class="color-comment">/**
+    * Constructor to allocate an instance and initialize its private variables.
+    * @param number $radius: radius of the circle, with default value of 1
+    */</span>
+   public function __construct($radius = 1) {
+      $this-&gt;radius = $radius;
+        <span class="color-comment"> // &quot;$this&quot; refers to the current instance.</span>
+      echo 'Constructed an instance of ', __CLASS__, ' with radius=', $this-&gt;radius, &quot;.\n&quot;;
+        <span class="color-comment"> // &quot;__CLASS__&quot; is a special magic constant that stores the class name.</span>
+   }
+ 
+   <span class="color-comment">/**
+    * Destructor - invoked just before the instance is deallocated.
+    */</span>
+   public function __destruct() {
+      echo 'Destructed instance ', $this, ' of ', __CLASS__, &quot;.\n&quot;;
+   }
+ 
+   <span class="color-comment">/**
+    * Getter for radius.
+    * @return number: radius of the circle.
+    */</span>
+   public function getRadius() { return $this-&gt;radius; }
+        <span class="color-comment"> // You cannot omit $this-&gt; (unlike Java).</span>
+ 
+   <span class="color-comment">/**
+    * Setter for radius.
+    * @param number $radius: radius of the circle.
+    */</span>
+   public function setRadius($radius) { $this-&gt;radius = $radius; }
+ 
+   <span class="color-comment">/**
+    * Return a string representation of this instance.
+    * @return string: in the form of 'MyCircle[radius=r]'.
+    */</span>
+   public function __toString() {
+      return __CLASS__ . '[radius=' . $this-&gt;radius . ']';
+   }
+ 
+   <span class="color-comment">/**
+    * Return the area of this circle.
+    * @return number: area of the circle.
+    */</span>
+   public function getArea() {
+      return $this-&gt;radius * $this-&gt;radius * pi();
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5 class="font-code">MyCircleTest.php</h5>
+<p>A test driver for the <code>MyCircle</code> class.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+</td>
+<td>
+<pre>
+&lt;?php <span class="color-comment"> // MyCircleTest.php</span>
+require_once 'MyCircle.php';
+ 
+<span class="color-comment">// Allocate an instance of class MyCircle</span>
+$c1 = new MyCircle(1.1); <span class="color-comment"> // Test constructor</span>
+ 
+<span class="color-comment">// Try different ways of printing an object</span>
+var_dump($c1);
+print_r($c1);
+var_export($c1);
+echo &quot;\n&quot;;
+ 
+echo &quot;Radius is: {$c1-&gt;getRadius()}\n&quot;;<span class="color-comment"> // Test getter</span>
+$c1-&gt;setRadius(5);          <span class="color-comment"> // Test setter</span>
+echo &quot;$c1\n&quot;;               <span class="color-comment"> // Call __toString() implicitly</span>
+echo &quot;{$c1-&gt;getArea()}\n&quot;;  <span class="color-comment"> // Test getArea()</span>
+ 
+$c2 = new MyCircle();  <span class="color-comment"> // Test construtor with default argument</span>
+echo &quot;$c2\n&quot;;
+ 
+echo &quot;Done.\n&quot;;
+<span class="color-comment">// Run the destructor before deallocating the instances at end of file.</span>
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>You can run the program via the PHP CLI (Command-Line Interface):</p>
+<pre class="color-command">
+$ php MyCircleTest.php</pre>
+
+<p>The expected outputs are:</p>
+
+<pre class="output">
+Constructed an instance of MyCircle with radius=1.1.
+object(MyCircle)#1 (1) {   <span class="color-comment">// var_dump()</span>
+  [&quot;radius&quot;:&quot;MyCircle&quot;:private]=&gt;
+  float(1.1)
+}
+MyCircle Object   <span class="color-comment">// print_r() (for human-readable output)</span>
+(
+    [radius:MyCircle:private] =&gt; 1.1
+)
+MyCircle::__set_state(array(  <span class="color-comment">// var_export(), which can be re-imported in a PHP program</span>
+   'radius' =&gt; 1.1000000000000001,
+))
+Radius is: 1.1
+MyCircle[radius=5]
+78.539816339745
+Constructed an instance of MyCircle with radius=1.
+MyCircle[radius=1]
+Done.
+Destructed instance MyCircle[radius=1] of MyCircle.
+Destructed instance MyCircle[radius=5] of MyCircle.</pre>
+
+<h4>Example: MyTime Class</h4>
+
+<p>The <code>MyTime</code>  class models a time instance of hour, minute and second, as shown in the following class diagram.</p>
+
+<img src="images/PhpMyTimeClass.png" alt="MyTime class diagram" class="image-center"/>
+
+<h5 class="font-code">MyTime.php</h5>
+
+<p>The class definition for the <code>MyTime</code> class.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117</pre>
+</td>
+<td>
+<pre>
+&lt;?php     <span class="color-comment"> // MyTime.php</span>
+<span class="color-comment">/**
+ * MyTime class models an instance of time.
+ */</span>
+class MyTime {
+  <span class="color-comment"> // private properties</span>
+   private $hour, $minute, $second;
+ 
+   <span class="color-comment">/**
+    * Constructor to allocate a new instance and initialize all private variables.
+    * @param int $hour: hour in 0-23
+    * @param int $minute: minute in 0-59
+    * @param int $second: second in 0-59
+    */</span>
+   public function __construct($hour = 0, $minute = 0, $second = 0) {
+      $this-&gt;setTime($hour, $minute, $second);
+      echo 'Constructed an instance of ', __CLASS__, ' with value ', $this, &quot;.\n&quot;;
+         <span class="color-comment">// &quot;__CLASS__&quot; is a special magic constant that stores the class name.
+         // &quot;$this&quot; refers to the current instance.</span>
+   }
+ 
+   <span class="color-comment">/**
+    * Destructor - invoked just before the instance is deallocated. 
+    */</span>
+   public function __destruct() {
+      echo 'Destructed instance ', $this, ' of ', __CLASS__, &quot;.\n&quot;;
+   }
+ 
+   <span class="color-comment">/**
+    * Getter for hour
+    * @return int hour
+    */</span>
+   public function getHour()   { return $this-&gt;hour;   }
+         <span class="color-comment">// You cannot omit $this-> (unlike Java).</span>
+   <span class="color-comment">/**
+    * Getter for minute
+    * @return int minute
+    */</span>
+   public function getMinute() { return $this-&gt;minute; }
+   <span class="color-comment">/**
+    * Getter for second
+    * @return int second
+    */</span>
+   public function getSecond() { return $this-&gt;second; }
+ 
+   <span class="color-comment">/**
+    * Setter for hour
+    * @param int $hour: hour in 0-23
+    */</span>
+   public function setHour($hour) {
+      if ($hour &lt; 0 or $hour &gt; 23) {
+         throw new InvalidArgumentException(&quot;Invalid hour $hour. Hour shall be 0-23.\n&quot;);
+      }
+      $this-&gt;hour = $hour;
+   }
+   <span class="color-comment">/**
+    * Setter for minute
+    * @param int $minute: minute in 0-59
+    */</span>
+   public function setMinute($minute) {
+      if ($minute &lt; 0 or $minute &gt; 59) {
+         throw new InvalidArgumentException(&quot;Invalid minute $minute. Minute shall be 0-59.\n&quot;);
+      }
+      $this-&gt;minute = $minute;
+   }
+   <span class="color-comment">/**
+    * Setter for second
+    * @param int $second: second in 0-59
+    */</span>
+   public function setSecond($second) {
+      if ($second &lt; 0 or $second &gt; 59) {
+         throw new InvalidArgumentException(&quot;Invalid second $second. Second shall be 0-59.\n&quot;);
+      }
+      $this-&gt;second = $second;
+   }
+ 
+   <span class="color-comment">/**
+    * Set the hour, minute and second.
+    * @param int $hour: hour in 0-23
+    * @param int $minute: minute in 0-59
+    * @param int $second: second in 0-59
+    */</span>
+   public function setTime($hour = 0, $minute = 0, $second = 0) {
+      $this-&gt;setHour($hour);
+      $this-&gt;setMinute($minute);
+      $this-&gt;setSecond($second);
+   }
+ 
+   <span class="color-comment">/**
+    * Return a string representation of this instance.
+    * @return string: in the form of &quot;HH:MM:SS&quot;.
+    */</span>
+   public function __toString() {
+      return sprintf(&quot;%02d:%02d:%02d&quot;, $this-&gt;hour, $this-&gt;minute, $this-&gt;second);
+   }
+ 
+   <span class="color-comment">/**
+    * Increment one second.
+    * @return MyTime $this to support chain operations.
+    */</span>
+   public function nextSecond() {
+      ++$this-&gt;second;
+      if ($this-&gt;second &gt; 59) {
+         $this-&gt;second = 0;
+         ++$this-&gt;minute;
+      }
+      if ($this-&gt;minute &gt; 59) {
+         $this-&gt;minute = 0;
+         ++$this-&gt;hour;
+      }
+      if ($this-&gt;hour &gt; 23) {
+         $this-&gt;hour = 0;
+      }
+      return $this;
+   }
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5 class="font-code">MyTimeTest.php</h5>
+<p>A test driver for the <code>MyTime</code> class.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre>
+</td>
+<td>
+<pre>
+&lt;?php <span class="color-comment"> // MyTimeTest.php</span>
+require_once 'MyTime.php';
+ 
+<span class="color-comment">// Allocate an instance of class MyTime</span>
+$t1 = new MyTime(23, 59, 59); <span class="color-comment"> // Call constructor</span>
+<span class="color-comment">// Try different ways of printing an object</span>
+var_dump($t1);
+print_r($t1);
+var_export($t1);
+echo &quot;\n&quot;;
+ 
+echo &quot;Hour is: {$t1-&gt;getHour()}\n&quot;;<span class="color-comment"> // Call getter</span>
+$t1-&gt;setHour(12);         <span class="color-comment"> // Call setter</span>
+echo &quot;$t1\n&quot;;             <span class="color-comment"> // Call __toString() implicitly</span>
+ 
+<span class="color-comment">// Increment 3 second and invoke __toString()</span>
+echo $t1-&gt;nextSecond()-&gt;nextSecond()-&gt;nextSecond(), &quot;\n&quot;;
+ 
+<span class="color-comment">// Allocate more instances</span>
+$t2 = new MyTime(12, 34); <span class="color-comment"> // default second</span>
+echo &quot;$t2\n&quot;;
+ 
+$t3 = new MyTime; <span class="color-comment"> // default hour, minute and second</span>
+echo &quot;$t3\n&quot;;
+ 
+<span class="color-comment">// Exception handling with try-catch</span>
+try {
+   $t4 = new MyTime(25);
+   echo &quot;This statement would not run, if an exception was thrown.&quot;;
+} catch (InvalidArgumentException $e) {
+   echo 'Caught InvalidArgumentException: ', $e-&gt;getMessage(), &quot;\n&quot;;
+}
+ 
+echo &quot;Done.\n&quot;;
+<span class="color-comment">// Run the destructor before deallocating the instances at end of file.</span>
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The output is:</p>
+
+<pre class="output">
+Constructed an instance of MyTime with value 23:59:59.
+object(MyTime)#1 (3) {   <span class="color-comment">//var_dump()</span>
+  [&quot;hour&quot;:&quot;MyTime&quot;:private]=&gt;
+  int(23)
+  [&quot;minute&quot;:&quot;MyTime&quot;:private]=&gt;
+  int(59)
+  [&quot;second&quot;:&quot;MyTime&quot;:private]=&gt;
+  int(59)
+}
+MyTime Object  <span class="color-comment">//print_r()</span>
+(
+    [hour:MyTime:private] =&gt; 23
+    [minute:MyTime:private] =&gt; 59
+    [second:MyTime:private] =&gt; 59
+)
+MyTime::__set_state(array(  <span class="color-comment">//var_export() - in a format can be used imported</span>
+   'hour' =&gt; 23,
+   'minute' =&gt; 59,
+   'second' =&gt; 59,
+))
+Hour is: 23
+12:59:59
+13:00:02
+Constructed an instance of MyTime with value 12:34:00.
+12:34:00
+Constructed an instance of MyTime with value 00:00:00.
+00:00:00
+Caught InvalidArgumentException: Invalid hour 25. Hour shall be 0-23.
+Done.
+Destructed instance 00:00:00 of MyTime.
+Destructed instance 12:34:00 of MyTime.
+Destructed instance 13:00:02 of MyTime.</pre>
+
+<h4>How OOP works in OOP</h4>
+
+<h5>Defining a Class</h5>
+
+<p>A class consists of member variables and functions. To define a class, use keyword <code>class</code>, as follows:</p>
+<pre class="color-syntax">
+class {
+   <em>memberVariables</em>;
+   <em>memberFunctions</em>;
+}</pre>
+
+<h5>Constructor <span class="font-code">__construct()</span></h5>
+
+<p>Constructor is a special function called <code>__construct()</code>. Constructor is used to construct an instance and initialize the instance variables. To construct an instance of a class, you need to invoke the constructor via the <code>new</code> operator (as illustrated in the test driver). Constructor does not return anything, hence, there shall not be a <code>return</code> statement inside a constructor.</p>
+
+<pre class="color-syntax">
+public function __construct( <em>arguments </em>) {
+   <em>body</em>;
+}</pre>
+
+<p>PHP does NOT support function overloading (unlike C++ and Java). In other words, there is only one version of the constructor. However, in PHP, you can provide default value to function parameters, including constructors. In this way, the constructor can be invoked with different set of arguments. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Constructor of MyTime class</span>
+public function __construct($hour = 0, $minute = 0, $second = 0) { ...... }
+
+<span class="color-comment">// Invoke the constructor</span>
+$t1 = new MyTime(23, 59, 59);
+$t2 = new MyTime(23, 59); <span class="color-comment">// default second</span>
+$t3 = new MyTime(23);     <span class="color-comment">// default minute and second</span>
+$t3 = new MyTime;         <span class="color-comment">// default hour, minute and second</span></pre>
+
+<p>PHP does not provide a default no-arg (no-argument) constructor (unlike Java). You need to explicitly define the constructor, if required.</p>
+
+<h5>Destructor <span class="font-code">__destruct()</span></h5>
+
+<p>Similarly, you can define a destructor called <code>__destruct()</code> for a class. Destructor shall not carry any parameter. It will be run before the instance is destructed (or deallocated). Destructors are not commonly-used.</p>
+
+<p>From the outputs of the above examples, it can be seen that the destructor is called on all objects when end-of-file is reached, before the program exits. To explicitly trigger the destructor, you can invoke <code>unset()</code> on an object. For example,</p>
+
+<pre class="color-example">
+$t1 = new MyTime;
+unset($t1); <span class="color-comment">// Invoke destructor</span></pre>
+
+<h5>Allocating an Instance - the <span class="font-code">new</span> Operator</h5>
+
+<p>To allocate an instance of a class, use the <code>new</code> operator to invoke a constructor, in the form of <code>new <em>ClassName</em>(<em>parameters</em>)</code>.</p>
+<pre class="color-syntax">
+<span class="color-comment"></span><span class="color-comment">// Examples</span>
+$t1 = new MyTime(23, 59, 59);
+$t2 = new MyTime;  <span class="color-comment">// using default value for arguments</span></pre>
+
+<h5>Accessing Members - the Member-of Operator (<span class="font-code">-&gt;</span>)</h5>
+
+<p>To access member variables/functions, use member-of operator (<code>-&gt;</code>), in the form of <code>$<em>instanceName</em>-&gt;<em>memberName</em></code>. For example,</p>
+
+<pre class="color-example">
+$t1 = new MyTime(23, 59, 59);
+echo $t1-&gt;getHour();  <span class="color-comment">// Invoke getter</span>
+$t1-&gt;setHour(12);     <span class="color-comment">// Invoke setter</span></pre>
+
+<h5><span class="font-code">$this</span></h5>
+<p><code>$this</code> refers to the current instance. To reference a member variable/function WITHIN the class definition, you MUST precede with <code>$this</code>, e.g., <code>$this-&gt;hour</code>, <code>$this-&gt;getHour()</code>. Take note that you cannot omit <code>$this</code> (unlike Java).</p>
+
+<h5>Access Control Modifiers - <span class="font-code">public</span>, <span class="font-code">private</span> and <span class="font-code">protected</span></h5>
+<p>We can use <em>access control modifier</em> to restrict access to a member variable/function. PHP supports these <em>access control modifiers</em> for member variables and functions:</p>
+<ul>
+<li><span class="line-heading font-code">public</span>: Accessible by all. This is the default.</li>
+<li><span class="line-heading font-code">private</span>: Accessible within the class only.</li>
+<li><span class="line-heading font-code">protected</span>: Accessible by subclasses.</li>
+</ul>
+
+<h5>Getters and Setters</h5>
+<p>Getters are setters are used to access and mutate private member variables, as shown in the above examples.</p>
+
+<p>It is a common PHP practice to use the same function for getter cum setter, differentiated by its argument. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Getter cum Setter</span>
+public function hour ($hour = NULL) {
+   if ($hour !== NULL) {
+      $this->hour = $hour;
+   }
+   return $this->hour;
+}
+
+<span class="color-comment">// Test</span>
+echo $t1->hour(), "\n";     <span class="color-comment">// Getter</span>
+echo $t1->hour(18), "\n";   <span class="color-comment">// Setter</span></pre>
+
+<h5><span class="font-code">__toString()</span></h5>
+<p><code>__toString()</code> is one of the so-called <em>magic methods</em>, which shall return a string representation of the current instance. It is implicitly invoked when the object is to be treated as a string. For example,</p>
+
+<pre class="color-example">
+$t1 = new MyTime(12, 34, 56);
+echo $t1;  <span class="color-comment">// Invoke __toString() implicitly.</span></pre>
+
+<p>Take note that if <code>__toString()</code> is not defined, &quot;<code>echo $t1</code>&quot; will cause a runtime error.</p>
+
+<p><code>__toString()</code> is similar to <code>toString()</code> in Java. However, unlike Java classes which always inherit a <code>toString()</code> from the root superclass <code>java.lang.Object</code>, <code>__toString()</code> in PHP must be explicitly defined for each class.</p>
+
+<h5><span class="font-code">__CLASS__</span></h5>
+<p><code>__CLASS__</code> is one of the so-called <em>magic constants</em> in PHP, which keeps the class name in string.</p>
+
+<h5>DocBlock (or PhpDoc) Comment</h5>
+<p>Comments enclosed with <code>/** .... */</code> are known as &quot;DocBlock&quot; or &quot;PhpDoc&quot;, which can be extracted to produce documentation (like JavaDoc). You can use markups like <code>params</code> and <code>return</code> to target the descriptions.</p>
+
+<h5>Exception Handling and <span class="font-code">try-catch-finally</span></h5>
+
+<p>The statements in the try block are executed in sequence. If one of the statements throws an exception, the rest of the statements will not be executed. Instead, execution switches to the catch block. If all the statements in try block do not throw any exception, then try block completes, and catch block is not executed. Take note that execution always resumes after the try-catch block, regardless of whether there is any exception.</p>
+
+<p>The try-catch construct supports graceful handling of errors/exception. Without try-catch, the program will be abruptly terminated when an exception is encountered. The try-catch construct also segregates the main logic and the exception handling logic, for better software engineering.</p>
+
+
+<h3>More OOP</h3>
+
+<h4><span class="font-code">static</span></h4>
+
+<p>A <code>static</code> member (variable or function) belongs to the class, not to the instances. In other words, all the instances share the same copy of a static member.</p>
+
+<p>For example, let rewrite our MyCircle class to include a <code>static</code> variable <code>$count</code> to maintain the count of circles created, as shown in the following class diagram. Note that static members are underlined in the UML notation.</p>
+
+<img src="images/PhpMyCircleWithCountClass.png" alt="MyCircleWithCount.png" class="image-center" />
+
+<h5 class="font-code">MyCircleWithCount.php</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre>
+</td>
+<td>
+<pre>
+&lt;?php   <span class="color-comment"> // MyCircleWithCount.php</span>
+<span class="color-comment">/**
+ * The MyCircleWithCount class models a Circle with a specific radius.
+ * It also maintains the number of circle instances created, via a static variable.
+ */</span>
+class MyCircleWithCount {
+  <span class="color-comment"> // static variable</span>
+   private static $count = 0; <span class="color-comment"> // count of instances</span>
+ 
+  <span class="color-comment"> // private variable</span>
+   private $radius;  <span class="color-comment"> // radius of the circle</span>
+ 
+   <span class="color-comment">/**
+    * Constructor to allocate an instance and initialize its private variables.
+    * @param number $radius: radius of the circle, with default value of 1
+    */</span>
+   public function __construct($radius = 1) {
+      $this-&gt;radius = $radius;
+      echo 'Constructed a ', __CLASS__, '. Number of circles is: ', ++self::$count, &quot;.\n&quot;;
+           <span class="color-comment"> // You MUST use :: (scope resoluation operator) instead of -&gt; (member-of operator) to</span>
+           <span class="color-comment"> //   access static members.</span>
+           <span class="color-comment"> // Within class defintion, SELF refers to this class.</span>
+           <span class="color-comment"> // Pre-increment $count before echo.</span>
+   }
+ 
+   <span class="color-comment">/**
+    * Destructor - invoked just before the instance is deallocated.
+    */</span>
+   public function __destruct() {
+      echo 'Destructed a ', __CLASS__, '. Number of circles is: ', --self::$count, &quot;.\n&quot;;
+   }
+ 
+   public function getRadius() { return $this-&gt;radius; }
+   public function setRadius($radius) { $this-&gt;radius = $radius; }
+   public function __toString() {
+     return __CLASS__ . '[radius=' . $this-&gt;radius . ']';
+   }
+   public function getArea() {
+      return $this-&gt;radius * $this-&gt;radius * pi();
+   }
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5 class="font-code">MyCircleWithCountTest.php</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre>
+</td>
+<td>
+<pre>
+&lt;?php   <span class="color-comment"> // MyCircleWithCountTest.php</span>
+require_once 'MyCircleWithCount.php';
+ 
+$c1 = new MyCircleWithCount(1.1);
+$c2 = new MyCircleWithCount(2.2);
+unset($c2);  <span class="color-comment"> // deallocate - run the destructor</span>
+$c3 = new MyCircleWithCount(3.3);
+echo 'Number of circles is: ', MyCircleWithCount::$count, &quot;\n.&quot;;
+     <span class="color-comment">// You can access public static variables via ClassName::memberName</span>
+echo &quot;Done.\n&quot;;
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected outputs are:</p>
+
+<pre class="output">
+Constructed a MyCircleWithCount. Number of circles is: 1.
+Constructed a MyCircleWithCount. Number of circles is: 2.
+Destructed a MyCircleWithCount. Number of circles is: 1.
+Constructed a MyCircleWithCount. Number of circles is: 2.
+Number of circles is: 2
+Done.
+Destructed a MyCircleWithCount. Number of circles is: 1.
+Destructed a MyCircleWithCount. Number of circles is: 0.</pre>
+
+<p>Can you do the count without <code>static</code>?</p>
+
+<h4>Constants - <span class="font-code">const</span></h4>
+
+<p>A constant member variable is identified by keyword <code>const</code>. Constants are always <code>public</code> and <code>static</code>, their content cannot be modified. Unlike normal variables, constants do not begin with a leading $ sign. Within the class definition, constants can be referenced via <code>self::<em>constantName</em></code>, just like any <code>static</code> member. Outside the class definition, they are referenced via <code><em>className</em>::<em>constantName</em></code>. By convention, use uppercase for constant names, e.g., <code>ERROR_CODE</code>, <code>ERROR_MESSAGE</code>.</p>
+
+
+<h4>Magic Methods and Constants</h4>
+
+<p>Magic methods are special methods, beginning with double underscore, that can be defined in any class and are executed via the built-in PHP functionality. For examples,</p>
+<ul>
+<li><code>__construct()</code>: constructor.</li>
+<li><code>__destruct()</code>: destructor.</li>
+<li><code>__toString()</code>: returns a string representation of this object. Called implicitly if a string is expected.</li>
+<li><code>__clone()</code>: for cloning a copy.</li>
+<li><code>__sleep()</code> and <code>__wakeup()</code>: for serialization.</li> 
+<li><code>__unset()</code>, <code>__isset()</code>, <code>__get()</code> and <code>__set()</code>: Called when trying to access a member variable which is not available. <code>__unset()</code> is triggered by <code>unset()</code>; <code>__isset()</code> is triggered by <code>isset()</code>.</li> 
+<li><code>__call()</code> and <code>__callStatic()</code>: Called when trying to call a function (or static function) which is not available.</li>
+<li><code>__set_state()</code>: via <code>var_export()</code>.</li>
+<li><code>__invoke()</code>:</li>
+</ul>
+
+<p>[TODO] Examples</p>
+
+<p>Magic constants (<code>public</code> and <code>static</code>), named in uppercase and beginning and ending with double underscore (without a leading $), contains special read-only properties. For examples,</p>
+
+<ul>
+<li><code>__CLASS__</code>: the current classname in string.</li>
+<li><code>__FILE__</code>: the current filename.</li>
+<li><code>__LINE__</code>: the line number, used in conjunction with <code>__FILE__</code>.</li>
+<li><code>__DIR__</code>: absolute directory, same as  <code>dir(__FILE__)</code>.</li>
+<li><code>__FUNCTION__</code> and <code>__METHOD__</code>: the function or method name.</li>
+<li><code>__NAMESPACE__</code>: the current namespace in string.</li>
+</ul>
+
+<p>[TODO] Examples</p>
+
+<h4><span class="font-code">self::</span>, <span class="font-code">parent::</span> and <span class="font-code">static::</span></h4>
+
+<p><code>self::</code>, <code>parent::</code> and <code>static::</code> allow you to access <code>static</code> members and <code>const</code> (<code>public</code> and <code>static</code>) WITHIN the class definition. <code>self::</code> refer to the current class, as illustrated in the above example.  <code>parent::</code> refer to the superclass and <code>static::</code> refer to the current class but with late binding - which will be discussed later in inheritance.</p>
+
+<p>Recall that outside the class definition, you could access <code>public</code> <code>static</code> member and <code>const</code> via <code><em>ClassName</em>::<em>memberName</em></code>.</p>
+
+<h5><span class="font-code">self</span> vs. <span class="font-code">$this</span></h5>
+<p>Use <code>$this</code> to refer to the current object. Use <code>self</code> to refer to the current class. In other words, within a class definition, use <code>$this-&gt;member</code> to reference non-<code>static</code> members, use <code>self::$member</code> for <code>static</code> members.</p>
+
+
+<h4>Type Hinting for Function Parameters</h4>
+
+<p>In function definition, you can declare the TYPE of the parameters, such as <code>array</code>, a class or interface name, or <code>callable</code>. However, type hinting are NOT applicable for scalar types, such as int or string.  For example,</p>
+
+<pre class="color-example">
+function fun (<span class="color-new">array</span> $a, <span class="color-new">Circle</span> $b, $c) { ...... }
+   <span class="color-comment">// $a is an array; $b is an object of class Circle; $c unknown</span></pre>
+
+
+<h3>Inheritance</h3>
+
+<h4>Example: <span class="font-code">MyCircle</span> and <span class="font-code">MyCylinder</span> classes</h4>
+<p>Let's illustrate superclass-subclass inheritance with the following example of <code>MyCircle</code> and <code>MyCylinder</code> classes.</p>
+
+<img src="images/PhpMyCircleMyCylinderClass.png" alt="Inheritance" class="image-center" />
+
+<h5 class="font-code">MyCircle.php</h5>
+
+<p>Same as the previous example.</p>
+
+<h5 class="font-code">MyCylinder.php</h5>
+
+<p>The <code>MyCylinder</code> class inherits from the <code>MyCircle</code> class, with more member variables/functions.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre>
+</td>
+<td>
+<pre>
+&lt;?php  <span class="color-comment"> // MyCylinder.php</span>
+require_once 'MyCircle.php';
+<span class="color-comment">/**
+ * The MyCylinder class models a cylinder with base radius and height.
+ * It inherits from the MyCircle class.
+ */</span>
+class MyCylinder extends MyCircle {  <span class="color-comment"> // keyword &quot;extends&quot; denotes inheritance</span>
+  <span class="color-comment"> // private variable</span>
+   private $height; <span class="color-comment"> // height of the cylinder</span>
+ 
+   <span class="color-comment">/**
+    * Constructor to allocate an instance and initialize its private variables.
+    * @param number $radius: radius of the base circle, with default value of 1
+    * @param number $height: height of the cylinder, with default value of 1
+    */</span>
+   public function __construct($radius = 1, $height = 1) {
+      parent::__construct($radius);
+           <span class="color-comment"> // Invoke the MyCircle's constructor to construct the base circle</span>
+      $this-&gt;height = $height;
+      echo 'Constructed an instance of ', __CLASS__, ': ', self::__toString(), &quot;\n.&quot;;
+   }
+ 
+  <span class="color-comment"> // Destructor</span>
+   public function __destruct() {
+      echo 'Destructed instance of ', self::__toString(), &quot;\n.&quot;;
+   }
+ 
+  <span class="color-comment"> // Getter and Setter</span>
+   public function getHeight() { return $this-&gt;height; }
+   public function setHeight($height) { $this-&gt;height = $height; }
+ 
+  <span class="color-comment"> // Return a string representation of this instance.</span>
+   public function __toString() {
+      return __CLASS__ . '[height=' . $this-&gt;height . ', ' . parent::__toString() . ']';
+   }
+ 
+  <span class="color-comment"> // Public method</span>
+   public function getVolume() {
+      return $this-&gt;getArea() * $this-&gt;height;
+        <span class="color-comment"> // $this-&gt;getArea() invoke superclass method</span>
+   }
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5 class="font-code">MyCylinderTest.php</h5>
+
+<p>A test driver for the <code>MyCylinder</code> class.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre>
+</td>
+<td>
+<pre>
+&lt;?php   <span class="color-comment"> // MyCylinderTest.php</span>
+require_once 'MyCylinder.php';
+<span class="color-comment">// Allocate an instance of subclass MyCylinder.</span>
+$cy1 = new MyCylinder(5.6, 7.8);
+print_r($cy1);
+echo &quot;$cy1\n&quot;;  <span class="color-comment"> // __toString()</span>
+echo &quot;Radius is: {$cy1-&gt;getRadius()}\n&quot;;  <span class="color-comment"> // Call superclass function</span>
+echo &quot;Base area is: {$cy1-&gt;getArea()}\n&quot;; <span class="color-comment"> // Call superclass function</span>
+echo &quot;Volume is: {$cy1-&gt;getVolume()}\n&quot;;  <span class="color-comment"> // Call subclass function</span>
+$cy1-&gt;setHeight(9.9);
+echo &quot;New height is: {$cy1-&gt;getHeight()}\n&quot;;
+echo &quot;Done.\n&quot;
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected outputs are:</p>
+
+<pre class="output">
+Constructed an instance of MyCircle with radius=5.6.
+Constructed an instance of MyCylinder: MyCylinder[height=7.8, MyCircle[radius=5.6]]
+.MyCylinder Object
+(
+    [height:MyCylinder:private] =&gt; 7.8
+    [radius:MyCircle:private] =&gt; 5.6
+)
+MyCylinder[height=7.8, MyCircle[radius=5.6]]
+Radius is: 5.6
+Base area is: 98.520345616576
+Volume is: 768.45869580929
+New height is: 9.9
+Done.
+Destructed instance of MyCylinder[height=9.9, MyCircle[radius=5.6]]</pre>
+
+<h4>How Inheritance works</h4>
+
+<h5><span class="font-code">extends</span></h5>
+<p>You can define a subclass inheriting a superclass via keyword <code>extends</code>.</p>
+
+<h5><span class="font-code">self</span> and <span class="font-code">parent</span></h5>
+
+<p>Within the subclass definition, you can use the keyword <code>parent</code> in the form of <code>parent::<em>memberName</em></code> to refer to a member of the superclass; and <code>self</code> in the form of <code>self::<em>memberName</em></code> to refer to a member of the subclass. The <code>::</code> is known as scope resolution operator.</p>
+
+<h5>Method Overriding</h5>
+<p>The subclass can override the inherited method from the superclass by providing its own definition. For example, the <code>MyCylinder</code> class can override the <code>getArea()</code> method inherited from superclass <code>MyCircle</code> as follows:</p>
+
+<pre class="color-example">
+class MyCylinder extends MyCircle {
+   ......
+   ......
+   
+   <span class="color-comment">// Override inherited superclass' getArea() to return the surface area</span>
+   public function getArea() {
+      return 2 * pi() * parent::getRadius() * $this-&gt;height;  
+         <span class="color-comment">// Cannot use parent::$radius as it is private, not public nor protected</span>
+   }
+   
+   <span class="color-comment">// Need to rewrite to invoke superclass' getArea()</span>
+   public function getVolume() {
+      return parent::getArea() * $this-&gt;height;
+   }
+}
+ 
+$c1 = new MyCircle(1.0);
+echo &quot;Area is: {$c1-&gt;getArea()}\n&quot;;
+ 
+$cy1 = new MyCylinder(2.0);
+echo &quot;Surface area is: {$cy1-&gt;getArea()}\n&quot;;</pre>
+
+
+<h5><span class="font-code">final</span></h5>
+
+<p>A <code>final</code> variable/method cannot be overridden in the subclass.</p>
+
+<h3>Polymorphism</h3>
+
+<h4><span class="font-code">abstract</span> method and <span class="font-code">abstract</span> class</h4>
+
+<p>An <code>abstract</code> method is a method with only the signature, without implementation. A class containing one or more <code>abstract</code> methods is an <code>abstract</code> class. An <code>abstract</code> class cannot be instantiated, as it's definition is incomplete. To use an <code>abstract</code> class, derive a subclass and override  the <code>abstract</code> methods. The subclass is now complete and can be instantiated.</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre>
+</td>
+<td>
+<pre>
+&lt;?php   <span class="color-comment"> // TestAbstractClass.php</span>
+<span class="color-comment">// The MyShape class contains an abstract method called getArea();</span>
+<span class="color-comment">// Hence, the MyShape class must be declared abstract</span>
+abstract class MyShape {
+   abstract public function getArea();
+     <span class="color-comment"> // An abstract method only have signature, without implementation body</span>
+}
+ 
+<span class="color-comment">// The MyRectangle class extends MyShape, and overrides the getArea()</span>
+<span class="color-comment">//  to provide its implementation.</span>
+<span class="color-comment">// The MyRectangle class is concrete, and can be instantiated.</span>
+class MyRectangle extends MyShape {
+   private $width, $length;
+ 
+  <span class="color-comment"> // Constructor</span>
+   public function __construct($width, $length) {
+      $this-&gt;width = $width;
+      $this-&gt;length = $length;
+   }
+ 
+  <span class="color-comment"> // Override</span>
+   public function getArea() { return $this-&gt;width * $this-&gt;length; }
+}
+ 
+<span class="color-comment">// Test</span>
+$r = new MyRectangle(3, 4);        <span class="color-comment"> // Can create instance of concrete class</span>
+echo &quot;Area is: {$r-&gt;getArea()}\n&quot;;
+$a = new MyShape(); <span class="color-comment"> // error:  Cannot instantiate abstract class MyShape</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Interface</h4>
+
+<p>An interface is a pure <code>abstract</code> class, which contains only <code>abstract</code> methods. An interface is defined using keyword <code>interface</code> (instead of <code>class</code>). To derive a subclass from an interface, use keyword <code>implements</code> (instead of <code>extends</code>).</p>
+
+<p>For examples,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre>
+</td>
+<td>
+<pre>
+&lt;?php   <span class="color-comment"> // TestInterace.php</span>
+<span class="color-comment">// Define an interface called MyShape which contains only abstract methods.</span>
+interface MyShape {
+   public function getArea();
+   public function getPerimeter();
+        <span class="color-comment"> // No need to include the abstract keyword</span>
+}
+ 
+<span class="color-comment">// The MyRectangle class implements MyShape, and overrides all the abstract methods</span>
+class MyRectangle implements MyShape {
+   private $width, $length;
+ 
+  <span class="color-comment"> // Constructor</span>
+   public function __construct($width, $length) {
+      $this-&gt;width = $width;
+      $this-&gt;length = $length;
+   }
+ 
+  <span class="color-comment"> // Override</span>
+   public function getArea() { return $this-&gt;width * $this-&gt;length; }
+   public function getPerimeter() { return 2 * ($this-&gt;width + $this-&gt;length); }
+}
+ 
+<span class="color-comment">// Test</span>
+$r = new MyRectangle(3, 4);        <span class="color-comment"> // Can create instance of concrete class</span>
+echo &quot;Area is: {$r-&gt;getArea()}\n&quot;;
+echo &quot;Perimeter is: {$r-&gt;getPerimeter()}\n&quot;;
+ 
+$s = new MyShape(); <span class="color-comment"> // error:  Cannot instantiate interface MyShape</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Take note that PHP's implementations of abstract class and interface are exactly the same as Java.</p>
+
+<h4>trait</h4>
+
+<p>See:</p>
+<ol>
+<li>&quot;Using Traits in PHP 5.4&quot; @ <a hrer="http://www.sitepoint.com/using-traits-in-php-5-4/">http://www.sitepoint.com/using-traits-in-php-5-4</a>.</li>
+<li>PHP Manual &quot;Traits&quot; @ <a href="http://php.net/manual/en/language.oop5.traits.php">http://php.net/manual/en/language.oop5.traits.php</a>.</li>
+
+</ol>
+
+
+<h3>More OOP</h3>
+
+<h4>Cloning Object</h4>
+
+<p>PHP provides a keyword <code>clone</code> to copy an object, which performs a shadow-copy. If <code>__clone()</code> magic method is defined in the class, it will be run after the shadow-copy.</p>
+
+<h4 class="font-code">__autoload()</h4>
+<p>[TODO]</p>
+
+
+<h3>Namespace</h3>
+
+<p>Can you have two versions of <code>Circle</code> class in your program? Yes, by placing them into different namespaces.</p>
+
+<p>A namespace (called package in Java) groups the related <em>classes</em>, <em>interfaces</em>, <em>functions</em> and <em>constants</em>. It tries to:</p>
+<ul>
+<li>resolve naming conflict;</li>
+<li>provide aliases for long names.</li>
+</ul>
+
+<p>These keywords are used in namespace management:</p>
+<ul>
+<li><code>namespace ...</code></li>
+<li><code>use ... [as ...]</code></li>
+</ul>
+
+<h5>Defining a Namespace</h5>
+<p>To define a namespace, write &quot;<code>namespace <em>identifier</em></code>&quot; as the FIRST statement in your PHP file, which sets the &quot;current&quot; namespace. For example,</p>
+
+<pre class="color-example">
+&lt;?php
+<span class="color-new">namespace MyProject;</span>   <span class="color-comment">// FIRST statement</span>
+      <span class="color-comment">// Set the current namespace.</span>
+
+<span class="color-comment">// A namespace can contain classes, interfaces, constants, and functions.</span>
+class MyClass { .... }
+const MY_CONSTANT = 2.17;
+function myFunction() { ..... } 
+?&gt;</pre>
+
+<p>You can define more than one namespaces in one file. But don't do it for best practice.</p>
+
+<h5>Global Space</h5>
+
+<p>Any entity defined under no namespace belongs to global space.</p>
+
+<h5>Sub-namespace</h5>
+
+<p>PHP supports so-called sub-namespace, with names separated by back-slash, e.g., &quot;<code>namespace MyProject\ZBox\ModSec</code>&quot;. Take note that there is no leading back-slash.</p>
+
+<p>It is a best practice to keep your source in directory that matches the namespace. For example, <code>namespace MyProject\ZBox\ModSec</code> shall be kept in Path/To/MyProject/ZBox/ModSec.</p>
+
+<p>Again, take note that PHP uses back-slash in namespace.</p>
+
+<h5>Referencing Entities in Namespace</h5>
+
+<p>To reference an entity in a namespace, you could:</p>
+<ol>
+<li>Use the <em>fully-qualified</em> name: e.g., <code>$a = new \MyProject\ZBox\ModSec\Circle</code>. Take note that it begins with a back-slash.</li>
+
+<li>Use the <em>unqualified</em> name: e.g., <code>$a = Circle</code>. This will be resolved to <code><em>CurrentNamespace</em>\Circle</code>.</li>
+
+<li>Use a <em>partially-qualified</em> name: e.g., <code>$a = ModSec\Circle</code> (without a leading back-slash). This will be resolved to <code><em>CurrentNamespace</em>\ModSec\Circle</code>.  Partially-qualified name is messy, and should be avoided.</li>
+</ol>
+
+<p>To access an entity in <em>another</em> namespace outside the current namespace, use the fully-qualified name.</p>
+
+<p>To access an entity in global space outside the current namespace, prefix the entity with a leading backslash. For example, <code>\strlen('hello')</code>.</p>
+
+<p>[TODO] Example</p>
+
+<h5>Magic Constant <span class="font-code">__NAMESPACE__</span></h5>
+
+<p>The magic constant <code>__NAMESPACE__</code> contains the name of the current namespace (in string). In global space, <code>__NAMESPACE__</code> contains an empty string.</p>
+
+<h5>Importing with &quot;<span class="font-code">use ...</span>&quot;</h5>
+
+<p>You can invoke the <code>use</code> operator to <em>import</em> a class, an interface or a namespace. Once an entity is imported, you can access it using its entity name, instead of the fully-qualified name. (This is similar to the <code>import</code> statement in Java; or <code>using</code> in C#.) PHP 5.6 supports the import of functions and constants as well. For example,</p>
+
+<pre class="color-example">
+namespace MyProject\ZBox;   <span class="color-comment">// Set the current namespace</span>
+
+use JoeProject\YBox\Circle;
+   <span class="color-comment">// Now you can simply refer to it as Circle</span>
+   <span class="color-comment">// Take note that there is no leading back-slash</span>
+
+use AnotherNamespace\Subnamespace\SubSubSpace;
+   <span class="color-comment">// Now you can simply refer to it as SubSubSpace</span>
+   
+use strlen;   <span class="color-comment">// A function in the global space</span>
+   <span class="color-comment">// Now you can refer to it as strlen, instead of fully-qualifieed name \strlen</span></pre>
+
+<h5>Aliasing with &quot;<span class="font-code">use ... as ...</span>&quot;</h5>
+
+<p>Furthermore, you can define an alias in the form of &quot;<code>use <em>FullyQualifiedName</em> as <em>alias</em></code>&quot;. For example,</p>
+
+<pre class="color-example">
+namespace MyProject\ZBox;
+
+use JoeProject\ABox\CircleWithASuperLongName as Circle;
+   <span class="color-comment">// Now you can refer to it as Circle</span></pre>
+
+<h5>Functions/Constants fall back to Global Space</h5>
+
+<p>An unqualified <em>class</em> name is resolved to the current namespace. To use a class outside the current namespace, you need to use the fully-qualified name.</p>
+
+<p>An unqualified <em>function</em> name and <em>constant</em> is similarly resolved to the current namespace. However, if it cannot be resolved, function/constant will fall back to the global space.</p>
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>PHP mother site @ <a href="http://www.php.net">http://www.php.net</a>; &quot;PHP Manual&quot; @ <a href="http://php.net/manual/en/index.php">http://php.net/manual/en/index.php</a>; &quot;PHP Language Reference&quot; @ <a href="http://www.php.net/manual/en/langref.php">http://www.php.net/manual/en/langref.php</a>.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: PHP 5.5.9 (Ubuntu 14.04)<br />
+Last modified: October, 2014</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

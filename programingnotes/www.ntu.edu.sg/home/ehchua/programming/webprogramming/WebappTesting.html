@@ -1,0 +1,499 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Web Applications Acceptance Test with Selenium</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Webapp Acceptance Test with Selenium</h1>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction</h3>
+
+<p>There are various type of software testings:</p>
+<ul>
+<li><strong>Unit Test</strong>: Test individual component/class in isolation.</li>
+<li><strong>Integration Test</strong>: Test a group of associated components/classes.</li>
+<li><strong>Acceptance Test (or Functional Test)</strong>: operate on a fully integrated system, testing against the user interface (e.g., HTML for browser or XML/JSON for web services) for functions provided by the system.</li>
+<li><strong>Regression Test</strong>: Tests to ensure that a change (such as enhancement, patches or configuration change) does not break the system or introduce new faults.</li>
+</ul>
+
+<p>The popular webapp Acceptance test frameworks include:</p>
+<ul>
+<li>Selenium @ <a href="http://www.seleniumhq.org/">http://www.seleniumhq.org</a>.</li>
+<li>......</li>
+</ul>
+
+<p>[TODO]</p>
+
+<h3>Selenium for Webapp Acceptance Test</h3>
+
+<h5>References</h5>
+<ol>
+<li>Selenium Documentation @ <a href="http://www.seleniumhq.org/docs/index.jsp">http://www.seleniumhq.org/docs/index.jsp</a>.</li>
+<li>Acceptance Testing of Web Applications with PHP @ <a href="http://devzone.zend.com/1014/acceptance-testing-of-web-applications-with-php/">http://devzone.zend.com/1014/acceptance-testing-of-web-applications-with-php/</a>.</li>
+<li>Selenium Tutorial @ <a href="http://www.guru99.com/selenium-tutorial.html">http://www.guru99.com/selenium-tutorial.html</a>.</li>
+</ol>
+
+<p>Selenium is an open-source automated testing suite for webapp. It supports most of the browsers and platforms. You can generate test scripts via record/playback (using a Selenium tool called Selenium IDE), or write the test scripts in one of the languages such as Java, C#, Perl, Python, PHP and Ruby.</p>
+
+<p>Selenium automates acceptance testing (or functional testing) for webapps by simulating a user's interaction with the webapp through remotely controlled Web browser. There are currently two versions: Selenium 1 (or Selenium RC (Remote Control)) and Selenium 2 (or Selenium WebDriver). Selenium 2 makes direct calls to browser via browser's native support; while Selenium 1 injects JavaScript functions, which has certain limitations.</p>
+
+<p>The Selenium suite consists of the following tools/components:</p>
+<ol>
+<li>Selenium IDE: an firefox plug-in for recording/playback tests.</li>
+<li>Selenium 1 (or Selenium RC)</li>
+<li>Selenium 2 (or Selenium WebDriver)</li>
+<li>Selenium Grid: For running parallel tests.</li>
+</ol>
+
+<p>There is an excellent and detail Selenium tutorial @ <a href="http://www.guru99.com/selenium-tutorial.html">http://www.guru99.com/selenium-tutorial.html</a>.</p>
+
+<h3>Selenium IDE (Firefox plugin)</h3>
+
+<p>References</p>
+<ol>
+<li>Selenium-IDE Documentation @ <a href="http://www.seleniumhq.org/docs/02_selenium_ide.jsp">http://www.seleniumhq.org/docs/02_selenium_ide.jsp.</a></li>
+</ol>
+
+<p>You can write your Selenium test scripts by hand using one of the programming languages such as Java, C#, PHP, Perl, Python or Ruby; but the easiest way is to use the &quot;Selenium IDE Firefox plug-in&quot; to record and generate test scripts. Selenium IDE is a prototyping tool for building test scripts. It has a recording feature, which could record user actions as they are performed. You could run the recorded tests or export them as a reusable test script in one of programming languages (Java, C#, Python, Perl, PHP, and Ruby) that can be enhanced and executed.</p>
+
+<h4>Installing Selenium IDE Firefox plugin</h4>
+
+<p>Start Firefox, goto <a href="http://www.seleniumhq.org/download/">http://www.seleniumhq.org/download/</a> and click &quot;Selenium IDE&quot; to install the plug-in. Restart firefox.</p>
+
+<p>You may install additional plug-ins such as &quot;PHP Formatter&quot; on the same download page.</p>
+
+<h4>Getting Started with Selenium IDE by Examples</h4>
+
+<h5>Example 1: Test Login Success and Failure</h5>
+
+<p>The following PHP script (&quot;<code>login.php</code>&quot;) presents a login form. If login is successful, it re-directs to &quot;<code>main.php</code>&quot;; otherwise, it displays an error message on the same form. We need to test the login success/failure functions. There is also a &quot;Forgot Password&quot; link on the page, that needs to be tested.</p>
+
+<p>Assume that the URL for this page is http://localhost/login.php. The valid username/password is test/pwcorrect (as hardcoded inside the script).</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49</pre>
+</td>
+<td>
+<pre>
+&lt;?php
+$errMsg = '';
+ 
+<span class="color-comment">/*
+ * Processing login request via POST parameters:
+ *   todo=login&amp;username=xxx&amp;password=xxx
+ */</span>
+if (isset($_POST['todo']) and $_POST['todo'] === 'login'
+      and isset($_POST['username']) and isset($_POST['password'])) {
+ 
+  <span class="color-comment"> // Get the value of POST parameters.</span>
+   $username = $_POST['username'];
+   $password = $_POST['password'];
+ 
+  <span class="color-comment"> // For testing purpose, hardcode username and password.</span>
+   if ($username === 'test' and $password === 'pwcorrect') {
+      <span class="color-comment">// If login succeeds, re-direct to main.php page</span> 
+      header('Location: main.php');
+      exit;
+   } else {
+      <span class="color-comment">// If login fails, display an error message.</span> 
+      $errMsg = '&lt;p id=&quot;loginError&quot;&gt;Wrong username or password!&lt;/p&gt;';
+   }
+}
+?&gt;
+ 
+&lt;h1&gt;LOG IN&lt;/h1&gt;
+&lt;form method=&quot;post&quot; &gt;
+  &lt;input type=&quot;hidden&quot; name=&quot;todo&quot; value=&quot;login&quot; /&gt;
+  &lt;table&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Username:&lt;/td&gt;
+      &lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;username&quot; id=&quot;username&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Password: &lt;/td&gt;
+      &lt;td&gt;&lt;input type=&quot;password&quot; name=&quot;password&quot; id=&quot;password&quot; value=&quot;&quot;/&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+      &lt;td&gt;&lt;input type = &quot;submit&quot; value = &quot;GO&quot;/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+        &lt;a href=&quot;ForgotPassword.php&quot;&gt;Forgot Password&lt;/a&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&amp;nbsp;&lt;/td&gt;
+      &lt;td id=&quot;loginError&quot;&gt;&lt;?php echo $errMsg ?&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/form&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Login-Success Test</h5>
+
+<p>To record a test for login-success function (using Selenium IDE Firefox plug-in Tool):</p>
+
+<ol>
+<li>Start firefox.</li>
+
+<li>Start the Selenium IDE plug-in, by clicking the &quot;Selenium IDE&quot; button added to Firefox. The Selenium Control Panel appears. In &quot;Base URL&quot;, enter http://localhost/, which serves as the base URL for all the references in the script.</li>
+
+<li>Start recording by clicking the &quot;Record&quot; button on the top-right corner (if recording is not started).</li>
+
+<li>In the Firefox browser, enter web link http://localhost/login.php; enter &quot;test&quot; as &quot;username&quot;, &quot;pwcorrect&quot; as &quot;password&quot;; and click the submit button.</li>
+<li>Stop the recording.</li>
+
+<li>Study the test commands recorded. Click the &quot;Source&quot; tab, which shows the recorded commands in an HTML test script.</li>
+
+<li>To run the recorded commands, click the &quot;run&quot; button.</li>
+
+<li>Next, add assert commands to verify the operation. Right-click on the command panel &rArr; Insert new command &rArr; Enter &quot;assertLocation&quot; in &quot;Command&quot; and &quot;http://localhost/main.php&quot; in &quot;Target&quot;.</li>
+
+<li>Rerun the test commands.</li>
+
+<li>Save the test script as an HTML file (e.g., LoginSuccessTest.html).</li>
+
+<li>You can also export the test in one of the programming languages. Select &quot;File&quot; menu &rArr; &quot;Export Test Case as&quot; &rArr; choose your programming language/test framework/Selenium such as Java/JUnit4/WebDriver or PHP (PHPUnit).  Study the exported test script.</li>
+</ol>
+
+<h5>Login-Failure Test</h5>
+
+<ol>
+<li>Start recording a test.</li>
+<li>Enter &quot;testwrong&quot; as username; &quot;pwwrong&quot; as password; and submit.</li>
+<li>Insert New Command &rArr; In command, enter &quot;assertTextPresent&quot;; in value, enter &quot;Wrong username or password!&quot;.</li>
+<li>Run the test.</li>
+<li>Save the test as an HTML file</li>
+<li>Export to your choice of programming language.</li>
+</ol>
+
+<h5>More Examples</h5>
+
+<p>Read <a href="http://www.guru99.com/first-selenium-test-script.html">http://www.guru99.com/first-selenium-test-script.html</a>.</p>
+
+<h4>Commonly-used Commands</h4>
+
+<ul>
+<li>open:</li>
+<li>click/clickAndWait:</li>
+<li>waitForPageToLoad:</li>
+<li>waitForElementToLoad:</li>
+<li>[TODO]</li>
+</ul>
+
+<h4>Commonly-used Assert and Verification Commands</h4>
+
+<p>&quot;Assert&quot; fails the test and abort the current test case; while &quot;verify&quot; fails the test, but continue to run the test case.</p>
+
+<ul>
+<li>verifyTitle/assertTitle: verifies the expected page title value in &lt;title&gt;.</li>
+<li>verifyTextPresent:</li>
+<li>verifyElementPresent:</li>
+<li>verifyText:</li>
+<li>[TODO]</li>
+</ul>
+
+<h4>Locating Elements</h4>
+
+<p>A locator is used to locate an element in the HTML document. Selenium IDE supports these locators:</p>
+
+<ul>
+<li><code>identifier=xxx</code> (or simply <code>xxx</code>): Return the first element with an matching &quot;<code>id</code>&quot; value. If there is no matching &quot;<code>id</code>&quot; value, return the first element with an matching &quot;<code>name</code>&quot; value</li>
+<li><code>id=xxx</code>: Return the first element with an matching &quot;<code>id</code>&quot; value.</li>
+<li><code>name=xxx</code> (or <code>name=xxx value=yyy</code>): Return the first element with an matching &quot;<code>name</code>&quot; value; or matching &quot;<code>name</code>&quot; as well as &quot;<code>value</code>&quot;.</li>
+<li>xpath=xxx:</li>
+<li>link=xxx:</li>
+<li>dom=xxx:</li>
+<li>css=xxx:</li>
+<li>[TODO]</li>
+</ul>
+
+<h3>Selenium 1 (Selenium RC)</h3>
+
+<p>The Selenium 1 (or Selenium Remote Control (RC)) comprises:</p>
+<ol>
+<li>The Selenium RC, which launches the browser with itself as the proxy server. It injects javascript to play the test, intercept and verify HTTP messages passed between the browser and the test program.</li>
+
+<li>Client libraries which provide the interface between each programming language (Java, Ruby, Python, Perl, PHP and C#) and the Selenium RC Server.</li>
+</ol>
+
+<p>In this section, I shall illustrate Selenium RC with PHP as the programming language and PHPUnit as the testing framework. Read &quot;<a href="php4_testing.html">PHPUnit How-To</a>&quot; if you are not familiar with PHPUnit.</p>
+
+<h4>Installing Selenium 1 (with PHP for Ubuntu)</h4>
+
+<p><span class="line-heading">Step 1</span>: Install Selenium RC Server: From <a href="http://www.seleniumhq.org/download/">http://www.seleniumhq.org/download/</a>, Download &quot;<code>selenium-server-standalone-2.xx.0.jar</code>&quot; and move to &quot;<code>/usr/local/bin</code>&quot;. JDK/JRE is needed to run Selenium Server.</p>
+
+<p><span class="line-heading">Step 2</span>: Install PHPUnit-Selenium (for Ubuntu) for writing Selenium test script in PHPUnit.</p>
+
+<pre class="color-command">
+$ sudo apt-get install phpunit-selenium</pre>
+
+<p>The PHPUnit-Selenium provides the Selenium RC PHPUnit extension for integrating Selenium test cases in a PHPUnit test suite.</p>
+
+<h4>Getting Started with Selenium 1 (with PHP) by Examples</h4>
+
+<h5>Example 1: Login Success and Failure Tests</h5>
+
+<p>We shall use the login form presented in the previous section as example. Assuming that the URL for the login page is http://localhost/login.php.</p>
+
+<p>The following test script (&quot;LoginTest.php&quot;) can be used to test the login-success and login-failure functions.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre>
+</td>
+<td>
+<pre>
+&lt;?php
+class TestLogin extends PHPUnit_Extensions_SeleniumTestCase {
+   protected function setUp() {
+      $this-&gt;setBrowser(&quot;*firefox&quot;);
+      $this-&gt;setBrowserUrl(&quot;http://localhost/&quot;);
+   }
+ 
+   public function testLoginPass() {
+      $this-&gt;open('/login.php');
+      $this-&gt;type('id=username', 'test');
+      $this-&gt;type('id=password', 'pwcorrect');
+      $this-&gt;click('css=input[type=\'submit\']');
+      $this-&gt;waitForPageToLoad('30000');
+      $this-&gt;assertEquals(&quot;http://localhost/main.php&quot;, $this-&gt;getLocation());
+      $this-&gt;assertTextPresent('Welcome');
+   }
+ 
+   public function testLoginFail() {
+      $this-&gt;open(&quot;/login.php&quot;);
+      $this-&gt;type(&quot;id=username&quot;, &quot;testwrong&quot;);
+      $this-&gt;type(&quot;id=password&quot;, &quot;pwwrong&quot;);
+      $this-&gt;click(&quot;css=input[type=\&quot;submit\&quot;]&quot;);
+      $this-&gt;waitForPageToLoad(&quot;30000&quot;);
+      $this-&gt;assertTextPresent('exact:Wrong username or password!');
+<span class="color-comment">//    $this-&gt;assertEquals(&quot;Wrong username or password!&quot;, $this-&gt;getText(&quot;id=loginError&quot;));</span>
+   }
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Running the Test</h5>
+
+<p>To run the PHPUnit test script</p>
+
+<ol>
+<li>First launch the Selenium Server:
+
+<pre class="color-command">
+$ java -jar /usr/local/bin/selenium-server-standalone-2.37.0.jar</pre></li>
+
+<li>Then, run the Selenium test script via PHPUnit:
+
+<pre class="color-command">
+$ phpunit --verbose LoginTest.php
+PHPUnit 3.6.10 by Sebastian Bergmann.
+..
+Time: 27 seconds, Memory: 3.50Mb
+OK (2 tests, 3 assertions)</pre></li>
+</ol>
+
+<h5>Explanation:</h5>
+
+<ul>
+<li>The <code>setBrowser()</code> specifies the browser used for running the test, which includes *firefox, *iexplore, *chrome, *safari, and others.</li>
+<li>The <code>setBrowserUrl()</code> sets the base URL. All URL references are relative to this base URL.</li>
+<li>[TODO]</li>
+</ul>
+
+<h5>Example 2</h5>
+
+<p>[TODO]</p>
+
+
+<h4>Code Coverage</h4>
+<p>In software testing, code coverage measures the degree for which the source program is tested. It could be measured in terms of the lines, functions, branches, decisions covered by the tests.</p>
+
+<p><code>PHPUnit_Extensions_SeleniumTestCase</code> can collect code coverage information for tests run through Selenium RC. To set up code coverage:</p>
+
+<ol>
+<li>Copy <code>PHPUnit/Extensions/SeleniumCommon/phpunit_coverage.php</code> (in folder <code>/usr/share/php/</code>) into your webserver's document root directory.</li>
+
+<li>In your webserver's <code>php.ini</code> (in folder <code>/etc/php5/apache2</code>) configuration file, configure <code>PHPUnit/Extensions/SeleniumCommon/prepend.php</code> and <code>PHPUnit/Extensions/SeleniumCommon/append.php</code> (in folder <code>/usr/share/php/</code>) as the <code>auto_prepend_file</code> and <code>auto_append_file</code>.</li>
+
+<li>In your test case class that extends <code>PHPUnit_Extensions_SeleniumTestCase</code>, include:
+<pre class="color-example">
+protected $coverageScriptUrl = 'http://host/phpunit_coverage.php';</pre></li>
+
+<li>To run test cases with code coverage:
+<pre class="color-command">
+<span class="color-comment">// Start the Selenium RC server:</span>
+$ java -jar /usr/local/bin/selenium-server-standalone-2.37.0.jar
+ 
+<span class="color-comment">// Run test case with code coverage enabled</span>
+$ phpunit --verbose --coverage-html ./codeCoverageReport XxxTest.php</pre></li>
+</ol>
+
+<p>The code coverage report would be generated in directory <code>codeCoverageReport</code>, which shows the lines, functions/methods and classes covered by the tests.</p>
+
+<h3>Selenium 2 (Selenium WebDriver)</h3>
+
+<h4>Installing Selenium WebDriver for Java</h4>
+
+<p>Selenium WebDriver is available in many languages, such as Java, C#, Python, Perl, PHP and Ruby.  I shall describe the Java version.</p>
+
+<ol>
+<li>From <a href="http://www.seleniumhq.org/download/">http://www.seleniumhq.org/download/</a>, under &quot;Selenium Client &amp; WebDriver Language Bindings&quot;, Select &quot;Java&quot; download &quot;<code>selenium-java-2.##.0.zip</code>&quot;.</li>
+<li>Unzip the download file into a folder of your choice (e.g., /usr/local/selenium-2.##.0).</li>
+</ol>
+
+<h4>Getting Started with Selenium WebDriver</h4>
+
+<p>I shall assume that your are familiar with Java, and use Eclipse as IDE.</p>
+
+<ol>
+<li>Launch Eclipse, create a new Java project (say SeleniumTest).</li>
+<li>Include Selenium JAR file: Right-click on the project &rArr; Properties &rArr; Java Build Path &rArr; Libraries &rArr; ADD External JARs &rArr; navigate to &quot;<code>selenium-2.##.0</code>&quot; and select &quot;<code>selenium-java-2.##.0.jar</code>&quot;.</li>
+<li>Repeat the above step to include all the JAR file in the &quot;<code>libs</code>&quot; directory.</li>
+<li>For Firefox and HTMLUnit, you do not need to install any driver. For IE, Chrome, Safari and other browsers, you need to install the appropriate driver from Selenium Download site.</li>
+</ol>
+
+<p>[TODO]</p>
+
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>PHPUnit Manual @ <a href="http://phpunit.de/manual/current/en/index.html">http://phpunit.de/manual/current/en/index.html</a>.</li>
+<li>Selenium Mother Site @ <a href="http://www.seleniumhq.org/">http://www.seleniumhq.org/</a> and documentation @ <a href="http://www.seleniumhq.org/docs/">http://www.seleniumhq.org/docs/</a>.</li>
+<li>Selenium Tutorial @ <a href="http://www.guru99.com/selenium-tutorial.html">http://www.guru99.com/selenium-tutorial.html</a>.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: PHP 5.4.9-4 (Ubuntu 13.04)<br />
+Last modified: October, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

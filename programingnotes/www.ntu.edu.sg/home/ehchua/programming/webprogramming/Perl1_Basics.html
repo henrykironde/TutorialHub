@@ -1,0 +1,1525 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Perl Tutorial Part 1 Basics</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Perl</h1>
+<h2>Part 1: Basics</h2>
+
+<h3>Introduction</h3>
+<p>Perl was created by Larry Wall in 1987, based on his earlier Unix system administrative tool called awk. Perl, stands for <em>Practical Extraction and Report Language</em>, originally meant for text formatting and processing, has grown over times to cover system administration, network,  web and database programming, glue between systems and languages (system integration and rapid prototyping), bioinformatics, data mining, and even application development.</p>
+
+<p>The main features of Perl are:</p>
+<ul>
+<li>&quot;Perl is the Swiss Army Knife of programming languages: powerful and adaptable.&quot; Perl is a mixture of C, Unix's shell script, awk, sed, and more. Perl is much more expressive than these languages (&quot;maximum expressivity&quot;, &quot;There is more than one way to do it&quot;). You can write a Perl program fairly quickly in a few lines of codes.</li>
+<li>Perl is an <em>interpreted</em> language, and therefore platform-independent. You can run Perl scripts in any platform (Unix, Windows, Mac) where Perl interpreter is available.</li>
+<li>Perl provides a powerful regular expression facility to support text processing and report generation. Perl also has  symbolic debugger, built-in support for database management, and etc.</li>
+<li>Perl 5 supports Object-oriented programming.</li>
+<li>Many Perl utilities and add-ons are available at CPAN  (Comprehensive Perl Archive Network @ <a href="http://www.cpan.org">www.cpan.org</a>).</li>
+<li>Perl is free. Perl is open-source.</li>
+</ul>
+
+<p>The Perl versions include:</p>
+<ul>
+<li>1.0 (1987)</li>
+<li>2.0 (1988)</li>
+<li>3.0 (1989)</li>
+<li>4.0 (1991)</li>
+<li>5.0 (1994),..., 5.5 (1998),..., 5.10 (2007), 5.11 (2009)</li>
+<li>Perl 6 (coming soon @ <a href="http://perl6.org">perl6.org</a>)</li>
+</ul>
+
+<p> Popular sites for Perl are <a href="http://www.perl.org">www.perl.org</a>, <a href="http://www.perl.com">www.perl.com</a>, <a href="http://www.pm.org">www.pm.org</a>, <a href="http://www.perlmongers.org">www.perlmongers.org</a>. Perl documentation is available at <a href="http://perldoc.perl.org">http://perldoc.perl.org</a>.</p>
+
+<h3>Installing Perl</h3>
+<p>There are many ways to get the Perl Interpreter:</p>
+<ul>
+<li>For Windows systems: Can be installed as part of CYGWIN (Read <a href="../howto/Cygwin_HowTo.html">How to install CYGWIN</a>. Select &quot;Category&quot; &rArr; &quot;Interpreters&quot; &rArr; &quot;perl&quot;).</li>
+<li>For Unix systems: Pre-installed in all Unixes.</li>
+<li>Download and install ActivePerl from <a href="http://www.activestate.com/activeperl/">http://www.activestate.com/activeperl</a>.</li>
+</ul>
+<p>The path of Perl interpreter &quot;<code>perl.exe</code>&quot; must be in included in the <code>PATH</code> environment variable.</p>
+
+<h3>First Perl Program</h3>
+<p>Use a programming text editor (such as NotePad++, PSPad, TextPad) to enter the following source codes and save as &quot;<code>Hello.pl</code>&quot;:</p>
+
+<table class="table-program">
+<tr>
+<td class="code-line-number-width">
+<pre class="code-line-number">1
+2
+3
+4
+5
+</pre>
+</td>
+<td>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;                <span class="code-comment"># Terminate when error occurs</span>
+use warnings;              <span class="code-comment"># Display all warning messages</span>
+print &quot;Hello world!\n&quot;;                  <span class="code-comment"># Print a message</span>
+print 'Hello world, ', 'Again!', &quot;\n&quot;;   <span class="code-comment"># Print another message</span>
+</pre>
+</td>
+</tr>
+</table>
+
+<p><strong>Explanation</strong>:</p>
+<ul>
+<li>Line 1, called <em>shebang</em>, is meant for Unixes, which specifies the location of the Perl Interpreter. This line is ignored under Windows.</li>
+<li>Line 2 and 3 are directive (or <em>pragma</em>) to instruct Perl on how to handle errors. &quot;<code>use strict</code>&quot; instruct Perl to terminate the program immediately when an error occurs. &quot;<code>use warning</code>&quot; instruct Perl to display all the warning messages.</li>
+<li>Line 1 to 3 are optional, but recommended for writing robust program.</li>
+<li>A <em>comment</em> begins with a '<code>#</code>' and lasts until the end of line. Comments are used to explain the codes; but are ignored by the interpreter.</li>
+<li>A Perl's <em>statement</em> ends with a semi-colon (<code>;</code>).</li>
+<li>The <code>print</code> function prints the given string to the console. <code>\n</code> denotes a new-line. A function can takes zero or more arguments (separated by commas). In Perl, you can enclose the function's arguments with parentheses <code>()</code> or omit them. For examples, the followings are equivalent:
+<pre class="code-example">
+print 'Hello world, ', 'Again', &quot;\n&quot;;    <span class="code-comment"># Function arguments without parentheses</span>
+print('Hello world, ', 'Again', &quot;\n&quot;);   <span class="code-comment"># Function arguments enclosed in parentheses</span>
+</pre>
+</li>
+
+<li>Strings can be enclosed in double-quotes or single-quotes. However, double-quotes interpret variables and special character (like <code>\n</code> for new-line, <code>\t</code> for tab), but single-quotes don't. For example,
+<pre class="code-example">print &quot;\n&quot;;     <span class="code-comment"># print a newline</span>
+print '\n';     <span class="code-comment"># print \n literally</span>
+</pre>
+
+</li>
+<li>Extra white-spaces (blanks, tabs, new-lines) are ignored.</li>
+<li>The file extension of &quot;<code>.pl</code>&quot; is not mandatory but recommended.</li>
+</ul>
+
+<p><strong>Running In Windows</strong></p>
+<p>To run the program under Windows, start a <code>cmd</code> shell and issue the command:</p>
+<pre class="code-command">&gt; ... change directory to the directory containing Hello.pl ...
+&gt; <strong>perl Hello.pl
+</strong></pre>
+<pre class="code-output">Hello world!
+Hello world, Again!
+</pre>
+
+<p>Note: The path for Perl Interpreter “<code>perl.exe</code>” must be in included in the  <code>PATH</code> environment variable.</p>
+
+<p>To display the Interpreter's help menu, issue:</p>
+<pre class="code-command">&gt; <strong>perl -h
+</strong></pre>
+
+<p>To find the version of the Perl Interpreter, issue:</p>
+
+<pre class="code-command">&gt; <strong>perl -v</strong>
+This is perl, v5.10.0 built for cygwin-thread-multi-64int
+......
+</pre>
+
+<p><strong>Running In Unix</strong></p>
+<p>For Unixes, include &quot;<code>#!/usr/bin/perl</code>&quot; as the <em>first</em> line of the program (which specifies the location of the Perl Interpreter - just like any other Unix shell script). To run the program: first make the file executable (via <em>change-mode</em> command) and then execute the file:</p>
+
+<pre class="code-command">$ ... change directory to the directory containing Hello.pl ...
+$ <strong>chmod u+x Hello.pl</strong>
+$ <strong>./Hello.pl
+</strong></pre>
+
+<h4>Perl 5.10 Features</h4>
+<p>Perl 5.10 introduces many nice features. For example, the Hello-world can be written as follows (to save as &quot;<code>Hello510.pl</code>&quot;):</p>
+<table class="table-program">
+<tr>
+<td class="code-line-number-width">
+<pre class="code-line-number">1
+2
+3
+4
+5
+</pre>
+</td>
+<td>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;      <span class="code-comment"># Terminate when error occurs</span>
+use warnings;    <span class="code-comment"># Display all warning messages</span>
+use 5.010;       <span class="code-comment"># Use Perl 5.10 features</span>
+say 'Hello, world!';    <span class="code-comment"># Print a message</span>
+</pre></td>
+</tr>
+</table>
+
+<pre class="code-command">&gt; <strong>perl Hello510.pl</strong>
+Hello, world!
+</pre>
+<p>Notes:</p>
+<ul>
+<li>Line 4 instructs Perl to enable the new features in Perl 5.10. It could also be written as &quot;<code>use feature ':5.10'</code>&quot;.</li>
+<li>Function <code>say</code> is similar to <code>print</code>, <code>say</code> automatically prints a newline at the end of the message, whereas <code>print</code> don't. <code>say</code> is available in Perl 5.10.</li>
+</ul>
+
+<h3>Basic Syntax</h3>
+
+<h4>Comment</h4>
+
+<p>Comments are ignored by the Perl runtime but greatly useful in explaining your codes to others (and also to yourself three days later).  You should use comments liberally to explain or document your codes.</p>
+
+<p>A comment begins with symbol <code>#</code>, and lasts until the end of the line. There is no multi-line comment other than putting a # at the beginning of each line.</p>
+
+<h4>Statement &amp; Block</h4>
+<p>A <em>statement</em> is a single instruction consisting of operators, variables and expression. A Perl's statement terminates with a semicolon (<code>;</code>).</p>
+<p>Blanks, tabs and newlines are collectively called <em>whitespaces</em>. In Perl, extra white-spaces (blanks, tabs, newlines) are ignored (that is, multiple whitespaces are treated as one whitespace).</p>
+<p> You can place many statements on a single line.</p>
+<p>A <em>block</em> consists of zero or more statements enclosed in pair of curly braces <code>{ ... }</code>. No semi-colon is needed after the closing brace.</p>
+
+<h4>Calling Perl's Built‐in Functions</h4>
+
+<p>Perl has many built-in functions, which takes a comma-separated list of arguments. You can enclose the arguments in parentheses or omit them, depending on your programming style. For examples,</p>
+
+<pre class="code-example">print 'Hello, world', &quot;\n&quot;;    <span class="code-comment"># Function arguments are separated by commas</span>
+print('Hello, world', &quot;\n&quot;);   <span class="code-comment"># Parentheses are optional</span> 
+say 'Hello, world';        <span class="code-comment">    # Function say (Perl 5.10) always prints a newline</span>
+say('Hello, world');
+</pre>
+
+<h3>Variables, Literals &amp; Data Types</h3>
+<p>A variable is a <em>named</em> storage location that holds a <em>value</em>, of a certain data <em>type</em>. A <em>literal</em> is a fixed value, e.g., <code>5566</code>, <code>3.14</code>, <code>'Hello'</code>,  that can be assigned to a variable or form part of an expression.</p>
+<p> Perl supports the following data types. It uses different initial symbols to denote  and differentiate the various data types.</p>
+<ul>
+<li>Scalar: begins with symbol <code>$</code>.</li>
+<li>Array: begins with symbol <code>@</code>.</li>
+<li>Hash or Associative Array: begins with symbol <code>%</code>.</li>
+</ul>
+
+<p>An <em>expression</em> is a combination of variables, literals, operators, and sub-expressions that can be evaluated to produce <em>a single value</em>.</p>
+
+<h3>Scalar Variables and Contexts</h3>
+
+<p>A scalar is a single item. A scalar variable's name begins with symbol <code>$</code>, followed by a letter or underscore, followed by more letters, digits, or underscore. For example, <code>$size</code>, <code>$_min_value</code>, and <code>$average</code>.</p>
+<p>Perl is <em>case-sensitive</em>. A <code>$rose</code> is not a <code>$ROSE</code>, and is not a <code>$Rose</code>.</p>
+<p>Unlike strong-type languages like C/C++/C#/Java, but like JavaScript/Unix Shell Script:</p>
+<ul>
+<li>Perl's variables name need not be declared before use, which often leads to poor programs. It is strongly recommended to declare a variable before use!!</li>
+<li>The actual type of a scalar (e.g., integer, floating-point number or string) need NOT be specified. Perl's scalar is simply a <em>single item</em>, which could take on <em>context</em> of <em>number</em> (<em>integer</em> or  <em>floating-point number</em>), <em>string</em>, or <em>boolean</em> automatically.</li>
+</ul>
+
+<p>You could assign a value (called <em>literal</em>) to a scalar variable using the assignment operators (<code>=</code>).  The scalar variable takes on the <em>context</em> of the literal assigned.  For example, a variable takes on a string context if a string literal is assigned; takes on a numeric context if a numeric literal is assigned.</p>
+<p> You can declare a <em>local variable</em> via the keyword <code>my</code>.</p>
+<pre class="code-example">my $num = 123;      <span class="code-comment"># numeric context</span>
+my $str = &quot;Hello&quot;;  <span class="code-comment"># string context</span>
+</pre>
+
+<p>The <em>context</em> of the scalar is important because many operations are confined to a certain context, e.g., arithmetic operations (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) can be applied to numbers but not strings; strings can concatenate using &quot;<code>.</code>&quot; operator; logical operations (<code>and</code>, <code>or</code>, <code>not</code>) are applied to boolean. Perl automatically converts between the different contexts as needed to perform an operation. In other word, the context of a scalar is determined by the operation. For example:</p>
+
+<pre class="code-listing">#!/usr/bin/perl          <span class="code-comment"># ScalarContextTest.pl</span>
+use strict;
+use warnings;
+my $num1 = 11;           <span class="code-comment"># Numeric context</span>
+my $num2 = 22;           <span class="code-comment"># Numeric context</span>
+my $str1 = 'Hello';      <span class="code-comment"># String context</span>
+my $str2 = 'world';      <span class="code-comment"># String context</span>
+my $str3 = '33';         <span class="code-comment"># String context</span>
+my $str4 = '44';         <span class="code-comment"># String context</span>
+   
+print $num1 + $num2 , &quot;\n&quot;;       <span class="code-comment"># + takes numbers</span>
+print 12 * 3.4 , &quot;\n&quot;;            <span class="code-comment"># * takes numbers</span>
+print $str1 + $str2 , &quot;\n&quot;;       <span class="code-comment"># + takes numbers, not strings. Invalid output</span>
+print $str1 . &quot; &quot; . $str2 , &quot;\n&quot;; <span class="code-comment"># . takes strings</span>
+print $str3 + $str4 , &quot;\n&quot;;       <span class="code-comment"># + takes numbers - String converted to numeric context</span>
+print &quot;5.5&quot; - 5 , &quot;\n&quot;;           <span class="code-comment"># - takes numbers - String converted to number</span>
+print $num1 . $num2 , &quot;\n&quot;;       <span class="code-comment"># . takes strings - Numbers converted to string</span>
+</pre>
+
+<pre class="code-output">&gt; <strong>perl ScalarContextTest.pl</strong>
+33
+40.8
+<span class="code-error">Argument &quot;world&quot; isn't numeric in addition (+) at ScalarContextTest.pl line 13.
+Argument &quot;Hello&quot; isn't numeric in addition (+) at ScalarContextTest.pl line 13.
+0</span>
+Hello world
+77
+0.5
+1122
+</pre>
+
+<p>If you remove the &quot;<code>use warning</code>&quot;, the warning messages will not be shown, and you will have no idea that something went wrong.</p>
+
+<p>How does Perl know that a variable is a number or a string?  In fact, Perl does not know.  Whenever a variable or string literal is used as an argument to an arithmetic operation (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>), Perl tries to convert it to a number.  If the variable does not contain a valid number,  Perl simply sets it to 0; and you will not be warned unless you specify &quot;<code>use warning</code>&quot; or turn on the <code>-w</code> (warning) flag!</p>
+
+<p>A variable takes a value called <code>UNDEF</code>, if no value is assigned to it.</p>
+
+<h4>Numeric Context and Operations</h4>
+
+<p>In Perl, numbers are stored as double-precision floating-point. All the arithmetic operations are carried out in floating-point. There is no distinct integer type in Perl!</p>
+
+<p>Numeric literals include:</p>
+<ul>
+<li>Point-point literals: e.g., <code>3.1416</code>, <code>-0.8e18</code>, <code>1.2E-0.5</code>.</li>
+<li>Integer literals: e.g., <code>5566</code>, <code>-128</code>. You can delimit a long integer with underscore, e.g., <code>12_111_222_333</code>.</li>
+<li>Octal literals: begin with a leading <code>0</code> (zero), e.g., <code>0127</code>.</li>
+<li>Hexadecimal literals: begin with <code>0x</code>, e.g., <code>0xABCD</code>.</li>
+<li>Binary literals: begin with <code>0b</code>, e.g., <code>0b10110011</code>.</li>
+</ul>
+
+<p><strong>Arithmetic Operators</strong>: Perl provides the following arithmetic operators for numbers. The following results are obtained assuming that <code>$x=5</code>, <code>$y=2</code> before the operation.</p>
+
+<table class="table-data">
+
+<tr>
+<th>OPERATOR</th>
+<th>DESCRIPTION</th>
+<th>EXAMPLE</th>
+<th>RESULT</th>
+</tr>
+
+<tr>
+<td class="td-center"><code>+</code></td>
+<td>Addition</td>
+<td><code>$z = $x + $y;</code></td>
+<td><code>$z is 7</code></td>
+</tr>
+
+<tr class="table-row-alt">
+<td class="td-center"><code>-</code></td>
+<td>Subtraction (or Unary Negation)</td>
+<td><code>$z = $x - $y;</code></td>
+<td><code>$z is 3</code></td>
+</tr>
+
+<tr>
+<td class="td-center"><code>*</code></td>
+<td>Multiplication</td>
+<td><code>$z = $x * $y;</code></td>
+<td><code>$z is 10</code></td>
+</tr>
+
+<tr class="table-row-alt">
+<td class="td-center"><code>/</code></td>
+<td>Division</td>
+<td><code>$z = $x / $y;</code></td>
+<td><code>$z is 2.5</code></td>
+</tr>
+
+<tr>
+<td class="td-center"><code>%</code></td>
+<td>Modulus (Division Remainder)</td>
+<td><code>$z = $x % $y;</code></td>
+<td><code>$z is 1</code></td>
+</tr>
+
+<tr class="table-row-alt">
+  <td class="td-center"><code>**</code></td>
+  <td>Exponentiation</td>
+  <td><code>$z = $x ** $y;</code></td>
+  <td><code>$z is 25</code></td>
+</tr>
+<tr>
+<td class="td-center"><code>++</code></td>
+<td>Unary Pre- or Post-Increment</td>
+<td><code>$y = $x++; $z = ++$x;</code><br />
+Same as: <code>$y = $x; $x = $x+1; $x = $x+1; $z = $x;</code></td>
+<td><code>$y is 5, $z is 7, $x is 7</code></td>
+</tr>
+
+<tr class="table-row-alt">
+<td class="td-center"><code>--</code></td>
+<td>Unary Pre- or Post-Decrement</td>
+<td><code>$y = --$x; $z = $x--;</code><br />
+Same as: <code>$x = $x-1; $y = $x; $z = $x; $x = $x-1;</code></td>
+<td><code>$y is 4, $z is 4, $x is 3</code></td>
+</tr>
+</table>
+
+<p>Arithmetic operations are carried out in floating-point (double precision). In other words, <code>1/2</code> give <code>0.5</code> (whereas in C/Java, <code>1/2</code> gives <code>0</code>). You can truncate a floating point number to integer via built-in function <code>int()</code>.</p>
+
+<pre class="code-listing">#!/usr/bin/perl          <span class="code-comment"># NumericOpTest.pl</span>
+use strict;
+use warnings;
+my $num1 = 11;
+my $num2 = 22;
+   
+print $num1, &quot;\n&quot;;           <span class="code-comment"># 11</span>
+print $num2, &quot;\n&quot;;           <span class="code-comment"># 22</span>
+print $num1+$num2, &quot;\n&quot;;     <span class="code-comment"># 33</span>
+print $num1-$num2, &quot;\n&quot;;     <span class="code-comment"># -11</span>
+print $num1*$num2, &quot;\n&quot;;     <span class="code-comment"># 242</span>
+print $num1/$num2, &quot;\n&quot;;     <span class="code-comment"># 0.5</span>
+print ++$num1, ' ', $num1, &quot;\n&quot;;   <span class="code-comment"># 12 12</span>
+print $num2--, ' ', $num2, &quot;\n&quot;;   <span class="code-comment"># 22 21</span>
+   
+$num1 -= $num2;
+print $num1, &quot;\n&quot;;           <span class="code-comment"># -9</span>
+</pre>
+
+
+<p><strong>Arithmetic cum Assignment Operators</strong>: These are short-hand operators to combine two operations.</p>
+<table class="table-data">
+  <tr>
+    <th>OPERATOR</th>
+    <th>DESCRIPTION</th>
+    <th>EXAMPLE</th>
+    <th>RESULT</th>
+  </tr>
+  <tr>
+    <td class="td-center"><code>+=</code></td>
+    <td>Addition cum Assignment</td>
+    <td><code>$x += $y;</code></td>
+    <td>Same as: <code>$x = $x + $y;</code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>-=</code></td>
+    <td>Subtraction cum Assignment</td>
+    <td><code>$x -= $y;</code></td>
+    <td>Same as: <code>$x = $x - $y;</code></td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>*=</code></td>
+    <td>Multiplication cum Assignment</td>
+    <td><code>$x *= $y;</code></td>
+    <td>Same as: <code>$x = $x * $y;</code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>/=</code></td>
+    <td>Division cum Assignment</td>
+    <td><code>$x /= $y;</code></td>
+    <td>Same as: <code>$x = $x / $y;</code></td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>%=</code></td>
+    <td>Modulus cum Assignment</td>
+    <td><code>$x %= $y;</code></td>
+    <td>Same as: <code>$x = $x % $y;</code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>**=</code></td>
+    <td>Exponentiation cum Assignment</td>
+    <td><code>$x **= $y;</code></td>
+    <td>Same as: <code>$x = $x ** $y;</code></td>
+  </tr>
+</table>
+<p><strong>Comparison Operators</strong>: Perl provides the following operators for comparing numbers:</p>
+<table class="table-data">
+  <tr>
+    <th>OPERATOR</th>
+    <th>DESCRIPTION</th>
+    <th>EXAMPLE</th>
+    <th>RESULT</th>
+  </tr>
+  <tr>
+    <td class="td-center"><code>==</code></td>
+    <td>Equal To</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>!=</code></td>
+    <td>Not Equal To</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>&gt;</code></td>
+    <td>Greater Than to</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>&gt;=</code></td>
+    <td>Greater Than or Equal To</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>&lt;</code></td>
+    <td>Less Than</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>&lt;=</code></td>
+    <td>Less Than or Equal To</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+</table>
+
+<h4>String Context and Operations</h4>
+
+<p>Strings are sequence of zero or more characters. String literals can be enquoted with <em>single quotes</em> or <em>double quotes</em>.  However, the type of quotes is significant: double quotes interpret (or interpolate) variables and special characters (e.g., <code>\n</code> for new-line, <code>\t</code> for tab, <code>\\</code> for back-slash), whereas single quotes don't. Perl look for the longest possible variable name in interpolation (i.e., greedy). For example,</p>
+<pre class="code-example">my $msg = 'Hello';
+print &quot;$msg world\n&quot;;       <span class="code-comment"># print Hello world followed by newline</span>
+print '$msg world\n';       <span class="code-comment"># print $msg world\n literally (no interpretation)</span>
+</pre>
+<p>Using single quotes is probably more efficient if the string does not need to be interpreted.</p>
+
+<p><strong>String Operators</strong>: Perl provides the following string operators:</p>
+<table class="table-data">
+  <tr>
+    <th>OPERATOR</th>
+    <th>DESCRIPTION</th>
+    <th>EXAMPLE</th>
+    <th>RESULT</th>
+  </tr>
+  <tr>
+    <td class="td-center"><code>.</code></td>
+    <td>String Concatenation</td>
+    <td><code>'Hello, ' . 'world'</code></td>
+    <td><code>'Hello, world'</code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>x</code></td>
+    <td>Duplicate</td>
+    <td><code>'ba' x 4</code></td>
+    <td><code>'babababa'</code></td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>.=</code></td>
+    <td>Concatenation cum Assignment</td>
+    <td><code>$str .= $str1;</code></td>
+    <td>Same as <code>$str = $str . $str1;</code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>x=</code></td>
+    <td>Duplicate cum Assignment</td>
+    <td><code>$str x= $num;</code></td>
+    <td>Same as <code>$str = $str x $num;</code></td>
+  </tr>
+</table>
+
+<p><strong>String Comparison Operators</strong>: Perl provide the following operators for comparing strings:</p>
+<table class="table-data">
+  <tr>
+    <th>OPERATOR</th>
+    <th>DESCRIPTION</th>
+    <th>EXAMPLE</th>
+    <th>RESULT</th>
+  </tr>
+  <tr>
+    <td class="td-center"><code>eq</code></td>
+    <td>String Equal To</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>ne</code></td>
+    <td>String Not Equal To</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>gt</code></td>
+    <td>String Greater Than to</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>ge</code></td>
+    <td>String Greater Than or Equal To</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>lt</code></td>
+    <td>String Less Than</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>le</code></td>
+    <td>String Less Than or Equal To</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>cmp</code></td>
+    <td>String Compare To</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+</table>
+
+<ul>
+<li><code>cmp</code>: returns 1 if the fist string is greater than the second string; 0 if equal; -1 otherwise.</li>
+</ul>
+
+<p><strong>String Functions:</strong> Perl provides many built-in functions for manipulating strings:</p>
+
+<ul>
+<li><code>substr(<em>var</em>, <em>index</em>, <em>length</em>)</code>: returns the substring from string <em><code>var</code></em>, starting from position <em><code>index</code></em>, of <em><code>length</code></em>.  String index begins at 0.  You can also use <code>substr</code> to modify the original string. For example,
+
+<pre class="code-example">my $msg = 'Perl is fun!';
+my $adj = substr $msg, 8, 3;       <span class="code-comment"># Extract a portion of string</span>
+print $adj, &quot;\n&quot;;                  <span class="code-comment"># 'fun'</span>
+print substr($msg, 8), &quot;\n&quot;;       <span class="code-comment"># 'fun!'</span>
+substr($msg, 8, 3) = 'quite cool'; <span class="code-comment"># Modify a portion of string</span>
+print $msg, &quot;\n&quot;;                  <span class="code-comment"># 'Perl is quite cool!'</span>
+</pre>
+</li>
+
+<li><code>index(<em>string</em>, <em>substring</em>)</code>: return the index of the <em><code>substring</code></em> in <em><code>string</code></em>, or -1 if not found.</li>
+<li><code>rindex(<em>string</em>, <em>substring</em>)</code>: return the index but searching from the right.</li>
+<li><code>length(<em>string</em>)</code>: returns the number of characters in <em><code>string</code></em>.</li>
+<li><code>lc(<em>string</em>)</code>: returns a lowercase <em><code>string</code></em>.</li>
+<li><code>uc(<em>string</em>)</code>: returns an uppercase <em><code>string</code></em>.</li>
+<li><code>lcfirst(<em>string</em>)</code>: returns a first-letter lowercase <em><code>string</code></em>.</li>
+<li><code>ucfirst(<em>string</em>)</code>: returns a first-letter uppercase <em><code>string</code></em>.</li>
+</ul>
+
+<p><strong><code>q</code> and <code>qq</code></strong></p>
+<p>Instead of using single quotes <code>'...'</code> or double quotes <code>&quot;...&quot;</code>, you could also use q (for single quotes) or qq (for double quotes), as follows:</p>
+
+<pre class="code-example">say q(Perl's cool);       <span class="code-comment"># Generalized single quote - may contain single quote</span>
+say q|Perl's cool|;
+say qq(Perl is &quot;cool&quot;);   <span class="code-comment"># Generalized double quote - may contain double quote</span>
+say qq|Perl is &quot;cool&quot;|;
+</pre>
+
+
+<h4>Boolean Context and Operations</h4>
+<p>A scalar can take a boolean context of either <em>true</em> or <em>false</em>.  &quot;False&quot; includes:</p>
+<ul>
+<li>The number <code>0</code>.</li>
+<li>An empty string <code>''</code> or <code>&quot;&quot;</code>.</li>
+<li>A string containing a zero (i.e., <code>'0'</code> or <code>&quot;0&quot;</code>).</li>
+<li>A variable that has not been assigned a value (i.e. <code>UNDEF</code>).</li>
+<li>An empty array or hash (to be discussed later).</li>
+</ul>
+<p>Anything else is considered as true.</p>
+
+<p><strong>Functions <code>defined</code> and <code>undef</code></strong>: <code>defined(<em>var</em>)</code> returns true if the variable <em><code>var</code></em> is defined.
+<code>undef(<em>var</em>)</code> un-defines the variable <em><code>var</code></em>.</p>
+
+<p><strong>Boolean Operators</strong>: Perl provides the following boolean (or logical) operators:</p>
+<table class="table-data">
+  <tr>
+    <th>OPERATOR</th>
+    <th>DESCRIPTION</th>
+    <th>EXAMPLE</th>
+    <th>RESULT</th>
+  </tr>
+  <tr>
+    <td class="td-center"><code>&amp;&amp;</code></td>
+    <td>C-style's Logical AND</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>||</code></td>
+    <td>C-style's Logical OR</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>!</code></td>
+    <td>C-style's Logical NOT</td>
+    <td><code> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>and</code></td>
+    <td>Perl's Logical AND</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>or</code></td>
+    <td>Perl's Logical OR</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>not</code></td>
+    <td>Perl's Logical NOT</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<ul>
+<li>Perl's <code>not</code>, <code>and</code>, <code>or</code> carry out the same operations as C-style's <code>!</code>, <code>&amp;&amp;</code>, <code>||</code>, but these logical operators have very low precedence (lower than assignment operator =) and can be useful in certain situations (but you can also use the parentheses to change the precedence). They are also easier to read than the C-style logical operators.</li>
+<li>Logical operations are always <em>short-circuited</em>. That is, the operation is terminated as soon as the result is certain, e.g., <code>false &amp;&amp; ...</code> is short-circuited to give <code>false</code>, <code>true || ...</code> gives <code>true</code>.</li>
+</ul>
+
+
+<h3>Input From Keyboard &amp; Formatted Output</h3>
+<p>You can use the operator <code>&lt;&gt;</code> or <code>&lt;STDIN&gt;</code> (called file-handle, to be discussed in details later in File IO) to read input from keyboard. The input, however, contains the newline character (corresponding to the enter key), which can be stripped away via  function <code>chomp</code>.</p>
+
+<p><strong> Functions <code>chomp</code> and <code>chop</code></strong>: <code>chop</code> removes the last character of a string. <code>chomp</code> removes the last character only if that is a newline character. Both <code>chop</code> and <code>chomp</code> returns the number of character removed.</p>
+
+<p>For example,</p>
+<pre class="code-listing">#!/usr/bin/perl          <span class="code-comment"># UserInputTest.pl</span>
+use strict;
+use warnings;
+print 'Enter your message: ';
+my $msg = &lt;&gt;;                   <span class="code-comment"># &lt;&gt; to read user's input</span>
+print &quot;Your message is $msg&quot;;   <span class="code-comment"># $msg include a newline</span>
+   
+print 'Enter your last name: ';
+my $lastName = &lt;&gt;;
+chomp $lastName;                  <span class="code-comment"># Strip ending newline</span>
+print 'Enter your first name: ';
+my $firstName = &lt;&gt;;
+chomp $firstName;                 <span class="code-comment"># Strip ending newline</span>
+my $fullName = $firstName . ' ' . $lastName;   <span class="code-comment"># Concatenate</span>
+print &quot;Your full name is $fullName\n&quot;;   <span class="code-comment"># $fullname does not have newline</span>
+</pre>
+
+<p><strong>Function <code>printf</code> and <code>sprintf</code></strong>: C-style's <code>printf</code> and <code>sprintf</code> (string printf) are supported in Perl for formatted output. For example,</p>
+<pre class="code-example">my $str = 'Hello';
+my $float = 1.2;
+my $num = 33;
+<span class="code-comment"># %s for string, %f for floating-point number, %d for integer</span>
+printf &quot;%10s %6.2f and %3d\n&quot;, $str, $float, $num;
+my $pstr = sprintf &quot;%10s %6.2f and %3d\n&quot;, $str, $float, $num;
+say $pstr;
+</pre>
+
+
+<h3>Conditional Flow Control</h3>
+
+<p>Perl provides many variations of flow control constructs:</p>
+
+<table class="table-program">
+<tr>
+<th>SYNTAX</th>
+<th>EXAMPLE</th>
+</tr>
+
+<tr>
+<td width="40%">
+<pre class="code-syntax"><strong>if (</strong><em>condition</em><strong>) {</strong> <em>trueBlock</em><strong>; }</strong>
+</pre>
+</td>
+<td width="61%">
+<pre class="code-explanation">if ($day eq 'sat' || $day eq 'sun') { print 'Super weekend!'; }
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre class="code-syntax"><em>trueSingleStatement</em> <strong>if</strong> <em>condition</em><strong>;</strong>
+</pre></td>
+<td>
+<pre class="code-explanation">print 'Super weekend!' if ($day eq 'sat' || $day eq 'sun');
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre class="code-syntax"><strong>unless</strong> <strong>(</strong><em>condition</em><strong>) {</strong><em> falseBlock</em><strong>; }</strong>
+<span class="code-comment">same as:</span> 
+<strong>if (!</strong><em>condition</em><strong>) {</strong> <em>falseBlock</em><strong>; }</strong>
+</pre></td>
+<td>
+<pre class="code-explanation">unless ($day eq 'sat' || $day eq 'sun') { print 'It is a weekday'; }
+unless ($day ne 'sat' || $day ne 'sun') { print 'Super weekend!'; }
+unless $error { print 'Yes, Hello'; }
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre class="code-syntax"><em>falseSingleStatement</em> <strong>unless</strong> <em>condition</em><strong>;</strong>
+</pre></td>
+<td>
+<pre class="code-explanation">print 'It's a weekday' unless ($day eq 'sat' || $day eq 'sun');
+</pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="code-syntax"><strong>if (</strong><em>condition</em><strong>) {</strong>
+   <em>trueBlock</em><strong>; 
+} else {</strong>
+   <em>falseBlock</em><strong>; 
+}</strong>
+</pre>
+</td>
+<td>
+<pre class="code-explanation">if ($day eq 'sat' || $day eq 'sun') {
+   print 'Super weekend!';
+} else {
+   print 'It is a weekday...';
+}
+</pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="code-syntax"><strong>if (</strong><em>condition1</em><strong>) {</strong>
+   <em>trueBlock1</em><strong>;
+} elsif (</strong><em>condition2</em><strong>) {</strong>
+   <em>trueBlock2</em><strong>;
+} elsif (</strong><em>condition3</em><strong>) {</strong>
+   <em>trueBlock3</em><strong>;
+} elsif {</strong>
+   ...
+<strong>} else {</strong>
+   <em>elseBlock</em><strong>;
+}</strong>
+</pre>
+</td>
+<td>
+<pre class="code-explanation">if ($day eq 'sat' || $day eq 'sun') {
+   print 'Super weekend!';
+} else if ($day eq 'fri') {
+   print &quot;Thank God, it's friday!&quot;;
+} else {
+   print 'It is a weekday...';
+}
+   
+   
+   
+   
+</pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="code-syntax"><em>condition</em> <strong>?</strong> <em>trueStatement</em> <strong>:</strong> <em>falseStatement</em><strong>;</strong>
+   
+</pre>
+</td>
+<td>
+<pre class="code-explanation">max = (a &gt; b) ? a : b;
+abs = (a &gt;= 0) ? a : -a;
+</pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="code-syntax"><span class="code-comment"># Perl 5.10 switch-case:</span>
+<strong>given (</strong><em>variable</em><strong>) {
+   when (</strong><em>value1</em><strong>) {</strong> ... <strong>}
+   when (</strong><em>value2</em><strong>) {</strong> ... <strong>}</strong>
+   ......
+<strong>}
+</strong></pre>
+</td>
+<td>
+<pre class="code-explanation">given ($day) {
+   when ('sat', 'sun') { print 'Super weekend!'; }
+   when ('mon', 'tue', 'wed', 'thu') { print 'It is a weekday...'; }
+   when ('fri') { print &quot;Thank God, it's friday&quot;; }
+}
+  
+</pre></td>
+</tr>
+
+</table>
+
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>The curly braces are mandatory even if there is only one statement in the block.</li>
+<li>A negate version of <code>if</code> called <code>unless</code> is provided. It could be hard to read and should be used only for negative logic, e.g.,<code> unless $error { ... }</code>, could be better than<code> if not $error { ... }</code>.</li>
+<li>The statement block can be placed before or after the <code>if</code> or <code>unless</code> clause.</li>
+<li>The keyword for else-if is <code>elsif</code>.</li>
+<li>Switch-case available from 5.10's <code>given-when</code>.</li>
+</ul>
+
+<h3>Arrays</h3>
+
+<p>An array contains a list of zero or more scalars. An array variable begins with <code>@</code>, whereas a scalar variable begins with <code>$</code>. A <code>@rose</code> is nothing to do with a <code>$rose</code>.</p>
+<p>An array can be assigned <em>to</em> and <em>from</em> a list of commas-separated scalars enclosed in parentheses.  For example:</p>
+<pre class="code-example">my @months = ('jan', 'feb', 'mar', 'apr');
+my @days = qw(mon tue wed thu fri sat sun);  <span class="code-comment"># single-quoted words</span>
+(my $first, my $second, my $third, my $fourth) = @months;
+print @months, &quot;\n&quot;;    <span class="code-comment"># janfebmarapr</span>
+print $first, &quot;\n&quot;;     <span class="code-comment"># jan</span>
+print $fourth, &quot;\n&quot;;    <span class="code-comment"># apr</span>
+</pre>
+
+<p>You can mix numbers and strings (and <code>undef</code>) inside an array, e.g.,</p>
+<pre class="code-example">my @mixmonths = ('jan', 2, 'mar', 4);
+print @mixmonths, &quot;\n&quot;;       <span class="code-comment"># jan2mar4</span>
+</pre>
+
+<p>You can use array index in the form of <code>$<em>arrayName</em>[<em>index</em>]</code> to reference individual element of an array.  The array index starts at 0. Note that scalar context <code>$</code> is used for referencing individual element instead of array context <code>@</code>. Accessing an array past its bound gives <code>UNDEF</code>.</p>
+<p> You can also refer to a portion (or <em>slice</em>) of an array (i.e., <em>sub-array</em>) using an index range in the form of <code>@<em>arrayName</em>[<em>beginIndex</em>..<em>endIndex</em>]</code> or <code>@<em>arrayName</em>[<em>index</em>1,<em>index</em>2,...]</code>. For example,</p>
+<pre class="code-example">my @months = ('jan', 'feb', 'mar', 'apr');
+print $months[2], &quot;\n&quot;;        <span class="code-comment"># Scalar 'feb'</span>
+print @months[1..3], &quot;\n&quot;;     <span class="code-comment"># Array slice ('feb', 'mar')</span>
+print @months[3,1], &quot;\n&quot;;      <span class="code-comment"># Array slice ('apr', 'jan')</span>
+print @months[2], &quot;\n&quot;;        <span class="code-comment"># Array slice ('feb')</span>
+my @emptyArray = ();           <span class="code-comment"># Empty array</span>
+</pre>
+
+<p>Some functions, such as <code>localtime</code>, return an array or scalar based on the context, e.g.,</p>
+<pre class="code-example">my ($sec, $min, $hour, $day, $month, $year, $weekday,$dayOfYear, $isdst) = localtime;
+my ($m, $d, $y) = (localtime)[4,3,5];
+
+my $dateTime = localtime;     <span class="code-comment"> # gives Tue Oct  6 19:04:44 2009</span></pre>
+
+<p>In Perl, array is not bounded.  Its size will be dynamically expanded when new elements are added. For example,</p>
+<pre class="code-example">my @months = ('jan', 'feb', 'mar', 'apr');
+@months[4..5]= ('may', 'jun');  <span class="code-comment"># @months is ('jan', 'feb', 'mar', 'apr', 'may', 'jun')</span>
+$months[7] = 'aug';             <span class="code-comment"># $month[6] gets UNDEF</span>
+</pre>
+
+<p>The scalar variable <code>$#<em>arrayName</em></code> maintains the last index of the array <code>@<em>arrayName</em></code>. You might be tempted to use <code>$#<em>arrayName</em>+1</code> as the length of the array.  This is not necessary, as Perl will return the length of the array if <code>@<em>arrayName</em></code> is used in a scalar context (e.g., assign to a scalar, arithmetic and comparison operations). In other words, to reference the length of an array, you can simply assign <code>@<em>arrayName</em></code> to a scalar context. For example,</p>
+<pre class="code-example">my @months = ('jan', 'feb', 'mar', 'apr');
+print $#months, &quot;\n&quot;;                  <span class="code-comment"># Gives 3</span>
+print $months[$#months], &quot;\n&quot;;         <span class="code-comment"># Gives 'apr'</span>
+$months[$#months + 1] = 'may'
+my $size = @months;                    <span class="code-comment"># Get the length of the array</span>
+print $size, &quot;\n&quot;;
+for (my $i = 0; $i &lt; @months; $i++) {  <span class="code-comment"># @months in scalar context</span>
+   print $months[$i], &quot;\n&quot;;
+}
+</pre>
+
+<p>Negative array index <em>n</em> can be used to reference the <em>n</em>th-to-last element of the array, e.g.,</p>
+<pre class="code-example">my @months = ('jan', 'feb', 'mar', 'apr');
+print $months[-1], &quot;\n&quot;;    <span class="code-comment"># Gives 'apr'</span>
+print $months[-2], &quot;\n&quot;;    <span class="code-comment"># Gives 'mar'</span>
+</pre>
+
+<h4>Array Functions</h4>
+
+<p>Perl provides many functions to manipulate arrays:</p>
+<ul>
+<li><code>push(<em>array</em>, <em>list</em>)</code>: appends the <em><code>list</code></em> of elements to the end of the <em><code>array</code></em>.</li>
+<li><code>pop(<em>array</em>)</code>: removes and returns the <em>last</em> element of the <em><code>array</code></em>.</li>
+<li><code>shift(<em>array</em>)</code>: removes and returns the <em>first</em> element of the <em><code>array</code></em>.</li>
+<li><code>unshift(<em>array</em>, <em>list</em>)</code>: add the <em><code>list</code></em> of the elements in front of the array.</li>
+<li><code>splice(<em>array</em>, <em>offset</em>, <em>legnth</em>, <em>list</em>)</code>: removes and returns <em><code>length</code></em> elements from <em><code>array</code></em>, starting from <em><code>offset</code></em>, and optionally, replace them with <em><code>list</code></em>.</li>
+</ul>
+
+<pre class="code-example">my @months = ('jan', 'feb', 'mar', 'apr');
+push @months, 'may';            <span class="code-comment"># @months = ('jan', 'feb', 'mar', 'apr', 'may')</span><br />print @months, &quot;\n&quot;;<br />print pop @months, &quot;\n&quot;;        <span class="code-comment"># @months = ('jan', 'feb', 'mar', 'apr')</span><br />print pop @months, &quot;\n&quot;;        <span class="code-comment"># @months = ('jan', 'feb', 'mar')</span><br />push (@months, shift @months);  <span class="code-comment"># Move the first element to last</span><br />print @months, &quot;\n&quot;;            <span class="code-comment"># @months = ('feb', 'mar', 'jan')</span>
+</pre>
+
+<h4>Special Array Variable: The Command-Line Argument Array <code>@ARGV</code></h4>
+<p>The command-line arguments (excluding the program name) are packed in an array, and passed into the Perl's program as an array named <code>@ARGV</code>,  The function <code>shift</code>, which takes <code>@ARGV</code> as the default argument, is often used to process the command-line argument.</p>
+
+<h3>Flow Control - Loops</h3>
+
+<p>Perl provides many types of loop constructs:</p>
+
+<table class="table-program">
+
+<tr>
+<th>SYNTAX</th>
+<th>EXAMPLE</th>
+</tr>
+
+<tr>
+<td width="40%">
+<pre class="code-syntax"><strong>while (</strong><em>condition</em><strong>) {</strong>
+   <em>trueBlock</em><strong>;
+}</strong>
+   
+   
+</pre>
+</td>
+<td width="57%">
+<pre class="code-explanation">my $i = 0;
+while ($i &lt; 10) {
+   print &quot;$i\n&quot;;
+   $i++;
+}
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre class="code-syntax"><strong>do {</strong>
+   <em>trueBlock</em><strong>;
+} while (</strong><em>condition</em><strong>);</strong>
+  
+  
+</pre>
+</td>
+<td>
+<pre class="code-explanation">my $i = 0;
+do {
+   print &quot;$i\n&quot;;
+   $i++;
+} while ($i &lt; 10);
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre class="code-syntax"><strong>until (</strong><em>condition</em><strong>) {</strong>
+   <em>falseBlock</em><strong>;
+}</strong>
+<span class="code-comment">same as:</span>
+<strong>while (!</strong><em>condition</em><strong>) {</strong> <em>falseBlock</em><strong>; }</strong>
+</pre>
+</td>
+<td>
+<pre class="code-explanation">my $i = 0;
+until ($i &gt;= 10) {
+   print &quot;$i\n&quot;;
+   $i++;
+}
+</pre>
+</td>
+</tr>
+
+<tr>
+<td>
+<pre class="code-syntax"><strong>foreach $</strong><em>scalarName</em> <strong>( @</strong><em>arrayName</em> <strong>) {</strong>
+   <em>statementBlock</em><strong>;
+}</strong>
+<span class="code-comment">or</span>
+<strong>for $</strong><em>scalarName</em> <strong>( @</strong><em>arrayName</em> <strong>) {</strong>
+   <em>statementBlock</em><strong>;
+}</strong>   
+</pre></td>
+<td>
+<pre class="code-explanation">my @months = ('jan', 'feb', 'mar', 'apr');
+foreach my $month (@months) {
+   print $month, &quot;\n&quot;;
+}
+for my $i (5, 4, 3, 2, 1) {
+   print &quot;$i &quot;;
+} 
+</pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="code-syntax"><strong>for (</strong><em>initialization</em><strong>;</strong> <em>expression</em><strong>;</strong> <em>postIncrement</em><strong>) {</strong>
+   <em>statementBlock</em><strong>;
+}</strong>
+   
+</pre>
+</td>
+<td>
+<pre class="code-explanation">my @months = ('jan', 'feb', 'mar', 'apr');
+for (my $i = 0; $i &lt; @months; $i++) {
+   print $months[$i], &quot;\n&quot;;
+}  
+</pre></td>
+</tr>
+
+</table>
+
+<p><strong>Notes:</strong></p>
+<ul>
+<li>Again, the curly braces are mandatory, even if there is only one statement in the block.</li>
+<li><code>foreach</code> loop is handy for reading each item of the array. It cannot modify the array.</li>
+<li>The negation version <code>until</code> should be used only for negative logic, e.g., <code>until ($done) { ... }</code>.</li>
+</ul>
+
+<h4>Loop Control Statements</h4>
+<ul>
+<li><code>last</code>: exit the for loop (similar to <code>break</code> statement in C/Java).</li>
+<li><code>next</code>: aborts the current iteration and continues to the next iteration of the loop (similar to <code>continue</code> statement in C/Java)</li>
+<li><code>redo</code>: redo the current iteration (from the begin brace).</li>
+<li>last, next and redo work with a labeled block in the form of <code>labelName: ...</code></li>
+</ul>
+
+<p>For example:</p>
+<pre class="code-listing">#!/usr/bin/perl          <span class="code-comment"># LoopTest.pl</span>
+use strict;
+use warnings;
+my $num = 1;
+while (1) {                  <span class="code-comment"># Always true</span>
+   $num++;
+   next if ($num % 3) == 0;  <span class="code-comment"># Continue to next num if num is divisible by 3</span>
+   last if $num == 17;       <span class="code-comment"># Break the loop if num is 17</span>
+   if (($num % 2) == 0) {
+      $num += 3;             <span class="code-comment"># Add 3 for even number</span>
+   } else { 
+      $num -= 3;             <span class="code-comment"># Subtract 3 for odd number</span>
+   }
+   print &quot;$num &quot;;
+}
+</pre>
+<pre class="code-output">&gt; <strong>perl LoopTest.pl</strong>
+5 4 2 7 11 10 8 13 17 16
+</pre>
+
+<h4>Special Scalar Variable: The Default Scalar Variable <code>$_</code></h4>
+<p>Perl introduces a feature called the <em>default variable</em>, which is not found in other languages.  The default scalar variable is named <code>$_</code>.</p>
+
+<p>Many constructs and functions, such as <code>foreach</code> loop and <code>print</code>, takes <code>$_</code> as the <em>default argument</em>.  For example,</p>
+<pre class="code-example">foreach my $month (@months) { print $month; }
+</pre>
+<p>can be rewritten as:</p>
+<pre class="code-example">foreach (@months) { print; }    <span class="code-comment"># same as: foreach $_ (@months) { print $_; }</span>
+<span class="code-comment"># or</span>
+for (@months) { print; }
+</pre>
+
+<p>Another example:</p>
+<pre class="code-example">
+while (&lt;&gt;) {                <span class="code-comment"># while ($_ = &lt;&gt;) to read input from keyboard</span>
+   print;                   <span class="code-comment"># print $_</span>
+   chomp;                   <span class="code-comment"># chomp $_ to remove ending newline from $_</span>
+   last if ($_ eq 'done');  <span class="code-comment"># break the loop if input is 'done'</span>
+}
+</pre>
+
+<h3>Hash or Associative Array</h3>
+<p>We have so far covered two data types, <em>scalar</em>  (which begins with <code>$</code>) for single item; and <em>array</em> (which begins with <code>@</code>) for a list of scalars. The third data type provided by Perl is called <em>Hash</em> or <em>Associative Array</em>, which begins with a <code>%</code>. Take note that <code>%rose</code> is not a <code>@rose</code> is not a <code>$rose</code>.</p>
+
+<p>Hash stores <em>key-value</em> (or <em>name-value</em>) pairs.  Hash is similar to regular array, except that regular arrays are indexed by numbers; but hashes are indexed by key-strings. Hash lets you associate one scalar to another, hence, it is also called <em>associative array</em>.</p>
+
+<p>To initialize a hash, you could provide a list of key-value pairs in the form of <code>(<em>key1</em> =&gt; <em>value1</em>, <em>key2</em> =&gt; <em>value2</em>, ...)</code> or <code>(<em>key</em>1, <em>value</em>1, <em>key</em>2, <em>value</em>2, ...)</code>. Key must be unique.</p>
+<p> You can retrieve the <em>value</em> associated to a <em>key</em>, in the scalar-context form of <code>$<em>hashName</em>{<em>keyName</em>}</code>.  Recall that <em>array</em> uses square bracket with numerical index, <code>$<em>arrayName</em>[<em>index</em>]</code>, whereas <em>hash</em> uses curly bracket and key-string index.</p>
+<p>For example,</p>
+<pre class="code-listing">#!/usr/bin/perl          <span class="code-comment"># HashTest.pl</span>
+use strict;
+use warnings;
+<span class="code-comment"># Declare and initialize a hash with key-value pairs.</span>
+my %countryCodes = ('us' =&gt; 'United States', 'sg' =&gt; 'Singapore');
+   
+<span class="code-comment"># Use $hashName{keyName} (scalar context) to reference the value of an item.</span>
+print $countryCodes{'us'}, &quot;\n&quot;;   <span class="code-comment"># prints 'United States'</span>
+print $countryCodes{'sg'}, &quot;\n&quot;;   <span class="code-comment"># prints 'Singapore'</span>
+   
+<span class="code-comment"># Add in more key-value pairs</span>
+$countryCodes{'fr'} = 'France';
+$countryCodes{'cn'} = 'China';
+   
+print %countryCodes, &quot;\n&quot;;   <span class="code-comment"># prints all items</span>
+   
+my %emtpyHash = ();   <span class="code-comment"># an initially empty hash</span>
+</pre>
+
+<p>You can converts a hash to an array and vice versa. The array stores the key-value pairs as sequential entries but in no particular order, e.g.,</p>
+<pre class="code-example"><span class="code-comment"># Assign Hash to Array</span>
+my %countryCodes = ('us' =&gt; 'United States', 'sg' =&gt; 'Singapore');  <span class="code-comment"># Hash</span>
+my @countryArray = %countryCodes;        <span class="code-comment"># Assign a Hash to an array</span>
+print $countryArray[0], &quot;\n&quot;;            <span class="code-comment"># Referencing array</span>
+print $countryArray[1], &quot;\n&quot;;
+</pre>
+<pre class="code-example"><span class="code-comment"># Assign an Array (a list of items) to a Hash</span>
+my %countryHash = ('us', 'United States', 'sg', 'Singapore');  <span class="code-comment"># Hash</span>
+print $countryHash{'us'}, &quot;\n&quot;;   <span class="code-comment"># Referencing hash</span>
+print $countryHash{'sg'}, &quot;\n&quot;;
+</pre>
+
+<h4>Hash Functions</h4>
+
+<ul>
+<li><code>keys(<em>hashName</em>)</code>: returns an array containing all the keys in <em><code>hashName</code></em>.</li>
+<li><code>values(<em>hashName</em>)</code>: returns an array containing all the values in <em><code>hashName</code></em>.</li>
+<li><code>each(<em>hashName</em>)</code>: returns a 2-element array (key, value) containing the next key-value pair from <em><code>hashName</code></em>.</li>
+<li><code>delete($<em>hashName</em>{<em>keyName</em>})</code>: removes the key-value pair of <em><code>keyName</code></em> from <em><code>hashName</code></em>, and returns the deleted value.</li>
+<li><code>exists($<em>hashName</em>{<em>keyName</em>})</code>: returns true if <em><code>keyName</code></em> exists in <em><code>hashName</code></em>.</li>
+<li><code>defined($<em>hashName</em>{<em>keyName</em>})</code>: check if value of <em><code>keyName</code></em> is defined in <em><code>hashName</code></em>.</li>
+</ul>
+
+<p>For example:</p>
+<pre class="code-example">my %countryCodes = ('us' =&gt; 'United States', 'sg' =&gt; 'Singapore');
+while ((my $key, my $value) = each %countryCodes) {
+   print &quot;$key is associated with $value.\n&quot;;
+}
+</pre>
+
+<h4>Special Hash Variable: The Environment Variables Hash <code>%ENV</code></h4>
+<p>A program can access an operating environment which contains information such as the current directory, the username, and etc. Perl stores the environment variables in a special hash named <code>%ENV</code>.</p>
+
+<pre class="code-example">print $ENV{'PATH'};   <span class="code-comment"># print environment variable PATH</span>
+   
+while ((my $key, my $value) = (each %ENV)) {  <span class="code-comment"># prints all environment variables
+</span>   print &quot;$key=$value\n&quot;;
+}
+</pre>
+
+<p><code>%ENV</code> hash is useful in writing server-side CGI Perl scripts.</p>
+
+<h4>Sorting the Hash</h4>
+<pre class="code-example">foreach my $key (sort keys %ENV) {   <span class="code-comment"># returns array of sorted keys.</span>
+   print &quot;$key=$ENV{$key}\n&quot;;        <span class="code-comment"># get the value with the sorted keys</span>
+}
+</pre>
+
+<h3>Subroutines (or Functions)</h3>
+<p>You can define your own subroutine (or functions) by using the keyword <code>sub</code> with a processing block:</p>
+<pre class="code-syntax"><strong>sub</strong> <em>subroutineName</em> <strong>{</strong>
+   <em>statementBlock</em><strong>;
+   return</strong> a<em>ReturnValue</em><strong>;
+}</strong>
+</pre>
+
+<p>In Perl, subroutine returns a single piece of data or nothing, via statement <code>return <em>aReturnValue</em></code> (or the last expression evaluated if there is no <code>return</code> statement).</p>
+
+<p>You can invoke a subroutine by referencing it with an ampersand <code>&amp;</code> before the subroutine name. (Recall that <code>$</code> identifies a scalar; <code>@</code> identifies an array, and <code>% </code>identifies a hash.)</p>
+
+<p>For example:</p>
+<pre class="code-example"><span class="code-comment"># Define subroutine</span>
+sub hello { return 'Hello, world'; }
+   
+<span class="code-comment"># Invoke subroutine</span>
+print &amp;hello, &quot;\n&quot;;
+</pre>
+
+<h4>Passing arguments into subroutines</h4>
+<p>You can pass argument(s) into subroutine.  Perl places the arguments into a special array variable named <code>@_</code>.  You can access the first element using <code>$_[0]</code>, the second with <code>$_[1]</code>, and so on. (Recall that <code>$_</code> is the default scalar variable.)</p>
+<p>You can use keyword <code>local</code> to define local variables or <code>my</code> to define lexical  variables (available inside a block) for the subroutine, which hides the global version temporarily if there is one.</p>
+<p>For example,</p>
+<pre class="code-example"><span class="code-comment"># Define a subroutine add which takes zero or more arguments</span>
+sub add {
+   my $sum = 0;
+   foreach (@_) { $sum += $_; }
+   return $sum;
+}
+   
+<span class="code-comment"># Invoke subroutine add with various number of arguments</span>
+print &amp;add(1), &quot;\n&quot;;
+print &amp;add(2, 3), &quot;\n&quot;;
+print &amp;add(4, 5, 6), &quot;\n&quot;;
+</pre>
+
+<h3>Perl's Build-in Functions</h3>
+
+<h4><strong>Mathematical Functions</strong></h4>
+<ul>
+<li><code>sqrt(<em>number</em>)</code>: returns the square root of <code><em>number</em></code>.</li>
+<li><code>abs(<em>number</em>)</code>: returns the absolute value of <code><em>number</em></code>.</li>
+<li><code>sin(<em>number</em>)</code>: returns the sine of <code><em>number</em></code>, in radian.</li>
+<li><code>cos(<em>number</em>)</code>: returns the cosine of <code><em>number</em></code>, in radian.</li>
+<li><code>atan(<em>y</em>, <em>x</em>)</code>: returns the arc-tangent of <em><code>y/x</code></em> in the range of -&pi; to &pi; radians.</li>
+<li><code>exp(<em>number</em>)</code>: returns the exponent of <code><em>number</em></code>.</li>
+<li><code>log(<em>number</em>)</code>: returns the natural logarithm of <code><em>number</em></code>.</li>
+</ul>
+
+<h4>Converting between Number Bases</h4>
+<ul>
+<li><code>ord(<em>character</em>)</code> returns the ASCII value of <em><code>character</code></em>.</li>
+<li><code>chr(<em>number</em>)</code> returns the character given its ASCII <em><code>number</code></em>.</li>
+<li><code>oct(<em>number</em>)</code> returns the decimal value of the octal <em><code>number</code></em>.</li>
+<li><code>hex(<em>number</em>)</code> returns the decimal value of the hexadecimal <em><code>number</code></em>.</li>
+</ul>
+
+<h4>Error Reporting Functions - exit, die, warn</h4>
+
+<ul>
+<li><code>exit(<em>number</em>)</code>: exits the program with the status <em><code>number</code></em>.  Normal termination of program exits with number 0.</li>
+<li><code>die(<em>string</em>)</code>: exits the program with the current value of the special variable <code>$!</code> and prints <em><code>string</code></em>.</li>
+<li><code>warn(<em>string</em>)</code>: prints the <em><code>string</code></em> but does not terminates the program.</li>
+</ul>
+<p>For example,</p>
+<pre class="code-example">
+exit unless open(HANDLE, $file)
+open (HADNLE, $file) or die 'cannot open $file!\n';
+</pre>
+
+<p><strong>Special Scalar Variable: Error Number <code>$!</code></strong></p>
+<p><code>$!</code> (or <code>$ERRNO</code> or <code>$OS_ERROR</code>) contains the system error.  In numeric context, it contains the error number; in string context, it contains the error string.</p>
+
+<h4>Backquotes `<em><code>command</code></em>` and Function <code>System</code></h4>
+<p>`<code><em>command</em></code>` executes <em><code>command</code></em> in a sub-shell and returns the <em><code>command</code></em>'s output. For examples,</p>
+
+<pre class="code-example">my $today = `date`;
+print $today, &quot;\n&quot;;
+  
+my @dirlines = `dir`;         <span class="code-comment"># Use `ls -l` for Unix</span>
+foreach (@dirlines) { print; }
+</pre>
+
+<p><code>system(<em>program</em>, <em>args</em>)</code> executes the <em><code>program</code></em> with argument <em><code>args</code></em> and waits for it to return. <code>system</code> is similar to backquotes.  However, backquotes return the output of the program; whereas <code>system</code> returns the exit code of the program (where 0 indicates normal termination).  <code>system</code> lets the command go ahead and prints to the console. For example,</p>
+
+<pre class="code-example">print system('date'), &quot;\n&quot;;
+print system('dir'), &quot;\n&quot;;
+</pre>
+
+<h4><strong>Function <code>sort</code></strong></h4>
+<p><code>sort(<em>subroutine</em>, <em>array</em>)</code> sorts the <em><code>array</code></em> using the comparison function <em><code>subroutine</code></em> and returns the sorted array.  Inside the <code>subroutine</code>, scalar variables <code>$a</code> and <code>$b</code> are automatically set to the two elements to be compared. If <code>sort</code> is used without the <em><code>subroutine</code></em>, it sorts according to string order.  (Caution: By default, number are sorted as string, that is, the number 10 is less than 2 in string order).</p>
+<p>For examples,</p>
+
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+my @color = ('black', 'white', 'blue', 'green');
+my @sorted = sort @color;
+foreach (@sorted) { print &quot;$_ &quot;; }
+</pre>
+
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+  
+<span class="code-comment"># Define sorting subroutine</span>
+sub numerically { if ($a &gt; $b) {1} elsif ($a &lt; $b) {-1} else {0} }    <span class="code-comment"># Compare numbers</span>
+  
+my @price = (77, 100, 99, 55, 1);
+my @sorted = sort numerically @price;
+foreach (@sorted) { print &quot;$_ &quot;; }  <span class="code-comment"># 1 55 77 99 100</span>
+   
+<span class="code-comment"># A &quot;spaceship&quot; operator as the shorthand for the above because it is used very often</span>
+@sorted = sort { $a &lt;=&gt; $b } @price;
+     
+@sorted = sort @price;              
+foreach (@sorted) { print &quot;$_ &quot;; }  <span class="code-comment"># 1 100 55 77 99</span>
+</pre>
+
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+  
+<span class="code-comment"># Define sorting subroutine</span> 
+sub alphabetically { lc($a) cmp lc($b); } <span class="code-comment"># Compare lowercase string</span>
+   
+my @color = ('red', 'YELLOW', 'Blue', 'green');
+my @sorted = sort alphabetically @color;
+foreach (@sorted) { print &quot;$_ &quot;; }
+</pre>
+
+<h4><strong>Random Number Functions <code>srand</code> and <code>rand</code></strong></h4>
+<ul>
+<li><code>srand(<em>seed</em>)</code>: initializes the random number generator with the <em><code>seed</code></em>.  Use it once at the beginning of the program.  If <em><code>seed</code></em> is omitted, the current time is used.</li>
+<li><code>rand(<em>number</em>)</code> returns a random floating-point number between 0 and <em><code>number</code></em>.</li>
+</ul>
+
+<pre class="code-example">
+srand;
+print rand(1), &quot;\n&quot;;         <span class="code-comment"># Generate a random number between 0.0 and 1.0</span>
+print int(rand(100)), &quot;\n&quot;;  <span class="code-comment"># Generate a random integer between 0 and 99</span>
+</pre>
+
+<h4><strong>Time Functions <code>time</code>, <code>localtime</code>, <code>gmttime</code></strong></h4>
+<ul>
+<li><code>time</code>: returns the number of second since January 1, 1970, GMT (Greenwich Mean Time).</li>
+<li><code>localtime(<em>time</em>)</code>: converts the numeric <em><code>time</code></em> to time/day/date fields in the local time zone.</li>
+<li><code>gmttime(<em>time</em>)</code>: converts the numeric <em><code>time</code></em> to time/day/date fields in GMT.</li>
+</ul>
+
+<h4><strong>Function <code>sleep</code></strong></h4>
+<p><code>sleep(<em>number</em>)</code> makes the program wait for <em><code>number</code></em> of seconds before resuming execution.</p>
+
+<h4>Encryption Function <code>crypt</code></h4>
+<p><code>crypt(<em>password</em>, <em>salt</em>)</code> encrypts <em><code>password</code></em> with <em><code>salt</code></em>, and returns the encrypted password.  <code>crypt</code> takes only the first 8 characters of the password for encryption.  <em><code>salt</code></em> is up to 12 bits (or 16 bits?). The first 2 characters in the encrypted password are the <em><code>salt</code></em>.  That is needed to verify the password.</p>
+
+<h3>Miscellaneous</h3>
+
+<h4><code>do(...)</code>: Executing another Perl program</h4>
+<p>For example, <code>do(<em>FILENAME</em>)</code> evaluates the Perl code in <em><code>FILENAME</code></em>. <code>do(...)</code> is similar to <code>#include</code> in C/C++.</p>
+
+<h4>Bitwise Operations</h4>
+<table class="table-data">
+  <tr>
+    <th>OPERATOR</th>
+    <th>DESCRIPTION</th>
+    <th>EXAMPLE</th>
+    <th>RESULT</th>
+  </tr>
+  <tr>
+    <td class="td-center"><code>&lt;&lt;</code></td>
+    <td>Left bit-shift (padded with 0's)</td>
+    <td><code><em>bitPattern</em> &lt;&lt; <em>number</em></code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>&gt;&gt;</code></td>
+    <td>Right bit-shift (padded with ??)</td>
+    <td><code><em>bitPattern</em> &gt;&gt; <em>number</em></code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>&amp;</code></td>
+    <td>Bitwise AND</td>
+    <td><code><em>bitPattern1</em> &amp; <em>bitPattern2</em></code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>|</code></td>
+    <td>Bitwise OR</td>
+    <td><code><em>bitPattern1</em> | <em>bitPattern2</em></code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr>
+    <td class="td-center"><code>~</code></td>
+    <td>Bitwise NOT (1's compliment)</td>
+    <td><code>~<em>bitPattern</em> </code></td>
+    <td><code> </code></td>
+  </tr>
+  <tr class="table-row-alt">
+    <td class="td-center"><code>^</code></td>
+    <td>Bitwise XOR</td>
+    <td><code><em>bitPattern1</em> ^ <em>bitPattern2</em></code></td>
+    <td><code> </code></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<ul>
+<li>You can also use the compound operators <code>|=</code>, <code>&amp;=</code>, <code>^=</code>, <code>~=</code>, <code>&lt;&lt;=</code>, <code>&gt;&gt;=</code>.</li>
+</ul>
+
+<h3>Debugging Perl Programs</h3>
+<p>[TODO]</p>
+
+<h3>Perl Documentations</h3>
+<p>Perl comes with thousands of pages of documentations @ <a href="http://perldoc.perl.org">http://perldoc.perl.org</a>.</p>
+<ul>
+<li>perlfaq: Perl frequently asked questions</li>
+<li>perldata: Perl data structures</li>
+<li>perlsyn: Perl syntax</li>
+<li>perlop: Perl operators and precedence</li>
+<li>perlre: Perl regular expressions</li>
+<li>perlrun: Perl execution and options</li>
+<li>perlfunc: Perl builtin functions</li>
+<li>perlvar: Perl predefined variables</li>
+<li>perlsub: Perl subroutines</li>
+<li>perlmod: Perl modules: how they work</li>
+</ul>
+
+<h3>Code Examples</h3>
+
+<h4>Print Calendar</h4>
+<p>Given a month (e.g., mar) and the first day of the week of that month (e.g., wed) , print the calendar of the month.</p>
+
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+use 5.010;
+   
+<span class="code-comment"># CalendarMonth.pl
+# Given a month and the first day of the week of that month, 
+# print the calendar for the month. For example,
+# &gt; perl CalendarMonth.pl mar wed</span>
+
+my @weekdays = (&quot;sun&quot;, &quot;mon&quot;, &quot;tue&quot;, &quot;wed&quot;, &quot;thu&quot;, &quot;fri&quot;, &quot;sat&quot;);
+my %daysInMonth = (&quot;jan&quot; =&gt; 31, &quot;feb&quot; =&gt; 28, &quot;mar&quot; =&gt; 31, &quot;apr&quot; =&gt; 30,
+                   &quot;may&quot; =&gt; 31, &quot;jun&quot; =&gt; 30, &quot;jul&quot; =&gt; 31, &quot;aug&quot; =&gt; 31,
+                   &quot;sep&quot; =&gt; 30, &quot;oct&quot; =&gt; 31, &quot;nov&quot; =&gt; 30, &quot;dec&quot; =&gt; 31);
+   
+<span class="code-comment"># Get inputs from the command-line argument @ARGV, convert to lowercase.</span>
+my $theMonth = lc(shift);
+my $firstWeekDay = lc(shift);
+   
+<span class="code-comment"># Check valid input for the first week day of the month</span>
+my $weekDayNum;
+for ($weekDayNum = 0; $weekDayNum &lt; @weekdays; $weekDayNum++) {
+   last if ($weekdays[$weekDayNum] eq $firstWeekDay) 
+}
+die &quot;Error: Incorrect first weekday '$firstWeekDay'&quot; if ($weekDayNum &gt;= @weekdays);
+   
+<span class="code-comment"># Check valid input for the month</span>
+die &quot;Error: Incorrect month '$theMonth'&quot; unless (exists $daysInMonth{$theMonth});
+   
+<span class="code-comment"># Print heading - Each month takes 4 places bMMM</span>
+printf &quot;%16s\n&quot;, uc($theMonth);   <span class="code-comment"># User C-style printf for formatted output</span>
+for my $day (@weekdays) {
+   printf &quot;%4s&quot;, ucfirst($day);
+}
+print &quot;\n&quot;;
+   
+<span class="code-comment"># Skip to the first day of the week</span>
+$weekDayNum = 0;
+until ($firstWeekDay eq $weekdays[$weekDayNum]) {
+   print &quot;    &quot;;
+   $weekDayNum++;
+}
+   
+<span class="code-comment"># Printing the month</span>
+for (my $dayNum = 1; $dayNum &lt;= $daysInMonth{$theMonth}; $dayNum++) {
+   printf &quot;%4d&quot;, $dayNum;
+   $weekDayNum++;
+   if ($weekDayNum == 7) {
+      $weekDayNum = 0;
+      print &quot;\n&quot;;
+   }
+}
+</pre>
+
+<p>Given a year (e.g., 2009), print the calendar of the year.</p>
+<pre class="code-listing">#!/usr/bin/perl
+use strict;
+use warnings;
+use 5.010;
+   
+<span class="code-comment"># CalendarYear.pl
+# Given a year (&gt;=1961), print the calendar for the year.
+# &gt; perl CalendarYear.pl 2009</span>
+   
+my @weekdays = (&quot;sun&quot;, &quot;mon&quot;, &quot;tue&quot;, &quot;wed&quot;, &quot;thu&quot;, &quot;fri&quot;, &quot;sat&quot;);
+my @months = ('jan', 'feb', 'mar', 'apr', 'may', 'jun',
+              'jul', 'aug', 'sep', 'oct', 'nov', 'dec');
+my %daysInMonth = (&quot;jan&quot; =&gt; 31, &quot;feb&quot; =&gt; 28, &quot;mar&quot; =&gt; 31, &quot;apr&quot; =&gt; 30,
+                   &quot;may&quot; =&gt; 31, &quot;jun&quot; =&gt; 30, &quot;jul&quot; =&gt; 31, &quot;aug&quot; =&gt; 31,
+                   &quot;sep&quot; =&gt; 30, &quot;oct&quot; =&gt; 31, &quot;nov&quot; =&gt; 30, &quot;dec&quot; =&gt; 31);
+                   
+<span class="code-comment"># Get inputs from the command-line argument @ARGV</span>
+my $theYear = shift;
+my $startYear = 1961;
+   
+<span class="code-comment"># Check valid inputs</span>
+die &quot;Error: no year given&quot; unless ($theYear);
+die &quot;Error: Incorrect year number '$theYear'&quot; unless ($theYear &gt;= $startYear);
+   
+<span class="code-comment"># Knowing that Jan 1, 1961 is a Sunday,
+#  compute the first week day of the given year</span>
+my $yearsDiff = $theYear - $startYear;
+my $daysDiff = $yearsDiff * 365;
+<span class="code-comment"># Account for leap years</span>
+$daysDiff += int($yearsDiff / 4);
+my $firstWeekDay = ($daysDiff + 0) % 7;   <span class="code-comment"># +0 for Sunday</span>
+my $weekDayNum = 0;
+   
+<span class="code-comment"># Print Month's heading - Each month takes 4 places bMMM</span>
+for my $month (@months) {
+   <span class="code-comment"># Print heading for month</span>
+   printf &quot;%16s\n&quot;, uc($month);
+   for my $day (@weekdays) {
+      printf &quot;%4s&quot;, ucfirst($day);
+   }
+   print &quot;\n&quot;;
+   
+   <span class="code-comment"># Skip to the first day of the week</span>
+   $weekDayNum = 0;
+   until ($firstWeekDay == $weekDayNum) {
+      print &quot;    &quot;;
+      $weekDayNum++;
+   }
+   
+   <span class="code-comment"># Check for leap year - divisible by 4 but not divisible by 100, or divisible by 400</span>
+   if (((($theYear % 4) == 0) &amp;&amp; (($theYear % 100) != 0)) || ($theYear % 400) == 0) {<br />      $daysInMonth{'feb'} = 29;
+   }
+   
+   <span class="code-comment"># Continue for the rest of the month</span>
+   for (my $dayNum = 1; $dayNum &lt;= $daysInMonth{$month}; $dayNum++) {
+      printf &quot;%4d&quot;, $dayNum;
+      $weekDayNum++;
+      if ($weekDayNum == 7) {
+         $weekDayNum = 0;
+         print &quot;\n&quot;;
+      }
+   }
+   print &quot;\n&quot;;
+   print &quot;\n&quot; if ($weekDayNum != 0);
+   $firstWeekDay = $weekDayNum;  <span class="code-comment"># Continue for next month</span>
+}
+</pre>
+
+
+
+<p>&nbsp;</p>
+
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>Popular Perl sites, e.g., <a href="http://www.perl.org">www.perl.org</a>, <a href="http://www.perl.com">www.perl.com</a>, <a href="http://www.pm.org">www.pm.org</a>, <a href="http://www.perlmongers.org">www.perlmongers.org</a>.</li>
+<li>Perl's documentation @ <a href="http://perldoc.perl.org">http://perldoc.perl.org</a>.</li>
+<li>&quot;Perlintro - A brief introduction and overview of Perl&quot;, available @ <a href="http://perldoc.perl.org">http://perldoc.perl.org</a>.</li>
+<li>CPAN (Comprehensive Perl Archive Network) @ <a href="http://www.cpan.org">www.cpan.org</a>.</li>
+<li>(The Camel Book) Larry Wall, Tom Christiansen and Jon Orwant, &quot;Programming Perl&quot;, 3rd eds, 2000   - covers Perl 5.6.</li>
+<li>(The Llama Book) Randal L. Schwartz, Tom Phoenix and Brian D Foy, &quot;Learning Perl&quot;, 5th eds, 2008  - covers Perl 5.10.</li>
+<li>(The Ram Book) Tom Christiansen and Nathan Torkington, &quot;The Perl Cookbook&quot;, 2nd eds, 2003  - recipes for common tasks.</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: Perl 5.10.0 (Cygwin)<br />
+Last modified: October 6, 2009</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

@@ -1,0 +1,1861 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>C++ Libraries, String and Standard Template Library</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>C++ Programming Language</h1>
+<h2>C++ Standard Libraries and Standard Template Library (STL)</h2>
+</div>
+
+<div id="content-main">
+
+<h3>C++ Standard Libraries</h3>
+
+<p>C++ provides  a huge set of libraries:</p>
+
+<ol>
+<li>Standard ANSI C library ported over to C++. These libraries are name with a prefix &quot;<code>c</code>&quot; and without the &quot;<code>.h</code>&quot;, e.g., <code>&lt;cmath&gt;</code> for C's <code>&lt;math.h&gt;</code>, <code>&lt;cstdlib&gt;</code> for C's <code>&lt;stdlib.h&gt;</code>, etc.</li>
+<li>C++ new Libraries, such as <code>&lt;iostream&gt;</code>, <code>&lt;iomanip&gt;</code>, <code>&lt;string&gt;</code>, <code>&lt;fstream&gt;</code>, <code>&lt;sstream&gt;</code>.</li>
+<li>C++ Standard Template Library (STL): consists of containers,  iterators, algorithms and function objects.</li>
+<li>Boost C++ libraries.</li>
+</ol>
+
+<p>The cplusplus.com at <a href="http://www.cplusplus.com/reference">http://www.cplusplus.com/reference</a> provides a comprehensive online references for the C++ libraries (and updated for C++11).</p>
+
+<h4>C Libraries and Headers</h4>
+
+<ul>
+<li><code>&lt;cstring&gt;</code>: To be elaborated later.</li>
+<li><code>&lt;cmath&gt;</code>: numeric mathematical library</li>
+<li><code>&lt;cstdlib&gt;</code>: General utilities such as Execution (<code>abort</code>, <code>exit</code>, <code>EXIT_SUCCESS</code>, <code>EXIT_FAILURE</code>); Environment (<code>getenv</code>); Dynamic Memory Management (<code>malloc</code>, <code>free</code>, <code>calloc</code>, <code>realloc</code>), String Parsing (<code>atoi</code>, <code>atof</code>, <code>atol</code>, <code>strtod</code>), Pseudo-random sequence generation (<code>rand</code>, <code>srand</code>, <code>RAND_MAX</code>); Array searching and sorting (<code>bsearch</code>, <code>qsort</code>).</li>
+<li><code>&lt;cctype&gt;</code>: Checking character types (<code>isalpha</code>, <code>isdigit</code>, <code>isalnum</code>, <code>isspace</code>, <code>isupper</code>, <code>islower</code>, <code>isblank</code>, <code>iscntrl</code>, <code>isgraph</code>, <code>isprint</code>, <code>ispunct</code>, <code>isxdigit</code>) and character conversion (<code>toupper</code>, <code>tolower</code>).</li>
+<li><code>&lt;climits&gt;</code>, <code>&lt;cfloat&gt;</code>: Size and limit of integer types (<code>INT_MAX</code>, <code>INT_MIN</code>, <code>UINT_MAX</code>, <code>CHAR_BIT</code>; and <code>SHRT_XXX</code> for <code>short</code>, <code>LONG_XXX</code> for <code>long</code>, <code>LLONG_XXX</code> for <code>long long</code>, <code>CHAR_XXX</code> for <code>char</code>) and floating-point types (<code>DBL_MIN</code>, <code>DBL_MAX</code>, <code>DBL_DIG</code>, <code>DBL_MIN_EXP</code>, <code>DBL_MAX_EXP</code>; and <code>FLT_XXX</code> for <code>float</code>, <code>LDBL_XXX</code> for <code>long double</code>).</li>
+<li><code>&lt;ctime&gt;</code>: <code>time</code>, <code>difftime</code>, <code>clock</code>, <code>gmttime</code>, <code>localtime</code>, and etc.</li>
+<li><code>&lt;cstdio&gt;</code>: C's IO operations (<code>scanf</code>, <code>printf</code>, <code>fscanf</code>, <code>fprintf</code>, <code>fopen</code>, <code>fclose</code>, etc)</li>
+<li><code>&lt;cassert&gt;</code>, <code>&lt;cerrno&gt;</code>, <code>&lt;csignal&gt;</code>: Diagnostics and error</li>
+<li><code>&lt;clocale&gt;</code>: localizaton</li>
+<li><code>&lt;cstdbool&gt;</code>, <code>&lt;cstdint&gt;</code>, <code>&lt;cstddef&gt;</code>, <code>&lt;cstdarg&gt;</code>:</li>
+<li><code>&lt;cuchar&gt;</code>, <code>&lt;cwchar&gt;</code>, <code>&lt;cwcchar&gt;</code>: Unicode characters.</li>
+</ul>
+
+<h4>C++ Libraries and Headers</h4>
+<ul>
+<li><code>&lt;ios&gt;</code>, <code>&lt;iostream&gt;</code>, <code>&lt;istream&gt;</code>, <code>&lt;ostream&gt;</code>, <code>&lt;fstream&gt;</code>, <code>&lt;sstream&gt;</code>:</li>
+<li><code>&lt;iomanip&gt;</code>:</li>
+<li><code>&lt;string&gt;</code>:</li>
+<li><code>&lt;regex&gt;</code>:</li>
+<li><code>&lt;random&gt;</code>:</li>
+<li><code>&lt;limits&gt;</code>:</li>
+<li><code>&lt;stdexcept&gt;</code>, <code>&lt;exception&gt;</code>:</li>
+<li><code>&lt;complex&gt;</code>, <code>&lt;tuple&gt;</code>, <code>&lt;valarray&gt;</code>:</li>
+<li><code>&lt;locale&gt;</code>:</li>
+<li><code>&lt;typeinfo&gt;</code>:</li>
+<li><code>&lt;chrono&gt;</code>:</li>
+<li>Others: <code>&lt;codecvt&gt;</code>, <code>&lt;new&gt;</code>, <code>&lt;ratio&gt;</code>, <code>&lt;system_error&gt;</code>, <code>&lt;type_traits&gt;</code>.</li>
+</ul>
+
+<table class="table-program">
+<tr>
+<th>FUNCTION</th>
+<th>EXAMPLE</th>
+</tr>
+
+<tr>
+<td><pre class="color-syntax"><strong>int atoi(char* s)</strong>
+  Parse string s into an int</pre></td>
+<td>
+<pre class="color-example"> 
+ </pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax"><strong>double atof(char* s)</strong>
+  Parse string s into a double</pre></td>
+<td>
+<pre class="color-example"> 
+ </pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">
+<strong>int rand(void)</strong>
+  Generate a random number between 0 and RAND_MAX (&gt;32767)
+<strong>void srand (unsigned int seed)</strong>
+  Initialize (Seed) the random number generator</pre></td>
+<td>
+<pre class="color-example">rand() % 100     <span class="color-comment">// between 0 and 99</span>
+rand() % 100 + 1 <span class="color-comment">// between 1 and 100</span>
+ 
+ </pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">
+<strong>void exit(int status)</strong>: Exit with status code
+<strong>void abort(void)</strong>: Abort current process
+<strong>int system(const char *command)</strong>: Execute system command
+<strong>char* getenv(const char *param)</strong>: Get environment parameter's value</pre></td>
+<td>
+<pre class="color-example"> 
+ 
+ 
+ </pre></td>
+</tr>
+
+<tr>
+<td>
+<pre class="color-syntax">
+<strong>EXIT_SUCCESS, EXIT_FAILURE</strong>: System-dependent return code for success and failure</pre></td>
+<td>
+<pre class="color-example"> 
+</pre></td>
+</tr>
+</table>
+
+
+<h4>C++ Standard Template Libraries (STL) and Headers</h4>
+
+<p>STL was developed by Alexander Stepanov and Meng Lee at Hewlett-Packard Lab as proof-of-concept for so-called <em>generic programming</em>. It was released in 1994 and subsequently adopted into the C++98.</p>
+
+<p> STL provides a collection of templates representing <em>containers</em>, <em>iterators</em>,  <em>algorithms</em> and <em>function objects</em>.</p>
+
+<ol>
+<li>A <em>container</em> (templatized data structure) can be used to hold fundamental-type values or almost any type of objects, e.g., <code>vector&lt;int&gt;</code>, <code>list&lt;string&gt;</code>, <code>deque&lt;Person&gt;</code>.</li>
+<li>An <em>iterator</em> (a generalization of pointer) is an object that lets you transverse through elements of a container, e.g., <code>vector&lt;int&gt;::iterator</code>, <code>list&lt;string&gt;::iterator</code>.</li>
+<li><em>Algorithms</em> are used for tasks such as searching, sorting and comparison, e.g., <code>for_each</code>, <code>find</code>, <code>sort</code>.</li>
+<li><em>Function objects</em> are objects that act like functions.</li>
+</ol>
+
+<p>STL is provided in the following  headers:</p>
+<ul>
+<li><code>&lt;vector&gt;</code>,<code> &lt;list&gt;</code>, <code>&lt;deque&gt;</code>, <code>&lt;queue&gt;</code>, <code>&lt;stack&gt;</code>, <code>&lt;map&gt;</code>, <code>&lt;set&gt;</code>, <code>&lt;bitset&gt;</code>, <code>&lt;forward_list&gt;</code> (C++11), <code>&lt;unordered_map&gt;</code> (C++11), <code>&lt;unordered_set&gt;</code> (C++11), <code>&lt;array&gt;</code> (C++11): Containers data structures template classes.</li>
+<li><code>&lt;iterator&gt;</code>: Iterator for transversing the elements in a container.</li>
+<li><code>&lt;algorithm&gt;</code>, <code>&lt;numeric&gt;</code><code></code>, <code>&lt;functional&gt;</code>, <code>&lt;utility&gt;</code>: Algorithm and function objects.</li>
+<li><code>&lt;initializer_list&gt;</code> (C++11), <code>&lt;memroy&gt;</code> (C++11).</li>
+</ul>
+
+<h4>Boost C++ Libraries</h4>
+
+<p>[TODO]</p>
+
+<h3>C++ Standard Template Library (STL)</h3>
+
+<p></p>
+
+<h4>Let's Get Started with Examples of <span class="font-code">vector</span> STL Template Class</h4>
+<p>In computing, a vector refers to an array-like structure that holds a set of direct-access elements of the same kinds, instead of mathematical n-component vector. Unlike array which is fixed-size, vector is dynamically-sized. <code>vector</code> is a class template, declared in the <code>vector</code> header.</p>
+
+<p>Let's begin with some examples.</p>
+
+<h5>Example 1: Construct <span class="font-code">vector&lt;&gt;</span> object and access its elements</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Test vector class element access  (TestVectorIndex.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;ctime&gt;
+#include &lt;vector&gt;
+using namespace std;
+ 
+void print(const vector&lt;int&gt; &amp; v);
+ 
+int main() {
+   const int SIZE = 10;
+   vector&lt;int&gt; numbers(SIZE); <span class="color-comment"> // Declare vector of int of SIZE elements, init to 0</span>
+ 
+   cout &lt;&lt; &quot;size = &quot; &lt;&lt; numbers.size() &lt;&lt; endl;
+   cout &lt;&lt; &quot;capacity = &quot; &lt;&lt; numbers.capacity() &lt;&lt; endl;
+   print(numbers);
+ 
+  <span class="color-comment"> // Assign random numbers into vector</span>
+   srand(time(0)); <span class="color-comment"> // Seed the pseudo-random number generator</span>
+   for (size_t i = 0; i &lt; numbers.size(); ++i) {
+      numbers.at(i) = rand() % 100; <span class="color-comment"> // at() did bound check</span>
+   }
+   print(numbers);
+ 
+   cout &lt;&lt; &quot;First element is &quot; &lt;&lt; numbers.front() &lt;&lt; endl;
+   cout &lt;&lt; &quot;Last element is &quot; &lt;&lt; numbers.back() &lt;&lt; endl;
+ 
+  <span class="color-comment"> // [] does not perform index bound check, but at() does</span>
+   cout &lt;&lt; numbers[55] &lt;&lt; endl;   <span class="color-comment"> // no error compile and run</span>
+<span class="color-comment">//</span> cout &lt;&lt; numbers.at(55) &lt;&lt; endl;<span class="color-comment"> // runtime out_of_range exception</span>
+   return 0;
+}
+ 
+<span class="color-comment">// Print the content of this vector using indexing operator []</span>
+void print(const vector&lt;int&gt; &amp; v) {
+   for (int i = 0; i &lt; v.size(); ++i) {
+      cout &lt;&lt; v[i] &lt;&lt; &quot; &quot;; <span class="color-comment"> // no bound check, but safe here</span>
+   }
+   cout &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li><code>vector</code> is a template class. We create an <code>int</code> specialization via <code>vector&lt;int&gt;</code>. We create a <code>vector&lt;int&gt;</code> object via constructor <code>vector&lt;int&gt; numbers(SIZE);</code> which allocates <code>SIZE</code> elements and initializes to 0.</li>
+<li>The <code>size()</code> member function returns the number of elements. The <code>capacity()</code> returns the storage allocated. All STL containers dynamically allocate storage.</li>
+<li>Elements in <code>vector</code> has a linear order index. You can use <code>[]</code> overloaded operator or <code>at()</code> member function to access the n-th element. Take note that <code>[]</code> does not perform index-bound check; but <code>at()</code> does at runtime and throws <code>out_of_range</code> exception if index exceeds bound.</li>
+<li>The member function <code>front()</code> and <code>back()</code> returns the first and last element respectively.</li>
+</ul>
+
+<h5>Example 2: Using <span class="font-code">push_back()</span> and <span class="font-code">pop_back()</span> to add and remove element</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Test modifying vector class's element (TestVectorMod.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;ctime&gt;
+#include &lt;vector&gt;
+using namespace std;
+ 
+void print(const vector&lt;int&gt; &amp; v);
+ 
+int main() {
+   vector&lt;int&gt; numbers; <span class="color-comment"> // Declare vector of int with initial size of 0</span>
+   cout &lt;&lt; &quot;size = &quot; &lt;&lt; numbers.size() &lt;&lt; endl;
+   cout &lt;&lt; &quot;capacity = &quot; &lt;&lt; numbers.capacity() &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Assign random numbers into vector</span>
+   srand(time(0));
+   for (int i = 0; i &lt; 5; ++i) {
+      numbers.push_back(rand() % 100);
+        <span class="color-comment"> // Append element at the end - vector resize automatically</span>
+   }
+   print(numbers);
+   cout &lt;&lt; &quot;size = &quot; &lt;&lt; numbers.size() &lt;&lt; endl;
+   cout &lt;&lt; &quot;capacity = &quot; &lt;&lt; numbers.capacity() &lt;&lt; endl;
+ 
+   numbers.pop_back();<span class="color-comment"> // Remove the last element - size reduces by 1</span>
+   numbers.pop_back();
+   print(numbers);
+   cout &lt;&lt; &quot;size = &quot; &lt;&lt; numbers.size() &lt;&lt; endl;
+   cout &lt;&lt; &quot;capacity = &quot; &lt;&lt; numbers.capacity() &lt;&lt; endl;
+ 
+   numbers.clear(); <span class="color-comment"> // Remove all elements</span>
+   cout &lt;&lt; &quot;size = &quot; &lt;&lt; numbers.size() &lt;&lt; endl;
+   cout &lt;&lt; &quot;capacity = &quot; &lt;&lt; numbers.capacity() &lt;&lt; endl;
+   return 0;
+}
+ 
+<span class="color-comment">// Print the content of this vector using indexing operator []</span>
+void print(const vector&lt;int&gt; &amp; v) {
+   for (int i = 0; i &lt; v.size(); ++i) {
+      cout &lt;&lt; v[i] &lt;&lt; &quot; &quot;; <span class="color-comment"> // no bound check, but safe here</span>
+   }
+   cout &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>The default constructor <code>vector&lt;int&gt; numbers</code> construct a vector object with size of 0.</li>
+<li>The member function <code>push_back()</code> appends the item at the end; while <code>pop_back()</code> removes the last element.</li>
+</ul>
+
+<h5>Example 3: Using iterator to access the container</h5>
+
+<p>We can use a special object called <em>iterator</em> to iterate through all the elements of a STL container, such as <code>vector</code>. The <code>vector</code> class provides a pair of functions <code>begin()</code> and <code>end()</code> to work with iterator. To use iterator:</p>
+<pre class="color-example">
+<span class="color-comment">// Declare a vector</span>
+vector&lt;int&gt; aVector(10);
+<span class="color-comment">// Declare an iterator called iter for vector&lt;int&gt;</span>
+vector&lt;int&gt;::iterator iter;
+<span class="color-comment">// Assign iter to the beginning of the vector</span>
+iter = aVector.begin()
+<span class="color-comment">// Use *iter to access the current element</span>
+cout &lt;&lt; *iter &lt;&lt; endl;
+<span class="color-comment">// Next element</span>
+++iter;
+<span class="color-comment">// The pass-the-end element is aVector.end() - to be excluded</span></pre>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test vector class's iterator (TestVectorIterator.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;cstdlib&gt;
+#include &lt;vector&gt;
+using namespace std;
+ 
+void print(vector&lt;string&gt; &amp; v);
+ 
+int main() {
+   vector&lt;string&gt; strs;
+   strs.push_back(&quot;apple&quot;);
+   strs.push_back(&quot;orange&quot;);
+   strs.push_back(&quot;banana&quot;);
+   print(strs);
+   cout &lt;&lt; &quot;size = &quot; &lt;&lt; strs.size() &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Test insert()</span>
+   strs.insert(strs.begin() + 2, &quot;b4-banana&quot;);
+   strs.insert(strs.begin() + 1, 2, &quot;b4-orange&quot;);
+   print(strs);
+   cout &lt;&lt; &quot;size = &quot; &lt;&lt; strs.size() &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Test erase()</span>
+   strs.erase(strs.begin() + 1, strs.begin() + 4);
+   print(strs);
+   cout &lt;&lt; &quot;size = &quot; &lt;&lt; strs.size() &lt;&lt; endl;
+ 
+  <span class="color-comment"> // insert() from another vector</span>
+   vector&lt;string&gt; newStrs;
+   newStrs.push_back(&quot;1&quot;);
+   newStrs.push_back(&quot;2&quot;);
+   newStrs.push_back(&quot;3&quot;);
+   strs.insert(strs.begin() + 1, newStrs.begin(), newStrs.end());
+   print(strs);
+   cout &lt;&lt; &quot;size = &quot; &lt;&lt; strs.size() &lt;&lt; endl;
+}
+ 
+<span class="color-comment">// Use iterator to iterate thru the entire vector</span>
+void print(vector&lt;string&gt; &amp; v) {
+   for (vector&lt;string&gt;::iterator iter = v.begin(); iter != v.end(); ++iter) {
+      cout &lt;&lt; *iter &lt;&lt; &quot; &quot;;  <span class="color-comment"> // dereference</span>
+   }
+   cout &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>Each container class defines its suitable iterator, with type name of <code>vector&lt;T&gt;::iterator</code>.</li>
+<li>The <code>vector</code>'s member function <code>begin()</code> and <code>end()</code> returns an iterator to the first element and the <em>pass-the-end</em> element, respectively. The pass-the-end element shall be excluded, i.e., <code>[begin(), end())</code>.</li>
+<li>Iterator works like pointer, you can use <code>*iter</code> (dereferencing operator) to retrieve the vector element; <code>++iter</code> (increment operator) to move to the next element; <code>iter+n</code> to point to the <code>+n</code> element.</li>
+<li>The <code>insert()</code> and <code>erase()</code> member functions works on the iterator as well. <code>insert(iter, item)</code> inserts item before the iter-element. <code>insert(insert, n, item)</code> fills <code>n</code> element before the iter-element. <code>erase(fist, last)</code> removes all element in <code>[first, last)</code>.</li>
+<li>In C++11, you can use the <code>auto</code>  as the type of iterator, which asks the compiler to deduce the type automatically.
+<pre class="color-example">
+for (<span class="color-new">auto</span> iter = strs.begin(); iter != strs.end(); ++iter) {
+   cout &lt;&lt; *iter &lt;&lt; &quot; &quot;;          <span class="color-comment"> // Print string</span>
+}
+cout &lt;&lt; endl;</pre></li>
+
+<li>C++ introduces for-each loop, which can be used to iterate thru all the items of an array or a container:
+  <pre class="color-example">
+for (<span class="color-new">auto</span> item : strs) {
+   cout &lt;&lt; item &lt;&lt; &quot; &quot;;
+}
+cout &lt;&lt; endl;</pre>
+</li>
+</ul>
+
+<h4>The <span class="font-code">vector</span> Template Class</h4>
+
+<p>Let's take a closer look at the <code>vector</code> template class, which serve as a sample for all the STL container classes.</p>
+
+<h5>Constructor</h5>
+
+<pre class="color-syntax">
+<strong>vector</strong> (const allocator_type &amp; alloc = allocator_type());
+   <span class="color-comment">// Default Constructor: construct a vector object</span>
+<strong>vector</strong> (size_type n, const value_type &amp; val = value_type(),
+        const allocator_type &amp; alloc = allocator_type());
+   <span class="color-comment">// Fill Constructor: construct a vector object with n-element filled with val</span>
+<strong>vector</strong> (const vector &amp; v);
+   <span class="color-comment">// Copy Constructor</span>
+template &lt;class InputIterator&gt;
+<strong>vector</strong> (InputIterator first, InputIterator last,
+        const allocator_type &amp; alloc = allocator_type());
+   <span class="color-comment">// Range Copy Constructor</span></pre>
+
+<h5>Size and Capacity</h5>
+
+<pre class="color-syntax">
+size_type <strong>size</strong> () const;      <span class="color-comment">// Return the size (number of elements)</span>
+size_type <strong>capacity</strong> () const;  <span class="color-comment">// Return the storage allocated (in term of element)</span>
+bool <strong>empty</strong> () const;          <span class="color-comment">// Return true if size is 0</span>
+void <strong>reserve</strong> (size_type n);   <span class="color-comment">// Request for storage to hold n elements</span>
+void <strong>resize</strong> (size_type n, value_type val = value_type());
+      <span class="color-comment">// resize to n, remove extra element or fill with val</span>
+size_type <strong>max_size</strong> () const;  <span class="color-comment">// Return the maximum number of element</span>
+void <strong>shrink_to_fit</strong> ();        <span class="color-comment">// (C++11) Request to shrink storage</span></pre>
+
+<h5>Accessing Element</h5>
+
+<pre class="color-syntax">
+value_type &amp; <strong>operator[]</strong> (size_type n);  <span class="color-comment">// [n] operator (without index-bound check)</span>
+value_type &amp; <strong>at</strong> (size_type n);          <span class="color-comment">// Return a reference to n-th element with index-bound check</span>
+value_type &amp; <strong>front</strong> ();    <span class="color-comment">// Return a reference to the first element</span>
+value_type &amp; <strong>back</strong> ();     <span class="color-comment">// Return a reference to the last element</span></pre>
+
+<h5>Modifying Contents</h5>
+
+<pre class="color-syntax">
+void <strong>push_back</strong> (const value_type &amp; val); <span class="color-comment">// Append val at the end</span>
+void <strong>pop_back</strong> ();                        <span class="color-comment">// Remove the last element</span>
+void <strong>clear</strong> ();                           <span class="color-comment">// Remove all elements</span></pre>
+
+<h5>Non-member Friend Functions</h5>
+
+<pre class="color-syntax">
+<strong>==</strong>, <strong>!=</strong>, <strong>&lt;</strong>, <strong>&gt;</strong>, <strong>&lt;=</strong>, <strong>&gt;=</strong>    <span class="color-comment">// Comparison Operators</span>
+<span class="color-comment">// E.g.</span>
+template &lt;class T, class Alloc&gt;
+bool <strong>operator==</strong> (const vector&lt;T,Alloc&gt; &amp; left, const vector&lt;T, Alloc&gt; &amp; right);
+   <span class="color-comment">// Compare two vectors
+   // For == and !=, first compare the size, then each element with equal algorithm.
+   //   Stop at the first mismatch.
+   // For &lt;, &gt;, &lt;=, &gt;=, use lexicographical_compare algorithm. Stop at first mismatch.</span>
+ 
+template &lt;class T, class Alloc&gt;
+void <strong>swap</strong> (vector&lt;T,Alloc&gt; &amp; v1, vector&lt;T,Alloc&gt; v2);
+   <span class="color-comment">// Swap the contents of containers v1 and v2.
+   // Both shall has the same type, but can have different sizes.</span></pre>
+
+<h5>Iterator</h5>
+
+<pre class="color-syntax">
+iterator <strong>begin</strong>();  <span class="color-comment">// Return an iterator pointing to the first element</span>
+iterator <strong>end</strong>();    <span class="color-comment">// Return an iterator pointing to the pass-the-end element</span>
+ 
+reverse_iterator <strong>rbegin</strong>(); <span class="color-comment">// Return a reverse iterator pointing to the reverse beginning (last element)
+                           // increasing a reverse iterator to transverse in reverse order</span>
+reverse_iterator <strong>rend</strong>();   <span class="color-comment">// Return a reverse iterator pointing to the reverse past-the-end</span></pre>
+
+<h5>Iterator-based Operations</h5>
+
+<pre class="color-syntax">
+iterator <strong>insert</strong> (iterator pos, const value_type &amp; val);  <span class="color-comment">// Single-Element: insert element val before iterator pos</span>
+void     <strong>insert</strong> (iterator pos, size_type n, const value_type &amp; val);  <span class="color-comment">// Fill: insert n copies of val before pos</span>
+template &lt;class InputIterator&gt;
+void     <strong>insert</strong> (iterator pos, InputIterator first, InputIterator last)
+    <span class="color-comment">// Range-copy: copy the range [first, last) and insert before pos.</span>
+ 
+iterator <strong>erase</strong> (iterator pos);  <span class="color-comment">// Single-element: remove element pointed to by iterator pos</span>
+iterator <strong>erase</strong> (iterator first, iterator last);  <span class="color-comment">// Range: remove elements between [first,last)</span>
+ 
+void <strong>assign</strong> (size_type n, const value_type &amp; val);  <span class="color-comment">// Fill: clear old contents and assign n copies of val</span>
+template &lt;class InputIterator&gt;
+void <strong>assign</strong> (InputIterator first, InputIterator last);  <span class="color-comment">// Range: assign [first, last)</span></pre>
+
+<p>[TODO] Example</p>
+
+<h4>Containers</h4>
+
+<h5>Sequence Containers, Associative Containers and Adapters</h5>
+
+<p>STL provides the following types of containers:</p>
+
+<ol>
+<li>Sequence Containers: linear data structures of elements
+  <ul>
+<li><code>vector</code>: dynamically resizable array. Support fast insertion and deletion at <em>back</em>; and direct access to its elements.</li>
+<li><code>deque</code>: double-ended queue. Support fast insertion and deletion at <em>front and back</em>; and direct access to its elements.</li>
+<li><code>list</code>: double-linked list. Support fast insertion and deletion <em>anywhere</em> in the list; and direct access to its elements.</li>
+</ul>
+</li>
+
+<li>Associative Containers: nonlinear data structures storing key-value pairs
+  <ul>
+<li><code>set</code>: No duplicate element. Support fast lookup.</li>
+<li><code>multiset</code>: Duplicate element allowed. Support fast lookup.</li>
+<li><code>map</code>: One-to-one mapping (associative array) with no duplicate. Support fast key lookup.</li>
+<li><code>multimap</code>: One-to-many mapping, with duplicates allowed. Support fast key lookup.</li>
+</ul>
+</li>
+
+<li>Container Adapter Classes:
+  <ul>
+<li><code>Stack</code>: Last-in-first-out (LIFO) queue, adapted from <code>deque</code> (default), or <code>vector</code>, or <code>list</code>. Support operations <code>back</code>, <code>push_back</code>, <code>pop_back</code>.</li>
+<li><code>queue</code>: First-in-first-out (FIFO) queue, adapted from <code>deque</code> (default), or <code>list</code>. Support operations <code>front</code>, <code>back</code>, <code>push_back</code>, <code>pop_front</code>.</li>
+<li><code>priority_queue</code>: highest priority element at front of the queue. adapted from <code>vector</code> (default) or <code>deque</code>. Support operations <code>front</code>, <code>push_back</code>, <code>pop_front</code>.</li>
+</ul>
+</li>
+</ol>
+
+<h5>First-class Containers, Adapters and Near Containers</h5>
+
+<p>The containers can also be classified as:</p>
+<ol>
+<li>First-class Containers: all sequence containers and associative containers are collectively known as first-class container.</li>
+<li>Adapters: constrained first-class containers such as <code>stack</code> and <code>queue</code>.</li>
+<li>Near Containers: Do not support all the first-class container operations. For example, the built-in array (pointer-like), <code>bitsets</code> (for maintaining a set of flags), <code>valarray</code> (support array computation), <code>string</code> (stores only character type).</li>
+
+</ol>
+
+<h5>Container's Functions</h5>
+
+<p>All containers provides these functions:</p>
+<ul>
+<li>Default Constructor: to construct an empty container. Other constructors are provided for specific purposes.</li>
+<li>Copy Constructor:</li>
+<li>Destructor:</li>
+<li><code>empty()</code>: returns true if the container is empty.</li>
+<li><code>size()</code>: returns the size (number of elements).</li>
+<li>Assignment Operator (<code>=</code>)</li>
+<li>Comparison Operators (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>).</li>
+<li><code>swap()</code>: exchanges the contents of two containers.</li>
+</ul>
+
+<p>In addition, the first-class containers support these functions:</p>
+
+<ul>
+<li><code>begin</code>, <code>end</code>, <code>cbegin</code>, <code>cend</code>: Returns the begin and end <code>iterator</code>, or the <code>const</code> version.</li>
+<li><code>rbegin</code>, <code>rend</code>, <code>crbegin</code>, <code>crend</code>: Returns the <code>reverse_iterator</code>.</li>
+<li><code>clear()</code>: Removes all elements.</li>
+<li><code>erase()</code>: Removes one element given an iterator, or a range of elements given [begin, end) iterators.</li>
+<li><code>max_size()</code>: Returns the maximum number of elements that the container can hold.</li>
+</ul>
+
+<h5>Container Header</h5>
+
+<ul>
+<li><code>&lt;vector&gt;</code></li>
+<li><code>&lt;list&gt;</code></li>
+<li><code>&lt;deque&gt;</code></li>
+<li><code>&lt;queue&gt;</code>: <code>queue</code> and <code>priority_queue</code></li>
+<li><code>&lt;stack&gt;</code></li>
+<li><code>&lt;map&gt;</code>: <code>map</code> and <code>multimap</code></li>
+<li><code>&lt;set&gt;</code>: <code>set</code> and <code>multiset</code></li>
+<li><code>&lt;valarray&gt;</code></li>
+<li><code>&lt;bitset&gt;</code></li>
+<li><code>&lt;array&gt;</code> (C++11)</li>
+<li><code>&lt;forward_list&gt;</code> (C++11)</li>
+<li><code>&lt;unordered_map&gt;</code> (C++11)</li>
+<li><code>&lt;unordered_set&gt;</code> (C++11)</li>
+
+
+
+</ul>
+
+
+<h4>Iterator</h4>
+
+<p>An <em>iterator</em> behaves like a <em>generic pointer</em>, which can be used to reference (point-to) individual element of a generic container; and transverse through elements of a container. The purpose of iterator is to make transversing (iterating) of containers independent on the type of the containers (e.g., <code>vector&lt;int&gt;</code>, <code>queue&lt;double&gt;</code>, <code>stack&lt;string&gt;</code>). With iterator, you can apply <em>generic algorithm</em> (such as searching, sorting and comparison) to the container, independent of types. Without iterator, you may need to write different codes for the same algorithm for different containers (e.g., different codes for searching an <code>vector&lt;int&gt;</code>, <code>vector&lt;double&gt;</code>, <code>stack&lt;string&gt;</code>).</p>
+<p>Iterator abstracts pointer and works like pointer. It could actually be implemented as pointer, but that is totally up to the compiler. Iterator shall meet the following requirements:</p>
+
+<ul>
+<li>The dereferencing operator <code>*</code> shall be defined. That is, if <code>iter</code> is an iterator, <code>*iter</code> shall be pointing to an element of the container.</li>
+
+<li>The assignment operator <code>=</code> shall be defined. That is, if <code>iter1</code> and <code>iter2</code> are iterators, <code>iter1 = iter2</code> shall assign <code>iter2</code> to <code>iter1</code>.</li>
+
+<li>The comparison operators <code>==</code> and <code>!=</code> shall be defined. That is, if <code>iter1</code> and <code>iter2</code> are iterators, we can use <code>iter1 == iter2</code> and <code>iter1 != iter2</code> to compare them for equality. If <code>iter1 == iter2</code> is true, then they shall be pointing at the same element, i.e., <code>*iter1 == *iter2</code>.</li>
+
+<li>The increment operator <code>++</code> shall be defined. That is, if <code>iter</code> is an iterator, <code>++iter</code> and <code>iter++</code> move the iterator to point to the next element. The program shall be able to iterate through all the elements via <code>++iter</code> (or <code>iter++</code>) operations.</li>
+</ul>
+
+<p>In addition,</p>
+
+<ul>
+<li>For <em>linearly-ordered</em> container, the <code>+</code> (and <code>+=</code>) operator shall be defined. That is, if <code>iter</code> is an iterator, <code>iter+n</code> points to the next <code>n</code>-th element in the linear order.</li>
+
+<li>For iterator that can transverse backward, the decrement operator <code>--</code> shall be defined. That is, if <code>iter</code> is an operator, <code>--iter</code> and <code>iter--</code> move the iterator to point to the next element in the reverse order (or previous element in the forward order).</li>
+</ul>
+
+<p>All STL container provides two member functions: <code>begin()</code> and <code>end()</code> that return the iterators pointing to the first element and the <em>pass-the-end</em> element respectively. Hence, you can use the following code to transverse all the elements in the container:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Assume that c is a container</span>
+<em>iter_type</em> iter;
+for (iter = c.begin(); iter != c.end(); ++iter) {
+   <span class="color-comment">// Use *iter to reference each element</span>
+   ......
+}</pre>
+
+<p>Take note that the above code work for all STL containers with any type specialization. The type of iterator (<em><code>iter_type</code></em><code></code>) depends on the container. In STL, you can get the iterator type via <code><em>container</em>&lt;<em>T</em>&gt;::iterator</code>.</p>
+<p>By convention, if a range of elements is specified by two iterators: <code>first</code> and <code>last</code>, then <code>first</code> is included and <code>last</code> is excluded, denoted as <code>[first, last)</code>.</p>
+
+<p>In C++11, you can use the <code>auto</code> to derive the type of iterator automatically, as follows:</p>
+
+<pre class="color-example">
+for (<span class="color-new">auto</span> iter = c.begin(); iter != c.end(); ++iter) {
+   <span class="color-comment">// Use *iter to reference each element</span>
+   ......
+}</pre>
+
+<p>In C++11, you can also use the new for-each loop to iterate thru all the element of a container:</p>
+
+<pre class="color-example">
+for (auto item : container) {
+   <span class="color-comment">// Use item to reference each element</span>
+   ......
+}</pre>
+
+<h5>Types of Iterators</h5>
+
+<p>STL defines the following types of iterators with different requirements. All iterators shall define <code>*</code> (dereferencing), <code>=</code> (assignment) and <code>==</code>, <code>!=</code> (equality comparison) operators.</p>
+
+<ol>
+<li>Input Iterator: can be used to read element from a container (may not support write operation). It defines <code>++</code> (prefix and postfix) to transverse thru all the elements of a container in a <em>single pass</em> - but no guarantee that different passes will transverse through the elements in the same order. Input iterator can be used for single-pass, read-only algorithms.</li>
+<li>Output Iterator: Similar to input iterator, but the dereferencing operator support write operation (may not support read operation). Output iterator can be used for single-pass, write-only algorithms.</li>
+<li>Forward Iterator: the <code>++</code> operator transverses thru the elements, and always in the same order (in different passes). It support both read and write operations.</li>
+<li>Bidirectional Iterator: a forward iterator with added support for <code>--</code> (decrement, prefix and postfix) to transverse in the opposite direction.</li>
+<li>Random-access (Direct-access) Iterator: support <code>+</code>, <code>-</code>, <code>+=</code>, <code>-+</code> (e.g., <code>iter+n</code>, <code>iter-n</code>) to directly access any element in constant time.</li>
+</ol>
+
+<p>In STL, each container class (such as <code>vector</code>) has a class scope <code>typedef</code> called <code>iterator</code>, which specifies the type of the iterator. For example, <code>vector&lt;int&gt;</code>'s iterator is called <code>vector&lt;int&gt;::iterator</code>; <code>stack&lt;string&gt;</code> is <code>stack&lt;string&gt;::iterator</code>.</p>
+
+<h5>STL Pre-defined Iterators (in Header <span class="font-code">&lt;iterator&gt;</span>)</h5>
+<p>STL pre-defined many iterators (in header <code>&lt;iterator&gt;</code>): <code>iterator</code>, <code>reverse_iterator</code>, <code>insert_iterator</code>, <code>front_insert_iterator</code>, <code></code> <code></code> <code>back_insert_iterator</code>, <code>istream_iterator</code>, <code>ostream_iterator</code>, <code></code><code>istreambuf_iterator</code>, and <code>ostreambuf_iterator</code>.</p>
+
+<h5>Example: <span class="font-code">istream_iterator</span> and <span class="font-code">ostream_iterator</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Testing istream_iterator and ostream_iterator (TestIOIterator.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;iterator&gt;
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> // Construct ostream_iterators to write int and string to cout</span>
+   ostream_iterator&lt;int&gt; iterOut(cout);
+   ostream_iterator&lt;string&gt; iterOutStr(cout);
+ 
+   *iterOutStr = &quot;Enter two integers: &quot;;
+ 
+  <span class="color-comment"> // Construct an istream_iterator&lt;int&gt; to read int from cin</span>
+   istream_iterator&lt;int&gt; iterIn(cin);
+   int number1 = *iterIn; <span class="color-comment"> // dereference to get the value</span>
+   ++iterIn;              <span class="color-comment"> // next int in cin</span>
+   int number2 = *iterIn;
+ 
+   *iterOutStr = &quot;You have entered &quot;;
+   *iterOut = number1;
+   *iterOutStr = &quot; and &quot;;
+   *iterOut = number2;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Example: <span class="font-code">copy()</span> to <span class="font-code">ostream_iterator</span></h5>
+
+<p>The STL algorithm <code>copy()</code> can be used to copy elements from one container to another container. <code>copy()</code> is a template function defined as follows:</p>
+
+<pre class="color-syntax">
+template &lt;class InputIterator, class OutputIterator&gt;
+outputIterator <strong>copy</strong> (InputIterator first, InputIterator last, OutputIterator result);</pre>
+
+<p>It copies the elements in the range of <code>[first,last)</code> to the output range beginning at <code>result</code>. As mentioned, <code>InputIterator</code> shall provide read access and <code>OutputIterator</code> write access. Input and output could be the same container, but result cannot be in <code>[first,last)</code>. For example,</p>
+
+<pre class="color-example">
+const int SIZE = 10;
+int array[SIZE] = {11, 55, 44, 33, 88, 99, 11, 22, 66, 77};
+vector&lt;int&gt; v(array, array + SIZE);  <span class="color-comment">// Copy constructor</span>
+ 
+<span class="color-comment">// Using copy() instead of copy constructor</span>
+vector&lt;int&gt; v2(SIZE);
+copy(array, array + SIZE, v2.begin());</pre>
+
+<p>You could also copy to an output stream such as <code>cout</code>, i.e., print, by using the STL's pre-defined <code>ostream_iterator</code> (in header <code>&lt;iterator&gt;</code>), which is a class template defined as follows:</p>
+
+<pre class="color-syntax">
+template &lt;class T, class charT = char, class traits = char_traits&lt;charT&gt; &gt;
+class <strong>ostream_iterator</strong>;
+   <span class="color-comment">// T is the data type, charT is the character type (such as char or wchar_t)</span>
+ 
+<span class="color-comment">// Example</span>
+ostream_iterator&lt;int, char&gt; out (cout, &quot; &quot;);
+   <span class="color-comment">// data type (T) is int, character type (charT) is char.
+   // output stream is cout, delimiter is a space (&quot; &quot;)</span></pre>
+   
+<p>In the following example, we used <code>copy()</code> to copy one container into output stream, via a <code>ostream_iterator</code>. This code replaces the <code>print()</code> user-defined function and seems to be more compact.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Testing ostream_iterator (TestOstreamIterator.cpp)
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;iterator&gt;
+using namespace std;
+ 
+int main() {
+   const int SIZE = 10;
+   int array[SIZE] = {11, 55, 44, 33, 88, 99, 11, 22, 66, 77};
+   vector&lt;int&gt; v(array, array + SIZE);
+ 
+  <span class="color-comment"> // Construct an ostream_iterator called out</span>
+   <span class="color-new">ostream_iterator&lt;int, char&gt; out (cout, &quot; &quot;);</span>
+  <span class="color-comment"> // Copy to ostream, via ostream_iterator - replacing the print()</span>
+   copy(v.begin(), v.end(), <span class="color-new">out</span>);
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Copy to ostream in reverse order</span>
+   copy(v.<span class="color-new">rbegin()</span>, v.<span class="color-new">rend()</span>, out);
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Use an anonymous ostream_iterator</span>
+   copy(v.begin(), v.end(), <span class="color-new">ostream_iterator&lt;int, char&gt;(cout, &quot; &quot;)</span>);
+   cout &lt;&lt; endl;
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Example: <span class="font-code">insert_iterator</span></h5>
+
+<p>The <code>copy()</code> with a <code>OutputIterator</code> (as in the above example) override the existing data in the output range. Instead you could use one of the insert_iterator to insert elements without overriding existing data. A <code>front_insert_iterator</code> inserts from the front; a <code>back_insert_iterator</code> inserts at the end; an <code>insert_iterator</code> inserts before a given location.</p>
+
+<pre class="color-example">
+vector&lt;int&gt; v(10);
+back_insert_iterator&lt;vector&lt;int&gt; &gt; back_iter (v);
+    <span class="color-comment">// Construct a back_insert_iterator for v
+    // The template type argument is the container
+    // The constructor argument is the name of container
+    // Need to write &quot;&gt; &gt;&quot; instead of &quot;&gt;&gt;&quot;</span>
+ 
+insert_iterator&lt;vector&lt;int&gt; &gt; insert_iter (v, v.begin());
+    <span class="color-comment">// The constructor's 2nd argument specifies insert before this location</span></pre>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Testing insert_iterator (TestInsertIterator.cpp)
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;iterator&gt;
+using namespace std;
+ 
+int main() {
+   int a1[5] = {11, 55, 44, 33, 88};
+   vector&lt;int&gt; v(a1, a1+5);
+   ostream_iterator&lt;int, char&gt; out (cout, &quot; &quot;); <span class="color-comment"> // for printing</span>
+   copy(v.begin(), v.end(), out);
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Construct a back_insert_iterator to insert at the end</span>
+   <span class="color-new">back_insert_iterator&lt;vector&lt;int&gt; &gt; back (v);</span>
+   int a2[3] = {91, 92, 93};
+   <span class="color-new">copy(a2, a2+3, back);</span>
+   copy(v.begin(), v.end(), out);
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Use an anonymous insert_iterator to insert at the front</span>
+   int a3[3] = {81, 82, 83};
+   <span class="color-new">copy(a3, a3+3, insert_iterator&lt;vector&lt;int&gt; &gt;(v, v.begin()));</span>
+   copy(v.begin(), v.end(), out);
+   cout &lt;&lt; endl;
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Algorithm</h4>
+<p>C++ provides a set of generic algorithm for STD in header <code>&lt;algorithm&gt;</code>, which includes:</p>
+<ul>
+<li>Searching: <code>find()</code>, <code>count()</code>.</li>
+<li>Sorting: <code>sort()</code>, <code>partial_sort()</code>, <code>merge()</code>.</li>
+<li>Generation, mutation and deletion:</li>
+<li>Numeric and relational:</li>
+</ul>
+
+<p>The algorithms operate on elements of STL container only indirectly through the iterator.</p>
+<p>The generic algorithms are non-member functions that are applicable to all STL containers. It accepts a pair of iterators, denoted as <code>first</code> and <code>last</code>, that mark the range of operation as <code>[first,last)</code> (including first, but excluding last). For example,</p>
+
+<pre class="color-example">
+sort(aVector.begin(), aVector.end());  <span class="color-comment">// Sort the entire vector</span>
+sort(aVector.begin(), aVector.begin + aVector.size()/2);  <span class="color-comment">// Sort first half</span></pre>
+
+<p>Let's begin with some examples.</p>
+
+<h5>Example 1: <span class="font-code">sort()</span>, <span class="font-code">reverse()</span>, <span class="font-code">random_shuffle()</span> and <span class="font-code">find()</span> on Iterators <span class="font-code">[first,last)</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Testing algorithms (TestAlgorithm.cpp)
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+ 
+void print(vector&lt;int&gt; &amp; v);
+ 
+int main() {
+   const int SIZE = 10;
+   int array[SIZE] = {11, 55, 44, 33, 88, 99, 11, 22, 66, 77};
+   vector&lt;int&gt; v(array, array + SIZE);
+   print(v);
+ 
+  <span class="color-comment"> // Sort</span>
+   <span class="color-new">sort(v.begin(), v.end());</span>  <span class="color-comment">// entire container [begin(),end())</span>
+   print(v);
+ 
+  <span class="color-comment"> // Reverse</span>
+   <span class="color-new">reverse(v.begin(), v.begin() + v.size()/2);</span>  <span class="color-comment">// First half</span>
+   print(v);
+ 
+  <span class="color-comment"> // Random Shuffle</span>
+   <span class="color-new">random_shuffle(v.begin() + 1, v.end() - 1);</span>  <span class="color-comment">// exclude first and last elements</span>
+   print(v);
+ 
+  <span class="color-comment"> // Search</span>
+   int searchFor = 55;
+   vector&lt;int&gt;::iterator <span class="color-new">found = find(v.begin(), v.end(), searchFor)</span>;
+   if (found != v.end()) {
+      cout &lt;&lt; &quot;Found&quot; &lt;&lt; endl;
+   }
+   return 0;
+}
+ 
+<span class="color-comment">// Use iterator to print the entire vector</span>
+void print(vector&lt;int&gt; &amp; v) {
+   for (vector&lt;int&gt;::iterator iter = v.begin(); iter != v.end(); ++iter) {
+      cout &lt;&lt; *iter &lt;&lt; &quot; &quot;;  <span class="color-comment"> // dereference</span>
+   }
+   cout &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+11 55 44 33 88 99 11 22 66 77
+11 11 22 33 44 55 66 77 88 99
+44 33 22 11 11 55 66 77 88 99
+44 55 22 77 11 33 66 88 11 99
+Found</pre>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>Most of the algorithm functions takes at least two iterators: <code>first</code> and <code>last</code>, to specify the range <code>[first,last)</code> of operation. They could have additional parameters.</li>
+<li>All STL containers provides members functions <code>begin()</code> and <code>end()</code>, which return the begin and pass-the-end elements of the container, respectively.</li>
+<li>To apply sort, the elements shall have overloaded the <code>'&lt;'</code> operator, which is used for comparing the order of the elements.</li>
+
+</ul>
+
+<h5>Example 2: <span class="font-code">for_each()</span></h5>
+
+<p>The <code>for_each()</code> applies a function to each element of the given range.</p>
+
+<pre class="color-syntax">
+template &lt;class InputIterator, class Function&gt;
+Function <strong>for-each</strong> (InputIterator first, InputIterator last, Function f);</pre>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Testing for_each algorithms (TestForEach.cpp)
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+ 
+void square(int &amp; n);
+void print(int &amp; n);
+ 
+int main() {
+   vector&lt;int&gt; v;
+   v.push_back(11);
+   v.push_back(3);
+   v.push_back(4);
+   v.push_back(22);
+ 
+  <span class="color-comment"> // Invoke the given function (print, square)</span>
+  <span class="color-comment"> // for each element in the range</span>
+   <span class="color-new">for_each</span>(v.begin(), v.end, <span class="color-new">print</span>);
+   <span class="color-new">for_each</span>(v.begin() + 1, v.begin() + 3, <span class="color-new">square</span>);
+   <span class="color-new">for_each</span>(v.begin(), v.end, <span class="color-new">print</span>);
+   return 0;
+}
+ 
+void square(int &amp; n) { n *= n; }
+ 
+void print(int &amp; n) { cout &lt;&lt; n &lt;&lt; &quot; &quot;; }</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>[TODO]</p>
+
+<h5>algorithm Functions</h5>
+
+<p>[TODO]</p>
+
+<h4>Function Object (Functors)</h4>
+
+<p>Most of the STL algorithms use so-called <em>function objects</em> or <em>functors</em>. A functor is an object that can be used with <code>()</code> operator, which includes regular functions, function pointers and class object with overloaded <code>()</code> operator.</p>
+
+<h5><span class="font-code">for_each()</span> algorithm</h5>
+
+<p>The <code>for_each()</code> algorithm, discussed earlier, takes a functor as its third argument, and apply the function to all the elements in the given range.</p>
+
+<h5><span class="font-code">transform()</span> algorithm</h5>
+
+<p><code>transform()</code> algorithm has two versions, supporting unary and binary operations, respectively.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Unary Operation</span>
+template &lt;class InputIterator, class OutputIterator, class UnaryOperation&gt;
+OutputIterator <strong>transform</strong> (InputIterator first, InputIterator last,
+                         OutputIterator result, UnaryOperation op)
+   <span class="color-comment">// Perform unary operation on each element in [first,last) and
+   // store the output in range beginning at result</span></pre>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Testing transform() algorithms (TestTransform.cpp)
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;iterator&gt;
+#include &lt;cmath&gt;
+using namespace std;
+ 
+int square(int n) { return n*n; }
+ 
+int main() {
+   vector&lt;int&gt; v;
+   v.push_back(2);
+   v.push_back(-3);
+   v.push_back(4);
+   v.push_back(3);
+   ostream_iterator&lt;int, char&gt; out(cout, &quot; &quot;);
+   copy(v.begin(), v.end(), out);
+   cout &lt;&lt; endl;
+ 
+   <span class="color-new">transform(v.begin(), v.end(), v.begin(), square);</span>
+   copy(v.begin(), v.end(), out);
+   cout &lt;&lt; endl;
+ 
+   <span class="color-new">transform(v.begin(), v.end(), out, ::sqrt);</span> <span class="color-comment"> // in &lt;cmath&gt;</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Testing transform() algorithms (TestTransform.cpp)
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;iterator&gt;
+#include &lt;cctype&gt;
+using namespace std;
+ 
+string &amp; strtoupper(string &amp; str);
+ 
+int main() {
+   vector&lt;string&gt; v;
+   v.push_back(&quot;apple&quot;);
+   v.push_back(&quot;orange&quot;);
+   v.push_back(&quot;banana&quot;);
+   ostream_iterator&lt;string, char&gt; out(cout, &quot; &quot;);
+   copy(v.begin(), v.end(), out);
+   cout &lt;&lt; endl;
+ 
+   transform(v.begin(), v.end(), v.begin(), strtoupper);
+   copy(v.begin(), v.end(), out);
+   cout &lt;&lt; endl;
+   return 0;
+}
+ 
+<span class="color-comment">// Convert the given string to uppercase</span>
+<span class="color-comment">// Use transform() on each character with toupper()</span>
+string &amp; strtoupper(string &amp; str) {
+   transform(str.begin(), str.end(), str.begin(), ::toupper); <span class="color-comment"> // toupper in &lt;cctype&gt;</span>
+   return str;
+}
+ </pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<pre class="color-syntax">
+<span class="color-comment">// Binary Operation</span>
+template &lt;class InputIterator1, class InputIterator2, class OutputIterator, class BinaryOperation&gt;
+OutputIterator <strong>transform</strong> (InputIterator1 first1, InputIterator1 last1,
+                         InputIterator2 first2,
+                         OutputIterator result, BinaryOperation op)
+   <span class="color-comment">// Perform binary operation on each element in [first1,last1) as first argument,
+   // and the respective [frist2,...) as second argument.
+   // Store the output in range beginning at result</span></pre>
+
+<p>The header <code>&lt;functional&gt;</code> contains many functors that can be used in <code>transform()</code> algorithm, e.g., arithmetic (<code>plus</code>, <code>minus</code>, <code>multiplies</code>, <code>divides</code>, <code>modulus</code>, <code>negate</code>), relational (<code>equal_to</code>, <code>not_equal_to</code>, <code>greater</code>, <code>less</code>, <code>greater_equal</code>, <code>less_equal</code>), and logical (<code>logical_and</code>, <code>logical_or</code>, <code>logical_not</code>), etc.</p>
+
+<pre class="color-syntax">
+template &lt;class T&gt;
+struct plus;
+
+<span class="color-comment">// Example</span>
+plus&lt;int&gt; add;
+int result = add(1, 2);</pre>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Testing transform() algorithms on binary operator (TestTransformBinary.cpp)
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;iterator&gt;
+#include &lt;functional&gt;
+using namespace std;
+ 
+int square(int n) { return n*n; }
+ 
+int main() {
+   int a1[5] = {1, 2, 3, 4, 5};
+   int a2[5] = {11, 12, 13, 14, 15};
+ 
+   vector&lt;int&gt; v1(a1, a1+5);
+   vector&lt;int&gt; v2(a2, a2+5);
+   ostream_iterator&lt;int, char&gt; out(cout, &quot; &quot;);
+   copy(v1.begin(), v1.end(), out);
+   cout &lt;&lt; endl;
+   copy(v2.begin(), v2.end(), out);
+   cout &lt;&lt; endl;
+ 
+   transform(v1.begin(), v1.end(), v2.begin(), out, plus&lt;int&gt;());
+      <span class="color-comment"> // Send result to output stream</span>
+   cout &lt;&lt; endl;
+ 
+   transform(v1.begin(), v1.end(), v2.begin(), v1.begin(), minus&lt;int&gt;());
+      <span class="color-comment"> // Store result back to v1</span>
+   copy(v1.begin(), v1.end(), out);
+   cout &lt;&lt; endl;
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Suppose that you want to add all elements by 8. The functor <code>plus</code> is a binary operator. You can use functors <code>bind1st</code> or <code>bind2nd</code> to bind the value of the first or second argument. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Testing functors bind1st and bind2nd (TestFunctorBind.cpp)
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;iterator&gt;
+#include &lt;functional&gt;
+using namespace std;
+ 
+int square(int n) { return n*n; }
+ 
+int main() {
+   int a1[5] = {1, 2, 3, 4, 5};
+   int a2[5] = {11, 12, 13, 14, 15};
+ 
+   vector&lt;int&gt; v1(a1, a1+5);
+   vector&lt;int&gt; v2(a2, a2+5);
+   ostream_iterator&lt;int, char&gt; out(cout, &quot; &quot;);
+   copy(v1.begin(), v1.end(), out);
+   cout &lt;&lt; endl;
+   copy(v2.begin(), v2.end(), out);
+   cout &lt;&lt; endl;
+ 
+   transform(v1.begin(), v1.end(), out, bind2nd(minus&lt;int&gt;(), 8));
+   cout &lt;&lt; endl;
+ 
+   transform(v1.begin(), v1.end(), out, bind1st(minus&lt;int&gt;(), 8));
+   cout &lt;&lt; endl;
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>STL and the <span class="font-code">string</span> class</h4>
+
+<p>The <code>string</code> class is not part of the STL, but has implemented many STL features. <code>string</code> can be treated as a STL container of <code>char</code>. It defines member functions <code>begin()</code>, <code>end()</code>, <code>rbegin()</code>, <code>rend()</code> which returns an iterator for forward and reverse transversal. Most of the algorithms (such as <code>transform()</code>, <code>sort()</code>) are applicable to <code>string</code>, operating on individual characters.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Testing string on STL algorithms (TestStringSTL.cpp)
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;algorithm&gt;
+#include &lt;iterator&gt;
+#include &lt;cctype&gt;
+using namespace std;
+ 
+int main() {
+   string s1(&quot;apples&quot;);
+   cout &lt;&lt; s1 &lt;&lt; endl;  <span class="color-comment"> // &quot;apples&quot;</span>
+   <span class="color-new">sort(s1.begin(), s1.end());</span>
+   cout &lt;&lt; s1 &lt;&lt; endl;  <span class="color-comment"> // &quot;aelpps&quot;</span>
+ 
+   <span class="color-new">transform(s1.begin(), s1.end(), s1.begin(), ::toupper);</span>
+   cout &lt;&lt; s1 &lt;&lt; endl;  <span class="color-comment"> // &quot;AELPPS&quot;</span>
+   <span class="color-new">transform(s1.begin(), s1.end(), s1.begin(), bind1st(plus&lt;char&gt;(), 'a'-'A'));</span>
+   cout &lt;&lt; s1 &lt;&lt; endl;  <span class="color-comment"> // &quot;aelpps&quot;</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4><span class="font-code">vector</span>, <span class="font-code">valarray</span> and <span class="font-code">array</span></h4>
+
+<p>C++ has 3 array template classes: <code>vector</code>, <code>valarray</code>, <code>array</code> (C++11). <code>vector</code> and <code>array</code> are STL; while <code>valarray</code> is not.</p>
+
+<h5><span class="font-code">vector</span></h5>
+
+<p><code>vector</code> is certainly the most commonly used STL container. <code>vector</code> is dynamically allocated, with support for <code>push_back()</code> and <code>insert()</code>.</p>
+
+<h5><span class="font-code">array</span></h5>
+
+<p>The <code>array</code> class is a wrapper for the fixed-sized built-in array with the STL container interfaces. It is designed as a substitute for the built-in array type, for applications where dynamic resizable <code>vector</code> is not needed (so as to reduce the overhead of dynamic array). <code>array</code> does not support <code>push_back()</code> and <code>insert()</code>, as it cannot be resized.</p>
+
+<h5><span class="font-code">valarray</span></h5>
+
+<p><code>valarray</code> is designed for numeric computation. It is variable-size but does not supports STL operations such as <code>push_back()</code> or <code>insert</code>, but provides a simple interface for many mathematical operations. For example, the arithmetic operators (such as +, -, <code>*</code>, <code>/</code>, <code>%</code>) and mathematical functions (such as <code>pow</code>, <code>sqrt</code>, <code>exp</code>, <code>log</code>, <code>sin</code>, <code>cos</code>, etc.) are overloaded to operate on the entire valarray (instead of individual element). For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Testing valarray (Testvalarray.cpp)
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;valarray&gt;
+using namespace std;
+ 
+void print(const valarray&lt;int&gt; &amp; va);
+ 
+int main() {
+   const int SIZE = 5;
+   int a1[SIZE] = {1, 2, 3, 4, 2};
+   int a2[SIZE] = {11, 12, 13, 14, 15};
+   valarray&lt;int&gt; va1(a1, SIZE);
+   valarray&lt;int&gt; va2(a2, SIZE);
+   valarray&lt;int&gt; va3(SIZE);  <span class="color-comment">// all 0</span>
+   print(va1);
+   print(va2);
+   print(va3);
+ 
+   <span class="color-new">va3 = va1 + va2;</span>  <span class="color-comment"> // + operates on all elements</span>
+   print(va3);
+ 
+   <span class="color-new">va3 = pow(va2, va1);</span> <span class="color-comment"> // pow() operates on elements</span>
+   print(va3);
+ 
+   cout &lt;&lt; &quot;sum is &quot; &lt;&lt; <span class="color-new">va1.sum()</span> &lt;&lt; endl;
+   cout &lt;&lt; &quot;max is &quot; &lt;&lt; <span class="color-new">va1.max()</span> &lt;&lt; endl;
+   cout &lt;&lt; &quot;min is &quot; &lt;&lt; <span class="color-new">va1.min()</span> &lt;&lt; endl;
+   return 0;
+}
+ 
+void print(const valarray&lt;int&gt; &amp; va) {
+   for (int i = 0; i &lt; va.size(); ++i) {
+      cout &lt;&lt; va[i] &lt;&lt; &quot; &quot;;
+   }
+   cout &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h4>STL Containers</h4>
+
+<p>C++98/03 has 11 containers: <code>vector</code>, <code>stack</code>, <code>list</code>, <code>queue</code>, <code>deque</code>, <code>priority_queue</code>, <code>map</code>, <code>multimap</code>, <code>set</code>, <code>multiset</code> and <code>bitset</code>. C++11 added <code>forward_list</code>, <code>unordered_map</code>, <code>unordered_multimap</code>, <code>unordered_set</code> and <code>unordered_multiset</code>, and moves <code>bitset</code> from container category to its own separate category. <code>string</code> is not really part of STL, but implemented many STL concepts.</p>
+
+<p>The STL container are template class, which can be instantiated with a type. The actual type has to be <em>copy constructable</em> (having copy constructor) and <em>assignable</em> (overload <code>=</code> operator).</p>
+
+<h5>Sequence Container</h5>
+
+<p>A sequence container requires that elements are arranged in a strict linear order.</p>
+
+<ul>
+<li><code>vector</code>: direct-access class-representation of dynamic array. Elements can be added and removed from the end in constant time. But insertion and removal not from the end require linear time. It supports direct-access, as well as bidirectional transversal.</li>
+
+<li><code>deque</code>: (pronounced &quot;deck&quot;) double-ended queue, allow elements to be added and removed from both the front and the rear, at constant time. The <code>deque</code> implementation in STL is similar to <code>vector</code>, which allows direct access. It is more complex than <code>vector</code>, as it allows constant-time insertion and removal from the front and rear; whereas vector only for rear.</li>
+
+<li><code>list</code>: double-linked list that can be transverse in both direction. It support constant-time insertion and removal, but does not allow direct (random) access with no indexing operator.</li>
+
+<li><code>forward_list</code> (C++11): single-linked list that support forward transversal only. It is simpler than <code>list</code>.</li>
+
+<li><code>queue</code>: allow elements to be added at the rear and removed from the front at constant time. STL's <code>queue</code> is very restrictive that it does not support direct access nor transversal through the elements.</li>
+
+<li><code>priority_queue</code>: Similar to <code>queue</code>, but move the larger element to the front of the queue.</li>
+
+<li><code>stack</code>: LIFO (last-in-first-out) queue, elements can be added and removed from the top-of-stack in a last-in-first-out manner. In STL, <code>stack</code> is an adapter class over the <code>vector</code> class. It is more restrictive than vector. Elements can only be accessed, added and removed from one-end (top-of-stack). It does not support direct access, nor transversal through all the elements.</li>
+<li><code>array</code> (C++11): <code>array</code> is NOT a STL container because it has a fixed size and does not support operations like insert. But you can apply STL algorithms on <code>array</code> container.</li>
+</ul>
+
+<h5>Associative Containers</h5>
+
+<p>Associative container stores key-value pair or name-value pairs (i.e., associate a key with a value, and use a key to find the value). Associative container (or associative array) is actually similar to an array or vector, where a numerical index key is associated with a value, and you use the numerical key to find a value. Example of key-value pair are person-phone number(s), id-name, etc.</p>
+
+<p>STL supports the following associative containers:</p>
+
+<ul>
+<li><code>set</code>: the key is the same as the value. It does not allow duplicate values. STL <code>set</code> is sorted and reversible.</li>
+
+<li><code>multiset</code>: allow duplicate values.</li>
+
+<li><code>map</code>: key-value pair, where keys are unique. One key is associated with one value. STL <code>map</code> is sorted and reversible. It needs two types to instantiate: <code>map&lt;<em>key-type</em>, <em>value-type</em>)</code>. To represent each key-value, STL provides a template class called <code>pair&lt;class K, class V&gt;</code>. You can instantiate the template class with specific key-type and value-type, e.g., <code>pair&lt;const int, string&gt;</code>.</li>
+
+<li><code>multimap</code>: one key could be associated with multiple values.</li>
+<li>C++11 added 4 unordered associative containers: <code>unordered_set</code>, <code>unordered_multiset</code>, <code>unordered_map</code>, and <code>unordered_multimap</code>. These unordered associative containers are based on hash table (efficient in insertion, removal and search, but requires more storage spaces); whereas the ordered counterparts are based on tree.</li>
+
+</ul>
+
+<h5>Example: <span class="font-code">map</span></h5>
+
+<p>[TODO]</p>
+
+<a class="references" href="../howto/References.html#cpp">Link to &quot;C++ References &amp; Resources&quot;</a>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: GCC 4.6.2<br />
+Last modified: May, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

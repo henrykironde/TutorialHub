@@ -1,0 +1,607 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>An Introduction to Java Database Programming (JDBC) by Examples</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1> An Introduction to<br />Java Database (JDBC) Programming</h1>
+<h2>by Examples</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Relational Database and and Structure Query Language (SQL)</h3>
+<p>I presume that you have some knowledge on Relational Databases and the SQL language. Otherwise, read &quot;<a href="../sql/MySQL_HowTo.html#intro">Introduction to Relational Database and SQL</a>&quot;.</p>
+
+<h3 id="JDBCSetupDB">Setting-up MySQL</h3>
+
+<p>In this section, I shall describe the MySQL relational database system. For other database systems, read &quot;<a href="#otherdb">Other Databases</a>&quot;.</p>
+
+<p>Install the MySQL (read &quot;<a href="../sql/MySQL_HowTo.html">How to Set Up MySQL and Get Started</a>&quot;). I shall assume that MySQL server is running on the default port number 3306.</p>
+<p>On MySQL, instead of using the &quot;<code>mysql</code>&quot; interactive <em>client</em> program provided, you can write your own <em>client</em> program (in Java or other  languages) to access the MySQL server. Your client program shall connect to the database server at the given IP address and TCP port number, issue the SQL commands, and process the results received.</p>
+
+<h4>Install JDK and Programming Editor</h4>
+
+<p>Before you proceed, I shall assume that you are familiar with Java Programming and have installed the followings:</p>
+
+<ol>
+<li>JDK (Read &quot;<a href="../howto/JDK_HowTo.html">How to install JDK and Get Started</a>&quot;).</li>
+<li>A programming text editor, such as TextPad, Notepad++ for Windows (Read &quot;<a href="../howto/CMD_Survival.html#editor">Programming Editor</a>&quot;), or jEdit, gEdit for Mac (Read &quot;<a href="../howto/MacUsers_HowTo.html#editor">Programming Editor for Mac</a>&quot;).</li>
+</ol>
+
+<h4 id="MySQLJDBCDriverInstall">Install  MySQL  JDBC Driver (<span class="color-new">Don't MISS This Step!</span>)</h4>
+
+<p>You need to install an appropriate JDBC (Java Database Connectivity) driver to run your Java database programs. The MySQL's JDBC  driver is called &quot;MySQL Connector/J&quot; and is available at MySQL mother site.</p>
+<p></p>
+
+<div class="side-note">
+  <p><span class="line-heading">For Windows</span></p>
+
+<ol>
+<li>Download the latest MySQL JDBC driver from <a href="http://dev.mysql.com/downloads">http://dev.mysql.com/downloads</a> &rArr; &quot;MySQL Connectors&quot; &rArr; &quot;Connector/J&quot; &rArr; Connector/J 5.1.{<em>xx</em>} &rArr; select &quot;Platform Independent&quot; &rArr; <span class="underline">ZIP Archive</span>  (e.g., &quot;<code>mysql-connector-java-5.1.{<em>xx</em>}.zip</code>&quot;, where <code>{<em>xx</em>}</code> is the latest release number).</li>
+
+<li><span class="color-new">UNZIP</span> the download file into a temporary folder.</li>
+
+<li>From the temporary folder, <span class="color-new">COPY</span> the JAR file &quot;<code>mysql-connector-java-5.1.{<em>xx</em>}-bin.jar</code>&quot; to your JDK's <span class="underline">Extension</span> Directory at &quot;<code>&lt;JAVA_HOME&gt;\<strong><span class="underline">jre\lib\ext</span></strong></code>&quot; (where <code>&lt;JAVA_HOME&gt;</code> is the JDK installed directory), e.g., <span class="color-new">&quot;<code>c:\program files\java\jdk1.8.0_{<em>xx</em>}\<strong><span class="underline">jre\lib\ext</span></strong></code>&quot;</span>.</li>
+</ol>
+</div>
+
+<div class="side-note">
+<p><span class="line-heading">For Mac OS X</span></p>
+
+<ol>
+
+<li>Download the latest MySQL JDBC driver from <a href="http://www.mysql.com/downloads">http://www.mysql.com/downloads</a> &rArr; MySQL Connectors &rArr; Connector/J &rArr; Connector/J 5.1.{<em>xx</em>} &rArr; select &quot;Platform Independent&quot; &rArr; <span class="underline">Compressed TAR Archive</span> (e.g., <code>mysql-connector-java-5.1.{<em>xx</em>}.tar.gz</code>, where <code>{<em>xx</em>}</code> is the latest release number).</li>
+
+<li>Double-click on the downloaded TAR file to <span class="color-new">expand</span> into folder &quot;<code>mysql-connector-java-5.1.{<em>xx</em>}</code>&quot;.</li>
+
+<li>Open the expanded folder. <span class="color-new">COPY</span> the JAR file &quot;<code>mysql-connector-java-5.1.{<em>xx</em>}-bin.jar</code>&quot; to JDK's extension directory at &quot;<code>/Library/Java/Extension</code>s&quot; (to goto that folder, from &quot;Finder&quot; &rArr; GO  &rArr; Go to Folder  &rArr; Type &quot;<code>/Library/Java/Extension</code>s&quot;).</li>
+
+</ol>
+</div>
+
+<div class="side-note">
+<p><span class="line-heading">(For Advanced User Only)</span> You can compile Java database programs without the JDBC driver. But to run the JDBC programs, the JDBC driver's JAR-file must be included in the environment variable <code>CLASSPATH</code>, or the JDK's extension directory, or in the <code>java</code>'s command-line option <code>-cp &lt;<em>paths</em>&gt;</code>. For example,</p>
+<pre>
+<span class="color-comment">// For windows</span>
+> java -cp .;/<em>path</em>/<em>to</em>/mysql-connector-java-5.1.{<em>xx</em>}-bin.jar <em>JDBCClassToBeRun</em>
+<span class="color-comment">// For Macs/Unixes</span>
+> java -cp .:/<em>path</em>/<em>to</em>/mysql-connector-java-5.1.{<em>xx</em>}-bin.jar <em>JDBCClassToBeRun</em></pre>
+</div>
+
+<h4>Setup Database</h4>
+
+<p>We have to set up a database before embarking on our database programming.  We shall call our database &quot;<code>ebookshop</code>&quot; which contains a table called &quot;<code>books</code>&quot;, with 5 columns, as below:</p>
+
+<pre class="color-example">
+Database: <strong>ebookshop</strong>
+Table: <strong>books</strong>
++-------+----------------------------+---------------+---------+-------+
+| <strong>id</strong>    | <strong>title</strong>                      | <strong>author</strong>        | <strong>price</strong>   | <strong>qty</strong>   |
+| (INT) | (VARCHAR(50))              | (VARCHAR(50)) | (FLOAT) | (INT) |
++-------+----------------------------+---------------+---------+-------+
+| 1001  | Java for dummies           | Tan Ah Teck   | 11.11   |   11  |
+| 1002  | More Java for dummies      | Tan Ah Teck   | 22.22   |   22  |
+| 1003  | More Java for more dummies | Mohammad Ali  | 33.33   |   33  |
+| 1004  | A Cup of Java              | Kumar         | 44.44   |   44  |
+| 1005  | A Teaspoon of Java         | Kevin Jones   | 55.55   |   55  |
++-------+----------------------------+---------------+---------+-------+</pre>
+
+<p><span class="line-heading">Start MySQL Server</span>: Start the MySQL server and verify the server's TCP port number from the console messages.</p>
+
+<pre class="color-command">
+<span class="color-comment">// For Windows</span>
+<span class="color-syntax"><span class="color-comment"></span>cd {<em>path-to-mysql-bin</em>}   <span class="color-comment">// Check your MySQL installed directory</span>
+<strong>mysqld --console</strong></span>
+
+<span class="color-comment">// For Mac OS X
+// Use graphical control at &quot;System Preferences&quot; -&gt; MySQL</span></pre>
+
+<p><span class="line-heading">Start a MySQL client</span>: I shall also assume that there is an authorized user called &quot;<code>myuser</code>&quot; with password &quot;<code>xxxx</code>&quot;.</p>
+<pre class="color-command">
+<span class="color-comment">// For Windows</span>
+<span class="color-syntax">cd {<em>path-to-mysql-bin</em>}</span>   <span class="color-syntax"><span class="color-comment">// Check your MySQL installed directory</span></span>
+<strong>mysql -u myuser -p</strong>
+ 
+<span class="color-comment">// For Mac OS X</span>
+<span class="color-syntax"><strong>cd /usr/local/mysql/bin</strong>
+</span>./<strong>mysql -u myuser -p</strong>
+</pre>
+
+<p> Run the following SQL statements to create our test database and table.</p>
+ <pre class="color-example">
+create database if not exists <strong>ebookshop</strong>;
+ 
+use ebookshop;
+ 
+drop table if exists books;
+create table <strong>books</strong> (
+   <strong>id</strong> int,
+   <strong>title</strong> varchar(50),
+   <strong>author</strong> varchar(50),
+   <strong>price</strong> float,
+   <strong>qty</strong> int,
+   primary key (id));
+ 
+insert into books values (1001, 'Java for dummies', 'Tan Ah Teck', 11.11, 11);
+insert into books values (1002, 'More Java for dummies', 'Tan Ah Teck', 22.22, 22);
+insert into books values (1003, 'More Java for more dummies', 'Mohammad Ali', 33.33, 33);
+insert into books values (1004, 'A Cup of Java', 'Kumar', 44.44, 44);
+insert into books values (1005, 'A Teaspoon of Java', 'Kevin Jones', 55.55, 55);
+ 
+select * from books;</pre>
+
+
+<h3>Introduction to JDBC Programming by Examples</h3>
+
+<p>A JDBC (Java Database Connectivity) program comprises the following steps:</p>
+
+<ol>
+<li>Allocate a <code>Connection</code> object, for connecting to the database.</li>
+<li>Allocate a <code>Statement</code> object, under the <code>Connection</code> object created.</li>
+<li>Write a SQL query and execute the query, via the <code>Statement</code> and <code>Connection</code> created.</li>
+<li>Process the query result.</li>
+<li>Close the <code>Statement</code> and <code>Connection</code> object to free up the resources.</li>
+</ol>
+
+<p>We shall illustrate Java Database programming by the following examples.</p>
+
+<p><span class="line-heading">IMPORTANT</span>: The following examples require JDK 1.7 and above to run. If you JDK is below 1.7, upgrade your JDK (See JDK How-to)! You can check your JDK version via command &quot;<code>javac -version</code>&quot;.</p>
+
+<h4>Example 1: SQL <span class="font-code">SELECT</span></h4>
+<p>Try out the following JDBC program (requires JDK 7), which issues an SQL <code>SELECT</code>. Take note that the <em>source filename</em> must be the <em>same</em> as the <em>classname</em>, with extension of &quot;<code>.java</code>&quot;. Save the program in any directory of your choice (e.g., <code>d:/myproject</code>).</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre>
+</td>
+<td>
+<pre>
+import java.sql.*;   <span class="color-comment">// Use classes in java.sql package</span>
+ 
+<span class="color-comment">// JDK 7 and above</span>
+public class <strong>JdbcSelectTest</strong> {  <span class="color-comment">// <span class="color-new">Save as &quot;JdbcSelectTest.java&quot;</span></span>
+   public static void main(String[] args) {
+      try (
+         <span class="color-comment">// Step 1: Allocate a database &quot;Connection&quot; object</span>
+         Connection conn = DriverManager.getConnection(
+               <span class="color-new">&quot;jdbc:mysql://localhost:3306/ebookshop?useSSL=false&quot;, &quot;myuser&quot;, &quot;xxxx&quot;</span>); <span class="color-comment">// MySQL</span>
+<span class="color-comment"></span> 
+         <span class="color-comment">// Step 2: Allocate a &quot;Statement&quot; object in the Connection</span>
+         Statement stmt = conn.createStatement();
+      ) {
+         <span class="color-comment">// Step 3: Execute a SQL SELECT query, the query result</span>
+         <span class="color-comment">//  is returned in a &quot;ResultSet&quot; object.</span>
+         <span class="color-new">String strSelect = &quot;select title, price, qty from books&quot;;</span>
+         System.out.println(&quot;The SQL query is: &quot; + strSelect); <span class="color-comment">// Echo For debugging</span>
+         System.out.println();
+ 
+         <span class="color-new">ResultSet rset = stmt.executeQuery(strSelect);</span>
+ 
+         <span class="color-comment">// Step 4: Process the ResultSet by scrolling the cursor forward via next().</span>
+         <span class="color-comment">//  For each row, retrieve the contents of the </span><span class="color-comment">cells with getXxx(columnName).</span>
+         System.out.println(&quot;The records selected are:&quot;);
+         int rowCount = 0;
+         while(<span class="color-new">rset.next()</span>) {   <span class="color-comment">// Move the cursor to the next row</span>
+            String title = <span class="color-new">rset.getString(&quot;title&quot;)</span>;
+            double price = <span class="color-new">rset.getDouble(&quot;price&quot;)</span>;
+            int    qty   = <span class="color-new">rset.getInt(&quot;qty&quot;)</span>;
+            System.out.println(title + &quot;, &quot; + price + &quot;, &quot; + qty);
+            ++rowCount;
+         }
+         System.out.println(&quot;Total number of records = &quot; + rowCount);
+ 
+      } catch(SQLException ex) {
+         ex.printStackTrace();
+      }
+      <span class="color-comment">// Step 5: Close the resources - Done automatically by try-with-resources</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p><span class="line-heading">Compile</span>: To compile the program:</p>
+
+<pre class="color-command">
+<strong>cd {<em>path-to-the-java-source-file</em>}</strong>
+<strong>javac JdbcSelectTest.java</strong></pre>
+
+<p><span class="line-heading">Run</span>: To run the program:</p>
+<pre class="color-command">
+<strong>java JdbcSelectTest</strong></pre>
+
+
+<p><span class="line-heading">(Skip Unless...)</span> Read &quot;<a href="../howto/ErrorMessages.html#JDBCErrors">Common Errors in JDBC Programming on MySQL</a>&quot;.</p>
+
+
+<h5>Dissecting the Program</h5>
+
+<ol>
+<li>The JDBC operations are carried out through the &quot;<code>Connection</code>&quot;, &quot;<code>Statement</code>&quot; and &quot;<code>ResultSet</code>&quot; objects (defined in package <code>java.sql</code>). However, you need not know the details, but merely the public methods defined in the API (Application Program Interface). You also need not re-invent the wheels by creating these classes yourself (which will take you many years?!). &quot;Re-using&quot; software component is a main strength of OOP.</li>
+<li>Notice that there is little programming involved in using JDBC programming.  You only have to specify the <em>database-URL</em>, write the SQL query, and process the query result.  The rest of the codes are kind of &quot;standard JDBC program template&quot;.  Again, this is because the wheels have been invented.</li>
+
+<li>In Line 7, we allocate a <code>Connection</code> object (called <code>conn</code>) via <code>static</code> method <code>DriverManager.getConnection(<em>database-url</em>, <em>db-user</em>, <em>password</em>)</code>. The Java program uses a so-called <em>database-URL</em> to connect to the server:
+  <ul>
+    <li>For MySQL:
+  <pre class="color-plain">
+<span class="color-comment">// Syntax</span>
+Connection conn = DriverManager.getConnection(<span class="color-new">&quot;jdbc:mysql://localhost:{port}/{db-name}&quot;, &quot;{db-user}&quot;, &quot;{password}&quot;</span>);
+<span class="color-comment">// Example</span>
+Connection conn = DriverManager.getConnection(&quot;jdbc:mysql://localhost:3306/ebooksop&quot;, &quot;myuser&quot;, &quot;xxxx&quot;);</pre>
+    
+    The <code>database-url</code> is in the form of &quot;<code>jdbc:mysql://{host}:{port}/{database-name}</code>&quot;, with protocol <code>jdbc</code> and  sub-protocol <code>mysql</code>. The <code>port</code> specifies the MySQL server's TCP port number; <code>db-user/password</code> is an authorized MySQL user. In our example, <code>&quot;localhost</code>&quot; (with special IP address of <code>127.0.0.1</code>) is the hostname for local loop-back; <code>&quot;3306</code>&quot; is the server's TCP port number, and <code>ebookshop</code> is the database name.</li>
+  <li>Others: Read &quot;<a href="JDBC_Basic2.html#otherdb">Other Databases</a>&quot;.</li>
+</ul>
+
+</li>
+
+<li>In Line 13, we allocate a <code>Statement</code> object (called <code>stmt</code>) within the <code>Connection</code> via <code>conn.createStatement()</code>.</li>
+
+<li>To execute a SQL SELECT, we invoke method <code>stmt.executeQuery(&quot;SELECT ...&quot;)</code>. It returns the query result in a <code>ResultSet</code> object (called <code>rset</code>). <code>ResultSet</code> models the returned table, which can be access via a <em>row cursor</em>. The cursor initially positions before the first row in the <code>ResultSet</code>. <code>rset.next()</code> moves the cursor to the first row. You can then use <code>rset.getXxx(<em>columnName</em>)</code> to retrieve the value of a column for that row, where <code>Xxx</code> corresponds to the type of the column, such as <code>int</code>, <code>float</code>, <code>double</code> and <code>String</code>. The <code>rset.next()</code> returns <code>false</code> at the last row, which terminates the while-loop.</li>
+
+<li>You may use <code>rset.getString(<em>columnName</em>)</code> to retrieve all types (<code>int</code>, <code>double</code>, etc).</li>
+
+<li>For maximum portability, <code>ResultSet</code> columns within each row should be   read in left-to-right order, and <em>each column should be read only once</em> via the <code>getXxx()</code> methods. Issue <code>getXxx()</code> to a cell more than once may trigger a strange error.</li>
+
+<li>In this example, we use JDK 7's new feature called try-with-resources, which  automatically closes all the opened resources in the try-clause, in our case, the <code>Connection</code> and <code>Statement</code>.</li>
+</ol>
+
+<p><span class="line-heading">Exercises:</span> <span class="color-new">Modify your Java program</span> to issue the following <code>SELECT</code> statements and display all the columns retrieved.  Make sure you modify the <code>ResultSet</code> processing to process only the columns retrieved (otherwise, you will get a &quot;Column not found&quot; error).</p>
+
+<ol>
+<li><code>SELECT * FROM books</code></li>
+<li><code>SELECT title, author, price, qty FROM books
+    WHERE author = 'Tan Ah Teck' OR price &gt;= 30
+    ORDER BY price DESC, id ASC</code></li>
+</ol>
+
+<h4>Example 2: SQL <span class="font-code">UPDATE</span></h4>
+
+<p>To execute a SQL <code>UPDATE</code>, you have to invoke the method <code>executeUpdate()</code> of the <code>Statement</code> object, which returns an <code>int</code> indicating the number of records affected.  Recall that for <code>SELECT</code>, we use <code>executeQuery()</code>, which returns a <code>ResultSet</code> object modeling the returned table. <code>UPDATE|INSERT|DELETE</code> does not return a table, but an <code>int</code> indicating the number of records affected.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre>
+</td>
+<td>
+<pre>
+import java.sql.*;     <span class="color-comment">// Use classes in java.sql package</span>
+ 
+<span class="color-comment">// <span class="color-new">JDK 7</span> and above</span>
+public class <strong>JdbcUpdateTest</strong> {    <span class="color-comment">// <span class="color-new">Save as &quot;JdbcUpdateTest.java&quot;</span></span>
+   public static void main(String[] args) {
+      try (
+         <span class="color-comment">// Step 1: Allocate a database &quot;Connection&quot; object</span>
+         Connection conn = DriverManager.getConnection(
+               <span class="color-new">&quot;jdbc:mysql://localhost:3306/ebookshop?useSSL=false&quot;, &quot;myuser&quot;, &quot;xxxx&quot;</span>); <span class="color-comment">// MySQL</span>
+ 
+         <span class="color-comment">// Step 2: Allocate a &quot;Statement&quot; object in the Connection</span>
+         Statement stmt = conn.createStatement();
+      ) {
+         <span class="color-comment">// Step 3 &amp; 4: Execute a SQL UPDATE via executeUpdate()</span>
+         <span class="color-comment">//   which returns an int indicating the number of rows affected.</span>
+         <span class="color-comment">// Increase the price by 7% and qty by 1 for id=1001</span>
+         String strUpdate = &quot;<span class="color-new">update books set price = price*0.7, qty = qty+1 where id = 1001</span>&quot;;
+         System.out.println(&quot;The SQL query is: &quot; + strUpdate);  <span class="color-comment">// Echo for debugging</span>
+         <span class="color-new">int countUpdated = stmt.executeUpdate(strUpdate);</span>
+         System.out.println(<span class="color-new">countUpdated</span> + &quot; records affected.&quot;);
+ 
+         <span class="color-comment">// Step 3 &amp; 4: Issue a SELECT to check the UPDATE.</span>
+         String strSelect = &quot;<span class="color-new">select * from books where id = 1001</span>&quot;;
+         System.out.println(&quot;The SQL query is: &quot; + strSelect);  <span class="color-comment">// Echo for debugging</span>
+         <span class="color-new">ResultSet rset = stmt.executeQuery(strSelect);</span>
+         while(rset.next()) {   <span class="color-comment">// Move the cursor to the next row</span>
+            System.out.println(rset.getInt(&quot;id&quot;) + &quot;, &quot;
+                    + rset.getString(&quot;author&quot;) + &quot;, &quot;
+                    + rset.getString(&quot;title&quot;) + &quot;, &quot;
+                    + rset.getDouble(&quot;price&quot;) + &quot;, &quot;
+                    + rset.getInt(&quot;qty&quot;));
+         }
+      } catch(SQLException ex) {
+         ex.printStackTrace();
+      }
+      <span class="color-comment">// Step 5: Close the resources - Done automatically by try-with-resources</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p><span class="line-heading">Exercises:</span> Modify your Java program to issue the following SQL statements:</p>
+<ol>
+<li>Increase the <code>price</code> by 50% for &quot;A Cup of Java&quot;.</li>
+<li>Set the <code>qty</code> to 0 for &quot;A Teaspoon of Java&quot;.</li>
+</ol>
+
+<h4>Example 3: SQL <span class="font-code">INSERT</span> and <span class="font-code">DELETE</span></h4>
+<p>Similarly, use the <code>executeUpdate()</code> to execute <code>INSERT INTO</code> and <code>DELETE FROM</code>. The method returns an <code>int</code> indicating the number of records affected.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61</pre>
+</td>
+<td>
+<pre>
+import java.sql.*;    <span class="color-comment"> // Use classes in java.sql package</span>
+ 
+<span class="color-comment">// JDK 7 and above</span>
+public class JdbcInsertTest {   <span class="color-comment"> // Save as &quot;JdbcUpdateTest.java&quot;</span>
+   public static void main(String[] args) {
+      try (
+        <span class="color-comment"> // Step 1: Allocate a database &quot;Connection&quot; object</span>
+         Connection conn = DriverManager.getConnection(
+               &quot;jdbc:mysql://localhost:3306/ebookshop?useSSL=false&quot;, &quot;myuser&quot;, &quot;xxxx&quot;);<span class="color-comment"> // MySQL</span>
+ 
+        <span class="color-comment"> // Step 2: Allocate a &quot;Statement&quot; object in the Connection</span>
+         Statement stmt = conn.createStatement();
+      ) {
+        <span class="color-comment"> // Step 3 &amp; 4: Execute a SQL INSERT|DELETE statement via executeUpdate(),</span>
+        <span class="color-comment"> //   which returns an int indicating the number of rows affected.</span>
+ 
+        <span class="color-comment"> // DELETE records with id&gt;=3000 and id&lt;4000</span>
+         String sqlDelete = &quot;delete from books where id&gt;=3000 and id&lt;4000&quot;;
+         System.out.println(&quot;The SQL query is: &quot; + sqlDelete); <span class="color-comment"> // Echo for debugging</span>
+         int countDeleted = stmt.executeUpdate(sqlDelete);
+         System.out.println(countDeleted + &quot; records deleted.\n&quot;);
+ 
+        <span class="color-comment"> // INSERT a record</span>
+         String sqlInsert = &quot;insert into books &quot;<span class="color-comment"> // need a space</span>
+               + &quot;values (3001, 'Gone Fishing', 'Kumar', 11.11, 11)&quot;;
+         System.out.println(&quot;The SQL query is: &quot; + sqlInsert); <span class="color-comment"> // Echo for debugging</span>
+         int countInserted = stmt.executeUpdate(sqlInsert);
+         System.out.println(countInserted + &quot; records inserted.\n&quot;);
+ 
+        <span class="color-comment"> // INSERT multiple records</span>
+         sqlInsert = &quot;insert into books values &quot;
+               + &quot;(3002, 'Gone Fishing 2', 'Kumar', 22.22, 22),&quot;
+               + &quot;(3003, 'Gone Fishing 3', 'Kumar', 33.33, 33)&quot;;
+         System.out.println(&quot;The SQL query is: &quot; + sqlInsert); <span class="color-comment"> // Echo for debugging</span>
+         countInserted = stmt.executeUpdate(sqlInsert);
+         System.out.println(countInserted + &quot; records inserted.\n&quot;);
+ 
+        <span class="color-comment"> // INSERT a partial record</span>
+         sqlInsert = &quot;insert into books (id, title, author) &quot;
+               + &quot;values (3004, 'Fishing 101', 'Kumar')&quot;;
+         System.out.println(&quot;The SQL query is: &quot; + sqlInsert); <span class="color-comment"> // Echo for debugging</span>
+         countInserted = stmt.executeUpdate(sqlInsert);
+         System.out.println(countInserted + &quot; records inserted.\n&quot;);
+ 
+        <span class="color-comment"> // Issue a SELECT to check the changes</span>
+         String strSelect = &quot;select * from books&quot;;
+         System.out.println(&quot;The SQL query is: &quot; + strSelect); <span class="color-comment"> // Echo For debugging</span>
+         ResultSet rset = stmt.executeQuery(strSelect);
+         while(rset.next()) {  <span class="color-comment"> // Move the cursor to the next row</span>
+            System.out.println(rset.getInt(&quot;id&quot;) + &quot;, &quot;
+                    + rset.getString(&quot;author&quot;) + &quot;, &quot;
+                    + rset.getString(&quot;title&quot;) + &quot;, &quot;
+                    + rset.getDouble(&quot;price&quot;) + &quot;, &quot;
+                    + rset.getInt(&quot;qty&quot;));
+         }
+      } catch(SQLException ex) {
+         ex.printStackTrace();
+      }
+     <span class="color-comment"> // Step 5: Close the resources - Done automatically by try-with-resources</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Notes:</h5>
+
+<ol>
+<li>You cannot insert two records with the same primary key (i.e., <code>id</code>) value. Hence, we issue a DELETE before INSERT new records. In this way, you can re-run the program.</li>
+<li>If you insert a partial record, the missing columns will receive their default values.</li>
+</ol>
+
+<p><span class="line-heading">Exercise:</span> Modify your Java program to issue the following SQL statements:</p>
+<ol>
+<li>Delete all books with id &gt; 8000; and insert: (8001, 'Java ABC', 'Kevin Jones', 15.55, 55) and (8002, 'Java XYZ', 'Kevin Jones', 25.55, 55);</li>
+</ol>
+
+<h3>JDBC Cycle</h3>
+
+<img class="image-left" src="images/JDBC_Cycle.png" alt="JDBC_Cycle.png" />
+
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>JDBC Online Tutorial @ <a href="http://download.oracle.com/javase/tutorial/jdbc/index.html">http://download.oracle.com/javase/tutorial/jdbc/index.html</a>.</li>
+<li>JDBC Home Page @ <a href="http://java.sun.com/products/jdbc/overview.html.">http://java.sun.com/products/jdbc/overview.html.</a></li>
+<li>JDBC API Specifications 1.2, 2.1, 3.0, and 4.0 @ <a href="http://java.sun.com/products/jdbc">http://java.sun.com/products/jdbc</a>.</li>
+<li>White Fisher, et al., &quot;JDBC API Tutorial and Reference&quot;, 3rd eds, Addison Wesley, 2003.</li>
+<li>MySQL Home Page @ <a href="http://www.mysql.org">http://www.mysql.org</a>, and documentation.</li>
+<li>MySQL 5.5 Reference Manual @ <a href="http://dev.mysql.com/doc/refman/5.1/en/index.html">http://dev.mysql.com/doc/refman/5.5/en/index.html</a>.</li>
+<li>SQL.org @ <a href="http://www.sql.org">http://www.sql.org</a>.</li>
+<li>Russell Dyer, &quot;MySQL in a Nutshell&quot;, O'Reilly, 2008.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Latest version tested: JDK 1.8.0_66/JDBC 4.0, MySQL 5.7.11, Connector/J 5.1.38<br />
+Last modified: February, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

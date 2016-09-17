@@ -1,0 +1,1520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java ME Basics &amp; Game Programming</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container div -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content div -->
+<div id="content">
+
+<h1>JAVA ME</h1>
+<h2>Basics &amp; Game Programming</h2>
+<p class="p-last-modified">Latest version tested: Sun Java Wireless Toolkit 2.5.2 for CLDC,<br />
+NetBeans 6.1 Mobility Pack, CLDC 1.1, MIDP 2.1<br />
+Last modified: October 13, 2008</p>
+
+<p>You can develop Java ME program using either:</p>
+<ul>
+<li>Sun Java Wireless Toolkit for CLDC (@ <a href="http://java.sun.com/products/sjwtoolkit">java.sun.com/products/sjwtoolkit</a>).</li>
+<li>NetBeans with Mobility Pack (@ <a href="http://www.netbeans.org">www.netbeans.org</a>).</li>
+</ul>
+
+<p>For serious programming, I certainly recommend NetBeans with Mobility Pack.</p>
+
+<p>There are quite few Java ME books, but tons of on-line learning resources. These are the steps that I recommend:</p>
+<ul>
+<li>Download and install the Sun Java Wireless Toolkit or NetBeans with Mobility pack or both, and write a Hello-world program.</li>
+<li>Check out the &quot;Getting Started&quot; and the &quot;Learning Path&quot; from the Java ME Developer site @ <a href="http://developers.sun.com/mobility/reference/index.jsp">http://developers.sun.com/mobility/reference/index.jsp</a>.</li>
+<li>Study the demos provided in Sun Java Wireless Toolkit and NetBeans Mobility Pack.</li>
+</ul>
+
+
+
+
+<h3>Install Sun Java Wireless Toolkit</h3>
+
+<p><strong>Step 1: Download</strong><br />
+Download Sun Java Wireless Toolkit for CLDC (formerly called J2ME wireless toolkit) from <a href="http://java.sun.com/products/sjwtoolkit/">http://java.sun.com/products/sjwtoolkit/</a>.</p>
+
+<p><strong>Step 2: Install</strong><br />
+Run the downloaded installer.</p>
+<p><strong>Step 3: Read Documentation</strong><br />
+Read the installed documentation via &quot;index.html&quot; (in the installed directory). Read &quot;Sun Java Wireless Toolkit for CLDC User's Guide&quot;.</p>
+<p><strong>Step 4: Try the Demos</strong><br />
+&quot;Start&quot; button &rArr; Programs &rArr; Sun Java Wireless Toolkit 2.5.2 &rArr; Open Project... &rArr; choose a demo &rArr; Build &rArr; Run.</p>
+
+<h3>Writing First Java ME Program</h3>
+<p><strong>Step 0: Read Documentation</strong><br />
+Read &quot;Sun Java Wireless Toolkit for CLDC User's Guide&quot;  chapters 1 and 2 (via &quot;<code>index.html</code>&quot; in the installed directory).</p>
+<p><strong>Step 1: Create a New Project</strong><br />
+Launch wireless toolkit via &quot;Start&quot; button &rArr; Programs &rArr; Sun Java Wireless Toolkit 2.5.2 &rArr; new Project... &rArr; In &quot;Project Name&quot;, enter &quot;Hello&quot;. In MIDlet Class Name, enter &quot;<code>HelloMIDlet</code>&quot; &rArr; Create Project &rArr; OK &rArr; Take note of the source file directory, e.g., &quot;<code>c:\WTK2.5.2\apps\Hello\src</code>&quot;. </p>
+<p>Note: You can change the project directory by editing &quot;<code>$WTK_BASE\wtklib\Windows\ktools.properties</code>&quot; to add the following property:</p>
+<pre class="code-example">
+kvem.apps.dir = <em>your-new-app-directory</em>
+</pre>
+
+<p><strong>Step 2: Write your Source Code</strong><br />
+Write the following source code, using a programming text editor, and saved as &quot;<code>HelloMIDlet.java</code>&quot; in the source file directory noted in the previous step.</p>
+
+<pre class="code-listing">
+<span class="code-comment">// #1: Uses Java ME APIs (instead of Java SE)</span>
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+&nbsp;
+<span class="code-comment">// #2: First MIDlet to say &quot;Hello, world&quot;</span>
+public class HelloMIDlet extends MIDlet implements CommandListener {
+&nbsp;
+   <span class="code-comment">// #3: Declare instance variables</span>
+   private Form mainForm;           <span class="code-comment">// for holding UI components</span>
+   private Display currentDisplay;  <span class="code-comment">// the current display screen</span>
+   private Command cmdExit;         <span class="code-comment">// exit command</span>
+&nbsp;
+   <span class="code-comment">// #4: Called back by the Runtime to start or resume (after being paused) the MIDlet</span>
+   public void startApp() {
+      mainForm = new Form(&quot;HelloMIDlet&quot;);   <span class="code-comment">// allocate a Form to hold the UI components</span>
+      mainForm.append(new StringItem(null, &quot;Hello, world!&quot;));  <span class="code-comment">// add a String component</span>
+      cmdExit = new Command(&quot;Exit&quot;, Command.EXIT, 0);  <span class="code-comment">// allocate the exit command</span>
+      mainForm.addCommand(cmdExit);         <span class="code-comment">// add the command</span>
+      mainForm.setCommandListener(this);    <span class="code-comment">// register &quot;this&quot; to handle command</span>
+      currentDisplay = Display.getDisplay(this);  <span class="code-comment">// retrieve the current display</span>
+      currentDisplay.setCurrent(mainForm);  <span class="code-comment">// use mainForm as the current display</span>
+   }
+&nbsp;
+   <span class="code-comment">// #5: Called back by the Runtime to pause the MIDlet</span>
+   public void pauseApp() {}  <span class="code-comment">// do nothing</span>
+&nbsp;
+   <span class="code-comment">// #6: Called back by the Runtime before the MIDlet is destroyed<code></code></span>
+   public void destroyApp(boolean unconditional) {}  <span class="code-comment">// do nothing</span>
+&nbsp;
+   <span class="code-comment">// #7: Handler for the Exit command</span>
+   public void commandAction(Command cmd, Displayable displayable) {
+      if (cmd == cmdExit) {
+         destroyApp(true);
+         notifyDestroyed();  <span class="code-comment">// put the midlet into destroy state</span>
+      }
+   }
+}
+</pre>
+
+<p><strong>Explanation:</strong></p>
+<ul>
+<li>A midlet (or Java ME program) (#2) extends from the abstract class <code>javax.microedition.midlet.MIDlet</code>. This class declares three abstract methods: <code>startApp()</code>, <code>pauseApp()</code> and <code>destroyApp()</code>. These are call-back methods, that will be invoked by the runtime (or Application Management Software) at the appropriate instance. You need to override these methods to program the running behaviors of your midlet.</li>
+<li><code>startApp()</code> (#4) is called by the runtime when the midlet is starting, or resuming after it is being paused. <code>pauseApp()</code> (#5) is called by the runtime to pause the midlet. <code>destroyApp()</code> (#6) is called the the runtime when the midlet is about to be destroyed and removed from the memory.</li>
+<li>In the <code>startApp()</code> (#4), we create the <code>mainForm</code> (of <code>javax.microedition.lcdui.Form</code>) to place the &quot;Hello, world&quot; <code>StringItem</code> UI component. We add a &quot;Exit&quot; command to the <code>mainForm</code>, and set <code>this</code> class as the command listener for handling the commands. We then retrieve the current display (of <code>javax.microedition.lcdui.Display</code>) of this midlet, and set the <code>mainForm</code> as the current display.</li>
+<li>This class, as the command listener, needs to implement the <code>javax.microedition.lcdui.CommandListener</code> interface (#2). This interface declares an abstract method <code>commandAction()</code>. We override this<code> </code>method (#7) to invoke <code>notifyDestroy()</code> in response to the &quot;Exit&quot; command, which will inform the runtime that this midlet has entered the destroy state.</li>
+</ul>
+
+<p><strong>Step 3: Build &amp; Run the Program</strong><br />
+Build &rArr; Run &rArr; Launch &rArr; Exit.</p>
+
+<h3>Using the NetBeans Mobility Pack</h3>
+<p><strong>Step 0: Install NetBeans</strong><br />
+Install NetBeans. Read &quot;<a href="NetBeans_HowTo.html">NetBeans HowTo</a>&quot; on how to install NetBeans and write program in NetBeans.</p>
+<p><strong>Step 1: Install Mobility Pack</strong><br />
+Download NetBeans Mobility Pack CLDC/MIDP from <a href="http://www.netbeans.org/products/mobility/">http://www.netbeans.org/products/mobility/</a>. Run the downloaded installer.</p>
+<p><strong>Step 2: Read &amp; Read</strong></p>
+<ul>
+<li>Mobile Applications Learning Trail @ <a href="http://www.netbeans.org/kb/trails/mobility.html">http://www.netbeans.org/kb/trails/mobility.html</a>.</li>
+<li>Quick Start Guide @ <a href="http://www.netbeans.org/kb/60/quickstart-mobility.html">http://www.netbeans.org/kb/60/quickstart-mobility.html</a>.</li>
+</ul>
+
+<p><strong>Step 3: Write a &quot;Hello-world&quot; Program</strong></p>
+<p>refer to the getting starting document and the source code above.</p>
+
+<p><strong>Step 4: Visual Programming</strong></p>
+<p>Compared with Sun Java Wireless Toolkit, NetBeans provides a <em>GUI Builder</em> (called Visual Mobile Designer) in addition to source coding. Follow the steps in &quot;Quick Start Guide&quot; to use the Visual Mobile Designer to write a Hello-world Java ME applications.</p>
+
+<h3>Next...</h3>
+<p>Read:</p>
+<ul>
+<li>&quot;Introduction to Mobility Java Technology&quot; @ <a href="http://developers.sun.com/mobility/getstart/">http://developers.sun.com/mobility/getstart/</a>.</li>
+<li>&quot;Wireless Development Tutorial Part I&quot;
+and &quot;Part II&quot; @ <a href="http://developers.sun.com/mobility/midp/articles/wtoolkit/">http://developers.sun.com/mobility/midp/articles/wtoolkit/</a>.</li>
+<li>Follow the learning path suggested in &quot;Learning About the Mobile World&quot; <a href="http://developers.sun.com/mobility/learn/">http://developers.sun.com/mobility/learn/</a>.</li>
+<li>Read more tutorials and sample code @ <a href="http://developers.sun.com/mobility/learning/tutorial/index.html">http://developers.sun.com/mobility/learning/tutorial/index.html</a>.</li>
+<li>Study the demo codes in Sun Java Wireless Toolkit and NetBeans Mobility Pack.</li>
+</ul>
+
+<p>Java ME, is easier than the Java SE and Java EE, simply because the APIs is very much smaller (because mobile devices has limited capability). For example, the <code>java.lang</code> in Java ME (CLDC 1.1) has 17 classes and 1 interface, compared with the <code>java.lang</code> of Java SE (JDK 1.6), which has 35 classes and 8 interfaces.</p>
+
+<h3>Java ME's Configurations, Profiles &amp; Optional APIs</h3>
+
+<p>Unlike Java SE, which is a single piece of software identical in all the operating platforms for developing desktop applications, Java ME is designed for mobile devices, which have limited and diverse computational power, memory, screen size, and networking capability. Due to the large variety and diversity of mobile devices, it does not make sense to design a one-size-fits-all solution and request all variety of mobile devices to support this piece of software.</p>
+<p>Java ME is, therefore, divided into <em>configurations</em>, <em>profiles</em>, and <em>optional APIs</em>.  A mobile device manufacturer is free to choose what to support, depending on the device's capability.</p>
+
+<img class="image-center" src="../java/images/JavaME_ConfigurationProfile.png" />
+
+<p>A configuration specifies a Java Virtual Machine (JVM) and a base set of core APIs for <em>a certain class of devices</em>.  There are currently two configurations defined:</p>
+<ul>
+<li>CLDC (Connected &amp; Limited Device Configuration):  for <em>intermittently networked</em> (<em>connected</em>) and <em>limited capability</em> devices such as mobile phone, smart phone, PDAs. CLDC specifies a JVM and core API packages <code>java.lang</code>, <code>java.io</code>, <code>java.util</code> (which are subset of the Java SE counterparts) and <code>javax.microedition.io</code> (for networking support).</li>
+<li>CDC (Connected Device Configuration): for robust networked and more capable devices, such as high-end PDAs, set-top boxes. (CDC is beyond the scope of this writing.)</li>
+</ul>
+
+<p>Configuration (CLDC and CDC), by itself, is incomplete for application development. A profile is defined on top of a configuration to provide specific APIs (such as user interface, persistent storage) to make a complete <em>application environment</em> for developing applications. For example, MIDP (Mobile Information Device Profile) is build on top of CLDC; PDAP (PDA Profile) is build on top of CDC.</p>
+
+<p>Mobile devices may choose to support optional APIs, such as Blue tooth API, Wireless Messaging API (WMA 1.0 or 2.0) and many others, depending on their capability.</p>
+
+<p>Configurations and profiles are confusing. As a starter, you need not worry about how to distinguish them.  You simply need to understand the combined APIs provided by the &quot;MIDP for CLDC&quot;.</p>
+
+<p><strong>Reference</strong>: &quot;Introduction to Mobility Java Technology&quot; @ <a href="http://developers.sun.com/mobility/getstart/">http://developers.sun.com/mobility/getstart/</a>.</p>
+
+<h3>MIDP for CLDC</h3>
+
+<p> In this writing, we focus on the &quot;MIDP for CLDC&quot;. Recall that CLDC is the base, and MIDP builds on top of CLDC to provide a complete application development environment. Currently, there are two versions of CLDC: 1.0 and 1.1 and three versions of MIDP: 1.0, 2.0, 2.1.</p>
+
+<p>CLDC defines the JVM and a base set of core APIs for a class of devices with intermittent connectivity and limited capacity.  CLDC specifies core APIs such as <code>java.lang</code>, <code>java.io</code>, <code>java.util</code>:</p>
+
+<ul>
+<li><code>java.lang</code>: CLDC 1.0 has 15 classes and 1 interface: <code>Object</code>, <code>System</code>, <code>Thread</code>/<code>Runnable</code>, <code>Runtime</code>, <code>Class</code>, <code>String</code>/<code>StringBuffer</code>, <code>Math</code>, wrapper classes (<code>Integer</code>/<code>Byte</code>/<code>Short</code>/<code>Long</code>/<code>Character</code>/<code>Boolean</code>). CLDC 1.1 added the floating-point support and wrapper classes <code>Float</code>/<code>Double</code>.</li>
+<li><code>java.util</code>: CLDC 1.0 has 7 classes and 1 interface: <code>Random</code>, collections (<code>Vector</code>/<code>Hashtable</code>/<code>Stack</code>), <code>Calendar</code>/<code>Date</code>/<code>TimeZone</code>, <code>Enumeration.</code> CLDC 1.1 added <code>Timer</code>/<code>TimerTask</code>.</li>
+<li><code>java.io</code>: CLDC has 11 classes and 2 interfaces: <code>InputStream</code>/<code>OutputStream</code>, <code>DataInputStream</code>/<code>DataOutputStream</code>, <code>ByteArrayInputStream</code>/<code>ByteArrayOutputStream</code>, <code>Reader</code>/<code>Writer</code>, <code>InputStreamReader</code>/<code>OutputStreamWriter</code>, and <code>PrintStream</code>.</li>
+<li><code>javax.microedition.io</code>: provides networking support. CLDC 1.0/1.1 define 1 class (<code>Connector</code>) and 8 interface.</li>
+</ul>
+
+<p>If you are familiar with Java SE (JDK), you can see that CLDC provides only a small subset of classes, as the mobile devices has limited capability.</p>
+
+<p>CLDC does not provide a complete application development environment, e.g., it lacks the user interface. MIDP is built upon CLDC to provide a complete environment.  MIDP specifies these APIs:</p>
+
+<ul>
+<li><code>javax.microedition.midlet</code>: <code>MIDlet</code> class for development MIDP applications.</li>
+<li><code>javax.microedition.io</code>: added <code>HttpConnection</code>.</li>
+<li><code>javax.microedition.lcdui</code>: User interface support.</li>
+<li><code>java.microedition.rms</code>: record management system to support persistent storage.</li>
+<li>MIDP 2.0 added packages <code>javax.microedition.media</code> (multimedia support), <code>javax.microedition.media.control</code>, <code>javax.microedition.lcdui.game</code> (UI for game development), and <code>javax.microedition.pki</code> (public key infrastructure).</li>
+<li>The latest MIDP 2.1 specification does not bring new features but instead it focuses to reduce device fragmentation by specifying a consistent set of Java technologies that must present in MIDP 2.1 capable phone.</li>
+</ul>
+
+
+<h3>Midlet's Life Cycle</h3>
+
+<p>A MIDP program is written by subclassing <code>javax.microedition.midlet.MIDlet</code>, and hence is called a <em>midlet</em>. A midlet is run and under the control of the Application Management Software (AMS or the runtime). The AMS can manage multiple midlets at the same time, and needs to content with other applications (such as SMS, MMS) for the limited system resources available in the mobile device.</p>
+
+<p>A midlet extends abstract class <code>MIDlet</code>, which declares three abstract methods for managing its life cycle: <code>startApp()</code>, <code>pauseAPP()</code> and <code>destroyApp()</code>, and other non-abstract methods such as <code>notifyPaused()</code> and <code>notifyDestroy()</code>.</p>
+
+<img class="image-center" src="../java/images/JavaME_MidletLifeCycle.png" />
+
+<p>A midlet could be in one of these states: <em>constructed</em>, <em>paused</em>, <em>active</em>, and <em>destroyed</em>. The life cycle of a midlet begins when the AMS invokes the constructor to create a new instance of the midlet. After it is constructed, the AMS places the midlet in the paused state. It then invokes <code>Midlet::startApp()</code> to start the midlet and place the midlet in the active state.  The AMS may shift the midlet into the paused state by invoking <code>Midlet::pauseApp()</code> (e.g., there is a incoming call or MMS message which requires attention and system resources) and resume its operation by calling <code>startApp()</code> again.  In the paused state, the midlet is not terminated, but it should release any resource it obtained in <code>startApp()</code>. The pause/active transition give you the ability to manage resources effectively. Typically, you shall use <code>startApp()</code> to allocate resources such as record stores, network connections, UI components, and use <code>pauseApp()</code> to release these resources. The AMS can put the midlet into the destroyed state from either paused or active state, via a call to <code>destroyApp()</code>.</p>
+
+<p>A midlet may voluntarily enter the paused state by invoking <code>Midlet::notifyPaused()</code>. Similarly, it could invoke <code>Midlet::notifyDestroyed()</code> to inform the AMS that it can now be considered destroyed.</p>
+
+<pre class="code-listing">
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+&nbsp;
+<span class="code-comment">// Testing the Life Cycle of a MIDlet</span>
+public class LifeCycleTest extends MIDlet implements CommandListener {
+&nbsp;
+   private Form mainForm;           <span class="code-comment">// for holding UI components</span>
+   private Display currentDisplay;  <span class="code-comment">// the current display screen</span>
+   private Command cmdExit;         <span class="code-comment">// exit command</span>
+   private StringItem msg;          <span class="code-comment">String UI Component</span>
+&nbsp;
+   <span class="code-comment">// Constructor</span>
+   public LifeCycleTest() {
+      System.out.println(&quot;Constructor is called&quot;);
+      mainForm = new Form(&quot;Midlet Lifecycle Test&quot;);
+      msg = new StringItem(null, &quot;Constructing Midlet...&quot;);
+      mainForm.append(msg);
+      cmdExit = new Command(&quot;Exit&quot;, Command.EXIT, 0);
+      mainForm.addCommand(cmdExit);
+      mainForm.setCommandListener(this);
+      currentDisplay = Display.getDisplay(this);
+      currentDisplay.setCurrent(mainForm);
+   }
+&nbsp;
+   public void startApp() {
+      System.out.println(&quot;startApp() is called&quot;);
+      msg.setText(&quot;Midlet started...&quot;);
+   }
+&nbsp;
+   public void pauseApp() {
+      System.out.println(&quot;pauseApp() is called&quot;);
+      msg.setText(&quot;Midlet paused...&quot;);
+   }
+&nbsp;
+   public void destroyApp(boolean unconditional) {
+      System.out.println(&quot;destroyApp() is called&quot;);
+      msg.setText(&quot;Midlet destroyed...&quot;);
+   }
+&nbsp;
+   public void commandAction(Command cmd, Displayable displayable) {
+      if (cmd == cmdExit) {
+         //destroyApp(true);  <span class="code-comment">// Uncomment and try this</span>
+         notifyDestroyed();
+      }
+   }
+}
+</pre>
+
+<p>Try the above midlet. Start the midlet and use the &quot;Exit&quot; command as well as &quot;Hang-up&quot; button to terminate the midlet.</p>
+
+<p><strong>Reference</strong>: &quot;MIDlet Life Cycle&quot; @ <a href="http://developers.sun.com/mobility/learn/midp/lifecycle/">http://developers.sun.com/mobility/learn/midp/lifecycle/</a>.</p>
+
+<h3>MIDP Basics</h3>
+
+<h4>HTTP Connection</h4>
+
+<pre class="code-listing">
+import java.io.*;
+import javax.microedition.io.*;
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+&nbsp;
+<span class="code-comment">// Testing HTTP Connection by connecting to a web page and retrieve
+// BUFFER_SIZE bytes of data.</span>
+public class HTTPConnectionTest extends MIDlet implements CommandListener {
+&nbsp;
+   private Form mainForm;
+   private StringItem msgItem;
+   private Command cmdExit,  cmdConnect;
+   private Display currentDisplay;
+   private HttpConnection conn;
+   private InputStream in;
+   private byte[] buffer;
+   private static final int BUFFER_SIZE = 512;
+   private String url = &quot;http://java.sun.com&quot;;
+&nbsp;
+   <span class="code-comment">// Constructor</span>
+   public HTTPConnectionTest() {
+      mainForm = new Form(&quot;HTTP Connector Test&quot;);
+      msgItem = new StringItem(null, &quot;&quot;);
+      mainForm.append(msgItem);
+      cmdExit = new Command(&quot;Exit&quot;, Command.EXIT, 0);
+      cmdConnect = new Command(&quot;Connect&quot;, Command.SCREEN, 0);
+      mainForm.addCommand(cmdExit);
+      mainForm.addCommand(cmdConnect);
+      mainForm.setCommandListener(this);
+   }
+&nbsp;
+   public void startApp() {
+      currentDisplay = Display.getDisplay(this);
+      currentDisplay.setCurrent(mainForm);
+   }
+&nbsp;
+   public void pauseApp() {}
+&nbsp;
+   public void destroyApp(boolean unconditional) {}
+&nbsp;
+   public void commandAction(Command cmd, Displayable displayable) {
+      if (cmd == cmdExit) {
+         notifyDestroyed();
+      } else if (cmd == cmdConnect) {
+         <span class="code-comment">// Start a new thread for network connection (as IO operation blocks)</span>
+         Thread t = new Thread() {
+            public void run() {
+               connect();
+               fillBuffer();
+            }
+         };
+         t.start();
+      }
+   }
+&nbsp;
+   <span class="code-comment">// Establish a HTTP connection</span>
+   private void connect() {
+      try {
+         conn = (HttpConnection) Connector.open(url, Connector.READ);
+         if (conn.getResponseCode() == HttpConnection.HTTP_OK) {
+            in = conn.openInputStream();     <span class="code-comment">// open the network input stream</span>
+            buffer = new byte[BUFFER_SIZE];  <span class="code-comment">// allocate the byte buffer for bytes read</span>
+         }
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+   }
+&nbsp;
+   <span class="code-comment">// Returns false if the buffer is not filled to capacity (indicating last segment)</span>
+   private boolean fillBuffer() {
+      int totalBytesRead = 0;
+      try {
+         while (totalBytesRead &lt; BUFFER_SIZE) {
+            int bytesRead = in.read(buffer, totalBytesRead, BUFFER_SIZE - totalBytesRead);
+            if (bytesRead &lt; 0) {  <span class="code-comment">// end of stream</span>
+               in.close();
+               break;
+            }
+            totalBytesRead += bytesRead;
+         }
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+      msgItem.setText(new String(buffer, 0, totalBytesRead));  <span class="code-comment">// show the bytes read</span>
+      return (totalBytesRead == BUFFER_SIZE);
+   }
+}
+</pre>
+
+<p><strong>Explanation:</strong></p>
+<p>[TODO] A &quot;Continue&quot; command to browse thru the entire site. Parsing HTTP response message.</p>
+
+<h4>Persistent with Record Management System (RMS)</h4>
+<p>[TODO]</p>
+
+
+<h3>MIDP User Interface</h3>
+<p>MIDP provides 3 sets of UI classes:</p>
+<ul>
+<li>a high-level UI which provide standard functionality with high abstraction (<code>Screen</code>, <code>Item</code>),</li>
+<li>a low-level UI which is highly customizable (<code>Graphics</code>, <code>Canvas</code>) to support custom drawing, and</li>
+<li>a mid-level Game API, for game-oriented abstraction (such as <code>GameCanvas</code> and <code>Sprite</code>). Game API will be discussed in the next section.</li>
+ </ul>
+
+<img class="image-center" src="../java/images/JavaME_LcduiClasses.png" />
+
+<p>The <code>Display</code> class provides the foundation for visual interaction with a midlet. There is only one instance of <code>Display</code>, which can be retrieved via static method <code>Display.getDisplay()</code>. You can then use <code>Display::setCurrent()</code> and <code>Display::getCurrent()</code> to get/set the current display for a particular <code>Displayable</code>.</p>
+<pre class="code-example">
+Display currentDisplay = Display.getDisplay(this);  <span class="code-comment">// &quot;this&quot; is a MIDlet</span>
+Form mainForm = new Form(...);
+currentDisplay.setCurrent(mainForm);  <span class="code-comment">// set the current display to a Form (Displayable)</span>
+</pre>
+
+<h4>High-Level UI: <code>Displayable</code>,  <code>Item</code>, <code>Command</code> and <code>CommandListener</code></h4>
+
+<p>The <code>Displayable</code> is an abstract class of objects that can be placed on the <code>Display</code>. A <code>Displayable</code> may have a title, a ticker, command(s) and an associated command listener. The following methods are provided:</p>
+<pre class="code-example">
+<span class="code-comment">// Get the height and width of the Displayable</span>
+public int getHeight();
+public int getWidth();
+<span class="code-comment">// Getter/Setter for Title and Ticker</span>
+public String getTitle();
+public void setTitle(String title);
+public Ticker getTicker();
+public void setTicker(Ticker ticker);
+<span class="code-comment">// Add/Remove Command and register command listener</span>
+public void addCommand(Command cmd);
+public void removeCommand(Command cmd);
+public void setCommandListener(CommandListener listener);
+</pre>
+
+<p><code>Command</code> objects can be associated with the soft buttons (two or three). The constructor of <code>Command</code> take three arguments:</p>
+<pre class="code-example">
+public Command(String label, int type, int priority);
+</pre>
+<ul>
+<li>Label: command label</li>
+<li>Type: <code>OK</code>, <code>CANCEL</code>, <code>ITEM</code> (list of items), <code>SCREEN</code> (custom), <code>HELP</code>, <code>BACK</code>, <code>STOP</code>.</li>
+<li>Priority: a smaller number indicates higher priority.</li>
+</ul>
+
+<p>The <code>CommandListener</code> interface declares one abstract method:</p>
+<pre class="code-example">
+public void commandAction(Command c, Displayable d); <span class="code-comment">// indicate a Command event has occurred on Displayable d</span>
+</pre>
+
+<p>In your <code>commandAction()</code> handler, you can either check for the <code>Command</code> object, command type, or <code>Displayable</code>, and program appropriate action.</p>
+<pre class="code-explanation">
+<span class="code-comment">// Command definitions</span>
+Command cmdExit = new Command(&quot;Exit&quot;, Command.EXIT, 1);
+Command cmdContinue = new Command(&quot;Continue&quot;, Command.SCREEN, 1);
+......
+&nbsp;
+<span class="code-comment">// Command event handler</span>
+public void commandAction(Command cmd, Displayable d) {
+   <span class="code-comment">// check for the Command object</span>
+   if (cmd == cmdExit) {
+      ...
+   } else if (cmd == cmdContinue) {
+      ...
+   }
+   <span class="code-comment">// or check for the Command's type</span>
+   int type = cmd.getCommandType();
+   if (type == Command.EXIT) {
+      ...
+   } else if (type == Command.SCREEN) {
+      ...
+   }
+}
+</pre> 
+
+<p><strong>Code Example</strong>: TextBoxes</p>
+<pre class="code-listing">
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+&nbsp;
+public class TextBoxTest extends MIDlet implements CommandListener {
+&nbsp;
+   private Display currentDisplay;
+   private TextBox tbox1;
+   private TextBox tbox2;
+   private Command cmdExit;
+   private Command cmdNext;
+&nbsp;
+   public void startApp() {
+      <span class="code-comment">// Allocate Displayable UI components</span>
+      tbox1 = new TextBox(&quot;Page 1&quot;, &quot;This is page number 1&quot;, 40, TextField.ANY);
+      tbox2 = new TextBox(&quot;Page 2&quot;, &quot;This is page number 2&quot;, 40, TextField.ANY);
+      <span class="code-comment">// Allocate Commands</span>
+      cmdExit = new Command(&quot;Exit&quot;, Command.EXIT, 2);
+      cmdNext = new Command(&quot;Next Page&quot;, Command.SCREEN, 1);
+      <span class="code-comment">// Associate Command with appropriate Displayable UI component</span>
+      tbox1.addCommand(cmdNext);
+      tbox2.addCommand(cmdExit);
+      <span class="code-comment">// Register command listener for the Displayables</span>
+      tbox1.setCommandListener(this);
+      tbox2.setCommandListener(this);
+      <span class="code-comment">// Retrieve and setup the current Display</span>
+      currentDisplay = Display.getDisplay(this);
+      currentDisplay.setCurrent(tbox1);      
+   }
+&nbsp;
+   public void pauseApp() { }
+&nbsp;
+   public void destroyApp(boolean unconditional) { }
+&nbsp;
+   public void commandAction(Command cmd, Displayable displayable) {
+      if (cmd == cmdNext) {
+         <span class="code-comment">// Change current display to the next page</span>
+         currentDisplay.setCurrent(tbox2);
+      } else if (cmd == cmdExit) {
+         destroyApp(true);
+         notifyDestroyed();
+      }
+   }
+}
+</pre>
+
+<h4><code>Alert</code></h4>
+<p><code>Alert</code> can be used for providing &quot;dialog&quot;.  There are two types of <code>Alert</code>: one display for a set period of time and does not require user's interaction; the other interrupt the program until user provides a response. <code>Alert</code> is a <code>Displayable</code>. Hence, it can have title, ticker, command(s) and can register command listener. <code>Alert</code> has the following constructors:</p>
+
+<pre class="code-example">
+public Alert(String title);     <span class="code-comment">// construct an empty Alert with the given title</span>
+public Alert(String title, String alertText, Image alertImage, AlertType type);
+</pre>
+
+<p>The available <code>AlertType</code>s are: <code>ALARM</code>, <code>CONFIRMATION</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARNING</code>.  You can use methods <code>getTimeout()</code> and <code>setTimeout()</code> to control the timeout (in milliseconds or <code>FOREVER</code>). <code>Alert</code> can be associated with an image or a sound effect.</p>
+
+<p><strong>Code Example</strong>: Guessing a number</p>
+
+<pre class="code-listing">
+import java.util.Random;
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+&nbsp;
+<span class="code-comment">// Guess a number between 1 to 99</span>
+public class NumberGuess extends MIDlet implements CommandListener {
+&nbsp;
+   private TextBox textBox;
+   private Command cmdExit,  cmdTry;
+   private Alert alert;
+   private Random rand = new Random();
+   private int secretNumber;
+   private int numTrial = 0;
+   private String msgPrompt = &quot;Enter your guess (between 1 to 99): &quot;;
+&nbsp;
+   <span class="code-comment">// Constructor</span>
+   public NumberGuess() {
+      textBox = new TextBox(&quot;Number Guess&quot;, msgPrompt, 60, TextField.PLAIN);
+      cmdExit = new Command(&quot;Exit&quot;, Command.EXIT, 2);
+      cmdTry = new Command(&quot;Try&quot;, Command.SCREEN, 1);
+      textBox.addCommand(cmdTry);
+      textBox.addCommand(cmdExit);
+      textBox.setCommandListener(this);
+      alert = new Alert(&quot;Result&quot;, &quot;&quot;, null, AlertType.CONFIRMATION);
+      <span class="code-comment">// Setup a random secret number between 1 and 99</span>
+      secretNumber = rand.nextInt(100);
+   }
+&nbsp;
+   public void startApp() {
+      Display.getDisplay(this).setCurrent(textBox);
+   }
+&nbsp;
+   public void pauseApp() { }
+&nbsp;
+   public void destroyApp(boolean unconditional) { }
+&nbsp;
+   <span class="code-comment">// Handler for command event</span>
+   public void commandAction(Command command, Displayable displayable) {
+      if (command == cmdTry) {
+         textBox.delete(0, msgPrompt.length());  <span class="code-comment">// remove prompting text</span>
+         alert.setString(checkNumber(textBox.getString())); <span class="code-comment">// display alert on result</span>
+         Display.getDisplay(this).setCurrent(alert);
+         textBox.setString(msgPrompt);
+      } else if (command == cmdExit) {
+         destroyApp(true);
+         notifyDestroyed();
+      }
+   }
+&nbsp;
+   <span class="code-comment">// Check if the guess is correct, and display the appropriate alert</span>
+   private String checkNumber(String strNumberIn) {
+      int numberIn = Integer.parseInt(strNumberIn);
+      numTrial++;
+      if (numberIn == secretNumber) {
+         <span class="code-comment">// Regenerate secret number for the next game</span>
+         int numTrialSaved = numTrial;
+         numTrial = 0;
+         secretNumber = rand.nextInt(100);
+         return &quot;Congratulation\nYou got it in &quot; + numTrialSaved + &quot; trials&quot;;
+      } else if (numberIn &gt; secretNumber) {
+         return &quot;Try Lower&quot;;
+      } else {
+         return &quot;Try Higher&quot;;
+      }
+   }
+}
+</pre>
+
+<p><strong>Code Example</strong>: <code>Form</code> (<code>TextField</code>, <code>StringItem</code>) with <code>Item</code>s and <code>ItemStateListener</code></p>
+
+<pre class="code-listing">
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+&nbsp;
+<span class="code-comment">// A Form with Items (TextField, StringItem) for simple addition and multiplication</span>
+public class FormTextFieldTest extends MIDlet implements CommandListener, ItemStateListener {
+&nbsp;
+   private Form mainForm;
+   private TextField tfNum1, tfNum2, tfOper, tfResult;
+   private StringItem msg;
+   private double num1, num2, result;
+   private String oper;
+   private Command cmdExit, cmdGo;
+&nbsp;   
+   public FormTextFieldTest() {
+      <span class="code-comment">// Setup the Form and Items</span>
+      mainForm = new Form(&quot;Form and TextField Test&quot;);
+      tfNum1 = new TextField(&quot;Number 1:&quot;, &quot;&quot;, 10, TextField.DECIMAL);
+      tfNum2 = new TextField(&quot;Number 2:&quot;, &quot;&quot;, 10, TextField.DECIMAL);
+      tfOper = new TextField(&quot;Operation:&quot;, &quot;&quot;, 1, TextField.ANY);
+      tfResult = new TextField(&quot;Result: &quot;, &quot;&quot;, 10, TextField.DECIMAL);
+      msg = new StringItem(&quot;&quot;, &quot;Type the numbers, set operation to 'A' for addition &quot; +
+              &quot;or 'M' for multiplication, then push 'Go'.&quot;);
+      mainForm.append(tfNum1);
+      mainForm.append(tfNum2);
+      mainForm.append(tfOper);
+      mainForm.append(tfResult);
+      mainForm.append(msg);
+&nbsp;
+      <span class="code-comment">// Setup Commands, register command listener and item-state listener</span>
+      cmdExit = new Command(&quot;Exit&quot;, Command.EXIT, 2);
+      cmdGo = new Command(&quot;GO&quot;, Command.SCREEN, 1);
+      mainForm.addCommand(cmdExit);
+      mainForm.addCommand(cmdGo);
+      mainForm.setCommandListener(this);
+      mainForm.setItemStateListener(this);
+   }
+&nbsp;
+   public void startApp() {
+      Display.getDisplay(this).setCurrent(mainForm);
+   }
+&nbsp;
+   public void pauseApp() { }
+&nbsp;
+   public void destroyApp(boolean unconditional) { }
+&nbsp;
+   <span class="code-comment">// Handler for command event</span>
+   public void commandAction(Command command, Displayable displayable) {
+      if (command == cmdGo) {
+         if (oper.equalsIgnoreCase(&quot;A&quot;)) {
+            result = num1 + num2;
+         } else if (oper.equalsIgnoreCase(&quot;M&quot;)) {
+            result = num1 * num2;
+         }
+         tfResult.setString(result + &quot;&quot;);
+      } else if (command == cmdExit) {
+         destroyApp(true);
+         notifyDestroyed();
+      }
+   }
+&nbsp;
+   <span class="code-comment">// Handler for item-state change event</span>
+   public void itemStateChanged(Item item) {
+      if (item == tfNum1) {
+         num1 = Double.parseDouble(tfNum1.getString());
+      }
+      if (item == tfNum2) {
+         num2 = Double.parseDouble(tfNum2.getString());
+      }
+      if (item == tfOper) {
+         oper = tfOper.getString();
+      }
+   }
+}
+</pre> 
+
+<h4>Low-level UI for Custom Graphics: <code>Canvas</code> and <code>Graphics</code></h4>
+
+<p>[TODO]</p>
+
+<h3>MIDP Game API</h3>
+
+<p>MIDP Game API (in package <code>javax.microedition.lcdui.game</code>) 
+enhances the <em>graphics</em> capabilities (of the MIDP UI package <code>javax.microedition.lcdui</code>) to better support game development. It provides five new classes: <code>GameCanvas</code>, <code>Sprite</code>, <code>Layer</code>, <code>TiledLayer</code>, and <code>LayerManager</code>, as shown below:</p>
+
+<img class="image-center" src="../java/images/JavaME_GameAPI.png" />
+
+<h4><code>GameCanvas</code></h4>
+<p><code>GameCanvas</code> extends  <code>Canvas</code>, and adds:</p>
+<ol>
+<li>off-screen graphics buffer for double-buffered rendering. You can retrieve the off-screen graphics handler via method <code>GameCanvas::getGraphics()</code> and transfer the contents to the on-screen buffer via <code>GameCanvas::flushGraphics()</code>.</li>
+<li>the ability to query key status, via method <code>GameCanvas::getKeyState()</code>.</li>
+</ol>
+
+<p><strong>Code Example</strong>: A key-controlled moving avatar built upon <code>GameCanvas</code></p>
+<pre class="code-listing">
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.game.*;
+&nbsp;
+<span class="code-comment">// Testing the MIDP Game API's GameCanvas class: off-screen graphics buffer and key state.</span>
+public class GameCanvasTest extends MIDlet {
+&nbsp;
+   <span class="code-comment">// Allocate a GameCanvas, set it to the current display, and start the game thread</span>
+   public void startApp() {
+      GameMain game = new GameMain(); <span class="code-comment">// GameMain extends GameCanvas for the game UI</span>
+      Display.getDisplay(this).setCurrent(game);
+      new Thread(game).start();       <span class="code-comment">// GameMain implements Runnable to run the game thread</span>
+   }
+&nbsp;
+   public void pauseApp() { }
+&nbsp;
+   public void destroyApp(boolean unconditional) { }
+&nbsp;
+   <span class="code-comment">// The GameMain class is designed as an inner class, which extends GameCanvas for drawing
+   // the game graphics, and implements Runnable to run the game logic in its own thread.</span>
+   class GameMain extends GameCanvas implements Runnable {
+&nbsp;
+      <span class="code-comment">// Avatar - a Pacman</span>
+      private int xCenter,  yCenter;   <span class="code-comment">// (x,y) position of the pacman's center</span>
+      private static final int RADIUS = 20;  <span class="code-comment">// radius</span>
+      private int speed = 3;      <span class="code-comment">// speed of move, in pixels</span>
+      private int xEye,  yEye;    <span class="code-comment">// (x,y) position of the pacman's eye</span>
+      private int direction = 0;  <span class="code-comment">// direction of move, in degrees counter-clockwise</span>
+      private int animationCount = 0;        <span class="code-comment">// counter to control avatar's animation</span>
+&nbsp;
+      private static final int INFO_AREA_HEIGHT = 20;  <span class="code-comment">// height of the info display area</span>
+      private static final int UPDATE_INTERVAL = 100;  <span class="code-comment">// game update interval in milliseconds</span>
+&nbsp;
+      <span class="code-comment">// Constructor</span>
+      public GameMain() {
+         super(true);
+      }
+&nbsp;
+      <span class="code-comment">// Running behavior of the game thread</span>
+      public void run() {
+         int canvasWidth = getWidth();
+         int canvasHeight = getHeight();
+&nbsp;
+         <span class="code-comment">// Initialize the Pacman</span>
+         xCenter = canvasWidth / 2;    <span class="code-comment">// place the pacman in the center of canvas</span>
+         yCenter = canvasHeight / 2;
+         direction = 0;          <span class="code-comment">// move right</span>
+         xEye = xCenter;
+         yEye = yCenter - RADIUS / 2;
+         animationCount = 0;
+         <span class="code-comment">// bounds for the pacman's center (x, y)</span>
+         int xMin = RADIUS;
+         int xMax = canvasWidth - 1 - RADIUS;
+         int yMin = RADIUS + INFO_AREA_HEIGHT;
+         int yMax = canvasHeight - 1 - RADIUS;
+&nbsp;
+         <span class="code-comment">// Retrieve the off-screen graphics buffer for graphics drawing</span>
+         Graphics g = getGraphics();
+&nbsp;
+         <span class="code-comment">// Game loop</span>
+         while (true) {
+            <span class="code-comment">// Check key state for user input</span>
+            int keyState = getKeyStates();
+            if ((keyState &amp; RIGHT_PRESSED) != 0) {
+               xCenter += speed;
+               if (xCenter &gt; xMax) {
+                  xCenter = xMax;
+               }
+               direction = 0;
+               xEye = xCenter;
+               yEye = yCenter - RADIUS / 2;
+            } else if ((keyState &amp; UP_PRESSED) != 0) {
+               yCenter -= speed;
+               if (yCenter &lt; yMin) {
+                  yCenter = yMin;
+               }
+               direction = 90;  <span class="code-comment">// degrees counter-clockwise</span>
+               xEye = xCenter - RADIUS / 2;
+               yEye = yCenter;
+            } else if ((keyState &amp; LEFT_PRESSED) != 0) {
+               xCenter -= speed;
+               if (xCenter &lt; xMin) {
+                  xCenter = xMin;
+               }
+               direction = 180;
+               xEye = xCenter;
+               yEye = yCenter - RADIUS / 2;
+            } else if ((keyState &amp; DOWN_PRESSED) != 0) {
+               yCenter += speed;
+               if (yCenter &gt; yMax) {
+                  yCenter = yMax;
+               }
+               direction = 270;
+               xEye = xCenter + RADIUS / 2;
+               yEye = yCenter;
+            }
+&nbsp;
+            <span class="code-comment">// Clear screen by filling a rectangle over the entire screen</span>
+            g.setColor(0x007fcf);
+            g.fillRect(0, 0, canvasWidth, canvasHeight);
+&nbsp;
+            <span class="code-comment">// Draw the Pacman</span>
+            <span class="code-comment">// Circular body with a open mouth, width of the mouth varies based on animation count.</span>
+            g.setColor(0xffff00);
+            g.fillArc(xCenter - RADIUS, yCenter - RADIUS, 2 * RADIUS, 2 * RADIUS,
+                    5 * animationCount + direction, 360 - 10 * animationCount);
+            animationCount = (animationCount + 1) % 6;   <span class="code-comment">// 6 different opening</span>
+            <span class="code-comment">// Draw the Pacman's eye, which alternately opens and closes</span>
+            g.setColor(0x000000);
+            g.drawArc(xEye, yEye, 4, 4, 0, 360);     <span class="code-comment">// outline</span>
+            if (animationCount &lt; 3) {
+               g.fillArc(xEye, yEye, 4, 4, 0, 360);  <span class="code-comment">// close via fill</span>
+            }
+&nbsp;
+            <span class="code-comment">// Display information in the info area: (x, y) of the Pacman</span>
+            g.setColor(0xffffff);
+            g.fillRect(0, 0, canvasWidth, INFO_AREA_HEIGHT);
+            g.setColor(0x000000);
+            g.drawString(&quot;(&quot; + xCenter + &quot;,&quot; + yCenter + &quot;)&quot;, 4, 0, Graphics.TOP | Graphics.LEFT);
+&nbsp;
+            <span class="code-comment">// Flush the off-screen buffer to the display</span>
+            flushGraphics();
+&nbsp;
+            <span class="code-comment">// Provide delay to achieve the targeted refresh rate,
+            // also yield for other threads to perform their tasks.</span>
+            try {
+               Thread.sleep(UPDATE_INTERVAL);
+            } catch (InterruptedException e) { }
+         }
+      }
+   }
+}
+</pre>
+
+<p><strong>Explanation</strong></p>
+<ul>
+<li>The <code>GameCanvas</code> class provides a <em>off-screen</em> graphics buffer for double-buffered rendering. You can retrieve the off-screen <code>Graphics</code> handle via method <code>GameCanvas::getGraphics()</code>.  You can then perform your graphic rendenering on this off-screen buffer, and invoke <code>GameCanvas::flushGraphics()</code> to send the contents to the on-screen buffer.</li>
+<li>The <code>GameCanvas</code> class also provides the ability to query the key states via the method <code>GameCanvas::getKeyState()</code>, which returns the current key state. You can then use  constants such as <code>UP_PRESSED</code>, <code>LEFT_PRESSED</code> (bit-AND with key state), to check for user action.</li>
+</ul>
+
+<p><strong>Code Example</strong>: A Bouncing Ball</p>
+
+<pre class="code-listing">
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.game.*;
+&nbsp;
+<span class="code-comment">// A Bouncing Ball in MIDP</span>
+public class BouncingBall extends MIDlet {
+&nbsp;
+   <span class="code-comment">// Allocate a GameCanvas, set it to the current display, and start the game thread</span>
+   public void startApp() {
+      GameMain game = new GameMain(); <span class="code-comment">// GameMain extends GameCanvas for the game UI</span>
+      Display.getDisplay(this).setCurrent(game);
+      new Thread(game).start();       <span class="code-comment">// GameMain implements Runnable to run the game thread</span>
+   }
+&nbsp;
+   public void pauseApp() { }
+&nbsp;
+   public void destroyApp(boolean unconditional) { }
+&nbsp;
+   <span class="code-comment">// The GameMain class is designed as an inner class, which extends GameCanvas for drawing
+   // the game graphics, and implements Runnable to run the game logic in its own thread.</span>
+   class GameMain extends GameCanvas implements Runnable {
+&nbsp;
+      <span class="code-comment">// Avatar - the Bouncing Ball</span>
+      private int xCenter,  yCenter;        <span class="code-comment">// (x,y) of the center of the ball</span>
+      private int speedX = 2,  speedY = 3;  <span class="code-comment">// speed in x and y direction</span>
+      private static final int RADIUS = 80; <span class="code-comment">// radius</span>
+&nbsp;
+      private static final int INFO_AREA_HEIGHT = 20;  <span class="code-comment">// height of the info display area</span>
+      private static final int UPDATE_INTERVAL = 30;  <span class="code-comment">// game update interval in milliseconds</span>
+&nbsp;
+      <span class="code-comment">// Constructor</span>
+      public GameMain() {
+         super(true);
+      }
+&nbsp;
+      <span class="code-comment">// Running behavior of the game thread</span>
+      public void run() {
+         int canvasWidth = getWidth();
+         int canvasHeight = getHeight();
+&nbsp;
+         <span class="code-comment">// Initializes the Ball</span>
+         xCenter = canvasWidth / 2;   <span class="code-comment">// place the ball in the center of the canvas</span>
+         yCenter = canvasHeight / 2;
+&nbsp;
+         <span class="code-comment">// Bounds of the center of the ball</span>
+         int xMin = RADIUS;
+         int yMin = RADIUS + INFO_AREA_HEIGHT;
+         int xMax = canvasWidth - 1 - RADIUS;
+         int yMax = canvasHeight - 1 - RADIUS;
+&nbsp;
+         <span class="code-comment">// Retrieve the off-screen graphics buffer for graphics drawing</span>
+         Graphics g = getGraphics();
+&nbsp;
+         <span class="code-comment">// Game loop</span>
+         while (true) {
+            <span class="code-comment">// Update the ball's position</span>
+            xCenter += speedX;
+            yCenter += speedY;
+            <span class="code-comment">// Check if the ball hit the bound. 'Reflect' the ball if so.</span>
+            if (xCenter &gt; xMax) {
+               xCenter = xMax;
+               speedX = -speedX;
+            } else if (xCenter &lt; xMin) {
+               xCenter = xMin;
+               speedX = -speedX;
+            }
+            if (yCenter &gt; yMax) {
+               yCenter = yMax;
+               speedY = -speedY;
+            } else if (yCenter &lt; yMin) {
+               yCenter = yMin;
+               speedY = -speedY;
+            }
+&nbsp;
+            <span class="code-comment">// Clear screen by filling a rectangle over the entire screen</span>
+            g.setColor(0x000000);
+            g.fillRect(0, 0, canvasWidth, canvasHeight);
+&nbsp;
+            <span class="code-comment">// Draw the ball</span>
+            g.setColor(0xffffff);
+            g.fillArc(xCenter - RADIUS, yCenter - RADIUS, 2 * RADIUS, 2 * RADIUS, 0, 360);
+&nbsp;
+            <span class="code-comment">// Display information in the infor area: (x, y) of the ball</span>
+            g.setColor(0xffffff);
+            g.fillRect(0, 0, canvasWidth, INFO_AREA_HEIGHT);
+            g.setColor(0x000000);
+            g.drawString(&quot;(&quot; + xCenter + &quot;,&quot; + yCenter + &quot;)&quot;, 4, 0, Graphics.TOP | Graphics.LEFT);
+&nbsp;
+            <span class="code-comment">// Flush the off-screen buffer to the display</span>
+            flushGraphics();
+&nbsp;
+            <span class="code-comment">// Provide delay to achieve the targeted refresh rate,
+            // also yield for other threads to perform their tasks.</span>
+            try {
+               Thread.sleep(UPDATE_INTERVAL);
+            } catch (InterruptedException e) {
+            }
+         }
+      }
+   }
+}
+</pre>
+
+<p><strong>Explanation</strong></p>
+<p>This bouncing ball is straight-forward. However, I have problem writing multiple balls, because MIDP's <code>Math</code> class does not provide arc-tangent function.</p>
+
+
+<h4><code>Sprite</code></h4>
+
+<p>The <code>Sprite</code> class allow you to render an <em>animated</em> sprite with several image frames stored as one single image for better management of animated frames.  Two examples of animated frame images are given below:</p>
+
+<img class="image-center" src="../java/images/JavaME_PacmanFrames.png" />
+<br />
+<img class="image-center" src="../java/images/JavaME_GhostFrames.png" />
+
+<p>The <code>Sprite</code> class is able to extract the frames (given the frame width and height) and number them starting from 0 for the top-left frame, in  row-major manner. Read the API documentation of the &lt;code&gt;Sprite&lt;/code&gt; class for more illustration.</p>
+
+<p> You construct a sprite as follow:</p>
+<pre class="code-example"><span class="code-comment">
+// Load the image (containing the animated frames) for the sprite</span>
+Image img = Image.createImage(&quot;/pacman.png&quot;);
+<span class="code-comment">// Create a Sprite from the image giving the frame's width and height</span>
+Sprite sprite = new Sprite(img, 25, 25);
+<span class="code-comment">// Select a frame for display</span>
+sprite.nextFrame();  <span class="code-comment">// Use the next frame</span>
+sprite.setFrame(2);  <span class="code-comment">// select a particular frame number</span>
+</pre>
+
+<p>The <code>Sprite</code> class also provide basic transforms via the method <code>Sprite::setTransform(type)</code>. The <code>type</code> includes <code>TRANS_NONE</code>, <code>TRANS_ROT90</code>, <code>TRANS_ROT180</code>, <code>TRANS_ROT270</code>, <code>TRANS_MIRROR</code>, <code>TRANS_MIRROR_ROT90</code>, <code>TRANS_MIRROR_ROT180</code>, <code>TRANS_MIRROR_ROT270</code>. For rotation, you can use <code>setRefPixelPosition(x, y)</code> to set the rotation center (by default, it rotates about (0, 0), which is the top-left corner of the image).  Note that: (a) you cannot concatenate multiple transforms, (b) rotation of arbitrary degree in not supported, and (c) the rotational degree is measured clockwise (instead of the usual convection of counter-clockwise).</p>
+
+<p>A sprite can detect collision with another sprite via the method <code>Sprite::collidesWith()</code>.  You can set the collision detection at &quot;pixel-level&quot; or &quot;bounding-box-level&quot;.</p>
+
+<p><strong>Code Example</strong>: <code>Sprite</code> with animated frames, transform, and collision detection</p>
+
+<pre class="code-listing">
+import java.io.IOException;
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.game.*;
+&nbsp;
+<span class="code-comment">// Testing the MIDP Game API's Sprite class: animation and collision detection.</span>
+public class SpriteTest extends MIDlet {
+&nbsp;
+   <span class="code-comment">// Allocate a GameCanvas, set it to the current display, and start the game thread</span>
+   public void startApp() {
+      GameMain game = new GameMain(); <span class="code-comment">// GameMain extends GameCanvas for the game UI</span>
+      Display.getDisplay(this).setCurrent(game);
+      new Thread(game).start();       <span class="code-comment">// GameMain implements Runnable to run the game thread</span>
+   }
+&nbsp;
+   public void pauseApp() { }
+&nbsp;
+   public void destroyApp(boolean unconditional) { }
+&nbsp;
+   <span class="code-comment">// The GameMain class is designed as an inner class, which extends GameCanvas for drawing
+   // the game graphics, and implements Runnable to run the game logic in its own thread.</span>
+   class GameMain extends GameCanvas implements Runnable {
+&nbsp;
+      <span class="code-comment">// Avatar - Pacman with animation</span>
+      private Sprite pacman;
+      private String pacmanImageFilename = &quot;/images/PacmanFrames.png&quot;;
+      private int pacmanXCenter,  pacmanYCenter;  <span class="code-comment">// (x,y) of the center of the Pacman</span>
+      private int pacmanSpeed = 3;                <span class="code-comment">// speed of move, in pixels</span>
+&nbsp;
+      <span class="code-comment">// Avatar - Ghost with animation</span>
+      private Sprite ghost;
+      private String ghostImageFilename = &quot;/images/GhostFrames.png&quot;;
+      private int ghostXCenter,  ghostYCenter;
+&nbsp;
+      private static final int FRAME_WIDTH = 25;
+      private static final int FRAME_HEIGHT = 25;
+      private static final int FRAME_RADIUS = FRAME_WIDTH / 2 + 1;      
+&nbsp;      
+      <span class="code-comment">// Collision Detection</span>
+      private boolean hasCollided;  <span class="code-comment">// flag indicating collision</span>
+&nbsp;
+      private static final int UPDATE_INTERVAL = 100; <span class="code-comment">// milliseconds</span>
+      private static final int INFO_AREA_HEIGHT = 20;  <span class="code-comment">// height of the info display area</span>
+&nbsp;
+      <span class="code-comment">// Constructor</span>
+      public GameMain() {
+         super(true);
+      }
+&nbsp;
+      <span class="code-comment">// Run the game loop in its own thread</span>
+      public void run() {
+         int canvasWidth = getWidth();
+         int canvasHeight = getHeight();
+&nbsp;
+         <span class="code-comment">// Construct the sprites</span>
+         try {
+            Image imgPacman = Image.createImage(pacmanImageFilename);
+            pacman = new Sprite(imgPacman, FRAME_WIDTH, FRAME_HEIGHT);
+            pacman.setRefPixelPosition(FRAME_RADIUS, FRAME_RADIUS);  <span class="code-comment">// set rotation center</span>
+&nbsp;
+            Image imgGhost = Image.createImage(ghostImageFilename);
+            ghost = new Sprite(imgGhost, FRAME_WIDTH, FRAME_HEIGHT);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+&nbsp;
+         <span class="code-comment">// Position pacman at the center</span>
+         pacmanXCenter = canvasWidth / 2;
+         pacmanYCenter = canvasHeight / 2;
+         <span class="code-comment">// Position ghost at the corner</span>
+         ghostXCenter = canvasWidth / 4;
+         ghostYCenter = canvasHeight / 4;
+         <span class="code-comment">// Pacman's bounds</span>
+         int pacmanXMin = FRAME_RADIUS;
+         int pacmanXMax = canvasWidth - FRAME_RADIUS;
+         int pacmanYMin = FRAME_RADIUS + INFO_AREA_HEIGHT;
+         int pacmanYMax = canvasHeight - FRAME_RADIUS;
+&nbsp;
+         <span class="code-comment">// Retrieve the off-screen graphics buffer for graphics drawing</span>
+         Graphics g = getGraphics();
+&nbsp;
+         <span class="code-comment">// Game loop</span>
+         while (true) {
+            <span class="code-comment">// Check key state for user input</span>
+            int keyState = getKeyStates();
+            if ((keyState &amp; RIGHT_PRESSED) != 0) {
+               pacmanXCenter += pacmanSpeed;
+               if (pacmanXCenter &gt; pacmanXMax) {
+                  pacmanXCenter = pacmanXMax;
+               }
+               pacman.setTransform(Sprite.TRANS_NONE);
+            } else if ((keyState &amp; UP_PRESSED) != 0) {
+               pacmanYCenter -= pacmanSpeed;
+               if (pacmanYCenter &lt; pacmanYMin) {
+                  pacmanYCenter = pacmanYMin;
+               }
+               pacman.setTransform(Sprite.TRANS_ROT270); <span class="code-comment">// clockwise</span>
+            } else if ((keyState &amp; LEFT_PRESSED) != 0) {
+               pacmanXCenter -= pacmanSpeed;
+               if (pacmanXCenter &lt; pacmanXMin) {
+                  pacmanXCenter = pacmanXMin;
+               }
+               pacman.setTransform(Sprite.TRANS_MIRROR);
+            } else if ((keyState &amp; DOWN_PRESSED) != 0) {
+               pacmanYCenter += pacmanSpeed;
+               if (pacmanYCenter &gt; pacmanYMax) {
+                  pacmanYCenter = pacmanYMax;
+               }
+               pacman.setTransform(Sprite.TRANS_ROT90); <span class="code-comment">// clockwise</span>
+            }
+&nbsp;
+            <span class="code-comment">// Clear screen by filling a rectangle over the entire screen</span>
+            g.setColor(0x007fcf);
+            g.fillRect(0, 0, canvasWidth, canvasHeight);
+&nbsp;
+            <span class="code-comment">// Draw the sprites</span>
+            pacman.setPosition(pacmanXCenter - FRAME_RADIUS, pacmanYCenter - FRAME_RADIUS);
+            pacman.paint(g);
+            pacman.nextFrame();  <span class="code-comment">// use next frame for the next refresh</span>
+&nbsp;
+            ghost.setPosition(ghostXCenter - FRAME_RADIUS, ghostYCenter - FRAME_RADIUS);
+            ghost.paint(g);
+            ghost.nextFrame();
+&nbsp;
+            <span class="code-comment">// Collision detection</span>
+            hasCollided = pacman.collidesWith(ghost, true);
+&nbsp;
+            <span class="code-comment">// Display info</span>
+            g.setColor(0xffffff);
+            g.fillRect(0, 0, canvasWidth, INFO_AREA_HEIGHT);
+            g.setColor(0x000000);
+            g.drawString(&quot;(&quot; + pacmanXCenter + &quot;,&quot; + pacmanYCenter + &quot;)&quot;, 4, 0, Graphics.TOP | Graphics.LEFT);
+            if (hasCollided) {
+               g.setColor(0xff0000);
+               g.drawString(&quot;Collided&quot;, canvasWidth / 2, 0, Graphics.TOP | Graphics.LEFT);
+            }
+&nbsp;
+            <span class="code-comment">// flush the off-screen buffer to the display</span>
+            flushGraphics();
+&nbsp;
+            <span class="code-comment">// Provide delay to achieve the targeted refresh rate,
+            // also yield for other threads to perform their tasks.</span>
+            try {
+               Thread.sleep(UPDATE_INTERVAL);
+            } catch (InterruptedException e) {
+            }
+         }
+      }
+   }
+}
+</pre>
+
+<p><strong>Explanation</strong></p>
+<p>[TODO]</p>
+
+<h4><code>Layer &amp; TiledLayer</code></h4>
+
+<p>A <code>Layer</code> is a rectangular visual panel with a width and height, and can be position on the screen with its top-left corner at (x, y) of the screen (via method <code>setPosition(x, y)</code>).<code> Layer</code> is an abstract class. <code>Sprite</code> (described earlier) and <code>TiledLayer</code> are implementations of the <code>Layer</code> class.</p>
+
+<p>A <code>TiledLayer</code> is a special layer that is divided into grid of cells. Each cells can be filled with a selected tile frame. In this way, you can reuse the tile frames instead of providing a huge image. <code>TiledLayer</code> is often used for background.</p>
+
+<p>To use a <code>TiledLayer</code>, you keep the tile frames in a single image (similar to sprite) and specify the width and height of the tile frame. The frames will be extracted and numbered starting from 1 (unlike sprite frame which starts from 0) for the top-left tile, in row-major manner.  You then divide the tile layer into cells (of rows and columns). For each cell, you can assign a tile frame index (from 1 to n). Index 0 indicates that the cell is empty. You can use negative index for animated tile cells. Each negative index is associated with a positive tile frame index, and the associated tile frame can be changed on the fly. For example, the animated tile index -1 can be made alternate between tile frame index 5 and 6. Read the API documentation of <code>TiledLayer</code> for more illustrations.</p>
+
+<img class="image-center" src="../java/images/JavaME_BackgroundTiles.png" />
+
+<p> You can construct a <code>TiledLayer</code> as follow:</p>
+<pre class="code-example"><span class="code-comment">
+// Load the image (containing the tile frames) for the TiledLayer</span>
+Image img = Image.createImage(&quot;/pacman.png&quot;);
+<span class="code-comment">// Compute the number of rows and columns of tiles</span>
+int tileRows = ....
+int tileCols = ....
+<span class="code-comment">// Create a TiledLayer from the image giving the numbers of rows and columns, tile frame's width and height</span>
+TiledLayer background = new TiledLayer(tileCols, tileRows, img, tileWidth, tileHeight);
+<span class="code-comment">// Select a static tile (from 1 to n) for a particular cell</span>
+background.setCell(aCol, aRow, aStaticTileIndex);
+<span class="code-comment">// Set up animated tile by retrieving the next available animated tile index (starting from -1)</span>
+int animatedTileIndex = background.createAnimatedTile(5);  <span class="code-comment">// init to static tile index 5</span>
+background.setCell(aCol, aRow, animatedTileIndex);
+<span class="code-comment">// Animate tile by changing its associated static tile index</span>
+background.setAnimatedTile(animatedTileIndex, 7);
+</pre>
+
+
+
+<p><strong>Code Example</strong>: <code>TiledLayer</code> with static and animated tiles</p>
+
+<pre class="code-listing">
+import java.io.IOException;
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.game.*;
+&nbsp;
+<span class="code-comment">// Testing the MIDP Game API's TiledLayer class: static and animated tiles.</span>
+public class TiledLayerTest extends MIDlet {
+&nbsp;
+   <span class="code-comment">// Allocate a GameCanvas, set it to the current display, and start the game thread</span>
+   public void startApp() {
+      GameMain game = new GameMain(); <span class="code-comment">// GameMain extends GameCanvas for the game UI</span>
+      Display.getDisplay(this).setCurrent(game);
+      new Thread(game).start();       <span class="code-comment">// GameMain implements Runnable to run the game thread</span>
+   }
+&nbsp;
+   public void pauseApp() { }
+&nbsp;
+   public void destroyApp(boolean unconditional) { }
+&nbsp;
+   <span class="code-comment">// The GameMain class is designed as an inner class, which extends GameCanvas for drawing
+   // the game graphics, and implements Runnable to run the game logic in its own thread.</span>
+   class GameMain extends GameCanvas implements Runnable {
+&nbsp;
+      <span class="code-comment">// Use a TiledLayer for the background</span>
+      private TiledLayer background;
+      private String imgTilesFilename = &quot;/images/Tiles.png&quot;;
+      private static final int TILE_WIDTH = 32;
+      private static final int TILE_HEIGHT = 32;
+      private int tileRows;  <span class="code-comment">// number of rows of tiles</span>
+      private int tileCols;  <span class="code-comment">// number of columns of tiles</span>
+      private int animatedTileIndex1, animatedTileIndex2;
+      private int frameCount = 0;  <span class="code-comment">// for controlling animated tile</span>
+&nbsp;
+      private static final int UPDATE_INTERVAL = 100;  <span class="code-comment">// game update interval in milliseconds</span>
+&nbsp;
+      <span class="code-comment">// Constructor</span>
+      public GameMain() {
+         super(true);
+      }
+&nbsp;
+      <span class="code-comment">// Running behavior of the game thread</span>
+      public void run() {
+         int canvasWidth = getWidth();
+         int canvasHeight = getHeight();
+&nbsp;
+         <span class="code-comment">// Compute the number of rows and columns of of background tiled layer</span>
+         tileCols = canvasWidth / TILE_WIDTH;
+         tileRows = canvasHeight / TILE_HEIGHT;
+         <span class="code-comment">// Top-left corner (x,y) of the tiled layer</span>
+         int tiledLayerX = (canvasWidth - tileCols * TILE_WIDTH) / 2;
+         int tiledLayerY = (canvasHeight - tileRows * TILE_HEIGHT) / 2;
+&nbsp;
+         <span class="code-comment">// Set up the TiledLayer and place the chosen tile on each cell</span>
+         try {
+            Image imgTiles = Image.createImage(imgTilesFilename);
+            background = new TiledLayer(tileCols, tileRows, imgTiles, TILE_WIDTH, TILE_HEIGHT);
+            <span class="code-comment">// Retrieve the next available animated tile index (negative number)</span>
+            animatedTileIndex1 = background.createAnimatedTile(5);  <span class="code-comment">// init to tile index 5</span>
+            animatedTileIndex2 = background.createAnimatedTile(7);  <span class="code-comment">// init to tile index 7</span>
+            for (int col = 0; col &lt; tileCols; col++) {
+               <span class="code-comment">// Top row of sky (static tile index 8)</span>
+               background.setCell(col, 0, 8);
+               <span class="code-comment">// Bottom two rows of water (animated tiles) </span>
+               background.setCell(col, tileRows - 2, animatedTileIndex1);
+               background.setCell(col, tileRows - 1, animatedTileIndex2);
+            }
+            for (int col = 1; col &lt; tileCols - 1; col++) {
+               <span class="code-comment">// grassland in between (static tile index 4), sides are empty (index 0)</span>
+               for (int row = 1; row &lt; tileRows - 2; row++) {
+                  background.setCell(col, row, 4);
+               }
+            }
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+&nbsp;
+         <span class="code-comment">// Retrieve the off-screen graphics buffer for graphics drawing</span>
+         Graphics g = getGraphics();
+&nbsp;
+         <span class="code-comment">// Game loop</span>
+         while (true) {
+            <span class="code-comment">// clear screen</span>
+            g.setColor(0xffffff);
+            g.fillRect(0, 0, canvasWidth, canvasHeight);
+&nbsp;
+            <span class="code-comment">// Change the index for animated tiles</span>
+            if (frameCount == 0) {
+               background.setAnimatedTile(animatedTileIndex1, 5);
+               background.setAnimatedTile(animatedTileIndex2, 7);
+            } else if (frameCount == 1) {
+               background.setAnimatedTile(animatedTileIndex1, 6);
+               background.setAnimatedTile(animatedTileIndex2, 6);
+            } else {
+               background.setAnimatedTile(animatedTileIndex1, 7);
+               background.setAnimatedTile(animatedTileIndex2, 5);
+            }
+            frameCount = (frameCount + 1) % 3;
+&nbsp;
+            <span class="code-comment">// Position the TiledLayer in the center of the canvas</span>
+            background.setPosition(tiledLayerX, tiledLayerY);
+            background.paint(g);
+&nbsp;
+            <span class="code-comment">// flush the off-screen buffer to the display</span>
+            flushGraphics();
+&nbsp;
+            <span class="code-comment">// Provide delay to achieve the targeted refresh rate,
+            // also yield for other threads to perform their tasks.</span>
+            try {
+               Thread.sleep(UPDATE_INTERVAL);
+            } catch (InterruptedException e) {
+            }
+         }
+      }
+   }
+}
+</pre>
+
+<p><strong>Explanation</strong></p>
+<p>[TODO]</p>
+
+<h4><code>LayerManager</code></h4>
+<p>The <code>LayerManager</code> can be used to manage a collection of <code>Layer</code>s, and place them on the screen with a specific z-order. Each <code>Layer</code> is given an index corresponding to its z-order, with value of 0 closer to you, and highest number further away from you. <code>Layer</code>s can be added into the <code>LayerManager</code> (via <code>insert()</code> or <code>append()</code>) and removed (via <code>remove()</code>). Recall that <code>Layer</code> is an abstract class, with implementations in <code>Sprite</code> and <code>TiledLayer</code> classes.</p>
+
+<pre class="code-example">
+<span class="code-comment">// Construct a LayerManager</span>
+LayerManager manager = new LayerManager();
+<span class="code-comment">// Construct Layers (of Sprite and TiledLayer) and add into the LayerManager
+</span>Sprite sprite1 = new Sprite(...);
+manager.insert(sprite1, 0);  <span class="code-comment">// add this layer with z-index of 0 (nearest to you)</span>
+Sprite sprite2 = new Sprite(...);
+manager.insert(sprite2, 0);  <span class="code-comment">// add this layer with z-index of 0, the rest of layers adjust automatically</span>
+<span class="code-comment">// more sprites</span>
+.....
+TiledLayout background = new TiledLayout(...);
+manager.append(background);  <span class="code-comment">// append this layer to the end with highest z-index (furthest from you)</span>
+<span class="code-comment">// Remove a Sprite by removing its layer - the layer numbers adjusted.</span>
+manager.remove(sprite2);
+</pre>
+
+
+<p><strong>Code Example</strong>: <code>LayerManager</code> with <code>Layer</code>s of <code>Sprite</code> and <code>TiledLayer</code></p>
+
+<pre class="code-listing">
+import java.io.IOException;
+import java.util.Random;
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.game.*;
+&nbsp;
+<span class="code-comment">// This example illustrate all the classes provided by MIDP Game API:
+// GameCanvas, Sprite, TiledLayer, and LayerManager which manages Layers of Sprites 
+// and TiledLayer.</span>
+public class LayerManagerTest extends MIDlet {
+&nbsp;
+   <span class="code-comment">// Allocate a GameCanvas, set it to the current display, and start the game thread</span>
+   public void startApp() {
+      GameMain game = new GameMain(); <span class="code-comment">// GameMain extends GameCanvas for the game UI</span>
+      Display.getDisplay(this).setCurrent(game);
+      new Thread(game).start();       <span class="code-comment">// GameMain implements Runnable to run the game thread</span>
+   }
+&nbsp;
+   public void pauseApp() { }
+&nbsp;
+   public void destroyApp(boolean unconditional) { }
+&nbsp;
+   <span class="code-comment">// The GameMain class is designed as an inner class, which extends GameCanvas for drawing
+   // the game graphics, and implements Runnable to run the game logic in its own thread.</span>
+   class GameMain extends GameCanvas implements Runnable {
+&nbsp;
+      <span class="code-comment">// Sprite Layer: Pacman</span>
+      private Sprite pacman;
+      private String pacmanImageFilename = &quot;/images/PacmanFrames.png&quot;;
+      private int pacmanXCenter,  pacmanYCenter;  <span class="code-comment">// (x,y) of the center</span>
+      private int pacmanSpeed = 3;                <span class="code-comment">// speed of move, in pixels</span>
+      private static final int PACMAN_SIZE = 25;
+      private static final int PACMAN_RADIUS = PACMAN_SIZE / 2 + 1;
+&nbsp;
+      <span class="code-comment">// Sprite Layers: Ghosts</span>
+      private int numGhosts = 5;
+      private Sprite[] ghosts = new Sprite[numGhosts];
+      private String ghostImageFilename = &quot;/images/GhostSmallFrames.png&quot;;
+      private static final int GHOST_SIZE = 20;
+      private static final int GHOST_RADIUS = GHOST_SIZE / 2;
+&nbsp;
+      <span class="code-comment">// TiledLayer: background</span>
+      private TiledLayer background;
+      private String tileImageFilename = &quot;/images/Tiles.png&quot;;
+      private static final int TILE_WIDTH = 32;
+      private static final int TILE_HEIGHT = 32;
+      private int tileRows;  <span class="code-comment">// number of rows of tiles</span>
+      private int tileCols;  <span class="code-comment">// number of columns of tiles</span>
+      private int animatedTileIndex;
+      private int animationCount = 0;
+&nbsp;
+      <span class="code-comment">// LayerManager which manages all the layers - Sprites and TiledLayer</span>
+      private LayerManager manager;
+      private boolean gameOver = false;
+&nbsp;
+      private static final int UPDATE_INTERVAL = 100; <span class="code-comment">// milliseconds</span>
+      private Random rand = new Random();
+&nbsp;
+      <span class="code-comment">// Constructor</span>
+      public GameMain() {
+         super(true);
+      }
+&nbsp;
+      <span class="code-comment">// Run the game loop in its own thread</span>
+      public void run() {
+         int canvasWidth = getWidth();
+         int canvasHeight = getHeight();
+&nbsp;
+         <span class="code-comment">// Compute the number of rows and columns of TiledLayer</span>
+         tileCols = canvasWidth / TILE_WIDTH;
+         tileRows = canvasHeight / TILE_HEIGHT;
+         <span class="code-comment">// Compute all the bounds</span>
+         int backgroundXMin = (canvasWidth - tileCols * TILE_WIDTH) / 2;
+         int backgroundYMin = (canvasHeight - tileRows * TILE_HEIGHT) / 2;
+         int backgroundXMax = canvasWidth - backgroundXMin;
+         int backgroundYMax = canvasHeight - backgroundYMin;
+         int pacmanXMin = backgroundXMin + PACMAN_RADIUS;
+         int pacmanXMax = backgroundXMax - PACMAN_RADIUS;
+         int pacmanYMin = backgroundYMin + PACMAN_RADIUS;
+         int pacmanYMax = backgroundYMax - PACMAN_RADIUS;
+         int ghostMinX = backgroundXMin + GHOST_SIZE;
+         int ghostMaxX = backgroundXMax - GHOST_SIZE;
+         int ghostMinY = backgroundYMin + GHOST_SIZE;
+         int ghostMaxY = backgroundYMax - GHOST_SIZE;
+&nbsp;
+         <span class="code-comment">// Setup the layer manager</span>
+         manager = new LayerManager();
+&nbsp;
+         <span class="code-comment">// Construct the Sprites &amp; TiledLayer</span>
+         try {
+            Image imgPacman = Image.createImage(pacmanImageFilename);
+            pacman = new Sprite(imgPacman, PACMAN_SIZE, PACMAN_SIZE);
+            pacman.setRefPixelPosition(PACMAN_RADIUS, PACMAN_RADIUS);  <span class="code-comment">// set rotation center</span>
+            manager.append(pacman);            <span class="code-comment">// add into the LayerManager as last layer</span>
+            pacmanXCenter = canvasWidth / 2;   <span class="code-comment">// Position pacman at the center</span>
+            pacmanYCenter = canvasHeight / 2;
+&nbsp;
+            Image imgTiles = Image.createImage(tileImageFilename);
+            background = new TiledLayer(tileCols, tileRows, imgTiles, TILE_WIDTH, TILE_HEIGHT);
+            animatedTileIndex = background.createAnimatedTile(5);
+            for (int col = 1; col &lt; tileCols - 1; col++) {
+               for (int row = 0; row &lt; tileRows; row++) {
+                  background.setCell(col, row, 4);  <span class="code-comment">// static layer index 4</span>
+               }
+            }
+            for (int row = 0; row &lt; tileRows; row++) {
+               background.setCell(0, row, animatedTileIndex);    <span class="code-comment">// animated tile</span>
+               background.setCell(tileCols - 1, row, animatedTileIndex);
+            }
+            background.setPosition(backgroundXMin, backgroundYMin);
+            manager.append(background);    <span class="code-comment">// add into the LayerManager as last layer</span>
+&nbsp;
+            Image imgGhost = Image.createImage(ghostImageFilename);
+            for (int i = 0; i &lt; numGhosts; i++) {
+               ghosts[i] = new Sprite(imgGhost, GHOST_SIZE, GHOST_SIZE);
+               manager.insert(ghosts[i], 0);  // add into LayerManager as first layer
+               <span class="code-comment">// Randomly position the ghosts</span>
+               int ghostXCenter = rand.nextInt(ghostMaxX - ghostMinX) + ghostMinX;
+               int ghostYCenter = rand.nextInt(ghostMaxY - ghostMinY) + ghostMinY;
+               ghosts[i].setPosition(ghostXCenter - GHOST_RADIUS, ghostYCenter - GHOST_RADIUS);
+            }
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+&nbsp;
+         <span class="code-comment">// Retrieve the off-screen graphics buffer for graphics drawing</span>
+         Graphics g = getGraphics();
+&nbsp;
+         <span class="code-comment">// Game loop</span>
+         while (!gameOver) {
+            <span class="code-comment">// Check key state for user input</span>
+            int keyState = getKeyStates();
+            if ((keyState &amp; RIGHT_PRESSED) != 0) {
+               pacmanXCenter += pacmanSpeed;
+               if (pacmanXCenter &gt; pacmanXMax) {
+                  pacmanXCenter = pacmanXMax;
+               }
+               pacman.setTransform(Sprite.TRANS_NONE);
+            } else if ((keyState &amp; UP_PRESSED) != 0) {
+               pacmanYCenter -= pacmanSpeed;
+               if (pacmanYCenter &lt; pacmanYMin) {
+                  pacmanYCenter = pacmanYMin;
+               }
+               pacman.setTransform(Sprite.TRANS_ROT270); <span class="code-comment">// clockwise</span>
+            } else if ((keyState &amp; LEFT_PRESSED) != 0) {
+               pacmanXCenter -= pacmanSpeed;
+               if (pacmanXCenter &lt; pacmanXMin) {
+                  pacmanXCenter = pacmanXMin;
+               }
+               pacman.setTransform(Sprite.TRANS_MIRROR);
+            } else if ((keyState &amp; DOWN_PRESSED) != 0) {
+               pacmanYCenter += pacmanSpeed;
+               if (pacmanYCenter &gt; pacmanYMax) {
+                  pacmanYCenter = pacmanYMax;
+               }
+               pacman.setTransform(Sprite.TRANS_ROT90); <span class="code-comment">// clockwise</span>
+            }
+&nbsp;
+            <span class="code-comment">// clear screen</span>
+            g.setColor(0x000000);
+            g.fillRect(0, 0, canvasWidth, canvasHeight);
+&nbsp;
+            <span class="code-comment">// Draw the avatar</span>
+            pacman.setPosition(pacmanXCenter - PACMAN_RADIUS, pacmanYCenter - PACMAN_RADIUS);
+            pacman.nextFrame();  <span class="code-comment">// use next frame for the next refresh</span>
+&nbsp;
+            for (int i = 0; i &lt; numGhosts; i++) {
+               ghosts[i].nextFrame();
+            }
+&nbsp;      
+            if (animationCount == 0) {
+               background.setAnimatedTile(animatedTileIndex, 5);
+            } else if (animationCount == 1) {
+               background.setAnimatedTile(animatedTileIndex, 6);
+            } else {
+               background.setAnimatedTile(animatedTileIndex, 7);
+            }
+            animationCount = (animationCount + 1) % 3;
+&nbsp;
+            <span class="code-comment">// Collision detection</span>
+            int numLayer = manager.getSize();
+            if (numLayer == 2) {  <span class="code-comment">// exclude the background and pacman layers</span>
+               gameOver = true;
+            }
+            for (int layerIndex = 0; layerIndex &lt; numLayer - 2; layerIndex++) {
+               Layer layer = manager.getLayerAt(layerIndex);
+               if (pacman.collidesWith((Sprite) layer, true)) {
+                  manager.remove(layer);  <span class="code-comment">// remove the layer of this ghost</span>
+                  break; <span class="code-comment">// need to break the loop as the layer number changes</span>
+               }
+            }
+&nbsp;
+            manager.paint(g, 0, 0);  <span class="code-comment">// paint all layers</span>
+            if (gameOver) {
+               Font font = g.getFont();
+               String msg = &quot;GAME OVER!&quot;;
+               g.setColor(0xffffff);
+               int msgWidth = font.stringWidth(msg);
+               int msgX = (canvasWidth - msgWidth) / 2;
+               int msgY = canvasHeight / 2;
+               g.fillRect(msgX - 4, msgY - 2, msgWidth + 8, 20);
+               g.setColor(0xff0000);
+               g.drawString(msg, msgX, msgY, Graphics.TOP | Graphics.LEFT);
+            }
+&nbsp;
+            <span class="code-comment">// flush the off-screen buffer to the display</span>
+            flushGraphics();
+&nbsp;
+            <span class="code-comment">// Provide delay to achieve the targeted refresh rate,
+            // also yield for other threads to perform their tasks.</span>
+            try {
+               Thread.sleep(UPDATE_INTERVAL);
+            } catch (InterruptedException e) {
+            }
+         }
+      }
+   }
+}
+</pre>
+
+<p><strong>Explanation</strong></p>
+<p>[TODO]</p>
+
+<h4>Complete MIDP Game Examples</h4>
+<p>[TODO]</p>
+
+<p><strong>Reference</strong>: &quot;Getting Started With the MIDP 2.0 Game API&quot; @ <a href="http://developers.sun.com/mobility/midp/articles/gameapi/">http://developers.sun.com/mobility/midp/articles/gameapi/</a></p>
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+  <li>Java ME Developer site @ <a href="http://developers.sun.com/mobility/index.jsp">http://developers.sun.com/mobility/index.jsp</a>.</li>
+  <li>Sun Java Wireless Tool Kit for CLDC @ <a href="http://java.sun.com/products/sjwtoolkit/">http://java.sun.com/products/sjwtoolkit/</a>.</li>
+  <li>NetBeans Mobility Pack.</li>
+  <li>Mobile Information Device Profile (MIDP) APIs, v1.0, v2.0, v2.1.</li>
+  <li>Connected Limited Device Configuration (CLDC) APIs, v1.0, v1.1.</li>
+  </ul>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+
+</div>  <!-- End the container division -->
+
+</body>
+</html>

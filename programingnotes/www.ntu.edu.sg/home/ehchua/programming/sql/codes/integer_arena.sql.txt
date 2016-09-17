@@ -1,0 +1,103 @@
+/*
+ * Playing with "Integer" data types
+ */
+
+/*
+ * Set up the database
+ */
+-- SHOW DATABASES;
+-- DROP DATABASE IF EXISTS `the_arena`;
+CREATE DATABASE IF NOT EXISTS `the_arena`;
+USE `the_arena`;
+-- SHOW TABLES;
+
+/*
+ * Create a table with columns of various integer types
+ */
+DROP TABLE IF EXISTS `integer_arena`;
+CREATE TABLE IF NOT EXISTS `integer_arena` (
+   `id`        INT UNSIGNED ZEROFILL     NOT NULL AUTO_INCREMENT,
+                                -- Use INT for AUTO_INCREMENT to avoid over-run
+   `desc`      VARCHAR(30)      NULL,
+   `cTinyInt`  TINYINT(12)      NOT NULL DEFAULT 88,
+                                -- 8-bit signed in [-128,127]
+   `cINT`      INT(5) UNSIGNED ZEROFILL  NOT NULL DEFAULT 99,
+                                -- 32-bit unsigned [0, 2^32-1]
+                                -- Display-width of 5 (default is 10)
+   PRIMARY KEY(`id`)
+);
+DESC `integer_arena`;
+SHOW CREATE TABLE `integer_arena` \G
+/*
+CREATE TABLE `integer_arena` (
+  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `desc` varchar(30) DEFAULT NULL,
+  `cTinyInt` tinyint(12) NOT NULL DEFAULT '88',
+  `cINT` int(5) unsigned zerofill NOT NULL DEFAULT '00099',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
+*/
+
+/*
+ * Insert records with valid values
+ */
+INSERT INTO `integer_arena` VALUES
+  (NULL, 'Valid values', -128, 0),
+  (NULL, 'valid values', 127, 888);
+SELECT * FROM `integer_arena`;
+
+/*
+ * Insert records with invalid (out-of-range) values.
+ */
+INSERT INTO `integer_arena` VALUES
+  (NULL, 'Beyond the upperbound', 999, 9999999999),  -- set to upperbound, issue warning
+  (NULL, 'Under the lowerbound', -999, -1);          -- set to lowerbound, issue warning
+SHOW WARNINGS;
+SELECT * FROM `integer_arena`;
+
+/*
+ * Test the display field-width of INT(5) column.
+ * Display field-width does not affect the number stored.
+ * Field-width is ignored if the value exceeds the width.
+ */
+INSERT INTO `integer_arena` VALUES (NULL, 'Test display field width', 0, 9999999);  
+     -- Last column is INT(5)
+SELECT * FROM `integer_arena`;
+
+/*
+ * Test BIT type
+ */
+-- ALTER TABLE `integer_arena` DROP COLUMN `cBit`;
+ALTER TABLE `integer_arena`
+ADD COLUMN `cBit` BIT(16) NOT NULL DEFAULT b'0110000101100001';
+                                           -- Hex '6161' String 'aa'
+DESCRIBE `integer_arena`;
+
+-- After the ALTER TABLE, values of the new column are set to default.
+SELECT * FROM `integer_arena`;  --  BIT column displayed as string.
+UPDATE `integer_arena` SET `cBit` = b'0100000101000001';
+                                    -- Hex '4141', String 'AA'
+SELECT * FROM `integer_arena`;
+
+/*
+ * Test BOOLEAN (or BOOL) type
+ * MYSQL implements BOOLEAN as TINYINT(1)
+ *   (8-bit precision, range: -128 to 127, display field-width=1).
+ */
+-- ALTER TABLE `integer_arena` DROP COLUMN `cBoolean`;
+ALTER TABLE `integer_arena` ADD COLUMN `cBoolean` BOOLEAN NOT NULL DEFAULT 1;
+                                            -- 0 for false and non-zero for true
+SELECT * FROM `integer_arena`;
+UPDATE `integer_arena` SET `cBoolean` = 9;    -- within the range of TINYINT
+SELECT * FROM `integer_arena`;
+UPDATE `integer_arena` SET `cBoolean` = 129;  -- Out-of-range for TINYINT
+SHOW WARNINGS;
+SELECT * FROM `integer_arena`;
+
+UPDATE `integer_arena` SET `cBoolean` = FALSE;
+          -- Can use boolean literal TRUE or FALSE
+SELECT * FROM `integer_arena`;
+          -- FALSE displays as 0
+UPDATE `integer_arena` SET `cBoolean` = TRUE;
+SELECT * FROM `integer_arena`;
+          -- TRUE displays as 1

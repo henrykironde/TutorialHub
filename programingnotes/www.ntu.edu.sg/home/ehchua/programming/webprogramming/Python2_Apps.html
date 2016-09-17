@@ -1,0 +1,1099 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Python Database and Web Applications</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Python</h1>
+<h2>Database and Web Applications</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Python Tools</h3>
+
+<h4><span class="font-code">python-dev</span> (Python development tools)</h4>
+
+<p>Many of the Python packages require <code>python-dev</code> (Python development tools) to install and build.</p>
+
+<p>To install <code>python-dev</code>:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get install python-dev</strong>
+
+$ <strong>dpkg --status python-dev</strong>
+Version: 2.7.5-5ubuntu3
+......</pre>
+
+<h4><span class="font-code">pip</span> - Python Package Manager</h4>
+
+<h5>References</h5>
+<ol>
+<li><code>pip</code> @ <a href="https://pypi.python.org/pypi/pip">https://pypi.python.org/pypi/pip</a>.</li>
+<li><code>pip</code> documentation @ <a href="https://pip.readthedocs.org/en/stable/">https://pip.readthedocs.org/en/stable</a>.</li>
+</ol>
+
+<p><code>pip</code> is used for downloading, installing/un-installing, and managing Python packages. It is a replacement for an earlier tool called easy_install.</p>
+
+<h5>Installing <span class="font-code">pip</span></h5>
+
+<p>In Ubuntu, to install <code>pip</code> for Python 2:</p>
+<pre class="color-command">
+<span class="color-comment"># Check if pip has been installed</span>
+$ <strong>pip</strong>
+The program 'pip' is currently not installed. You can install it by typing:
+sudo apt-get install python-pip
+<span class="color-comment"># Install pip</span>
+$ <strong>sudo apt-get install python-pip</strong>
+......
+$ <strong>which pip</strong>
+/usr/bin/pip
+$ <strong>ll /usr/bin/pip*</strong>
+-rwxr-xr-x 1 root root 281 Jun 17 05:52 /usr/bin/pip*
+-rwxr-xr-x 1 root root 283 Jun 17 05:52 /usr/bin/pip2*
+$ <strong>whereis pip</strong>
+pip: /usr/bin/pip /usr/bin/X11/pip /usr/share/man/man1/pip.1.gz</pre>
+
+<p>To install <code>pip3</code> for Python 3, use:</p>
+<pre class="color-command">
+$ <strong>sudo apt-get install python3-pip</strong>
+......
+$ <strong>which pip3</strong>
+/usr/bin/pip3
+$ <strong>ll /usr/bin/pip*</strong>
+-rwxr-xr-x 1 root root 281 Jun 17 05:52 /usr/bin/pip*
+-rwxr-xr-x 1 root root 283 Jun 17 05:52 /usr/bin/pip2*
+-rwxr-xr-x 1 root root 284 Jun 17 05:52 /usr/bin/pip3*</pre>
+
+<h5>Using <span class="font-code">pip</span></h5>
+
+<p>Installing a package:</p>
+<pre class="color-command">
+<span class="color-comment"># Syntax: pip install [package-name]</span>
+$ <strong>pip install virtualenv</strong>
+Downloading/unpacking virtualenv
+  Downloading virtualenv-13.1.2-py2.py3-none-any.whl (1.7MB): 1.7MB downloaded
+Installing collected packages: virtualenv
+Successfully installed virtualenv
+Cleaning up...</pre>
+
+<p>By default, the package (and its dependent packages) are installed under <code>/usr/local/lib/python2.7/dist-packages/</code>, which is in the <code>PYTHONPATH</code> (or <code>sys.path</code>). It may require <code>sudo</code>.</p>
+
+<p>Showing what files were installed:</p>
+<pre class="color-command">
+<span class="color-comment"># Syntax: pip show --files [package-name]</span>
+$ <strong>pip show --files virtualenv</strong>
+Name: virtualenv
+Version: 13.1.2
+Location: /usr/local/lib/python2.7/dist-packages
+......</pre>
+
+<p>Installing a package of a specific or minimum version:</p>
+<pre class="color-command">
+<span class="color-comment"># Syntax for installing specific version: pip install [package-name]==[version]</span>
+<span class="color-comment"># Syntax for installing minimum version: pip install [package-name]>=[version]</span>
+$ <strong>pip install virtualenv==13.1.1</strong>  <span class="color-comment"># specific version</span>
+$ <strong>pip install virtualenv>=13.1.1</strong>  <span class="color-comment"># minimum version</span></pre>
+
+<p>Installing a package from a URL (for the latest version):</p>
+<pre class="color-command">
+<span class="color-comment">Syntax: pip install [url]</span>
+$ <strong>pip install https://github.com/pypa/virtualenv/archive/develop.tar.gz</strong></pre>
+
+<p>Listing all/out-dated packages:</p>
+<pre class="color-command">
+<span class="color-comment"># List all installed packages</span>
+$ <strong>pip list</strong>
+
+<span class="color-comment"># List out-dated packages</span>
+$ <strong>pip list --outdated</strong>
+requests (Current: 2.2.1 Latest: 2.8.1)
+......</pre>
+
+<p>Upgrading a package:</p>
+<pre class="color-command">
+<span class="color-comment"># Syntax: pip install --upgrade [package-name]</span>
+$ <strong>pip install --upgrade requests</strong></pre>
+
+<p>Un-Installing a package:</p>
+<pre class="color-command">
+<span class="color-comment"># Syntax: pip uninstall [package-name]</span>
+$ <strong>pip uninstall requests</strong></pre>
+
+<p>Search for a package:</p>
+<pre class="color-command">
+<span class="color-comment"># Syntax: pip search [package-name]</span>
+$ <strong>pip search requests</strong></pre>
+
+<p>Creating a list of pip-installed packages:</p>
+<pre class="color-command">
+<span class="color-comment"># Syntax: pip freeze &gt; [list-name.txt]</span>
+$ <strong>pip freeze &gt; requirements.txt</strong></pre>
+
+<p>Installing all the package from a list:</p>
+<pre class="color-command">
+<span class="color-comment"># Syntax: pip install -r [list-name.txt]</span>
+$ <strong>pip install -r requirements.txt</strong></pre>
+
+<p>Installing package for user</p>
+<pre class="color-command">
+<span class="color-comment"># Syntax: pip install --user [package-name]</span>
+$ <strong>pip install --user requests</strong>
+   <span class="color-comment"># The package will be installed in $HOME/.local/lib/python2.7/site-packages</span></pre>
+
+
+<h4><span class="font-code">virtualenv</span> - Virtual Environment for Python Application Development</h4>
+
+<h5>References</h5>
+
+<ol>
+<li><code>virtualenv</code> @ <a href="https://pypi.python.org/pypi/virtualenv">https://pypi.python.org/pypi/virtualenv</a>.</li>
+<li><code>virtualenv</code> documentation @ <a href="https://virtualenv.readthedocs.org/en/latest/">https://virtualenv.readthedocs.org/en/latest</a>.</li>
+</ol>
+
+<p>A Python &quot;Virtual Environment&quot; is a directory which contains everything that a Python application needed to run the application in an organized and isolated fashion.  It includes its own Python interpreter, its own <code>pip</code> and all the <code>pip</code>-installed packages. Via virtual environment, you can test and run different Python applications with different Python versions and packages, without affecting the global Python environment. Also, you can run a virtual environment without administrator right.</p>
+
+<h5>Installing <span class="font-code">virtualenv</span></h5>
+
+<p>To install <code>virtualenv</code> via <code>pip</code>:</p>
+
+<pre class="color-command">
+$ <strong>sudo pip install virtualenv</strong>
+
+<span class="color-comment"># Verifying the installation</span>
+$ <strong>pip show --files virtualenv</strong>
+Name: virtualenv
+Version: 13.1.2
+Location: /usr/local/lib/python2.7/dist-packages
+......
+$ <strong>virtualenv --version</strong>
+13.1.2
+$ <strong>which virtualenv</strong>
+/usr/local/bin/virtualenv
+$ <strong>ll /usr/local/bin/virtualenv</strong>
+-rwxr-xr-x 1 root root 211 Nov  6 17:42 /usr/local/bin/virtualenv*</pre>
+
+<h5>Using <span class="font-code">virtualenv</span></h5>
+
+<p>Creating and initializing an environment (which is kept in a folder of the same name):</p>
+
+<pre class="color-command">
+<span class="color-comment"># Create a directory called &quot;venv&quot; under the project directory</span>
+<span class="color-comment"># Syntax: virtualenv [env-folder-name]</span>
+$ <strong>cd /path/to/project-directory</strong>
+$ <strong>virtualenv venv</strong>
+New python executable in venv/bin/python
+Installing setuptools, pip, wheel...done.
+$ <strong>ll venv</strong>
+drwxrwxr-x 2 chua chua 4096 Nov 16 11:54 bin/
+drwxrwxr-x 2 chua chua 4096 Nov 16 11:54 include/
+drwxrwxr-x 3 chua chua 4096 Nov 16 11:54 lib/
+drwxrwxr-x 2 chua chua 4096 Nov 16 11:54 local/
+$ <strong>ll venv/bin</strong>
+-rw-rw-r-- 1 chua chua    2253 Nov 16 11:54 activate
+-rwxrwxr-x 1 chua chua     270 Nov 16 11:54 easy_install*
+-rwxrwxr-x 1 chua chua     270 Nov 16 11:54 easy_install-2.7*
+-rwxrwxr-x 1 chua chua     242 Nov 16 11:54 pip*
+-rwxrwxr-x 1 chua chua     242 Nov 16 11:54 pip2*
+-rwxrwxr-x 1 chua chua     242 Nov 16 11:54 pip2.7*
+-rwxrwxr-x 1 chua chua 3345416 Nov 16 11:54 python*
+lrwxrwxrwx 1 chua chua       6 Nov 16 11:54 python2 -> python*
+lrwxrwxrwx 1 chua chua       6 Nov 16 11:54 python2.7 -> python*
+-rwxrwxr-x 1 chua chua     249 Nov 16 11:54 wheel*</pre>
+
+<p>You can also create an environment with a specific version of Python Interpreter:</p>
+
+<pre class="color-command">
+<span class="color-comment"># Syntax: virtualenv --python=[python-name] [env-folder-name]</span>
+$ <strong>virtualenv --python=/usr/bin/python3 venv</strong></pre>
+
+<p>Activate/Deactivate a virtual environment:</p>
+<pre class="color-command">
+<span class="color-comment"># Syntax: source [env-name]/bin/activate</span>
+$ <strong>cd /path/to/project-directory</strong>
+$ <strong>source venv/bin/activate</strong>
+(venv)....$
+   <span class="color-comment"># The command-prompt changes to &quot;(venv)...$&quot;</span>
+   <span class="color-comment"># All Python tasks are carried out inside the virtual environment</span>
+
+<span class="color-comment"># To deactivate virtual environment</span>
+(venv)....$ <strong>deactivate</strong>
+$
+   <span class="color-comment"># The command-prompt returns to &quot;$&quot;</span></pre>
+
+<h5><span class="font-code">virtualenvwrapper</span></h5>
+
+<p>Reference: virtualenvwrapper documentation @ <a href="https://virtualenvwrapper.readthedocs.org/en/latest/">https://virtualenvwrapper.readthedocs.org/en/latest/</a>.</p>
+
+<p>&quot;<code>virtualenvwrapper</code> is a set of extensions to Ian Bicking’s <code>virtualenv</code> tool. The extensions include wrappers for creating and deleting virtual environments and otherwise managing your development workflow, making it easier to work on more than one project at a time without introducing conflicts in their dependencies.&quot;</p>
+
+<p>[TODO] more</p>
+
+
+<h3>Python-MySQL Database Programming</h3>
+
+<h5>References:</h5>
+<ol>
+<li>MySQL for Python (MySQLdb) @ <a href="http://sourceforge.net/projects/mysql-python/">http://sourceforge.net/projects/mysql-python/</a>.</li>
+<li>MySQLdb User's Guide @ <a href="http://mysql-python.sourceforge.net/MySQLdb.html">http://mysql-python.sourceforge.net/MySQLdb.html</a>.</li>
+</ol>
+
+<p>I assume that you are familiar with MySQL. Otherwise, read the &quot;MySQL&quot; section.</p>
+
+<h4>Setting Up</h4>
+
+<h5>Installing Python-MySQL Driver - <code>MySQLdb</code></h5>
+
+<p>For Ubuntu:</p>
+<pre class="color-command">
+<span class="color-comment"># These packages might be needed to build MySQLdb</span>
+$ <strong>sudo apt-get update</strong>
+$ <strong>sudo apt-get install python-dev libmysqlclient-dev</strong>
+
+<span class="color-comment"># Install MySQLdb via pip</span>
+$ <strong>sudo pip install MySQL-python</strong>
+
+<span class="color-comment"># Verify the installation</span>
+$ <strong>pip show --files MySQL-python</strong>
+Name: MySQL-python
+Version: 1.2.5
+Location: /usr/local/lib/python2.7/dist-packages
+......</pre>
+
+<p>Notes: You could also use &quot;<code>apt-get install python-mysqldb</code>&quot;. But that might not install the latest version.</p>
+
+<p>Take note that MySQLdb does not support Python 3. Try PyMySQL (@ <a href="https://github.com/PyMySQL/PyMySQL">https://github.com/PyMySQL/PyMySQL</a>) if you use Python 3.</p>
+
+<h5>Setting up MySQL</h5>
+
+<p>Login to MySQL. Create a test user (called <code>testuser</code>) and a test database (called <code>testdb</code>) as follows:</p>
+
+<pre class="color-command">
+$ <strong>mysql -u root -p</strong>
+......
+
+mysql&gt; <strong>create user 'testuser'@'localhost' identified by 'xxxx';</strong>
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; <strong>create database if not exists testdb;</strong>
+Query OK, 1 row affected (0.00 sec)
+
+mysql&gt; <strong>grant all on testdb.* to 'testuser'@'localhost';</strong>
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; <strong>quit</strong></pre>
+
+<h4>MySQL EX 1: Connecting to MySQL Database Server</h4>
+
+<p>We shall use the MySQLdb module, which is object-oriented and compatible with the Python DB API to make the codes more portable.</p>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Test MySQL Database Connection&quot;&quot;&quot;</span>
+import sys
+import MySQLdb
+
+conn = None  <span class="color-comment"># Database connection</span>
+
+try:
+    <span class="color-comment"># Open database connection.
+    # Parameters are: (server_hostname, username, password, database_name, server_port=3306)</span>
+    conn = MySQLdb.connect('localhost', 'testuser', 'xxxx', 'testdb')
+    print('Connected...')
+    <span class="color-comment"># Get a cursor from the connection, for traversing the records in result-set</span>
+    cursor = conn.cursor()
+    <span class="color-comment"># Execute a MySQL query via execute()</span>
+    cursor.execute('SELECT VERSION()')
+    #cursor.execute('SELECT xxx')   <span class="color-comment"># uncomment to trigger an exception</span>
+    <span class="color-comment"># Fetch one (current) row into a tuple</span>
+    version = cursor.fetchone()
+    print('Database version : %s ' % version)  <span class="color-comment"># one-item tuple</span>
+    
+except MySQLdb.Error as e:
+    print('Error %d: %s' % (e.args[0], e.args[1]))  <span class="color-comment"># Error code number, description</span> 
+    sys.exit(1)  <span class="color-comment"># Raise a SystemExit exception for cleanup, but honor finally-block</span>
+    
+finally:    
+    if conn:
+        <span class="color-comment"># Always close the connection</span>
+        conn.close()
+        print('Closed...')</pre>
+
+<h5>Dissecting the program</h5>
+<ol>
+<li>[TODO]</li>
+</ol>
+
+<h4>MySQL EX 2: SQL CREATE/DROP TABLE, INSERT and SELECT</h4>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Testing MySQL statements: CREATE TABLE, INSERT and SELECT&quot;&quot;&quot;</span>
+import MySQLdb
+
+conn = MySQLdb.connect('localhost', 'testuser', 'xxxx', 'testdb')
+
+with conn:   <span class="color-comment"># Automatically close with error handling</span>
+    cursor = conn.cursor()
+    <span class="color-comment"># Create a new table</span>
+    cursor.execute('drop table if exists cafe')
+    cursor.execute('''create table if not exists cafe (
+                        id int unsigned not null auto_increment,
+                        category enum('tea', 'coffee') not null,
+                        name varchar(50) not null,
+                        price decimal(5,2) not null,
+                        primary key (id)
+                      )''')
+    <span class="color-comment"># Insert one record</span>
+    cursor.execute('''insert into cafe (category, name, price) values
+                        ('coffee', 'Espresso', 3.19)''')
+    <span class="color-comment"># Insert multiple records</span>
+    cursor.execute('''insert into cafe (category, name, price) values
+                        ('coffee', 'Cappuccino', 3.29),
+                        ('coffee', 'Caffe Latte', 3.39),
+                        ('tea', 'Green Tea', 2.99),
+                        ('tea', 'Wulong Tea', 2.89)''')
+    <span class="color-comment"># Commit the insert</span>
+    conn.commit()
+    <span class="color-comment"># Query all records</span>
+    cursor.execute('select * from cafe')
+    <span class="color-comment"># Fetch all rows from result-set into 'a tuple of tuples'</span>
+    rows = cursor.fetchall()
+    #print(rows)  <span class="color-comment"># For debugging</span>
+    <span class="color-comment"># Process each row (tuple)</span>
+    for row in rows:
+        print(row)
+        
+    <span class="color-comment"># Instead of fetching all rows (which may not be feasible),
+    # we can fetch row by row.
+    # We also fetch the column names.</span>
+    cursor.execute('select * from cafe')
+    <span class="color-comment"># Fetch the column descriptions in 'a tuple of tuples'
+    # Each inner tuple describes a column</span>
+    desc = cursor.description  
+    #print(desc)  <span class="color-comment"># For debugging</span>
+    <span class="color-comment"># Print header of column names (first item of inner tuple)</span>
+    print('%-10s %-20s %-6s' % (desc[1][0], desc[2][0], desc[3][0]))
+    print('%10s-%20s-%6s' % ('-'*10, '-'*20, '-'*6))  <span class="color-comment"># Print divider</span>
+    
+    for i in range(cursor.rowcount):
+        row = cursor.fetchone()
+        print('%-10s %-20s %6.2f' % (row[1], row[2], row[3]))  <span class="color-comment"># Using tuple indexes</span>
+        
+    <span class="color-comment"># Another way to fetch row-by-row</span>
+    cursor.execute('select * from cafe')
+    while True:
+        row = cursor.fetchone()
+        if row == None:
+            break
+        print(row)</pre>
+
+<h5>Dissecting the program</h5>
+<ol>
+<li>The <code>with conn:</code> statement always closes the <code>conn</code>, and provide error handling.</li>
+<li>[TODO]</li>
+</ol>
+
+<h4>MySQL EX 3: Using Dictionary Cursor</h4>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Using Dictionary Cursor&quot;&quot;&quot;</span>
+import MySQLdb
+
+conn = MySQLdb.connect('localhost', 'testuser', 'xxxx', 'testdb')
+
+with conn:
+    <span class="color-comment"># Using a dictionary cursor.
+    # Each row of the result-set is a dictionary of column names and values</span>
+    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('drop table if exists cafe')
+    cursor.execute('''create table if not exists cafe (
+                     id int unsigned not null auto_increment,
+                     category enum('tea', 'coffee') not null,
+                     name varchar(50) not null,
+                     price decimal(5,2) not null,
+                     primary key (id)
+                   )''')
+    cursor.execute('''insert into cafe (category, name, price) values
+                     ('coffee', 'Espresso', 3.19),
+                     ('coffee', 'Cappuccino', 3.29),
+                     ('coffee', 'Caffe Latte', 3.39),
+                     ('tea', 'Green Tea', 2.99),
+                     ('tea', 'Wulong Tea', 2.89)''')
+    conn.commit()  <span class="color-comment"># Commit the insert</span>
+
+    <span class="color-comment"># Query all records</span>
+    cursor.execute('select * from cafe')
+    <span class="color-comment"># Fetch all rows from result-set into 'a tuple of dictionary'</span>
+    rows = cursor.fetchall()
+    #print(rows)  <span class="color-comment"># For debugging</span>
+    <span class="color-comment"># Process each row (dictionary)</span>
+    for row in rows:
+        #print(row)  <span class="color-comment"># For debugging</span>
+        print(row['category'] + ': ' + row['name'])  <span class="color-comment"># via dictionary keys</span></pre>
+
+
+<h5>Dissecting the program</h5>
+<ol>
+<li>[TODO]</li>
+</ol>
+
+<h4>MySQL EX 4: Using Prepared-Statements</h4>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Using SQL Prepared-Statement&quot;&quot;&quot;</span>
+import MySQLdb
+
+conn = MySQLdb.connect('localhost', 'testuser', 'xxxx', 'testdb')
+
+with conn:
+    cursor = conn.cursor()
+    cursor.execute('drop table if exists cafe')
+    cursor.execute('''create table if not exists cafe (
+                        id int unsigned not null auto_increment,
+                        category enum('tea', 'coffee') not null,
+                        name varchar(50) not null,
+                        price decimal(5,2) not null,
+                        primary key (id)
+                      )''')
+
+    <span class="color-comment"># Using prepared-statement via printf formatting specifiers
+    # Use %s for all fields?!</span>
+    sql = 'insert into cafe (category, name, price) values (%s, %s, %s)'
+    
+    <span class="color-comment"># Execute for one set of data</span>
+    cursor.execute(sql, ('coffee', 'Espresso', 3.19))
+                   
+    <span class="color-comment"># Execute for more than one set of data</span>
+    data = [('coffee', 'Cappuccino', 3.29),
+            ('coffee', 'Caffe Latte', 3.39),
+            ('tea', 'Green Tea', 2.99),
+            ('tea', 'Wulong Tea', 2.89)]
+    cursor.executemany(sql, data)
+    conn.commit()  <span class="color-comment"># Commit the insert</span>
+    
+    cursor.execute('select * from cafe')
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)
+
+    <span class="color-comment"># Another example</span>
+    item = 'Cappuccino'
+    cursor.execute('update cafe set price = price * 1.1 where name = %s', item)
+    cursor.execute('select * from cafe where name = %s', item)
+    row = cursor.fetchone()
+    print(row)</pre>
+
+<h5>Dissecting the program</h5>
+<ol>
+<li>Python MySQLdb supports prepared-statments via printf formatting specifiers.</li>
+<li>[TODO]</li>
+</ol>
+
+<h4>MySQL EX 5: Managing Transactions</h4>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Testing SQL Transaction of commit and rollback&quot;&quot;&quot;</span>
+import sys
+import MySQLdb
+
+conn = None
+
+try:
+    conn = MySQLdb.connect('localhost', 'testuser', 'xxxx', 'testdb')
+
+    cursor = conn.cursor()
+    <span class="color-comment"># A transaction is started silently when the cursor is created.
+    # No BEGIN statement is needed.</span> 
+    cursor.execute('drop table if exists cafe')
+    cursor.execute('''create table if not exists cafe (
+                     id int unsigned not null auto_increment,
+                     category enum('tea', 'coffee') not null,
+                     name varchar(50) not null,
+                     price decimal(5,2) not null,
+                     primary key (id)
+                   )''')
+    conn.commit()
+    
+    cursor.execute("insert into cafe values (NULL, 'coffee', 'Espresso', 3.19)")
+    cursor.execute("insert into cafe values (NULL, 'coffee', 'Cappuccino', 3.29)")
+    conn.commit()
+    
+    cursor.execute("insert into cafe values (NULL, 'tea', 'Green Tea', 2.99)")
+    #cursor.execute("insert into cafe (xxx) values ('tea')")  <span class="color-comment"># uncomment to trigger an error</span>
+    cursor.execute("insert into cafe values (NULL, 'tea', 'Wulong Tea', 2.89)")
+    conn.commit()
+
+except MySQLdb.Error as e:
+    if conn:
+        conn.rollback()
+        print('rolled back...')
+    print('Error %d: %s' % (e.args[0], e.args[1]))
+    sys.exit(1)  <span class="color-comment"># Raise a SystemExit exception for cleanup, but honor finally-block</span>
+    
+finally:
+    if conn:
+        cursor.execute('select * from cafe')
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row)
+        conn.close()</pre>
+
+<h5>Dissecting the program</h5>
+<ol>
+<li>[TODO]</li>
+</ol>
+
+<p>We can also use <code>with</code> statement, which provide automatic <code>commit</code> and <code>rollback</code>.</p>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Testing Transaction (commit/rollback) under with-statement&quot;&quot;&quot;</span>
+import MySQLdb
+
+conn = MySQLdb.connect('localhost', 'testuser', 'xxxx', 'testdb')
+
+with conn:   <span class="color-comment"># Provide automatic commit and rollback</span>
+    cursor = conn.cursor()
+    cursor.execute('drop table if exists cafe')
+    cursor.execute('''create table if not exists cafe (
+                     id int unsigned not null auto_increment,
+                     category enum('tea', 'coffee') not null,
+                     name varchar(50) not null,
+                     price decimal(5,2) not null,
+                     primary key (id)
+                   )''')
+    #conn.commit()   <span class="color-comment"># auto commit for create table</span>
+    
+    cursor.execute("insert into cafe values (NULL, 'tea', 'Green Tea', 2.99)")
+    #cursor.execute("insert into cafe (xxx) values ('tea')")  <span class="color-comment"># uncomment to trigger an error</span>
+    cursor.execute("insert into cafe values (NULL, 'tea', 'Wulong Tea', 2.89)")
+
+    cursor.execute('select * from cafe')
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)</pre>
+
+<h5>Dissecting the program</h5>
+<ol>
+<li>[TODO]</li>
+</ol>
+
+
+<h3>Python-PostgreSQL Database Programming</h3>
+
+<h5>References:</h5>
+<ol>
+<li><code>Psycopg2</code> @ <a href="http://initd.org/psycopg/">http://initd.org/psycopg/.</a></li>
+<li><code>Psycopg2</code> Documentation &amp; API @ <a href="http://initd.org/psycopg/docs/">http://initd.org/psycopg/docs/</a>.</li>
+<li>[TODO]</li>
+</ol>
+
+<p>I assume that you are familiar with PostgreSQL. Otherwise, read the &quot;PostgreSQL&quot; section.</p>
+
+<h4>Setting Up</h4>
+
+<h5>Installing Python-PostgreSQL Driver - <code>psycopg2</code> module</h5>
+
+<p>In Ubuntu:</p>
+<pre class="color-command">
+<span class="color-comment"># These packages might be needed to build psycopg2</span>
+$ <strong>sudo apt-get update</strong>
+   <span class="color-comment"># Update package list</span>
+$ <strong>sudo apt-get install postgresql-server-dev-9.3 libpq-dev python-dev</strong>
+
+<span class="color-comment"># Install psycopg2 via pip</span>
+$ <strong>sudo pip install psycopg2</strong>
+Successfully installed psycopg2
+
+<span class="color-comment"># Verify the installation</span>
+$ <strong>pip show --files psycopg2</strong>
+Name: psycopg2
+Version: 2.6.1
+Location: /usr/local/lib/python2.7/dist-packages
+......</pre>
+
+<p>Notes: You may also use &quot;<code>apt-get install python-psycopg2</code>&quot; to install <code>psycopg2</code>. However, that might install an outdated version (2.4.5).</p>
+
+<h5>Setting Up PostgreSQL</h5>
+
+<p>Create a test user (called <code>testuser</code>) and a test database (called <code>testdb</code> owned by <code>testuser</code>) as follows:</p>
+
+<pre class="color-command">
+<span class="color-comment"># Create a new PostgreSQL user called testuser, allow user to login, but NOT creating databases</span>
+$ <strong>sudo -u postgres createuser --login --pwprompt testuser</strong>
+Enter password for new role: ......
+
+<span class="color-comment"># Create a new database called testdb, owned by testuser.</span>
+$ <strong>sudo -u postgres createdb --owner=testuser testdb</strong></pre>
+
+<p>Tailor the PostgreSQL configuration file <code>/etc/postgresql/9.3/main/pg_hba.conf</code> to allow user <code>testuser</code> to login to PostgreSQL server, by adding the following entry:</p>
+
+<pre class="color-command">
+<span class="color-comment"># TYPE  DATABASE    USER        CIDR-ADDRESS          METHOD</span>
+local   testdb      testuser                          md5</pre>
+
+<p>Restart PostgreSQL server:</p>
+<pre class="color-command">
+$ <strong>sudo service postgresql restart</strong></pre>
+
+<h4>PostgreSQL EX 1: Connecting to MySQL Database Server</h4>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python2
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Testing PostgreSQL database connection&quot;&quot;&quot;</span>
+import sys
+import psycopg2
+
+conn = None
+
+try:
+    <span class="color-comment"># Open database connection.</span>
+    conn = psycopg2.connect(database='testdb', user='testuser', password='xxxx', host='localhost', port='5432')
+    print('Connected...')
+    <span class="color-comment"># Get a cursor from the connection, for traversing the records in result-set</span>
+    cursor = conn.cursor()
+    <span class="color-comment"># Execute a MySQL query via execute()</span>
+    cursor.execute('SELECT VERSION()')
+    #cursor.execute('SELECT xxx')   <span class="color-comment"># uncomment to trigger an exception</span>
+    <span class="color-comment"># Fetch one (current) row into a tuple</span>
+    version = cursor.fetchone()
+    print('Database version : %s ' % version)  <span class="color-comment"># one-item tuple</span>
+    
+except psycopg2.DatabaseError as e:
+    print('Error code %s: %s' % (e.pgcode, e))
+    sys.exit(1)  <span class="color-comment"># Raise a SystemExit exception for cleanup, but honor finally-block</span>
+    
+finally:
+    if conn:
+        <span class="color-comment"># Always close the connection</span>
+        conn.close()
+        print('Closed...')</pre>
+
+<h4>PostgreSQL EX 2: SQL CREATE/DROP TABLE, INSERT and SELECT</h4>
+
+<p>Note: This example uses Python's <code>with</code> statement to automatic commit and close resources. This requires <code>psycopg 2.5</code> or above.  If your <code>psycopg2</code> is lower than 2.5, use <code>try-except-finally</code> statement, as in Example 1.</p>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Testing SQL statements: CREATE TABLE, INSERT, SELECT&quot;&quot;&quot;</span>
+import psycopg2
+
+with psycopg2.connect(database='testdb', 
+                      user='testuser', 
+                      password='xxxx', 
+                      host='localhost', 
+                      port='5432') as conn:
+    with conn.cursor() as cursor:
+        <span class="color-comment"># Create a new table</span>
+        cursor.execute('drop table if exists cafe')
+        cursor.execute('''create table if not exists cafe (
+                            id serial,
+                            category varchar(10) not null,
+                            name varchar(50) not null,
+                            price decimal(5,2) not null,
+                            primary key (id)
+                          )''')
+        <span class="color-comment"># Insert records</span>
+        cursor.execute('''insert into cafe (category, name, price) values
+                            ('coffee', 'Espresso', 3.19),
+                            ('coffee', 'Cappuccino', 3.29),
+                            ('coffee', 'Caffe Latte', 3.39),
+                            ('tea', 'Green Tea', 2.99),
+                            ('tea', 'Wulong Tea', 2.89)''')
+        <span class="color-comment"># Commit the insert</span>
+        conn.commit()
+        <span class="color-comment"># Query all records</span>
+        cursor.execute('select * from cafe')
+        <span class="color-comment"># Fetch all rows from result-set into 'a tuple of tuples'</span>
+        rows = cursor.fetchall()
+        #print(rows)  <span class="color-comment">For debugging</span>
+        <span class="color-comment"># Process each row (tuple)</span>
+        for row in rows:
+            print(row)</pre>
+
+<h5>Dissecting the Program</h5>
+<ol>
+<li>As explained in <a href="http://initd.org/psycopg/docs/usage.html">http://initd.org/psycopg/docs/usage.html</a>, starting from psycopg 2.5, the connection and cursor are <em>context manager</em> and can be used with Python's with-statement.
+<ul>
+<li>When a connection exits the with block, the transaction is committed if no exception has been raised; otherwise, it is rolled back.</li>
+
+<li>When a cursor exits the with block it is closed, releasing any resource eventually associated with it. The state of the transaction is not affected.</li>
+</ul>
+
+</li>
+</ol>
+
+<p>Alternatively,</p>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Testing with-statement&quot;&quot;&quot;</span>
+import psycopg2
+
+conn = psycopg2.connect(database='testdb', 
+                      user='testuser', 
+                      password='xxxx', 
+                      host='localhost', 
+                      port='5432') 
+
+with conn:
+    with conn.cursor() as cursor:
+        <span class="color-comment"># Create a new table</span>
+        cursor.execute('drop table if exists cafe')
+        cursor.execute('''create table if not exists cafe (
+                            id serial,
+                            category varchar(10) not null,
+                            name varchar(50) not null,
+                            price decimal(5,2) not null,
+                            primary key (id)
+                          )''')
+        <span class="color-comment"># Insert records</span>
+        cursor.execute('''insert into cafe (category, name, price) values
+                            ('coffee', 'Espresso', 3.19),
+                            ('coffee', 'Cappuccino', 3.29),
+                            ('coffee', 'Caffe Latte', 3.39),
+                            ('tea', 'Green Tea', 2.99),
+                            ('tea', 'Wulong Tea', 2.89)''')
+<span class="color-comment"># automatic commit when conn exits</span> 
+        
+with conn:
+    with conn.cursor() as cursor:
+        <span class="color-comment"># Query all records</span>
+        cursor.execute('select * from cafe')
+        <span class="color-comment"># Fetch all rows from result-set into 'a tuple of tuples'</span>
+        rows = cursor.fetchall()
+        #print(rows)  <span class="color-comment">For debugging</span>
+        <span class="color-comment"># Process each row (tuple)</span>
+        for row in rows:
+            print(row)
+
+conn.close()  <span class="color-comment"># Need to close connection manually</span></pre>
+
+<h4>PostgreSQL EX 3: Dictionary Cursor</h4>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Using PostgreSQL Dictionary Cursor&quot;&quot;&quot;</span>
+import psycopg2
+import psycopg2.extras   <span class="color-comment"># Needed for dictionary cursor</span>
+
+with psycopg2.connect(database='testdb',
+                      user='testuser', 
+                      password='xxxx', 
+                      host='localhost', 
+                      port='5432') as conn:
+    
+    <span class="color-comment"># Create a dictionary cursor</span>
+    with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+        cursor.execute('drop table if exists cafe')
+        cursor.execute('''create table if not exists cafe (
+                            id serial,
+                            category varchar(10) not null,
+                            name varchar(50) not null,
+                            price decimal(5,2) not null,
+                            primary key (id)
+                          )''')
+        cursor.execute('''insert into cafe (category, name, price) values
+                            ('coffee', 'Espresso', 3.19),
+                            ('coffee', 'Cappuccino', 3.29),
+                            ('coffee', 'Caffe Latte', 3.39),
+                            ('tea', 'Green Tea', 2.99),
+                            ('tea', 'Wulong Tea', 2.89)''')
+        conn.commit()
+        cursor.execute('select * from cafe')
+        rows = cursor.fetchall()
+        for row in rows:
+            #print(row)  <span class="color-comment">For debugging</span>
+            <span class="color-comment"># Using column names</span>
+            print("%8s %20s %6.2f" % (row['category'], row['name'], row['price']))</pre>
+
+<h4>PostgreSQL EX 4: Using Prepared-Statements</h4>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Testing SQL statements: CREATE TABLE, INSERT, SELECT&quot;&quot;&quot;</span>
+import psycopg2
+
+with psycopg2.connect(database='testdb', 
+                      user='testuser', 
+                      password='xxxx', 
+                      host='localhost', 
+                      port='5432') as conn:
+    with conn.cursor() as cursor:
+        cursor.execute('drop table if exists cafe')
+        cursor.execute('''create table if not exists cafe (
+                            id serial,
+                            category varchar(10) not null,
+                            name varchar(50) not null,
+                            price decimal(5,2) not null,
+                            primary key (id)
+                          )''')
+
+        <span class="color-comment"># Using prepared-statement via printf formatting specifiers
+        # Use %s for all fields?!</span>
+        sql = 'insert into cafe (category, name, price) values (%s, %s, %s)'
+    
+        <span class="color-comment"># Execute for one set of data</span>
+        cursor.execute(sql, ('coffee', 'Espresso', 3.19))
+                   
+        <span class="color-comment"># Execute for more than one set of data</span>
+        data = [('coffee', 'Cappuccino', 3.29),
+                ('coffee', 'Caffe Latte', 3.39),
+                ('tea', 'Green Tea', 2.99),
+                ('tea', 'Wulong Tea', 2.89)]
+        cursor.executemany(sql, data)
+        conn.commit()  <span class="color-comment"># Commit the insert</span>
+    
+        cursor.execute('select * from cafe')
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row)
+
+        <span class="color-comment"># Another example</span>
+        item = 'Cappuccino'
+        cursor.execute('update cafe set price = price * 1.1 where name = %s', (item,))
+            <span class="color-comment"># the second argument must be either a tuple or a list</span>
+        item_tuple = (item,)
+        cursor.execute('select * from cafe where name = %s', item_tuple)
+        row = cursor.fetchone()
+        print(row)</pre>
+
+
+<h4>PostgreSQL EX 5: Transaction Management</h4>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-
+&quot;&quot;&quot;Test transaction commit and rollback&quot;&quot;&quot;</span>
+import sys
+import psycopg2
+
+conn = None
+
+try:
+    conn = psycopg2.connect(database='testdb', user='testuser', password='xxxx', host='localhost', port='5432')
+    cursor = conn.cursor()
+    <span class="color-comment"># A transaction is started silently when the cursor is created.
+    # No BEGIN statement is needed.</span> 
+    cursor.execute('drop table if exists cafe')
+    cursor.execute('''create table if not exists cafe (
+                        id serial,
+                        category varchar(10) not null,
+                        name varchar(50) not null,
+                        price decimal(5,2) not null,
+                        primary key (id)
+                      )''')
+    conn.commit()
+    
+    cursor.execute("insert into cafe values (DEFAULT, 'coffee', 'Espresso', 3.19)")
+       <span class="color-comment"># PostgreSQL uses DEFAULT (instead of NULL in MySQL)</span>
+    cursor.execute("insert into cafe values (DEFAULT, 'coffee', 'Cappuccino', 3.29)")
+    conn.commit()
+    
+    cursor.execute("insert into cafe values (DEFAULT, 'tea', 'Green Tea', 2.99)")
+    #cursor.execute("insert into cafe (xxx) values ('tea')")  <span class="color-comment"># uncomment to trigger an error</span>
+    cursor.execute("insert into cafe values (DEFAULT, 'tea', 'Wulong Tea', 2.89)")
+    conn.commit()
+    
+except psycopg2.DatabaseError as e:
+    print('Error code %s: %s' % (e.pgcode, e))
+    if conn:
+        conn.rollback()
+        print('rolled back...')
+    sys.exit(1)  <span class="color-comment"># Raise a SystemExit exception for cleanup, but honor finally-block</span>
+    
+finally:
+    if conn:
+        cursor.execute('select * from cafe')
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row)
+        <span class="color-comment"># Always close the connection</span>
+        conn.close()
+        print('Closed...')</pre>
+
+<h3>Python Web Applications without Framework</h3>
+
+<p>In this section, I shall present an example of Python webapp, running under Apache 2.4 and MySQL 5.6, without using a Python webapp framework (such as Django or Flask).</p>
+
+<h5>Configuring Apache</h5>
+<p>I assume that you have installed Apache 2.4 and are familiar with Apache. To check your apache version:</p>
+
+<pre class="color-command">
+$ <strong>apachectl -version</strong>
+Server version: Apache/2.4.7 (Ubuntu)
+Server built:   Oct 14 2015 14:20:21</pre>
+
+<p>Python scripts are run as cgi script under Apache. Goto <code>/etc/apache2/mods-enabled/</code>, check if modules <code>cgi</code> and <code>mpm_prefork</code> are enabled. If not,</p>
+
+<pre class="color-command">
+$ <strong>sudo a2enmod mpm_prefork cgi</strong>
+   <span class="color-comment"># You might need to disable module mpm_event</span></pre>
+
+<p>Create the home directory for our webapp, say <code>/var/www/mypython-test</code>:</p>
+<pre class="color-command">
+$ <strong>sudo mkdir /var/www/mypython-test</strong></pre>
+   
+<p>Create a port-based virtual host for our webapp on port 8100, by creating a new configuration file <code>mypython-test.conf</code> in <code>/etc/apache2/sites-available</code>.</p>
+
+<pre class="color-command">
+$ <strong>cd /etc/apache2/sites-available</strong>
+$ <strong>gksu gedit mypython-test.conf</strong></pre>
+
+<pre class="color-example">
+&lt;VirtualHost *:8100&gt;
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/mypython-test
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    &lt;Directory /var/www/mypython-test&gt;
+        Options Indexes FollowSymLinks ExecCGI
+        DirectoryIndex index.py
+        # apache 2.4
+        Require all granted
+    &lt;/Directory&gt;
+    AddHandler cgi-script .py
+&lt;/VirtualHost&gt;</pre>
+
+<p>Edit <code>/etc/apache2/ports.conf</code> to add &quot;<code>Listen 8100</code>&quot;.</p>
+
+<p>Make the new configuration available:</p>
+<pre class="color-command">
+$ <strong>sudo a2ensite mypython-test</strong>
+$ <strong>sudo service apache2 reload</strong></pre>
+
+<p>You can now access the webapp via <code>http://localhost:8100/</code>, which shall show an empty directory at this moment.</p>
+
+<h5>Setup MySQL</h5>
+<p>Configure MySQL, by creating a user (called <code>testuser</code>) and a database (called <code>testdb</code>). See above &quot;Python-MySQL Database Programming&quot;.</p>
+
+<h5>Write the Web Page in Python Script</h5>
+
+<p>Create a new Python script called <code>index.py</code> under <code>/var/www/mypython-test</code>, as follows:</p>
+
+<pre class="color-example">
+<span class="color-comment">#!/usr/bin/python
+# -*- coding: utf-8 -*-</span>
+
+<span class="color-comment"># Turn on debug mode to show the error message. To disable for production</span>
+import cgitb
+cgitb.enable()
+
+<span class="color-comment"># Print HTML response header, followed by a new line</span>
+print("Content-Type: text/html\n")
+
+import MySQLdb
+
+conn = MySQLdb.connect('localhost', 'testuser', 'xxxx', 'testdb')
+
+with conn:
+    cursor = conn.cursor()
+    <span class="color-comment"># Create table</span>
+    cursor.execute('drop table if exists cafe')
+    cursor.execute('''create table if not exists cafe (
+                        id int unsigned not null auto_increment,
+                        category enum('tea', 'coffee') not null,
+                        name varchar(50) not null,
+                        price decimal(5,2) not null,
+                        primary key (id)
+                      )''')
+    <span class="color-comment"># Insert rows</span>
+    cursor.execute('''insert into cafe (category, name, price) values
+                        ('coffee', 'Espresso', 3.19),
+                        ('coffee', 'Cappuccino', 3.29),
+                        ('coffee', 'Caffe Latte', 3.39),
+                        ('tea', 'Green Tea', 2.99),
+                        ('tea', 'Wulong Tea', 2.89)''')
+    <span class="color-comment"># Commit the insert</span>
+    conn.commit()
+
+    <span class="color-comment"># Query all records</span>
+    cursor.execute('select * from cafe')
+    rows = cursor.fetchall()
+    for row in rows:
+        print('&lt;p&gt;' + str(row) + '&lt;/p&gt;')</pre>
+        
+<p>Note: You need to use PyMySQL for Python 3. MySQLdb only supports Python 2.</p>
+
+<p>Set permissions: read and execute for Apache's user <code>www-data</code>.</p>
+
+<pre class="color-command">
+$ <strong>cd /var/www/mypython-test</strong>
+$ <strong>sudo chmod 755 index.py</strong></pre>
+
+<p>Try running the Python script, by itself:</p>
+<pre class="color-command">
+$ <strong>/var/www/mypython-test/index.py</strong></pre>
+
+<h5>Run the Webapp</h5>
+<p>Now, access the page via <code>http://localhost:8100</code> again. If error 50x occurs, check the apache log @ <code>/var/log/apache2/error.log</code>.</p>
+
+
+<h3>Debugging Python Webapps</h3>
+<p>[TODO]</p>
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+
+
+<ol>
+<li>The Python's mother site @ <a href="http://www.python.org">www.python.org</a>.</li>
+<li>Vernon L. Ceder, &quot;The Quick Python Book&quot;, 2nd ed, 2010, Manning (Good starting guide for experience programmers who wish to learning Python).</li>
+<li>Mark Lutz, &quot;Learning Python&quot;, 4th ed, 2009; &quot;Programming Python&quot;, 4th ed, 2011; &quot;Python Pocket Reference&quot;, 4th ed, 2010, O'reilly.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Python (Ubuntu) 2.7.6 and 3.4.3<br />
+Last modified: June, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

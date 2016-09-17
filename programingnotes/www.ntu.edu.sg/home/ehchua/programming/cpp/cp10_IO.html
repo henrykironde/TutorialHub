@@ -1,0 +1,935 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>C++ IO Streams and File Input/Output</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>C++ Programming Language</h1>
+<h2>Stream IO  and File IO</h2></div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<p>The C language did not build the input/output facilities into the language. In other words, there is no keyword like <code>read</code> or <code>write</code>. Instead, it left the IO to the compiler as external library functions (such as <code>printf</code> and  <code>scanf</code> in <code>stdio</code> library). The ANSI C standard formalized these IO functions into Standard IO package (<code>stdio.h</code>). C++ continues this approach and formalizes IO in libraries such as <code>iostream</code> and <code>fstream</code>.</p>
+
+<h5>Features</h5>
+<ul>
+<li>C++ IO is <em>type safe</em>. IO operations are defined for each of the type. If IO operations are not defined for a particular type, compiler will generate an error.</li>
+
+<li>C++ IO operations are based on streams of bytes and are <em>device independent</em>. The same set of operations can be applied to different types of IO devices.</li>
+
+</ul>
+
+<h3>Stream IO</h3>
+
+<h4>Streams</h4>
+
+<p>C/C++ IO are based on <em>streams</em>, which are sequence of bytes flowing in and out of the programs (just like water and oil flowing through a pipe). In  input operations, data bytes flow from an <em>input source</em> (such as keyboard, file, network or another program) into the program. In output operations, data bytes flow from the program to an <em>output sink</em> (such as console, file, network or another program). Streams acts as an intermediaries between the programs and the actual IO devices, in such the way that frees the programmers from handling the actual devices, so as to archive device independent IO operations.</p>
+
+<img class="image-center" src="images/IOstreams.png" alt="IOstreams.png" />
+
+<p>C++ provides both the <em>formatted</em> and <em>unformatted</em> IO functions. In formatted or high-level IO, bytes are grouped and converted to types such as <code>int</code>, <code>double</code>, string or user-defined types. In unformatted or low-level IO, bytes are treated as raw bytes and unconverted. Formatted IO operations are supported via overloading the stream insertion (<code>&lt;&lt;</code>) and stream extraction (<code>&gt;&gt;</code>) operators, which presents a consistent public IO interface.</p>
+
+<p>To perform input and output, a C++ program:</p>
+
+<ol>
+<li>Construct a stream object.</li>
+<li>Connect (Associate) the stream object to an actual IO device (e.g., keyboard, console, file, network, another program).</li>
+<li>Perform input/output operations on the stream, via the functions defined in the stream's pubic interface in a device independent manner. Some functions convert the data between the external format and internal format (formatted IO); while other does not (unformatted or binary IO).</li>
+<li>Disconnect (Dissociate) the stream to the actual IO device (e.g., close the file).</li>
+<li>Free the stream object.</li>
+</ol>
+
+<h4>C++ IO Headers, Templates and Classes</h4>
+
+<h5>Headers</h5>
+
+<p>C++ IO is provided in headers <code>&lt;iostream&gt;</code> (which included <code>&lt;ios&gt;</code>, <code>&lt;istream&gt;</code>, <code>&lt;ostream&gt;</code> and <code>&lt;streambuf&gt;</code>), <code>&lt;fstream&gt;</code> (for file IO), and <code>&lt;sstream&gt;</code> (for string IO). Furthermore, the header <code>&lt;iomanip&gt;</code> provided manipulators such as <code>setw()</code>, <code>setprecision()</code><code>setfill()</code> and <code>setbase()</code> for formatting.</p>
+
+
+<img class="image-center" src="images/IOclasses.png" alt="IOclasses.png" />
+
+<h5>Template Classes</h5>
+
+<p>In order to support various character sets (<code>char</code> and  <code>wchar_t</code> in C++98/03; and <code>char16_t</code>, <code>char32_t</code> introduced in C++11), the stream classes are written as template classes, which could be instantiated with an actual character type. Most of the template classes take two type parameters. For example,</p>
+
+<pre class="color-syntax">
+template &lt;class charT, class traits = char_traits&lt;charT&gt; &gt;
+class <strong>basic_istream</strong>;
+ 
+template &lt;class charT, class traits = char_traits&lt;charT&gt; &gt;
+class <strong>basic_ostream</strong>;</pre>
+
+<p>where:</p>
+
+<ul>
+<li><code>charT</code> is the character type, such as <code>char</code> or <code>wchar_t</code>;</li>
+<li><code>traits</code>, of another template class <code>char_traits&lt;charT&gt;</code>, defined the properties of the character operations such as the collating sequence (sorting order) of character set.</li>
+</ul>
+
+<h5>Template Instantiations and <span class="font-code">typedef</span></h5>
+
+<p>As mention, the <code>basic_xxx</code> template classes can be instantiated with a character type, such as <code>char</code> and <code>wchar_t</code>. C++ further provides <code>typedef</code> statements to name these classes:</p>
+
+<pre class="color-example">
+typedef basic_ios&lt;char&gt;           <strong>ios</strong>;
+typedef basic_ios&lt;wchar_t&gt;        wios;
+typedef basic_istream&lt;char&gt;       <strong>istream</strong>;
+typedef basic_istream&lt;wchar_t&gt;    wistream;
+typedef basic_ostream&lt;char&gt;       <strong>ostream</strong>;
+typedef basic_ostream&lt;wchar_t&gt;    wostream;
+typedef basic_iostream&lt;char&gt;      <strong>iostream</strong>;
+typedef basic_iostream&lt;wchar_t&gt;   wiostream;
+typedef basic_streambuf&lt;char&gt;     <strong>streambuf</strong>;
+typedef basic_streambuf&lt;wchar_t&gt;  wstreambuf;
+</pre>
+
+<h5>Specialization Classes for <span class="font-code">char</span> type</h5>
+
+<p>We shall focus on the specialization classes for <code>char</code> type:</p>
+
+<ul>
+<li><code>ios_base</code> and <code>ios</code>: superclasses to maintain common stream properties such as format flag, field width, precision and locale. The superclass <code>ios_base</code> (which is not a template class) maintains data that is independent of the template parameters; whereas the subclass <code>ios</code> (instantiation of template <code>basic_ios&lt;char&gt;</code>) maintains data which is dependent of the template parameters.</li>
+<li><code>istream</code> (<code>basic_istream&lt;char&gt;</code>), <code>ostream</code> (<code>basic_ostream&lt;char&gt;</code>): provide the input and output public interfaces.</li>
+<li><code>iostream</code> (<code>basic_iostream&lt;char&gt;</code>): subclass of both <code>istream</code> and <code>ostream</code>, which supports bidirectional input and output operations. Take note that <code>istream</code> and <code>ostream</code> are unidirectional streams; whereas <code>iostream</code> is bidirectional. <code>basic_iostream</code> template and <code>iostream</code> class is declared in the <code>&lt;istream&gt;</code> header, not <code>&lt;iostream&gt;</code> header.</li>
+<li><code>ifstream</code>, <code>ofstream</code> and <code>fstream</code>: for file input, output and bidirectional input/output.</li>
+<li><code>istringstream</code>, <code>ostringstream</code> and <code>stringstream</code>: for <code>string</code> buffer input, output and bidirectional input/output.</li>
+<li><code>streambuf</code>, <code>filebuf</code> and <code>stringbuf</code>: provide memory buffer for the stream, file-stream and string-stream, and the public interface for accessing and managing the buffer.</li>
+</ul>
+
+<h4>Buffered IO</h4>
+
+<p>[TODO]</p>
+
+<h4>The <span class="font-code">&lt;iostream&gt;</span> Header and the Standard Stream Objects: <span class="font-code">cin</span>, <span class="font-code">cout</span>, <span class="font-code">cerr</span> and <span class="font-code">clog</span></h4>
+
+<p>The <code>&lt;iostream&gt;</code> header also included the these headers: <code>&lt;ios&gt;</code>, <code>&lt;istream&gt;</code>, <code>&lt;ostream&gt;</code> and <code>&lt;streambuf&gt;</code>. Hence, your program  needs to include only the <code>&lt;iostream&gt;</code> header for IO operations.</p>
+
+<p>The <code>&lt;iostream&gt;</code> header declares these <em>standard stream objects</em>:</p>
+
+<ol>
+<li><code>cin</code> (of <code>istream</code> class, <code>basic_istream&lt;char&gt;</code> specialization), <code>wcin</code> (of <code>wistream</code> class, <code>basic_istream&lt;wchar_t&gt;</code> specialization): corresponding to the <em>standard input stream</em>, defaulted to keyword.</li>
+
+<li><code>cout</code> (of <code>ostream</code> class), <code>wcout</code> (of <code>wostream</code> class): corresponding to the <em>standard output stream</em>, defaulted to the display console.</li>
+
+<li><code>cerr</code> (of <code>ostream</code> class), <code>wcerr</code> (of <code>wostream</code> class): corresponding to the <em>standard error stream</em>, defaulted to the display console.</li>
+
+<li><code>clog</code> (of <code>ostream</code> class), <code>wclog</code> (of <code>wostream</code> class): corresponding to the <em>standard log stream</em>, defaulted to the display console.</li>
+</ol>
+
+<h4>The Stream Insertion <span class="font-code">&lt;&lt;</span> and Stream Extraction <span class="font-code">&gt;&gt;</span> Operators</h4>
+
+<p>Formatted output is carried out on streams via the stream insertion <code>&lt;&lt;</code> and stream extraction <code>&gt;&gt;</code> operators. For example,</p>
+
+<pre class="color-example">
+cout &lt;&lt; <em>value</em>;
+cin &gt;&gt; <em>variable</em>;</pre>
+
+<p>Take note that <code>cin</code>/<code>cout</code> shall be the left operand and the data flow in the direction of the arrows.</p>
+
+<p>The <code>&lt;&lt;</code> and <code>&gt;&gt;</code> operators are overloaded to handle fundamental types (such as <code>int</code> and <code>double</code>), and classes (such as <code>string</code>). You can also overload these operators for your own user-defined types.</p>
+
+<p>The <code>cin &lt;&lt;</code> and <code>cout &gt;&gt;</code> return a reference to <code>cin</code> and <code>cout</code>, and thus, support cascading operations. For example,</p>
+
+<pre class="color-example">
+cout &lt;&lt; <em>value1</em> &lt;&lt; <em>value2</em> &lt;&lt; .... ;
+cin &gt;&gt; <em>variable1</em> &lt;&lt; <em>variable2</em> &lt;&lt; .... ;</pre>
+
+
+<h4>The <span class="font-code">ostream</span> Class</h4>
+
+<p>The <code>ostream</code> class is a <code>typedef</code> to <code>basic_ostream&lt;char&gt;</code>. It contains two set of output functions: <em>formatted output</em> and <em>unformatted output</em>.</p>
+
+<ul>
+<li>The formatted output functions (via overloaded stream insertion operator <code>&lt;&lt;</code>) convert numeric values (such as <code>int</code>, <code>double</code>) from their internal representations (e.g., 16-/32-bit <code>int</code>, 64-bit <code>double</code>) to a stream of characters that representing the numeric values in text form.</li>
+
+<li>The unformatted output functions (e.g., <code>put()</code>, <code>write()</code>) outputs the bytes as they are, without format conversion.</li></ul>
+<h5>Formatting Output via the Overloaded  Stream Insertion <span class="font-code">&lt;&lt;</span> Operator</h5>
+
+<p>The <code>ostream</code> class overloads the stream insertion <code>&lt;&lt;</code> operator for each of the C++ fundamental types (<code>char</code>, <code>unsigned char</code>, <code>signed char</code>, <code>short</code>, <code>unsigned short</code>, <code>int</code>, <code>unsigned int</code>, <code>long</code>, <code>unsigned long</code>, <code>long long</code> (C++11), <code>unsigned long long</code> (C++11), <code>float</code>, <code>double</code> and <code>long double</code>. It converts a numeric value from its internal representation to the text form.</p>
+
+<pre class="color-syntax">
+ostream &amp; <strong>operator&lt;&lt;</strong> (<em>type</em>)   <span class="color-comment">// type of int, double etc</span></pre>
+
+<p>The <code>&lt;&lt;</code> operator returns a reference to the invoking <code>ostream</code> object. Hence, you can concatenate <code>&lt;&lt;</code> operations, e.g., <code>cout &lt;&lt; 123 &lt;&lt; 1.13 &lt;&lt; endl;</code>.</p>
+
+<p>The <code>&lt;&lt;</code> operator is also overloaded for the following pointer types:</p>
+
+<ul>
+<li><code>const char *</code>, <code>const signed char *</code>, <code>const unsigned char *</code>: for outputting C-strings and literals. It uses the terminating null character to decide the end of the <code>char</code> array.</li>
+
+<li><code>void *</code>: can be used to print an address.</li>
+</ul>
+
+<p>For example,</p>
+
+<pre class="color-example">
+char str1[] = &quot;apple&quot;;
+const char * str2 = &quot;orange&quot;;
+ 
+cout &lt;&lt; str1 &lt;&lt; endl;   <span class="color-comment">// with char *, print C-string</span>
+cout &lt;&lt; str2 &lt;&lt; endl;   <span class="color-comment">// with char *, print C-string</span>
+cout &lt;&lt; (void *) str1 &lt;&lt; endl;  <span class="color-comment">// with void *, print address (regular cast)</span>
+cout &lt;&lt; static_cast&lt;void *&gt;(str2) &lt;&lt; endl;  <span class="color-comment">// with void *, print address</span></pre>
+
+<h5>Flushing the Output Buffer</h5>
+
+<p>You can flush the output buffer via:</p>
+
+<ol>
+<li><code>flush</code> member function or manipulator:
+  <pre class="color-syntax">
+<span class="color-comment">// Member function of ostream class - std::ostream::flush</span>
+ostream &amp; <strong>flush</strong> ();
+<span class="color-comment">// Example</span>
+cout &lt;&lt; &quot;hello&quot;;
+cout.flush();
+ 
+<span class="color-comment">// Manipulator - std::flush</span>
+ostream &amp; <strong>flush</strong> (ostream &amp; os);
+<span class="color-comment">// Example</span>
+cout &lt;&lt; &quot;hello&quot; &lt;&lt; flush;</pre></li>
+
+<li><code>endl</code> manipulator, which inserts a newline and flush the buffer.  Outputting a newline character <code>'\n'</code>
+  may not flush the output buffer; but <code>endl</code> does.
+  <pre class="color-syntax"><span class="color-comment">// Manipulator - std::endl</span>
+ostream &amp; <strong>endl</strong> (ostream &amp; os)</pre></li>
+
+<li><code>cin</code>: output buffer is flushed when input is pending, e.g.,
+<pre class="color-example">
+cout &lt;&lt; &quot;Enter a number: &quot;;
+int number;
+cin &lt;&lt; number;  <span class="color-comment">// flush output buffer so as to show the prompting message</span></pre>
+</li>
+</ol>
+
+<h4>The <span class="font-code">istream</span> class</h4>
+
+<p>Similar to the <code>ostream</code> class, the <code>istream</code> class is a <code>typedef</code> to <code>basic_istream&lt;char&gt;</code>. It also supports formatted input and unformatted input.</p>
+
+<ul>
+<li>In formatting input, via overloading the <code>&gt;&gt;</code> extraction operator, it converts the text form (a stream of character) into internal representation (such as 16-/32-bit <code>int</code>, 64-byte <code>double</code>).</li>
+
+<li>In unformatting input, such as <code>get()</code>, <code>getlin()</code>, <code>read()</code>, it reads the characters as they are, without conversion.</li>
+</ul>
+
+<h5>Formatting Input via the Overloaded Stream Extraction <span class="font-code">&gt;&gt;</span> Operator</h5>
+
+<p>The <code>istream</code> class overloads the  extraction <code>&gt;&gt;</code> operator for each of the C++ fundamental types (<code>char</code>, <code>unsigned char</code>, <code>signed char</code>, <code>short</code>, <code>unsigned short</code>, <code>int</code>, <code>unsigned int</code>, <code>long</code>, <code>unsigned long</code>, <code>long long</code> (C++11), <code>unsigned long long</code> (C++11), <code>float</code>, <code>double</code> and <code>long double</code>. It performs formatting by converting the input texts into the internal representation of the respective types.</p>
+
+<pre class="color-syntax">
+istream &amp; <strong>operator&lt;&lt;</strong> (<em>type</em> &amp;)   <span class="color-comment">// type of int, double etc.</span></pre>
+
+<p>The <code>&gt;&gt;</code> operator returns a reference to the invokind <code>istream</code> object. Hence, you can concatenate <code>&gt;&gt;</code> operations, e.g., <code>cin &gt;&gt; number1 &lt;&lt; number2 &lt;&lt;...</code>.</p>
+
+<p>The <code>&gt;&gt;</code> operator is also overloaded for the following pointer types:</p>
+
+<ul>
+<li><code>const char *</code>, <code>const signed char *</code>, <code>const unsigned char *</code>: for inputting C-strings. It uses whitespace as delimiter and adds a terminating null character to the C-string.</li>
+</ul>
+
+<p>[TODO] Read &quot;C-string input&quot;.</p>
+
+<h5>Flushing the Input Buffer - <span class="font-code">ignore()</span></h5>
+
+<p>You can use the <code>ignore()</code> to discard characters in the input buffer:</p>
+
+<pre class="color-syntax">
+istream &amp; ignore (int n = 1, int delim = EOF);
+    <span class="color-comment">// Read and discard up to n characters or delim, whichever comes first</span>
+ 
+<span class="color-comment">// Examples</span>
+cin.ignore(numeric_limits&lt;streamsize&gt;::max());        <span class="color-comment">// Ignore to the end-of-file</span>
+cin.ignore(numeric_limits&lt;streamsize&gt;::max(), '\n');  <span class="color-comment">// Ignore to the end-of-line</span></pre>
+
+<h4>Unformatted Input/Output Functions</h4>
+
+<h5><span class="font-code">put()</span>, <span class="font-code">get()</span> and <span class="font-code">getline()</span></h5>
+
+<p>The <code>ostream</code>'s member function <code>put()</code> can be used to put out a <code>char</code>. <code>put()</code> returns the invoking <code>ostream</code> reference, and thus, can be cascaded. For example,</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// ostream class</span>
+ostream &amp; <strong>put</strong> (char c);  <span class="color-comment">// put char c to ostream</span></pre>
+
+<pre class="color-example">
+<span class="color-comment">// Examples</span>
+cout.put('A');
+cout.put('A').put('p').put('p').put('\n');
+cout.put(65);</pre>
+
+<pre class="color-syntax">
+<span class="color-comment">// istream class</span>
+<span class="color-comment">// Single character input</span>
+int <strong>get</strong> ();   
+      <span class="color-comment">// Get a char and return as int. It returns EOF at end-of-file</span>
+istream &amp; <strong>get</strong> (char &amp; c);
+      <span class="color-comment">// Get a char, store in c and return the invoking istream reference</span>
+<span class="color-comment"> 
+// C-string input</span>
+istream &amp; <strong>get</strong> (char * cstr, streamsize n, char delim = '\n');
+      <span class="color-comment">// Get n-1 chars or until delimiter and store in C-string array cstr.
+      // Append null char to terminate C-string
+      // Keep the delim char in the input stream.</span>
+istream &amp; <strong>getline</strong> (char * cstr, streamsize n, char delim = '\n');
+      <span class="color-comment">// Same as get(), but extract and discard delim char from the
+      // input stream.</span></pre>
+
+<pre class="color-example">
+<span class="color-comment">// Examples</span>
+int inChar;
+while ((inChar = cin.get()) != EOF) {  <span class="color-comment">// Read till End-of-file</span>
+   cout.put(inchar);
+}</pre>
+
+<p>[TODO] Example</p>
+
+<h5><span class="font-code">read()</span>, <span class="font-code">write()</span> and <span class="font-code">gcount()</span></h5>
+
+<pre class="color-syntax">
+<span class="color-comment">// istream class</span>
+istream &amp; <strong>read</strong> (char * buf, streamsize n);
+      <span class="color-comment">// Read n characters from istream and keep in char array buf.
+      // Unlike get()/getline(), it does not append null char at the end of input.
+      // It is used for binary input, instead of C-string.</span>
+streamsize <strong>gcount()</strong> const;
+      <span class="color-comment">// Return the number of character extracted by the last unformatted input operation
+      // get(), getline(), ignore() or read().</span>
+ 
+<span class="color-comment">// ostream class</span>
+ostream &amp; <strong>write</strong> (const char * buf, streamsize n)
+      <span class="color-comment">// Write n character from char array.</span></pre>
+
+<pre class="color-example">
+<span class="color-comment">// Example</span>
+[TODO]</pre>
+
+<h5>Other <span class="font-code">istream</span> functions - <span class="font-code">peek()</span> and <span class="font-code">putback()</span></h5>
+
+<pre class="color-syntax">
+char <strong>peek</strong> ();
+      <span class="color-comment">//returns the next character in the input buffer without extracting it.</span>
+ 
+istream &amp; <strong>putback</strong> (char c);
+      <span class="color-comment">// insert the character back to the input buffer.</span></pre>
+
+</ul>
+
+<h4>States of stream</h4>
+
+<p>The steam superclass <code>ios_base</code> maintains a data member to describe the <em>states</em> of the stream, which is a bitmask of the type <code>iostate</code>. The flags are:</p>
+
+<ul>
+<li><code>eofbit</code>: set when an input operation reaches end-of-file.</li>
+<li><code>failbit</code>: The last input operation failed to read the expected characters or output operation failed to write the expected characters, e.g., <code>getline()</code> reads n characters without reaching delimiter character.</li>
+<li><code>badbit</code>: serious error due to failure of an IO operation (e.g. file read/write error) or stream buffer.</li>
+<li><code>goodbit</code>: Absence of above error with value of 0.</li>
+</ul>
+
+<p>These flags are defined as public static members in <code>ios_base</code>. They can be accessed directly via <code>ios_base::failbit</code> or via subclasses such as <code>cin::failbit</code>, <code>ios::failbit</code>. However, it is more convenience to use these public member functions of <code>ios</code> class:</p>
+
+<ul>
+<li><code>good()</code>: returns <code>true</code> if <code>goodbit</code> is set (i.e., no error).</li>
+<li><code>eof()</code>: returns <code>true</code> if <code>eofbit</code> is set.</li>
+<li><code>fail()</code>: returns <code>true</code> if <code>failbit</code> or <code>badbit</code> is set.</li>
+<li><code>bad()</code>: returns <code>true</code> if <code>badbit</code> is set.</li>
+<li><code>clear()</code>: clear <code>eofbit</code>, <code>failbit</code> and <code>badbit</code>.</li>
+</ul>
+
+<h4>Formatting Input/Output via Manipulators in <span class="font-code">&lt;iomanip&gt;</span> and <span class="font-code">&lt;iostream&gt;</span></h4>
+
+<p>C++ provides a set of manipulators to perform input and output formatting:</p>
+
+<ol>
+<li><code>&lt;iomanip&gt;</code> header: <code>setw()</code>, <code>setprecision()</code>, <code>setbas()</code>, <code>setfill()</code>.</li>
+<li><code>&lt;iostream&gt;</code> header: <code>fixed|scientific</code>, <code>left|right|internal</code>, <code>boolalpha|noboolalpha</code>, etc.</li>
+
+</ol>
+
+
+<h5>Default Output Formatting</h5>
+
+<p>The <code>ostream</code>'s <code>&lt;&lt;</code> stream insertion operator is overloaded to convert a numeric value from its internal representation (e.g., 16-/32-bit <code>int</code>, 64-bit <code>double</code>) to the text form.</p>
+
+<ul>
+<li>By default, the values are displayed with a field-width just enough to hold the text, without additional leading or trailing spaces. You need to provide spaces between the values, if desired.</li>
+
+<li>For integers, all digits will be displayed, by default. For example,
+  <pre class="color-example">
+cout &lt;&lt; &quot;|&quot; &lt;&lt;  1 &lt;&lt; &quot;|&quot;  &lt;&lt; endl;         <span class="color-comment">// |1|</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; -1 &lt;&lt; &quot;|&quot;  &lt;&lt; endl;         <span class="color-comment">// |-1|</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt;  123456789 &lt;&lt; &quot;|&quot; &lt;&lt; endl;  <span class="color-comment">// |123456789|</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; -123456789 &lt;&lt; &quot;|&quot; &lt;&lt; endl;  <span class="color-comment">// |-123456789|</span></pre>
+</li>
+
+<li>For floating-point numbers, the default <em>precison</em> is 6 digits, except that the trailing zeros will not be shown. This default precision (of 6 digits) include all digits before and after the decimal point, but exclude the leading zeros. Scientific notation (E-notation) will be used if the exponent is 6 or more or -5 or less. In scientific notation, the default precision is also 6 digits; the exponent is displayed in 3 digits with plus/minus sign (e.g., +006, -005). For example,
+  <pre class="color-example">
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 1.20000 &lt;&lt; &quot;|&quot; &lt;&lt; endl;       <span class="color-comment">// |1.2| (trailing zeros not displayed)</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 1.23456 &lt;&lt; &quot;|&quot; &lt;&lt; endl;       <span class="color-comment">// |1.23456| (default precision is 6 digits)</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; -1.23456 &lt;&lt; &quot;|&quot; &lt;&lt; endl;      <span class="color-comment">// |-1.23456|</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 1.234567 &lt;&lt; &quot;|&quot; &lt;&lt; endl;      <span class="color-comment">// |1.23457|</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 123456.7 &lt;&lt; &quot;|&quot; &lt;&lt; endl;      <span class="color-comment">// |123457|</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 1234567.89 &lt;&lt; &quot;|&quot; &lt;&lt; endl;    <span class="color-comment">// |1.23457e+006| (scientific-notation for e&gt;=6)</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 0.0001234567 &lt;&lt; &quot;|&quot; &lt;&lt; endl;  <span class="color-comment">// |0.000123457|  (leading zeros not counted towards precision)</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 0.00001234567 &lt;&lt; &quot;|&quot; &lt;&lt; endl; <span class="color-comment">// |1.23457e-005| (scientific-notation for e&lt;=-5)</span></pre></li>
+   
+<li><code>bool</code> values are displayed as 0 or 1 by default, instead of <code>true</code> or <code>false</code>.</li>
+</ul>
+
+<h5>Field Width (<span class="font-code">setw</span>), Fill Character (<span class="font-code">setfill</span>) and Alignment (<span class="font-code">left|right|internal</span>)</h5>
+
+<p>The  <code>ios_base</code> superclass (included in <code>&lt;iostream&gt;</code> header) maintains data members for field-width (<code>width</code>) and formatting flags (<code>fmtflags</code>); and provides member functions (such as <code>width()</code>, <code>setf()</code>) for manipulating them.</p>
+
+<p>However, it is more convenience to use the so-called <em>IO manipulators</em>, which returns a reference to the invoking stream object and thus can be concatenated in <code>&lt;&lt;</code> operator (e.g., <code>cout &lt;&lt; setfill(':') &lt;&lt; left &lt;&lt; setw(5) &lt;&lt;...</code>). They are:</p>
+
+<ul>
+<li><strong><code>setw()</code></strong> manipulator (in <code>&lt;iomanip&gt;</code> header) to set the field width.</li>
+<li><code><strong>setfill()</strong></code> manipulator (in <code>&lt;iomanip&gt;</code> header) to set the fill character</li>
+<li><code><strong>left|right|internal</strong></code> manipulator (in <code>&lt;iostream&gt;</code> header) to set the text alignment.</li>
+
+</ul>
+
+<p>The default field-width is 0, i.e., just enough space to display the value. C++ never truncates data, and will expand the field to display the entire value if the field-width is too small. The <code>setw()</code> operation is <em>non-sticky</em>. That is, it is applicable only to the next IO operation, and reset back to 0 after the operation. The field-width property is applicable to both output and input operations.</p>
+<p> Except <code>setw()</code>, all the other IO manipulators are <em>sticky</em>, i.e., they take effect until a new value is set.</p>
+
+<pre class="color-example">
+<span class="color-comment">// Test setw() - need &lt;iomanip&gt;</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; <span class="color-new">setw(5)</span> &lt;&lt; 123 &lt;&lt; &quot;|&quot; &lt;&lt; 123 &lt;&lt; endl;  <span class="color-comment">// |  123|123</span>
+         <span class="color-comment">// setw() is non-sticky. &quot;|&quot; and 123 displayed with default width</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; <span class="color-new">setw(5)</span> &lt;&lt; -123 &lt;&lt; &quot;|&quot; &lt;&lt; endl;        <span class="color-comment">// | -123|123</span>
+         <span class="color-comment">// minus sign is included in field width</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; <span class="color-new">setw(5)</span> &lt;&lt; 1234567 &lt;&lt; &quot;|&quot; &lt;&lt; endl;     <span class="color-comment">// |1234567|</span>
+         <span class="color-comment">// no truncation of data</span>
+ 
+<span class="color-comment">// Test setfill() and alignment (left|right|internal)</span>
+cout &lt;&lt; <span class="color-new">setfill('_')</span>;   <span class="color-comment">// Set the fill character (sticky)</span>
+cout &lt;&lt; <span class="color-new">setw(6)</span> &lt;&lt; 123 &lt;&lt; <span class="color-new">setw(4)</span> &lt;&lt; 12 &lt;&lt; endl;      <span class="color-comment">// ___123__12</span>
+cout &lt;&lt; <span class="color-new">left</span>;           <span class="color-comment">// left align (sticky)</span>
+cout &lt;&lt; <span class="color-new">setw(6)</span> &lt;&lt; 123 &lt;&lt; <span class="color-new">setw(4)</span> &lt;&lt; 12 &lt;&lt; endl;      <span class="color-comment">// 123___12__</span></pre>
+
+<p>Example: Alignment</p>
+<pre class="color-example">
+cout &lt;&lt; showpos; <span class="color-comment"> // show positive sign</span>
+cout             &lt;&lt; '|' &lt;&lt; setw(6) &lt;&lt; 123 &lt;&lt; '|' &lt;&lt; endl; <span class="color-comment"> // |  +123| (default alignment)</span>
+cout &lt;&lt; <span class="color-new">left</span>     &lt;&lt; '|' &lt;&lt; setw(6) &lt;&lt; 123 &lt;&lt; '|' &lt;&lt; endl; <span class="color-comment"> // |+123  |</span>
+cout &lt;&lt; <span class="color-new">right</span>    &lt;&lt; '|' &lt;&lt; setw(6) &lt;&lt; 123 &lt;&lt; '|' &lt;&lt; endl; <span class="color-comment"> // |  +123|</span>
+cout &lt;&lt; <span class="color-new">internal</span> &lt;&lt; '|' &lt;&lt; setw(6) &lt;&lt; 123 &lt;&lt; '|' &lt;&lt; endl; <span class="color-comment"> // |+  123|</span></pre>
+
+<p>The <code>internal</code> alignment left-align the sign, but right-align the number, as illustrated.</p>
+
+<p>[TODO] Example of field-width for input operations</p>
+
+<p>You can also use <code>ostream</code>'s member function <code>width()</code> (e.g. <code>cout.width(n)</code>) to set the field width, but <code>width()</code> cannot be used with <code>cout &lt;&lt;</code> operator.</p>
+
+<h5>Floating-point Format (<span class="font-code">fixed|scientific</span>) and Precision (<span class="font-code">setprecision</span>)</h5>
+
+<p>The IO stream superclass <code>ios_base</code> also maintains data member for the floating-point precision and display format; and provides member functions (such as <code>precision()</code>) for manipulating them.</p>
+
+<p>Again, it is more convenience to use IO manipulators, which can be concatenated in <code>&lt;&lt;</code>. They are:</p>
+
+<ul>
+
+<li><strong><code>setprecision()</code></strong> manipulator (in <code>&lt;iomanip&gt;</code> header) to set the precision of floating-point number.</li>
+
+<li><code><strong>fixed|scientific</strong></code> manipulators (in <code>&lt;iostream&gt;</code> header) <code></code>to set the floating-point display format.</li>
+</ul>
+
+<p>Floating point number can be display in 3 formatting modes: <em><code>default</code></em><code>|fixed|scientific</code>. The precision is interpreted differently in <em>default</em> and <em>non-default</em> modes (due to legacy).</p>
+
+<ul>
+<li>In <em>default</em> mode (neither <code>fixed</code> nor <code>scientific</code> used), a floating-point number is displayed in fixed-point notation (e.g., <code>12.34</code>) for exponent in the range of <code>[-4, 5]</code>; and scientific notation (e.g., <code>1.2e+006</code>) otherwise. The precision in default mode includes digits before and after the decimal point but exclude the leading zeros. Fewer digits might be shown as the trailing zeros are not displayed. The default precision is 6. See the earlier examples for default mode with default precision of 6.<br />
+  As mentioned, the trailing zeros are not displayed in default mode, you can use manipulator <code>showpoint|noshowpoint</code> to  show or hide the trailing zeros.</li>
+
+<li>In both <code>fixed</code> (e.g., <code>12.34</code>) and <code>scientific</code> (e.g., <code>1.2e+006</code>), the precision sets the number of digits after decimal point. The default precision is also 6.</li>
+</ul>
+
+<p>For examples,</p>
+
+<pre class="color-example">
+<span class="color-comment">// default floating-point format</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 123.456789 &lt;&lt; &quot;|&quot; &lt;&lt; endl;    <span class="color-comment">// |123.457| (fixed-point format)
+         // default precision is 6, i.e., 6 digits before and after the decimal point</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 1234567.89 &lt;&lt; &quot;|&quot; &lt;&lt; endl;    <span class="color-comment">// |1.23457e+006| (scientific-notation for e&gt;=6)
+         // default precision is 6, i.e., 6 digits before and after the decimal point</span>
+ 
+<span class="color-comment">// showpoint - show trailing zeros in default mode</span>
+cout &lt;&lt; <span class="color-new">showpoint</span> &lt;&lt; 123. &lt;&lt; &quot;,&quot; &lt;&lt; 123.4 &lt;&lt; endl; <span class="color-comment">// 123.000,123.400</span>
+cout &lt;&lt; <span class="color-new">noshowpoint</span> &lt;&lt; 123. &lt;&lt; endl;               <span class="color-comment">// 123</span>
+ 
+<span class="color-comment">// fixed-point formatting</span>
+cout &lt;&lt; <span class="color-new">fixed</span>;
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 1234567.89 &lt;&lt; &quot;|&quot; &lt;&lt; endl;    <span class="color-comment">// |1234567.890000|
+         // default precision is 6, i.e., 6 digits after the decimal point</span>
+ 
+<span class="color-comment">// scientific formatting</span>
+cout &lt;&lt; <span class="color-new">scientific</span>;   
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 1234567.89 &lt;&lt; &quot;|&quot; &lt;&lt; endl;    <span class="color-comment">// |1.234568e+006|
+         // default precision is 6, i.e., 6 digits after the decimal point</span>
+ 
+<span class="color-comment">// Test precision</span>
+cout &lt;&lt; <span class="color-new">fixed</span> &lt;&lt; <span class="color-new">setprecision(2)</span>;   <span class="color-comment">// sticky</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 123.456789 &lt;&lt; &quot;|&quot; &lt;&lt; endl;  <span class="color-comment">// |123.46|</span>
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 123. &lt;&lt; &quot;|&quot; &lt;&lt; endl;        <span class="color-comment">// |123.00|</span>
+ 
+cout &lt;&lt; <span class="color-new">setprecision(0)</span>;
+cout &lt;&lt; &quot;|&quot; &lt;&lt; 123.456789 &lt;&lt; &quot;|&quot; &lt;&lt; endl;  <span class="color-comment">// |123|</span></pre>
+
+<p>You can also use <code>ostream</code>'s member function <code>precision(<em>n</em>)</code> (e.g. <code>cout.precision(n)</code>) to set the floating-point precision, but <code>precision()</code> cannot be used with <code>cout &lt;&lt;</code> operator.</p>
+
+<h5>Integral Number Base (<span class="font-code">dec|oct|hex</span>, <span class="font-code">setbase</span>)</h5>
+
+<p>C++ support number bases (radixes) of decimal, hexadecimal and octal. You can use the following manipulators (defined in <code>ios_base</code> class, included in <code>&lt;iostream&gt;</code> header) to manipulate the integral number base:</p>
+<ul>
+<li><code><strong>hex|dec|oct</strong></code>: Set the integral number base. Negative <code>hex</code> and <code>oct</code> are displayed in 2's complement format. Alternatively, you can use <code>setbase(8|10|16)</code> (in header <code>&lt;iomanip&gt;</code>).</li>
+
+<li><code><strong>showbase|noshowbase</strong></code>: write <code>hex</code> values with <code>0x</code> prefix; and <code>oct</code> values with <code>0</code> prefix.</li>
+
+<li><code><strong>showpos|noshowpos</strong></code>: write positive <code>dec</code> value with + sign.</li>
+
+<li><code><strong>uppercase|nouppercase</strong></code>: write uppercase in certain insertion operations, e.g., hex digits. It does not convert characters or strings to uppercase!</li>
+</ul>
+
+<p>These manipulators are <em>sticky</em>.</p>
+
+<p>For examples,</p>
+
+<pre class="color-example">
+cout &lt;&lt; 1234 &lt;&lt; endl;       <span class="color-comment"> // 1234 (default is dec)</span>
+cout &lt;&lt; <span class="color-new">hex</span> &lt;&lt; 1234 &lt;&lt; endl;<span class="color-comment"> // 4d2</span>
+cout &lt;&lt; 1234 &lt;&lt; &quot;,&quot; &lt;&lt; -1234 &lt;&lt; endl;<span class="color-comment"> // 4d2,fffffb2e</span>
+                                     <span class="color-comment"> // (hex is sticky, negative number in 2's complement)</span>
+cout &lt;&lt; <span class="color-new">oct</span> &lt;&lt; 1234 &lt;&lt; endl;         <span class="color-comment"> // 2322</span>
+cout &lt;&lt; 1234 &lt;&lt; &quot;,&quot; &lt;&lt; -1234 &lt;&lt; endl;<span class="color-comment"> // 2322,37777775456</span>
+cout &lt;&lt; <span class="color-new">setbase(10)</span> &lt;&lt; 1234 &lt;&lt; endl; <span class="color-comment"> // 1234 (setbase requires &lt;iomanip&gt; header)</span>
+ 
+<span class="color-comment">// showbase - show hex with 0x prefix; oct with 0 prefix</span>
+cout &lt;&lt; <span class="color-new">showbase</span> &lt;&lt; 123 &lt;&lt; &quot;,&quot; &lt;&lt; <span class="color-new">hex</span> &lt;&lt; 123 &lt;&lt; &quot;,&quot; &lt;&lt; <span class="color-new">oct </span>&lt;&lt; 123 &lt;&lt; endl; <span class="color-comment"> // 123,0x7b,0173</span>
+cout &lt;&lt; <span class="color-new">noshowbase</span> &lt;&lt; <span class="color-new">dec</span>;
+ 
+<span class="color-comment">// showpos - show dec's plus (+) sign</span>
+cout &lt;&lt; <span class="color-new">showpos</span> &lt;&lt; 123 &lt;&lt; endl; <span class="color-comment"> // +123</span>
+ 
+<span class="color-comment">// uppercase - display in uppercase (e.g., hex digits)</span>
+cout &lt;&lt; <span class="color-new">uppercase</span> &lt;&lt; <span class="color-new">hex</span> &lt;&lt; 123 &lt;&lt; endl; <span class="color-comment"> // 7B</span></pre>
+
+<h5><span class="font-code">bool</span> values (<span class="font-code">boolalpha|noboolalpha</span>)</h5>
+
+<ul>
+<li><strong><code>boolalpha|noboolalpha</code></strong>: read/write bool value as alphabetic string <code>true</code> or <code>false</code>.
+<pre class="color-example">
+<span class="color-comment">// boolalpha - display bool as true/false</span>
+cout &lt;&lt; <span class="color-new">boolalpha</span> &lt;&lt; false &lt;&lt; &quot;,&quot; &lt;&lt; true &lt;&lt; endl;  <span class="color-comment"> // false,true</span>
+cout &lt;&lt; <span class="color-new">noboolalpha</span> &lt;&lt; false &lt;&lt; &quot;,&quot; &lt;&lt; true &lt;&lt; endl;<span class="color-comment"> // 0,1</span></pre></li></ul>
+
+<h5>Other manipulators</h5>
+
+<ul>
+<li><code><strong>skipws|noskipws</strong></code>: skip leading white spaces for certain input operations.</li>
+
+<li><strong><code>unitbuf|nounibuf</code></strong>: flush output after each insertion operation.</li>
+</ul>
+
+<h5>Notes</h5>
+
+<ul>
+<li>You need to include the <code>&lt;iomanip&gt;</code> header for <code>setw()</code>, <code>setprecision()</code>, <code>setfill()</code>, and <code>setbase()</code>.</li>
+
+<li>You can use <code>ios_base</code>'s (in <code>&lt;iostream&gt;</code> header) member functions <code>setf()</code> and <code>unsetf()</code> to set the individual formatting flags. However, they are not as user-friendly as using manipulators as discussed above. Furthermore, they cannot be used with <code>cout &lt;&lt;</code> operator.</li></ul>
+
+
+<h4>The C++ <span class="font-code">string</span> class Input/Output</h4>
+
+<p>[TODO]</p>
+
+<h3>File Input/Output (Header <span class="font-code">&lt;fstream&gt;</span>)</h3>
+
+<p>C++ handles file IO similar to standard IO. In header <code>&lt;fstream&gt;</code>, the class <code>ofstream</code> is a subclass of <code>ostream</code>; <code>ifstream</code> is a subclass of <code>istream</code>; and <code>fstream</code> is a subclass of <code>iostream</code> for bi-directional IO. You need to include both <code>&lt;iostream&gt;</code> and <code>&lt;fstream&gt;</code> headers in your program for file IO.</p>
+<p>To write to a file, you construct a <code>ofsteam</code> object connecting to the output file, and use the <code>ostream</code> functions such as stream insertion <code>&lt;&lt;</code>, <code>put()</code> and <code>write()</code>. Similarly, to read from an input file, construct an <code>ifstream</code> object connecting to the input file, and use the <code>istream</code> functions such as stream extraction <code>&gt;&gt;</code>, <code>get()</code>, <code>getline()</code> and  <code>read()</code>.</p>
+<p>File IO requires an additional step to connect the file to the stream (i.e., file open) and disconnect from the stream (i.e., file close).</p>
+
+<h4>File Output</h4>
+
+<p>The steps are:</p>
+<ol>
+<li>Construct an <code>ostream</code> object.</li>
+<li>Connect it to a file (i.e., file open) and set the mode of file operation (e.g, truncate, append).</li>
+<li>Perform output operation via insertion <code>&gt;&gt;</code> operator or <code>write()</code>, <code>put()</code> functions.</li>
+<li>Disconnect (close the file which flushes the output buffer) and free the <code>ostream</code> object.</li>
+</ol>
+
+<pre class="color-syntax">
+#include &lt;fstream&gt;
+.......
+ofstream fout;
+fout.open(filename, mode);
+......
+fout.close();
+ 
+<span class="color-comment">// OR combine declaration and open()</span>
+ofstream fout(filename, mode);</pre>
+
+<p>By default, opening an output file creates a new file if the filename does not exist; or truncates it (clear its content) and starts writing as an empty file.</p>
+
+<h5><span class="font-code">open()</span>, <span class="font-code">close()</span> and  <span class="font-code">is_open()</span></h5>
+
+<pre class="color-syntax">
+void <strong>open</strong> (const char* filename,
+           ios::openmode mode = ios::in | ios::out);
+   <span class="color-comment">// open() accepts only C-string. For string object, need to use c_str() to get the C-string</span>
+ 
+void <strong>close</strong> ();    <span class="color-comment">// Closes the file, flush the buffer and disconnect from stream object</span>
+ 
+bool <strong>is_open</strong> ();  <span class="color-comment">// Returns true if the file is successfully opened</span></pre>
+
+<h5>File Modes</h5>
+
+<p>File modes are defined as static public member in <code>ios_base</code> superclass. They can be referenced from <code>ios_base</code> or its subclasses - we typically use subclass <code>ios</code>. The available file mode flags are:</p>
+
+<ol>
+<li><code>ios::<strong>in</strong></code> - open file for input operation</li>
+<li><code>ios::<strong>out</strong></code> -  open file for output operation</li>
+<li><code>ios::<strong>app</strong></code> - output appends at the end of the file.</li>
+<li><code>ios::<strong>trunc</strong></code> - truncate the file and discard old contents.</li>
+<li><code>ios::<strong>binary</strong></code> - for binary (raw byte) IO operation, instead of character-based.</li>
+<li><code>ios::<strong>ate</strong></code> - position the file pointer &quot;at the end&quot; for input/output.</li>
+</ol>
+
+<p>You can set multiple flags via bit-or (<code>|</code>) operator, e.g., <code>ios::out | ios::app</code> to append output at the end of the file.</p>
+<p>For output, the default is <code>ios::out | ios::trunc</code>. For input, the default is <code>ios::in</code>.</p>
+
+
+
+<h4>File Input</h4>
+
+<p>The steps are:</p>
+<ol>
+<li>Construct an <code>istream</code> object.</li>
+<li>Connect it to a file (i.e., file open) and set the mode of file operation.</li>
+<li>Perform output operation via extraction <code>&lt;&lt;</code> operator or <code>read()</code>, <code>get()</code>, <code>getline()</code> functions.</li>
+<li>Disconnect (close the file) and free the <code>istream</code> object.</li>
+</ol>
+
+<pre class="color-syntax">
+#include &lt;fstream&gt;
+.......
+ifstream fin;
+fin.open(filename, mode);
+......
+fin.close();
+ 
+<span class="color-comment">// OR combine declaration and open()</span>
+ifstream fin(filename, mode);</pre>
+
+<p>By default, opening an input file ....</p>
+
+<h4>Example on Simple File IO</h4>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Testing Simple File IO (TestSimpleFileIO.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string&gt;
+using namespace std;
+ 
+int main() {
+   string filename = &quot;test.txt&quot;;
+ 
+  <span class="color-comment"> // Write to File</span>
+   ofstream fout(filename.c_str()); <span class="color-comment"> // default mode is ios::out | ios::trunc</span>
+   if (!fout) {
+      cerr &lt;&lt; &quot;error: open file for output failed!&quot; &lt;&lt; endl;
+      abort(); <span class="color-comment"> // in &lt;cstdlib&gt; header</span>
+   }
+   fout &lt;&lt; &quot;apple&quot; &lt;&lt; endl;
+   fout &lt;&lt; &quot;orange&quot; &lt;&lt; endl;
+   fout &lt;&lt; &quot;banana&quot; &lt;&lt; endl;
+   fout.close();
+ 
+  <span class="color-comment"> // Read from file</span>
+   ifstream fin(filename.c_str()); <span class="color-comment"> // default mode ios::in</span>
+   if (!fin) {
+      cerr &lt;&lt; &quot;error: open file for input failed!&quot; &lt;&lt; endl;
+      abort();
+   }
+   char ch;
+   while (fin.get(ch)) { <span class="color-comment"> // till end-of-file</span>
+      cout &lt;&lt; ch;
+   }
+   fin.close();
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>Most of the <code>&lt;fstream&gt;</code> functions (such as constructors, <code>open()</code>) supports filename in C-string only. You may need to extract the C-string from <code>string</code> object via the <code>c_str()</code> member function.</li>
+
+<li>You could use <code>is_open()</code> to check if the file is opened successfully.</li>
+
+<li>The <code>get(char &amp;)</code> function returns a null pointer (converted to <code>false</code>) when it reaches end-of-file.</li>
+</ul>
+
+<h4>Binary file, <span class="font-code">read()</span> and <span class="font-code">write()</span></h4>
+
+<p>We need to use <code>read()</code> and <code>write()</code> member functions for binary file (file mode of <code>ios::binary</code>), which read/write raw bytes without interpreting the bytes.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Testing Binary File IO (TestBinaryFileIO.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string&gt;
+using namespace std;
+ 
+int main() {
+   string filename = &quot;test.bin&quot;;
+ 
+  <span class="color-comment"> // Write to File</span>
+   ofstream fout(filename.c_str(), <span class="color-new">ios::out | ios::binary</span>);
+   if (!fout.is_open()) {
+      cerr &lt;&lt; &quot;error: open file for output failed!&quot; &lt;&lt; endl;
+      abort();
+   }
+   int i = 1234;
+   double d = 12.34;
+   <span class="color-new">fout.write((char *)&amp;i, sizeof(int));</span>
+   <span class="color-new">fout.write((char *)&amp;d, sizeof(double));</span>
+   fout.close();
+ 
+  <span class="color-comment"> // Read from file</span>
+   ifstream fin(filename.c_str(), <span class="color-new">ios::in | ios::binary</span>);
+   if (!fin.is_open()) {
+      cerr &lt;&lt; &quot;error: open file for input failed!&quot; &lt;&lt; endl;
+      abort();
+   }
+   int i_in;
+   double d_in;
+   <span class="color-new">fin.read((char *)&amp;i_in, sizeof(int));</span>
+   cout &lt;&lt; i_in &lt;&lt; endl;
+   <span class="color-new">fin.read((char *)&amp;d_in, sizeof(double));</span>
+   cout &lt;&lt; d_in &lt;&lt; endl;
+   fin.close();
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Random Access File</h4>
+
+<p>Random access file is associated with a file pointer, which can be moved directly to any location in the file. Random access is crucial in certain applications such as databases and indexes.</p>
+
+<p>You can position the input pointer via <code>seekg()</code> and output pointer via <code>seekp()</code>. Each of them has two versions: absolute and relative positioning.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Input file pointer (g for get)</span>
+istream &amp; <strong>seekg</strong> (streampos pos);  <span class="color-comment">// absolute position relative to beginning</span>
+istream &amp; <strong>seekg</strong> (streamoff offset, ios::seekdir way);
+      <span class="color-comment">// with offset (positive or negative) relative to seekdir:
+      // ios::beg (beginning), ios::cur (current), ios::end (end)</span>
+streampos <strong>tellg</strong> ();  <span class="color-comment">// Returns the position of input pointer</span>
+
+<span class="color-comment">// Output file pointer (p for put)</span>
+ostream &amp; <strong>seekp</strong> (streampos pos);  <span class="color-comment">// absolute</span>
+ostream &amp; <strong>seekp</strong> (streamoff offset, ios::seekdir way);  <span class="color-comment">// relative</span>
+streampos <strong>tellp</strong> ();   <span class="color-comment">// Returns the position of output pointer</span></pre>
+
+<p>Random access file is typically process as binary file, in both input and output modes.</p>
+<p>[TODO] Example</p>
+
+<h3>String Streams</h3>
+
+<p>C++ provides a <code>&lt;sstream&gt;</code> header, which uses the same public interface to support IO between a program and <code>string</code> object (buffer).</p>
+
+<p>The string streams is based on <code>ostringstream</code> (subclass of <code>ostream</code>), <code>istringstream</code> (subclass of <code>istream</code>) and bi-directional <code>stringstream</code> (subclass of <code>iostream</code>).</p>
+
+<pre class="color-syntax">
+typedef basic_istringstream&lt;char&gt; <strong>istringstream</strong>;
+typedef basic_ostringstream&lt;char&gt; <strong>ostringstream</strong>;</pre>
+
+<p>Stream input can be used to validate input data; stream output can be used to format the output.</p>
+
+<h5><span class="font-code">ostringstream</span></h5>
+
+<pre class="color-syntax">
+explicit <strong>ostringstream</strong> (ios::openmode mode = ios::out);  <span class="color-comment">// default with empty string</span>
+explicit <strong>ostringstream</strong> (const string &amp; buf, 
+                        ios::openmode mode = ios::out);  <span class="color-comment">// with initial str</span>
+
+string <strong>str</strong> () const;           <span class="color-comment">// Get contents</span>
+void <strong>str</strong> (const string &amp; str); <span class="color-comment">// Set contents</span></pre>
+
+<p>For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// construct output string stream (buffer) - need &lt;sstream&gt; header</span>
+ostringstream sout;  
+    
+<span class="color-comment">// Write into string buffer</span>
+sout &lt;&lt; &quot;apple&quot; &lt;&lt; endl;
+sout &lt;&lt; &quot;orange&quot; &lt;&lt; endl;
+sout &lt;&lt; &quot;banana&quot; &lt;&lt; endl;
+ 
+<span class="color-comment">// Get contents</span>
+cout &lt;&lt; sout.<span class="color-new">str()</span> &lt;&lt; endl;</pre>
+
+<p>The <code>ostringstream</code> is responsible for dynamic memory allocation and management.</p>
+
+<h5><span class="font-code">istringstream</span></h5>
+
+<pre class="color-syntax">
+explicit <strong>istringstream</strong> (ios::openmode mode = ios::in);  <span class="color-comment">// default with empty string</span>
+explicit <strong>istringstream</strong> (const string &amp; buf,
+                        ios::openmode mode = ios::in);  <span class="color-comment">// with initial string</span></pre>
+
+<p>For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// construct input string stream (buffer) - need &lt;sstream&gt; header</span>
+<span class="color-new">istringstream sin(&quot;123 12.34 hello&quot;);</span>
+ 
+<span class="color-comment">// Read from buffer</span>
+int i;
+double d;
+string s;
+<span class="color-new">sin &gt;&gt; i &gt;&gt; d &gt;&gt; s;</span>
+cout &lt;&lt; i &lt;&lt; &quot;,&quot; &lt;&lt; d &lt;&lt; &quot;,&quot; &lt;&lt; s &lt;&lt; endl;</pre>
+
+
+
+
+
+<!-- @@ start change in v1 -->
+<a class="references" href="../howto/References.html#cpp">Link to &quot;C++ Language References &amp; Resources&quot;</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: GNU GCC 4.6.2<br />
+Last modified: May, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

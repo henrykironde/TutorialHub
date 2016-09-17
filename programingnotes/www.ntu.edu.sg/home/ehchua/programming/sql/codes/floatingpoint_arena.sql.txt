@@ -1,0 +1,52 @@
+/*
+ * Playing with "Floating-point" data types
+ */
+
+ /*
+ * Set up the database
+ */
+-- SHOW DATABASES;
+-- DROP DATABASE IF EXISTS `the_arena`;
+CREATE DATABASE IF NOT EXISTS `the_arena`;
+USE `the_arena`;
+-- SHOW TABLES;
+
+/*
+ * Create a table with floating-point columns
+ */
+DROP TABLE IF EXISTS `floatingpoint_arena`;
+CREATE TABLE IF NOT EXISTS `floatingpoint_arena` (
+   `id`        INT UNSIGNED ZEROFILL   AUTO_INCREMENT,
+   `desc`      VARCHAR(50)             NULL,
+   `cfloat1`   FLOAT                   NOT NULL DEFAULT 1.8,  -- 32-bit single percision
+   `cfloat2`   FLOAT(8,2) UNSIGNED     NOT NULL DEFAULT 2.8,  -- 8 digits, 2 decimal point
+   `cDouble1`  DOUBLE                  NOT NULL DEFAULT 3.8,  -- 64-bit double percision
+   `cDouble2`  DOUBLE(8,2) UNSIGNED ZEROFILL NOT NULL DEFAULT 4.8, -- 8 digits, 2 decimal point
+   `cDecimal`  DECIMAL(8,2)            NOT NULL DEFAULT 5.8,  -- 8 digits, 2 decimal point 
+   PRIMARY KEY(`id`)
+);
+DESCRIBE `floatingpoint_arena`;
+
+/*
+ * Insert records with valid values.
+ */
+-- can express floating point literals in scientic notation, but no decimal for exponent.
+INSERT INTO `floatingpoint_arena` VALUES 
+   (NULL, 'Valid values', 4.3E-2, 5.6, -1.2e+3, -1.2, 3.3); 
+INSERT INTO `floatingpoint_arena` VALUES 
+   (NULL, 'Exactly n digits d decimal places', 123456.78, 123456.78, 123456.78, 123456.78, 123456.78);
+SELECT * FROM `floatingpoint_arena`;
+
+/*
+ * Testing precision width (n, d). Unlike INT(n), this n,d affects the range for FLOAT, DOUBLE, DECIMAL.
+ */
+INSERT INTO `floatingpoint_arena` VALUES (NULL, 'Exceed d decimal places', 123456.789, 123456.789, 123456.789, 123456.789, 123456.789);
+SHOW WARNINGS;
+-- Data truncated for DECIMAL(8,2). No warning for FLOAT(8,2) and DOUBLE(8,2)??
+SELECT * FROM `floatingpoint_arena`;   -- displayed numbers truncated according to field-width
+
+INSERT INTO `floatingpoint_arena` VALUES (NULL, 'Exceed n range', 1234567, 1234567, 1234567, 1234567, 1234567);
+SHOW WARNINGS;
+-- Out-of-range warning for FLOAT(8,2), DOUBLE(8,2), and DECIMAL(8,2), and results capped at maximum.
+SELECT * FROM `floatingpoint_arena`;
+

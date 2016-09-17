@@ -1,0 +1,3283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>An introduction on OpenGL with 2D Graphics  - OpenGL Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>OpenGL Tutorial</h1>
+<h2>An Introduction on OpenGL with 2D Graphics</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Setting Up OpenGL</h3>
+<p>To set up OpenGL, depending on your programming platform, read:</p>
+<ul>
+<li><a href="HowTo_OpenGL_C.html">How to write OpenGL programs in C/C++</a>.</li>
+<li>How to write OpenGL programs in Java: <a href="JOGL2.0.html">JOGL</a> or <a href="LWJGL2.8.html">LWJGL</a>.</li>
+<li><a href="../android/Android_3D.html">How to write OpenGL|ES programs in Android</a>.</li>
+</ul>
+
+<h4>Example 1: Setting Up OpenGL and GLUT (<span class="font-code">GL01Hello.cpp</span>)</h4>
+<p>Make sure that you can run the &quot;<code>GL01Hello.cpp</code>&quot; described in &quot;<a href="HowTo_OpenGL_C.html">How to write OpenGL programs in C/C++</a>&quot;, reproduced below:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * GL01Hello.cpp: Test OpenGL/GLUT C/C++ Setup
+ * Tested under Eclipse CDT with MinGW/Cygwin and CodeBlocks with MinGW
+ * To compile with -lfreeglut -lglu32 -lopengl32
+ */</span>
+#include &lt;windows.h&gt;  <span class="color-comment">// for MS Windows</span>
+#include &lt;GL/glut.h&gt;  <span class="color-comment">// GLUT, include glu.h and gl.h</span>
+ 
+<span class="color-comment">/* Handler for window-repaint event. Call back when the window first appears and
+   whenever the window needs to be re-painted. */</span>
+void display() {
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); <span class="color-comment">// Set background color to black and opaque</span>
+   glClear(GL_COLOR_BUFFER_BIT);         <span class="color-comment">// Clear the color buffer (background)</span>
+ 
+   <span class="color-comment">// Draw a Red 1x1 Square centered at origin</span>
+   glBegin(GL_QUADS);              <span class="color-comment">// Each set of 4 vertices form a quad</span>
+      glColor3f(1.0f, 0.0f, 0.0f); <span class="color-comment">// Red</span>
+      glVertex2f(-0.5f, -0.5f);    <span class="color-comment">// x, y</span>
+      glVertex2f( 0.5f, -0.5f);
+      glVertex2f( 0.5f,  0.5f);
+      glVertex2f(-0.5f,  0.5f);
+   glEnd();
+ 
+   glFlush();  <span class="color-comment">// Render now</span>
+}
+ 
+<span class="color-comment">/* Main function: GLUT runs as a console application starting at main()  */</span>
+int main(int argc, char** argv) {
+   glutInit(&amp;argc, argv);                 <span class="color-comment">// Initialize GLUT</span>
+   glutCreateWindow(&quot;OpenGL Setup Test&quot;); <span class="color-comment">// Create a window with the given title</span>
+   glutInitWindowSize(320, 320);   <span class="color-comment">// Set the window's initial width &amp; height</span>
+   glutInitWindowPosition(50, 50); <span class="color-comment">// Position the window's initial top-left corner</span>
+   glutDisplayFunc(display); <span class="color-comment">// Register display callback handler for window re-paint</span>
+   glutMainLoop();           <span class="color-comment">// Enter the event-processing loop</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="color-new">
+#include &lt;windows.h&gt;</pre> 
+
+<p>The header &quot;<code>windows.h</code>&quot; is needed for the Windows platform only.</p>
+
+<pre class="color-new">
+#include &lt;GL/glut.h&gt;</pre> 
+
+<p>We also included the GLUT header, which is guaranteed to include &quot;<code>glu.h</code>&quot; (for GL Utility) and &quot;<code>gl.h</code>&quot; (for Core OpenGL).</p>
+
+<p>The rest of the program will be explained in due course.</p>
+
+<h3>Introduction</h3>
+<p>OpenGL (Open Graphics Library) is a cross-platform, hardware-accelerated, language-independent, industrial standard API for producing 3D (including 2D) graphics. Modern computers have dedicated GPU (Graphics Processing Unit) with its own memory to speed up graphics rendering. OpenGL is the software interface to graphics hardware. In other words, OpenGL graphic rendering commands issued by your applications could be directed to the graphic hardware and accelerated.</p>
+
+<p>We use 3 sets of libraries in our OpenGL programs:</p>
+<ol>
+<li><span class="line-heading">Core OpenGL (GL)</span>: consists of hundreds of commands, which begin with a prefix &quot;<code>gl</code>&quot; (e.g., <code>glColor</code>, <code>glVertex</code>, <code>glTranslate</code>, <code>glRotate</code>).  The Core OpenGL models an object via a set of geometric primitives such as point, line and polygon.</li>
+
+<li><span class="line-heading">OpenGL Utility Library (GLU)</span>: built on-top of the core OpenGL to provide important utilities (such as setting camera view and projection) and more building models (such as qradric surfaces and polygon tessellation). GLU commands start with a prefix &quot;<code>glu</code>&quot; (e.g., <code>gluLookAt</code>, <code>gluPerspective</code>).</li>
+
+<li><span class="line-heading">OpenGL Utilities Toolkit (GLUT)</span>: OpenGL is designed to be independent of the windowing system or operating system. GLUT is needed to interact with the Operating System (such as creating a window, handling key and mouse inputs); it also provides more building models (such as sphere and torus). GLUT commands start with a prefix of &quot;<code>glut</code>&quot; (e.g., <code>glutCreatewindow</code>, <code>glutMouseFunc</code>). GLUT is platform independent, which is built on top of platform-specific OpenGL extension such as GLX for X Window System, WGL for Microsoft Window, and AGL, CGL or Cocoa for Mac OS.<br />
+  Quoting from the <a href="http://www.opengl.org/resources/libraries/glut/">opengl.org</a>: &quot;GLUT is designed for constructing small to medium sized OpenGL programs. While GLUT is well-suited to learning OpenGL and developing simple OpenGL applications, GLUT is not a full-featured toolkit so large applications requiring sophisticated user interfaces are better off using native window system toolkits. <em>GLUT is simple, easy, and small.</em>&quot;<br />
+  Alternative of GLUT includes SDL, ....</li>
+
+<li><span class="line-heading">OpenGL Extension Wrangler Library (GLEW)</span>: &quot;GLEW is a cross-platform open-source C/C++ extension loading library. GLEW provides efficient run-time mechanisms for determining which OpenGL extensions are supported on the target platform.&quot; Source and pre-build binary available at <a href="http://glew.sourceforge.net/">http://glew.sourceforge.net/</a>. A standalone utility called &quot;<code>glewinfo.exe</code>&quot; (under the &quot;<code>bin</code>&quot; directory) can be used to produce the list of OpenGL functions supported by your graphics system.</li>
+
+<li>Others.</li>
+</ol>
+
+<h3>Vertex, Primitive and Color</h3>
+
+<h4>Example 2: Vertex, Primitive and Color (<span class="font-code">GL02Primitive.cpp</span>)</h4>
+
+<p>Try building and runnng this OpenGL C/C++ program:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * GL02Primitive.cpp: Vertex, Primitive and Color
+ * Draw Simple 2D colored Shapes: quad, triangle and polygon.
+ */</span>
+#include &lt;windows.h&gt;  <span class="color-comment">// for MS Windows</span>
+#include &lt;GL/glut.h&gt;  <span class="color-comment">// GLUT, include glu.h and gl.h</span>
+ 
+<span class="color-comment">/* Initialize OpenGL Graphics */</span>
+void initGL() {
+   <span class="color-comment">// Set &quot;clearing&quot; or background color</span>
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); <span class="color-comment">// Black and opaque</span>
+}
+ 
+<span class="color-comment">/* Handler for window-repaint event. Call back when the window first appears and
+   whenever the window needs to be re-painted. */</span>
+void display() {
+   glClear(GL_COLOR_BUFFER_BIT);   <span class="color-comment">// Clear the color buffer with current clearing color</span>
+ 
+   <span class="color-comment">// Define shapes enclosed within a pair of glBegin and glEnd</span>
+   glBegin(GL_QUADS);              <span class="color-comment">// Each set of 4 vertices form a quad</span>
+      glColor3f(1.0f, 0.0f, 0.0f); <span class="color-comment">// Red</span>
+      glVertex2f(-0.8f, 0.1f);     <span class="color-comment">// Define vertices in counter-clockwise (CCW) order</span>
+      glVertex2f(-0.2f, 0.1f);     <span class="color-comment">//  so that the normal (front-face) is facing you</span>
+      glVertex2f(-0.2f, 0.7f);
+      glVertex2f(-0.8f, 0.7f);
+ 
+      glColor3f(0.0f, 1.0f, 0.0f); <span class="color-comment">// Green</span>
+      glVertex2f(-0.7f, -0.6f);
+      glVertex2f(-0.1f, -0.6f);
+      glVertex2f(-0.1f,  0.0f);
+      glVertex2f(-0.7f,  0.0f);
+ 
+      glColor3f(0.2f, 0.2f, 0.2f); <span class="color-comment">// Dark Gray</span>
+      glVertex2f(-0.9f, -0.7f);
+      glColor3f(1.0f, 1.0f, 1.0f); <span class="color-comment">// White</span>
+      glVertex2f(-0.5f, -0.7f);
+      glColor3f(0.2f, 0.2f, 0.2f); <span class="color-comment">// Dark Gray</span>
+      glVertex2f(-0.5f, -0.3f);
+      glColor3f(1.0f, 1.0f, 1.0f); <span class="color-comment">// White</span>
+      glVertex2f(-0.9f, -0.3f);
+   glEnd();
+ 
+   glBegin(GL_TRIANGLES);          <span class="color-comment">// Each set of 3 vertices form a triangle</span>
+      glColor3f(0.0f, 0.0f, 1.0f); <span class="color-comment">// Blue</span>
+      glVertex2f(0.1f, -0.6f);
+      glVertex2f(0.7f, -0.6f);
+      glVertex2f(0.4f, -0.1f);
+ 
+      glColor3f(1.0f, 0.0f, 0.0f); <span class="color-comment">// Red</span>
+      glVertex2f(0.3f, -0.4f);
+      glColor3f(0.0f, 1.0f, 0.0f); <span class="color-comment">// Green</span>
+      glVertex2f(0.9f, -0.4f);
+      glColor3f(0.0f, 0.0f, 1.0f); <span class="color-comment">// Blue</span>
+      glVertex2f(0.6f, -0.9f);
+   glEnd();
+ 
+   glBegin(GL_POLYGON);            <span class="color-comment">// These vertices form a closed polygon</span>
+      glColor3f(1.0f, 1.0f, 0.0f); <span class="color-comment">// Yellow</span>
+      glVertex2f(0.4f, 0.2f);
+      glVertex2f(0.6f, 0.2f);
+      glVertex2f(0.7f, 0.4f);
+      glVertex2f(0.6f, 0.6f);
+      glVertex2f(0.4f, 0.6f);
+      glVertex2f(0.3f, 0.4f);
+   glEnd();
+ 
+   glFlush();  <span class="color-comment">// Render now</span>
+}
+ 
+<span class="color-comment">/* Main function: GLUT runs as a console application starting at main()  */</span>
+int main(int argc, char** argv) {
+   glutInit(&amp;argc, argv);          <span class="color-comment">// Initialize GLUT</span>
+   glutCreateWindow(&quot;Vertex, Primitive &amp; Color&quot;);  <span class="color-comment">// Create window with the given title</span>
+   glutInitWindowSize(320, 320);   <span class="color-comment">// Set the window's initial width &amp; height</span>
+   glutInitWindowPosition(50, 50); <span class="color-comment">// Position the window's initial top-left corner</span>
+   glutDisplayFunc(display);       <span class="color-comment">// Register callback handler for window re-paint event</span>
+   initGL();                       <span class="color-comment">// Our own OpenGL initialization</span>
+   glutMainLoop();                 <span class="color-comment">// Enter the event-processing loop</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected output and the coordinates are as follows. Take note that 4 shapes have pure color, and 2 shapes have color blending from their vertices.</p>
+<img src="images/Output_GL02Primitive.png" />
+<img src="images/Design_GL02Shape2D.png" />
+
+<p>I shall explain the program in the following sections.</p>
+
+<h4>OpenGL as a State Machine</h4>
+<p>OpenGL operates as a <em>state machine</em>, and maintain a set of <em>state variables</em> (such as the foreground color, background color, and many more). In a state machine, once the value of a state variable is set, the value persists until a new value is given.</p>
+<p>For example, we set the &quot;clearing&quot; (background) color to black <em>once</em> in <code>initGL()</code>. We use this setting to clear the window in the <code>display()</code> <em>repeatedly</em> (<code>display()</code> is called back whenever there is a window re-paint request) - the clearing color is not changed in the entire program.</p>
+
+<pre class="color-example">
+<span class="color-comment">// In initGL(), set the &quot;clearing&quot; or background color</span>
+glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  <span class="color-comment">// black and opaque</span>
+ 
+<span class="color-comment">// In display(), clear the color buffer (i.e., set background) with the current &quot;clearing&quot; color</span>
+glClear(GL_COLOR_BUFFER_BIT);</pre>
+
+<p>Another example: If we use <code>glColor</code> function to set the current foreground color to &quot;red&quot;, then &quot;red&quot; will be used for all the subsequent vertices, until we use another <code>glColor</code> function to change the foreground color.</p>
+<p><em>In a state machine, everything shall remain until you explicitly change it!</em></p>
+<h4>Naming Convention for OpenGL Functions</h4>
+<p>An OpenGL functions:</p>
+<ul>
+<li>begins with lowercase <code>gl</code> (for core OpenGL), <code>glu</code> (for OpenGL Utility) or <code>glut</code> (for OpenGL Utility Toolkit).</li>
+<li>followed by the purpose of the function, in <em>camel case</em> (initial-capitalized), e.g., <code>glColor</code> to specify the drawing color, <code>glVertex</code> to define the position of a vertex.</li>
+<li>followed by specifications for the parameters, e.g., <code>glColor3f</code> takes three <code>float</code> parameters. <code>glVectex2i</code> takes two <code>int</code> parameters. <br />
+  (This is needed as C Language does not support function overloading. Different versions of the function need to be written for different parameter lists.)</li>
+</ul>
+
+<p>The convention can be expressed as follows:</p>
+<pre class="color-command">
+<em>returnType</em> <strong>gl<em>Function</em>[234][sifd]</strong> (<em>type value</em>, ...);  <span class="color-comment">// 2, 3 or 4 parameters</span>
+<em>returnType</em> <strong>gl<em>Function</em>[234][sifd]v</strong> (<em>type</em> *<em>value</em>);     <span class="color-comment">// an array parameter</span></pre>
+
+<p>The function may take 2, 3, or 4 parameters, in type of <code>s</code> (<code>GLshort</code>), <code>i</code> (<code>GLint</code>), <code>f</code> (<code>GLfloat</code>) or <code>d</code> (<code>GLdouble</code>). The '<code>v</code>' (for vector) denotes that the parameters are kept in an array of 2, 3, or 4 elements, and pass into the function as an array pointer.</p>
+
+<p>OpenGL defines its own <em>data types</em>:</p>
+<ul>
+<li>Signed Integers: <code>GLbyte</code> (8-bit), <code>GLshort</code> (16-bit), <code>GLint</code> (32-bit).</li>
+<li>Unsigned Integers: <code>GLubyte</code> (8-bit), <code>GLushort</code> (16-bit), <code>GLuint</code> (32-bit).</li>
+<li>Floating-point numbers: <code>GLfloat</code> (32-bit), <code>GLdouble</code> (64-bit), <code>GLclampf</code> and <code>GLclampd</code> (between 0.0 and 1.0).</li>
+<li><code>GLboolean</code> (unsigned char with 0 for false and non-0 for true).</li>
+<li><code>GLsizei</code> (32-bit non-negative integers).</li>
+<li><code>GLenum</code> (32-bit enumerated integers).</li>
+</ul>
+
+<p>The OpenGL types are defined via <code>typedef</code> in &quot;<code>gl.h</code>&quot; as follows:</p>
+
+<pre class="color-syntax">
+typedef unsigned int    GLenum;
+typedef unsigned char   GLboolean;
+typedef unsigned int    GLbitfield;
+typedef void            GLvoid;
+typedef signed char     GLbyte;         <span class="color-comment">/* 1-byte signed */</span>
+typedef short           GLshort;        <span class="color-comment">/* 2-byte signed */</span>
+typedef int             GLint;          <span class="color-comment">/* 4-byte signed */</span>
+typedef unsigned char   GLubyte;        <span class="color-comment">/* 1-byte unsigned */</span>
+typedef unsigned short  GLushort;       <span class="color-comment">/* 2-byte unsigned */</span>
+typedef unsigned int    GLuint;         <span class="color-comment">/* 4-byte unsigned */</span>
+typedef int             GLsizei;        <span class="color-comment">/* 4-byte signed */</span>
+typedef float           GLfloat;        <span class="color-comment">/* single precision float */</span>
+typedef float           GLclampf;       <span class="color-comment">/* single precision float in [0,1] */</span>
+typedef double          GLdouble;       <span class="color-comment">/* double precision float */</span>
+typedef double          GLclampd;       <span class="color-comment">/* double precision float in [0,1] */</span></pre>
+
+<p>OpenGL's <em>constants</em> begins with &quot;<code>GL_</code>&quot;, &quot;<code>GLU_</code>&quot; or &quot;<code>GLUT_</code>&quot;, in uppercase separated with underscores, e.g., <code>GL_COLOR_BUFFER_BIT</code>.</p>
+
+<p>For examples,</p>
+<pre class="color-example">
+glVertex3f(1.1f, 2.2f, 3.3f);        <span class="color-comment">// 3 GLfloat parameters</span>
+glVertex2i(4, 5);                    <span class="color-comment">// 2 GLint paramaters</span>
+glColor4f(0.0f, 0.0f, 0.0f, 1.0f);   <span class="color-comment">// 4 GLfloat parameters</span>
+ 
+GLdouble aVertex[] = {1.1, 2.2, 3.3};
+glVertex3fv(aVertex);        <span class="color-comment">// an array of 3 GLfloat values</span></pre>
+
+<h4>One-time Initialization <span class="font-code">initGL()</span></h4>
+
+<p>The <code>initGL()</code> is meant for carrying out one-time OpenGL initialization tasks, such as setting the clearing color. <code>initGL()</code> is invoked once (and only once) in <code>main()</code>.</p>
+
+<h4>Callback Handler <span class="font-code">display()</span></h4>
+<p>The function <code>display()</code> is known as a <em>callback </em><em>event handler</em>. An event handler provides the <em>response</em> to a particular <em>event</em> (such as key-press, mouse-click, window-paint). The function <code>display()</code> is meant to be the handler for <em>window-paint</em> event. The OpenGL graphics system calls back  <code>display()</code> in response to a window-paint request to re-paint the window (e.g., window first appears, window is restored after minimized, and window is resized). Callback means that the function is invoked by the system, instead of called by the your program.</p>
+<p>The <code>Display()</code> runs when the window first appears and once per subsequent re-paint request. Observe that we included OpenGL graphics rendering code inside the <code>display()</code> function, so as to re-draw the entire window when the window first appears and upon each re-paint request.</p>
+
+<h4>Setting up GLUT - <span class="font-code">main()</span></h4>
+
+<p>GLUT provides high-level utilities to simplify OpenGL programming, especially in interacting with the Operating System (such as creating a window, handling key and mouse inputs). The following GLUT functions were used in the above program:</p>
+
+<ul>
+<li><code>glutInit</code>: initializes GLUT, must be called before other GL/GLUT functions. It takes the same arguments as the <code>main()</code>.
+<pre class="color-syntax">void <strong>glutInit</strong>(int *<em>argc</em>, char **<em>argv</em>)</pre>
+</li>
+
+<li><code>glutCreateWindow</code>: creates a window with the given title.
+<pre class="color-syntax">int <strong>glutCreateWindow</strong>(char *<em>title</em>)</pre>
+</li>
+
+<li><code>glutInitWindowSize</code>: specifies the initial window width and height, in pixels.
+  <pre class="color-syntax">void <strong>glutInitWindowSize</strong>(int <em>width</em>, int <em>height</em>)</pre>
+</li>
+
+<li><code>glutInitWindowPosition</code>: positions the top-left corner of the initial window at (<em>x</em>, <em>y</em>). The coordinates (<em>x</em>, <em>y</em>), in term of pixels, is measured in window coordinates, i.e., origin (0, 0) is at the top-left corner of the screen; x-axis pointing right and y-axis pointing down.
+  <pre class="color-syntax">void <strong>glutInitWindowPosition</strong>(int <em>x</em>, int <em>y</em>)</pre>
+</li>
+
+<li><code>glutDisplayFunc</code>: registers the callback function (or event handler) for handling window-paint event. The OpenGL graphic system calls back this handler when it receives a window re-paint request. In the example, we register the function <code>display()</code> as the handler.
+  <pre class="color-syntax">void <strong>glutDisplayFunc</strong>(void (*<em>func</em>)(void))</pre>
+</li>
+
+<li><code>glutMainLoop</code>: enters the infinite event-processing loop, i.e, put the OpenGL graphics system to wait for events (such as re-paint), and trigger respective event handlers (such as <code>display()</code>).
+  <pre class="color-syntax">void <strong>glutMainLoop</strong>()</pre>
+</li>
+</ul>
+
+<p>In the  <code>main()</code> function of the  example:</p>
+
+<pre class="color-new">
+glutInit(&amp;argc, argv);
+glutCreateWindow(&quot;Vertex, Primitive &amp; Color&quot;);
+glutInitWindowSize(320, 320);
+glutInitWindowPosition(50, 50);</pre>
+
+<p>We initialize the GLUT and create a window with a title, an initial size and position.</p>
+
+<pre class="color-new">
+glutDisplayFunc(display);</pre>
+
+<p>We register <code>display()</code> function as the callback handler for window-paint event. That is, <code>display()</code> runs when the window first appears and whenever there is a request to re-paint the window.</p>
+
+<pre class="color-new">
+initGL();</pre>
+<p>We call the <code>initGL()</code> to perform all the one-time initialization operations. In this example, we set the clearing (background) color once, and use it repeatably in the <code>display()</code> function.</p>
+
+<pre class="color-new">
+glutMainLoop();</pre>
+<p>We then put the program into the event-handling loop, awaiting for events (such as window-paint request) to trigger off the respective event handlers (such as <code>display()</code>).</p>
+
+<h4>Color</h4>
+
+<p>We use <code>glColor</code> function to set the <em>foreground color</em>, and <code>glClearColor</code> function to set the <em>background</em> (or <em>clearing</em>) color.</p>
+
+<pre class="color-syntax">
+void <strong>glColor3f</strong>(GLfloat <em>red</em>, GLfloat <em>green</em>, GLfloat <em>blue</em>)
+void <strong>glColor3fv</strong>(GLfloat *<em>colorRGB</em>)
+void <strong>glColor4f</strong>(GLfloat <em>red</em>, GLfloat <em>green</em>, GLfloat <em>blue</em>, GLfloat <em>alpha</em>)
+void <strong>glColor4fv</strong>(GLfloat <em>*colorRGBA</em>)
+ 
+void <strong>glClearColor</strong>(GLclampf <em>red</em>, GLclampf <em>green</em>, GLclampf <em>blue</em>, GLclampf <em>alpha</em>)
+   <span class="color-comment">// GLclampf in the range of 0.0f to 1.0f</span></pre>
+
+<p>Notes:</p>
+<ul>
+  <li>Color is typically specified in <code>float</code> in the range <code>0.0f</code> and <code>1.0f</code>.</li>
+  <li>Color can be specified using RGB (Red-Green-Blue) or RGBA (Red-Green-Blue-Alpha) components. The 'A' (or alpha) specifies the transparency (or opacity) index, with value of 1 denotes opaque (non-transparent and cannot see-thru) and value of 0 denotes total transparent. We shall discuss alpha later.</li> 
+</ul>
+
+<p>In the above example, we set the background color via <code>glClearColor</code> in <code>initGL()</code>, with R=0, G=0, B=0 (black) and A=1 (opaque and cannot see through).</p>
+<pre class="color-example">
+<span class="color-comment">// In initGL(), set the &quot;clearing&quot; or background color</span>
+glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  <span class="color-comment">// Black and opague</span></pre>
+
+<p>In <code>display()</code>, we set the vertex color via <code>glColor3f</code> for subsequent vertices. For example, R=1, G=0, B=0 (red).</p> 
+
+<pre class="color-example">
+<span class="color-comment">// In display(), set the foreground color of the pixel</span>
+glColor3f(1.0f, 0.0f, 0.0f);  <span class="color-comment">// Red</span></pre>
+
+<h4>Geometric Primitives</h4>
+
+<p>In OpenGL, an object is made up of geometric primitives such as triangle, quad, line segment and point. A primitive is made up of one or more vertices. OpenGL supports the following primitives:</p>
+
+<img class="image-center" src="images/GL_GeometricPrimitives.png" />
+
+<p>A geometric primitive is defined by specifying its vertices via <code>glVertex</code> function, enclosed within a pair <code>glBegin</code> and <code>glEnd</code>.</p>
+
+<pre class="color-syntax">void <strong>glBegin</strong>(GLenum <em>shape</em>)
+   void <strong>glVertex[234][sifd]</strong> (<em>type</em> <em>x</em>, <em>type</em> <em>y</em>, <em>type</em> <em>z</em>, ...)
+   void <strong>glVertex[234][sifd]v </strong>(<em>type</em> *<em>coords</em>)
+void <strong>glEnd</strong>()</pre>
+
+<p><code>glBegin</code> specifies the type of geometric object, such as <code>GL_POINTS</code>, <code>GL_LINES</code>,<code> GL_QUADS</code>, <code>GL_TRIANGLES</code>, and <code>GL_POLYGON</code>. For types that end with '<code>S</code>', you can define multiple objects of the same type in each <code>glBegin</code>/<code>glEnd</code> pair. For example, for <code>GL_TRIANGLES</code>, each set of three <code>glVertex</code>'s defines a triangle.</p>
+
+<p>The vertices are usually specified in <code>float</code> precision. It is because integer is not suitable for trigonometric operations (needed to carry out transformations such as rotation). Precision of <code>float</code> is sufficient for carrying out intermediate operations, and render the objects finally into pixels on screen (with resolution of says 800x600, integral precision). <code>double</code> precision is often not necessary.</p>
+
+<p>In the above example:</p>
+
+<pre class="color-new">
+glBegin(GL_QUADS);
+   <span class="color-comment">.... 4 quads with 12x glVertex() ....</span>
+glEnd();</pre>
+
+<p>we define 3 color quads (<code>GL_QUADS</code>) with 12x <code>glVertex()</code> functions.</p>
+
+<pre class="color-new">
+glColor3f(1.0f, 0.0f, 0.0f);
+glVertex2f(-0.8f, 0.1f);
+glVertex2f(-0.2f, 0.1f);
+glVertex2f(-0.2f, 0.7f);
+glVertex2f(-0.8f, 0.7f);</pre>
+
+<p>We set the color to red (R=1, G=0, B=0). All subsequent vertices will have the color of red. Take note that in OpenGL, color (and many properties) is applied to vertices rather than primitive shapes. The color of the a primitive shape is <em>interpolated</em> from its vertices.</p>
+
+<p>We similarly define a second quad in green.</p>
+
+<p>For the third quad (as follows), the vertices have different color. The color of the quad surface is interpolated from its vertices, resulting in a shades of white to dark gray, as shown in the output.</p>
+
+<pre class="color-new">
+glColor3f(0.2f, 0.2f, 0.2f);  <span class="color-comment">// Dark Gray</span>
+glVertex2f(-0.9f, -0.7f);
+glColor3f(1.0f, 1.0f, 1.0f);  <span class="color-comment">// White</span>
+glVertex2f(-0.5f, -0.7f);
+glColor3f(0.2f, 0.2f, 0.2f);  <span class="color-comment">// Dark Gray</span>
+glVertex2f(-0.5f, -0.3f);
+glColor3f(1.0f, 1.0f, 1.0f);  <span class="color-comment">// White</span>
+glVertex2f(-0.9f, -0.3f);</pre>
+
+<h4>2D Coordinate System and the Default View</h4>
+<p>The following diagram shows the OpenGL 2D Coordinate System, which corresponds to the everyday 2D Cartesian coordinates with origin located at the bottom-left corner.</p>
+
+<img class="image-center" src="images/GL_2DCoordinates.png" />
+
+<p> The default OpenGL 2D <em>clipping-area</em> (i.e., what is captured by the camera) is an orthographic view with x and y in the range of -1.0 and 1.0, i.e., a 2x2 square with centered at the origin. This clipping-area is mapped to the <em>viewport</em> on the screen. Viewport is measured in pixels.</p>
+
+<p>Study the above example to convince yourself that the 2D shapes created are positioned correctly on the screen.</p>
+
+<h3>Clipping-Area &amp; Viewport</h3>
+<p>Try dragging the corner of the window to make it bigger or smaller. Observe that all the shapes are distorted.</p>
+
+<p>We can handle the re-sizing of window via a callback handler <code>reshape()</code>, which can be programmed to adjust the OpenGL clipping-area according to the  window's aspect ratio.</p>
+
+<img class="image-center" src="images/GL_2DViewport.png" />
+
+<p><span class="line-heading">Clipping Area</span>: <em>Clipping area</em> refers to the area that can be seen (i.e., captured by the camera), measured in OpenGL coordinates.</p>
+<p>The function <code>gluOrtho2D</code> can be used to set the clipping area of 2D orthographic view. Objects outside the clipping area will be <em>clipped</em> away and cannot be seen.</p>
+<pre class="color-syntax">void <strong>gluOrtho2D</strong>(GLdouble <em>left</em>, GLdouble <em>right</em>, GLdouble <em>bottom</em>, GLdouble <em>top</em>)
+   <span class="color-comment">// The default clipping area is (-1.0, 1.0, -1.0, 1.0) in OpenGL coordinates, 
+   // i.e., 2x2 square centered at the origin.</span></pre>
+
+
+<p>To set the clipping area, we need to issue a series of commands as follows: we first select the so-called <em>projection matrix</em> for operation, and reset the projection matrix to identity. We then choose the 2D orthographic view with the desired clipping area, via <code>gluOrtho2D()</code>.</p>
+
+<pre class="color-example"><span class="color-comment">// Set to 2D orthographic projection with the specified clipping area</span>
+glMatrixMode(GL_PROJECTION);      <span class="color-comment">// Select the Projection matrix for operation</span>
+glLoadIdentity();                 <span class="color-comment">// Reset Projection matrix</span>
+gluOrtho2D(-1.0, 1.0, -1.0, 1.0); <span class="color-comment">// Set clipping area's left, right, bottom, top</span></pre>
+
+<p><span class="line-heading">Viewport</span>: <em>Viewport</em> refers to the display area on the window (screen), which is measured in pixels in screen coordinates (excluding the title bar).</p>
+<p>The clipping area is mapped to the viewport. We can use <code>glViewport</code> function to configure the viewport.</p>
+
+<pre class="color-syntax">void <strong>glViewport</strong>(GLint <em>xTopLeft</em>, GLint <em>yTopLeft</em>, GLsizei <em>width</em>, GLsizei <em>height</em>)</pre>
+
+<p> Suppose the the clipping area's (left, right, bottom, top) is (-1.0, 1.0, -1.0, 1.0) (in OpenGL coordinates) and the viewport's (xTopLeft, xTopRight, width, height) is (0, 0, 640, 480) (in screen coordinates in pixels), then the bottom-left corner (-1.0, -1.0) maps to (0, 0) in the viewport, the top-right corner (1.0, 1.0) maps to (639, 479). It is obvious that if the <em>aspect ratios</em> for the clipping area and the viewport are not the same, the shapes will be distorted.</p>
+<p>Take note that in the earlier example, the windows' size of 320x320 has a square shape, with a aspect ratio consistent with the default 2x2 squarish clipping-area.</p>
+
+<h4>Example 3: Clipping-area and Viewport (<span class="font-code">GL03Viewport.cpp</span>)</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * GL03Viewport.cpp: Clipping-area and Viewport
+ * Implementing reshape to ensure same aspect ratio between the
+ * clipping-area and the viewport.
+ */</span>
+#include &lt;windows.h&gt;  <span class="color-comment">// for MS Windows</span>
+#include &lt;GL/glut.h&gt;  <span class="color-comment">// GLUT, include glu.h and gl.h</span>
+ 
+<span class="color-comment">/* Initialize OpenGL Graphics */</span>
+void initGL() {
+   <span class="color-comment">// Set &quot;clearing&quot; or background color</span>
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); <span class="color-comment">// Black and opaque</span>
+}
+ 
+void display() {
+   glClear(GL_COLOR_BUFFER_BIT);   <span class="color-comment">// Clear the color buffer with current clearing color</span>
+ 
+   <span class="color-comment">// Define shapes enclosed within a pair of glBegin and glEnd</span>
+   glBegin(GL_QUADS);              <span class="color-comment">// Each set of 4 vertices form a quad</span>
+      glColor3f(1.0f, 0.0f, 0.0f); <span class="color-comment">// Red</span>
+      glVertex2f(-0.8f, 0.1f);     <span class="color-comment">// Define vertices in counter-clockwise (CCW) order</span>
+      glVertex2f(-0.2f, 0.1f);     <span class="color-comment">//  so that the normal (front-face) is facing you</span>
+      glVertex2f(-0.2f, 0.7f);
+      glVertex2f(-0.8f, 0.7f);
+ 
+      glColor3f(0.0f, 1.0f, 0.0f); <span class="color-comment">// Green</span>
+      glVertex2f(-0.7f, -0.6f);
+      glVertex2f(-0.1f, -0.6f);
+      glVertex2f(-0.1f,  0.0f);
+      glVertex2f(-0.7f,  0.0f);
+ 
+      glColor3f(0.2f, 0.2f, 0.2f); <span class="color-comment">// Dark Gray</span>
+      glVertex2f(-0.9f, -0.7f);
+      glColor3f(1.0f, 1.0f, 1.0f); <span class="color-comment">// White</span>
+      glVertex2f(-0.5f, -0.7f);
+      glColor3f(0.2f, 0.2f, 0.2f); <span class="color-comment">// Dark Gray</span>
+      glVertex2f(-0.5f, -0.3f);
+      glColor3f(1.0f, 1.0f, 1.0f); <span class="color-comment">// White</span>
+      glVertex2f(-0.9f, -0.3f);
+   glEnd();
+ 
+   glBegin(GL_TRIANGLES);          <span class="color-comment">// Each set of 3 vertices form a triangle</span>
+      glColor3f(0.0f, 0.0f, 1.0f); <span class="color-comment">// Blue</span>
+      glVertex2f(0.1f, -0.6f);
+      glVertex2f(0.7f, -0.6f);
+      glVertex2f(0.4f, -0.1f);
+ 
+      glColor3f(1.0f, 0.0f, 0.0f); <span class="color-comment">// Red</span>
+      glVertex2f(0.3f, -0.4f);
+      glColor3f(0.0f, 1.0f, 0.0f); <span class="color-comment">// Green</span>
+      glVertex2f(0.9f, -0.4f);
+      glColor3f(0.0f, 0.0f, 1.0f); <span class="color-comment">// Blue</span>
+      glVertex2f(0.6f, -0.9f);
+   glEnd();
+ 
+   glBegin(GL_POLYGON);            <span class="color-comment">// These vertices form a closed polygon</span>
+      glColor3f(1.0f, 1.0f, 0.0f); <span class="color-comment">// Yellow</span>
+      glVertex2f(0.4f, 0.2f);
+      glVertex2f(0.6f, 0.2f);
+      glVertex2f(0.7f, 0.4f);
+      glVertex2f(0.6f, 0.6f);
+      glVertex2f(0.4f, 0.6f);
+      glVertex2f(0.3f, 0.4f);
+   glEnd();
+ 
+   glFlush();  <span class="color-comment">// Render now</span>
+}
+ 
+<span class="color-comment"><strong>/* Handler for window re-size event. Called back when the window first appears and
+   whenever the window is re-sized with its new width and height */</strong></span><strong>
+void reshape(GLsizei width, GLsizei height) {  <span class="color-comment">// GLsizei for non-negative integer</span>
+   <span class="color-comment">// Compute aspect ratio of the new window</span>
+   if (height == 0) height = 1;                <span class="color-comment">// To prevent divide by 0</span>
+   GLfloat aspect = (GLfloat)width / (GLfloat)height;
+ 
+   <span class="color-comment">// Set the viewport to cover the new window</span>
+   glViewport(0, 0, width, height);
+ 
+   <span class="color-comment">// Set the aspect ratio of the clipping area to match the viewport</span>
+   glMatrixMode(GL_PROJECTION);  <span class="color-comment">// To operate on the Projection matrix</span>
+   glLoadIdentity();             <span class="color-comment">// Reset the projection matrix</span>
+   if (width &gt;= height) {
+     <span class="color-comment">// aspect &gt;= 1, set the height from -1 to 1, with larger width</span>
+      gluOrtho2D(-1.0 * aspect, 1.0 * aspect, -1.0, 1.0);
+   } else {
+      <span class="color-comment">// aspect &lt; 1, set the width to -1 to 1, with larger height</span>
+     gluOrtho2D(-1.0, 1.0, -1.0 / aspect, 1.0 / aspect);
+   }
+}</strong>
+ 
+<span class="color-comment">/* Main function: GLUT runs as a console application starting at main() */</span>
+int main(int argc, char** argv) {
+   glutInit(&amp;argc, argv);          <span class="color-comment">// Initialize GLUT</span>
+   glutInitWindowSize(<strong>640, 480</strong>);   <span class="color-comment">// Set the window's initial width &amp; height - non-square</span>
+   glutInitWindowPosition(50, 50); <span class="color-comment">// Position the window's initial top-left corner</span>
+   glutCreateWindow(&quot;Viewport Transform&quot;);  <span class="color-comment">// Create window with the given title</span>
+   glutDisplayFunc(display);       <span class="color-comment">// Register callback handler for window re-paint event</span>
+   <strong>glutReshapeFunc(reshape);</strong>       <span class="color-comment">// Register callback handler for window re-size event</span>
+   initGL();                       <span class="color-comment">// Our own OpenGL initialization</span>
+   glutMainLoop();                 <span class="color-comment">// Enter the infinite event-processing loop</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>A <code>reshape()</code> function, which is called back when the window first appears and whenever the window is re-sized, can be used to ensure consistent aspect ratio between clipping-area and viewport, as shown in the above example. The graphics sub-system passes the window's width and height, in pixels, into the <code>reshape()</code>.</p>
+
+<pre class="color-new">
+GLfloat aspect = (GLfloat)width / (GLfloat)height;</pre>
+
+<p>We compute the aspect ratio of the new re-sized window, given its new <code>width</code> and <code>height</code> provided by the graphics sub-system to the callback function <code>reshape()</code>.</p>
+
+<pre class="color-new">
+glViewport(0, 0, width, height);</pre>
+<p>We set the viewport to cover the entire new re-sized window, in pixels. <br />
+  Try setting the viewport to cover only a quarter (lower-right qradrant) of the window via <code>glViewport(0, 0, width/2, height/2)</code>.</p>
+
+<pre class="color-new">
+glMatrixMode(GL_PROJECTION);
+glLoadIdentity();
+if (width &gt;= height) {
+   gluOrtho2D(-1.0 * aspect, 1.0 * aspect, -1.0, 1.0);
+} else {
+   gluOrtho2D(-1.0, 1.0, -1.0 / aspect, 1.0 / aspect);
+}
+</pre>
+
+<p><span class="line-heading-code-new">
+</span>
+We set the aspect ratio of the clipping area to match the viewport. To set the clipping area, we first choose the operate on the projection matrix via <code>glMatrixMode(GL_PROJECTION)</code>. OpenGL has two matrices, a projection matrix (which deals with camera projection such as setting the clipping area) and a model-view matrix (for transforming the objects from their local spaces to the common world space). We reset the projection matrix via <code>glLoadIdentity()</code>.</p>
+
+<p>Finally, we invoke <code>gluOrtho2D()</code> to set the clipping area with an aspect ratio matching the viewport. The shorter side has the range from -1 to +1, as illustrated below:</p>
+   
+<img class="image-center" src="images/GL_2DViewportAspectRatio.png" />
+
+<p>We need to register the <code>reshape()</code> callback handler with GLUT via <code>glutReshapeFunc()</code> in the <code>main()</code> as follows:</p>
+
+<pre class="color-new">
+int main(int argc, char** argv) {
+   glutInitWindowSize(640, 480);
+   ......
+   glutReshapeFunc(reshape);
+}</pre>
+
+<p>In the above <code>main()</code> function, we specify the initial window size to <code>640x480</code>, which is non-squarish. Try re-sizing the window and observe the changes.</p>
+<p> Note that the <code>reshape()</code> runs at least <em>once</em> when the window first appears. It is then called back whenever the window is re-shaped. On the other hand, the <code>initGL()</code> runs once (and only once); and the <code>display()</code> runs in response to window re-paint request (e.g., after the window is re-sized).</p>
+
+<h3>Translation &amp; Rotation</h3>
+<p>In the above sample, we positioned each of the shapes by defining their vertices with respective to the <em>same</em> origin (called <em>world space</em>). It took me quite a while to figure out the absolute coordinates of these vertices.</p>
+
+<p>Instead, we could position each of the shapes by defining their vertices with respective to their own center (called <em>model space</em> or <em>local space</em>). We can then use translation and/or rotation to position the shapes at the desired locations in the world space, as shown in the following revised <code>display()</code> function.</p>
+
+<h4>Example 4: Translation and Rotation (<span class="font-code">GL04ModelTransform.cpp</span>)</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * GL04ModelTransform.cpp: Model Transform - Translation and Rotation
+ * Transform primitives from their model spaces to world space.
+ */</span>
+#include &lt;windows.h&gt;  <span class="color-comment">// for MS Windows</span>
+#include &lt;GL/glut.h&gt;  <span class="color-comment">// GLUT, include glu.h and gl.h</span>
+ 
+<span class="color-comment">/* Initialize OpenGL Graphics */</span>
+void initGL() {
+   <span class="color-comment">// Set &quot;clearing&quot; or background color</span>
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); <span class="color-comment">// Black and opaque</span>
+}
+ 
+<span class="color-comment">/* Handler for window-repaint event. Call back when the window first appears and
+   whenever the window needs to be re-painted. */</span>
+void display() {
+   glClear(GL_COLOR_BUFFER_BIT);    <span class="color-comment">// Clear the color buffer</span>
+<strong>   glMatrixMode(GL_MODELVIEW);      <span class="color-comment">// To operate on Model-View matrix</span>
+   glLoadIdentity();                <span class="color-comment">// Reset the model-view matrix</span>
+ 
+   glTranslatef(-0.5f, 0.4f, 0.0f); <span class="color-comment">// Translate left and up</span>
+   glBegin(GL_QUADS);               <span class="color-comment">// Each set of 4 vertices form a quad</span>
+      glColor3f(1.0f, 0.0f, 0.0f);  <span class="color-comment">// Red</span>
+      glVertex2f(-0.3f, -0.3f);     <span class="color-comment">// Define vertices in counter-clockwise (CCW) order</span>
+      glVertex2f( 0.3f, -0.3f);     <span class="color-comment">//  so that the normal (front-face) is facing you</span>
+      glVertex2f( 0.3f,  0.3f);
+      glVertex2f(-0.3f,  0.3f);
+   glEnd();
+ 
+   glTranslatef(0.1f, -0.7f, 0.0f); <span class="color-comment">// Translate right and down</span>
+   glBegin(GL_QUADS);               <span class="color-comment">// Each set of 4 vertices form a quad</span>
+      glColor3f(0.0f, 1.0f, 0.0f); <span class="color-comment">// Green</span>
+      glVertex2f(-0.3f, -0.3f);
+      glVertex2f( 0.3f, -0.3f);
+      glVertex2f( 0.3f,  0.3f);
+      glVertex2f(-0.3f,  0.3f);
+   glEnd();
+ 
+   glTranslatef(-0.3f, -0.2f, 0.0f); <span class="color-comment">// Translate left and down</span>
+   glBegin(GL_QUADS);                <span class="color-comment">// Each set of 4 vertices form a quad</span>
+      glColor3f(0.2f, 0.2f, 0.2f); <span class="color-comment">// Dark Gray</span>
+      glVertex2f(-0.2f, -0.2f);
+      glColor3f(1.0f, 1.0f, 1.0f); <span class="color-comment">// White</span>
+      glVertex2f( 0.2f, -0.2f);
+      glColor3f(0.2f, 0.2f, 0.2f); <span class="color-comment">// Dark Gray</span>
+      glVertex2f( 0.2f,  0.2f);
+      glColor3f(1.0f, 1.0f, 1.0f); <span class="color-comment">// White</span>
+      glVertex2f(-0.2f,  0.2f);
+   glEnd();
+ 
+   glTranslatef(1.1f, 0.2f, 0.0f); <span class="color-comment">// Translate right and up</span>
+   glBegin(GL_TRIANGLES);          <span class="color-comment">// Each set of 3 vertices form a triangle</span>
+      glColor3f(0.0f, 0.0f, 1.0f); <span class="color-comment">// Blue</span>
+      glVertex2f(-0.3f, -0.2f);
+      glVertex2f( 0.3f, -0.2f);
+      glVertex2f( 0.0f,  0.3f);
+   glEnd();
+ 
+   glTranslatef(0.2f, -0.3f, 0.0f);     <span class="color-comment">// Translate right and down</span>
+   glRotatef(180.0f, 0.0f, 0.0f, 1.0f); <span class="color-comment">// Rotate 180 degree</span>
+      glBegin(GL_TRIANGLES);               <span class="color-comment">// Each set of 3 vertices form a triangle</span>
+      glColor3f(1.0f, 0.0f, 0.0f); <span class="color-comment">// Red</span>
+      glVertex2f(-0.3f, -0.2f);
+      glColor3f(0.0f, 1.0f, 0.0f); <span class="color-comment">// Green</span>
+      glVertex2f( 0.3f, -0.2f);
+      glColor3f(0.0f, 0.0f, 1.0f); <span class="color-comment">// Blue</span>
+      glVertex2f( 0.0f,  0.3f);
+   glEnd();
+ 
+   glRotatef(-180.0f, 0.0f, 0.0f, 1.0f); <span class="color-comment">// Undo previous rotate</span>
+   glTranslatef(-0.1f, 1.0f, 0.0f);      <span class="color-comment">// Translate right and down</span>
+   glBegin(GL_POLYGON);                  <span class="color-comment">// The vertices form one closed polygon</span>
+      glColor3f(1.0f, 1.0f, 0.0f); <span class="color-comment">// Yellow</span>
+      glVertex2f(-0.1f, -0.2f);
+      glVertex2f( 0.1f, -0.2f);
+      glVertex2f( 0.2f,  0.0f);
+      glVertex2f( 0.1f,  0.2f);
+      glVertex2f(-0.1f,  0.2f);
+      glVertex2f(-0.2f,  0.0f);
+   glEnd();
+</strong> 
+   glFlush();   <span class="color-comment">// Render now</span>
+}
+ 
+<span class="color-comment">/* Handler for window re-size event. Called back when the window first appears and
+   whenever the window is re-sized with its new width and height */</span>
+void reshape(GLsizei width, GLsizei height) {  <span class="color-comment">// GLsizei for non-negative integer</span>
+   <span class="color-comment">// Compute aspect ratio of the new window</span>
+   if (height == 0) height = 1;                <span class="color-comment">// To prevent divide by 0</span>
+   GLfloat aspect = (GLfloat)width / (GLfloat)height;
+ 
+   <span class="color-comment">// Set the viewport to cover the new window</span>
+   glViewport(0, 0, width, height);
+ 
+   <span class="color-comment">// Set the aspect ratio of the clipping area to match the viewport</span>
+   glMatrixMode(GL_PROJECTION);  <span class="color-comment">// To operate on the Projection matrix</span>
+   glLoadIdentity();
+   if (width &gt;= height) {
+     <span class="color-comment">// aspect &gt;= 1, set the height from -1 to 1, with larger width</span>
+      gluOrtho2D(-1.0 * aspect, 1.0 * aspect, -1.0, 1.0);
+   } else {
+      <span class="color-comment">// aspect &lt; 1, set the width to -1 to 1, with larger height</span>
+     gluOrtho2D(-1.0, 1.0, -1.0 / aspect, 1.0 / aspect);
+   }
+}
+ 
+<span class="color-comment">/* Main function: GLUT runs as a console application starting at main() */</span>
+int main(int argc, char** argv) {
+   glutInit(&amp;argc, argv);          <span class="color-comment">// Initialize GLUT</span>
+   glutInitWindowSize(640, 480);   <span class="color-comment">// Set the window's initial width &amp; height - non-square</span>
+   glutInitWindowPosition(50, 50); <span class="color-comment">// Position the window's initial top-left corner</span>
+   glutCreateWindow(&quot;Model Transform&quot;);  <span class="color-comment">// Create window with the given title</span>
+   glutDisplayFunc(display);       <span class="color-comment">// Register callback handler for window re-paint event</span>
+   glutReshapeFunc(reshape);       <span class="color-comment">// Register callback handler for window re-size event</span>
+   initGL();                       <span class="color-comment">// Our own OpenGL initialization</span>
+   glutMainLoop();                 <span class="color-comment">// Enter the infinite event-processing loop</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="color-new">
+glMatrixMode(GL_MODELVIEW); <span class="color-comment">// To operate on model-view matrix</span>
+glLoadIdentity();           <span class="color-comment">// Reset</span></pre>
+
+<p>Translation and rotation are parts of so-called <em>model transform</em>, which transform from the objects from the local space (or model space) to the common world space. To carry out model transform, we set the matrix mode to mode-view matrix (<code>GL_MODELVIEW</code>) and reset the matrix. (Recall that in the previous example, we set the matrix mode to projection matrix (<code>GL_PROJECTION</code>) to set the clipping area.)</p>
+
+<p>OpenGL is operating as a state machine. That is, once a state is set, the value of the state persists until it is changed. In other words, once the coordinates are translated or rotated, all the subsequent operations will be based on this coordinates.</p>
+
+<p>Translation is done via <code>glTranslate</code> function:</p>
+
+<pre class="color-syntax">
+void <strong>gltranslatef</strong> (GLfloat <em>x</em>, GLfloat <em>y</em>, GLfloat <em>z</em>)
+   <span class="color-comment">// where (x, y, z) is the translational vector</span></pre>
+
+<p>Take note that <code>glTranslatef</code> function must be placed outside the <code>glBegin</code>/<code>glEnd</code>, where as <code>glColor</code> can be placed inside <code>glBegin</code>/<code>glEnd</code>.</p>
+<p>Rotation is done via <code>glRotatef</code> function:</p>
+<pre class="color-syntax">void <strong>glRotatef </strong>(GLfloat <em>angle</em>, GLfloat <em>x</em>, GLfloat <em>y</em>, GLfloat <em>z</em>)
+   <span class="color-comment">// where <em>angle</em> specifies the rotation in degree, (<em>x</em>, <em>y</em>, <em>z</em>) forms the axis of rotation.</span></pre>
+<p>Take note that the rotational angle is measured in degrees (instead of radians) in OpenGL.</p>
+
+<p>In the above example, we translate within the x-y plane (z=0) and rotate about the z-axis (which is normal to the x-y plane).</p>
+
+<h3>Animation</h3>
+
+<h4>Idle Function</h4>
+
+<p>To perform animation (e.g., rotating the shapes), you could register an <code>idle()</code> callback handler with GLUT, via <code>glutIdleFunc</code> command. The graphic system will call back the <code>idle()</code> function when there is no other event to be processed.</p>
+
+<pre class="color-syntax">void glutIdleFunc(void (*<em>func</em>)(void<em></em>))</pre>
+   
+
+
+<p>In the <code>idle()</code> function, you could issue <code>glutPostRedisplay</code> command to post a window re-paint request, which in turn will activate <code>display()</code> function.</p>
+
+<pre class="color-example">void idle() {
+   glutPostRedisplay();   <span class="color-comment">// Post a re-paint request to activate display()</span>
+}</pre>
+
+<p>Take note that the above is equivalent to registering <code>display()</code> as the <code>idle</code> function.</p>
+<pre class="color-example">
+<span class="color-comment">// main</span>
+glutIdleFunc(display);</pre>
+
+<h4>Double Buffering</h4>
+<p>Double buffering uses two display buffers to smoothen animation. The next screen is prepared in a <em>back</em> buffer, while the current screen is held in a <em>front</em> buffer. Once the preparation is done, you can use <code>glutSwapBuffer</code> command to swap the front and back buffers.</p>
+<p>To use double buffering, you need to make two changes:</p>
+<ol>
+<li>In the <code>main()</code>, include this line before creating the window:
+<pre class="color-example">glutInitDisplayMode(GLUT_DOUBLE);  <span class="color-comment">// Set double buffered mode</span></pre></li>
+
+<li>In the <code>display()</code> function, replace <code>glFlush()</code> with <code>glutSwapBuffers()</code>, which swap the front and back buffers.</li>
+</ol>
+
+<p>Double buffering should be used in animation. For static display, single buffering is sufficient. (Many graphics hardware always double buffered, so it is hard to see the differences.)</p>
+
+<h4>Example 5: Animation using Idle Function (<span class="font-code">GL05IdleFunc.cpp</span>)</h4>
+
+<p>The following program rotates all the shapes created in our previous example using idle function with double buffering.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * GL05IdleFunc.cpp: Translation and Rotation
+ * Transform primitives from their model spaces to world space (Model Transform).
+ */</span>
+#include &lt;windows.h&gt;  <span class="color-comment">// for MS Windows</span>
+#include &lt;GL/glut.h&gt;  <span class="color-comment">// GLUT, include glu.h and gl.h</span>
+ 
+<span class="color-comment">// Global variable</span>
+<strong>GLfloat angle = 0.0f;  <span class="color-comment">// Current rotational angle of the shapes</span></strong>
+ 
+<span class="color-comment">/* Initialize OpenGL Graphics */</span>
+void initGL() {
+   <span class="color-comment">// Set &quot;clearing&quot; or background color</span>
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); <span class="color-comment">// Black and opaque</span>
+}
+ 
+<span class="color-comment"><strong>/* Called back when there is no other event to be handled */</strong></span><strong>
+void idle() {
+   glutPostRedisplay();   <span class="color-comment">// Post a re-paint request to activate display()</span>
+}</strong>
+ 
+<span class="color-comment">/* Handler for window-repaint event. Call back when the window first appears and
+   whenever the window needs to be re-painted. */</span>
+void display() {
+   glClear(GL_COLOR_BUFFER_BIT);   <span class="color-comment">// Clear the color buffer</span>
+<strong>   glMatrixMode(GL_MODELVIEW);     <span class="color-comment">// To operate on Model-View matrix</span>
+   glLoadIdentity();               <span class="color-comment">// Reset the model-view matrix</span>
+</strong> 
+<strong>   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(-0.5f, 0.4f, 0.0f);    <span class="color-comment">// Translate</span>
+   glRotatef(angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// rotate by angle in degrees</span></strong>
+   glBegin(GL_QUADS);                  <span class="color-comment">// Each set of 4 vertices form a quad</span>
+      glColor3f(1.0f, 0.0f, 0.0f);     <span class="color-comment">// Red</span>
+      glVertex2f(-0.3f, -0.3f);
+      glVertex2f( 0.3f, -0.3f);
+      glVertex2f( 0.3f,  0.3f);
+      glVertex2f(-0.3f,  0.3f);
+   glEnd();
+   <strong>glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(-0.4f, -0.3f, 0.0f);   <span class="color-comment">// Translate</span>
+   glRotatef(angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// rotate by angle in degrees</span></strong>
+   glBegin(GL_QUADS);
+      glColor3f(0.0f, 1.0f, 0.0f); <span class="color-comment">// Green</span>
+      glVertex2f(-0.3f, -0.3f);
+      glVertex2f( 0.3f, -0.3f);
+      glVertex2f( 0.3f,  0.3f);
+      glVertex2f(-0.3f,  0.3f);
+   glEnd();
+   <strong>glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(-0.7f, -0.5f, 0.0f);   <span class="color-comment">// Translate</span>
+   glRotatef(angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// rotate by angle in degrees</span></strong>
+   glBegin(GL_QUADS);
+      glColor3f(0.2f, 0.2f, 0.2f); <span class="color-comment">// Dark Gray</span>
+      glVertex2f(-0.2f, -0.2f);
+      glColor3f(1.0f, 1.0f, 1.0f); <span class="color-comment">// White</span>
+      glVertex2f( 0.2f, -0.2f);
+      glColor3f(0.2f, 0.2f, 0.2f); <span class="color-comment">// Dark Gray</span>
+      glVertex2f( 0.2f,  0.2f);
+      glColor3f(1.0f, 1.0f, 1.0f); <span class="color-comment">// White</span>
+      glVertex2f(-0.2f,  0.2f);
+   glEnd();
+   <strong>glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(0.4f, -0.3f, 0.0f);    <span class="color-comment">// Translate</span>
+   glRotatef(angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// rotate by angle in degrees</span></strong>
+   glBegin(GL_TRIANGLES);
+      glColor3f(0.0f, 0.0f, 1.0f); <span class="color-comment">// Blue</span>
+      glVertex2f(-0.3f, -0.2f);
+      glVertex2f( 0.3f, -0.2f);
+      glVertex2f( 0.0f,  0.3f);
+   glEnd();
+   <strong>glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(0.6f, -0.6f, 0.0f);    <span class="color-comment">// Translate</span>
+   glRotatef(180.0f + angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// Rotate 180+angle degree</span></strong>
+   glBegin(GL_TRIANGLES);
+      glColor3f(1.0f, 0.0f, 0.0f); <span class="color-comment">// Red</span>
+      glVertex2f(-0.3f, -0.2f);
+      glColor3f(0.0f, 1.0f, 0.0f); <span class="color-comment">// Green</span>
+      glVertex2f( 0.3f, -0.2f);
+      glColor3f(0.0f, 0.0f, 1.0f); <span class="color-comment">// Blue</span>
+      glVertex2f( 0.0f,  0.3f);
+   glEnd();
+   <strong>glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(0.5f, 0.4f, 0.0f);     <span class="color-comment">// Translate</span>
+   glRotatef(angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// rotate by angle in degrees</span></strong>
+   glBegin(GL_POLYGON);
+      glColor3f(1.0f, 1.0f, 0.0f); <span class="color-comment">// Yellow</span>
+      glVertex2f(-0.1f, -0.2f);
+      glVertex2f( 0.1f, -0.2f);
+      glVertex2f( 0.2f,  0.0f);
+      glVertex2f( 0.1f,  0.2f);
+      glVertex2f(-0.1f,  0.2f);
+      glVertex2f(-0.2f,  0.0f);
+   glEnd();
+   <strong>glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glutSwapBuffers();   <span class="color-comment">// Double buffered - swap the front and back buffers</span>
+ 
+   <span class="color-comment">// Change the rotational angle after each display()</span>
+   angle += 0.2f;</strong>
+}
+ 
+<span class="color-comment">/* Handler for window re-size event. Called back when the window first appears and
+   whenever the window is re-sized with its new width and height */</span>
+void reshape(GLsizei width, GLsizei height) {  <span class="color-comment">// GLsizei for non-negative integer</span>
+   <span class="color-comment">// Compute aspect ratio of the new window</span>
+   if (height == 0) height = 1;                <span class="color-comment">// To prevent divide by 0</span>
+   GLfloat aspect = (GLfloat)width / (GLfloat)height;
+ 
+   <span class="color-comment">// Set the viewport to cover the new window</span>
+   glViewport(0, 0, width, height);
+ 
+   <span class="color-comment">// Set the aspect ratio of the clipping area to match the viewport</span>
+   glMatrixMode(GL_PROJECTION);  <span class="color-comment">// To operate on the Projection matrix</span>
+   glLoadIdentity();
+   if (width &gt;= height) {
+     <span class="color-comment">// aspect &gt;= 1, set the height from -1 to 1, with larger width</span>
+      gluOrtho2D(-1.0 * aspect, 1.0 * aspect, -1.0, 1.0);
+   } else {
+      <span class="color-comment">// aspect &lt; 1, set the width to -1 to 1, with larger height</span>
+     gluOrtho2D(-1.0, 1.0, -1.0 / aspect, 1.0 / aspect);
+   }
+}
+ 
+<span class="color-comment">/* Main function: GLUT runs as a console application starting at main() */</span>
+int main(int argc, char** argv) {
+   glutInit(&amp;argc, argv);          <span class="color-comment">// Initialize GLUT</span>
+   <strong>glutInitDisplayMode(GLUT_DOUBLE);  <span class="color-comment">// Enable double buffered mode</span></strong>
+   glutInitWindowSize(640, 480);   <span class="color-comment">// Set the window's initial width &amp; height - non-square</span>
+   glutInitWindowPosition(50, 50); <span class="color-comment">// Position the window's initial top-left corner</span>
+   glutCreateWindow(&quot;Animation via Idle Function&quot;);  <span class="color-comment">// Create window with the given title</span>
+   glutDisplayFunc(display);       <span class="color-comment">// Register callback handler for window re-paint event</span>
+   glutReshapeFunc(reshape);       <span class="color-comment">// Register callback handler for window re-size event</span>
+   <strong>glutIdleFunc(idle);             <span class="color-comment">// Register callback handler if no other event</span></strong>
+   initGL();                       <span class="color-comment">// Our own OpenGL initialization</span>
+   glutMainLoop();                 <span class="color-comment">// Enter the infinite event-processing loop</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>In the above example, instead of accumulating all the translations and undoing the rotations, we use <code>glPushMatrix</code> to save the current state, perform transformations, and restore the saved state via <code>glPopMatrix</code>.  (In the above example, we can also use <code>glLoadIdentity</code> to reset the matrix before the next transformations.)</p>
+
+<pre class="color-new">
+GLfloat angle = 0.0f;  <span class="color-comment">// Current rotational angle of the shapes</span></pre>
+
+<p>We define a global variable called <code>angle</code> to keep track of the rotational angle of all the shapes. We will later use <code>glRotatef</code> to rotate all the shapes to this angle.</p>
+
+<pre class="color-new">
+angle += 0.2f;</pre>
+
+<p>At the end of each refresh (in <code>display()</code>), we update the rotational angle of all the shapes. </p>
+
+<pre class="color-new">
+glutSwapBuffers();                 <span class="color-comment">// Swap front- and back framebuffer</span>
+ 
+glutInitDisplayMode(GLUT_DOUBLE);  <span class="color-comment">// In main(), enable double buffered mode</span></pre>
+
+<p>Instead of <code>glFlush()</code> which flushes the framebuffer for display immediately, we enable double buffering and use <code>glutSwapBuffer()</code> to swap the front- and back-buffer during the VSync for smoother display.</p>
+
+<pre class="color-new">
+void idle() {
+   glutPostRedisplay();   <span class="color-comment">// Post a re-paint request to activate display()</span>
+}
+ 
+glutIdleFunc(idle);       <span class="color-comment">// In main() - Register callback handler if no other event</span></pre>
+
+<p>We define an <code>idle()</code> function, which posts a re-paint request and invoke <code>display()</code>, if there is no event outstanding. We register this <code>idle()</code> function in <code>main()</code> via <code>glutIdleFunc()</code>.</p>
+
+
+<h4>Double Buffering &amp; Refresh Rate</h4>
+
+<p>When double buffering is enabled, <code>glutSwapBuffers</code> synchronizes with the screen refresh interval (VSync). That is, the buffers will be swapped at the same time when the monitor is putting up a new frame. As the result, <code>idle()</code> function, at best, refreshes the animation at the same rate as the refresh rate of the monitor (60Hz for LCD/LED monitor).  It may operates at half the monitor refresh rate (if the computations takes more than 1 refresh interval), one-third, one-fourth, and so on, because it need to wait for the VSync.</p>
+
+<h4>Timer Function</h4>
+<p>With <code>idle()</code>, we have no control to the refresh interval. We could register a <code>Timer()</code> function with GLUT via <code>glutTimerFunc</code>. The <code>Timer()</code> function will be called back at the specified fixed interval.</p>
+
+<pre class="color-syntax">void glutTimerFunc(unsigned int <em>millis</em>, void (*<em>func</em>)(int <em>value</em>), <em>value</em>)
+   <span class="color-comment">// where <em>millis</em> is the delay in milliseconds, <em>value</em> will be passed to the timer function.</span></pre>
+
+<h4>Example 6: Animation via Timer Function (<span class="font-code">GL06TimerFunc.cpp</span>)</h4>
+   
+<p>The following modifications rotate all the shapes created in the earlier example counter-clockwise by 2 degree per 30 milliseconds.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * GL06TimerFunc.cpp: Translation and Rotation
+ * Transform primitives from their model spaces to world space (Model Transform).
+ */</span>
+#include &lt;windows.h&gt;  <span class="color-comment">// for MS Windows</span>
+#include &lt;GL/glut.h&gt;  <span class="color-comment">// GLUT, include glu.h and gl.h</span>
+ 
+<span class="color-comment">// global variable</span>
+GLfloat angle = 0.0f;  <span class="color-comment">// rotational angle of the shapes</span>
+int refreshMills = 30; <span class="color-comment">// refresh interval in milliseconds</span>
+ 
+<span class="color-comment">/* Initialize OpenGL Graphics */</span>
+void initGL() {
+   <span class="color-comment">// Set &quot;clearing&quot; or background color</span>
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); <span class="color-comment">// Black and opaque</span>
+}
+ 
+<span class="color-comment"><strong>/* Called back when timer expired */</strong></span><strong>
+void Timer(int value) {
+   glutPostRedisplay();      <span class="color-comment">// Post re-paint request to activate display()</span>
+   glutTimerFunc(refreshMills, Timer, 0); <span class="color-comment">// next Timer call milliseconds later</span>
+}</strong>
+ 
+<span class="color-comment">/* Handler for window-repaint event. Call back when the window first appears and
+   whenever the window needs to be re-painted. */</span>
+void display() {
+   glClear(GL_COLOR_BUFFER_BIT);   <span class="color-comment">// Clear the color buffer</span>
+   glMatrixMode(GL_MODELVIEW);     <span class="color-comment">// To operate on Model-View matrix</span>
+   glLoadIdentity();               <span class="color-comment">// Reset the model-view matrix</span>
+ 
+   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(-0.5f, 0.4f, 0.0f);    <span class="color-comment">// Translate</span>
+   glRotatef(angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// rotate by angle in degrees</span>
+   glBegin(GL_QUADS);                  <span class="color-comment">// Each set of 4 vertices form a quad</span>
+      glColor3f(1.0f, 0.0f, 0.0f);     <span class="color-comment">// Red</span>
+      glVertex2f(-0.3f, -0.3f);
+      glVertex2f( 0.3f, -0.3f);
+      glVertex2f( 0.3f,  0.3f);
+      glVertex2f(-0.3f,  0.3f);
+   glEnd();
+   glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(-0.4f, -0.3f, 0.0f);   <span class="color-comment">// Translate</span>
+   glRotatef(angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// rotate by angle in degrees</span>
+   glBegin(GL_QUADS);
+      glColor3f(0.0f, 1.0f, 0.0f); <span class="color-comment">// Green</span>
+      glVertex2f(-0.3f, -0.3f);
+      glVertex2f( 0.3f, -0.3f);
+      glVertex2f( 0.3f,  0.3f);
+      glVertex2f(-0.3f,  0.3f);
+   glEnd();
+   glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(-0.7f, -0.5f, 0.0f);   <span class="color-comment">// Translate</span>
+   glRotatef(angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// rotate by angle in degrees</span>
+   glBegin(GL_QUADS);
+      glColor3f(0.2f, 0.2f, 0.2f); <span class="color-comment">// Dark Gray</span>
+      glVertex2f(-0.2f, -0.2f);
+      glColor3f(1.0f, 1.0f, 1.0f); <span class="color-comment">// White</span>
+      glVertex2f( 0.2f, -0.2f);
+      glColor3f(0.2f, 0.2f, 0.2f); <span class="color-comment">// Dark Gray</span>
+      glVertex2f( 0.2f,  0.2f);
+      glColor3f(1.0f, 1.0f, 1.0f); <span class="color-comment">// White</span>
+      glVertex2f(-0.2f,  0.2f);
+   glEnd();
+   glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(0.4f, -0.3f, 0.0f);    <span class="color-comment">// Translate</span>
+   glRotatef(angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// rotate by angle in degrees</span>
+   glBegin(GL_TRIANGLES);
+      glColor3f(0.0f, 0.0f, 1.0f); <span class="color-comment">// Blue</span>
+      glVertex2f(-0.3f, -0.2f);
+      glVertex2f( 0.3f, -0.2f);
+      glVertex2f( 0.0f,  0.3f);
+   glEnd();
+   glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(0.6f, -0.6f, 0.0f);    <span class="color-comment">// Translate</span>
+   glRotatef(180.0f + angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// Rotate 180+angle degree</span>
+   glBegin(GL_TRIANGLES);
+      glColor3f(1.0f, 0.0f, 0.0f); <span class="color-comment">// Red</span>
+      glVertex2f(-0.3f, -0.2f);
+      glColor3f(0.0f, 1.0f, 0.0f); <span class="color-comment">// Green</span>
+      glVertex2f( 0.3f, -0.2f);
+      glColor3f(0.0f, 0.0f, 1.0f); <span class="color-comment">// Blue</span>
+      glVertex2f( 0.0f,  0.3f);
+   glEnd();
+   glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glPushMatrix();                     <span class="color-comment">// Save model-view matrix setting</span>
+   glTranslatef(0.5f, 0.4f, 0.0f);     <span class="color-comment">// Translate</span>
+   glRotatef(angle, 0.0f, 0.0f, 1.0f); <span class="color-comment">// rotate by angle in degrees</span>
+   glBegin(GL_POLYGON);
+      glColor3f(1.0f, 1.0f, 0.0f); <span class="color-comment">// Yellow</span>
+      glVertex2f(-0.1f, -0.2f);
+      glVertex2f( 0.1f, -0.2f);
+      glVertex2f( 0.2f,  0.0f);
+      glVertex2f( 0.1f,  0.2f);
+      glVertex2f(-0.1f,  0.2f);
+      glVertex2f(-0.2f,  0.0f);
+   glEnd();
+   glPopMatrix();                      <span class="color-comment">// Restore the model-view matrix</span>
+ 
+   glutSwapBuffers();   <span class="color-comment">// Double buffered - swap the front and back buffers</span>
+ 
+   <span class="color-comment">// Change the rotational angle after each display()</span>
+   angle += 2.0f;
+}
+ 
+<span class="color-comment">/* Handler for window re-size event. Called back when the window first appears and
+   whenever the window is re-sized with its new width and height */</span>
+void reshape(GLsizei width, GLsizei height) {  <span class="color-comment">// GLsizei for non-negative integer</span>
+   <span class="color-comment">// Compute aspect ratio of the new window</span>
+   if (height == 0) height = 1;                <span class="color-comment">// To prevent divide by 0</span>
+   GLfloat aspect = (GLfloat)width / (GLfloat)height;
+ 
+   <span class="color-comment">// Set the viewport to cover the new window</span>
+   glViewport(0, 0, width, height);
+ 
+   <span class="color-comment">// Set the aspect ratio of the clipping area to match the viewport</span>
+   glMatrixMode(GL_PROJECTION);  <span class="color-comment">// To operate on the Projection matrix</span>
+   glLoadIdentity();
+   if (width &gt;= height) {
+     <span class="color-comment">// aspect &gt;= 1, set the height from -1 to 1, with larger width</span>
+      gluOrtho2D(-1.0 * aspect, 1.0 * aspect, -1.0, 1.0);
+   } else {
+      <span class="color-comment">// aspect &lt; 1, set the width to -1 to 1, with larger height</span>
+     gluOrtho2D(-1.0, 1.0, -1.0 / aspect, 1.0 / aspect);
+   }
+}
+ 
+<span class="color-comment">/* Main function: GLUT runs as a console application starting at main() */</span>
+int main(int argc, char** argv) {
+   glutInit(&amp;argc, argv);          <span class="color-comment">// Initialize GLUT</span>
+   glutInitDisplayMode(GLUT_DOUBLE);  <span class="color-comment">// Enable double buffered mode</span>
+   glutInitWindowSize(640, 480);   <span class="color-comment">// Set the window's initial width &amp; height - non-square</span>
+   glutInitWindowPosition(50, 50); <span class="color-comment">// Position the window's initial top-left corner</span>
+   glutCreateWindow(&quot;Animation via Idle Function&quot;);  <span class="color-comment">// Create window with the given title</span>
+   glutDisplayFunc(display);       <span class="color-comment">// Register callback handler for window re-paint event</span>
+   glutReshapeFunc(reshape);       <span class="color-comment">// Register callback handler for window re-size event</span>
+   <strong>glutTimerFunc(0, Timer, 0);</strong>     <span class="color-comment">// First timer call immediately</span>
+   initGL();                       <span class="color-comment">// Our own OpenGL initialization</span>
+   glutMainLoop();                 <span class="color-comment">// Enter the infinite event-processing loop</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="color-new">
+void Timer(int value) {
+   glutPostRedisplay();                   <span class="color-comment">// Post re-paint request to activate display()</span>
+   glutTimerFunc(refreshMills, Timer, 0); <span class="color-comment">// next Timer call milliseconds later</span>
+}</pre>
+
+<p>We replace the <code>idle()</code> function by a <code>timer()</code> function, which post a re-paint request to invoke <code>display()</code>, after the timer expired.</p>
+
+<pre class="color-new">
+glutTimerFunc(0, Timer, 0);     <span class="color-comment">// First timer call immediately</span></pre>
+
+<p>In <code>main()</code>, we register the <code>timer()</code> function, and activate the <code>timer()</code> immediately (with initial timer = 0).</p>
+
+<h4>More GLUT functions</h4>
+<ul>
+<li><code>glutInitDisplayMode</code>: requests a display with the specified mode, such as color mode (<code>GLUT_RGB</code>, <code>GLUT_RGBA</code>, <code>GLUT_INDEX</code>), single/double buffering (<code>GLUT_SINGLE</code>, <code>GLUT_DOUBLE</code>), enable depth (<code>GLUT_DEPTH</code>), joined with a bit <code>OR</code> '<code>|</code>'.
+  <pre class="color-syntax">void glutInitDisplayMode(unsigned int <em>displayMode</em>)</pre>
+<p>For example,</p>
+<pre class="color-example">glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+   <span class="color-comment">// Use RGBA color, enable double buffering and enable depth buffer</span></pre>
+</li>
+</ul>
+
+<h4>Example 7: A Bouncing Ball (<span class="font-code">GL07BouncingBall.cpp</span>)</h4>
+
+<p>This example shows a ball bouncing inside the window. Take note that circle is not a primitive geometric shape in OpenGL. This example uses <code>TRIANGLE_FAN</code> to compose a circle.</p>
+
+<img class="image-left" src="images/Output_GL07BouncingBall.png" />
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * GL07BouncingBall.cpp: A ball bouncing inside the window
+ */</span>
+#include &lt;windows.h&gt;  <span class="color-comment">// for MS Windows</span>
+#include &lt;GL/glut.h&gt;  <span class="color-comment">// GLUT, includes glu.h and gl.h</span>
+#include &lt;Math.h&gt;     <span class="color-comment">// Needed for sin, cos</span>
+#define PI 3.14159265f
+ 
+<span class="color-comment">// Global variables</span>
+char title[] = &quot;Bouncing Ball (2D)&quot;;  <span class="color-comment">// Windowed mode's title</span>
+int windowWidth  = 640;     <span class="color-comment">// Windowed mode's width</span>
+int windowHeight = 480;     <span class="color-comment">// Windowed mode's height</span>
+int windowPosX   = 50;      <span class="color-comment">// Windowed mode's top-left corner x</span>
+int windowPosY   = 50;      <span class="color-comment">// Windowed mode's top-left corner y</span>
+ 
+GLfloat ballRadius = 0.5f;   <span class="color-comment">// Radius of the bouncing ball</span>
+GLfloat ballX = 0.0f;         <span class="color-comment">// Ball's center (x, y) position</span>
+GLfloat ballY = 0.0f;
+GLfloat ballXMax, ballXMin, ballYMax, ballYMin; <span class="color-comment">// Ball's center (x, y) bounds</span>
+GLfloat xSpeed = 0.02f;      <span class="color-comment">// Ball's speed in x and y directions</span>
+GLfloat ySpeed = 0.007f;
+int refreshMillis = 30;      <span class="color-comment">// Refresh period in milliseconds</span>
+ 
+<span class="color-comment">// Projection clipping area</span>
+GLdouble clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop;
+ 
+<span class="color-comment">/* Initialize OpenGL Graphics */</span>
+void initGL() {
+   glClearColor(0.0, 0.0, 0.0, 1.0); <span class="color-comment">// Set background (clear) color to black</span>
+}
+ 
+<span class="color-comment">/* Callback handler for window re-paint event */</span>
+void display() {
+   glClear(GL_COLOR_BUFFER_BIT);  <span class="color-comment">// Clear the color buffer</span>
+   glMatrixMode(GL_MODELVIEW);    <span class="color-comment">// To operate on the model-view matrix</span>
+   glLoadIdentity();              <span class="color-comment">// Reset model-view matrix</span>
+ 
+   glTranslatef(ballX, ballY, 0.0f);  <span class="color-comment">// Translate to (xPos, yPos)</span>
+   <span class="color-comment">// Use triangular segments to form a circle</span>
+   glBegin(GL_TRIANGLE_FAN);
+      glColor3f(0.0f, 0.0f, 1.0f);  <span class="color-comment">// Blue</span>
+      glVertex2f(0.0f, 0.0f);       <span class="color-comment">// Center of circle</span>
+      int numSegments = 100;
+      GLfloat angle;
+      for (int i = 0; i &lt;= numSegments; i++) { <span class="color-comment">// Last vertex same as first vertex</span>
+         angle = i * 2.0f * PI / numSegments;  <span class="color-comment">// 360 deg for all segments</span>
+         glVertex2f(cos(angle) * ballRadius, sin(angle) * ballRadius);
+      }
+   glEnd();
+ 
+   glutSwapBuffers();  <span class="color-comment">// Swap front and back buffers (of double buffered mode)</span>
+ 
+   <span class="color-comment">// Animation Control - compute the location for the next refresh</span>
+   ballX += xSpeed;
+   ballY += ySpeed;
+   <span class="color-comment">// Check if the ball exceeds the edges</span>
+   if (ballX &gt; ballXMax) {
+      ballX = ballXMax;
+      xSpeed = -xSpeed;
+   } else if (ballX &lt; ballXMin) {
+      ballX = ballXMin;
+      xSpeed = -xSpeed;
+   }
+   if (ballY &gt; ballYMax) {
+      ballY = ballYMax;
+      ySpeed = -ySpeed;
+   } else if (ballY &lt; ballYMin) {
+      ballY = ballYMin;
+      ySpeed = -ySpeed;
+   }
+}
+ 
+<span class="color-comment">/* Call back when the windows is re-sized */</span>
+void reshape(GLsizei width, GLsizei height) {
+   <span class="color-comment">// Compute aspect ratio of the new window</span>
+   if (height == 0) height = 1;                <span class="color-comment">// To prevent divide by 0</span>
+   GLfloat aspect = (GLfloat)width / (GLfloat)height;
+ 
+   <span class="color-comment">// Set the viewport to cover the new window</span>
+   glViewport(0, 0, width, height);
+ 
+   <span class="color-comment">// Set the aspect ratio of the clipping area to match the viewport</span>
+   glMatrixMode(GL_PROJECTION);  <span class="color-comment">// To operate on the Projection matrix</span>
+   glLoadIdentity();             <span class="color-comment">// Reset the projection matrix</span>
+   if (width &gt;= height) {
+      clipAreaXLeft   = -1.0 * aspect;
+      clipAreaXRight  = 1.0 * aspect;
+      clipAreaYBottom = -1.0;
+      clipAreaYTop    = 1.0;
+   } else {
+      clipAreaXLeft   = -1.0;
+      clipAreaXRight  = 1.0;
+      clipAreaYBottom = -1.0 / aspect;
+      clipAreaYTop    = 1.0 / aspect;
+   }
+   gluOrtho2D(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
+   ballXMin = clipAreaXLeft + ballRadius;
+   ballXMax = clipAreaXRight - ballRadius;
+   ballYMin = clipAreaYBottom + ballRadius;
+   ballYMax = clipAreaYTop - ballRadius;
+}
+ 
+<span class="color-comment">/* Called back when the timer expired */</span>
+void Timer(int value) {
+   glutPostRedisplay();    <span class="color-comment">// Post a paint request to activate display()</span>
+   glutTimerFunc(refreshMillis, Timer, 0); <span class="color-comment">// subsequent timer call at milliseconds</span>
+}
+ 
+<span class="color-comment">/* Main function: GLUT runs as a console application starting at main() */</span>
+int main(int argc, char** argv) {
+   glutInit(&amp;argc, argv);            <span class="color-comment">// Initialize GLUT</span>
+   glutInitDisplayMode(GLUT_DOUBLE); <span class="color-comment">// Enable double buffered mode</span>
+   glutInitWindowSize(windowWidth, windowHeight);  <span class="color-comment">// Initial window width and height</span>
+   glutInitWindowPosition(windowPosX, windowPosY); <span class="color-comment">// Initial window top-left corner (x, y)</span>
+   glutCreateWindow(title);      <span class="color-comment">// Create window with given title</span>
+   glutDisplayFunc(display);     <span class="color-comment">// Register callback handler for window re-paint</span>
+   glutReshapeFunc(reshape);     <span class="color-comment">// Register callback handler for window re-shape</span>
+   glutTimerFunc(0, Timer, 0);   <span class="color-comment">// First timer call immediately</span>
+   initGL();                     <span class="color-comment">// Our own OpenGL initialization</span>
+   glutMainLoop();               <span class="color-comment">// Enter event-processing loop</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>[TODO] Explanation</p>
+
+
+<h3>Handling Keyboard Inputs with GLUT</h3>
+
+<p>We can register callback functions to handle keyboard inputs for normal and special keys, respectively.</p>
+<ul>
+<li><code>glutKeyboardFunc</code>: registers callback handler for keyboard event.
+<pre class="color-syntax">void <strong>glutKeyboardFunc</strong> (void (*<em>func</em>)(unsigned char <em>key</em>, int <em>x</em>, int <em>y</em>)
+   <span class="color-comment">// <em>key</em> is the char pressed, e.g., 'a' or 27 for ESC
+   // (<em>x</em>, <em>y</em>) is the mouse location in Windows' coordinates</span></pre>
+</li>
+
+<li><code>glutSpecialFunc</code>: registers callback handler for special key (such as arrow keys and function keys).
+<pre class="color-syntax">void <strong>glutSpecialFunc</strong> (void (*<em>func</em>)(int <em>specialKey</em>, int <em>x</em>, int <em>y</em>)
+   <span class="color-comment">// <em>specialKey</em>: GLUT_KEY_* (* for LEFT, RIGHT, UP, DOWN, HOME, END, PAGE_UP, PAGE_DOWN, F1,...F12). 
+   // (<em>x</em>, <em>y</em>) is the mouse location in Windows' coordinates</span></pre>
+</li>
+</ul>
+
+<h4>Example 8: Switching between Full-Screen and Windowed-mode (<span class="font-code">GL08FullScreen.cpp</span>) </h4>
+<p>For the bouncing ball program, the following special-key handler toggles between <em>full-screen</em> and <em>windowed modes</em> using F1 key.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * GL08FullScreen.cpp: Switching between full-screen mode and windowed-mode
+ */</span>
+#include &lt;windows.h&gt;  <span class="color-comment">// for MS Windows</span>
+#include &lt;GL/glut.h&gt;  <span class="color-comment">// GLUT, includes glu.h and gl.h</span>
+#include &lt;Math.h&gt;     <span class="color-comment">// Needed for sin, cos</span>
+#define PI 3.14159265f
+ 
+<span class="color-comment">// Global variables</span>
+char title[] = &quot;Full-Screen &amp; Windowed Mode&quot;;  <span class="color-comment">// Windowed mode's title</span>
+int windowWidth  = 640;     <span class="color-comment">// Windowed mode's width</span>
+int windowHeight = 480;     <span class="color-comment">// Windowed mode's height</span>
+int windowPosX   = 50;      <span class="color-comment">// Windowed mode's top-left corner x</span>
+int windowPosY   = 50;      <span class="color-comment">// Windowed mode's top-left corner y</span>
+ 
+GLfloat ballRadius = 0.5f;   <span class="color-comment">// Radius of the bouncing ball</span>
+GLfloat ballX = 0.0f;         <span class="color-comment">// Ball's center (x, y) position</span>
+GLfloat ballY = 0.0f;
+GLfloat ballXMax, ballXMin, ballYMax, ballYMin; <span class="color-comment">// Ball's center (x, y) bounds</span>
+GLfloat xSpeed = 0.02f;      <span class="color-comment">// Ball's speed in x and y directions</span>
+GLfloat ySpeed = 0.007f;
+int refreshMillis = 30;      <span class="color-comment">// Refresh period in milliseconds</span>
+ 
+<span class="color-comment">// Projection clipping area</span>
+GLdouble clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop;
+ 
+<strong>bool fullScreenMode = true; <span class="color-comment">// Full-screen or windowed mode?</span></strong>
+ 
+<span class="color-comment">/* Initialize OpenGL Graphics */</span>
+void initGL() {
+   glClearColor(0.0, 0.0, 0.0, 1.0); <span class="color-comment">// Set background (clear) color to black</span>
+}
+ 
+<span class="color-comment">/* Callback handler for window re-paint event */</span>
+void display() {
+   glClear(GL_COLOR_BUFFER_BIT);  <span class="color-comment">// Clear the color buffer</span>
+   glMatrixMode(GL_MODELVIEW);    <span class="color-comment">// To operate on the model-view matrix</span>
+   glLoadIdentity();              <span class="color-comment">// Reset model-view matrix</span>
+ 
+   glTranslatef(ballX, ballY, 0.0f);  <span class="color-comment">// Translate to (xPos, yPos)</span>
+   <span class="color-comment">// Use triangular segments to form a circle</span>
+   glBegin(GL_TRIANGLE_FAN);
+      glColor3f(0.0f, 0.0f, 1.0f);  <span class="color-comment">// Blue</span>
+      glVertex2f(0.0f, 0.0f);       <span class="color-comment">// Center of circle</span>
+      int numSegments = 100;
+      GLfloat angle;
+      for (int i = 0; i &lt;= numSegments; i++) { <span class="color-comment">// Last vertex same as first vertex</span>
+         angle = i * 2.0f * PI / numSegments;  <span class="color-comment">// 360 deg for all segments</span>
+         glVertex2f(cos(angle) * ballRadius, sin(angle) * ballRadius);
+      }
+   glEnd();
+ 
+   glutSwapBuffers();  <span class="color-comment">// Swap front and back buffers (of double buffered mode)</span>
+ 
+   <span class="color-comment">// Animation Control - compute the location for the next refresh</span>
+   ballX += xSpeed;
+   ballY += ySpeed;
+   <span class="color-comment">// Check if the ball exceeds the edges</span>
+   if (ballX &gt; ballXMax) {
+      ballX = ballXMax;
+      xSpeed = -xSpeed;
+   } else if (ballX &lt; ballXMin) {
+      ballX = ballXMin;
+      xSpeed = -xSpeed;
+   }
+   if (ballY &gt; ballYMax) {
+      ballY = ballYMax;
+      ySpeed = -ySpeed;
+   } else if (ballY &lt; ballYMin) {
+      ballY = ballYMin;
+      ySpeed = -ySpeed;
+   }
+}
+ 
+<span class="color-comment">/* Call back when the windows is re-sized */</span>
+void reshape(GLsizei width, GLsizei height) {
+   <span class="color-comment">// Compute aspect ratio of the new window</span>
+   if (height == 0) height = 1;                <span class="color-comment">// To prevent divide by 0</span>
+   GLfloat aspect = (GLfloat)width / (GLfloat)height;
+ 
+   <span class="color-comment">// Set the viewport to cover the new window</span>
+   glViewport(0, 0, width, height);
+ 
+   <span class="color-comment">// Set the aspect ratio of the clipping area to match the viewport</span>
+   glMatrixMode(GL_PROJECTION);  <span class="color-comment">// To operate on the Projection matrix</span>
+   glLoadIdentity();             <span class="color-comment">// Reset the projection matrix</span>
+   if (width &gt;= height) {
+      clipAreaXLeft   = -1.0 * aspect;
+      clipAreaXRight  = 1.0 * aspect;
+      clipAreaYBottom = -1.0;
+      clipAreaYTop    = 1.0;
+   } else {
+      clipAreaXLeft   = -1.0;
+      clipAreaXRight  = 1.0;
+      clipAreaYBottom = -1.0 / aspect;
+      clipAreaYTop    = 1.0 / aspect;
+   }
+   gluOrtho2D(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
+   ballXMin = clipAreaXLeft + ballRadius;
+   ballXMax = clipAreaXRight - ballRadius;
+   ballYMin = clipAreaYBottom + ballRadius;
+   ballYMax = clipAreaYTop - ballRadius;
+}
+ 
+<span class="color-comment">/* Called back when the timer expired */</span>
+void Timer(int value) {
+   glutPostRedisplay();    <span class="color-comment">// Post a paint request to activate display()</span>
+   glutTimerFunc(refreshMillis, Timer, 0); <span class="color-comment">// subsequent timer call at milliseconds</span>
+}
+ 
+<span class="color-comment"><strong>/* Callback handler for special-key event */</strong></span><strong>
+void specialKeys(int key, int x, int y) {
+   switch (key) {
+      case GLUT_KEY_F1:    <span class="color-comment">// F1: Toggle between full-screen and windowed mode</span>
+         fullScreenMode = !fullScreenMode;         <span class="color-comment">// Toggle state</span>
+         if (fullScreenMode) {                     <span class="color-comment">// Full-screen mode</span>
+            windowPosX   = glutGet(GLUT_WINDOW_X); <span class="color-comment">// Save parameters for restoring later</span>
+            windowPosY   = glutGet(GLUT_WINDOW_Y);
+            windowWidth  = glutGet(GLUT_WINDOW_WIDTH);
+            windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
+            glutFullScreen();                      <span class="color-comment">// Switch into full screen</span>
+         } else {                                         <span class="color-comment">// Windowed mode</span>
+            glutReshapeWindow(windowWidth, windowHeight); <span class="color-comment">// Switch into windowed mode</span>
+            glutPositionWindow(windowPosX, windowPosX);   <span class="color-comment">// Position top-left corner</span>
+         }
+         break;
+   }
+}
+</strong> 
+<span class="color-comment">/* Main function: GLUT runs as a console application starting at main() */</span>
+int main(int argc, char** argv) {
+   glutInit(&amp;argc, argv);            <span class="color-comment">// Initialize GLUT</span>
+   glutInitDisplayMode(GLUT_DOUBLE); <span class="color-comment">// Enable double buffered mode</span>
+   glutInitWindowSize(windowWidth, windowHeight);  <span class="color-comment">// Initial window width and height</span>
+   glutInitWindowPosition(windowPosX, windowPosY); <span class="color-comment">// Initial window top-left corner (x, y)</span>
+   glutCreateWindow(title);      <span class="color-comment">// Create window with given title</span>
+   glutDisplayFunc(display);     <span class="color-comment">// Register callback handler for window re-paint</span>
+   glutReshapeFunc(reshape);     <span class="color-comment">// Register callback handler for window re-shape</span>
+   glutTimerFunc(0, Timer, 0);   <span class="color-comment">// First timer call immediately</span>
+<strong>   glutSpecialFunc(specialKeys); <span class="color-comment">// Register callback handler for special-key event</span>
+   glutFullScreen();             <span class="color-comment">// Put into full screen</span>
+</strong>   initGL();                     <span class="color-comment">// Our own OpenGL initialization</span>
+   glutMainLoop();               <span class="color-comment">// Enter event-processing loop</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>[TODO] Explanation</p>
+
+<p>[TODO] Using <code>glVertex</code> to draw a Circle is inefficient (due to the compute-intensive <code>sin()</code> and <code>cos()</code> functions). Try using GLU's quadric.</p>
+
+
+<h4>Example 9: Key-Controlled (<span class="font-code">GL09KeyControl.cpp</span>)</h4>
+
+<p>For the bouncing ball program, the following key and special-key handlers provide exits with ESC (27), increase/decrease y speed with up-/down-arrow key, increase/decrease x speed with left-/right-arrow key, increase/decrease ball's radius with PageUp/PageDown key.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * GL09KeyControl.cpp: A key-controlled bouncing ball
+ */</span>
+#include &lt;windows.h&gt;  <span class="color-comment">// for MS Windows</span>
+#include &lt;GL/glut.h&gt;  <span class="color-comment">// GLUT, include glu.h and gl.h</span>
+#include &lt;Math.h&gt;     <span class="color-comment">// Needed for sin, cos</span>
+#define PI 3.14159265f
+ 
+<span class="color-comment">// Global variables</span>
+char title[] = &quot;Full-Screen &amp; Windowed Mode&quot;;  <span class="color-comment">// Windowed mode's title</span>
+int windowWidth  = 640;     <span class="color-comment">// Windowed mode's width</span>
+int windowHeight = 480;     <span class="color-comment">// Windowed mode's height</span>
+int windowPosX   = 50;      <span class="color-comment">// Windowed mode's top-left corner x</span>
+int windowPosY   = 50;      <span class="color-comment">// Windowed mode's top-left corner y</span>
+ 
+GLfloat ballRadius = 0.5f;   <span class="color-comment">// Radius of the bouncing ball</span>
+GLfloat ballX = 0.0f;        <span class="color-comment">// Ball's center (x, y) position</span>
+GLfloat ballY = 0.0f;
+GLfloat ballXMax, ballXMin, ballYMax, ballYMin; <span class="color-comment">// Ball's center (x, y) bounds</span>
+GLfloat xSpeed = 0.02f;      <span class="color-comment">// Ball's speed in x and y directions</span>
+GLfloat ySpeed = 0.007f;
+int refreshMillis = 30;      <span class="color-comment">// Refresh period in milliseconds</span>
+ 
+<span class="color-comment">// Projection clipping area</span>
+GLdouble clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop;
+ 
+bool fullScreenMode = true; <span class="color-comment">// Full-screen or windowed mode?</span>
+ 
+<span class="color-comment">/* Initialize OpenGL Graphics */</span>
+void initGL() {
+   glClearColor(0.0, 0.0, 0.0, 1.0); <span class="color-comment">// Set background (clear) color to black</span>
+}
+ 
+<span class="color-comment">/* Callback handler for window re-paint event */</span>
+void display() {
+   glClear(GL_COLOR_BUFFER_BIT);  <span class="color-comment">// Clear the color buffer</span>
+   glMatrixMode(GL_MODELVIEW);    <span class="color-comment">// To operate on the model-view matrix</span>
+   glLoadIdentity();              <span class="color-comment">// Reset model-view matrix</span>
+ 
+   glTranslatef(ballX, ballY, 0.0f);  <span class="color-comment">// Translate to (xPos, yPos)</span>
+   <span class="color-comment">// Use triangular segments to form a circle</span>
+   glBegin(GL_TRIANGLE_FAN);
+      glColor3f(0.0f, 0.0f, 1.0f);  <span class="color-comment">// Blue</span>
+      glVertex2f(0.0f, 0.0f);       <span class="color-comment">// Center of circle</span>
+      int numSegments = 100;
+      GLfloat angle;
+      for (int i = 0; i &lt;= numSegments; i++) { <span class="color-comment">// Last vertex same as first vertex</span>
+         angle = i * 2.0f * PI / numSegments;  <span class="color-comment">// 360 deg for all segments</span>
+         glVertex2f(cos(angle) * ballRadius, sin(angle) * ballRadius);
+      }
+   glEnd();
+ 
+   glutSwapBuffers();  <span class="color-comment">// Swap front and back buffers (of double buffered mode)</span>
+ 
+   <span class="color-comment">// Animation Control - compute the location for the next refresh</span>
+   ballX += xSpeed;
+   ballY += ySpeed;
+   <span class="color-comment">// Check if the ball exceeds the edges</span>
+   if (ballX &gt; ballXMax) {
+      ballX = ballXMax;
+      xSpeed = -xSpeed;
+   } else if (ballX &lt; ballXMin) {
+      ballX = ballXMin;
+      xSpeed = -xSpeed;
+   }
+   if (ballY &gt; ballYMax) {
+      ballY = ballYMax;
+      ySpeed = -ySpeed;
+   } else if (ballY &lt; ballYMin) {
+      ballY = ballYMin;
+      ySpeed = -ySpeed;
+   }
+}
+ 
+<span class="color-comment">/* Call back when the windows is re-sized */</span>
+void reshape(GLsizei width, GLsizei height) {
+   <span class="color-comment">// Compute aspect ratio of the new window</span>
+   if (height == 0) height = 1;                <span class="color-comment">// To prevent divide by 0</span>
+   GLfloat aspect = (GLfloat)width / (GLfloat)height;
+ 
+   <span class="color-comment">// Set the viewport to cover the new window</span>
+   glViewport(0, 0, width, height);
+ 
+   <span class="color-comment">// Set the aspect ratio of the clipping area to match the viewport</span>
+   glMatrixMode(GL_PROJECTION);  <span class="color-comment">// To operate on the Projection matrix</span>
+   glLoadIdentity();             <span class="color-comment">// Reset the projection matrix</span>
+   if (width &gt;= height) {
+      clipAreaXLeft   = -1.0 * aspect;
+      clipAreaXRight  = 1.0 * aspect;
+      clipAreaYBottom = -1.0;
+      clipAreaYTop    = 1.0;
+   } else {
+      clipAreaXLeft   = -1.0;
+      clipAreaXRight  = 1.0;
+      clipAreaYBottom = -1.0 / aspect;
+      clipAreaYTop    = 1.0 / aspect;
+   }
+   gluOrtho2D(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
+   ballXMin = clipAreaXLeft + ballRadius;
+   ballXMax = clipAreaXRight - ballRadius;
+   ballYMin = clipAreaYBottom + ballRadius;
+   ballYMax = clipAreaYTop - ballRadius;
+}
+ 
+<span class="color-comment">/* Called back when the timer expired */</span>
+void Timer(int value) {
+   glutPostRedisplay();    <span class="color-comment">// Post a paint request to activate display()</span>
+   glutTimerFunc(refreshMillis, Timer, 0); <span class="color-comment">// subsequent timer call at milliseconds</span>
+}
+ 
+<span class="color-comment"><strong>/* Callback handler for normal-key event */</strong></span><strong>
+void keyboard(unsigned char key, int x, int y) {
+   switch (key) {
+      case 27:     <span class="color-comment">// ESC key</span>
+         exit(0);
+         break;
+   }
+}
+ 
+<span class="color-comment">/* Callback handler for special-key event */</span>
+void specialKeys(int key, int x, int y) {
+   switch (key) {
+      case GLUT_KEY_F1:    <span class="color-comment">// F1: Toggle between full-screen and windowed mode</span>
+         fullScreenMode = !fullScreenMode;         <span class="color-comment">// Toggle state</span>
+         if (fullScreenMode) {                     <span class="color-comment">// Full-screen mode</span>
+            windowPosX   = glutGet(GLUT_WINDOW_X); <span class="color-comment">// Save parameters for restoring later</span>
+            windowPosY   = glutGet(GLUT_WINDOW_Y);
+            windowWidth  = glutGet(GLUT_WINDOW_WIDTH);
+            windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
+            glutFullScreen();                      <span class="color-comment">// Switch into full screen</span>
+         } else {                                         <span class="color-comment">// Windowed mode</span>
+            glutReshapeWindow(windowWidth, windowHeight); <span class="color-comment">// Switch into windowed mode</span>
+            glutPositionWindow(windowPosX, windowPosX);   <span class="color-comment">// Position top-left corner</span>
+         }
+         break;
+      case GLUT_KEY_RIGHT:    <span class="color-comment">// Right: increase x speed</span>
+         xSpeed *= 1.05f; break;
+      case GLUT_KEY_LEFT:     <span class="color-comment">// Left: decrease x speed</span>
+         xSpeed *= 0.95f; break;
+      case GLUT_KEY_UP:       <span class="color-comment">// Up: increase y speed</span>
+         ySpeed *= 1.05f; break;
+      case GLUT_KEY_DOWN:     <span class="color-comment">// Down: decrease y speed</span>
+         ySpeed *= 0.95f; break;
+      case GLUT_KEY_PAGE_UP:  <span class="color-comment">// Page-Up: increase ball's radius</span>
+         ballRadius *= 1.05f;
+         ballXMin = clipAreaXLeft + ballRadius;
+         ballXMax = clipAreaXRight - ballRadius;
+         ballYMin = clipAreaYBottom + ballRadius;
+         ballYMax = clipAreaYTop - ballRadius;
+         break;
+      case GLUT_KEY_PAGE_DOWN: <span class="color-comment">// Page-Down: decrease ball's radius</span>
+         ballRadius *= 0.95f;
+         ballXMin = clipAreaXLeft + ballRadius;
+         ballXMax = clipAreaXRight - ballRadius;
+         ballYMin = clipAreaYBottom + ballRadius;
+         ballYMax = clipAreaYTop - ballRadius;
+         break;
+   }
+}
+</strong> 
+<span class="color-comment">/* Main function: GLUT runs as a console application starting at main() */</span>
+int main(int argc, char** argv) {
+   glutInit(&amp;argc, argv);            <span class="color-comment">// Initialize GLUT</span>
+   glutInitDisplayMode(GLUT_DOUBLE); <span class="color-comment">// Enable double buffered mode</span>
+   glutInitWindowSize(windowWidth, windowHeight);  <span class="color-comment">// Initial window width and height</span>
+   glutInitWindowPosition(windowPosX, windowPosY); <span class="color-comment">// Initial window top-left corner (x, y)</span>
+   glutCreateWindow(title);      <span class="color-comment">// Create window with given title</span>
+   glutDisplayFunc(display);     <span class="color-comment">// Register callback handler for window re-paint</span>
+   glutReshapeFunc(reshape);     <span class="color-comment">// Register callback handler for window re-shape</span>
+   glutTimerFunc(0, Timer, 0);   <span class="color-comment">// First timer call immediately</span>
+   glutSpecialFunc(specialKeys); <span class="color-comment">// Register callback handler for special-key event</span>
+   glutKeyboardFunc(keyboard);   <span class="color-comment">// Register callback handler for special-key event</span><br />   glutFullScreen();             <span class="color-comment">// Put into full screen</span>
+   initGL();                     <span class="color-comment">// Our own OpenGL initialization</span>
+   glutMainLoop();               <span class="color-comment">// Enter event-processing loop</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>[TODO] Explanation</p>
+
+<h3>Handling Mouse Inputs with GLUT</h3>
+
+<p>Similarly, we can register callback function to handle mouse-click and mouse-motion.</p>
+
+<ul>
+<li><code>glutMouseFunc</code>: registers callback handler for mouse click.
+<pre class="color-syntax">void glutMouseFunc(void (*<em>func</em>)(int <em>button</em>, int <em>state</em>, int <em>x</em>, int <em>y</em>)
+   <span class="color-comment">// (<em>x</em>, <em>y</em>) is the mouse-click location.
+   // <em>button</em>: GLUT_LEFT_BUTTON, GLUT_RIGHT_BUTTON, GLUT_MIDDLE_BUTTON
+   // <em>state</em>: GLUT_UP, GLUT_DOWN</span></pre>
+</li>
+
+<li><code>glutMotionFunc</code>: registers callback handler for mouse motion (when the mouse is clicked and moved).
+<pre class="color-syntax">void glutMotionFunc(void (*<em>func</em>)(int <em>x</em>, int <em>y</em>)
+   <span class="color-comment">// where (<em>x</em>, <em>y</em>) is the mouse location in Window's coordinates</span></pre>
+</li>
+
+</ul>
+
+<h4>Example 10: Mouse-Controlled (<span class="font-code">GL10MouseControl.cpp</span>)</h4>
+<p>For the bouncing ball program, the following mouse handler pause the movement with left-mouse click, and resume with right-mouse click.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * GL10MouseControl.cpp: A mouse-controlled bouncing ball
+ */</span>
+#include &lt;windows.h&gt;  <span class="color-comment">// for MS Windows</span>
+#include &lt;GL/glut.h&gt;  <span class="color-comment">// GLUT, include glu.h and gl.h</span>
+#include &lt;Math.h&gt;     <span class="color-comment">// Needed for sin, cos</span>
+#define PI 3.14159265f
+ 
+<span class="color-comment">// Global variables</span>
+char title[] = &quot;Full-Screen &amp; Windowed Mode&quot;;  <span class="color-comment">// Windowed mode's title</span>
+int windowWidth  = 640;     <span class="color-comment">// Windowed mode's width</span>
+int windowHeight = 480;     <span class="color-comment">// Windowed mode's height</span>
+int windowPosX   = 50;      <span class="color-comment">// Windowed mode's top-left corner x</span>
+int windowPosY   = 50;      <span class="color-comment">// Windowed mode's top-left corner y</span>
+ 
+GLfloat ballRadius = 0.5f;   <span class="color-comment">// Radius of the bouncing ball</span>
+GLfloat ballX = 0.0f;        <span class="color-comment">// Ball's center (x, y) position</span>
+GLfloat ballY = 0.0f;
+GLfloat ballXMax, ballXMin, ballYMax, ballYMin; <span class="color-comment">// Ball's center (x, y) bounds</span>
+GLfloat xSpeed = 0.02f;      <span class="color-comment">// Ball's speed in x and y directions</span>
+GLfloat ySpeed = 0.007f;
+int refreshMillis = 30;      <span class="color-comment">// Refresh period in milliseconds</span>
+ 
+<span class="color-comment">// Projection clipping area</span>
+GLdouble clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop;
+ 
+bool fullScreenMode = true; <span class="color-comment">// Full-screen or windowed mode?</span>
+<strong>bool paused = false;         <span class="color-comment">// Movement paused or resumed</span>
+GLfloat xSpeedSaved, ySpeedSaved;  <span class="color-comment">// To support resume</span></strong>
+ 
+<span class="color-comment">/* Initialize OpenGL Graphics */</span>
+void initGL() {
+   glClearColor(0.0, 0.0, 0.0, 1.0); <span class="color-comment">// Set background (clear) color to black</span>
+}
+ 
+<span class="color-comment">/* Callback handler for window re-paint event */</span>
+void display() {
+   glClear(GL_COLOR_BUFFER_BIT);  <span class="color-comment">// Clear the color buffer</span>
+   glMatrixMode(GL_MODELVIEW);    <span class="color-comment">// To operate on the model-view matrix</span>
+   glLoadIdentity();              <span class="color-comment">// Reset model-view matrix</span>
+ 
+   glTranslatef(ballX, ballY, 0.0f);  <span class="color-comment">// Translate to (xPos, yPos)</span>
+   <span class="color-comment">// Use triangular segments to form a circle</span>
+   glBegin(GL_TRIANGLE_FAN);
+      glColor3f(0.0f, 0.0f, 1.0f);  <span class="color-comment">// Blue</span>
+      glVertex2f(0.0f, 0.0f);       <span class="color-comment">// Center of circle</span>
+      int numSegments = 100;
+      GLfloat angle;
+      for (int i = 0; i &lt;= numSegments; i++) { <span class="color-comment">// Last vertex same as first vertex</span>
+         angle = i * 2.0f * PI / numSegments;  <span class="color-comment">// 360 deg for all segments</span>
+         glVertex2f(cos(angle) * ballRadius, sin(angle) * ballRadius);
+      }
+   glEnd();
+ 
+   glutSwapBuffers();  <span class="color-comment">// Swap front and back buffers (of double buffered mode)</span>
+ 
+   <span class="color-comment">// Animation Control - compute the location for the next refresh</span>
+   ballX += xSpeed;
+   ballY += ySpeed;
+   <span class="color-comment">// Check if the ball exceeds the edges</span>
+   if (ballX &gt; ballXMax) {
+      ballX = ballXMax;
+      xSpeed = -xSpeed;
+   } else if (ballX &lt; ballXMin) {
+      ballX = ballXMin;
+      xSpeed = -xSpeed;
+   }
+   if (ballY &gt; ballYMax) {
+      ballY = ballYMax;
+      ySpeed = -ySpeed;
+   } else if (ballY &lt; ballYMin) {
+      ballY = ballYMin;
+      ySpeed = -ySpeed;
+   }
+}
+ 
+<span class="color-comment">/* Call back when the windows is re-sized */</span>
+void reshape(GLsizei width, GLsizei height) {
+   <span class="color-comment">// Compute aspect ratio of the new window</span>
+   if (height == 0) height = 1;                <span class="color-comment">// To prevent divide by 0</span>
+   GLfloat aspect = (GLfloat)width / (GLfloat)height;
+ 
+   <span class="color-comment">// Set the viewport to cover the new window</span>
+   glViewport(0, 0, width, height);
+ 
+   <span class="color-comment">// Set the aspect ratio of the clipping area to match the viewport</span>
+   glMatrixMode(GL_PROJECTION);  <span class="color-comment">// To operate on the Projection matrix</span>
+   glLoadIdentity();             <span class="color-comment">// Reset the projection matrix</span>
+   if (width &gt;= height) {
+      clipAreaXLeft   = -1.0 * aspect;
+      clipAreaXRight  = 1.0 * aspect;
+      clipAreaYBottom = -1.0;
+      clipAreaYTop    = 1.0;
+   } else {
+      clipAreaXLeft   = -1.0;
+      clipAreaXRight  = 1.0;
+      clipAreaYBottom = -1.0 / aspect;
+      clipAreaYTop    = 1.0 / aspect;
+   }
+   gluOrtho2D(clipAreaXLeft, clipAreaXRight, clipAreaYBottom, clipAreaYTop);
+   ballXMin = clipAreaXLeft + ballRadius;
+   ballXMax = clipAreaXRight - ballRadius;
+   ballYMin = clipAreaYBottom + ballRadius;
+   ballYMax = clipAreaYTop - ballRadius;
+}
+ 
+<span class="color-comment">/* Called back when the timer expired */</span>
+void Timer(int value) {
+   glutPostRedisplay();    <span class="color-comment">// Post a paint request to activate display()</span>
+   glutTimerFunc(refreshMillis, Timer, 0); <span class="color-comment">// subsequent timer call at milliseconds</span>
+}
+ 
+<span class="color-comment">/* Callback handler for normal-key event */</span>
+void keyboard(unsigned char key, int x, int y) {
+   switch (key) {
+      case 27:     <span class="color-comment">// ESC key</span>
+         exit(0);
+         break;
+   }
+}
+ 
+<span class="color-comment">/* Callback handler for special-key event */</span>
+void specialKeys(int key, int x, int y) {
+   switch (key) {
+      case GLUT_KEY_F1:    <span class="color-comment">// F1: Toggle between full-screen and windowed mode</span>
+         fullScreenMode = !fullScreenMode;         <span class="color-comment">// Toggle state</span>
+         if (fullScreenMode) {                     <span class="color-comment">// Full-screen mode</span>
+            windowPosX   = glutGet(GLUT_WINDOW_X); <span class="color-comment">// Save parameters for restoring later</span>
+            windowPosY   = glutGet(GLUT_WINDOW_Y);
+            windowWidth  = glutGet(GLUT_WINDOW_WIDTH);
+            windowHeight = glutGet(GLUT_WINDOW_HEIGHT);
+            glutFullScreen();                      <span class="color-comment">// Switch into full screen</span>
+         } else {                                         <span class="color-comment">// Windowed mode</span>
+            glutReshapeWindow(windowWidth, windowHeight); <span class="color-comment">// Switch into windowed mode</span>
+            glutPositionWindow(windowPosX, windowPosX);   <span class="color-comment">// Position top-left corner</span>
+         }
+         break;
+      case GLUT_KEY_RIGHT:    <span class="color-comment">// Right: increase x speed</span>
+         xSpeed *= 1.05f; break;
+      case GLUT_KEY_LEFT:     <span class="color-comment">// Left: decrease x speed</span>
+         xSpeed *= 0.95f; break;
+      case GLUT_KEY_UP:       <span class="color-comment">// Up: increase y speed</span>
+         ySpeed *= 1.05f; break;
+      case GLUT_KEY_DOWN:     <span class="color-comment">// Down: decrease y speed</span>
+         ySpeed *= 0.95f; break;
+      case GLUT_KEY_PAGE_UP:  <span class="color-comment">// Page-Up: increase ball's radius</span>
+         ballRadius *= 1.05f;
+         ballXMin = clipAreaXLeft + ballRadius;
+         ballXMax = clipAreaXRight - ballRadius;
+         ballYMin = clipAreaYBottom + ballRadius;
+         ballYMax = clipAreaYTop - ballRadius;
+         break;
+      case GLUT_KEY_PAGE_DOWN: <span class="color-comment">// Page-Down: decrease ball's radius</span>
+         ballRadius *= 0.95f;
+         ballXMin = clipAreaXLeft + ballRadius;
+         ballXMax = clipAreaXRight - ballRadius;
+         ballYMin = clipAreaYBottom + ballRadius;
+         ballYMax = clipAreaYTop - ballRadius;
+         break;
+   }
+}
+ 
+<span class="color-comment"><strong>/* Callback handler for mouse event */</strong></span><strong>
+void mouse(int button, int state, int x, int y) {
+   if (button == GLUT_LEFT_BUTTON &amp;&amp; state == GLUT_DOWN) { <span class="color-comment">// Pause/resume</span>
+      paused = !paused;         <span class="color-comment">// Toggle state</span>
+      if (paused) {
+         xSpeedSaved = xSpeed;  <span class="color-comment">// Save parameters for restore later</span>
+         ySpeedSaved = ySpeed;
+         xSpeed = 0;            <span class="color-comment">// Stop movement</span>
+         ySpeed = 0;
+      } else {
+         xSpeed = xSpeedSaved;  <span class="color-comment">// Restore parameters</span>
+         ySpeed = ySpeedSaved;
+      }
+   }
+}</strong>
+ 
+<span class="color-comment">/* Main function: GLUT runs as a console application starting at main() */</span>
+int main(int argc, char** argv) {
+   glutInit(&amp;argc, argv);            <span class="color-comment">// Initialize GLUT</span>
+   glutInitDisplayMode(GLUT_DOUBLE); <span class="color-comment">// Enable double buffered mode</span>
+   glutInitWindowSize(windowWidth, windowHeight);  <span class="color-comment">// Initial window width and height</span>
+   glutInitWindowPosition(windowPosX, windowPosY); <span class="color-comment">// Initial window top-left corner (x, y)</span>
+   glutCreateWindow(title);      <span class="color-comment">// Create window with given title</span>
+   glutDisplayFunc(display);     <span class="color-comment">// Register callback handler for window re-paint</span>
+   glutReshapeFunc(reshape);     <span class="color-comment">// Register callback handler for window re-shape</span>
+   glutTimerFunc(0, Timer, 0);   <span class="color-comment">// First timer call immediately</span>
+   glutSpecialFunc(specialKeys); <span class="color-comment">// Register callback handler for special-key event</span>
+   glutKeyboardFunc(keyboard);   <span class="color-comment">// Register callback handler for special-key event</span>
+   glutFullScreen();             <span class="color-comment">// Put into full screen</span>
+   <strong>glutMouseFunc(mouse);   <span class="color-comment">// Register callback handler for mouse event</span></strong>
+   initGL();                     <span class="color-comment">// Our own OpenGL initialization</span>
+   glutMainLoop();               <span class="color-comment">// Enter event-processing loop</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>[TODO] Explanation</p>
+
+<h4>Example 11: A Simple Paint program</h4>
+<img class="image-left" src="images/Output_MyPaint.gif" />
+
+<p>[TODO] Use mouse-motion and <code>GL_LINE_STRIP</code>.</p>
+<p>&nbsp;</p>
+
+
+<a class="references" href="References_OpenGL.html">Link to OpenGL/Computer Graphics References and Resources</a>
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Eclipse CDT /MinGW<br />
+Last modified: July, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

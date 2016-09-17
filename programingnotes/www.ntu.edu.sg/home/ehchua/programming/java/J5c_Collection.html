@@ -1,0 +1,2058 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>The Collection Framework - Java Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>The Collection Framework</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Introduction</h3>
+
+<h4>Introduction to the  Collection Framework</h4>
+<p>Although we can use an array to store a group of elements of the same type (either primitives or objects).  The array, however, does not support so-called <em>dynamic allocation</em> - it has a <em>fixed length</em> which cannot be changed once allocated.   Furthermore, array is a simple linear structure. Many applications may require more complex data structure such as linked list, stack, hash table, sets, or trees.</p>
+
+<p>In Java, dynamically allocated <em>data structures</em> (such as <code>ArrayList</code>, <code>LinkedList</code>, <code>Vector</code>, <code>Stack</code>, <code>HashSet</code>, <code>HashMap</code>, <code>Hashtable</code>) are supported in a <em>unified architecture</em> called the <em>Collection Framework</em>, which mandates the common behaviors of all the classes.</p>
+
+<p>A <em>collection</em>, as its name implied, is simply <em>an object that holds a collection (or a group, a container) of objects</em>. Each item in a collection is called an <em>element</em>.  A <em>framework</em>, by definition, is a set of interfaces that force you to adopt some design practices. A well-designed  framework can improve your productivity and provide ease of maintenance.</p>
+<p>The <em>collection framework</em> provides a <em>unified interface</em> to store, retrieve and manipulate the elements of a collection, regardless of the underlying and actual implementation.  This allows the programmers to program at the interfaces, instead of the actual implementation.</p>
+
+<p>The Java Collection Framework package (<code>java.util</code>) contains:</p>
+<ol>
+<li>A set of interfaces,</li>
+<li>Implementation classes, and</li>
+<li>Algorithms (such as sorting and searching).</li>
+</ol>
+
+<p>Similar Collection Framework is the C++ Standard Template Library (STL).</p>
+
+<p>Prior to JDK 1.2, Java's data structures consist of array, <code>Vector</code>, and <code>Hashtable</code> that were designed in a non-unified way with inconsistent public interfaces. JDK 1.2 introduced the unified <em>collection framework</em>, and retrofits the legacy classes (<code>Vector</code> and <code>Hashtable</code>) to conform to this unified <em>collection framework</em>.</p>
+
+<p>JDK 1.5 introduced <em>Generics </em>(which supports passing of types), and many related features (such as auto-boxing and unboxing, enhance for-loop). The collection framework is retrofitted to support generics and takes full advantages of these new features.</p>
+
+<p>To understand this chapter, you have to be familiar with:</p>
+<ul>
+<li>Polymorphism, especially the upcasting and downcasting operations.</li>
+<li>Interfaces, abstract methods and their implementations.</li>
+<li>Generics, Auto-boxing &amp; unboxing, and enhanced for-loop (introduced in JDK 1.5).</li>
+</ul>
+
+<p>You need to refer to the JDK API specification while reading this chapter.  The classes and interfaces for the <em>Collection Framework</em> are kept in package <code>java.util</code>.</p>
+
+<h4 id="arraylist_example">Collection by Example - <span class="font-code">ArrayList</span> (Pre-JDK 1.5)</h4>
+<p>Let's begin with an example of a <code>Collection</code> - an <code>ArrayList</code>. The <code>ArrayList</code> is a linear data structure, similar to the array, but <em>resizable</em>.</p>
+
+<p>Recall that a <code>Collection</code> is an object that holds a collection (or a group, or a container) of elements.  Below is an example of using an <code>ArrayList</code> to hold a collection of <code>String</code> objects.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// Pre-JDK 1.5</span>
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+ 
+public class ArrayListPreJDK15Test {
+   public static void main(String[] args) {
+      List lst = new ArrayList();  <span class="color-comment">// A List contains instances of Object. Upcast ArrayList to List</span>
+      lst.add(&quot;alpha&quot;);            <span class="color-comment">// add() takes Object. String upcast to Object implicitly</span>
+      lst.add(&quot;beta&quot;);
+      lst.add(&quot;charlie&quot;);
+      System.out.println(lst);     <span class="color-comment">// [alpha, beta, charlie]</span>
+ 
+      <span class="color-comment">// Get a &quot;iterator&quot; instance from List to iterate thru all the elements of the List</span>
+      Iterator iter = lst.iterator();
+      while (iter.hasNext()) {      <span class="color-comment">// any more element</span>
+         <span class="color-comment">// Retrieve the next element, explicitly downcast from Object back to String</span>
+         String str = (String)iter.next();
+         System.out.println(str);
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>You may need to compile this program with option <code>-Xlint:unchecked</code>. You will receive some warning messages. We will resolve these warnings later.</p>
+
+<h5>Dissecting the Program</h5>
+<ul>
+<li>Line 2-4 imports the collection framework classes and interfaces reside in the <code>java.util</code> package.
+
+<img class="image-center" src="images/Collection_ListImplementation.png" />
+</li>
+
+<li>The class hierarchy of the <code>ArrayList</code> is shown above. We observe that <code>ArrayList</code> implements <code>List</code>, <code>Collection</code> and <code>Iterable</code> interfaces. The <code>Collection</code> and <code>Iterable</code> interfaces define the common behaviors of all the collection implementations.  Interface <code>Collection</code> defines how to add and remove an element into the collection.  Interface <code>Iterable</code> defines a mechanism to iterate or transverse through all the elements of a collection.  Instead of using the interface <code>Collection</code> directly, it is more common to use one of its sub-interfaces, <code>List</code> (an ordered list supporting indexed access), <code>Set</code> (no duplicate elements) or <code>Queue</code> (FIFO, priority queues).</li>
+
+<li>In line 8, we construct an <code>ArrayList</code> instance, and <em>upcast</em> it to the <code>List</code> interface.  This is possible as the <code>ArrayList</code> implements <code>List</code> interface.  Remember that a good program operates on the interfaces instead of an actual implementation. The <em>Collection Framework</em> provides a set of interfaces so that you can program on these interfaces instead of the actual implementation.</li>
+
+<li>The <code>Collection</code> interface defines the common behaviors expected from a collection such as how to add and remove an element.  It declares <code>abstract</code> methods such as:
+<pre class="color-syntax">
+<span class="color-comment">// Pre-JDK 1.5</span>
+boolean add(Object element)     <span class="color-comment">// adds an element</span>
+boolean remove(Object element)  <span class="color-comment">// removes an element</span>
+int size()                      <span class="color-comment">// returns the size</span>
+boolean isEmpty()               <span class="color-comment">// checks if empty</span>
+</pre>
+In pre-JDK 1.5, the <code>add(Object)</code> method operates on <code>java.lang.Object</code>, which is the Java's <em>root</em> class.  Since all Java classes are subclasses of <code>Object</code>, any Java class can be <em>upcasted</em> to <code>Object</code> and added into a collection.  The upcasting, which is always type-safe, is done implicitly by the compiler.</li>
+
+<li>The super-interface <code>Iterable</code> defines a mechanism to iterate (or transverse) through all the elements of a <code>Collection</code> via a so-called <code>Iterator</code> object.  The <code>Iterable</code> interface contains only one <code>abstract</code> method to retrieve the <code>Iterator<span class="color-comment"></span></code> object associated with the collection.
+<pre class="color-syntax">
+Iterator iterator();   <span class="color-comment">// returns an Iterator object to iterate thru all the elements of the collection</span>
+</pre>
+</li>
+
+<li>The <code>Iterator</code> interface declares the following <code>abstract</code> methods:
+  <pre class="color-syntax">
+<span class="color-comment">// Pre-JDK 1.5</span>
+boolean hasNext()  <span class="color-comment">// returns true if it has more elements</span>
+Object next()      <span class="color-comment">// returns the next element</span>
+void remove()      <span class="color-comment">// removes the last element returned by the iterator</span></pre>
+
+The <code>hasNext()</code> method returns <code>true</code> if there is more elements, and the <code>next()</code> method returns the next element.  The <code>remove()</code> method removes the last element that was returned by <code>next()</code> from the collection.  The <code>remove()</code> method shall be called only after a call to <code>next()</code>.</li>
+
+<li>Lines 15-20 retrieve the <code>Iterator</code> associated with this <code>ArrayList</code>, and use a while-loop to iterate through all the elements of this <code>ArrayList</code>.  Lines 15-20 is the standard approach to use an <code>Iterator</code> to traverse through all the elements in a <code>Collection</code>, regardless of its actual implementation.</li>
+
+<li>In line 18, the <code>iter.next()</code> method returns a <code>java.lang.Object</code>.  In pre-JDK 1.5, programmer has to <em>explicitly downcast</em> the <code>Object</code> back to its original class <code>String</code>, before further manipulation can take place.</li>
+
+<li>The above program works perfectly well if we decide to use <code>LinkedList</code>, <code>Vector</code> or <code>Stack</code> implementation (of the <code>List</code> interface) instead of <code>ArrayList</code>.  We only have to modify Line 8 to instantiate the <code>List</code> with a different implementation.  The rest of the codes needs not be changed.  This is the beauty of programming on the interfaces instead of the actual implementations.
+
+  <pre class="color-example">
+List lst = new LinkedList();   <span class="color-comment">// use &quot;LinkedList&quot; implementation</span>
+<span class="color-comment">// or</span>
+List lst = new Vector();       <span class="color-comment">// use &quot;Vector&quot; implementation</span>
+<span class="color-comment">// or</span>
+List lst = new Stack();        <span class="color-comment">// use &quot;Stack&quot; implementation</span>
+</pre>
+</li>
+
+</ul>
+
+<h5>Summary</h5>
+
+<p>This example illustrates the unified architecture of the Collection Framework, defined in the interfaces <code>Collection</code> (and its sub-interfaces <code>List</code>, <code>Set</code>, <code>Queue</code>), <code>Iterable</code>, and <code>Iterator</code>.  You can program on these interfaces instead of the actual implementations.</p>
+
+<p>Prior to JDK 1.5, a collection is designed to hold <code>java.lang.Object</code>.  Since <code>Object</code> is the Java’s root class, all Java classes, which are descendants of <code>Object</code>, can be upcasted to <code>Object</code> and kept in a collection.  However, when you retrieve an element from a collection (in the form of <code>Object</code>) it is the programmer's responsibility to downcast the <code>Object</code> back to its original class, before further manipulation can take place.</p>
+
+<h4>Pre-JDK 1.5 Collections are not Type-safe</h4>
+
+<p>The pre-JDK 1.5 approach has the following drawbacks:</p>
+<ol>
+<li>The upcasting to <code>java.lang.Object</code> is done implicitly by the compiler.  But, the programmer has to explicitly downcast the <code>Object</code> retrieved back to their original class.</li>
+<li>The compiler is not able to check whether the downcasting is valid at compile-time.  Incorrect downcasting will show up only at runtime, as a <code>ClassCastException</code>.  This is known as <em>dynamic binding</em> or <em>late binding</em>.  For example, if you accidentally added an <code>Integer</code> object into the above list which is intended to hold <code>String</code>, the error will show up only when you try to downcast the <code>Integer</code> to <code>String</code> - at runtime. For example,
+  <pre class="color-example">
+<span class="color-comment">// lst is designed to hold Strings</span>
+lst.add(new Integer(88));  <span class="color-comment">// adds an Integer, implicitly upcast to Object, okay in compile/runtime</span>
+ 
+Iterator iter = lst.iterator();
+while (iter.hasNext()) {
+   String str = (String)iter.next(); <span class="color-comment">// compile okay but runtime ClassCastException</span>
+   System.out.println(str);
+}</pre></li>
+</ol>
+
+<p>Why not let the compiler does the upcasting/downcasting and check for casting error, instead of leaving it to the runtime, which could be too late?</p>
+
+<h4>Introduction to Generics (JDK 1.5)</h4>
+
+<p>JDK 1.5 introduces a new feature called <em>generics</em> to resolve this problem.  Generics allow us to <em>pass type information</em>, in the form of <code>&lt;type&gt;</code>, to the compiler,  so that the compiler can perform all the necessary type-check during compilation to ensure type-safety at runtime.</p>
+
+<p>For example, this statement with generics <code>List&lt;String&gt;</code> (read as <code>List</code> of <code>String</code>s) and <code>ArrayList&lt;String&gt;</code> (read as <code>ArrayList</code> of <code>String</code>s) informs the compiler that the <code>List</code> and <code>ArrayList</code> can hold only <code>String</code> object:</p>
+<pre class="color-example">
+List&lt;String&gt; lst = new ArrayList&lt;String&gt;();  <span class="color-comment">// read as List of Strings, ArrayList of Strings</span>
+</pre>
+
+<p>You are certainly familiar with passing arguments into methods. You place the arguments inside the round bracket <code>()</code> and pass them to the method. In generics, instead of pass arguments, we pass <em>type information</em> inside the angle brackets <code>&lt;&gt;</code> to the compiler.</p>
+
+<h4><span class="font-code">ArrayList</span> with Generics (JDK 1.5)</h4>
+
+<p>Let's rewrite the earlier example using generics:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// Post-JDK 1.5 with Generics</span>
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+ 
+public class ArrayListPostJDK15Test {
+   public static void main(String[] args) {
+      List<span class="color-new">&lt;String&gt;</span> lst = new ArrayList<span class="color-new">&lt;String&gt;</span>();  <span class="color-comment">// Inform compiler about the type</span>
+      lst.add(&quot;alpha&quot;);         <span class="color-comment">// compiler checks if argument's type is String</span>
+      lst.add(&quot;beta&quot;);
+      lst.add(&quot;charlie&quot;);
+      System.out.println(lst);  <span class="color-comment">// [alpha, beta, charlie]</span>
+ 
+      Iterator<span class="color-new">&lt;String&gt;</span> iter = lst.iterator();   <span class="color-comment">// Iterator of Strings</span>
+      while (iter.hasNext()) {
+         String str = iter.next();  <span class="color-comment">// compiler inserts downcast operator</span>
+         System.out.println(str);
+      }
+ 
+<span class="color-comment">//      lst.add(new Integer(1234));   // ERROR: compiler can detect wrong type</span>
+<span class="color-comment">//      Integer intObj = lst.get(0);  // ERROR: compiler can detect wrong type</span>
+ 
+      <span class="color-comment">// Enhanced for-loop (JDK 1.5)</span>
+      for (String str : lst) {
+         System.out.println(str);
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>In Lines 8 and 14, the <em>type</em> information about the collection classes is specified via generics, written as <code>List&lt;String&gt;</code>, <code>ArrayList&lt;String&gt;</code>, and <code>Iterator&lt;String&gt;</code>.  Based on this type information, compiler is able to check the type of argument for the <code>add()</code> methods, and issues an compilation error for Line 20, when you attempt to add an <code>Integer</code> object.  The compiler can also automatically insert the proper downcast operator in Line 16 and detect the wrong type in Line 21 in the <code>get()</code> methods in retrieving the elements of the collection. Take note that in the earlier pre-JDK 1.5 example, programmer needs to explicitly issue the downcast operator.</p>
+<p>JDK 1.5 also introduced a new loop structure called enhanced for-loop (Lines 24-26). The loop variable <code>str</code> will take on each element of the <code>lst</code> in the loop-body.</p>
+
+<h4>Backward Compatibility</h4>
+
+<p>If you compile a pre-JDK 1.5 program using JDK 1.5 and above compiler, e.g.,</p>
+<pre class="color-example">
+<span class="color-comment">// Pre-JDK 1.5</span>
+List lst = new ArrayList();  <span class="color-comment">// No type information</span>
+lst.add(&quot;alpha&quot;);   <span class="color-comment">// Without generics, compiler can't check if the type is correct</span>
+</pre>
+
+<p>You may need to include the <code>-Xlint:unchecked</code> option. The compiler issues these warning messages to warn you about the <em>unsafe operations</em> (i.e., the compiler is unable to check for the type and ensure type-safety at runtime). You could go ahead and execute the program with warnings.</p>
+<pre class="output">
+Note: ArrayListPreJDK15Test.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+&nbsp;
+ArrayListPreJDK15Test.java:6: warning: [unchecked] <strong>unchecked call to add(E)</strong> as a member of the raw type java.util.List
+      lst.add(&quot;alpha&quot;);
+             ^</pre>
+
+<h4 id="autoboxing">Auto-Boxing &amp; Auto-Unboxing (JDK 1.5)</h4>
+
+<p>A collection contains only objects. It cannot holds primitives (such as <code>int</code> and <code>double</code>).  Although arrays can be used to hold primitives, they are not <em>resizable</em>.</p>
+
+<p>To put a primitive into a collection (such as <code>ArrayList</code>), you have to wrap the primitive into an object using the corresponding <em>wrapper class</em> as shown below:</p>
+
+<img class="image-center" src="images/OOP_WrapperClass.png" />
+
+<p>Prior to JDK 1.5, you have to wrap a primitive value into an object and unwrap the primitive value from the wrapper object:</p>
+<pre class="color-example">
+<span class="color-comment">// Pre-JDK 1.5</span>
+Integer intObj = new Integer(5566);    <span class="color-comment">// wrap int to Integer</span>
+int i = intObj.intValue();             <span class="color-comment">// unwrap Integer to int</span>
+&nbsp;
+Double doubleObj = new Double(55.66);  <span class="color-comment">// wrap double to Double</span>
+double d = doubleObj.doubleValue();    <span class="color-comment">// unwrap Double to double</span>
+</pre>
+
+<p>The pre-JDK 1.5 approach involves quite a bit of codes to do the wrapping and unwrapping. JDK 1.5 introduces a new feature called <em>auto-boxing</em> and <em>auto-unboxing</em> to resolve this problem, by delegating the compiler to do the job. For example:</p>
+<pre class="color-example">
+<span class="color-comment">// JDK 1.5</span>
+Integer intObj = 5566;    <span class="color-comment">// autobox from int to Integer</span>
+int i = intObj;           <span class="color-comment">// auto-unbox from Integer to int</span>
+&nbsp;
+Double doubleObj = 55.66; <span class="color-comment">// autoboxing from double to Double</span>
+double d = doubleObj;     <span class="color-comment">// atuo-unbox from Double to double</span>
+</pre>
+
+<h5>Example - Pre JDK 1.5 Collections of Primitives</h5>
+
+<p>Pre-JDK 1.5 does not support generics, auto-boxing and for-each loop.  The codes for collection can be quite messy and more importantly, not type-safe.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// Pre-JDK 1.5</span>
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
+ 
+public class PrimitiveCollectionPreJDK15 {
+   public static void main(String[] args) {
+      List lst = new ArrayList();
+ 
+      <span class="color-comment">// Add 10 random primitive int into the List</span>
+      Random random = new Random();
+      for (int i = 1; i &lt;= 10; ++i) {
+         <span class="color-comment">// Wrap the primitive int into Integer, upcast to Object</span>
+         lst.add(new Integer(random.nextInt(10)));
+      }
+      System.out.println(lst);
+ 
+      Iterator iter = lst.iterator();
+      while (iter.hasNext()) {
+         <span class="color-comment">// Explicit downcast to Integer, then unwrap to int</span>
+         int i = ((Integer)iter.next()).intValue();   <span class="color-comment">// un-safe at runtime</span>
+         System.out.println(i);
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Example - Autoboxing &amp; Unboxing of Primitives</h5>
+<p>With generics, autoboxing and for-each loop, JDK 1.5 codes for collection are more concise and more importantly - type-safe.  For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// Post-JDK 1.5</span>
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
+ 
+public class PrimitiveCollectionJDK15 {
+   public static void main(String[] args) {
+      List&lt;Integer&gt; lst = new ArrayList&lt;Integer&gt;();
+ 
+      <span class="color-comment">// Add 10 random primitive int into the List</span>
+      Random random = new Random();
+      for (int i = 1; i &lt;= 10; ++i) {
+         lst.add(random.nextInt(10)); <span class="color-comment">// autobox to Integer, upcast to Object, type-safe</span>
+      }
+      System.out.println(lst);
+ 
+      <span class="color-comment">// Transverse via iterator</span>
+      Iterator&lt;Integer&gt; iter = lst.iterator();
+      while (iter.hasNext()) {
+         int i = iter.next();  <span class="color-comment">// downcast to Integer, auto-unbox to int, type-safe</span>
+         System.out.println(i);
+      }
+ 
+      <span class="color-comment">// Transverse via enhance for-loop</span>
+      for (int i : lst) {      <span class="color-comment">// downcast to Integer, auto-unbox to int, type-safe</span>
+         System.out.println(i);
+      }
+ 
+      <span class="color-comment">// Retrieve via for-loop with List's index</span>
+      for (int i = 0; i &lt; lst.size(); ++i) {
+         int j = lst.get(i);   <span class="color-comment">// downcast to Integer, auto-unbox to int, type-safe</span>
+         System.out.println(j);
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>The Collection Interfaces</h3>
+
+<p>The hierarchy of the interfaces (and the commonly-used implementation classes) in the <em>Collection Framework</em> is as shown below:</p>
+
+<img class="image-center" src="images/Collection_interfaces.png" />
+
+<h4><span class="font-code">Iterable&lt;E&gt;</span> Interface</h4>
+
+<p>The <code>Iterable&lt;E&gt;</code> interface, which takes a generic type <code>E</code> and read as <code>Iterable</code> of element of type <code>E</code>, declares one <code>abstract</code> method called <code>iterator()</code> to retrieve the <code>Iterator&lt;E&gt;</code> object associated with all the collections. This <code>Iterator</code> object can then be used to transverse through all the elements of the associated collection.</p>
+
+<pre class="color-syntax">
+Iterator&lt;E&gt; iterator();   <span class="color-comment">// Returns the associated Iterator instance 
+                          // that can be used to transverse thru all the elements of the collection</span>
+</pre>
+
+<p>All implementations of the collection (e.g., <code>ArrayList</code>, <code>LinkedList</code>, <code>Vector</code>) must implement this method, which returns an object that implements <code>Iterator</code> interface.</p>
+
+<h4><span class="font-code">Iterator&lt;E&gt;</span> Interface</h4>
+
+<p>The <code>Iterator&lt;E&gt;</code> interface, declares the following three <code>abstract</code> methods:</p>
+<pre class="color-syntax">
+boolean hasNext()  <span class="color-comment">// Returns true if it has more elements</span>
+E next()           <span class="color-comment">// Returns the next element of generic type E</span>
+void remove()      <span class="color-comment">// Removes the last element returned by the iterator</span></pre>
+
+<p>As seen in the introductory example, you can use a while-loop to iterate through the elements with the <code>Iterator</code> as follows:</p>
+<pre class="color-example">
+List&lt;String&gt; lst = new ArrayList&lt;String&gt;();
+lst.add(&quot;alpha&quot;);
+lst.add(&quot;beta&quot;);
+lst.add(&quot;charlie&quot;);
+ 
+<span class="color-comment">// Retrieve the Iterator associated with this List via the iterator() method</span>
+Iterator&lt;String&gt; iter = lst.iterator();
+<span class="color-comment">// Transverse thru this List via the Iterator</span>
+while (iter.hasNext()) {
+   <span class="color-comment">// Retrieve each element and process</span>
+   String str = iter.next();
+   System.out.println(str);
+}</pre>
+
+<h4>Enhanced for-loop (JDK 1.5)</h4>
+<p>Besides using the <code>Iterator</code> (as described in the previous section), JDK 1.5 also introduces a new enhance for-loop, which you can use to transverse thru all the elements of a collection (as well as an array).</p>
+<p>The syntax is as follows (read as <em>for each</em> element in the collection):</p>
+
+<pre class="color-syntax">
+for ( <em>type</em> <em>item</em> : <em>aCollection</em> ) {
+   <em>body</em> ;
+}</pre>
+
+<p>The loop variable <code><em>item</em></code> will take on <em>each of the element</em> of the collection, in each iteration of the loop-body.  See the introductory section on example.</p>
+
+<h5>Modifying Objects in the Collection?</h5>
+
+<p>The enhanced for-loop provides a convenience way to transverse through a collection of elements.  But it hides the <code>Iterator</code>, hence, you CANNOT remove (via <code>Iterator.remove()</code>) or replace the elements.</p>
+<p>On the other hand, as the loop variable receives a &quot;cloned&quot; copy of the object reference, the enhanced for-loop can be used to modify  &quot;mutable&quot; elements (such as <code>StringBuilder</code>) via the &quot;cloned&quot; object references, but it cannot modify &quot;immutable&quot; objects (such as <code>String</code> and primitive wrapper classes) as new references are created.</p>
+
+<h5>Example - Using Enhanced for-loop on Collection of &quot;Mutable&quot; Objects (such as <span class="font-code">StringBuilder</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre>
+</td>
+<td>
+<pre>
+import java.util.List;
+import java.util.ArrayList;
+ 
+public class ForEachMutableTest {
+   public static void main(String[] args) {
+      List&lt;StringBuilder&gt; lst = new ArrayList&lt;StringBuilder&gt;();
+      lst.add(new StringBuilder(&quot;alpha&quot;));
+      lst.add(new StringBuilder(&quot;beta&quot;));
+      lst.add(new StringBuilder(&quot;charlie&quot;));
+      System.out.println(lst);   <span class="color-comment">// [alpha, beta, charlie]</span>
+ 
+      for (StringBuilder sb : lst) {
+         sb.append(&quot;88&quot;);   <span class="color-comment">// can modify &quot;mutable&quot; objects</span>
+      }
+      System.out.println(lst);  <span class="color-comment">// [alpha88, beta88, charlie88]</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Example - Using Enhanced for-loop on Collection of &quot;Immutable&quot; Objects (such as <span class="font-code">String</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre>
+</td>
+<td>
+<pre>
+import java.util.List;
+import java.util.ArrayList;
+ 
+public class ForEachImmutableTest {
+   public static void main(String[] args) {
+      List&lt;String&gt; lst = new ArrayList&lt;String&gt;();
+      lst.add(&quot;alpha&quot;);
+      lst.add(&quot;beta&quot;);
+      lst.add(&quot;charlie&quot;);
+      System.out.println(lst);   <span class="color-comment">// [alpha, beta, charlie]</span>
+ 
+      for (String str : lst) {
+         str += &quot;change!&quot;;   <span class="color-comment">// cannot modify &quot;immutable&quot; objects</span>
+      }
+      System.out.println(lst);   <span class="color-comment">// [alpha, beta, charlie]</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4><span class="font-code">Collection&lt;E&gt;</span> Interface</h4>
+<p>The  <code>Collection&lt;E&gt;</code>, which takes a generic type <code>E</code> and read as <code>Collection</code> of element of type <code>E</code>, is the <em>root</em> interface of the Collection Framework. It defines the common behaviors expected of all classes, such as how to add or remove an element, via the following <code>abstract</code> methods:</p>
+<pre class="color-syntax">
+<span class="color-comment">// Basic Operations</span>
+int <strong>size</strong>()                        <span class="color-comment">// Returns the number of elements of this Collection</span>
+void <strong>clear</strong>()                      <span class="color-comment">// Removes all the elements of this Collection</span>
+boolean <strong>isEmpty</strong>()                 <span class="color-comment">// Returns true if there is no element in this Collection</span>
+boolean <strong>add</strong>(E <em>element</em>)            <span class="color-comment">// Ensures that this Collection contains the given <em>element</em></span>
+boolean <strong>remove</strong>(Object <em>element</em>)    <span class="color-comment">// Removes the given <em>element</em>, if present</span>
+boolean <strong>contains</strong>(Object <em>element</em>)  <span class="color-comment">// Returns true if this Collection contains the given <em>element</em></span>
+
+<span class="color-comment">// Bulk Operations with another Collection</span>
+boolean <strong>containsAll</strong>(Collection&lt;?&gt; <em>c</em>)       <span class="color-comment">// Collection of any &quot;unknown&quot; object</span>
+boolean <strong>addAll</strong>(Collection&lt;? extends E&gt; <em>c</em>)  <span class="color-comment">// Collection of E or its sub-types</span>
+boolean <strong>removeAll</strong>(Collection&lt;?&gt; <em>c</em>)
+boolean <strong>retainAll</strong>(Collection&lt;?&gt; <em>c</em>)
+&nbsp;
+<span class="color-comment">// Comparison - Objects that are equal shall have the same hashCode</span>
+boolean <strong>equals</strong>(Object <em>o</em>)
+int <strong>hashCode</strong>()
+ 
+<span class="color-comment">// Array Operations</span>
+Object[] <strong>toArray</strong>()       <span class="color-comment">// Convert to an Object array</span>
+&lt;T&gt; T[] <strong>toArray</strong>(T[] <em>a</em>)   <span class="color-comment">// Convert to an array of the given type T</span>
+</pre>
+
+<h5>Collection of Primitives?</h5>
+
+<p>A <code>Collection&lt;E&gt;</code> can only contain objects, not primitive values (such as <code>int</code> or <code>double</code>). Primitive values are to be wrapped into objects (via the respective wrapper classes such as <code>Integer</code> and <code>Double</code>). JDK 1.5 introduces auto-boxing and auto-unboxing to simplify the wrapping and unwrapping processes. Read &quot;<a href="#autoboxing">Auto-Boxing and Auto-Unboxing</a>&quot; section for example.</p>
+
+<h4><span class="font-code">List&lt;E&gt;</span>, <span class="font-code">Set&lt;E&gt;</span> &amp; <span class="font-code">Queue&lt;E&gt;</span> - Sub-interfaces of <span class="font-code">Collection&lt;E&gt;</span></h4>
+
+<p>In practice, we typically program on one of the sub-interfaces of the <code>Collection</code> interface: <code>List&lt;E&gt;</code>, <code>Set&lt;E&gt;</code>, or <code>Queue&lt;E&gt;</code>, which provide further specifications.</p>
+
+<ul>
+<li><code>List&lt;E&gt;</code>: models a<em> </em>resizable linear array, which allows <em>indexed access</em>.  <code>List</code> can contain duplicate elements. Frequently-used implementations of <code>List</code> include <code>ArrayList</code>, <code>LinkedList</code>, <code>Vector</code> and <code>Stack</code>.</li>
+<li><code>Set&lt;E&gt;</code>: models a mathematical set, where no duplicate elements are<em> </em>allowed.  Frequently-used implementations of <code>Set</code> are <code>HashSet</code> and <code>LinkedHashSet</code>. The sub-interface <code>SortedSet&lt;E&gt;</code> models an <em>ordered and sorted</em> set of elements, implemented by <code>TreeSet</code>.</li>
+<li><code>Queue&lt;E&gt;</code>: models queues such as First-in-First-out (FIFO) queue and priority queue. It sub-interface <code>Deque&lt;E&gt;</code> models queues that can be operated on both ends. Implementations include <code>PriorityQueue</code>, <code>ArrayDeque</code> and <code>LinkedList</code>.</li>
+</ul>
+
+<p>The details of these sub-interfaces and implementations will be covered later in the implementation section.</p>
+
+<h4><span class="font-code">Map&lt;K,V&gt;</span> Interface</h4>
+<p>The interface <code>Map&lt;K,V&gt;</code>, which takes two generic types <code>K</code> and <code>V</code> and read as <code>Map</code> of Key type <code>K</code> and Value type <code>V</code>, is used as a collection of of &quot;key-value pairs&quot;.  No duplicate key is allowed. Frequently-used implementations include <code>HashMap</code>, <code>Hashtable</code> and <code>LinkedHashMap</code>. Its sub-interface <code>SortedMap&lt;K, V&gt;</code> models an ordered and sorted map, based on its key, implemented in <code>TreeMap</code>.</p>
+<p>Take note that <code>Map&lt;K,V&gt;</code> is not a sub-interface of <code>Collection&lt;E&gt;</code>, as it involves a pair of objects for each element. The details will be covered later. </p>
+
+<h3><span class="font-code">List&lt;E&gt;</span> Interface and Implementations</h3>
+
+<p>In practice, it is more common to program on the one of the sub-interfaces of <code>Collection</code>: <code>List</code>, <code>Set</code>, or <code>Queue</code>, instead of the super-interface <code>Collection</code>. These sub-interfaces further refine the behaviors of the <code>Collection</code>.</p>
+
+<p>A <code>List&lt;E&gt;</code> models a resizable linear array, which supports <em>indexed</em> access. Elements in a list can be retrieved and inserted at a specific index position based on an <code>int</code> index. It can contain <em>duplicate</em> elements. It can contain <code>null</code> elements. You can search a list, iterate through its elements, and perform operations on a selected range of values in the list.</p>
+<p>Lists are the most commonly-used data structures.</p>
+
+<img class="image-center" src="images/Collection_ListImplementation.png" />
+
+<p>The <code>List&lt;E&gt;</code> interface declares the following <code>abstract</code> methods, in additional to its super-interfaces.  Since <code>List</code> has a positional index.  Operation such as <code>add()</code>, <code>remove()</code>, <code>set()</code> can be applied to an element at a specified index position.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Operations at a specified index position</span>
+void <strong>add</strong>(int <em>index</em>, E <em>element</em>)    <span class="color-comment">// add</span>
+E <strong>set</strong>(int <em>index</em>, E <em>element</em>)       <span class="color-comment">// replace</span>
+E <strong>get</strong>(int <em>index</em>)                  <span class="color-comment">// retrieve without remove</span>
+E <strong>remove</strong>(int <em>index</em>)               <span class="color-comment">// remove last retrieved</span>
+int <strong>indexOf</strong>(Object <em>obj</em>)
+int <strong>lastIndexOf</strong>(Object <em>obj</em>)
+<span class="color-comment">// Operations on a range fromIndex (inclusive) toIndex (exclusive)</span>
+List&lt;E&gt; <strong>subList</strong>(int <em>fromIndex</em>, int <em>toIndex</em>)
+......
+ 
+<span class="color-comment">// Operations inherited from Collection&lt;E&gt;</span>
+int <strong>size</strong>()
+boolean <strong>isEmpty</strong>()
+boolean <strong>add</strong>(E <em>element</em>)
+boolean <strong>remove</strong>(Object <em>obj</em>)
+boolean <strong>contains</strong>(Object <em>obj</em>)
+void <strong>clear</strong>();
+......</pre>
+
+<p>The <code>abstract</code> superclass <code>AbstractList</code> provides implementation to many of the <code>abstract</code> methods declared in the <code>List</code>, <code>Collector</code>, and <code>Iterable</code> interfaces.  However, some methods such as <code>get(int index)</code> remains <code>abstract</code>.  These methods will be implemented by the concrete subclasses such as <code>ArrayList</code> and <code>Vector</code>.</p>
+
+<h4><span class="font-code">ArrayList&lt;E&gt;</span> &amp; <span class="font-code">Vector&lt;E&gt;</span> - Implementation Classes for <span class="font-code">List&lt;E&gt;</span></h4>
+<p><code>ArrayList&lt;E&gt;</code> is the <em>best all-around </em>implementation of the <code>List&lt;E&gt;</code> interface.  Many useful methods are already implemented in <code>AbstractList</code> but overridden for efficiency in <code>ArrayList</code> (e.g., <code>add()</code>, <code>remove()</code>, <code>set()</code> etc.).</p>
+
+<p><code>Vector&lt;E&gt;</code> is a <em>legacy</em> class (since JDK 1.0), which is retrofitted to conform to the Collection Framework (in JDK 1.2).  <code>Vector</code> is a <em>synchronized</em> implementation of the <code>List</code> interface. It also contains additional legacy methods (e.g., <code>addElement()</code>, <code>removeElement()</code>, <code>setElement()</code>, <code>elementAt()</code>, <code>firstElement()</code>, <code>lastElement()</code>, <code>insertElementAt()</code>).  There is no reason to use these legacy methods - other than to maintain backward compatibility.</p>
+
+<p><code>ArrayList</code> is not synchronized.  The integrity of <code>ArrayList</code> instances is not guaranteed under multithreading.  Instead, it is the programmer's responsibility to ensure synchronization.  On the other hand, <code>Vector</code> is synchronized internally. Read &quot;<a href="#synchronized_collection">Synchronized Collection</a>&quot; if you are dealing with multi-threads.</p>
+
+<p><span class="line-heading">Java Performance Tuning Tip:</span>  Synchronization involves overheads.  Hence, if synchronization is not an issue, you should use <code>ArrayList</code> instead of <code>Vector</code> for better performance.</p>
+
+<p>[TODO] Example</p>
+
+<h4><span class="font-code">Stack&lt;E&gt;</span> - Implementation Class for <span class="font-code">List&lt;E&gt;</span></h4>
+
+<p><code>Stack&lt;E&gt;</code> is a last-in-first-out queue (LIFO) of elements.  <code>Stack</code> extends <code>Vector</code>, which is a synchronized resizable array, with five additional methods:</p>
+<pre class="color-syntax">
+E <strong>push</strong>(E <em>element</em>)       <span class="color-comment">// pushes the specified element onto the top of the stack</span>
+E <strong>pop</strong>()         <span class="color-comment">        // removes and returns the element at the top of the stack</span>
+E <strong>peek</strong>()        <span class="color-comment">        // returns the element at the top of stack without removing</span>
+boolean <strong>empty</strong>()         <span class="color-comment">// tests if this stack is empty</span>
+int <strong>search</strong>(Object <em>obj</em>)  <span class="color-comment">// returns the distance of the specified object from the top
+                        //  of stack (distance of 1 for TOS), or -1 if not found</span>
+</pre>
+  
+<p>[TODO] Example</p>
+
+<h4><span class="font-code">LinkedList&lt;E&gt;</span> - Implementation Class for <span class="font-code">List&lt;E&gt;</span></h4>
+
+<p><code>LinkedList&lt;E&gt;</code> is a double-linked list implementation of the <code>List&lt;E&gt;</code> interface, which is efficient for insertion and deletion of elements, in the expense of more complex structure.</p>
+<p><code>LinkedList&lt;E&gt;</code> also implements <code>Queue&lt;E&gt;</code> and <code>Deque&lt;E&gt;</code> interfaces, and can be processed from both ends of the queue. It can serve as FIFO or LIFO queue.</p>
+
+<p>[TODO] Example</p>
+
+<h4>Converting a <span class="font-code">List</span> to an Array - <span class="font-code">toArray()</span></h4>
+<p>The super-interface <code>Collection</code> defines a method called <code>toArray()</code> to create an array based on this list. The returned array is free for modification.</p>
+
+<pre class="color-syntax">
+Object[] <strong>toArray</strong>()      <span class="color-comment">// Object[] version</span>
+&lt;T&gt; T[] <strong>toArray</strong>(T[] <em>a</em>)  <span class="color-comment">// Generic type version</span>
+</pre>
+
+<h5>Example - <span class="font-code">List</span> to array</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+public class TestToArray {
+   public static void main(String[] args) {
+      List&lt;String&gt; lst = new ArrayList&lt;String&gt;();
+      lst.add(&quot;alpha&quot;);
+      lst.add(&quot;beta&quot;);
+      lst.add(&quot;charlie&quot;);
+ 
+      <span class="color-comment">// Use the Object[] version</span>
+      Object[] strArray1 = lst.toArray();
+      System.out.println(Arrays.toString(strArray1));   <span class="color-comment">// [alpha, beta, charlie]</span>
+ 
+      <span class="color-comment">// Use the generic type verion - Need to specify the type in the argument</span>
+      String[] strArray2 = lst.toArray(new String[0]);
+      strArray2[0] = &quot;delta&quot;;   <span class="color-comment">// modify the returned array</span>
+      System.out.println(Arrays.toString(strArray2));   <span class="color-comment">// [delta, beta, charlie]</span>
+      System.out.println(lst);  <span class="color-comment">// [alpha, beta, charlie] - no change in the original list</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Using an Array as a <span class="font-code">List</span> - <span class="font-code">Arrays.asList()</span></h4>
+
+<p>The utility class <code>java.util.Arrays</code> provides a <code>static</code> method <code>Arrays.asList()</code> to convert an array into a <code>List&lt;T&gt;</code>. However, change to the list write-thru the array and vice versa. Take note that the name of the method is <code>asList</code> and not <code>toList</code>.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Returns a fixed-size list backed by the specified array.
+// Change to the list write-thru to the array.</span>
+public static &lt;T&gt; List&lt;T&gt; <strong>asList</strong>(T[] <em>a</em>)</pre>
+
+<h5>Example - Array as <span class="font-code">List</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+</td>
+<td>
+<pre>
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+public class TestArrayAsList {
+   public static void main(String[] args) {
+      String[] strs = {&quot;alpha&quot;, &quot;beta&quot;, &quot;charlie&quot;};
+      System.out.println(Arrays.toString(strs));   <span class="color-comment">// [alpha, beta, charlie]</span>
+ 
+      List&lt;String&gt; lst = Arrays.asList(strs);
+      System.out.println(lst);  <span class="color-comment">// [alpha, beta, charlie]</span>
+ 
+      <span class="color-comment">// Changes in array or list write thru</span>
+      strs[0] += &quot;88&quot;;
+      lst.set(2, lst.get(2) + &quot;99&quot;);
+      System.out.println(Arrays.toString(strs)); <span class="color-comment">// [alpha88, beta, charlie99]</span>
+      System.out.println(lst);  <span class="color-comment">// [alpha88, beta, charlie99]</span>
+ 
+      <span class="color-comment">// Initialize a list using an array</span>
+      List&lt;Integer&gt; lstInt = Arrays.asList(22, 44, 11, 33);
+      System.out.println(lstInt);  <span class="color-comment">// [22, 44, 11, 33]</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Comparison of <span class="font-code">ArrayList</span>, <span class="font-code">Vector</span>, <span class="font-code">LinkedList</span> and <span class="font-code">Stack</span></h4>
+<p>[TODO] Example on benchmarking <code>ArrayList</code>, <code>Vector</code>, <code>LinkedList</code>, and <code>Stack</code></p>
+
+<h3 id="ordering">Ordering, Sorting &amp; Searching</h3>
+
+<p>The notion of <em>ordering</em> is needed in these two situation:</p>
+<ol>
+<li>In order to <em>sort</em> a <code>Collection</code> or an array (using the <code>Collections.sort()</code> or <code>Arrays.sort()</code> methods), an ordering specification is needed.</li>
+
+<li>Some collections, in particular, <code>SortedSet</code> (<code>TreeSet</code>) and <code>SortMap</code> (<code>TreeMap</code>), are <em>ordered</em>.  That is, the objects are stored according to a specified order.</li>
+
+</ol>
+
+<p>There are two ways to specify the ordering of objects:</p>
+
+<ol>
+<li>Make the objects implement the <code>java.lang.Comparable</code> interface, and override the <code>compareTo()</code> method to specify the ordering of comparing two objects.</li>
+<li>Create a special <code>java.util.Comparator</code> object, with a method <code>compare()</code> to specify the ordering of comparing two objects.</li>
+</ol>
+
+<h4><span class="font-code">java.lang.Comparable&lt;T&gt;</span> Interface</h4>
+<p>A <code>java.lang.Comparable&lt;T&gt;</code> interface specifies how two two objects are to be compared for ordering. It define one <code>abstract</code> method:</p>
+
+<pre class="color-syntax">
+int <strong>compareTo</strong>(T <em>o</em>)  <span class="color-comment">// Returns a negative integer, zero, or a positive integer 
+                    // as this object is less than, equal to, or greater than the given object</span></pre>
+
+<p>This ordering is referred to as the class's <em>natural ordering</em>, and the class's <code>compareTo()</code> method is referred to as its <em>natural comparison method</em>.</p>
+
+
+
+<p>It is strongly recommended that <code>compareTo()</code> be consistent with <code>equals()</code> and <code>hashCode()</code> (inherited from <code>java.lang.Object</code>):</p>
+
+<ol>
+<li>If <code>compareTo()</code> returns a zero, <code>equals()</code> should return <code>true</code>.</li>
+<li>If <code>equals()</code> returns <code>true</code>, <code>hashCode()</code> shall produce the same <code>int</code>.</li>
+</ol>
+
+<p>All the eight primitive wrapper classes (<code>Byte</code>, <code>Short</code>, <code>Integer</code>, <code>Long</code>, <code>Float</code>, <code>Double</code>, <code>Character</code> and <code>Boolean</code>) implement <code>Comparable</code> interface, with the <code>compareTo()</code> uses the numeric order.</p>
+
+<h5>Example - <span class="font-code">Comparable</span></h5>
+
+<p>The utility class <code>java.util.Arrays</code> and <code>java.util.Collections</code> provide many static method for the various algorithms such as sorting and searching (Refer to &quot;<a href="#algorithms">Algorithms</a>&quot; for details).</p>
+<p>In this example, we use the <code>Arrays.sort()</code> and <code>Collections.sort()</code> methods to sort an array of <code>String</code>s and a <code>List</code> of <code>Integer</code>s, based on their default <code>Comparable</code>. The default <code>Comparable</code> of <code>String</code> compares two <code>Strings</code> based on their underlying Unicodes, i.e., uppercase letter is smaller than the lowercase counterpart.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre>
+</td>
+<td>
+<pre>
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+ 
+public class TestComparable {
+   public static void main(String[] args) {
+      <span class="color-comment">// Sort and search an &quot;array&quot; of Strings</span>
+      String[] array = {&quot;Hello&quot;, &quot;hello&quot;, &quot;Hi&quot;, &quot;HI&quot;};
+ 
+      <span class="color-comment">// Use the Comparable defined in the String class</span>
+      Arrays.sort(array);
+      System.out.println(Arrays.toString(array));  <span class="color-comment">// [HI, Hello, Hi, hello]</span>
+ 
+      <span class="color-comment">// Try binary search - the array must be sorted</span>
+      System.out.println(Arrays.binarySearch(array, &quot;Hello&quot;)); <span class="color-comment">// 1</span>
+      System.out.println(Arrays.binarySearch(array, &quot;HELLO&quot;)); <span class="color-comment">// -1 (insertion at index 0)</span>
+ 
+      <span class="color-comment">// Sort and search a &quot;List&quot; of Integers</span>
+      List&lt;Integer&gt; lst = new ArrayList&lt;Integer&gt;();
+      lst.add(22);  <span class="color-comment">// auto-box</span>
+      lst.add(11);
+      lst.add(44);
+      lst.add(33);
+      Collections.sort(lst);    <span class="color-comment">// Use the Comparable of Integer class</span>
+      System.out.println(lst);  <span class="color-comment">// [11, 22, 33, 44]</span>
+      System.out.println(Collections.binarySearch(lst, 22)); <span class="color-comment">// 1</span>
+      System.out.println(Collections.binarySearch(lst, 35)); <span class="color-comment">// -4 (insertion at index 3)</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h4><span class="font-code">java.util.Comparator&lt;T&gt;</span> Interface</h4>
+
+<p>Besides the <code>Comparable</code> (or the natural ordering), you can pass a <code>Comparator</code> object into the sorting methods (<code>Collections.sort()</code> or <code>Arrays.sort()</code>) to provide precise control over the ordering. The <code>Comparator</code> will override the <code>Comparable</code>, if available.</p>
+
+<p>The <code>java.util.Comparator</code> interface declares:</p>
+<pre class="color-syntax">
+int <strong>compare</strong>(T <em>o1</em>, T <em>o2</em>)    <span class="color-comment">// Returns a negative integer, zero, or a positive integer as the 
+                           // first argument is less than, equal to, or greater than the second.</span></pre>
+
+<p>Take note that you need to construct an instance of <code>Comparator&lt;T&gt;</code>, and invoke <code>compare()</code> to compare <code>o1</code> and <code>o2</code>. [In the earlier <code>Comparable</code>, the method is called <code>compareTo()</code> and it takes only one argument, i.e., this object compare to the given object.]</p>
+
+<h5>Example - <span class="font-code">Comparator</span></h5>
+
+<p>In this example, instead of using the default <code>Comparable</code>, we define our customized <code>Comparator</code> for <code>String</code>s and <code>Integer</code>s.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50</pre>
+</td>
+<td>
+<pre>
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+ 
+public class TestComparator {
+ 
+   <span class="color-comment">// Define a Comparator&lt;String&gt; to order strings in case-insensitive manner</span>
+   public static class StringComparator implements Comparator&lt;String&gt; {
+      @Override
+      public int compare(String s1, String s2) {
+         return s1.compareToIgnoreCase(s2);
+      }
+   }
+ 
+   <span class="color-comment">// Define a Comparator&lt;Integer&gt; to order Integers based on the least significant digit</span>
+   public static class IntegerComparator implements Comparator&lt;Integer&gt; {
+      @Override
+      public int compare(Integer s1, Integer s2) {
+         return s1%10 - s2%10;
+      }
+   }
+ 
+   public static void main(String[] args) {
+      <span class="color-comment">// Use a customized Comparator for Strings</span>
+      Comparator&lt;String&gt; compStr = new StringComparator();
+ 
+      <span class="color-comment">// Sort and search an &quot;array&quot; of Strings</span>
+      String[] array = {&quot;Hello&quot;, &quot;Hi&quot;, &quot;HI&quot;, &quot;hello&quot;};
+      Arrays.sort(array, compStr);
+      System.out.println(Arrays.toString(array));  <span class="color-comment">// [Hello, hello, Hi, HI]</span>
+      System.out.println(Arrays.binarySearch(array, &quot;Hello&quot;, compStr)); <span class="color-comment">// 1</span>
+      System.out.println(Arrays.binarySearch(array, &quot;HELLO&quot;, compStr)); <span class="color-comment">// 1 (case-insensitive)</span>
+ 
+      <span class="color-comment">// Use a customized Comparator for Integers</span>
+      Comparator&lt;Integer&gt; compInt = new IntegerComparator();
+ 
+      <span class="color-comment">// Sort and search a &quot;List&quot; of Integers</span>
+      List&lt;Integer&gt; lst = new ArrayList&lt;Integer&gt;();
+      lst.add(42);  <span class="color-comment">// auto-box</span>
+      lst.add(21);
+      lst.add(34);
+      lst.add(13);
+      Collections.sort(lst, compInt);
+      System.out.println(lst);  <span class="color-comment">// [21, 42, 13, 34]</span>
+      System.out.println(Collections.binarySearch(lst, 22, compInt)); <span class="color-comment">// 1</span>
+      System.out.println(Collections.binarySearch(lst, 35, compInt)); <span class="color-comment">// -5 (insertion at index 4)</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Try: Modify the <code>Comparator</code> to sort in A, a ,B, b, C, c ... (uppercase letter before the lowercase).</p>
+<h3><span class="font-code">Set&lt;E&gt;</span> Interfaces &amp; Implementations</h3>
+
+<p>The <code>Set&lt;E&gt;</code> interface models a mathematical set, where no duplicate elements are allowed (e.g., playing cards). It may contain a single <code>null</code> element.</p>
+
+<img class="image-center" src="images/Collection_SetImplementation.png" />
+
+<p>The <code>Set&lt;E&gt;</code> interface declares the following abstract methods. The insertion, deletion and inspection methods returns <code>false</code> if the operation fails, instead of throws an exception.</p>
+
+<pre class="color-syntax">
+boolean <strong>add</strong>(E <em>o</em>)           <span class="color-comment">// add the specified element if it is not already present</span>
+boolean <strong>remove</strong>(Object <em>o</em>)   <span class="color-comment">// remove the specified element if it is present</span>
+boolean <strong>contains</strong>(Object <em>o</em>) <span class="color-comment">// return true if it contains o</span>
+ 
+<span class="color-comment">// Set operations</span>
+boolean <strong>addAll</strong>(Collection&lt;? extends E&gt; <em>c</em>) <span class="color-comment">// Set union</span>
+boolean <strong>retainAll</strong>(Collection&lt;?&gt; <em>c</em>)        <span class="color-comment">// Set intersection</span>
+</pre>
+ 
+<p>The implementations of <code>Set&lt;E&gt;</code> interface include:</p>
+<ul>
+<li><code>HashSet&lt;E&gt;</code>:  Stores the elements in a hash table (hashed via the <code>hashcode()</code>). <code>HashSet</code> is is <em>the best all-round implementation</em> for <code>Set</code>.</li>
+<li><code>LinkedHashSet&lt;E&gt;</code>:  Stores the elements in a linked-list hash table for better efficiency in insertion and deletion. The element are hashed via the <code>hashCode()</code> and arranged in the linked list according to the insertion-order.</li>
+<li><code>TreeSet&lt;E&gt;</code>:  Also implements sub-interfaces <code>NavigableSet</code> and <code>SortedSet</code>. Stores the elements in a red-black tree data structure, which are sorted and navigable. Efficient in search, add and remove operations (in <code>O(log(n))</code>).</li>
+</ul>
+
+<h4><span class="font-code">HashSet&lt;E&gt;</span> By Example</h4>
+
+<p>Let's write a <code>Book</code> class, and create a <code>Set</code> of <code>Book</code> objects.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre>
+</td>
+<td>
+<pre>
+public class Book {
+   private int id;
+   private String title;
+ 
+   <span class="color-comment">// Constructor</span>
+   public Book(int id, String title) {
+      this.id = id;
+      this.title = title;
+   }
+ 
+   @Override
+   public String toString() {
+      return id + &quot;: &quot; + title;
+   }
+ 
+   <span class="color-comment">// Two book are equal if they have the same id</span>
+   @Override
+   public boolean equals(Object o) {
+      if (!(o instanceof Book)) {
+         return false;
+      }
+      return this.id == ((Book)o).id;
+   }
+ 
+   <span class="color-comment">// Consistent with equals(). Two objects which are equal have the same hash code.</span>
+   @Override
+   public int hashCode() {
+      return id;
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>We need to provide an <code>equals()</code> method, so that the <code>Set</code> implementation can test for equality and duplication. In this example, we choose the <code>id</code> as the distinguishing feature. We override <code>equals()</code> to return <code>true</code> if two books have the same <code>id</code>. We also override the <code>hashCode()</code> to be consistent with <code>equals()</code>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre>
+</td>
+<td>
+<pre>
+import java.util.HashSet;
+import java.util.Set;
+public class TestHashSet {
+   public static void main(String[] args) {
+      Book book1 = new Book(1, &quot;Java for Dummies&quot;);
+      Book book1Dup = new Book(1, &quot;Java for the Dummies&quot;); <span class="color-comment">// same id as above</span>
+      Book book2 = new Book(2, &quot;Java for more Dummies&quot;);
+      Book book3 = new Book(3, &quot;more Java for more Dummies&quot;);
+ 
+      Set&lt;Book&gt; set1 = new HashSet&lt;Book&gt;();
+      set1.add(book1);
+      set1.add(book1Dup); <span class="color-comment">// duplicate id, not added</span>
+      set1.add(book1);    <span class="color-comment">// added twice, not added</span>
+      set1.add(book3);
+      set1.add(null);     <span class="color-comment">// Set can contain a null</span>
+      set1.add(null);     <span class="color-comment">// but no duplicate</span>
+      set1.add(book2);
+      System.out.println(set1); <span class="color-comment">// [null, 1: Java for Dummies,</span>
+                                <span class="color-comment">//  2: Java for more Dummies, 3: more Java for more Dummies]</span>
+ 
+      set1.remove(book1);
+      set1.remove(book3);
+      System.out.println(set1); <span class="color-comment">// [null, 2: Java for more Dummies]</span>
+ 
+      Set&lt;Book&gt; set2 = new HashSet&lt;Book&gt;();
+      set2.add(book3);
+      System.out.println(set2); <span class="color-comment">// [3: more Java for more Dummies]</span>
+      set2.addAll(set1);        <span class="color-comment">// &quot;union&quot; with set1</span>
+      System.out.println(set2); <span class="color-comment">// [null, 2: Java for more Dummies, 3: more Java for more Dummies]</span>
+ 
+      set2.remove(null);
+      System.out.println(set2); <span class="color-comment">// [2: Java for more Dummies, 3: more Java for more Dummies]</span>
+      set2.retainAll(set1);     <span class="color-comment">// &quot;intersection&quot; with set1</span>
+      System.out.println(set2); <span class="color-comment">// [2: Java for more Dummies]</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>A <code>Set</code> cannot hold duplicate element. The elements are check for duplication via the overridden <code>equal()</code>. A <code>Set</code> can hold a <code>null</code> value as its element (but no duplicate too). The <code>addAll()</code> and <code>retainAll()</code> perform <em>set union</em> and <em>set intersection</em> operations, respectively.</p>
+
+<p>Take note that the arrangement of the elements is arbitrary, and does not correspond to the order of <code>add()</code>.</p>
+
+<h4><span class="font-code">LinkedHashSet&lt;E&gt;</span> By Example</h4>
+
+<p>Unlike <code>HashSet</code>, <code>LinkedHashSet</code> builds a link-list over the hash table for better efficiency in insertion and deletion (in the expense of more complex structure). It maintains its elements in the insertion-order (i.e., order of <code>add()</code>).</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+import java.util.LinkedHashSet;
+import java.util.Set;
+public class TestLinkedHashSet {
+   public static void main(String[] args) {
+      Book book1 = new Book(1, &quot;Java for Dummies&quot;);
+      Book book1Dup = new Book(1, &quot;Java for the Dummies&quot;); <span class="color-comment">// same id as above</span>
+      Book book2 = new Book(2, &quot;Java for more Dummies&quot;);
+      Book book3 = new Book(3, &quot;more Java for more Dummies&quot;);
+ 
+      Set&lt;Book&gt; set = new LinkedHashSet&lt;Book&gt;();
+      set.add(book1);
+      set.add(book1Dup); <span class="color-comment">// duplicate id, not added</span>
+      set.add(book1); <span class="color-comment">// added twice, not added</span>
+      set.add(book3);
+      set.add(null);  <span class="color-comment">// Set can contain a null</span>
+      set.add(null);  <span class="color-comment">// but no duplicate</span>
+      set.add(book2);
+      System.out.println(set);  <span class="color-comment">// [1: Java for Dummies, 3: more Java for more Dummies,</span>
+                                <span class="color-comment">//  null, 2: Java for more Dummies]</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The output clearly shows that the set is ordered according to the order of <code>add()</code>.</p>
+
+<h4><span class="font-code">NavigableSet&lt;E&gt;</span> &amp; <span class="font-code">SortedSet&lt;E&gt;</span> Interfaces</h4>
+
+<p>Elements in the <code>SortedSet&lt;E&gt;</code> are sorted during <code>add()</code>, either using the natural ordering in the <code>Comparable</code>, or given a <code>Comparator</code> object. Read &quot;<a href="#ordering">Ordering, Sorting and Searching</a>&quot; for details on <code>Comparable</code> and <code>Comparator</code>.</p>
+
+<p>The <code>NavigableSet&lt;E&gt;</code> is a sub-interface of <code>Set</code>, which declares these additional navigation methods:</p>
+
+<pre class="color-syntax">
+Iterator&lt;E&gt; <strong>descendingIterator</strong>()  <span class="color-comment">// Returns an iterator over the elements in this set,
+                                  // in descending order.</span>
+Iterator&lt;E&gt; <strong>iterator</strong>()   <span class="color-comment">// Returns an iterator over the elements in this set, in ascending order.</span>
+ 
+<span class="color-comment">// Per-element operation</span>
+E <strong>floor</strong>(E <em>e</em>)    <span class="color-comment">// Returns the greatest element in this set less than or equal to the given element, 
+                // or null if there is no such element.</span>
+E <strong>ceiling</strong>(E <em>e</em>)  <span class="color-comment">// Returns the least element in this set greater than or equal to the given element, 
+                // or null if there is no such element.</span>
+E <strong>lower</strong>(E <em>e</em>)    <span class="color-comment">// Returns the greatest element in this set strictly less than the given element, 
+                // or null if there is no such element.</span>
+E <strong>higher</strong>(E <em>e</em>)   <span class="color-comment">// Returns the least element in this set strictly greater than the given element, 
+                // or null if there is no such element.</span>
+ 
+<span class="color-comment">// Subset operation</span>
+SortedSet&lt;E&gt; <strong>headSet</strong>(E <em>toElement</em>) <span class="color-comment">// Returns a view of the portion of this set 
+                                  // whose elements are strictly less than toElement.</span>
+SortedSet&lt;E&gt; <strong>tailSet</strong>(E <em>fromElement</em>) <span class="color-comment">// Returns a view of the portion of this set
+                                    // whose elements are greater than or equal to fromElement.</span>
+SortedSet&lt;E&gt; <strong>subSet</strong>(E <em>fromElement</em>, E <em>toElement</em>)  
+                      <span class="color-comment">// Returns a view of the portion of this set 
+                      // whose elements range from fromElement, inclusive, to toElement, exclusive.</span></pre>
+
+<h4><span class="font-code">TreeSet&lt;E&gt;</span> by Example</h4>
+<p><code>TreeSet&lt;E&gt;</code> is an implementation to <code>NavigableSet&lt;E&gt;</code> and <code>SortedSet&lt;E&gt;</code>.</p>
+
+
+<h5 id="sortedset_example">Example - <span class="font-code">TreeSet</span> with <span class="font-code">Comparable</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre>
+</td>
+<td>
+<pre>
+public class AddressBookEntry implements Comparable&lt;AddressBookEntry&gt; {
+   private String name, address, phone;
+ 
+   public AddressBookEntry(String name) {
+      this.name = name;
+   }
+ 
+   @Override
+   public String toString() {
+      return name;
+   }
+ 
+   @Override
+   public int compareTo(AddressBookEntry another) {
+      return this.name.compareToIgnoreCase(another.name);
+   }
+ 
+   @Override
+   public boolean equals(Object o) {
+      if (!(o instanceof AddressBookEntry)) {
+         return false;
+      }
+      return this.name.equalsIgnoreCase(((AddressBookEntry)o).name);
+   }
+ 
+   @Override
+   public int hashCode() {
+      return name.length();
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>This <code>AddressBookEntry</code> class implements <code>Comparable</code>, in order to be used in <code>TreeSet</code>. It overrides <code>compareTo()</code> to compare the <code>name</code> in a case insensitive manner. It also overrides <code>equals()</code> and <code>hashCode()</code>, so as they are consistent with the <code>compareTo()</code>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+import java.util.TreeSet;
+ 
+public class TestTreeSetComparable {
+   public static void main(String[] args) {
+      AddressBookEntry addr1 = new AddressBookEntry(&quot;peter&quot;);
+      AddressBookEntry addr2 = new AddressBookEntry(&quot;PAUL&quot;);
+      AddressBookEntry addr3 = new AddressBookEntry(&quot;Patrick&quot;);
+ 
+      TreeSet&lt;AddressBookEntry&gt; set = new TreeSet&lt;AddressBookEntry&gt;();
+      set.add(addr1);
+      set.add(addr2);
+      set.add(addr3);
+      System.out.println(set); <span class="color-comment">// [Patrick, PAUL, peter]</span>
+ 
+      System.out.println(set.floor(addr2));   <span class="color-comment">// PAUL</span>
+      System.out.println(set.lower(addr2));   <span class="color-comment">// Patrick</span>
+      System.out.println(set.headSet(addr2)); <span class="color-comment">// [Patrick]</span>
+      System.out.println(set.tailSet(addr2)); <span class="color-comment">// [PAUL, peter]</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Observe that the <code>AddressBookEntry</code> objects are sorted and stored in the order depicted by the <code>Comparable</code><code></code> during <code>add()</code> operation.</p>
+
+
+<h5 id="sortedset_example">Example - <span class="font-code">TreeSet</span> with <span class="font-code">Comparator</span></h5>
+
+<p>Let rewrite the previous example to use a <code>Comparator</code> object instead of <code>Comparable</code>. We shall set the <code>Comparator</code> to order in descending order of <code>name</code> for illustration.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre>
+</td>
+<td>
+<pre>
+public class PhoneBookEntry {
+   public String name, address, phone;
+ 
+   public PhoneBookEntry(String name) {
+      this.name = name;
+   }
+ 
+   @Override
+   public String toString() {
+      return name;
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The <code>PhoneBookEntry</code> class does not implement <code>Comparator</code>. You cannot <code>add()</code> a <code>PhoneBookEntry</code> object into a  <code>TreeSet()</code> as in the above example. Instead, we define a <code>Comparator</code> class, and use an instance of <code>Comparator</code> to construct a <code>TreeSet</code>.</p>
+
+<p>The <code>Comparator</code> orders the <code>PhoneBookEntry</code> objects in descending <code>name</code> and case insensitive.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre>
+</td>
+<td>
+<pre>
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.Comparator;
+ 
+public class TestTreeSetComparator {
+   public static class PhoneBookComparator implements Comparator&lt;PhoneBookEntry&gt; {
+      @Override
+      public int compare(PhoneBookEntry p1, PhoneBookEntry p2) {
+         return p2.name.compareToIgnoreCase(p1.name);  <span class="color-comment">// descending name</span>
+      }
+   }
+ 
+   public static void main(String[] args) {
+      PhoneBookEntry addr1 = new PhoneBookEntry(&quot;peter&quot;);
+      PhoneBookEntry addr2 = new PhoneBookEntry(&quot;PAUL&quot;);
+      PhoneBookEntry addr3 = new PhoneBookEntry(&quot;Patrick&quot;);
+ 
+      Comparator&lt;PhoneBookEntry&gt; comp = new PhoneBookComparator();
+      TreeSet&lt;PhoneBookEntry&gt; set = new TreeSet&lt;PhoneBookEntry&gt;(comp);
+      set.add(addr1);
+      set.add(addr2);
+      set.add(addr3);
+      System.out.println(set);    <span class="color-comment">// [peter, PAUL, Patrick]</span>
+ 
+      Set&lt;PhoneBookEntry&gt; newSet = set.descendingSet();  <span class="color-comment">// Reverse the order</span>
+      System.out.println(newSet); <span class="color-comment">// [Patrick, PAUL, peter]</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p>In the test program, we construct a <code>TreeSet</code> with the <code>BookComparator</code>. We also tried the <code>descendingSet()</code> method to obtain a new <code>Set</code> in reverse order.</p>
+
+<h3><span class="font-code">Queue&lt;E&gt;</span> Interfaces &amp; Implementations</h3>
+<p>A <em>queue</em> is a collection whose elements are added and removed in a specific order, typically in a first-in-first-out (FIFO) manner. A <em>deque</em> (pronounced &quot;deck&quot; ) is a double-ended queue that elements can be inserted and removed at both ends (head and tail) of the queue.</p>
+
+<img class="image-center" src="images/Collection_QueneImplementation.png" />
+
+<p>Besides basic <code>Collection&lt;E&gt;</code> operations, <code>Queue&lt;E&gt;</code> provide additional insertion, extraction, and inspection operations. Each of these methods exists in two forms: one throws an exception if the operation fails, the other returns a special value (either <code>null</code> or <code>false</code>, depending on the operations). The latter form of the insert operation is designed specifically for use with capacity-restricted <code>Queue</code> implementations</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Insertion at the end of the queue</span>
+boolean <strong>add</strong>(E <em>e</em>)   <span class="color-comment">// throws IllegalStateException if no space is currently available</span>
+boolean <strong>offer</strong>(E <em>e</em>) <span class="color-comment">// returns true if the element was added to this queue, else false</span>
+ 
+<span class="color-comment">// Extract element at the head of the queue</span>
+E <strong>remove</strong>()         <span class="color-comment">// throws NoSuchElementException if this queue is empty</span>
+E <strong>poll</strong>()           <span class="color-comment">// returns the head of this queue, or null if this queue is empty</span>
+ 
+<span class="color-comment">// Inspection (retrieve the element at the head, but does not remove)</span>
+E <strong>element</strong>()        <span class="color-comment">// throws NoSuchElementException if this queue is empty</span>
+E <strong>peek</strong>()           <span class="color-comment">// returns the head of this queue, or null if this queue is empty</span></pre>
+
+<p><code>Deque&lt;E&gt;</code> declares additional methods to operate on both ends (head and tail) of the queue.</p>
+<pre class="color-syntax">
+<span class="color-comment">// Insertion</span>
+void <strong>addFirst</strong>(E <em>e</em>)
+void <strong>addLast</strong>(E <em>e</em>)
+boolean <strong>offerFirst</strong>(E <em>e</em>)
+boolean <strong>offerLast</strong>(E <em>e</em>)
+ 
+<span class="color-comment">// Retrieve and Remove</span>
+E <strong>removeFirst</strong>()
+E <strong>removeLast</strong>()
+E <strong>pollFirst</strong>()
+E <strong>pollLast</strong>()
+ 
+<span class="color-comment">// Retrieve but does not remove</span>
+E <strong>getFirst</strong>()
+E <strong>getLast</strong>()
+E <strong>peekFirst</strong>()
+E <strong>peekLast</strong>()</pre>
+
+<p>A <code>Deque</code> can be used as FIFO queue (via methods <code>add(e)</code>, <code>remove()</code>, <code>element()</code>, <code>offer(e)</code>, <code>poll()</code>, <code>peek()</code>) or LIFO queue (via methods <code>push(e)</code>, <code>pop()</code>, <code>peek()</code>).</p>
+
+<p>The <code>Queue&lt;E&gt;</code> and <code>Deque&lt;E&gt;</code> implementations include:</p>
+
+<ul>
+<li><code>PriorityQueue&lt;E&gt;</code>: A queue where the elements are ordered based on an ordering you specify, instead of FIFO.</li>
+
+<li><code>ArrayDeque&lt;E&gt;</code>: A queue and deque implemented as a dynamic array, similar to <code>ArrayList&lt;E&gt;</code>.</li>
+
+<li><code>LinkedList&lt;E&gt;</code>: The <code>LinkedList&lt;E&gt;</code> also implements the <code>Queue&lt;E&gt;</code> and <code>Deque&lt;E&gt;</code> interfaces, in additional to <code>List&lt;E&gt;</code> interface, providing a queue or deque that is implemented as a double- linked list data structure.</li>
+</ul>
+
+<p>The basic operations of <code>Queue&lt;E&gt;</code> include adding an element, polling the queue to retrieve the next element, or peeking at the queue to see if there is an element available in the queue. The <code>Deque&lt;E&gt;</code> operations are similar except element can be added, polled, or peeked at both ends of the deque.</p>
+
+<p>[TODO] Example</p>
+
+<h3><span class="font-code">Map&lt;K,V&gt;</span> Interfaces &amp; Implementations</h3>
+
+<p>A map is a collection of key-value pairs (e.g., name-address, name-phone, isbn-title, word-count). Each key maps to one and only value. Duplicate keys are not allowed, but duplicate values are allowed. Maps are similar to linear arrays, except that an array uses an integer key to index and access its elements; whereas a map uses any arbitrary key (such as <code>String</code>s or any objects).</p>
+
+<img class="image-center" src="images/Collection_MapImplementation.png" />
+
+<p>The <code>Map&lt;K,V&gt;</code> interface declares the following <code>abstract</code> methods:</p>
+<pre class="color-syntax">
+V <strong>get</strong>(Object <em>key</em>)      <span class="color-comment">// Returns the value of the specified key</span>
+V <strong>put</strong>(K <em>key</em>, V <em>value</em>)  <span class="color-comment">// Associate the specified value with the specified key</span>
+boolean <strong>containsKey</strong>(Object <em>key</em>)  <span class="color-comment">// Is this map has specified key?</span>
+boolean <strong>containsValue</strong>(Object <em>value</em>)
+
+<span class="color-comment">// Views</span>
+Set&lt;K&gt; <strong>keySet</strong>()         <span class="color-comment">// Returns a set view of the keys</span>
+Collection&lt;V&gt; <strong>values</strong>()  <span class="color-comment">// Returns a collection view of the values</span>
+Set <strong>entrySet</strong>()          <span class="color-comment">// Returns a set view of the key-value</span>
+</pre>
+
+<p>The implementations of <code>Map&lt;K,V&gt;</code> interface include:</p>
+<ul>
+<li><code>HashMap&lt;K,V&gt;</code>:  Hash table implementation of the <code>Map&lt;K,V&gt;</code> interface.  The <em>best all-around implementation</em>. Methods in <code>HashMap</code> is not synchronized.</li>
+<li><code>TreeMap&lt;K,V&gt;</code>:  Red-black tree implementation of the <code>SortedMap&lt;K,V&gt;</code> interface.</li>
+<li><code>LinkedHashMap&lt;K,V&gt;</code>:  Hash table with link-list to facilitate insertion and deletion.</li>
+<li><code>Hashtable&lt;K,V&gt;</code>:  Retrofitted legacy (JDK 1.0) implementations.  A synchronized hash table implementation of the <code>Map&lt;K,V&gt;</code> interface that does not allow <code>null</code> key or values, with legacy methods.</li>
+</ul>
+
+<p>For example,</p>
+<pre class="color-example">
+HashMap&lt;String, String&gt; aMap = new HashMap&lt;String, String&gt;();
+aMap.put(&quot;1&quot;, &quot;Monday&quot;);
+aMap.put(&quot;2&quot;, &quot;Tuesday&quot;);
+aMap.put(&quot;3&quot;, &quot;Wednesday&quot;);
+
+String str1 = aMap.get(&quot;1&quot;);  <span class="color-comment">// No need downcast</span>
+System.out.println(str1);
+String str2 = aMap.get(&quot;2&quot;);
+System.out.println(str2);
+String str3 = aMap.get(&quot;3&quot;);
+System.out.println(str3);
+
+Set&lt;String&gt; keys = aMap.keySet();
+for (String str : keys) {
+   System.out.print(str);
+   System.out.print(&quot;:&quot;);
+   System.out.println(aMap.get(str));
+}
+</pre>
+
+<p>There is no <code>List</code>-like iterator for <code>Map</code>.  You need to obtain <em>a view of key or value</em> before you can apply the iterator.</p>
+
+<h5>Example - <span class="font-code">HashMap</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// Counts the frequency of each of the words in a file given in the command-line,</span>
+<span class="color-comment">// and saves in a map of {word, freq}.</span>
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.io.File;
+ 
+public class WordCount {
+   public static void main(String[] args) throws Exception {
+      Scanner in = new Scanner(new File(args[0]));
+ 
+      Map&lt;String, Integer&gt; map = new HashMap&lt;String, Integer&gt;();
+      while (in.hasNext()) {
+         String word = in.next();
+         int freq = (map.get(word) == null) ? 1 : map.get(word) + 1;   <span class="color-comment">// type-safe</span>
+         map.put(word, freq);      <span class="color-comment">// autobox int to Integer and upcast, type-check</span>
+      }
+      System.out.println(map);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="algorithms">Algorithms</h3>
+<p>The Collection Framework provides two utility classes: <code>java.util.Arrays</code> and <code>java.util.Collections</code>, which provide common algorithms, such as sorting and searching, on arrays and Collections. (Take note that the interface is called <code>Collection</code>, while the utility class is called <code>Collections</code> with a <code>'s'</code><code></code>).</p>
+
+<h4><span class="font-code">java.util.Arrays</span> Utility Class</h4>
+
+<p>The <code>java.util.Arrays</code> class contains <code>static</code> methods for <em>sorting</em> and <em>searching</em> arrays, among others.</p>
+
+<p>Array is a reference type in Java. It can hold primitives, as well as objects. Nine types of arrays were defined in Java, one for of each of the eight primitives (<code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code>, <code>char</code>, <code>boolean</code>), and one for <code>Object</code>.</p>
+
+<h5>Sorting - <span class="font-code">Arrays.sort()</span></h5>
+
+<p>There is a pair of <code>sort()</code> methods for each of the primitive types (exception <code>boolean</code>) and <code>Object</code>. For example, for <code>int[]</code>:</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Sort the given array into ascending order</span>
+public static void <strong>sort</strong>(int[] <em>a</em>)
+<span class="color-comment">// Sort between <em>fromIndex</em> (inclusive) and <em>toTodex</em> (exclusive)</span>
+public static void <strong>sort</strong>(int[] <em>a</em>, int <em>fromIndex</em>, int <em>toIndex</em>)</pre>
+
+<p>Similar <code>sort()</code> methods are available for <code>byte[]</code>, <code>short[]</code>, <code>long[]</code>, <code>float[]</code>, <code>double[]</code>, <code>char[]</code> (except <code>boolean[]</code>) and <code>Object[]</code>. For <code>Object[]</code>, the objects must implement <code>Comparable</code> interface so that the ordering can be determined via the <code>compareTo()</code> method.</p>
+ 
+<pre class="color-syntax">
+public static void <strong>sort</strong>(Object[] <em>a</em>)
+public static void <strong>sort</strong>(Object[] <em>a</em>, int <em>fromIndex</em>, int <em>toIndex</em>)</pre>
+
+<p>A pair of methods is also defined for generic objects, to be sorted based on the given <code>Comparator</code> (instead of <code>Comparable</code>).</p>
+
+<pre class="color-syntax">
+public static &lt;T&gt; void <strong>sort</strong>(T[] <em>a</em>, Comparator&lt;? super T&gt; <em>c</em>)
+public static &lt;T&gt; void <strong>sort</strong>(T[] <em>a</em>, int <em>fromIndex</em>, int <em>toIndex</em>, Comparator&lt;? super T&gt; <em>c</em>)</pre>
+
+<p>Suppose that you wish to sort an array of <code>Integer</code> (<code>T</code> is <code>Integer</code>), you could use a <code>Comparator&lt;Integer&gt;</code> (<code>this</code> compares with <code>Integer</code>) or <code>Comparator&lt;Number&gt;</code> or <code>Comparator&lt;Object&gt;</code>, as <code>Object</code> and <code>Number</code> are superclass of <code>Integer</code>.</p>
+
+<p>Example: See previous section on <code>Comparable</code> and <code>Comparator</code>.</p>
+
+<h5>Searching - <span class="font-code">Arrays.binarySearch()</span></h5>
+<p>Similarly, there is a pair of searching method for each of the primitive types (except <code>boolean</code>) and <code>Object</code>. The array must be sorted before you can apply the <code>binarySearch()</code> method.</p>
+
+<pre class="color-syntax">
+public static int <strong>binarySearch</strong>(int[] <em>a</em>, int <em>key</em>)
+public static int <strong>binarySearch</strong>(int[] <em>a</em>, int <em>fromIndex</em>, int <em>toIndex</em>, int <em>key</em>)
+<span class="color-comment">// Similar methods for byte[], short[], long[], float[], double[] and char[]</span>
+ 
+<span class="color-comment">// Searching objects, which implements Comparable</span>
+public static int <strong>binarySearch</strong>(Object[] <em>a</em>, Object <em>key</em>)
+public static int <strong>binarySearch</strong>(Object[] <em>a</em>, int <em>fromIndex</em>, int <em>toIndex</em>, Object <em>key</em>)
+<span class="color-comment">// Searching generic objects, based on the given Comparator</span>
+public static &lt;T&gt; int <strong>binarySearch</strong>(T[] <em>a</em>, T <em>key</em>, Comparator&lt;? super T&gt; <em>c</em>)
+public static &lt;T&gt; int <strong>binarySearch</strong>(T[] a, T <em>key</em>, int <em>fromIndex</em>, int <em>toIndex</em>, Comparator&lt;? super T&gt; <em>c</em>)
+</pre>
+
+<p>Example: [TODO]</p>
+
+<h5>Equality Comparison - <span class="font-code">Arrays.equals()</span></h5>
+<pre class="color-syntax">
+public static boolean <strong>equals</strong>(int[] <em>a1</em>, int[] <em>a2</em>)
+<span class="color-comment">// Similar methods for byte[], short[], long[], float[], double[], char[], boolean[] and Object[]</span></pre>
+
+<h5>Copying - <span class="font-code">Arrays.copyOf()</span> and <span class="font-code">Arrays.copyOfRange()</span></h5>
+
+<pre class="color-syntax">
+public static int[] <strong>copyOf</strong>(int[] <em>original</em>, int <em>newLength</em>)
+  <span class="color-comment">// Copies the given array, truncating or padding with zeros (if necessary) so the copy has the specified length</span>
+public static int[] <strong>copyOfRange</strong>(int[] <em>original</em>, int <em>from</em>, int <em>to</em>)
+  <span class="color-comment">// padded with 0 if to is beyond the length</span>
+ 
+<span class="color-comment">// Similar methods for byte[], short[], long[], float[], double[], char[] and boolean[]</span>
+
+public static &lt;T&gt; T[] <strong>copyOf</strong>(T[] <em>original</em>, int <em>newLength</em>)
+public static &lt;T&gt; T[] <strong>copyOfRange</strong>(T[] <em>original</em>, int <em>from</em>, int <em>to</em>)
+public static &lt;T,U&gt; T[] <strong>copyOf</strong>(U[] <em>original</em>, int <em>newLength</em>, Class&lt;? extends T[]&gt; <em>newType</em>)
+public static &lt;T,U&gt; T[] <strong>copyOfRange</strong>(U[] <em>original</em>, int <em>from</em>, int <em>to</em>, Class&lt;? extends T[]&gt; <em>newType</em>)</pre>
+    
+<h5>Filling - <span class="font-code">Arrays.fill()</span></h5>
+<pre class="color-syntax">
+public static void <strong>fill</strong>(int[] <em>a</em>, int <em>value</em>)
+public static void <strong>fill</strong>(int[] <em>a</em>, int <em>fromIndex</em>, int <em>toIndex</em>, int <em>value</em>)
+<span class="color-comment">// Similar methods for byte[], short[], long[], float[], double[], char[] and boolean[] and Object[]</span></pre>
+
+<h5>Description - <span class="font-code">Arrays.toString()</span></h5>
+<pre class="color-syntax">
+<span class="color-comment">// Returns a string representation of the contents of the specified array.</span>
+public static String <strong>toString</strong>(int[] <em>a</em>)
+<span class="color-comment">// Similar methods for byte[], short[], long[], float[], double[], char[] and boolean[] and Object[]</span></pre>
+
+<h5>Converting to <span class="font-code">List</span> - <span class="font-code">Arrays.asList()</span></h5>
+
+<pre class="color-syntax">
+<span class="color-comment">// Returns a fixed-size list backed by the specified array.
+// Change to the list write-thru to the array.</span>
+public static &lt;T&gt; List&lt;T&gt; <strong>asList</strong>(T[] <em>a</em>)</pre>
+
+
+
+<h4><span class="font-code">java.util.Collections</span> Utility Class</h4>
+
+<p>Similar to <code>java.util.Arrays</code>, the <code>java.util.Collections</code> class provides <code>static</code> methods to operate on <code>Collection</code>s, such as sorting (<code>sort()</code>), searching (<code>binarySearch()</code>), among others.</p>
+
+<h5>Sorting - <span class="font-code">Collections.sort()</span></h5>
+
+<pre class="color-syntax">
+<span class="color-comment">// Sorts the specified list into ascending order. The objects shall implement Comparable. </span>
+public static &lt;T extends Comparable&lt;? super T&gt;&gt; void <strong>sort</strong>(List&lt;T&gt; <em>list</em>)
+<span class="color-comment">// Sorts the specified list according to the order induced by the specified comparator.</span>
+public static &lt;T&gt; void <strong>sort</strong>(List&lt;T&gt; <em>list</em>, Comparator&lt;? super T&gt; <em>c</em>)</pre>
+
+<p>Take note that the <code>Collections.sort()</code> methods are applicable to <code>List</code> only. They are not applicable to <code>Set</code>, <code>Queue</code> and <code>Map</code>. Nonetheless, the <code>SortedSet</code> (<code>TreeSet</code>) and <code>SortedMap</code> (<code>TreeMap</code>) are sorted automatically.</p>
+<p>Example [TODO]</p>
+
+<h5>Searching - <span class="font-code">Collections.binarySearch()</span></h5>
+<p>The <code>List</code> must be sorted before you can apply the <code>binarySearch()</code> method.</p>
+<pre class="color-syntax">
+public static &lt;T&gt; int <strong>binarySearch</strong>(List&lt;? extends Comparable&lt;? super T&gt;&gt; <em>list</em>, T <em>key</em>)
+public static &lt;T&gt; int <strong>binarySearch</strong>(List&lt;? extends T&gt; <em>list</em>, T <em>key</em>, Comparator&lt;? super T&gt; <em>c</em>)</pre>
+
+<h5>Maximum and Minimum - <span class="font-code">Collections.max()</span> &amp; <span class="font-code">Collections.min()</span></h5>
+
+<pre class="color-syntax">
+<span class="color-comment">// Returns the maximum/minimum element of the given collection, according to the natural ordering of its elements.</span>
+public static &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt; T <strong>max</strong>(Collection&lt;? extends T&gt; <em>c</em>)
+public static &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt; T <strong>min</strong>(Collection&lt;? extends T&gt; <em>c</em>)
+ 
+<span class="color-comment">// Returns the maximum/minimum element of the given collection, according to the order induced by the specified comparator.</span>
+public static &lt;T&gt; T <strong>max</strong>(Collection&lt;? extends T&gt; <em>c</em>, Comparator&lt;? super T&gt; <em>comp</em>)
+public static &lt;T&gt; T <strong>min</strong>(Collection&lt;? extends T&gt; <em>c</em>, Comparator&lt;? super T&gt; <em>comp</em>)</pre>
+
+
+<p>Many other methods such as <code>copy()</code>, <code>fill()</code>, etc.</p>
+
+<h5 id="synchronized_collection">Synchronized <span class="font-code">Collection</span>, <span class="font-code">List</span>, <span class="font-code">Set</span> &amp; <span class="font-code">Map</span></h5>
+
+<p>Most of the <code>Collection</code> implementations such as <code>ArrayList</code>, <code>HashSet</code> and  <code>HashMap</code> are NOT <em>synchronized</em> for multi-threading, except the legacy <code>Vector</code> and <code>HashTable</code>, which are retrofitted to conform to the Collection Framework and synchronized. Instead of using the synchronized <code>Vector</code> and <code>HastTable</code>, you can create a synchronized <code>Collection</code>, <code>List</code>, <code>Set</code>, <code>SortedSet</code>, <code>Map</code> and <code>SortedMap</code>, via the <code>static</code> <code>Collections.synchronizedXxx()</code> methods:</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Returns a synchronized (thread-safe) collection backed by the specified collection.</span>
+public static &lt;T&gt; Collection&lt;T&gt; <strong>synchronizedCollection</strong>(Collection&lt;T&gt; <em>c</em>)
+
+<span class="color-comment">// Others</span>
+public static &lt;T&gt; List&lt;T&gt; <strong>synchronizedList</strong>(List&lt;T&gt; <em>list</em>)
+public static &lt;T&gt; Set&lt;T&gt; <strong>synchronizedSet</strong>(Set&lt;T&gt; <em>set</em>)
+public static &lt;T&gt; SortedSet&lt;T&gt; <strong>synchronizedSortedSet</strong>(SortedSet&lt;T&gt; <em>set</em>)
+public static &lt;K,V&gt; Map&lt;K,V&gt; <strong>synchronizedMap</strong>(Map&lt;K,V&gt; <em>map</em>)
+public static &lt;K,V&gt; SortedMap&lt;K,V&gt; <strong>synchronizedSortedMap</strong>(SortedMap&lt;K,V&gt; <em>map</em>)
+</pre>
+
+<p>According to the JDK API specification, &quot;to guarantee serial access, it is critical that all access to the backing list is accomplished through the returned list, and that user manually synchronize on the returned list when iterating over it&quot;. For example,</p>
+<pre class="color-example">
+<strong>List lst = Collections.synchronizedList(new ArrayList());</strong>
+   ......
+<strong>synchronized(lst) {</strong>  <span class="color-comment">// must be enclosed in a synchronized block</span>
+   Iterator iter = lst.iterator(); 
+   while (iter.hasNext())
+     iter.next();
+     ......
+<strong>}</strong></pre>
+
+
+<a class="references" href="../howto/References.html#java">LINK TO JAVA REFERENCES &amp; RESOURCES</a>
+
+<p class="references">More References</p>
+<ol>
+<li>Java Online Tutorial on &quot;Generics&quot; @ <a href="http://docs.oracle.com/javase/tutorial/extra/generics/index.html">http://docs.oracle.com/javase/tutorial/extra/generics/index.html</a>.</li>
+<li>Java Online Tutorial on &quot;Collections&quot; @ <a href="http://docs.oracle.com/javase/tutorial/collections/index.html">http://docs.oracle.com/javase/tutorial/collections/index.html</a>.</li>
+
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7.0_03<br />
+Last modified: May, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+
+</body>
+</html>

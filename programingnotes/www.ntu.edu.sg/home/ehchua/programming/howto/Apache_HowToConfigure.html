@@ -1,0 +1,734 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to configure Apache 2</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>How To Configure Apache 2</h1>
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+<p>It is important to read the documentation distributed together with the Apache server. These documents are usually kept in directory  &quot;<code>&lt;APACHE_HOME&gt;\manual</code>&quot; or &quot;<code>&lt;APACHE_HOME&gt;\htdocs\manual</code>&quot; (where <code>&lt;APACHE_HOME&gt;</code> denotes your Apache's installed directory). Read the tutorials and How-To's.</p>
+<p>To install Apache 2, read &quot;<a href="Apache_HowToInstall.html">How to install Apache 2</a>&quot;. I shall assume that Apache HTTP server is installed in <code>d:\myProject\apache2</code>, running in port 8000.  The document root directory is &quot;<code>&lt;APACHE_HOME&gt;\htdocs</code>&quot;.</p>
+
+<h3>Basic Configuration</h3>
+
+<p>Apache is configured by placing configuration directives, such as <code>Listen</code> and <code>ServerName</code>, into a configuration file, which will be read by the Apache executable during the startup.</p>
+<p>The default configuration file is called &quot;<code>httpd.conf</code>&quot; (or &quot;<code>apache2.conf</code>&quot;) in the directory &quot;<code>&lt;APACHE_HOME&gt;\conf</code>&quot;. Browser through this configuration file.</p>
+<p>At a minimum, you need to check the following directives:</p>
+
+<ul>
+
+<li><span class="line-heading font-code">Listen</span>: to bind Apache to specific IP addresses and/or ports. HTTP server, by default, runs on port 80 for production. For testing, you could choose a port number between 1024 to 65535, which is not used by an existing application (you can run command &quot;<code>netstat</code>&quot; to check the existing connections). We shall run the Apache at port 8000.
+
+<pre class="color-example"><span class="color-comment"># Listen: Allows you to bind Apache to specific IP addresses and/or ports.</span>
+Listen 8000</pre></li>
+
+<li><span class="line-heading font-code">ServerName</span>: Set to your DNS hostname, or IP address (to find out your IP address, run command &quot;<code>ipconfig</code>&quot;), or your computer name, or &quot;localhost&quot; (localhost is meant for local loop-back testing only, you can also use the localhost's IP address 127.0.0.1), followed by the  port number chosen above.
+
+<pre class="color-example"><span class="color-comment"># ServerName gives the name and port that the server uses to identify itself.
+# If your host doesn't have a registered DNS name, enter its IP address here.</span>
+ServerName <em>YourHostNameOrIPAddres</em>:8000</pre></li>
+
+<li><span class="line-heading font-code">ServerRoot</span>: the Apache installed directory &quot;<code>&lt;APACHE_HOME&gt;</code>&quot;, e.g.,
+
+<pre class="color-example"><span class="color-comment"># ServerRoot: The top of the directory tree under which the server's
+# configuration, error, and log files are kept.
+# Assume that Apache HTTP server is installed in &quot;d:\myProject\apache2&quot;</span>
+ServerRoot &quot;<span class="code-error">d:/myProject/apache2</span>&quot;</pre>
+
+<p>You should use  Unix-style forward slash (<code>/</code>) as the <em>directory separator</em>, instead of Windows-style backward slash (<code>\</code>) in the configuration file.</p>
+</li>
+
+<li><span class="line-heading font-code">DocumentRoot</span>: the document root directory, i.e., home directory of the server. It is set to &quot;<code>&lt;APACHE_HOME&gt;\htdocs</code>&quot; by default.
+
+<pre class="color-example"><span class="color-comment"># DocumentRoot: The directory out of which you will serve your documents.</span>
+DocumentRoot &quot;<span class="code-error"><strong>d:/myPorject/apache2</strong></span><strong>/htdocs</strong>&quot;
+    
+<span class="color-comment"># Access Control for the document base directory</span>
+&lt;Directory &quot;<span class="code-error"><strong>d:/myPorject/apache2</strong></span><strong>/htdocs</strong>&quot;&gt;
+    <span class="color-comment"># Show directory listing, and allow symbolic links</span>
+    Options Indexes FollowSymLinks
+ 
+    <span class="color-comment"># Cannot override with .htaccess files.</span>
+    AllowOverride None
+ 
+    <span class="color-comment"># Controls who can get stuff from this server.</span>
+    Order allow,deny
+    Allow from all
+&lt;/Directory&gt;</pre>
+
+<p><span class="line-heading">Caution</span>: You MUST do a global search on &quot;<code>htdocs</code>&quot;, before modifying the document root directory.</p>
+</li>
+</ul>
+
+
+<h3 id="AccessControl">Access Control in Apache HTTP Server</h3>
+
+<p><em>Access control</em> deals with controlling access to a resource, which could a set of directories, files or locations.  Access control can be based on the client's identity, which is called <em>authentication</em> (discussed in &quot;<a href="../webprogramming/HTTP_Authentication.html">HTTP Authentication</a>&quot;).  Access control could also be based on other criteria, such as the network address, the time of day, the browser which the client is using, the types of request methods, and etc.</p>
+
+<h4>Directory Access Control</h4>
+
+<p>This section deals with access control to directories.  The following sections will deal with access control to files and locations.</p>
+
+<p><span class="line-heading font-code">&lt;Directory&gt;...&lt;/Directory&gt;</span>: can be used to apply access control to a set of directories. The syntax is:</p>
+
+<pre class="color-example">
+&lt;Directory <em>directories</em>&gt;
+<span class="color-comment"># access control directives for the matching directory(ies).</span>
+......
+&lt;/Directory&gt;</pre>
+
+<p>The <code>&lt;directory&gt;</code> block directive encloses a set of access-control directives, which will be applied to the matched directory(ies) and its sub-directories. The <em><code>directories</code></em> specifies the directories applicable to this block.  Wildcard can be used in matching:  &quot;<code>?</code>&quot; matches exactly one character;  &quot;<code>*</code>&quot; matches zero or more characters;  <code>[...]</code> can be used to specify a range of characters, e.g. <code>[c-f]</code>.  Extended regular expression (regexe) can be used, which begins with a &quot;<code>~</code>&quot;.</p>
+
+<p><span class="line-heading font-code">Options</span>: controls what kinds of actions are permitted for the set of resources under control.</p>
+<pre class="color-example">Option [+|-]<em>option-1</em> [+|-]<em>option-2</em> ...</pre>
+
+<p>  The available options are:</p>
+
+<ul>
+<li><span class="font-code">Indexes</span>: If the client requests for a directory and there is no indexing file (e.g., &quot;<code>Index.html</code>&quot;) in the directory, then the server will return a listing of the directory.  If &quot;<code>Indexes</code>&quot; option is disabled, the server returns error &quot;403 Forbidden&quot;.</li>
+<li><span class="font-code">ExecCGI</span>: Allow execution of CGI script.</li>
+<li><span class="font-code">Includes</span>: Allow Server-Side Include (SSI).</li>
+<li><span class="font-code">IncludesNOEXEC</span>: Allow SSI, but disable #exec command and #exec CGI.</li>
+<li><span class="font-code">FollowSymLinks</span>: Follow symbolic links.</li>
+<li><span class="font-code">SymLinksIfOwnerMatch</span>: Follow symbolic links only if the owner is the same.</li>
+<li><span class="font-code">MultiViews</span>: Allow content negotiation, such as language negotiation.</li>
+<li><span class="font-code">None</span>: Nothing.</li>
+<li><span class="font-code">All</span>: All options except <code>MultiViews</code>.  This is the default setting.</li>
+<li><span class="font-code">+</span> (or <span class="font-code">-</span>) adds (or removes) that particular option, relative to the current setting.  All the other options remain the same.  For example, &quot;<code>Option +Indexes -ExecGGI</code>&quot; directive adds the &quot;<code>Indexes</code>&quot; option and removes the &quot;<code>ExecCGI</code>&quot; option from the current setting.  The other options remain unaffected.</li>
+</ul>
+
+<p>If no <code>Options</code> directive is used, the effect is All except <code>MultiViews</code>.  However, if an <code>Options</code> directive is used without <code>+/-</code>, e.g., &quot;<code>Options Indexes</code>&quot;, only <code>Indexes</code> option is available, and the rest of options are off.  If <code>+/-</code> is used, only that particular option is changed, the rest of the options remain the same (inherited from the setting at the higher level).</p>
+
+<h5>Example 1</h5>
+
+<pre class="color-example">
+&lt;Directory <strong>/www</strong>&gt;
+   Options Indexes ExecCGI
+&lt;/Directory&gt;
+   
+&lt;Directory <strong>/www/sales</strong>&gt;
+   Options Indexes
+&lt;/Directory&gt;
+   
+&lt;Directory <strong>/www/support</strong>&gt;
+   Options -Indexes
+&lt;/Directory&gt;</pre>
+
+<p>Since the <code>&lt;Directory&gt;</code> matching applies to sub-directories, &quot;<code>/www</code>&quot; has options <code>Indexes</code> and <code>ExexCGI</code>, &quot;<code>/www/sales</code>&quot; has option <code>Indexes</code> only (the setting in the parent directory is ignored), and &quot;<code>/www/support</code>&quot; has option <code>ExecCGI</code> (inherited from its parent directory).</p>
+
+<p><span class="line-heading font-code">Order</span>: specifies the order in which <code>Allow</code> and <code>Deny</code> directives are evaluated.</p>
+
+<pre class="color-example">Order Deny,Allow | Allow,Deny</pre>
+
+<ul>
+<li><span class="font-code">Deny,Allow:</span>  Access is allowed by default, and the <code>Deny</code> directives are evaluated before the <code>Allow</code> directives.  Any client which does not match a <code>Deny</code> directive &quot;or&quot; does match an <code>Allow</code> directive will be allowed access to the server.  (The client is allowed access if it is in both <code>Deny</code> and <code>Allow</code> list, as <code>Allow</code> is evaluated last.)</li>
+
+<li><span class="font-code">Allow,Deny</span>:  Access is denied by default, and the <code>Allow</code> directives are evaluated before the <code>Deny</code> directives.  Any client which does not match an <code>Allow</code> directive &quot;or&quot; does match a <code>Deny</code> directive will be denied access to the server.  (A client in both <code>Allow</code> and <code>Deny</code> will be denied access, as Deny is evaluated last.)</li>
+</ul>
+
+<h5>Apache 2.4</h5>
+<p>Apache 2.4 uses a new module called <code>mod_authz_host</code> for access control. Instead of the <code>Order</code>, <code>Allow</code> and <code>Deny</code> directives in Apache 2.2, it uses a new directive <code>Require</code>. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Apache 2.2</span>
+Order deny,allow
+Deny from all
+<span class="color-comment">// Apache 2.4</span>
+Require all denied
+ 
+<span class="color-comment">// Apache 2.2</span>
+Order allow,deny
+Allow from all
+<span class="color-comment">// Apache 2.4</span>
+Require all granted
+
+<span class="color-comment">// Apache 2.2</span>
+Order Deny,Allow
+Deny from all
+Allow from example.com
+<span class="color-comment">// Apache 2.4</span>
+Require host example.org</pre>
+
+<p>[TODO] Tidy up the following examples.</p>
+
+
+<h5>Example 2</h5>
+<pre class="color-example">Order Deny,Allow
+Deny from all
+Allow from test101.com</pre>
+<ol>
+<li>access is allowed by default;</li>
+<li>all hosts are denied;</li>
+<li>those in the domain &quot;<code>*.test101.com</code>&quot; are allowed.</li>
+</ol>
+<p>Consequently, only hosts in &quot;<code>*.test101.com</code>&quot; are allowed.</p>
+
+<h5>Example 3</h5>
+<pre class="color-example">Order Allow,Deny
+Allow from test101.com
+Deny from sales.test101.com</pre>
+
+<ol>
+<li>access is denied by default;</li>
+<li>all hosts in the &quot;<code>*.test101.com</code>&quot; domain are allowed, and;</li>
+<li>hosts in the &quot;*<code>.sales.test101.com</code>&quot; sub-domain are denied.</li>
+</ol>
+<p>Consequently, all hosts in the &quot;<code>*.test101.com</code>&quot; domain except &quot;*<code>.sales.test101.com</code>&quot; are allowed.</p>
+
+<p>On the other hand, if the <code>Order</code> is changed to <code>Deny,Allow</code>, all hosts will be allowed access (by default).  This happens because, regardless of the actual ordering of the directives in the configuration file, the <code>Allow from test101.com</code> will be evaluated last and will override the <code>Deny from sales.test101.com</code>.  Any other hosts are allowed access by default.</p>
+
+<h5>Example 4</h5>
+<pre class="color-example">
+&lt;Directory /home&gt;
+  Order Allow,Deny
+&lt;/Directory&gt;</pre>
+
+<p>Access is denied to all hosts to directory &quot;<code>/home</code>&quot;, based on the default setting.</p>
+
+<h5>Example 5</h5>
+
+<pre class="color-example">
+&lt;Directory /home&gt;
+  Order Deny,Allow
+  Deny from all
+&lt;/Directory&gt;</pre>
+
+<p>Access is denied to all hosts to directory &quot;<code>/home</code>&quot;.  Although the access is allowed by default, <code>Deny from all</code> prohibits all hosts.</p>
+
+<p><span class="line-heading font-code">Allow</span>: specifies which hosts can access a set of resources.  Access can be controlled by hostname, IP Address, IP Address range, or environment variables.</p>
+<pre class="color-example">Allow from all|host|env=<em>env-variable</em></pre>
+
+<p>If <code>Allow from all</code> is specified, then all hosts are allowed access, subject to the configuration of the <code>Deny</code> and <code>Order</code> directives.  To allow only particular hosts or groups of hosts to access the server, the host can be specified in any of the following formats:</p>
+
+<ul>
+<li>Domain-name: Hosts whose names match, or end in, this string are allowed access.  For example, Allow from test101.com will match sales.test101.com and support.test101.com but it will not match www.test999.com.</li>
+<li>Full/partial IP address: For example, Allow from 10.1 grants access to all IP addresses in the form 10.1.*.*.</li>
+<li>A network/netmask pair: For example, Allow from 10.1.0.0/255.255.0.0.</li>
+</ul>
+
+<p>If <code>Allow from env=<em>env-variable</em></code> is specified, then the request is granted if the environment variable <code><em>env-variable</em></code> exists.  This directive can be used to allow access based on such factors as the clients User-Agent (browser type), Referer, request method, or other HTTP request header.</p>
+
+<h5>Example 6</h5>
+
+<pre class="color-example">SetEnvIf User-Agent ^Mozilla/4.0 Mozilla4_browser
+   
+&lt;Directory /docroot&gt;
+    Order Deny,Allow
+    Deny from all
+    Allow from env=Mozilla4_browser
+&lt;/Directory&gt;</pre>
+
+<p>In this example, browsers with a <code>User-Agent</code> string beginning with <code>Mozilla/4.0</code> will be allowed access.  All other type of browsers will be denied.</p>
+
+<p><span class="line-heading font-code">Deny</span>: restricts access based on hostname, IP address, or environment variables.</p>
+
+<pre class="color-example">Deny from all|host|env=<em>env-variable</em></pre>
+
+<p>The arguments for the <code>Deny</code> directive are identical to the arguments for the <code>Allow</code> directive.</p>
+
+<p><span class="line-heading">File <span class="font-code">.htaccess</span></span></p>
+
+<p>In each directory, you can create a file called &quot;<code>.htacces</code>&quot; to control the access into that particular directory, if <code>AllowOverride</code> is turned on.  The directives inside the <code>.htaccess</code> override the <code>&lt;directory&gt;</code> directive.  The relevant directives to enable <code>.htaccess</code> in &quot;<code>httpd.conf</code>&quot; are:</p>
+
+<pre class="color-example"><span class="color-comment"># AccessFileName specifies the name of the file to look for
+# in each directory for access control information.</span>
+AccessFileName .htaccess
+    
+<span class="color-comment"># AllowOverride controls which options the .htaccess files in
+# directories can override. Can be &quot;None&quot;, &quot;All&quot;, or any
+# combination of &quot;Options&quot;, &quot;FileInfo&quot;, &quot;AuthConfig&quot;, and &quot;Limit&quot;.</span>
+AllowOverride None|All|Options|FileInfo|AuthConfig|Limit
+   
+<span class="color-comment"># Prevent files beginning with &quot;.ht&quot; (such as .htaccess, .htpasswd
+# from being viewed by clients for security reason.
+# Since .htaccess files often contain authorization information.</span>
+&lt;Files ~ &quot;^\.ht&quot;&gt;
+    Order allow,deny
+    Deny from all
+    Satisfy All
+&lt;/Files&gt;
+<span class="color-comment"># To protect only .htaccess</span>
+&lt;Files .htaccess&gt;
+    Order allow,deny
+    Deny from all
+&lt;/Files&gt;</pre>
+
+<p>Using <code>.htaccess</code> can prevent frequent re-starting of the  server. This is because the configuration directives in &quot;<code>httpd.conf</code>&quot; is read at startup.  Any change requires a re-start.  The <code>.htaccess</code> is check at each access.  Change will take effect for the subsequent accesses.  The disadvantage is degradation in performance as the <code>.htaccess</code> has to be check for every access into the directory.</p>
+
+<p><span class="line-heading font-code">&lt;Limit <em>methods</em>&gt; &amp; &lt;LimitExcept <em>methods</em>&gt;</span>:</p>
+
+<pre class="color-example">&lt;Limit <em>request-method-1</em> <em>request-method-2</em>&gt;
+<span class="color-comment">...<em>directives</em>...
+</span>&lt;/Limit&gt;</pre>
+
+<p>Access controls are normally effective for all the request methods (such as GET, POST, HEAD, PUT, DELETE).  <code>&lt;Limit&gt;</code> and <code>&lt;limitExcept&gt;</code> blocks can be used to restrict access controls based on the HTTP request method used in the incoming request.  This is useful if you have implemented PUT request but wish to limit PUT requests but not GET requests; or you might want to allow GET/HEAD but limit PUT/DELETE.</p>
+
+<p>For <code>&lt;limit&gt;</code>, access control is applied to those methods listed; all the other methods are unrestricted, for example,</p>
+
+<pre class="color-example">
+&lt;Limit POST PUT DELETE&gt;
+   Order deny,allow
+   Deny from All
+&lt;/Limit&gt;</pre>
+
+<p>Access control applied to the methods POST, PUT, and DELETE; all other methods are unrestricted.</p>
+
+<p>The method names listed can be one or more of: GET, POST, PUT, DELETE, CONNECT, OPTIONS, PATCH, PROPFIND, PROPPATCH, MKCOL, COPY, MOVE, LOCK, and UNLOCK.  If GET is used it will also restrict HEAD requests.  The TRACE method cannot be limited.</p>
+
+<p><code>&lt;LimitExcept&gt;</code> is used to enclose a group of access control directives which will be applied to any HTTP access method NOT listed; i.e., it is the opposite of a <code>&lt;Limit&gt;</code> block and can be used to control both standard and nonstandard/unrecognized methods.  A <code>&lt;LimitExcept&gt;</code> block should be used in preference to a <code>&lt;Limit&gt;</code> block when restricting access, since a <code>&lt;LimitExcept&gt;</code> block provides protection against arbitrary methods. For example,</p>
+
+<pre class="color-example">
+&lt;LimitExcept GET POST&gt;
+   Order deny,allow
+   Deny from all
+&lt;/LimitExcept&gt;</pre>
+
+<p>Request methods other than GET and POST, such as PUT, DELETE will not be permitted.</p>
+
+<h5>Example 7</h5>
+
+<pre class="color-example">
+&lt;Directory &quot;d:/myPorject/apache2/users&quot;&gt;
+    AllowOverride FileInfo AuthConfig Limit
+    Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec
+    &lt;Limit GET POST OPTIONS PROPFIND&gt;
+        <span class="color-comment"># Default access is deny</span>
+        Order allow,deny
+        <span class="color-comment"># But allow access from all</span>
+        Allow from all
+    &lt;/Limit&gt;
+    &lt;LimitExcept GET POST OPTIONS PROPFIND&gt;
+        <span class="color-comment"># Default access is allow</span>
+        Order deny,allow
+        <span class="color-comment"># But deny access from all</span>
+        Deny from all
+    &lt;/LimitExcept&gt;
+&lt;/Directory&gt;</pre>
+
+<h4>File Access Control</h4>
+<pre class="color-example">&lt;Files file-name&gt;
+......
+&lt;/Files&gt;</pre>
+
+<p>Unlike <code>&lt;directory&gt;</code>, file-name is relative to the DocumentRoot.</p>
+
+<p>(Under construction)(Give some examples)</p>
+
+<h4>Location Access Control</h4>
+
+<pre class="color-example">
+&lt;Location URL&gt;
+......
+&lt;/Location&gt;</pre>
+
+<p>Limit the scope of directives defined within the block to those matching URL(s).</p>
+
+<p>(Under construction)(Give some examples)</p>
+
+
+<h3 id="VirtualHosts">Virtual Hosts</h3>
+<p>Very often, your web server has to support a few hostnames (e.g., www.test101.com, www.test102.com, and etc.), a few IP addresses (with multiple network cards) or listening to a few ports.  It is rather unusual and messy to run one server for each of the hostnames, IP addresses, or ports.  It is better to run many &quot;virtual hosts&quot; within a single physical web server.</p>
+
+<p>HTTP/1.1 introduces a new feature called &quot;virtual host&quot;, which allows you to running multiple hostnames on the same physical server/machine.  HTTP/1.1-compliant server can support many hostnames/IP addresses/Ports within one single server.  On the other hand, HTTP/1.0 server supports only one TCP address and one host name.  In HTTP/1.1, the &quot;Host&quot; request header is mandatory to select one of the virtual hosts.</p>
+
+<p>Read &quot;Virtual Host - How-to&quot; in &quot;htdocs\manual\programs\vhosts\index.html.html&quot;</p>
+
+<p>Apache support (a) Name-based virtual hosts, (b) IP-based virtual hosts, and (c) Port-based virtual host.</p>
+
+<h4>Named-based Virtual Hosts</h4>
+
+<p>Name-based virtual hosting is usually simpler, since you only need to configure your DNS server to map each hostname to the same IP address and then configure the Apache HTTP Server to recognize the different hostnames.  Name-based virtual hosting also eases the demand for scarce IP addresses.  Name-based virtual hosting should be used unless there is a specific reason to choose IP-based virtual hosting.</p>
+
+<p>To use name-based virtual hosting, you must designate the IP address (and possibly port) on the server that will be accepting requests for the hosts.  This is configured using the <code>NameVirtualHost</code> directive.  In the normal case where any and all IP addresses on the server should be used, you can use * as the argument to <code>NameVirtualHost</code>.</p>
+
+<p>The next step is to create a <code>&lt;VirtualHost&gt;</code> block for each different host that you would like to serve.  The argument to the <code>&lt;VirtualHost&gt;</code> directive should be the same as the argument to the <code>NameVirtualHost</code> directive (i.e., an IP address, or * for all addresses).  Inside each <code>&lt;VirtualHost&gt;</code> block, you will need at minimum a <code>ServerName</code> directive to designate which host is served and a <code>DocumentRoot</code> directive to show where in the file system the content for that host lives.</p>
+
+<p>If you are adding virtual hosts to an existing web server, you must also create a <code>&lt;VirtualHost&gt;</code> block for the existing host.  The <code>ServerName</code> and <code>DocumentRoot</code> included in this virtual host should be the same as the global <code>ServerName</code> and <code>DocumentRoot</code>.  List this virtual host first in the configuration file so that it will act as the default host.</p>
+
+<p>For example, suppose that you are serving the domain www.test101.com and you wish to add the virtual host www.test102.com, which resolves to the same IP address.  Then you simply add the following to &quot;<code>httpd.conf</code>&quot;:</p>
+
+<pre class="color-example"><span class="color-comment"># Virtual host for all IP addresses at Port 80</span>
+NameVirtualHost *
+   
+<span class="color-comment"># First virtual host shall be the main server, the default host.</span>
+&lt;VirtualHost *&gt;
+ServerName www.test101.com
+DocumentRoot /www101
+&lt;/VirtualHost&gt;
+   
+&lt;VirtualHost *&gt;
+ServerName www.test102.com
+DocumentRoot /www102
+&lt;/VirtualHost&gt;</pre>
+
+<p>You can alternatively specify an explicit IP address in place of the * in both the <code>NameVirtualHost</code> and <code>&lt;VirtualHost&gt;</code> directives, if your server accepts multiple IP addresses.</p>
+
+<p>Many servers want to be accessible by more than one name.  This is possible with the <code>ServerAlias</code> directive, placed inside the <code>&lt;VirtualHost&gt;</code> section.  For example if you add this to the first <code>&lt;VirtualHost&gt;</code> block above</p>
+
+<pre class="color-example">ServerAlias www.test101.com *.test101.com</pre>
+
+<p>then requests for all hosts in the test101.com domain will be served by the www.test101.com virtual host.  The wildcard characters &quot;<code>*</code>&quot; and &quot;<code>?</code>&quot; can be used to match names.  Of course, you can't just make up names and place them in <code>ServerName</code> or <code>ServerAlias</code>.  You must first have your DNS server properly configured to map those names to an IP address associated with your server.</p>
+
+<p>Now when a request arrives, the server will first check if it is using an IP address that matches the <code>NameVirtualHost</code>. If it is, then it will look at each <code>&lt;VirtualHost&gt;</code> section with a matching IP address and try to find one where the <code>ServerName</code> or <code>ServerAlias</code> matches the requested hostname.  If it finds one, then it uses the configuration for that server.  If no matching virtual host is found, then the first listed virtual host that matches the IP address will be used.</p>
+
+<p>As a consequence, the first listed virtual host is the default virtual host.  The DocumentRoot from the main server will never be used when an IP address matches the <code>NameVirtualHost</code> directive. If you would like to have a special configuration for requests that do not match any particular virtual host, simply put that configuration in a <code>&lt;VirtualHost&gt;</code> container and list it first in the configuration file.</p>
+
+<p>IP-based virtual hosts use the IP address of the connection to determine the correct virtual host to serve.  Therefore you need to have a separate IP address for each host.  With name-based virtual hosting, the server relies on the client to report the hostname as part of the HTTP headers.  Using this technique, many different hosts can share the same IP address.</p>
+
+<p>For testing virtual host without access to DNS server: You can create a few hostnames pointing to your own IP address (or localhost) in your local DNS lookup table &quot;hosts&quot;.  For example:</p>
+<pre class="color-example">192.123.123.1    www.yellow.com
+192.123.123.1    www.sales.yellow.com
+192.123.123.1    www.orange.com
+127.0.0.1        localhost
+127.0.0.1        apple88
+127.0.0.1        orange99</pre>
+
+<p>In Windows, the local DNS lookup table is called &quot;<code>%SYSTEM_ROOT%\system32\drivers\etc\Hosts</code>&quot;.</p>
+
+<h4>IP-based Virtual Hosts</h4>
+
+<p>As the term IP-based indicates, the server must have a different IP address for each IP-based virtual host.  This can be achieved by the machine having several physical network connections, or by use of virtual interfaces which are supported by most modern operating systems (see system documentation for details, these are frequently called &quot;ip aliases&quot;, and the &quot;<code>ifconfig</code>&quot; command is most commonly used to set them up).</p>
+
+<p>For example:</p>
+<pre class="color-example">&lt;VirtualHost 192.123.10.1&gt;
+  DocumentRoot /www201
+  ServerName www.test201.com
+&lt;/VirtualHost&gt;
+   
+&lt;VirtualHost 192.123.10.2&gt;
+  DocumentRoot /www202
+  ServerName www.test202.com
+&lt;/VirtualHost&gt;</pre>
+   
+<p>Host can be <code>_default_</code>, in which case it matches anything no <code>&lt;VirtualHost&gt;</code> matches.</p>
+
+<h4 id="PortVirtualHost">Port-based Virtual Hosts</h4>
+
+<p>Use different port number for different virtual hosts.  The advantage is you do not need many domain names or IP addresses.  However, the client may not be familiar with the format of accessing HTTP server with a non-default port number.</p>
+
+<p>An example is as follows:</p>
+
+<pre class="color-example">Listen 80
+&lt;VirtualHost *:80&gt;
+  ServerName    localhost:80
+  DocumentRoot  /var/www1
+  ErrorLog &lt;APACHE_HOME&gt;/error.log
+  CustomLog &lt;APACHE_HOME&gt;/access.log combined
+  
+  <span class="color-comment"># Set the permission of the document base directory<span></span></span>
+  &lt;Directory "/var/wwwl"&gt;
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride None
+
+    # Apache 2.4
+    Require all granted
+    # Apache 2.2
+    # Order allow,deny
+    # allow from all
+  &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+
+Listen 8080
+&lt;VirtualHost *:8080&gt;
+  ServerName    localhost:8080
+  DocumentRoot  /var/www2
+  ErrorLog &lt;APACHE_HOME&gt;/error.log
+  CustomLog &lt;APACHE_HOME&gt;/access.log combined
+ 
+  <span class="color-comment"># Set the permission of the document base directory<span></span></span>
+  &lt;Directory &quot;/var/www2&quot;&gt;
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride None
+    
+    # Apache 2.4
+    Require all granted
+    # Apache 2.2
+    # Order allow,deny
+    # allow from all
+  &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</pre>
+   
+<p>The Listen directive tells the Apache which port to listen to.  Apache can listen to more than one port by using multiple Listen directives.</p>
+
+<h3 id="https">Setup HTTPS for Apache Server (Windows)</h3>
+
+<p>For Ubuntu, read &quot;<a href="Ubuntu_HowTo.html#https">Setup HTTPS for Apache (Ubuntu)</a>&quot;.</p>
+
+<h5 id="openssl">Step 1: Create a Certificate for the Web Server</h5>
+
+<p>The first step to set up SSL support is to create a certificate for your web server. To do so, you need OpenSSL, which is an open-source software available at <a href="http://www.openssl.org">http://www.openssl.org</a>. Apache's Windows binary package includes OpenSSL in &quot;<code>&lt;APACHE_HOME&gt;\bin</code>&quot;.</p>
+
+<p>Issue the following command to create a <em>self-signed certificate</em> for the server. First of all, a public-private key pair is generated. The private key is saved in &quot;<code>MyServer.key</code>&quot; (which shall be kept in a secure location). The public key is saved in a certificate &quot;<code>MyServer.crt</code>&quot; to be transferred to the user.</p>
+<pre class="color-command">
+&gt; <strong>openssl req -x509 -days 36500 -newkey rsa:2048 -nodes -keyout MyServer.key -out MyServer.crt
+     -subj /C=SG/O=MyCompany/CN=localhost</strong>
+ 
+<span class="color-comment">// If error &quot;Unable to load config info from /usr/local/ssl/openssl.cnf&quot; encountered<span></span></span>
+&gt; <strong>openssl req -x509 -days 36500 -newkey rsa:2048 -nodes -keyout MyServer.key -out MyServer.crt
+     -subj /C=SG/O=MyCompany/CN=localhost</strong> <strong>-config ../conf/openssl.cnf</strong></pre>
+
+<p>The option are:</p>
+<ul>
+  <li><code>-x509</code>: requests a X.509 certificate to be generated.</li>
+<li><code>-days 36500</code>: sets the expiration period for the certificate. The default is 30 days. I set to 100 years.</li>
+<li><code>-newkey rsa:2048</code>: generate a new key-pair, using RSA of bit-length 2048.</li>
+<li><code>-nodes</code>: no passphrase is to be used for the private key file.</li>
+<li><code>-keyout</code> and <code>-out</code>: specify the output private key-file and certificate.</li>
+<li><code>-subj</code> sets the country code (/C), company name (/O), and the common name (/CN). If you leave these out, you'll be prompted for them. The CN (Common Name) must be the same as your <code>ServerName</code> in your Apache configuration, otherwise the certificate won't match and users will receive a warning when connecting.</li>
+<li><code>-config &lt;openssl.conf&gt;</code>: specify the openssl config file.</li>
+<li>Refer to <a href="http://www.modssl.org/docs/2.2/ssl_reference.html">http://www.modssl.org/docs/2.2/ssl_reference.html</a> for more information about OpenSSL command syntax.</li>
+</ul>
+
+<p>To view the content of a certificate (which contains the public key of the server), issue the following openssl command:</p>
+<pre class="color-command">
+&gt; <strong>openssl x509 -in server.crt -noout -text</strong></pre>
+
+<h5>Step 2: Configuring Apache HTTP Server</h5>
+
+<p>First of all, move the private key file (<code>MyServer.key</code>) and certificate (<code>MyServer.crt</code>) to the Apache's configuration directory (<code>&lt;APACHE_HOME&gt;/conf</code>).</p>
+
+<p>In apache's main configuration &quot;<code>httpd.conf</code>&quot; (under <code>&lt;APACHE_HOME&gt;/conf</code>), check the following directives:</p>
+
+<pre class="color-syntax">
+<span class="color-comment"># Load the SSL module<span></span></span>
+LoadModule ssl_module modules/mod_ssl.so
+ 
+<span class="color-comment"># Include ssl configuration from an external file<span></span></span>
+Include conf/extra/httpd-ssl.conf</pre>
+
+<p>The <code>LoadModule</code> loads the SSL module and the <code>Include</code> directive includes more configuration options for SSL support in &quot;<code>conf/extra/httpd-ssl.conf</code>&quot;, as follows</p>
+
+<pre class="color-syntax">
+<span class="color-comment"># Use HTTPS default port number of 443<span></span></span>
+Listen 443
+ 
+<span class="color-comment"># Define a Virtual Host for HTTPS under directory &quot;wwwssl&quot;<span></span></span>
+&lt;VirtualHost *:443&gt;
+DocumentRoot &quot;&lt;APACHE_HOME&gt;/wwwssl&quot;
+ServerName localhost:443
+ErrorLog &quot;&lt;APACHE_HOME&gt;/logs/error.log&quot;
+TransferLog &quot;&lt;APACHE_HOME&gt;/logs/access.log&quot;
+SSLEngine on
+SSLProtocol all -SSLv2
+SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
+SSLCertificateFile &quot;&lt;APACHE_HOME&gt;/conf/MyServer.crt&quot;
+SSLCertificateKeyFile &quot;&lt;APACHE_HOME&gt;/conf/MyServer.key&quot;
+ 
+<span class="color-comment"># Set the permission of the document base directory<span></span></span>
+&lt;Directory &quot;&lt;APACHE_HOME&gt;/wwwssl&quot;&gt;
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride None
+    Order allow,deny
+    allow from all
+<span class="color-comment">#   SSLRequireSSL</span>
+&lt;/Directory&gt;
+ 
+&lt;/VirtualHost&gt;</pre>
+
+<h5>Verifying SSL Installation</h5>
+
+<p>Create the document root directory &quot;<code>wwwssl</code>&quot;, and place a welcome page (e.g., <code>index.html</code>).</p>
+<p>Start the Apache Server. Start a browser and issue <code>https://localhost</code>.</p>
+
+<p>Because the server certificate is self-signed and not signed by a trusted CA (Certificate Authority), browser issues a warning. Accept the warning and continue...</p>
+
+<h5>What if...</h5>
+<p>In case of error in the installation:</p>
+<ul>
+<li>Check the Apache and SSL log.</li>
+<li>Try connecting to the Apache server via OpenSSL as follows:
+<pre class="color-command">
+&gt; <strong>openssl s_client -connect localhost:443</strong></pre>
+If the connection succeeds then an HTTP command such as &quot;`<code>GET /</code>&quot;' to retrieve a web page. </li>
+</ul>
+
+<h5>Password-Protected Private Key File</h5>
+<p>You can attached a passphrase (i.e., password) to the private key file. However, to start Apache, you need to either hardcode the passphrase in the apache's configuration file (same security exposure as no passphrase) or provide the passphrase during the start-up dialog (this means that you can't automate the Apache start-up!).</p>
+
+<h5>CA-Signed Certificate</h5>
+<p>To generate a certificate for signning by CA:</p>
+<ol>
+<li>Generate a public-privage key pair and a certificate request:
+<pre class="color-command">
+&gt; <strong>openssl req -new -newkey rsa:2048 -nodes  
+  -keyout MyServer.key -out www.mysite.com.csr
+  -subj /O=MyCompany/OU=MyDepartment/CN=www.mysite.com</strong></pre>
+we didn't use the <code>-x509</code> switch. The command will therefore generate a public-private key pair and certificate request in a <code>.csr</code> file, but not a certificate (<code>.crt</code> file).</li>
+
+<li>Send that certificate request file &quot;<code>www.mysite.com.csr</code>&quot; to the CA (with your payment). You may be able to get a free certificate from <code>CAcert.org</code>.</li>
+<li>Rename the received certificate to <code>MyServer.crt</code> and verify its contents:
+  <pre class="color-command">
+&gt; <strong>openssl verify -CAfile /path/to/trusted_ca.crt -purpose sslserver server.crt</strong></pre>
+Check that the certificate corresponds to your private key:
+<pre class="color-command">
+&gt; <strong>openssl x509 -noout -modulus -in server.pem | openssl sha1</strong>
+&gt; <strong>openssl rsa -noout -modulus -in server.key | openssl sha1</strong></pre>
+</li>
+
+<li>Install your private key (<code>MyServer.key</code>) and certificate (<code>Myserver.crt</code>) in your apache configuration.</li>
+</ol>
+
+
+<h3>Miscellaneous Configurations</h3>
+
+<h4>Log Files</h4>
+
+<p>Apache produces these log files: error log, access log. The default configuration puts the error log in &quot;<code>$APACHE_home\logs\error.log</code>&quot; and access log in &quot;<code>$APACHE_home\logs\access.log</code>&quot;.  Take a quick glance into these log files.</p>
+
+<p><span class="line-heading">Error Log</span>: The configuration directives related to error logging are <code>ErrorLog</code> and <code>LogLevel</code>:</p>
+
+<ul>
+<li><code>ErrorLog</code> directive specifies the location of the error log file.  For example:
+
+<pre class="color-example"><span class="color-comment"># ErrorLog: The location of the error log file.
+# If you do not specify an ErrorLog directive within a &lt;VirtualHost&gt;
+# container, error messages relating to that virtual host will be
+# logged here.  If you *do* define an error logfile for a &lt;VirtualHost&gt;
+# container, that host's errors will be logged there and not here.</span>
+ErrorLog logs/error.log</pre>
+</li>
+
+<li><code>LogLevel</code> directive controls the types of error messages written to the error log. For example:
+
+<pre class="color-example"><span class="color-comment"># LogLevel: Control the number of messages logged to the error_log.
+# Possible values include: debug, info, notice, warn, error, crit,
+# alert, emerg.</span>
+LogLevel warn</pre>
+</li>
+
+</ul>
+
+<p>Sample entries in the error log are as follows:</p>
+
+<pre class="color-example">[Sun Oct 18 16:53:40 xxxx] [error] [client 127.0.0.1] Invalid method in request get /index.html HTTP/1.0<br />[Sun Oct 18 18:36:20 xxxx] [error] [client 127.0.0.1] File does not exist: d:/myPorject/apache2/htdocs/t.html
+[Sun Oct 18 19:58:41 xxxx] [error] [client 127.0.0.1] client denied by server configuration: d:/myPorject/apache2/htdocs/forbidden/index.html</pre>
+
+<p><span class="line-heading">Access Log</span>: The configuration directives related to access logging are <code>CustomLog</code> and <code>LogFormat</code>:</p>
+
+<ul>
+<li>The <code>CustomLog</code> directive specifies the locations of the access log files. There are 3 types of access logs: common, referrer and agent.  Common access log captures client access.  Referrer access log captures the &quot;referrer&quot; (as in the Referer request header) of the request. (Referrer can be used for access control or accounting purpose such as e-advertising.)  Agent access log captures the types of the browsers used in issuing the request (as in the User-Agent request header). Most installations do not need the referrer and agent access logs.  For example:
+
+<pre class="color-example"><span class="color-comment"># The location and format of the access logfile (Common Logfile Format).
+# If you do not define any access logfiles within a &lt;VirtualHost&gt;
+# container, they will be logged here.  Contrariwise, if you *do*
+# define per-&lt;VirtualHost&gt; access logfiles, transactions will be
+# logged therein and *not* in this file.</span>
+CustomLog &quot;logs/access.log&quot; common
+#CustomLog logs/referer.log referer
+#CustomLog logs/agent.log agent</pre>
+
+<p>You can combine all the 3 access logs into a single log file, using keyword &quot;combined&quot;.</p>
+<pre class="color-example"><span class="color-comment"># If you prefer a logfile with access, agent, and referer information
+# (Combined Logfile Format) you can use the following directive.</span>
+#CustomLog &quot;logs/access.log&quot; combined</pre>
+</li>
+
+<li><code>LogFormat</code> directive controls the format of the access logs.  For example:
+
+<pre class="color-example"><span class="color-comment"># The following directives define some format nicknames for use with
+# a CustomLog directive.</span>
+LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;&quot; combined
+LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b&quot; common
+LogFormat &quot;%{Referer}i -&gt; %U&quot; referer
+LogFormat &quot;%{User-agent}i&quot; agent</pre>
+</li>
+
+</ul>
+
+<p>Some sample entries in the &quot;common&quot; access log are as shown:</p>
+
+<pre class="color-example">127.0.0.1 - - [18/Oct/2009:15:41:30 +0800] &quot;GET / HTTP/1.1&quot; 200 44
+127.0.0.1 - - [18/Oct/2009:18:36:20 +0800] &quot;GET /t.html HTTP/1.0&quot; 404 204
+127.0.0.1 - - [18/Oct/2009:18:32:05 +0800] &quot;get /index.html HTTP/1.0&quot; 501 215</pre>
+
+
+
+<h4>Error Response</h4>
+<p>The main role of Apache is to deliver document.  When apache encounters problems and cannot meet a client's request, it generates an error code and returns an error message to explain the error.  Apache provides a default set of error messages.  Nonetheless, you can customize you own error response using directive ErrorDocument as follows:</p>
+
+<ul>
+<li>Produce a short message by providing a text string after a (&quot;).
+<pre class="color-example">ErrorDocument 404 &quot;Cannot find the requested document.</pre>
+</li>
+
+<li>Redirect to a local page using a relative URL:
+<pre class="color-example">ErrorDocument 404 /missing.html
+ErrorDocument 403 //cgi-bin/forbidden.pl</pre>
+</li>
+
+<li>Redirect to an external page using an absolute URL.  In this case, apache will send a &quot;redirect&quot; message to the client.  The client has to issue another request to pull in the redirected page.
+<pre class="color-example">ErrorDocument 404 http://www.green.com/missing.html</pre>
+</li>
+
+</ul>
+
+<h4>Directory Indexing &amp; Listing</h4>
+
+<p>If a client issues a URL selecting a directory, Apache returns a listing of that directory, if <code>Options Indexes</code> is on; otherwise it returns error &quot;403 forbidden&quot;.  However, if the directory contains a file called &quot;<code>index.html</code>&quot;, Apache returns this &quot;<code>index.html</code>&quot; instead.  You can use directive <code>DirectoryIndex</code> to specify the name of the indexing file.  For example,</p>
+
+<pre class="color-example">
+&lt;IfModule mod_dir.c&gt;
+    <span class="color-comment"># The first item takes precedence if many exist</span>
+    DirectoryIndex index.html myindex.html
+&lt;/IfModule&gt;</pre>
+
+<p>You can control the appearance (e.g., fancy indexing) of the directory listing using directive <code>IndexOptions</code> (of module <code>mod_autoindex</code>).  See Apache documentation for more details.</p>
+
+<p>To turn off automatic indexing for a directory, you can use directive &quot;<code>Options -indexes</code>&quot;.  Apache will return error &quot;403 Forbidden&quot; if a directory request is made.  For example:</p>
+
+<pre class="color-example">&lt;Directory dir-path&gt;
+   Options -Indexes
+&lt;/Directory&gt;</pre>
+
+<h4>Server-side Include (SSI)</h4>
+<p>[TODO]</p>
+
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ul>
+<li>Apache HTTP Server Mother Site @ <a href="http://www.apache.org/">www.apache.org</a></li>
+<li>Apache Documentation @ sub-directory &quot;<code>Manual</code>&quot;</li>
+<li>Laurie b., and Laurie P., &quot;Apache, The  Definitive Guide&quot;, 2nd eds, O'reilly, 1999.</li>
+<li>RFC 2616 &quot;Hypertext Transfer Protocol HTTP/1.1&quot;, 1999 @ <a href="http://www.ietf.org/rfc/rfc2616.txt">http://www.ietf.org/rfc/rfc2616.txt</a>.</li>
+<li>RFC 1945 &quot;Hypertext Transfer Protocol HTTP/1.0&quot;, 1996 @ <a href="http://www.ietf.org/rfc/rfc1945.txt">http://www.ietf.org/rfc/rfc1945.txt</a>.</li>
+</ul>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: ???<br />
+Last modified: September, 2014</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

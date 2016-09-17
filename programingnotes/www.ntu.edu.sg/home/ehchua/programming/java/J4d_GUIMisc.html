@@ -1,0 +1,889 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Swing: Templates, Misc and How-To - Java Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>Swing: Templates, Miscellaneous and How-To</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Swing Program Templates</h3>
+
+
+
+<h4>My Swing Program Template</h4>
+
+<p>My template is primarily meant for <em>teaching</em> and for <em>ease of explanation</em>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+ 
+<span class="color-comment">// Swing Program Template</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class SwingTemplate <strong>extends JFrame</strong> {
+   <span class="color-comment">// Name-constants to define the various dimensions</span>
+   public static final int WINDOW_WIDTH = 300;
+   public static final int WINDOW_HEIGHT = 150;
+   <span class="color-comment">// ......</span>
+ 
+   <span class="color-comment">// private variables of UI components</span>
+   <span class="color-comment">// ......</span>
+ 
+   <span class="color-comment">/** Constructor to setup the UI components */</span>
+   public SwingTemplate() {
+      Container cp = this.getContentPane();
+ 
+      <span class="color-comment">// Content-pane sets layout</span>
+      <span class="color-comment">// cp.setLayout(new ....Layout());</span>
+ 
+      <span class="color-comment">// Allocate the UI components</span>
+      <span class="color-comment">// .....</span>
+ 
+      <span class="color-comment">// Content-pane adds components</span>
+      <span class="color-comment">// cp.add(....)</span>
+ 
+      <span class="color-comment">// Source object adds listener</span>
+      <span class="color-comment">// .....</span>
+ 
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  <span class="color-comment">// Exit when close button clicked</span>
+      setTitle(&quot;......&quot;); <span class="color-comment">// &quot;this&quot; JFrame sets title</span>
+      setSize(WINDOW_WIDTH, WINDOW_HEIGHT);  <span class="color-comment">// or pack() the components</span>
+      setVisible(true);   <span class="color-comment">// show it</span>
+   }
+ 
+   <span class="color-comment">/** The entry main() method */</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Run GUI codes in the Event-Dispatching thread for thread safety</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         public void run() {
+            new SwingTemplate();  <span class="color-comment">// Let the constructor do the job</span>
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Codes that can be Run as Application as well as Applet</h4>
+
+<p>To write codes that can be run as a <em>standalone application</em> as well as an <em>applet</em>, you could extend your main class from <code>JPanel</code>.</p>
+
+<ol>
+<li>To run as an application, write a <code>main()</code> method that allocates a <code>JFrame</code> and set its content-pane to your main class (<code>JPanel</code>).</li>
+<li>To run as an applet, write a class that extends <code>JApplet</code>, with an <code>init()</code> which set the <code>JApplet</code>'s content-pane to your main class (<code>JPanel</code>). Use <code>SwingUtilities.invokeAndWait()</code> to run the GUI construction codes, instead of <code>invokeLater()</code>.</li>
+</ol>
+
+<h5>Main Graphics class</h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+ 
+<span class="color-comment">// Swing Program Template for running as application or Applet</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class SwingTemplateApp extends JPanel {
+   <span class="color-comment">// Name-constants to define the various dimensions</span>
+   public static final int WINDOW_WIDTH = 300;
+   public static final int WINDOW_HEIGHT = 150;
+   <span class="color-comment">// ......</span>
+ 
+   <span class="color-comment">// private variables of UI components</span>
+   <span class="color-comment">// ......</span>
+ 
+   <span class="color-comment">/** Constructor to setup the UI components */</span>
+   public SwingTemplateApp() {
+      <span class="color-comment">// &quot;this&quot; JPanel sets layout</span>
+      <span class="color-comment">// this.setLayout(new ....Layout());</span>
+ 
+      <span class="color-comment">// Allocate the UI components</span>
+      <span class="color-comment">// .....</span>
+ 
+      <span class="color-comment">// &quot;this&quot; JPanel adds components</span>
+      <span class="color-comment">// this.add(....)</span>
+ 
+      <span class="color-comment">// Source object adds listener</span>
+      <span class="color-comment">// .....</span>
+ 
+   }
+ 
+   <span class="color-comment">/** The entry main() method */</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Run GUI codes in the Event-Dispatching thread for thread safety</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         public void run() {
+            JFrame frame = new JFrame();
+            frame.setContentPane(new SwingTemplateApp());
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setTitle(&quot;......&quot;);
+            frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);  <span class="color-comment">// or pack()</span>
+            frame.setVisible(true);
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Main Applet Class</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+import java.lang.reflect.InvocationTargetException;
+import javax.swing.JApplet;
+ 
+<span class="color-comment">// Swing Program Template for running as Applet</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class SwingTemplateApplet extends JApplet {
+ 
+   <span class="color-comment">/** init() to setup the UI components */</span>
+   @Override
+   public void init() {
+      <span class="color-comment">// Run GUI codes in the Event-Dispatching thread for thread safety</span>
+      try {
+         javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
+            public void run() {
+               setContentPane(new SwingTemplateApplet());
+            }
+         });
+      } catch (InvocationTargetException e) {
+         e.printStackTrace();
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Custom Graphics</h4>
+<p>[TODO]</p>
+
+<h4>Full-Screen Mode (for Games) Template</h4>
+<p>See below on how to use full-screen mode</p>
+<p>[TODO] Template</p>
+
+<h4>NetBeans GUI Builder Template</h4>
+
+<p>NetBeans GUI Builder's template is similar to mine but uses many helper methods:</p>
+<ol>
+<li>Each UI component is declared as a private variable of the class, so that it can be referenced by all the methods. I typically declare UI components as private variable only if they have to be referenced. Otherwise, they are either declared inside the constructor, or anonymous instance used.</li>
+<li>It uses a helper method called <code>initComponent()</code> to construct all the UI component, which is invoked in the constructor.  I place the GUI construction codes directly in the constructor. The <code>setVisible(true)</code> is called (in the <code>main()</code>) after the <code>initComponents()</code>.</li>
+<li>An anonymous inner class is created for each source's action. A helper method is generated for each event handler.</li>
+<li>It uses <code>GroupLayout</code> (which was introduced by NetBeans and included in JDK) to layout the components.</li>
+<li>It uses <code>java.awt.EventQueue.invokeLater()</code>, which is the same as <code>javax.swing.SwingUtilities.invokeLater()</code>, to run the GUI codes on the event-dispatching thread.</li>
+</ol>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+ 
+public class NetBeansGUIBuilderTemplate extends JFrame {
+   <span class="color-comment">// privates variables for all the UI components</span>
+   <span class="color-comment">// E.g.,</span>
+   <span class="color-comment">// private javax.swing.JButton btn;</span>
+ 
+   <span class="color-comment">/** Constructor */</span>
+   public NetBeansGUIBuilderTemplate() {
+      <span class="color-comment">// Setup and initialize UI via helper method initComponents()</span>
+      initComponents();
+   }
+ 
+   <span class="color-comment">/** Helper method (Generated via GUI Builder) */</span>
+   private void initComponents() {
+      <span class="color-comment">// Construct the UI components</span>
+      <span class="color-comment">// E.g.,</span>
+      <span class="color-comment">// btn = new JButton();</span>
+ 
+      <span class="color-comment">// Source object adds listener</span>
+      <span class="color-comment">// Use an anonymous inner class for each source</span>
+      <span class="color-comment">// E.g.,</span>
+      <span class="color-comment">// btn.addActionListener(new ActionListener() {</span>
+      <span class="color-comment">//   @Override</span>
+      <span class="color-comment">//   public void actionPerformed(ActionEvent evt) {</span>
+      <span class="color-comment">//      // Generate a helper method for each handler</span>
+      <span class="color-comment">//      btnActionPerformed(evt);</span>
+      <span class="color-comment">//   }</span>
+      <span class="color-comment">// });</span>
+ 
+      <span class="color-comment">// Layout the container and components</span>
+      <span class="color-comment">// NetBeans introduces the so-called GroupLayout</span>
+      <span class="color-comment">// .....</span>
+ 
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      setTitle(&quot;...Title...&quot;);
+      pack();  <span class="color-comment">// pack all the component in this JFrame</span>
+   }
+ 
+   <span class="color-comment">// Generated Helper method for source btn's actionPerformed() handler</span>
+   <span class="color-comment">// private void btnActionPerformed(ActionEvent evt) {</span>
+   <span class="color-comment">//    ......</span>
+   <span class="color-comment">// }</span>
+ 
+   <span class="color-comment">/** The entry main() method */</span>
+   public static void main(String args[]) {
+      <span class="color-comment">// Run the GUI construction on the event-dispatching thread for thread-safety</span>
+      <span class="color-comment">// Same as javax.swing.SwingUtilities.invokeLater()</span>
+      java.awt.EventQueue.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            <span class="color-comment">// Allocate a JFrame and show it
+            // setVisible(true) runs after initComponents()</span>
+            new NetBeansGUIBuilderTemplate().setVisible(true);
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h4>Swing Tutorial Template</h4>
+
+<ol>
+<li>Swing tutorial template uses a <code>static</code> method called <code>createAndShowGUI()</code> to setup the UI. The <code>createAndShowGUI()</code> is an <em>extension</em> to the static <code>main()</code> method solely responsible for GUI construction.</li>
+
+<li>The main class does not extend from <code>JFrame</code>. Instead, a <code>JFrame</code> called <code>frame</code> is declared and constructed in the <code>static</code> method <code>createAndShowGUI()</code>.</li>
+<li>The main class may extends <code>JPanel</code>, which is the main panel for the application. In <code>createAndShowGUI()</code>, you can create a main class (<code>JPanel</code>) and set it as the content-pane of the <code>JFrame</code>.</li>
+</ol>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+ 
+public class SwingTutorialTemplate extends JPanel {
+   <span class="color-comment">// Name-constants to define the various dimensions</span>
+   public static final int WINDOW_WIDTH = 300;
+   public static final int WINDOW_HEIGHT = 150;
+   <span class="color-comment">// ......</span>
+ 
+   <span class="color-comment">// Create the GUI and show it.</span>
+   <span class="color-comment">// For thread safety, this method should be invoked from </span><span class="color-comment">event-dispatching thread.</span>
+   private static void createAndShowGUI() {
+      <span class="color-comment">// Create and set up the application window</span>
+      JFrame frame = new JFrame(&quot;...Your Title...&quot;);
+      frame.setContentPane(new SwingTutorialTemplate());
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+            <span class="color-comment">// or frame.pack() to &quot;pack&quot; all the components in this frame</span>
+      frame.setVisible(true);  <span class="color-comment">// show it</span>
+   }
+ 
+   public static void main(String[] args) {
+      <span class="color-comment">// Schedule a job for the event-dispatching thread to create and show</span> <span class="color-comment">this application's GUI.</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            createAndShowGUI();
+         }
+      });
+      <span class="color-comment">// ......</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3><span class="font-code">java.awt.Robot</span></h3>
+<p><code>java.awt.Robot</code> (since JDK 1.3) is an interesting utility class that can be used to take control of the mouse and keyboard. It can generate mouse and key events to the underlying native system (for test automation, self-running demos, among others).  <code>Robot</code> can also be used to do screen capture (or print screen).</p>
+
+<p>The commonly-used methods in <code>java.awt.Robot</code> are:</p>
+
+<pre class="color-syntax">
+void delay(int msec)             <span class="color-comment">// delay in milliseconds</span>
+&nbsp;
+void keyPress(int keyCode)       <span class="color-comment">// press a key</span>
+void keyRelease(int keyCode)     <span class="color-comment">// release a key</span>
+&nbsp;
+void mouseMove(int x, int y)     <span class="color-comment">// move the mouse point to (x, y) screen coordinates</span>
+void mousePress(int mouseCode)   <span class="color-comment">// press a mouse button</span>
+void mouseRelease(int mouseCode) <span class="color-comment">// release a mouse button</span>
+&nbsp;
+BufferImage createScreenCapture(Rectangle r)   <span class="color-comment">// capture clip specified by the Rectangle</span>  
+</pre>
+
+<h4>Example 1: Sending Keystrokes and Mouse-Clicks</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+ 
+<span class="color-comment">/** Launch NotePad, send key strokes, then send mouse events to exit. */</span>
+public class RobotDemoKeyAndMouse {
+   public static Robot robot;
+ 
+   public static void main(String[] args) {
+      try {
+         robot = new Robot();
+         Runtime.getRuntime().exec(&quot;notepad.exe&quot;); <span class="color-comment">// launch NotePad</span>
+         robot.delay(1000);  <span class="color-comment">// wait for NotePad to launch</span>
+ 
+         <span class="color-comment">// Send keys to NotePad</span>
+         int [] keys = {
+            KeyEvent.VK_T,
+            KeyEvent.VK_E,
+            KeyEvent.VK_S,
+            KeyEvent.VK_T,
+            KeyEvent.VK_ENTER
+         };
+         for (int i = 0; i &lt; keys.length; ++i) {
+            sendKey(keys[i]);
+         }
+ 
+         <span class="color-comment">// Send mouse event to exit NotePad</span>
+         <span class="color-comment">// Need to check the (x, y) of the menu location</span>
+         sendMouseClick(55, 74);     <span class="color-comment">// File</span>
+         sendMouseClick(50, 260);    <span class="color-comment">// Exit</span>
+         sendKey(KeyEvent.VK_TAB);   <span class="color-comment">// Don't save</span>
+         sendKey(KeyEvent.VK_ENTER);
+ 
+      } catch (AWTException ex) {
+         ex.printStackTrace();
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+   }
+ 
+   <span class="color-comment">/** helper method to send the given key to the active application */</span>
+   public static void sendKey(int keyCode) {
+      robot.keyPress(keyCode);
+      robot.keyRelease(keyCode);
+      robot.delay(500); <span class="color-comment">// for you to see the keystroke</span>
+   }
+ 
+   <span class="color-comment">/** helper method to send a mouse-click to the active application */</span>
+   public static void sendMouseClick(int x, int y) {
+      robot.mouseMove(x, y);
+      robot.delay(1000); <span class="color-comment">// for you to see the move</span>
+      robot.mousePress(InputEvent.BUTTON1_MASK);
+      robot.mouseRelease(InputEvent.BUTTON1_MASK);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Dissecting the Program</h5>
+<ul>
+<li>Once a <code>Robot</code> is constructed, you could use the <code>keyPress()</code> and <code>keyRelease()</code> to send a keystroke to the native system.</li>
+<li>You can use <code>mouseMove(x, y)</code> to position the mouse-pointer at absolute screen co-ordinates (x, y), and <code>mousePress()</code> and <code>mouseRelease()</code> to send a mouse-click.</li>
+<li>A <code>delay()</code> method is also provided. Delay is needed for self-running demos.</li>
+</ul>
+
+<h4>Example 2: Screen Capture</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.*;
+ 
+<span class="color-comment">/** Using java.awt.Robot to capture a screen shot and saves it */</span>
+public class RobotScreenCaptureDemo {
+   public static void main(String[] args) {
+      try {
+         <span class="color-comment">// Get the &quot;actual&quot; screen size</span>
+         Dimension scr = Toolkit.getDefaultToolkit().getScreenSize();
+         System.out.println(&quot;(&quot; + scr.width + &quot;,&quot; + scr.height + &quot;)&quot;);
+ 
+         <span class="color-comment">// Allocate a Robot instance, and do a screen capture</span>
+         Robot robot = new Robot();
+         Rectangle rect = new Rectangle(0, 0, scr.width, scr.height);
+         BufferedImage image = <strong>robot.createScreenCapture(rect)</strong>;
+ 
+         <span class="color-comment">// Save the captured image to file with ImageIO (JDK 1.4)</span>
+         ImageIO.write(image, &quot;jpeg&quot;, new File(&quot;captured.jpg&quot;));
+      } catch (AWTException ex) {  <span class="color-comment">// for Robot()</span>
+         ex.printStackTrace();
+      } catch (IOException ex) {   <span class="color-comment">// for ImageIO.write()</span>
+         ex.printStackTrace();
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Dissecting the Program</h5>
+<ul>
+<li>Line 11 gets the actual screen size via the default <code>ToolKit</code>.</li>
+<li>Line 15 allocate a <code>java.awt.Robot</code> instance (JDK 1.3) and Line 17 invokes <code>createScreenCapture()</code> method of the <code>Robot</code> instance to take a snapshot of the screen of the given rectangular area.</li>
+<li>Line 20 writes the captured image to a disk file, via the <code>javax.imageio.ImageIO</code> utility (JDK 1.4), which supports &quot;jpg&quot; and &quot;png&quot;.</li>
+</ul>
+
+<h3>Swing How-To</h3>
+
+<h4>Get  Current Screen (Monitor) Size?</h4>
+<p>In JDK, &quot;screen&quot; refers to your computer monitor; &quot;window&quot; refers to your application window.</p>
+<ol>
+<li>Via <code>static</code> method <code>Toolkit.getDefaultToolkit().getScreenSize()</code>.
+
+  <pre class="color-example"><span class="color-comment"></span>Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+int screenWidth = dim.width;
+int screenHeight = dim.heigth;</pre></li>
+
+<li>Via <code>java.awt.Window</code>'s <code>getToolkit().getScreenSize()</code> method.</li>
+<li>Via current <code>DisplayMode</code> of the current screen <code>GraphicsDevice</code>:
+<pre class="color-example">
+GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+GraphicsDevice defaultScreen = env.getDefaultScreenDevice();
+DisplayMode defaultDisplayMode = defaultScreen.getDisplayMode();
+int screenWidth = defaultDisplayMode.getWidth();
+int screenHeight = defaultDisplayMode.getHeight();</pre>
+</li>
+</ol>
+
+<h4>Setting <span class="font-code">JComponent</span>'s (<span class="font-code">JFrame</span>, <span class="font-code">JPanel</span>) Size?</h4>
+<p>For window (<code>JFrame</code>/<code>Frame</code>):</p>
+<ol>
+<li><code>setSize(int width, int height)</code> of <code>java.awt.Window</code>.</li>
+
+<li><code>setBounds(int topLeftX, int topLeftY, int width, int height)</code> of <code>java.awt.Window</code>.</li>
+</ol>
+
+<p>For both window (<code>JFrame</code>/<code>Frame</code>)and panel (<code>JPanel</code>/<code>Panel</code>):</p>
+<ol>
+<li><code>setPreferredSize(Dimension d)</code> of <code>java.awt.Component</code>.</li>
+
+<li>Override called-back method <code>getPreferredSize()</code> of <code>java.awt.Component</code>, which shall return the preferred <code>Dimension</code> of this component.</li>
+
+</ol>
+
+<h4>Centralize Your Window on the Screen</h4>
+<p>In JDK, &quot;screen&quot; refers to your computer monitor; &quot;window&quot; refers to your application window.</p>
+<p>Use <code>JFrame</code>'s <code>setLocationRelativeTo(null)</code>.</p>
+<p>Or,</p>
+
+<ol>
+<li>Get the screen width and height.</li>
+<li>Get your application window's width and height, via <code>JFrame</code>'s  <code>getWidth()</code> and <code>getHeight()</code>.</li>
+<li>Position your application window on the screen via <code>setBounds(x, y, width, height)</code>.</li>
+</ol>
+
+<h4>Align Text in <span class="font-code">drawString()?</span></h4>
+<p>Use a <code>FontMetrics</code> to find out the width and height of the <code>String</code> to be rendered for the current <code>Font</code>, and position the baseline (x, y) of the <code>drawString()</code> accordingly.</p>
+
+<pre class="color-example">g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
+String message = &quot;Hello, world!&quot;;
+FontMetrics fontMetrics = g.getFontMetrics();
+Rectangle2D messageBounds = fontMetrics.getStringBounds(message, g);
+   
+<span class="color-comment">// Centralize on the window</span>
+g.drawString(message,
+  (int) ((getWidth() - messageBounds.getWidth()) / 2),
+  (int) ((getHeight() - messageBounds.getHeight()) / 2));</pre>
+
+<p>It is interesting to note that in JavaME, the <code>drawString()</code> provides an additional argument for setting the alignment of text string.</p>
+
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>&quot;Creating a GUI With JFC/Swing&quot; (aka &quot;The Swing Tutorial&quot;) @ <a href="http://docs.oracle.com/javase/tutorial/uiswing/">http://docs.oracle.com/javase/tutorial/uiswing/</a>.</li>
+</ol>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7<br />
+Last modified: April, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

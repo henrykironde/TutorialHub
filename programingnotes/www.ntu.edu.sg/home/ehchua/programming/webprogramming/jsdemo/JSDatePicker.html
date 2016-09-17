@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- JSDatePicker.html -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>A Date Chooser</title>
+  <script src="JSDateUtil.js"></script>
+  <script src="JSDatePicker.js"></script>
+</head>
+<body>
+  <h2>A Date Chooser</h2>
+  <form id="theForm">
+    Year: <input type="text" name="year" id="year" size="4" maxLength="4">
+    Month: <select name="month" id="month">
+      <option id="month1" value="1">Jan</option>
+      <option id="month2" value="2">Feb</option>
+      <option id="month3" value="3">Mar</option>
+      <option id="month4" value="4">Apr</option>
+      <option id="month5" value="5">May</option>
+      <option id="month6" value="6">Jun</option>
+      <option id="month7" value="7">Jul</option>
+      <option id="month8" value="8">Aug</option>
+      <option id="month9" value="9">Sep</option>
+      <option id="month10" value="10">Oct</option>
+      <option id="month11" value="11">Nov</option>
+      <option id="month12" value="12">Dec</option>
+    </select>
+    Day: <select name="day" id="day"></select>&nbsp;
+    <input type="text" name="dayInWeek" id="dayInWeek" readonly>&nbsp;
+    <input type="button" id="btnNow" value="Now">
+  </form>
+</body>
+</html>

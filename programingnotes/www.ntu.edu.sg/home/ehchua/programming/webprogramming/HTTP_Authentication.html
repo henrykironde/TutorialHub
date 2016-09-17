@@ -1,0 +1,536 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTTP Authentication</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>HTTP</h1>
+<h2>Authentication</h2>
+
+<h3>Authentication, Authorization and Access Control</h3>
+
+<p><em>Authentication</em> is the process of verifying &quot;someone is who he claims he is&quot;. In other words, authentication is to ascertain the identity of the users. This is usually carried out via a credential (username/password). Other techniques include smart card and biometrics (retina scan, voice recognition, or fingerprints).</p>
+
+<p><em>Authorization</em> followed authentication. Once the identity of the user is ascertained, the authorization process decides whether this client has the authority to access the requested resources. The criteria may include whether the client possesses the necessary authority (e.g., manager or worker has different authorities) or whether he has paid the admission or subscription.</p>
+
+<p><em>Access control</em> is a much more general way of controlling access to a resource. Access control is not limited to checking the identify of the client, it could include other criteria, such as the network address and hostname, the time of day, the type of browser which the client is using, the referrer, and etc. Apache provides a rich set of directives for controlling access to directories, files, and locations, e.g., <code>&lt;Directory&gt;</code>, <code>&lt;File&gt;</code>, <code>&lt;Location&gt;</code>, <code>Allow</code>, <code>Deny</code>, <code>Order</code>, and <code>.htaccess</code> (refer to <a href="../howto/Apache_HowToConfigure.html#AccessControl">Apache How-To: Access Control</a>).</p>
+
+<p>This section describes the identity-based access control, i.e., authentication and authorization. In Apache, authentication and authorization are inextricable and are configured together.</p>
+
+<p>HTTP provides two schemes for authenticating clients: <em>Basic Access Authentication</em> and <em>Digest Access Authentication</em>. The specification is given in &quot;RFC 2617 HTTP Authentication: Basic and Digest Access Authentication&quot;. It is important to stress that these schemes merely provide a mean for the client to send in his username/password for authentication. The schemes do not ensure message confidentially (i.e., message encryption), message integrity (man-in-the-middle attack), and non-repudiation. For high-risk and high-security systems which require these guarantees, you have to turn to SSL (Secure Socket Layout). HTTP with SSL (or HTTPS) will be discussed in the later chapter.</p>
+
+<h3>Basic Authentication</h3>
+
+<p><em>Basic Access Authentication</em> scheme was introduced since HTTP/1.0. It is a simple scheme, which uses username/password to authenticate clients.</p>
+
+<p>The client sends his username and password to the server. The server looks up the password file and decide whether the client is authorized to access the requested resource. The password file can be a simple text file, or a database (which greatly improves the retrieval and matching process for large user base). Users can be grouped into <em>groups</em>. Access can then be controlled at the group level. To improve on the flexibility, the protected space is divided into <em>realm</em>. Each username/password pair is valid for one particular realm.</p>
+
+<p><strong>CAUTION:</strong>  The Basic Access Authentication scheme is not considered secure nor safe. This is because the username, password, and messages are all sent in clear text (i.e., not encrypted). Eavesdroppers or network snifters can easily pick up your username, password, and the messages. You should be extremely cautious when giving your username and password to a server that uses basic authentication scheme (if you use the same password to access your bank account!?). Use a dedicated &quot;low-risk&quot; password for this site instead. (The morale of this story is you should use different passwords for different purposes, although it could be hard to manage.)</p>
+
+<h4>Implementing the Basic Access Authentication Scheme</h4>
+
+<p>The configuration for basic access authentication involves 3 steps:</p>
+<ol>
+<li>Create a password file.</li>
+<li>Configure the Apache server to use this password file.</li>
+<li>Optionally, use a group file to group related users and control access on the group basis.</li>
+</ol>
+
+<p><strong>Step 1</strong>: To create the password file, use the utility &quot;<code>htpasswd.exe</code>&quot; distributed with Apache HTTP Server (in directory <code>&quot;%APACHE_HOME%\bin</code>&quot;) as shown below:</p>
+
+<pre class="code-command">&gt; <span class="code-comment">... change directory to %APACHE_HOME\bin ...</span>
+&gt; <strong>htpasswd ?</strong>
+(The help menu)
+ 
+&gt; <strong>htpasswd -c ../conf/basic.users bob</strong>
+<span class="code-comment">(Option -c is used to create a new file)</span>
+Automatically using MD5 format on Windows.
+New password: ***
+Re-type new password: ***
+Adding password for user bob
+ 
+&gt; <strong>htpasswd ../conf/basic.users bill</strong>
+Automatically using MD5 format on Windows.
+New password: ****
+Re-type new password: ****
+Adding password for user bill
+ 
+&gt; <strong>htpasswd ../conf/basic.users alice</strong>
+Automatically using MD5 format on Windows.
+New password: *****
+Re-type new password: *****
+Adding password for user alice
+ 
+&gt; <strong>htpasswd ../conf/basic.users alan</strong>
+Automatically using MD5 format on Windows.
+New password: ****
+Re-type new password: ****
+Adding password for user alan</pre>
+
+<p>The above commands create a user file called &quot;<code>basic.users</code>&quot; in &quot;<code>%APACHE_HOME\conf</code>&quot;; followed by 4 users (with password). Make sure that this user file is outside the document directory and is protected from unauthorized persons. If you open this user file, you shall see that the <em>digest</em> of the passwords are stored, instead of the passwords in clear text:</p>
+
+<pre class="code-output">bob:$apr1$c0Nw/XQI$mLuIl7DboHBkp4tZfh2Uj/<br />bill:$apr1$vn.O35Db$t8UasLOGIjBgVE93UvIMh0<br />alice:$apr1$1rPtsZaD$0MpAqMQC.KpePAffgnqK70<br />alan:$apr1$1pPU8Nwf$Ms/1EO90PBm25pnvaT5bi0</pre>
+
+<p><strong>Step 2</strong>: To configure Apache HTTP server to use the password file we have just created, add the following directives into the appropriate <code>&lt;directory&gt;</code> of the configuration file &quot;<code>%APACHE_HOME%\conf\httpd.conf</code>&quot; (or place them inside the &quot;<code>.htaccess</code>&quot; of the directory to be protected if override is permitted).</p>
+
+<pre class="code-syntax">
+&lt;Directory <em>protected-directories</em>&gt;
+  AuthType Basic
+  AuthName Private
+  AuthUserFile conf/basic.users
+  Require valid-user
+&lt;/Directory&gt;</pre>
+
+<ul>
+<li>The <code>&lt;Directory&gt;</code> block directive sets up a group of directories for applying access control. The directives enclosed within the block (such as <code>require valid-user</code>) are applicable to all the directories (and their sub-directories) that match the <em>protected-directories</em>.</li>
+
+<li>The directive <code>AuthType Basic</code> specifies that basic access authentication scheme is to be used.</li>
+
+<li>The directive <code>AuthName</code> defines a &quot;<em>realm</em>&quot; (or a partition of the entire protected space), which is a set of resources (directories, files, locations) that is accessible with the same username/password. The realms allow the protected resources on a server to be partitioned into a set of protection space, each with its own authentication scheme and/or authorization database. This realm name will be shown to the client when prompting for the username/password. (The above may not be correct for basic scheme, as realm name is not inside the password file – unlike digest scheme. Can we have two &lt;directory&gt;s of the same realm but use different password file?)</li>
+
+<li>The directive &quot;<code>Require valid-user</code>&quot; grants access to all valid users in the password file. Instead of granting access to all users, you could limit access to certain users by using the directive &quot;<code>Require user <em>username1</em> <em>username2</em> ...</code>&quot;.</li>
+
+</ul>
+
+<p>When a client requests for a protected resource, Apache replies with a &quot;401 Authentication Required&quot; response. This is to inform the client that user credential is needed. Upon receiving the 401 response, the browser will prompt the user to supply his username/password, and send them to the server for verification.</p>
+<p>Since HTTP is a <em>stateless</em> protocol, every request will be treated on its own, without knowledge of the previous requests.  That is to say, you have to supply the same username/password to every protected resource requested.  Fortunately, the browser takes care of the details by caching the username, password, realm and server name, so that you do not have to type in your username/password for every request.</p>
+
+<p>The authentication process is summarized as follows:</p>
+
+<ol>
+<li>A client requests for a web resource, which is protected under the basic access authentication scheme, via an HTTP GET request.</li>
+<li>The server returns a &quot;401 Authorization Required&quot; response. The 401 response includes a &quot;<code>WWW-Authenticate</code>&quot; response header, specifying the type of authentication scheme and the realm that the protected resource belongs to.</li>
+<li>The client re-submits the HTTP GET request with an &quot;<code>Authorization</code>&quot; request header, which gives the credential (username/password) needed to access that realm. The credential is usually cached by the browser for all subsequent requests to the same realm of that particular server.</li>
+<li>Server checks the credential. If it is acceptable, the server returns the requested resource with a &quot;200 OK&quot; status code. Otherwise, a &quot;401 Authorization Required&quot; response will be sent again. Most browsers will repeat step (2) to (4) for 3 times, before displaying the 401 message. The browser will display 401 message if the user cancels the request.</li>
+</ol>
+
+<h4>Message Trace</h4>
+<p>Let's look at a trace of messages under Basic Access Authentication. I have created a directory called &quot;<code>basic_auth</code>&quot; (under &quot;<code>htdocs</code>&quot;), which contains a &quot;<code>test.html</code>&quot; file. Assuming that Apache HTTP Server is running on port 8000.</p>
+
+<ul>
+
+<li>Client Request:
+
+<pre class="code-command">GET <strong>/basic_auth/test.html</strong> HTTP/1.1
+Accept: image/gif, image/jpeg, */*
+Accept-Language: en-us
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+Host: 127.0.0.1:8000
+(blank line)</pre>
+</li>
+
+<li>Server Response:
+
+<pre class="code-output">HTTP/1.1 <strong>401 Authorization Required</strong>
+Date: Tue, 20 Oct 2009 07:25:42 GMT
+Server: Apache/2.2.14 (Win32)
+<strong>WWW-Authenticate: Basic realm=&quot;Private&quot;</strong>
+Content-Length: 401
+Content-Type: text/html; charset=iso-8859-1
+   
+(response message body omitted)</pre>
+</li>
+
+<li>Client:
+
+<p>Instead of displaying &quot;401 Authorization Required&quot; response, the browser puts up a dialog (as shown below for firefox and IE) showing the server, the realm, and prompts for the username/password.</p>
+<img class="image-left" src="images/HTTP_BasicAuthLogin.png" />
+<img class="image-left" src="images/HTTP_BasicAuthLoginIE.png" />
+
+<p>The user provides the credential. The browser re-submits the request with an &quot;Authorization&quot; header, giving his username/password.</p>
+<pre class="code-command">GET <strong>/basic_auth/test.html</strong> HTTP/1.1
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+Accept-Language: en-us
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+Host: 127.0.0.1:8000
+Connection: Keep-Alive
+<strong>Authorization: Basic YWxpY2U6YWxpY2U=</strong></pre>
+</li>
+
+<li>Server:
+
+<p>If the credential is acceptable, the server returns the requested resource with status code &quot;200 OK&quot;</p>
+
+<pre class="code-output">HTTP/1.1 <strong>200 OK</strong>
+Date: Tue, 20 Oct 2009 07:37:12 GMT
+Server: Apache/2.2.14 (Win32)
+Last-Modified: Sat, 20 Nov 2004 07:16:26 GMT
+ETag: &quot;f00000003e4f9-2c-3e94b66c2e680&quot;
+Accept-Ranges: bytes
+Content-Length: 44
+Content-Type: text/html
+   
+(body omitted)</pre>
+
+<p>If the credential is not acceptable, the server sends a &quot;401 Authorization Required&quot; again. The authentication process repeats.</p>
+
+<pre class="code-output">HTTP/1.1 <strong>401 Authorization Required</strong>
+Date: Tue, 20 Oct 2009 07:38:43 GMT
+Server: Apache/2.2.14 (Win32)
+<strong>WWW-Authenticate: Basic realm=&quot;Private&quot;</strong>
+Content-Length: 401
+Content-Type: text/html; charset=iso-8859-1
+ 
+(body omitted)</pre>
+
+<p>The browser may prompt you three times, before displaying this 401 message. The browser may cache the credential, and automatically include the &quot;Authorization&quot; header for subsequent accesses to the same realm of the same server, so as to save you the trouble of keep typing your username/password.</p>
+</li>
+</ul>
+
+<h4>Security Exposure</h4>
+
+<p>In basic access authentication, the credential client sends to the server is not encrypted but simply <em>Base64-encoded</em> (refer to RFC2045 for specification on Base64 encoding). If you look up the Base64 table (or use WinZip), you will see the username/password in the <code>Authorization</code> header in clear text.</p>
+
+<p>The most serious flaw in basic access authentication is that it transmits the password in clear text over the network. Hence, this password should not be the same as the one you use to access your bank account. Furthermore, once authenticated, the message is also sent in clear text. The username, password, and the message are subjected to network sniffing.</p>
+
+<h4>User Group</h4>
+
+<p><strong>Step 3</strong>: Optionally, you can group the users into groups, and grant access to selected groups. To use group access control, you have to create a &quot;Group File&quot; (save as &quot;<code>%APACHE_HOME%/conf/basic.groups</code>&quot;).</p>
+
+<pre class="code-syntax">manager: alice alan
+worker: bob bill</pre>
+
+<p>In the Apache's configuration &quot;<code>conf\httpd.conf</code>&quot;, include the following directives:</p>
+
+
+<pre class="code-syntax">&lt;Directory <em>protected-directories</em>&gt;
+  AuthType Basic
+  AuthName Private
+  AuthUserFile conf/basic.users
+  <strong>AuthGroupFile conf/basic.groups</strong>
+  <strong>Require group manager</strong>
+&lt;/Directory&gt;</pre>
+
+<h4>Configuration Directives</h4>
+
+<p>Refer to Apache documentation @ &quot;<code>%APACHE_HOME%\htdocs\manual\mod\mod_auth.html</code>&quot; for details on the configuration directives.</p>
+
+<p><strong>AuthType</strong>: selects the type of user authentication. Only <code>Basic</code> and <code>Digest</code> are currently implemented.</p>
+<pre class="code-syntax">AuthType Basic|Digest</pre>
+
+<p><strong>AuthUserFile</strong>: specifies the name of the password file, which can be created using <code>htpasswd</code> utility. Each line of the user file contains a username followed by a colon, followed by the <code>crypt()</code> encrypted password (or MD5-digested password).</p>
+
+<pre class="code-syntax">AuthUserFile <em>user-<em>filename</em></em></pre>
+
+<p><strong>AuthGroupFile</strong>: specifies the name of the group file. Each line of the group file contains a group name followed by a colon, followed by the members' username separated by a space.</p>
+
+<pre class="code-syntax">AuthGroupFile <em>group-</em><em>filename</em></pre>
+
+<p><strong>Require</strong>: specifies which authenticated users can access the protected resource.</p>
+<pre class="code-syntax">Require <em>entity-name-1</em> [<em>entity-name-2</em>] ...</pre>
+
+<ul>
+<li><code>Require valid-user</code>: All valid users in the password file can access the resource.</li>
+<li><code>Require user <em>username1 username2</em> ...</code>: only the named user(s) can access the resource.</li>
+<li><code>Require group <em>groupname1 groupname2 </em>...</code>: Only users in the named group(s) can access the resource.</li>
+<li><code>Require file-owner</code>: Only the user, whose name matches the name of the file owner, can access the resource.</li>
+<li><code>Require file-group</code>: Only the members of the group, whose name matches the name of the file owner group, can access the resource.</li>
+
+</ul>
+
+<p>Access controls are effective for all HTTP request methods (GET, POST etc) used to request the resource. If you wish to apply access controls only to specific methods (e.g., POST but not GET), you can place the <code>Require</code> directive inside a <code>&lt;Limit&gt;</code> or <code>&lt;LimitExcept&gt;</code> section.</p>
+
+<p><strong>Satisfy</strong>: set the access policy if both <code>Allow</code> (for access control) and <code>Require</code> (for authentication) directives are used.  It takes value of either <code>all</code> (default) or <code>any</code>.  This directive is only useful if access to aparticular realm is being restricted by both username/password <em>and</em> client host address.  In this case the default behavior of &quot;<code>all</code>&quot; requires the client passes the address access restriction <em>and</em> provided a valid username/password.  With the &quot;<code>any</code>&quot; option, the client will be granted access if he either passes the host restriction or provide a valid username/password.  This can be used to password restrict an area, but to let clients from particular addresses in without prompting for a password.</p>
+
+<pre class="code-syntax">Satisfy <span class="underline">all</span>|any</pre>
+
+<h3>Digest Access Authentication</h3>
+
+<p>Like basic access authentication, <em>digest access authentication</em> requires a client to supply his credential, in terms of username and password. Unlike basic access authentication, digest access authentication does not send the password over the network in clear text. Instead, the MD5 digest of the password is transmitted (hence, the name <em>digest</em> access authentication). Network snifters cannot recover your password from the digest.</p>
+
+<p>(A digest is a hash value from a one-way hash function.  Suppose that y is the digest or one-way hash value of x using a one-way hash function h, i.e., y = h(x). It is easy to compute y from x, but almost impossible to compute x given y, even if the function h is known. Furthermore, even if x1 and x2 are similar, the corresponding digests y1=h(x1) and y2=h(x2) will be far apart. Information about MD5 digest can be found from RFC1321 or at <a href="http://userpages.umbc.edu/~mabzug1/cs/md5/md5.html">http://userpages.umbc.edu/~mabzug1/cs/md5/md5.html</a>.)</p>
+
+<p>Digest access authentication scheme is not intended to be a complete solution to the need of security for Internet.  The scheme does not provide encryption of message (i.e. message confidentiality), message integrity, and non-repudiation.  The digest scheme is meant to avoid the serious flaw in the basic scheme (i.e., sending password in clear text) and to <em>replace</em> the basic scheme.</p>
+
+<p>Like basic scheme, digest scheme is based on a simple challenge-response exchange for user authentication.  The server challenges the client with a <em>nonce</em> value, and expects a <em>response</em>, which is the digest of the <em>username</em>, <em>password</em>, the given <em>nonce</em> value, the HTTP <em>method</em>, and the requested <em>URL</em>.  It is important to note that the password is not sent in cleartext, as in the basic scheme. A hash value involving the password is sent instead.  Network snifters will not be able to reconstruct the password from the intercepted digest.  The nonce, which ideally should be different for difference request, is used to prevent &quot;replay attack&quot;.</p>
+
+<p>The details of the authentication steps involved in the digest scheme are as follows:</p>
+
+<ol>
+<li>The client requests for a web resource protected by digest authentication scheme, via an HTTP GET request.</li>
+<li>The server returns a &quot;401 Authentication Required&quot; response, specifying the authentication scheme, the realm, and a nonce, in the &quot;<code>WWW-Authenticate</code>&quot; response header.</li>
+<li>The client combines the password, nonce, HTTP method and URI; computes the digest; and sends this digest back to the server.  An example of computation is as shown:
+<pre class="code-example">MD5(MD5(&lt;password&gt; + &quot;:&quot; + &lt;nouce&gt; + &quot;:&quot; + MD5(&lt;method&gt; + &quot;;&quot; + &lt;uri&gt;)</pre>
+</li>
+
+<li>The server independently generates the hash and verifies with the hash received.  It sends back the resource requested (with status &quot;200 OK&quot;) if the two hash values match.  Otherwise, a &quot;401 Authentication Required&quot; will be sent, and the authentication process repeats (or until the client cancels the request).</li>
+</ol>
+
+<h4>Implementing Digest Access Authentication</h4>
+<p>Like basic scheme, the configuration needed for using digest access authentication in the Apache HTTP Server may involve the following 3 steps:</p>
+
+<ol>
+<li>Create a password file;</li>
+<li>Configure the Apache server to use this password file;</li>
+<li>Optionally, define a group file, and apply access control at group level.</li>
+</ol>
+
+<p><strong>Step 1</strong>: To create the password file, you can use the utility &quot;htdigest&quot; provided in &quot;%APACHE_HOME%\bin&quot; as follows:</p>
+
+<pre class="code-command">&gt; <strong>htdigest -h</strong>
+Usage: htdigest [-c] password-file realm username
+The -c flag creates a new file.
+   
+&gt; <strong>htdigest -c ..\conf\digest.users &quot;members only&quot; bob</strong>
+Adding password for bob in realm members only.
+New password: ***
+Re-type new password: ***
+   
+&gt; <strong>htdigest ..\conf\digest.users &quot;members only&quot; alice</strong>
+Adding user alice in realm members only
+New password: *****
+Re-type new password: *****</pre>
+
+<p>The content of the digest user file &quot;<code>conf\digest.users</code>&quot; is as shown:</p>
+<pre class="code-output">bob:members only:f64f2af9501033efe7c402417681e05b<br />alice:members only:d65afa1afb84c30a7547aecff4431700</pre>
+
+<p>Notice that, unlike basic scheme, each pair of username/password is associated with a realm.  The username and password is only valid for that particular realm.</p>
+
+<p><strong>Step 2</strong>: To activate the digest scheme, you have to include these directives in the Apache's configuration &quot;<code>conf\httpd.conf</code>&quot; (or <code>.htaccess</code> if override is allowed):</p>
+
+<pre class="code-syntax"><span class="code-comment"># uncomment these two lines to load the digest authentication module</span>
+LoadModule digest_auth_module modules/mod_auth_digest.so
+......
+AddModule mod_auth_digest.c   <span class="code-comment"># for older Apache versions only</span>
+......
+   
+&lt;Directory <em>protected-directories</em>&gt;
+  <strong>AuthType Digest</strong>
+  AuthName &quot;members only&quot;
+  <strong>AuthDigestFile conf/digest.users</strong>  <span class="code-comment"># Use AuthUserFile for Apache 2</span>
+  Require user bob
+&lt;/Directory&gt;</p></pre>
+  
+<p>Directive &quot;<code>AuthType Digest</code>&quot; is used to activate the digest access authentication.  Directive <code>AuthDigestFile</code> is used to specify the location of the password file. (If you encounter error with <code>AuthDigestFile</code> directive, use <code>AuthUserFile</code> directive instead, for Apache 2.) The realm in the <code>AuthName</code> must match the user file and it is case sensitive.</p>
+
+<p><strong>Step 3</strong>: Optionally, you can use a group file to control access at the group level.  The format of the group file is the same as the basic authentication.  For example:</p>
+
+<pre class="code-syntax">admin: alice alan
+audit: bob bill</pre>
+
+<p>An example of configuration is as follows:</p>
+
+<pre class="code-syntax">&lt;Directory <em>protected-directories</em>&gt;
+  AuthType Digest
+  AuthName &quot;members only&quot;
+  AuthDigestFile conf/digest
+  AuthDigestGroupFile conf/digest.groups
+  Require group admin
+&lt;/Directory&gt;</pre>
+
+<p>Directive <code>AuthDigestGroupFile</code> is used to specify the group file (instead of <code>AuthGroupFile</code> in the basic scheme).</p>
+
+<h4>Message Trace</h4>
+<p>A trace of messages involved in the digest access authentication is as follows. A directory called &quot;<code>digest_auth</code>&quot; is created under &quot;<code>htdocs</code>&quot;, containing a file &quot;<code>test.html</code>&quot;. Assuming that Apache HTTP server is running on port 8000.</p>
+
+<ul>
+
+<li>Client Request:
+
+<pre class="code-command">GET <strong>/digest_auth/test.html</strong> HTTP/1.1
+Accept: image/gif, image/jpeg, */*
+Accept-Language: en-us
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+Host: 127.0.0.1:8000</pre> 
+</li>
+
+<li>Server Response:
+
+<pre class="code-output">HTTP/1.1 <strong>401 Authorization Required</strong>
+Date: Tue, 20 Oct 2009 08:16:43 GMT
+Server: Apache/2.2.14 (Win32)
+<strong>WWW-Authenticate: Digest realm=&quot;Members only&quot;, 
+  nonce=&quot;LHOKe1l2BAA=5c373ae0d933a0bb6321125a56a2fcdb6fd7c93b&quot;, algorithm=MD5, qop=&quot;auth&quot;</strong>
+Content-Length: 401
+Content-Type: text/html; charset=iso-8859-1
+   
+(body omitted)</pre>
+</li>
+
+<li>Client:
+
+<p>Instead of displaying &quot;401 Authorization Required&quot; response, the browser puts up a dialog specifying the server name and the realm, and prompt for your username/password.  Note that in IE, the appearance of the dialog window is different from that produced by the basic authentication scheme.</p>
+
+<img class="image-left" src="images/HTTP_DigestAuthLogin.png"  />
+<img class="image-left" src="images/HTTP_DigestAuthLoginIE.png"  />
+
+<p>The client provides the credential.  The browser re-submits the request.</p>
+
+<pre class="code-command">GET <strong>/digest_auth/test.html</strong> HTTP/1.1
+Accept: image/gif, image/jpeg, */*
+Accept-Language: en-us
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+Host: 127.0.0.1:8000
+<strong>Authorization: Digest username=&quot;bob&quot;, realm=&quot;members only&quot;,
+  qop=&quot;auth&quot;, algorithm=&quot;MD5&quot;, uri=&quot;/digest_auth/test.html&quot;,
+  nonce=&quot;5UImQA==3d76b2ab859e1770ec60ed285ec68a3e63028461&quot;,
+  nc=00000001, cnonce=&quot;1672b410efa182c061c2f0a58acaa17d&quot;,
+  response=&quot;3d9ebe6b9534a7135a3fde59a5a72668&quot;</strong></pre>
+</li>
+
+<li>Server:
+
+<p>If the credential is acceptable, the server returns the resource requested with status code &quot;200 OK&quot;.</p>
+
+<pre class="code-output">HTTP/1.1 <strong>200 OK</strong>
+Date: Sun, 08 Feb 2004 14:08:57 GMT
+Server: Apache/1.3.29 (Win32)
+<strong>Authentication-Info: rspauth=&quot;670ff3158cec20b73d7342932f8c40a1&quot;,</strong>
+<strong>  cnonce=&quot;1672b410efa182c061c2f0a58acaa17d&quot;,  nc=00000001, qop=auth</strong>
+Last-Modified: Sat, 07 Feb 2004 10:53:25 GMT
+ETag: &quot;0-23-4024c3a5&quot;
+Accept-Ranges: bytes
+Content-Length: 35
+Keep-Alive: timeout=15, max=100
+Connection: Keep-Alive
+Content-Type: text/html</p>
+   
+(body omitted)</pre>
+
+<p>If the credential is not acceptable, the server again returns &quot;401 Authorization Required&quot; to repeat the authentication process.  The browser may prompt you 3 times before displaying the &quot;401&quot; message.</p>
+
+<pre class="code-output">HTTP/1.1 <strong>401 Authorization Required</strong>
+Date: Sun, 08 Feb 2004 14:20:00 GMT
+Server: Apache/1.3.29 (Win32)
+<strong>WWW-Authenticate: Digest realm=&quot;members only&quot;,
+  nonce=&quot;kEUmQA==afc92fa0cb1ce89577fc1c1c7d80389b8ddd7137&quot;,
+  algorithm=MD5, qop=&quot;auth&quot;</strong>
+Keep-Alive: timeout=15, max=100
+Connection: Keep-Alive
+Transfer-Encoding: chunked
+Content-Type: text/html; charset=iso-8859-1
+   
+(body omitted)</pre>
+</li>
+</ul>
+
+<h4>Digesting Details</h4>
+<p>When a client requests for a protected resource under the digest scheme, the server returns a &quot;401 Authentication Required&quot; response, which includes a &quot;<code>WWW-authenticate</code>&quot; header.  The following information is included in the &quot;<code>WWW-authenticate</code>&quot; header:</p>
+
+<ul>
+<li><code>Digest</code>: inform the client that the digest access authentication scheme is in place.</li>
+<li><code>realm</code>: the &quot;realm&quot; of which the protected resource belongs to (recall that username/password is set at the realm basis, and only valid for that particular realm).</li>
+<li><code>nounce</code> (server's nounce): the server should uniquely generate a nounce each time a &quot;401&quot; response is triggered (so as to prevent &quot;replay attack&quot;).  The value of nonce is implementation dependent.  For example, a server's nonce can consists of:
+
+<pre class="code-syntax">Time-Stamp:H(Time-stamp:Etag:Private-key)</pre>
+
+Time-stamp can be used to limit the nonce's validity period to prevent &quot;replay attack&quot;.  Etag, which is an entity header of the requested document, can prevent replay attack to an updated version of that document.  Server may choose to implement a &quot;one-time nonce&quot; for PUT and POST requests and a time-stamp nonce for GET request.
+</li>
+
+<li>algorithm:  to inform the client the hashing algorithm(s) supported by the server.  Currently, the algorithm includes MD5 and MD5-sess (MD5 session).  The client can select one of the supported algorithms.</li>
+<li>qop (quality of protection):  to inform the client the types of &quot;quality of protection&quot; supported by the server.  Currently, the gop includes &quot;auth&quot; (authentication) and &quot;auth-int&quot; (authentication with message integrity, the hash value contains the message entity, to assure the integrity of the message).  The client can choose one of these supported options.</li>
+</ul>
+
+<p>Upon receiving the &quot;401&quot; response from the server, the client must include an &quot;Authentication&quot; header and re-submit the request.  The following information is provided in the &quot;Authentication&quot; header:</p>
+
+<ul>
+<li>Digest</li>
+<li>username</li>
+<li>realm</li>
+<li>gop (quality of protection):  the quality of protection chosen by the client from the available server's options, either &quot;auth&quot; or &quot;auth-int&quot;.</li>
+<li>algorithm:  the digest algorithm chosen by the client from the available server's options, either &quot;MD5&quot; or &quot;MD5-sess&quot;.</li>
+<li>uri:  the URI from the request line, duplicated here because the proxy are allowed to change the request URI in transit.</li>
+<li>nonce (server's nonce):  the client echos back the server's nonce.</li>
+<li>nc (nonce count): the number of requests that the client has sent with this nonce.  This allow server to detect replay attack by maintaining its own copy of the count, if desired.</li>
+<li>cnonce (client's nonce):  a nonce provide by the client, contributing to the resulting hash value to avoid chosen plaintext attack, and some degree of mutual authentication.</li>
+<li>response: the hash value, which is computed according to the settings of gop (auth or auth-int) and algorithm (MD5 or MD5-sess) as follows:
+
+<pre class="code-syntax">If &quot;qop&quot; is used, the digest is:
+  H(H(A1):nonce:nc:cnonce:qop:H(A2))
+  where H is the hash function such as MD5; A1 and A2 will be given later.
+   
+If &quot;gop&quot; is not used, the digest is:
+  H(H(A1):nonce:H(A2))
+  
+If the &quot;algorithm&quot; chosen is &quot;MD5&quot;:
+  A1 = Username:realm:password
+  
+If the &quot;algorithm&quot; chosen is &quot;MD5-sess&quot;, then A1 is calculated only once – 
+on the first request by the client following receipt of a WWW-Authenticate challenge from the server.
+It uses the server nonce from that challenge, and the first client nonce:
+  A1 = Username:realm:password:nouce:cnonce
+  
+If &quot;gop&quot; is &quot;auth&quot;, then
+  A2 = Method:URL
+  
+If &quot;gop&quot; is &quot;auth-int&quot; for message integrity, then
+  A2 = Method:URL:H(entity-body)</pre>
+
+<p>For example, if &quot;gop=auth&quot; and &quot;algorithm=MD5&quot; then the digest is:</p>
+<pre class="code-example">MD5(MD5(username:realm:password):nonce:nc:cnonce:qop:MD5(method:URL))</pre>
+
+<p>Obviously, the value of &quot;response&quot; from the client is different in different request.  This is to prevent the replay attack.</p>
+
+<p>It is important to note that the server does not have to keep the clear text of password, but the hash of <code>MD5(Username:realm:password)</code> for digest authentication purpose.  This further improves the security in case the server was compromised.</p>
+
+</li>
+</ul>
+
+<h4>Security Considerations</h4>
+<p>Basic access authentication scheme has the following flaws:</p>
+
+<ul>
+<li>Password is sent in cleartext.</li>
+<li>Server must keep the username/password in the database.  If the password file is compromise, all users will be affected (although most likely the password file is encrypted).</li>
+<li>No message integrity.</li>
+</ul>
+
+<p>Digest scheme overcomes these flaws.  However, it does not assure message confidentiality and non-repudiation.  It merely provides a more secure and safe way for clients to submit their credential.  It is not as secure as Kerberos, client-side private key, or SSL, but much better than telnet, ftp and of course, basic authentication scheme.</p>
+
+<p>You should certainly replace the basic scheme with the digest scheme, unless password security is no of your concern.</p>
+
+<p>One final note: by modern cryptographic standards, the MD5 digest algorithm is considered weak.
+(Need to verify!)</p>
+
+<h4>Configuration Directives:</h4>
+
+<p>Refer to &quot;<code>%APACHE_HOME%\htdocs\manual\mod\mod_auth_digest.html</code>&quot; for details of the configuration directives.</p>
+
+<p><strong>AuthDigestFile</strong>: specifies the location of the password file for digest authentication, which can be created using the <code>htdigest</code> utility provided. (Use <code>AuthUserFile</code> if you encounter error.)</p>
+<pre class="code-syntax">AuthDigestFile <em>digest-user-filename</em></pre>
+
+<p><strong>AuthDigestGroupFile</strong>: specifies the location of the group file.  Each line of the group file contains a groupname followed by a colon, followed by the members' username separated by a space.  The format of the group file is the same as the basic authentication.</p>
+
+<pre class="code-syntax">AuthDigestGroupFile <em>digest-group-filename</em></pre>
+
+<h3>Using Database for Password files</h3>
+<p>Matching the username/password from a flat file created using utilities &quot;htpasswd&quot; and &quot;htdigest&quot; is slow if the number of users is large.  You can use a database to store the username/password to speed up the password verification process.</p>
+
+<p>Read the Apache documentation.</p>
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>Apache FAQ @ %APACHE_HOME%\htdocs\manual\FAQ.html.</li>
+<li>Apache documentation @ &quot;%APACHE_HOME%\htdocs\manual\&quot;.</li>
+<li>&quot;How-To: Authentication, Authorization and Access Control&quot; @ &quot;%APACHE_HOME%\htdocs\manual\howto\auth.html&quot;.</li>
+<li>RFC 1945: &quot;Hypertext Transfer Protocol HTTP/1.0&quot;, 1996.</li>
+<li>RFC 2616: &quot;Hypertext Transfer Protocol HTTP/1.1&quot;, 1999.</li>
+<li>RFC 2617: &quot;HTTP Authentication: Basic and Digest Access Authentication&quot;, 1999.</li>
+<li>RFC 2045: &quot;Multipurpose Internet Mail Extension (MIME) Part 1: Format of Internet Message Bodies&quot;, 1996.</li>
+<li>RFC 1321: &quot;The MD5 Message Digest Algorithm&quot;, 1992.</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: Apache HTTP Server 2.2.14<br />
+Last modified: October 19, 2009</p>
+
+</div> <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div> <!-- End the container division -->
+</body>
+</html>

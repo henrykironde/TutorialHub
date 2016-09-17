@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Using jBullet Physics Engine</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Bullet Physics and jBullet Physics Engine</h1>
+<h2>&nbsp;</h2>
+
+<h3>Bullet Phyiscs</h3>
+<p>Bullet Physics is an open-source <em>collision detection</em>, <em>rigid body</em> and <em>soft body dynamics</em> library. It can be used as the <em>physics engine</em> in a complex 3D game or animation, complimentary the <em>game engine</em>.  The mother site is <a href="http://bulletphysics.org/wordpress/">http://bulletphysics.org/wordpress/</a>. The main task of physics engine is perform collision detection, resolve collisions and other constraints, and update the states for all the objects.</p>
+
+<h4>How to Install and Get Started</h4>
+
+<p><span class="line-heading">Step 1: Download and Unzip -</span> From <a href="http://bulletphysics.org">http://bulletphysics.org</a>  ⇒ Download  ⇒ Select the ZIP source file ⇒ Download and unzip into a directory of your choice, e.g., <code>d:\myproject</code>. Bullet physics shall be unzipped into &quot;<code>d:\myproject\bullet-2.xx</code>&quot;. I shall refer to this directory as the Bullet Physics <em>installed directory</em>.</p>
+
+<p><span class="line-heading">Step 2: Read -</span> Read the &quot;User Manual&quot; available at the installed directory.</p>
+
+<p><span class="line-heading">Step3: Install CMake -</span> We need CMake to build the Bullet Physics. Get Cmake from <a href="http://cmake.org">http://cmake.org</a>  ⇒ Download  ⇒ Choose &quot;Binary distributions&quot; ⇒ Window ZIP  ⇒ Unzip in a directory of your choice (e.g., <code>d:\myproject</code>).</p>
+
+<p><span class="line-heading">Step 4: Build Bullet Physics using CMake</span><ol>
+<li>Run &quot;<code>cmake-gui.exe</code>&quot; (under the CMake &quot;<code>bin</code>&quot; directory).</li>
+<li>In &quot;Where is the source code&quot;, click &quot;Browse source&quot; and select the  Bullet Physics installed directory (NOT src).</li>
+<li> In &quot;Where to build the binaries&quot;, select a directory  (e.g., <code>d:\myproject\bullet-physics-2.xx-cmake_vc9</code>) ⇒ Configure.</li>
+<li>In &quot;Specify the genertor for this project&quot;, choose your target platform, e.g., &quot;Visual Studio 9 2008&quot; ⇒ Finish.</li>
+<li> Set your &quot;<code>CMAKE_INSTALL_PREFIX</code>&quot;, e.g.,  <code>d:\myproject\bullet-physics-2.xx-cmake_vc9</code>, &quot;<code>LIBRARY_OUTPUT_DIRECTORY</code>&quot;, <code>d:\myproject\bullet-physics-2.xx-cmake_vc9\lib</code> ⇒ Configure ⇒ Generate ⇒ Close CMake.</li>
+<li> In CMake build target (<code>bullet-physics-2.xx-cmake_vc9</code>), start &quot;<code>BULLET_PHYSICS.sln</code>&quot; (double-click to launch the VC) ⇒ Build ⇒ Build Solution. The &quot;<code>.lib</code>&quot; will built under <code>bullet-physics-2.xx-cmake_vc9\bin\debug</code>.</li>
+</ol>
+
+<p><span class="line-heading">Step 5: Write a Hello-world Bullet Physics Program</span></p>
+
+<ol>
+<li>Create a new solution/project: Launch VC ⇒ File ⇒ New Project ⇒ In &quot;Project Types&quot;, select &quot;Win32&quot; ⇒  In &quot;Templates&quot;, select &quot;Win32 Console Application&quot; ⇒  In &quot;Location&quot;, select your working directory ⇒  In &quot;Solution Name&quot;, enter &quot;TestBulletPhysics&quot;, and check &quot;Create directory for solution&quot; ⇒  In &quot;Name&quot;, enter &quot;Helloworld&quot; ⇒  Next ⇒ In &quot;Application Type&quot;, choose &quot;Console application&quot;  ⇒  In &quot;Additional options&quot;, choose &quot;Empty project&quot;.</li>
+
+<li>Create a new source file: Right-click on &quot;Source Files&quot; ⇒ Add ⇒ New Item... ⇒ In &quot;Name&quot;, enter &quot;Helloworld.cpp&quot;. Look for &quot;Helloworld.cpp&quot; from the demos (under &quot;<code>bullet-2.xx\Demos\HelloWorld</code>&quot;), and copy all the codes.</li>
+
+<li>Specify the <em>include-path</em> for header &quot;<code>btBulletDynamicsCommon.h</code>&quot;: Right-click on the project ⇒ Properties ⇒ Configuration Properties ⇒ C/C++ ⇒ General ⇒ Additional Include Directories ⇒ Enter  bullet's source directory (e.g., <code>d:\myproject\bullet-2.77\src</code> - you can see that the header needed is kept here).</li>
+
+<li>Include the bullet's libraries (<code>BulletCollision</code>, <code>BulletDynamics</code> and <code>LinearMath</code>): Two ways:
+<ol>
+<li>Add the CMake generated project files: File  ⇒ Add ⇒ Exisiting Project... ⇒ select CMake target's <code>src/BulletCollision/BulletCollision.vcproj</code>, <code>src/BulletDynamics/BulletDynamics.vcproj</code> and   <code>src/LinearMath/LinearMath.vcproj</code> ⇒ Right-click on the project &quot;Helloworld&quot; ⇒ Project Dependencies  ⇒ Check the above three projects.</li>
+
+<li>Use the libraries generated: Right-click on the project ⇒ Properties ⇒ Configuration Properties ⇒ Linker ⇒ General ⇒ In &quot;Additional Library directories&quot;, enter <code>d:\myproject\bullet-2.xx-cmake-vc9\lib\Debug</code> (the libraries built in the earlier step) ⇒ In &quot;Use Library Dependency Inputs&quot;, select &quot;Yes&quot;. In Linker ⇒ Input ⇒ In &quot;Additional Dependencies&quot;, enter &quot;<code>BulletCollision.lib</code><code> BulletDynamics.lib</code> <code>LinearMath.lib</code>&quot; (VS requires &quot;.<code>lib</code>&quot; extension; Unixes do not).</li>
+</ol>
+</li>
+
+<li>Build the project, and run the program.</li>
+</ol>
+
+<p>Try other demos source provided, in particular, BasicDemo, which requires many more libraries.</p>
+
+<h3>jBullet</h3>
+<p>jBullet is a Java port of Bullet Physics. The mother site is at <a href="http://jbullet.advel.cz/">http://jbullet.advel.cz</a>.</p>
+
+<h4>How to Install and Get Started</h4>
+
+<p><span class="line-heading">Step 1: Download and Unzip -</span> Downlad jBullet from <a href="http://jbullet.advel.cz/">http://jbullet.advel.cz</a>, and upzip into a directory of your choice, e.g., <code>d:\myproject</code>. jBullet shall be unzipped into <code>d:\myproject\jbullet-2010xxxx</code>.</p>
+
+<p><span class="line-heading">Step 2: Try the Demo:</span> To run the demo program in Eclipse:</p>
+<ol>
+<li>Create a New Project ⇒ Create a package called <code>com.bulletphysics.demos</code>, copy all the demo codes (all the directories under <code>d:\myproject\jbullet-2010xxxx\src\com\bulletphysics\demos</code>) under this package.</li>
+<li>Include External JAR Files: Right-click on the project ⇒ Build Path  ⇒ Add External Archives ⇒ Navigate to select the distributed JAR files under the &quot;<code>lib</code>&quot; directory (<code>d:\myproject\jbullet-20101010\lib</code>). You should include <code>asm-all-3.1.jar</code>, <code>stack-alloc.jar</code>, <code>jinput.jar</code>, <code>lwjgl.jar</code>, <code>lwjgl_util.jar</code>, <code>swing-layout-1.0.3.jar</code> and  <code>vecmath.jar</code>.</li>
+<li>Include Native Libraries for <code>lwjgl.jar</code>: Right-click on the <code>lwjgl.jar</code> ⇒ Build Path  ⇒ Configure Build Path... ⇒ Open <code>lwjgl.jar</code> node  ⇒ Select &quot;Native Library Location&quot;  ⇒ Edit ⇒ In &quot;Location Path&quot;, enter &quot;<code>d:/project/jbullet-20101010/lib/lwjgl/win32</code>&quot;.</li>
+</ol>
+
+<h4>Using jStackAlloc</h4>
+
+<p>jBullet author also created a library called jStackAlloc, which allocates objects on the method's stack instead of program heap. This improves real-time performance by reducing the frequency of garbage collection. jStackAlloc uses a JDK 1.5 feature called <code>Instrument</code> to modify the bytecodes.</p>
+
+<p><span class="line-heading">Writing a Program that uses  jStackAlloc:</span></p>
+
+<ol>
+<li>Create a project. Add External Archive <code>jstack-alloc.jar</code>, <code>asm-all-3.1.jar</code>, <code>vecmath.jar</code> and <code>ant.jar</code> (select from the Eclipse plug-in).</li>
+
+<li>Write a test program as follows:
+<table class="table-program">
+<tr>
+<td class="code-line-number-width">
+<pre class="code-line-number">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre class="code-listing">
+package mytest;
+import javax.vecmath.Vector3f;
+import cz.advel.stack.Stack;
+ 
+public class TestJStackAlloc {
+ 
+   public static void main(String[] args) {
+      Vector3f tmp = Stack.alloc(Vector3f.class);
+      tmp.set(1, 2, 3);
+      System.out.println(tmp.x);
+      System.out.println(tmp.y);
+      System.out.println(tmp.z);
+   }
+}</pre>
+</td>
+</tr>
+</table>
+
+The above program allocate <code>Vector3f</code> (of javax.vecmath) in stack, instead of the heap. You can also use your own class instead of <code>Vector3f</code> (with some restrictions on the class design - see jStackAlloc documentation).</li>
+
+<li>You cannot run the program directly, as jStackAlloc need to perform so-called <em>instrumentation</em>, which modifies the byte-code. You can then run the modified bytecodes. Write a ANT build file (<code>build.xml</code>) as follows, which invoke the Instrumentation task on the compiled classes and then run from the instrumented-classes.
+<table class="table-program">
+<tr>
+<td class="code-line-number-width">
+<pre class="code-line-number">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre>
+</td>
+<td>
+<pre class="code-listing">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project name=&quot;javabullet&quot; default=&quot;run&quot; basedir=&quot;.&quot;&gt;
+   &lt;path id=&quot;myclasspath&quot;&gt;
+       &lt;pathelement path=&quot;bin&quot;/&gt;
+       &lt;pathelement location=&quot;d:\myproject\jbullet-20101010\lib\jstackalloc\stack-alloc.jar/&quot; /&gt;
+       &lt;pathelement location=&quot;d:\myproject\jbullet-20101010\lib\ASM3.1\asm-all-3.1.jar&quot; /&gt;
+       &lt;pathelement location=&quot;d:\myproject\jbullet-20101010\lib\vecmath\vecmath.jar&quot; /&gt;
+   &lt;/path&gt;
+ 
+   &lt;target name=&quot;instrument-classes&quot; &gt;
+      &lt;taskdef name=&quot;instrument-stack&quot;
+         classname=&quot;cz.advel.stack.instrument.InstrumentationTask&quot;
+         classpathref=&quot;myclasspath&quot; &gt;
+      &lt;/taskdef&gt;
+      &lt;instrument-stack dest=&quot;bin&quot; packageName=&quot;mytest&quot;&gt;
+         &lt;fileset dir=&quot;bin&quot; includes=&quot;**<span class="code-comment">/*.class&quot; /&gt;
+      &lt;/instrument-stack&gt;
+   &lt;/target&gt;
+ 
+   &lt;target name=&quot;run&quot; depends=&quot;instrument-classes&quot;&gt;
+      &lt;java classname=&quot;mytest.TestJStackAlloc&quot;
+         classpathref=&quot;myclasspath&quot;
+         fork=&quot;true&quot; failonerror=&quot;true&quot; &gt;
+      &lt;/java&gt;
+   &lt;/target&gt;
+&lt;/project&gt;</pre>
+</td>
+</tr>
+</table>
+
+</li>
+
+</ol>
+
+<h3>Using jBullet on Android</h3>
+<p>JBullet works on Android.</p>
+<p>[TODO] Helloworld</p>
+<p>[TODO] BasicDemo</p>
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>Bullet Physics mother site at <a href="http://bulletphysics.org/wordpress/">http://bulletphysics.org/wordpress/</a>.</li>
+<li>&quot;Bullet Physics SDK Manual&quot;, bundled with the download.</li>
+<li>JBullet mother site at <a href="http://jbullet.advel.cz/">http://jbullet.advel.cz/</a>.</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: Bullet Physics 2.77, JBullet 20101010<br />
+Last modified: November, 2010</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

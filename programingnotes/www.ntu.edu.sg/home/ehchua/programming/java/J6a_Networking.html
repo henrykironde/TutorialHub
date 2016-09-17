@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Networking in Java</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Java Programming</h1>
+<h2>Networking</h2>
+
+<h3>Networking Fundamentals</h3>
+
+<h4>Latency &amp; Bandwidth</h4>
+<p>Latency is the time (delay) it takes for a package of data to travel from its source to its destination. It depends on the travel distance and the speed of traveling.</p>
+
+<p>Bandwidth is the number of bytes that can be transferred in a unit of time, usually measured in terms of kbps (kilo bits per second).</p>
+
+<h4>Package Switching Network</h4>
+<p>[PENDING]</p>
+
+<h4>ISO/OSI 7-layer Networking Model</h4>
+
+<img class="image-center" src="images/Networking_7layer.png" />
+
+<h4>OSI Model vs. TCP/IP</h4>
+<img class="image-center" src="images/Networking_TCPIP.png" />
+
+<h4>TCP</h4>
+<p>TCP is a reliable, in-order transport protocol. Every package send by the source is guaranteed to arrive at its destination in the same order as it was sent. The limitation for TCP/IP is there can only be one sender and one receiver. Multicasting is not supported.</p>
+
+<h4>UDP</h4>
+<p>UDP does not guarantee the order of package delivery, it does not even guarantee that a package will be delivered to its destination. UDP is simpler than TCP, with less overhead (shorter header and no package sequence number, no re-transmission). It is often used for delivering video/voice over a IP network (VoIP).  UDP supports multicast, where one package can be received by everyone joining the multicast group (within the time-to-live number of hops from the sender).</p>
+
+<h4>Socket (or Port)</h4>
+<p>Socket is a end-point for networking communication. TCP and UDP supports 64K sockets, from socket number 0 to socket number 65,535. Socket number between 0 to 1023 are reserved for popular application protocols (e.g., Port 80 for HTTP, Port 443 for HTTPS, Port 21 for FTP, Port 23 for Telnet, Port 25 for SMTP, Port 110 for POP3, etc. See <a href="http://www.iana.org/assignments/port-numbers">http://www.iana.org/assignments/port-numbers</a>). Port number on and above 1024 are available for your testing.</p>
+
+<h3>Java Networking (<code>java.net</code>)</h3>
+
+<p>Java supports the following type of sockets in package <code>java.net</code>:</p>
+<ul>
+<li><code>ServerSocket</code> and <code>Socket</code> for TCP</li>
+<li><code>DatagramSocket</code> for UDP</li>
+<li><code>MulticastSocket</code> for UDP multicasting</li>
+</ul>
+
+<h3>TCP &amp; <code>ServerSocket/Socket</code></h3>
+
+<p>Java distinguishes between the server and client for TCP/IP communication. Let's begin with the server-side programming.</p>
+
+<p><code>java.net</code>  provide a <code>ServerSocket</code> class, which acts as a socket factory for the server.  The server first instantiate a <code>ServerSocket</code>, and invoke its <code>accept()</code> method to listen for a client's connection. The <code>accept()</code> blocks until a connection is made. It returns a new <code>Socket</code> once connected. The returned <code>Socket</code> can then be used for transferring data to/from the clients by openning an <code>InputStream</code> and <code>OutputStream</code> from the <code>Socket</code>.</p>
+
+<p><strong>Example</strong>: A simple TCP-based server</p>
+
+<pre class="code-listing">
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+<span class="code-comment">/**
+ * A simple server socket listener that listens to port number 8888, and prints
+ * whatever received to the console.
+ */</span>
+public class SimpleSocketListener {
+   
+   ServerSocket server;
+   int serverPort = 8888;
+   
+   <span class="code-comment">// Constructor to allocate a ServerSocket listening at the given port.</span>
+   public SimpleSocketListener() {
+      try {
+         server = new ServerSocket(serverPort);
+         System.out.println(&quot;ServerSocket: &quot; + server);
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+   }
+   
+   <span class="code-comment">// Start listening.</span>
+   private void listen() {
+      while (true) { <span class="code-comment">// run until you terminate the program</span>
+         try {
+            <span class="code-comment">// Wait for connection. Block until a connection is made.</span>
+            Socket socket = server.accept();
+            System.out.println(&quot;Socket: &quot; + socket);
+            InputStream in = socket.getInputStream();
+            int byteRead;
+            <span class="code-comment">// Block until the client closes the connection (i.e., read() returns -1)</span>
+            while ((byteRead = in.read()) != -1) {
+               System.out.print((char)byteRead);
+            }
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      }
+   }
+   
+   public static void main(String[] args) {
+      new SimpleSocketListener().listen();  <span class="code-comment">// Start the server and listening</span>
+   }
+}
+</pre>
+
+<p>Start the server and try to connect to the server via telnet. (On Vista, telnet is not installed by default, goto &quot;control panel&quot; &rArr; &quot;program and feature&quot; &rArr; &quot;turn windows feature on and off&quot; &rArr; &quot;telnet client&quot;.)</p>
+<pre class="code-command">
+&gt; telnet localhost 8888
+telnet&gt; enter some texts
+</pre>
+
+<p>The above server has a problem, it can only process a single client (try starting two telnet clients), as the <code>read()</code> IO operation blocks until the connection is closed.</p>
+
+<p><strong>Example</strong>: In this example, we start a thread for each connection to perform IO operations.</p>
+
+<pre class="code-listing">
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+<span class="code-comment">/**
+ * A simple server socket listener that listens to port number 8888, and prints
+ * whatever received to the console. It starts a thread for each connection to
+ * perform IO operations.
+ */</span>
+public class SimpleThreadedSocketListener {
+   
+   ServerSocket server;
+   int serverPort = 8888;
+   
+   <span class="code-comment">// Constructor to allocate a ServerSocket listening at the given port.</span>
+   public SimpleThreadedSocketListener() {
+      try {
+         server = new ServerSocket(serverPort);
+         System.out.println(&quot;ServerSocket: &quot; + server);
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+   }
+   
+   <span class="code-comment">// Start listening.</span>
+   private void listen() {
+      while (true) { <span class="code-comment">// run until you terminate the program</span>
+         try {
+            <span class="code-comment">// Wait for connection. Block until a connection is made.</span>
+            Socket socket = server.accept();
+            System.out.println(&quot;Socket: &quot; + socket);
+            <span class="code-comment">// Start a new thread for each client to perform block-IO operations.</span>
+            <strong>new ClientThread(socket).start();</strong>
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      }
+   }
+   
+   public static void main(String[] args) {
+      new SimpleThreadedSocketListener().listen();
+   }
+   
+   <span class="code-comment">// Fork out a thread for each connected client to perform block-IO</span> 
+   class ClientThread extends Thread {
+   
+      Socket socket;
+   
+      public ClientThread(Socket socket) {
+         this.socket = socket;
+      }
+   
+      @Override
+      public void run() {
+         InputStream in;
+         try {
+            in = socket.getInputStream();
+            int byteRead;
+            <span class="code-comment">// Block until the client closes the connection, results in read() returns -1</span>
+            while ((byteRead = in.read()) != -1) {
+               System.out.print((char)byteRead);
+            }
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      }
+   }
+}
+</pre>
+
+<p>Let's write our own client using <code>java.net.Socket</code> to establish a connection with the server. This client is a swing application, which allow user to enter texts into a text field, and send to the server.</p>
+
+<img class="image-center" src="images/Networking_SimpleClient.png" />
+
+
+<pre class="code-listing">
+import java.awt.*r;
+import java.awt.event.*;
+import java.io.*;
+import java.net.Socket;
+import java.net.*;
+import javax.swing.*;
+<span class="code-comment">/**
+ * A simple client used to connect to the server
+ */</span>
+public class SimpleClient extends JFrame implements ActionListener {
+   
+   Socket client = null;
+   String serverAddr = &quot;localhost&quot;;
+   int serverPort = 8888;
+   PrintWriter out;
+   JTextField tf;
+   
+   public SimpleClient() {
+      try {
+         <strong>client = new Socket(serverAddr, serverPort);</strong>
+         System.out.println(&quot;Client: &quot; + client);
+         <strong>out = new PrintWriter(client.getOutputStream());
+         out.println(&quot;Hello&quot;);
+         out.flush();</strong>  <span class="code-comment">// need to flush a short message</span>
+      } catch (UnknownHostException e) {
+         e.printStackTrace();
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+   
+      <span class="code-comment">// Set up the UI</span>
+      Container cp = this.getContentPane();
+      cp.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
+      cp.add(new JLabel(&quot;Enter your message or \&quot;quit\&quot;&quot;));
+      tf = new JTextField(40);
+      tf.addActionListener(this);
+      cp.add(tf);
+      this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+      this.pack();
+      this.setTitle(&quot;Simple Client&quot;);
+      this.setVisible(true);
+   }
+   
+   @Override
+   public void actionPerformed(ActionEvent e) {
+      String message = tf.getText();
+      if (message.equals(&quot;quit&quot;)) {
+         <span class="code-comment">// Need to close the socket to orderly disconnect from the server</span>
+         try {
+            <strong>out.close();
+            client.close();</strong>
+            System.exit(0);
+         } catch (IOException e1) {
+            e1.printStackTrace();
+         }
+      } else {
+         <span class="code-comment">// Send the message entered to the network socket</span>
+         <strong>out.println(message);
+         out.flush();</strong>
+         tf.setText(&quot;&quot;);
+      }
+   }
+   
+   public static void main(String[] args) {
+      new SimpleClient();
+   }
+}
+</pre>
+
+<h3>UDP &amp; DatagramSocket</h3>
+<p>[PENDING]</p>
+
+<h3>Multicasting &amp; MulticastSocket</h3>
+<p>Mulitcast is organized in a so-called <em>multicast group</em>, that uses a speical IP adress in the range of 224.0.0.1 to 239.255.255.255.  When a program sends a multicast datagram to a group, all the participants to the multicast group will receive it.</p>
+
+<p>Time-to-live: the maximum number of hops (i.e., subnet boundaries) that a package can travel.  Set to 1 if the package is only required within the same subnet.</p>
+
+<p>[PENDING]</p>
+
+
+<h3>New IO's Networking (JDK 1.4)</h3>
+<p>The one-thread-per-socket (because of the block-IO operation) works well for small server processing a few connection, but cannot handle hundreds or thousands of connections. Furthermore, the Standard IO's streams (i.e., <code>InputStream</code> and <code>OutputStream</code>) do not support direct buffer (mapping to OS buffer directly), results in heavy overhead. New IO, introduced in JDK 1.4, attempt to resolve these problems.</p>
+
+
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+  <li>[PENDING]</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: JDK 1.6<br />
+Last modified: September 1, 2008</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+
+</div>  <!-- End the container division -->
+
+</body>
+</html>

@@ -1,0 +1,1701 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Getting Started with PHP</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Getting Started with PHP</h1>
+<h2>(not for the dummies)</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction</h3>
+
+<p>PHP is a popular open-source general-purpose HTML-embedded <em>server-side</em> scripting language, which enables web developers to create dynamically generated web pages quickly. PHP was originally created by Rasmus Lerdorf in 1995, who added web forms that communicate with database (based on CGI/Perl) and called it &quot;<em>Personal Home Page/Forms Interpreter</em>&quot; or PHP/FI. PHP is now said to stand for &quot;<em>PHP: Hypertext Preprocessor</em>&quot; (a recursive acronym similar to GNU - GNU is Not Unix). PHP is now maintained by &quot;The PHP Group&quot; (@ <a href="http://www.php.net">http://www.php.net</a>).</p>
+
+<p>PHP is great for a one-man-operated (or two-man-operated) project, where a technically proficient geek can quickly produce a working prototype for a webapp. However, it is hard to use PHP to write good MVC (Model-View-Control) webapp, where the data (model), presentation (view) and logic (control) are well separated to facilitate team collaboration and maintenance. There are many PHP MVC frameworks (or libraries that run on top of PHP), such as Zend, CakePHP, Yii, Symfony and CodeIgniter. However, the learning curve of using these frameworks could be steep.</p>
+
+<p>Other HTML-embedded server-side scripting languages are: Microsoft's ASP (Active Server Pages), Java's JSP (Java Server Pages), CGI/Perl and etc.</p>
+
+
+<h5>Modes of Operation</h5>
+<p>PHP operates in two modes:</p>
+
+<ol>
+<li>Standalone Command-line Interface (CLI): You can run a CLI PHP script by itself, just like any program written in Perl/Python or C/C++/Java.</li>
+<li>HTML-embedded Server-side Script: The server-side script must be run under a PHP-capable Web Server (such as Apache HTTP Server).</li>
+</ol>
+
+<p>We shall focus on PHP Server-side script, as it is what PHP is most often used.</p>
+
+
+<h5>Pre-Requisites</h5>
+
+<p>This article is NOT for the dummies. The pre-requisites are:</p>
+<ul>
+<li>HTML</li>
+<li>For webapps: HTTP, HTML/CSS/JavaSCript/Ajax and MySQL.</li>
+<li>For OOP: basic knowledge of OOP.</li>
+</ul>
+
+<h3>Installing PHP</h3>
+
+<p>PHP is most often used in writing HTML-embedded server-side scripts, that run inside an PHP-capable Web Server, such as Apache HTTP Server. Hence, to setup PHP for server-side scripting, you need to set up a PHP-capable web server. In addition, PHP scripts often communicate with database (such as MySQL) to generate dynamic web pages.</p>
+
+<p>Read &quot;<a href="AMP_Setup.html">Setting Up Apache/MySQL/PHP (AMP) for Linux, Windows and Mac</a>&quot;.</p>
+
+<h3>Getting Started with PHP Server-side Scripts by Examples</h3>
+
+<p>Let's begin with the PHP server-side scripts. We shall discuss PHP standalone script (CLI) in the next section.</p>
+
+<h4>Example 1: First PHP Hello-world Program</h4>
+
+<p>Use a programming text editor (such as NotePad++ for Windows, or gedit for Ubuntu/Mac OS X) to create the following PHP script and save as &quot;<code>hello.php</code>&quot; under your web server's document <em>root</em> directory (e.g, &quot;<code>www</code>&quot; for WampServer. &quot;<code>htdocs</code>&quot; for XAMPP):</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;My First PHP Web Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+<span class="color-new">&lt;?php
+<span class="color-comment">// First PHP script to say hello</span>
+echo '&lt;h1&gt;Hello, world!&lt;/h1&gt;';
+?&gt;</span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>To run this script, start a browser and issue URL <code>http://localhost/hello.php</code>, assuming that the HTTP server has been started on the default TCP port 80.</p>
+<p>By default, PHP script has a file extension of &quot;<code>.php</code>&quot;. When the web server encounters a request for a &quot;<code>.php</code>&quot; file, it passes the &quot;<code>.php</code>&quot; file to a <em>PHP processor</em>. A PHP script is typically a HTML file with embedded PHP commands enclosed within <code>&lt;?php .... ?&gt;</code> tag. The PHP processor processes the PHP commands. The results are then merged into the HTML file, and returned to the client (web browser).</p>
+
+<p>In the above example, the PHP's <code>echo</code> command outputs the given string.</p>
+
+<p>Try &quot;View Source&quot; to check the output received by the client:</p>
+<pre class="output">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;My First PHP Web Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+<span class="color-new">&lt;h1&gt;Hello, world!&lt;/h1&gt;</span>&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+<p>It is important to take note that the <code>&lt;?php ... ?&gt;</code> tag (and its contents) are not returned to client as it is. Instead, it is processed in the server, and the output returned to the client.</p>
+<p>In brief:</p>
+<ol>
+<li>PHP can be used as server-side script. The server processes the PHP script and returns its output.</li>
+<li>PHP server-side script is HTML-embedded.</li>
+</ol>
+
+<h4>Example 2: <span class="font-code">phpinfo()</span> Built-in Function</h4>
+
+<p>Enter the following script and save as &quot;<code>RunPhpinfo.php</code>&quot;, under your web server's document root directory:</p>
+<pre class="color-example">
+&lt;?php 
+<span class="color-comment">// Run phpinfo() built-in function</span>
+<span class="color-new">phpinfo();</span>
+?&gt;</pre>
+
+<p>Run the script from a web browser via <code>http://localhost/run_phpinfo.php</code>.</p>
+<p>The PHP's built-in function <code>phpinfo()</code> outputs a fully-formatted HTML page showing the details of your PHP environment.</p>
+
+<h4>Example 3: Computation</h4>
+
+<p>You can write a PHP script to perform computation, just like a C/C++/Java program. For example, create the following PHP script called &quot;<code>PrintTimeTable.php</code>&quot; and run the script.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Simple Computation&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+<span class="color-new">&lt;?php
+<span class="color-comment">// Simple Computation</span>
+$size = 9;
+echo '&lt;pre&gt;';
+for ($row = 1; $row &lt;= $size; ++$row) {
+   for ($col = 1; $col &lt;= $size; ++$col) {
+      printf('%3d', $row * $col);
+   }
+   echo '&lt;br&gt;';
+}
+echo '&lt;/pre&gt;'
+?&gt;</span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How it Works?</h5>
+
+<ol>
+<li>A PHP variable begins with a <code>'$'</code> sign. Like all the other scripting languages, PHP is loosely-type. You do not have to declare the type/name of a variable before using it. The variable will take on the type of the value assigned.</li>
+<li>You can use the <code>echo</code> statement to output a string. You can also use the C-like <code>printf()</code> for formatted output.</li>
+<li>The for-loop syntax is exactly the same as C/C++/Java.</li>
+</ol>
+
+
+<h4>Example 4: Handling HTML Form Data</h4>
+<p>Create the following script and save as &quot;<code>FormTest.php</code>&quot;:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Test HTML Form&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+<span class="color-new">&lt;?php
+if (isset($_POST['username'])) {
+   echo '&lt;h2&gt;Hello, ' . htmlentities($_POST['username']) . '&lt;/h2&gt;';
+}
+?&gt;
+</span>&lt;form method=&quot;post&quot;&gt;
+&lt;label&gt;What is your name? &lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;&lt;/label&gt;&lt;br&gt;
+&lt;input type=&quot;submit&quot;&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How it works?</h5>
+
+<ol>
+<li>An HTML form is defined (Lines 13-16) having a text field with a name called <code>username</code> (Line 14). This form uses POST method with default <code>action</code> to the current page.</li>
+
+<li>In the PHP script (Lines 7-11), the system variable <code>$_POST</code> is an associative array keeping all the key-value pairs of the POST request parameters - in this example, <code>username=<em>value</em></code>. <code>$_POST['username']</code> gets the value of the key <code>username</code>. The built-in function <code>isset($_POST['username'])</code> returns TRUE, if the value of the given key is set. During the first visit, the key <code>username</code> is not set in the POST request parameters. Hence, the hello message is not displayed. Once user enters the name and submit the form, <code>username</code> is set; and the hello message will be displayed.</li>
+
+<li>In the <code>echo</code> command (Line 9), the dot (<code>.</code>) operator concatenates two strings; the built-in function <code>htmlentities(<em>str</em>)</code> (or <code>htmlspecialchars(<em>str</em>)</code>) converts all the special characters to HTML entities (e.g., <code>&gt;</code> to <code>&amp;gt;</code>, <code>&lt;</code> to <code>&amp;lt;</code>, <code>&quot;</code> to <code>&amp;quot;</code>, <code>&amp;</code> to <code>&amp;amp;</code>). It is important to convert special characters, in particular, <code>&lt;</code> and <code>&gt;</code>, before echoing back to the client to prevent the so-called <em>Cross-Site Scripting attack</em> (XSS).</li>
+
+<li>Try &quot;View Source&quot; to check the output produced by the PHP script.</li>
+</ol>
+
+<p>[TODO] More basic examples</p>
+
+<h3>Running PHP Scripts as Standalone Programs</h3>
+
+<p>Instead of using PHP to write server-side scripts that run under an HTTP server, you can also use PHP to write a stand-alone program, known as CLI (Command-Line interface).</p>
+<p>You can skip this section if you are not interested in writing standalone PHP scripts.</p>
+
+<h4>Running PHP Scripts From Command-line</h4>
+
+<p> For example, prepare the following PHP script and save as &quot;<code>hello.php</code>&quot;:</p>
+
+<pre class="color-example">
+&lt;?php
+echo &quot;Hello, world!\n&quot;;
+?&gt;
+</pre>
+
+<p>To run the PHP Script:</p>
+
+<pre class="color-command">
+$ <strong>php hello.php</strong>
+Hello, world!</pre>
+
+<p>By default, PHP reads the program from the <code>stdin</code>. Hence, you could input the statements on command-line and press Ctrl-D to signal end-of-file:</p>
+
+<pre class="color-command">
+$ <strong>php</strong>
+&lt;?php
+echo &quot;Hello, world!\n&quot;;
+?&gt;[Ctrl-D]</pre>
+<pre class="output">
+Hello, world!
+</pre>
+
+<p>You can also run PHP statements via the <code>-r</code> option (run). For example,</p>
+
+<pre class="color-command">
+$ <strong>php -r 'echo "Hello, world!\n";'</strong>
+Hello, world!
+ 
+$ <strong>php -r 'phpinfo();' | less</strong>
+......</pre>
+
+<h5>Prompting for User input</h5>
+
+<p>You can use the <code>readline()</code> function to prompt for user input from command-line. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre>
+</td>
+<td>
+<pre>
+&lt;?php
+<span class="color-comment">// Simple Computation</span>
+$size = readline('Enter the size of table: ');
+for ($row = 1; $row &lt;= $size; ++$row) {
+   for ($col = 1; $col &lt;= $size; ++$col) {
+      printf('%3d', $row * $col);
+   }
+   echo &quot;\n&quot;;
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Unix PHP Shell Script</h4>
+
+<p>In Unix, you can make a PHP script as an <em>executable</em> script by adding the so-called she-bang line &quot;<code>#!/usr/bin/php</code>&quot;, specifying the location of PHP interpreter; and enabling the  executable file mode. For example, create the following file called &quot;<code>HelloExe.php</code>&quot;:</p>
+
+<pre class="color-example">
+#!/usr/bin/php
+&lt;?php
+echo &quot;Hello, world!\n&quot;;
+?&gt;
+</pre>
+
+<pre class="color-command">
+<span class="color-comment">// Set the file executable</span>
+$ <strong>chmod u+x HelloExe.php</strong>
+<span class="color-comment">// Execute the script</span>
+$ <strong>./HelloExe.php</strong>
+Hello, world!</pre>
+
+
+<h3>Eclipse PHP Developer Tool (PDT)</h3>
+<p>A good IDE with a graphic debugger is critical for program development.</p>
+<p>Eclipse PDT (PHP Developer Tool) is an IDE for PHP program development. The main advantage is it can debug PHP script with XDebug or Zend Debugger. Read &quot;<a href="AMP_Setup.html#eclipsePDT">Setting up Eclipse PDT (PHP Developer Tool)</a>&quot;</p>
+
+<h3>PHP Language Syntax</h3>
+
+<p>PHP is typically used together with JavaScript in a webapp. Take note and remember that PHP syntax is quite different from JavaScript (which follows Java, and hence C/C++). For example, in PHP, a variable name starts with a <code>'$'</code> sign; there is no <code>var</code> keyword to declare a variable;<code> </code>an array is defined via <code>array('1', '2', '3')</code> (or <code>['1', '2', '3']</code> in PHP 5.4) instead of <code>{'1', '2', '3'}</code>; an associate array is defined via <code>array('name' => 'peter', 'age' => 18)</code> instead of <code>{name:'peter', age:18}</code>; and many more.</p>
+
+<p>Basic object-oriented features was added in PHP 3, improved in PHP 4, and completely rewritten in PHP 5.</p>
+
+<p>The official &quot;PHP Language Reference&quot; is available @ <a href="http://php.net/manual/en/langref.php">http://php.net/manual/en/langref.php</a>.</p>
+
+<h4>Basic Syntax</h4>
+
+<h5>Comments</h5>
+<p>A <em>mutli-line comment</em> is enclosed within <code>/*</code> and <code>*/</code>. An <em>end-of-line comment</em> begins with <code>//</code>  (or <code>#</code>) and lasts till the end of the current line. Comments are ignored by the PHP processor, but they are important in providing explanation and documentation for you and your readers. I recommend using comments liberally.</p>
+
+<h5>Statement</h5>
+<p>A <em>statement</em> performs a single piece of programming action. A PHP statement ends with a semicolon (<code>;</code>). A block, consisting of zero or more statements, is enclosed within braces <code>{}</code>. A block is treated as one unit and can be used as the body of constructs such as if-else and loops.</p>
+
+<h5>Whitespaces</h5>
+<p>Additional whitespaces (blank, tab and newline) are ignored. I strongly recommend that you use additional whitespaces to format your code, so that it can be understood by you and your readers.</p>
+
+<h5>Case Sensitivity</h5>
+<p>PHP is case sensitive.</p>
+
+<h5>Output: <span class="font-code">echo</span> and <span class="font-code">print</span></h5>
+
+<p>You can use the &quot;<code>echo</code>&quot; or &quot;<code>print</code>&quot; to produce output.</p>
+
+<pre class="color-syntax">
+void echo (string $arg1 [, string $... ])
+int print (string $arg)  <span class="color-comment">// always return 1</span></pre>
+
+<p>&quot;<code>echo</code>&quot; accepts one or more strings (separated by commas); whereas &quot;<code>print</code>&quot; takes only one string. &quot;<code>echo</code>&quot; is more commonly used than &quot;<code>print</code>&quot;</p>
+
+<p>For example,</p>
+
+<pre class="color-example">
+&lt;?php
+<span class="color-comment">// echo one string.</span>
+echo 'Hello, world!&lt;br&gt;';
+<span class="color-comment">// Parentheses are optional.</span>
+echo('Hello, world!&lt;br&gt;');
+ 
+<span class="color-comment">// You can echo multiple strings (separated by commas).</span>
+echo 'one', ' ', 'two', ' ', 'three', '&lt;br&gt;';
+<span class="color-comment">// You can also use the string concatenation operator dot (.) to join the strings into one.</span>
+echo 'one' . ' ' . 'two' . ' ' . 'three' . '&lt;br&gt;';
+ 
+print 'Hello, world!&lt;br&gt;';
+print('Hello, world!&lt;br&gt;'); <span class="color-comment"> // parentheses are optional</span>
+print 'one' . ' ' . 'two' . ' ' . 'three' . '&lt;br&gt;'; <span class="color-comment"> // one string</span>
+?&gt;</pre>
+
+<p>&quot;<code>echo</code>&quot; and &quot;<code>print</code>&quot; are not really functions, they are program constructs. Hence, the parentheses are optional.</p>
+
+<h5>Output functions for Debugging: <span class="font-code">var_dump()</span>, <span class="font-code">print_r()</span> and <span class="font-code">var_export()</span></h5>
+
+<p>These functions can be used to display information about a variable. They are particularly useful for display complex variables such as array and object.</p>
+<ul>
+<li><code>var_dump(<em>var</em>)</code>: dumps detail information about a variable, useful for debugging.</li>
+<li><code>var_export(<em>var</em>)</code>: export the value of the variable in valid PHP codes.</li>
+<li><code>print_r(<em>var</em>)</code>: similar to <code>var_export()</code>, but print in human readable form.</li>
+<li><code>print_r(<em>var</em>, TRUE)</code>: return the generated string instead of printing it.</li>
+</ul>
+
+<h5>Formatted Output Functions: <span class="font-code">printf()</span> and <span class="font-code">sprintf()</span></h5>
+
+<ul>
+<li><code>printf(<em>formatString</em>, <em>var</em>, ...)</code>: similar to C's <code>printf()</code>.</li>
+<li><code>sprintf(<em>formatString</em>, <em>var</em>, ...)</code>: returns the formatting string, instead of sending it to the output.</li>
+</ul>
+
+<h5>Expressions</h5>
+<p>An expression is a combination of variables, literal values and operators, that can be evaluated to produce a value.</p>
+
+<h4>Variables</h4>
+
+<p>A PHP variable begins with a dollar sign <code>'$'</code>.</p>
+
+<p>PHP is a <em>loosely-type</em> (or <em>weakly-type</em>) language. You do not have to declare the type of a variable before using the variable. You can simply assign a literal value, and the PHP processor will set the type of the variable accordingly.</p>
+<p>For example,</p>
+
+<pre class="color-example">
+&lt;?php
+<span class="color-new"><span class="color-comment">// Integer</span>
+$myInteger = 123;</span>
+echo $myInteger, '&lt;br&gt;';
+ 
+<span class="color-comment">// Floating point number</span>
+<span class="color-new">$myFloat = 45.67;</span>
+echo $myFloat, '&lt;br&gt;';
+ 
+<span class="color-comment">// a single-quoted string</span>
+<span class="color-new">$myString = 'hello';</span>
+echo $myString, '&lt;br&gt;';
+ 
+<span class="color-comment">// An array of string</span>
+<span class="color-new">$myArray = array('Mon', 'Tue', 'Wed')</span>;
+echo $myArray[0], '&lt;br&gt;';
+<span class="color-new"></span>echo $myArray[1], '&lt;br&gt;';
+<span class="color-new"></span>echo $myArray[2], '&lt;br&gt;';
+<span class="color-new"></span>?&gt;</pre>
+
+<p><span class="line-heading">Variable Naming Rules:</span> A variable name can contain letters (<code>a-z</code>, <code>A-Z</code>), digit (<code>0-9</code>) and underscore (<code>_</code>). It shall begin with a letter  or underscore. Variable names are case-sensitive, i.e., a <code>$rose</code> is NOT a <code>$ROSE</code>, and is not a <code>$Rose</code>.</p>
+
+<p><span class="line-heading">Variable Naming Convention:</span> A variable name shall be a noun comprising one or more words. You can either use Java-style or C-style:</p>
+
+<ul>
+<li>Java-style: begins with lowercase, with subsequent words initial-capitalized (called camel-case).</li>
+<li>C-style: all words in lowercase, and joined with underscores.</li>
+</ul>
+<p>On the other hand, constants are in uppercase, with words joined with underscores.</p>
+
+<h5>Assignment Operator (<span class="font-code">=</span>)</h5>
+<p>You can use the assignment operator (<code>=</code>) to assign a value into a variable.</p>
+
+<h4>Strings</h4>
+
+<h5>Single-quoted and Double-quoted Strings</h5>
+
+<p>There are two types of string literals: single-quoted and double-quoted.</p>
+<ul>
+<li>A <em>single-quoted string</em> preserves its content <em>as it is</em>. It does not interpret escape sequences, e.g., <code>'\n'</code> will be treated as a back-slash followed by n (2 characters); not the newline character (1 ASCII character 0AH). You can place double-quote directly inside the single-quoted string, e.g., <code>'Hi, &quot;Peter&quot;'</code>. To place a single-quote, use escape sequence <code>\'</code>, e.g., <code>'Hi, \'Peter\''</code>. To place a backslash <code>\</code>, use double backslashes <code>\\</code> to avoid ambiguity. In brief, there are only two escape sequences in single-quoted string, <code>\'</code> for single-quote and <code>\\</code> for backslash.</li>
+
+<li>A <em>double-quoted string</em> performs <em>variable substitution</em> (or <em>variable evaluation</em>) and interprets all escape sequences starting with backslash <code>\</code> (such as <code>\t</code> for tab, <code>\n</code> for newline and <code>\r</code> for carriage return, <code>\&quot;</code> for double-quote, <code>\\</code> for backslash, etc.).</li>
+</ul>
+
+<p>For example,</p>
+<pre class="color-example">
+&lt;?php
+$count = 5;
+echo &quot;&lt;p&gt;The count is <span class="color-new">$count</span>.\n&lt;/p&gt;&quot;;        <span class="color-comment">// Substitute variable with its value</span>
+echo '&lt;p&gt;The count is <span class="color-new">$count</span>.\n&lt;/p&gt;';        <span class="color-comment">// As it is</span>
+echo '&lt;p&gt;The count is ' . <span class="color-new">$count</span> . '.&lt;/p&gt;';  <span class="color-comment">// Use string concatenation (.)</span>
+echo '&lt;p&gt;The count is ', <span class="color-new">$count</span>, '.&lt;/p&gt;';    <span class="color-comment">// echo multiple items</span>
+echo &quot;&lt;p&gt;The count is &quot; . <span class="color-new">$count</span> . &quot;.&lt;/p&gt;&quot;;
+?&gt;</pre>
+<pre class="output">
+The count is 5.[newline]
+The count is $count.\n
+The count is 5.
+The count is 5.
+The count is 5.</pre>
+
+<p>Double-quoted string facilitates variable substitution (in place of tedious string concatenation) and interpretation of escape sequences. Use single-quoted strings, which are more efficient, if variable substitution and escape sequences are not needed.</p>
+
+<p>In variable expansion, PHP greedily parse as many characters as possible (after the $ sign) to form the variable name. You may enclose the variable name in braces <code>{}</code> to explicitly delimit the name. For example,</p>
+
+<pre class="color-example">
+&lt;?php
+<span class="color-new">$drink</span> = 'coffee';
+echo &quot;Give me one <span class="color-new">$drink</span>.&lt;br&gt;&quot;;
+echo &quot;Give me two <span class="color-new">$drinks</span>.&lt;br&gt;&quot;;    <span class="color-comment">// won't work, treated as variable $drinks</span>
+echo &quot;Give me two {<span class="color-new">$drink</span>}s.&lt;br&gt;&quot;;
+?&gt;</pre>
+
+<p>You cannot expand the return value of a function via double-quoted string - concatenation needed. For example,</p>
+
+<pre class="color-example">
+&lt;?php
+echo 'phpinfo() is ' . phpinfo();
+<span class="color-comment">// PHP cannot expand function inside double-quoted string</span>
+// echo "phpinfo() is {phpinfo()}";
+?&gt;</pre>
+
+<h5>String Concatenation Operator (<span class="font-code">.</span>)</h5>
+<p>You can join two strings via the string concatenation operator (<code>.</code>).</p>
+
+<p>Notes: JavaScript (and Java) uses '+' as string concatenation operation. '+' don't work in PHP, which is one of the most common bugs in writing webapp using PHP and JavaScript together!</p>
+
+<h5>Multiline Strings, Heredoc and Nowdoc</h5>
+
+<p>In PHP, a single-quoted string and double-quoted string can <em>span multiple lines</em>, e.g.,</p>
+<pre class="color-example">
+&lt;?php
+$message1 = 'Hello';
+$message2 = 'world';
+ 
+<span class="color-comment">// Multiline double-quoted string</span>
+echo <span class="color-new">&quot;</span>&lt;h1&gt;This is a multiline string&lt;/h1&gt;
+&lt;p&gt;First Line&lt;/p&gt;
+&lt;p&gt;$message1,\t$message2&lt;/p&gt;
+&lt;p&gt;Take note that variables/Escape characters are expanded.&lt;/p&gt;
+&lt;p&gt;Last     Line&lt;/p&gt;<span class="color-new">&quot;</span>;   <span class="color-comment">// closing double-quote here</span>
+ 
+<span class="color-comment">// Multiline single-quoted string</span>
+echo <span class="color-new">'</span>&lt;h1&gt;This is a multiline string&lt;/h1&gt;
+&lt;p&gt;First Line&lt;/p&gt;
+&lt;p&gt;$message1,\t$message2&lt;/p&gt;
+&lt;p&gt;Take note that variables/Escape characters are NOT expanded.&lt;/p&gt;
+&lt;p&gt;Last     Line&lt;/p&gt;<span class="color-new">'</span>;   <span class="color-comment">// closing single-quote here</span>
+?&gt;</pre>
+
+<p>Try &quot;View Source&quot; to check the output. All the newlines and whitespaces are preserved within the quotes. Again, double-quoted string performs variable substitution; whereas single-quoted string does not.</p>
+
+<p>You can also use the so-called <em>heredoc</em> (<em>here-document</em>) syntax for double-quoted multiline string (since PHP 5.3). For example,</p>
+
+<pre class="color-example">&lt;?php
+$message1 = 'Hello';
+$message2 = 'heredoc';
+$output = <span class="color-new">&lt;&lt;&lt;_END</span>
+&lt;h1&gt;This is a multiline string&lt;/h1&gt;
+&lt;p&gt;First Line&lt;/p&gt;
+&lt;p&gt;$message1,\t$message2&lt;/p&gt;
+&lt;p&gt;Take note that variables/Escape characters are expanded.&lt;/p&gt;
+&lt;p&gt;Last Line&lt;/p&gt;
+<span class="color-new">_END</span>;
+echo $output;
+?&gt;</pre>
+
+<p>Heredoc (<code>&lt;&lt;&lt;<em>tag</em> ... <em>tag</em></code>) is treated as a double-quoted string. The begin tag must follow by a newline. The end tag must begin at the first column and shall occupy the entire line with nothing after the tag - no even a comment. Instead of the tag-name <code>_END</code>, you can choose any tag-name such as <code>_EOD</code>, <code>END</code>, <code>OUTPUT</code>, and etc. The tag name shall begin with a letter or underscore, and consists of letters, digits or underscore.</p>
+
+<p>Similarly, you can use the so-called <em>nowdoc</em> (<em>now-document</em>) syntax (<code>&lt;&lt;&lt;'<em>tag</em>' ... <em>tag</em></code>) for single-quoted string, where the begin-tag is single-quoted (since PHP 5.3). For example,</p>
+
+<pre class="color-example">&lt;?php
+$message1 = 'Hello';
+$message2 = 'nowdoc';
+$output = <span class="color-new">&lt;&lt;&lt;'_END'</span>
+&lt;h1&gt;This is a multiline string&lt;/h1&gt;
+&lt;p&gt;First Line&lt;/p&gt;
+&lt;p&gt;$message1,\t$message2&lt;/p&gt;
+&lt;p&gt;Take note that variables/Escape characters are NOT expanded.&lt;/p&gt;
+&lt;p&gt;Last Line&lt;/p&gt;
+<span class="color-new">_END</span>;
+echo $output;
+?&gt;</pre>
+
+<p>Multiline strings, heredoc and nowdoc are convenient to produce an entire web page, which is the goal of PHP; instead of using a <code>echo</code> statement per line - as in C/C++/Java. Furthermore, there is no need to use escape characters for quotes.</p>
+
+<h5>Built-in String functions</h5>
+
+<ul>
+<li><span class="line-heading font-code">strlen(<em>str</em>)</span>: returns the length of the given string.</li>
+
+<li><span class="line-heading font-code">substr(<em>str</em>, <em>start</em> [, <em>length</em>])</span>: returns the substring from <code><em>start</em></code> position of <code><em>length</em></code>.</li>
+
+<li><span class="line-heading font-code">strtoupper(<em>str</em>)</span>, <span class="line-heading font-code">strtolower(<em>str</em>)</span>: return the uppercase/lowecase of the given string.</li>
+<li><span class="line-heading font-code">trim(<em>str</em>)</span>: trim whitespaces from the beginning and end of the given string.</li>
+
+<li><span class="line-heading font-code">rtrim(<em>str</em>)</span>: trim whitespaces from the end of the given string.</li>
+<li>[TODO]</li>
+</ul>
+
+<h4>String and Regular Expression (regexe)</h4>
+
+<p>Regular Expression (regexe) is a power tool and is essential in program development.</p>
+
+<h5>Built-in Regexe functions</h5>
+<ul>
+<li><span class="line-heading font-code">preg_match(...)</span>: [TODO]</li>
+<li><span class="line-heading font-code">preg_replace(...)</span>: [TODO]</li>
+<li><span class="line-heading font-code">preg_split(...)</span>: [TODO]</li>
+<li>[TODO]</li>
+</ul>
+
+<p>[TODO]</p>
+
+<h4>Data Types</h4>
+<p>As mentioned, PHP is a <em>loosely-type</em> language (similar to other scripting languages such as Perl and JavaScript). You do not have to explicitly declare the type of variables. PHP will infer the data type from the value assigned and convert variables to the types needed in operations.</p>
+<p>PHP supports these data types:</p>
+<ol>
+<li><span class="line-heading font-code">integer</span>: platform-specific (such as 32-bit or 64-bit).</li>
+<li><span class="line-heading font-code">double</span>: also platform-specific (single-precision or double-precision).</li>
+<li><span class="line-heading font-code">string</span>: single-quoted, double-quoted, nowdoc, and heredoc.</li>
+
+<li><span class="line-heading font-code">boolean</span>: PHP supports native boolean type, which takes value of either <code>TRUE</code> or <code>FALSE</code>. In type casting and conversion, these values are considered boolean FALSE:
+<ul>
+<li>integer <code>0</code>,</li>
+<li>float <code>0.0</code>,</li>
+<li>empty string <code>''</code> and string <code>'0'</code>,</li>
+<li>an array with zero element (empty array),</li>
+<li>an object with zero member variables,</li>
+<li>the special value NULL (indicating no value).</li>
+</ul>
+Take note that string <code>'FALSE'</code> is evaluated to boolean TRUE in PHP. Hence, if you need to use string to represent boolean (e.g. in HTML <code>&lt;select&gt;</code> or radio buttons' values), use <code>'0'</code> for false, and <code>'1'</code> for true, instead of string <code>'true'</code> and <code>'false'</code>, which requires some explicit conversions.<br />
+
+The PHP manual states that boolean literals should be written in uppercase TRUE and FALSE, but PHP also accepts lowercase. I suggest you use uppercase for consistency and readability. (Take note that JavaScript and Java use lowercase.)</li>
+
+<li><span class="line-heading font-code">object</span>: an instance of a class.</li>
+<li><span class="line-heading font-code">resource</span>: represents external resources, such as image, file, database.</li>
+<li><span class="line-heading font-code">array</span>: array of the above types.</li>
+
+<li><span class="line-heading">Type <span class="font-code">null</span> and value <span class="font-code">NULL</span></span>: A special value NULL is used to represent a variable with no value. The value NULL is the only possible value of type null.<br />
+A variable is considered to be NULL if
+<ul>
+<li>it has been assigned the value NULL;</li>
+<li>it has not been set to any value yet;</li>
+<li>it has been <code>unset()</code>.</li>
+</ul>
+Again, I suggest that you use uppercase for NULL value. (Take note that JavaScript and Java use lowercase.)</li>
+</ol>
+
+<h5><span class="font-code">gettype()</span> and <span class="font-code">is_<em>xxx</em>()</span></h5>
+
+<p>To find the type of a variable, use function <code>gettype()</code>. You can also use boolean function <code>is_xxx(<em>var</em>)</code> (e.g., <code>is_integer()</code>, <code>is_int()</code>, <code>is_double()</code>, <code>is_string()</code>, <code>is_array()</code>, <code>is_object()</code>) to check if a variable belongs to a certain type.</p>
+<p>For example,</p>
+
+<pre class="color-example">
+&lt;?php
+$myInt = 5;
+$myDouble = 1.23;
+$myString = 'Hello';
+$myBoolean = TRUE;
+$myArray = array('Mon', 'Tue', 'Wed');
+$myNull = NULL;
+ 
+<span class="color-comment">// gettype()</span>
+echo <span class="color-new">gettype($myInt)</span>, '&lt;br&gt;';       <span class="color-comment">// integer</span>
+echo <span class="color-new">gettype($myDouble)</span>, '&lt;br&gt;';    <span class="color-comment">// double</span>
+echo <span class="color-new">gettype($myString)</span>, '&lt;br&gt;';    <span class="color-comment">// string</span>
+echo <span class="color-new">gettype($myBoolean)</span>, '&lt;br&gt;';   <span class="color-comment">// boolean</span>
+echo <span class="color-new">gettype($myArray)</span>, '&lt;br&gt;';     <span class="color-comment">// array</span>
+echo <span class="color-new">gettype($myNull)</span>, '&lt;br&gt;';      <span class="color-comment">// NULL</span>
+ 
+<span class="color-comment">// is_xxx()</span>
+echo <span class="color-new">is_integer($myInt)</span>, '&lt;br&gt;';    <span class="color-comment">// 1 (TRUE)</span>
+echo <span class="color-new">is_string($myInt)</span>, '&lt;br&gt;';     <span class="color-comment">// nothing (FALSE)</span>
+ 
+<span class="color-comment">// Type Casting</span>
+echo <span class="color-new">gettype((string)$myDouble)</span>, '&lt;br&gt;';  <span class="color-comment">// string</span>
+echo <span class="color-new">gettype((double)'1.234')</span>, '&lt;br&gt;';    <span class="color-comment">// double</span>
+?&gt;</pre>
+
+<h5>Debugging: <span class="font-code">var_dump()</span>, <span class="font-code">var_export()</span> and <span class="font-code">print_r()</span></h5>
+
+<p>These functions can be used to display information about a variable. They are particularly useful for display complex variables such as array and object.</p>
+<ul>
+<li><code>var_dump(<em>var</em>)</code>: dumps detail information about a variable, useful for debugging.</li>
+<li><code>var_export(<em>var</em>)</code>: export the value of the variable in valid PHP codes.</li>
+<li><code>print_r(<em>var</em>)</code>: similar to <code>var_export()</code>, but print in human readable form.</li>
+<li><code>print_r(<em>var</em>, TRUE)</code>: return the generated string instead of printing it.</li>
+</ul>
+
+<p>For example,</p>
+<pre class="color-example">
+&lt;?php
+$myInt = 5;
+var_dump($myInt);
+echo '&lt;br&gt;';
+var_export($myInt);
+echo '&lt;br&gt;';
+print_r($myInt);
+echo '&lt;br&gt;';
+
+$myString = 'Hello';
+var_dump($myString);
+echo '&lt;br&gt;';
+var_export($myString);
+echo '&lt;br&gt;';
+print_r($myString);
+echo '&lt;br&gt;';
+
+$myArray = array('Mon', 'Tue', 'Wed');
+var_dump($myArray);
+echo '&lt;br&gt;';
+var_export($myArray);
+echo '&lt;br&gt;';
+print_r($myArray);
+?&gt;</pre>
+
+<pre class="output">
+int 5      <span class="color-comment">// var_dump()</span>
+5          <span class="color-comment">// var_export()</span>
+5          <span class="color-comment">// print_r()</span>
+
+string 'Hello' (length=5)  <span class="color-comment">// var_dump()</span>
+'Hello'                    <span class="color-comment">// var_export()</span>
+Hello                      <span class="color-comment">// print_r()</span>
+
+array (size=3)                                 <span class="color-comment">// var_dump()</span>
+  0 =&gt; string 'Mon' (length=3)
+  1 =&gt; string 'Tue' (length=3)
+  2 =&gt; string 'Wed' (length=3)
+array ( 0 =&gt; 'Mon', 1 =&gt; 'Tue', 2 =&gt; 'Wed', )  <span class="color-comment">// var_export()</span>
+Array ( [0] =&gt; Mon [1] =&gt; Tue [2] =&gt; Wed )     <span class="color-comment">// print_r()</span></pre>
+
+<h5>Checking Variables</h5>
+
+<p>You can use the following built-in functions:</p>
+
+<ul>
+<li><span class="line-heading font-code">isset($var)</span>: return TRUE is <code>$var</code> is set and is not NULL.</li>
+
+<li><span class="line-heading font-code">unset($var)</span>: unset the <code>$var</code>.</li>
+
+<li><span class="line-heading font-code">is_null($var)</span>: return TRUE if the <code>$var</code> is NULL.</li>
+
+<li><span class="line-heading font-code">empty($var)</span>: return TRUE if the <code>$var</code> does not exist (i.e. <code>!isset($var)</code>) or its value is equivalent to boolean FALSE (e.g., NULL, <code>0</code>, <code>0.0</code>, <code>''</code>, <code>'0'</code>, empty array and object).</li>
+
+</ul>
+
+<h5>Type Casting and Conversion</h5>
+
+<p>As an example, there are 3 ways to cast a string to an integer:</p>
+<ol>
+<li><code>intval()</code>: The function <code>intval($str)</code> returns an equivalent integer or 0 if <code>$str</code> does not contain an valid integer. Take note that it cannot handle <code>'0'</code>, as the result is ambiguous.</li>
+
+<li>Casting operator <code>(int)</code>: same as <code>intval()</code>.</li>
+
+<li><code>settype($var, 'integer')</code>: convert <code>$var</code> to integer type, and return either TURE/FALSE.</li>
+
+</ol>
+
+<h4>Operators</h4>
+
+<h5>Type casting Operators</h5>
+<p>You can use the type casting operator to get a value of the desired type:</p>
+
+<table class="table-zebra" style="width:60%">
+<tr>
+  <th>Operator</th>
+  <th>Meaning</th>
+  <th>Example</th>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center"><span class="font-code" style="text-align:center">(integer)</span>, (int)</td>
+  <td>Cast to an integer</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center"><span class="font-code" style="text-align:center">(boolean)</span>, (bool)</td>
+  <td>Cast to a boolean</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center"><span class="font-code" style="text-align:center">(double), </span>(float), (real)</td>
+  <td>Cast to a floating-point number</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">(string)</td>
+  <td>Cast to a string</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">(array)</td>
+  <td>Cast to an array</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">(object)</td>
+  <td>Cast to an object</td>
+  <td>&nbsp;</td>
+</tr>
+</table>
+
+
+
+<h5>Arithmetic Operators for Numeric Types</h5>
+
+<table class="table-zebra" style="width:50%">
+<tr>
+  <th>Operator</th>
+  <th>Meaning</th>
+  <th>Example</th>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">+</td>
+  <td>Addition</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">-</td>
+  <td>Subtraction</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">*</td>
+  <td>Multiplication</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">/</td>
+  <td>Division</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">%</td>
+  <td>Modulus (Remainder)</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">++</td>
+  <td>Increment (unary)</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">--</td>
+  <td>Decrement (unary)</td>
+  <td>&nbsp;</td>
+</tr>
+</table>
+
+<h5>Shorthand Assignment Operators</h5>
+
+<table class="table-zebra" style="width:50%">
+<tr>
+  <th>Operator</th>
+  <th>Meaning</th>
+  </tr>
+<tr>
+  <td class="font-code" style="text-align:center">+=</td>
+  <td><span class="font-code">$x += $y</span> is the same as <span class="font-code">$x = $x + $y</span></td>
+  </tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">-=</td>
+  <td><span class="font-code">$x -= $y</span> is the same as <span class="font-code">$x = $x - $y</span></td>
+  </tr>
+<tr>
+  <td class="font-code" style="text-align:center">*=</td>
+  <td><span class="font-code">$x *= $y</span> is the same as <span class="font-code">$x = $x * $y</span></td>
+  </tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">/=</td>
+  <td><span class="font-code">$x /= $y</span> is the same as <span class="font-code">$x = $x / $y</span></td>
+  </tr>
+<tr>
+  <td class="font-code" style="text-align:center">%=</td>
+  <td><span class="font-code">$x %= $y</span> is the same as <span class="font-code">$x = $x % $y</span></td>
+  </tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">.=</td>
+  <td><span class="font-code">$x .= $y</span> is the same as <span class="font-code">$x = $x . $y</span><br />(String Concatenation)</td>
+  </tr>
+</table>
+
+<h5>Comparison (Relational) Operators</h5>
+
+<table class="table-zebra" style="width:50%">
+<tr>
+  <th>Operator</th>
+  <th>Meaning</th>
+  <th>Example</th>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">==</td>
+  <td>is equal to</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">!=</td>
+  <td>is not equal to</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">===</td>
+  <td>is strictly equal to (both type and value)</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">!==</td>
+  <td>is not strictly equal to (both type and value)</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">&gt;</td>
+  <td>is greater than</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">&gt;=</td>
+  <td>is greater than or equal to</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">&lt;</td>
+  <td>is less than</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">&lt;=</td>
+  <td>is less than or equal to</td>
+  <td>&nbsp;</td>
+</tr>
+</table>
+
+<p>Similar to JavaScript, PHP provides two sets of equality operators: == and ===. The === compares both the value and the type. For example,</p>
+
+<pre class="color-example">
+&lt;?php
+$n = 8;
+$str = '8';
+
+var_dump($n == $str);    <span class="color-comment">// bool(true)</span>
+var_dump($n === $str);   <span class="color-comment">// bool(false) difference types</span>
+?&gt;
+</pre>
+
+<p>It is highly recommended to use === and !==, to avoid some unexpected comparison results caused by type casting (e.g., 'FALSE' == FALSE gives FALSE, as string 'FALSE' is casted to boolean TRUE).</p>
+
+<h5>Logical (Boolean) Operators</h5>
+
+<table class="table-zebra" style="width:50%">
+<tr>
+  <th>Operator</th>
+  <th>Meaning</th>
+  <th>Example</th>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">&amp;&amp;</td>
+  <td>Logical AND</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">||</td>
+  <td>Logical OR</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">!</td>
+  <td>Logical NOT</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">and</td>
+  <td>Low-precedence Logical AND</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td class="font-code" style="text-align:center">or</td>
+  <td>Low-precedence Logical OR</td>
+  <td>&nbsp;</td>
+</tr>
+<tr class="tr-alt">
+  <td class="font-code" style="text-align:center">xor</td>
+  <td>Low-precedence Logical Exclusive OR</td>
+  <td>&nbsp;</td>
+</tr>
+</table>
+
+<p>There are two sets of logical operators: &quot;<code>and</code>&quot; vs. &quot;<code>&amp;&amp;</code>&quot;. They carry out the same task but having different operator precedences. &quot;<code>&amp;&amp;</code>&quot; is higher than assignment; while &quot;<code>and</code>&quot; is lower. Hence,</p>
+
+<pre class="color-example">
+$n = $a and $b;
+<span class="color-comment">// interpret as ($n = $a) and $b;</span>
+
+$n = $a &amp;&amp; $b;
+<span class="color-comment">// interpret as $n = ($a &amp;&amp; $b);</span></pre>
+
+<p>It is recommended to use &quot;<code>and</code>&quot; &quot;<code>or</code>&quot; as they are human readable, but take note of their precedence over assignment.</p>
+
+<p>Notes: JavaScript (and Java) does not support &quot;<code>and</code>&quot; &quot;<code>or</code>&quot; operators.</p>
+
+<p>The logical chained operations are short-circuited. For example,</p>
+
+<pre class="color-example">
+!$error
+   or die('error encountered');   <span class="color-comment">// only run if $error is TRUE</span>
+   
+$pStmt-&gt;bind_param(...)
+   and $pStmt-&gt;execute(...)
+   and $pStmt-&gt;store_result(...)
+   and $pStmt-&gt;bind_result(...)
+   or die('error encountered');   <span class="color-comment">// run only if any of the above is FALSE</span></pre>
+
+<h5>Constants</h5>
+
+<p>You can define a constant via the <code>define</code> command and refer a a constant without the leading <code>$</code> sign.</p>
+<pre class="color-example">
+<span class="color-comment">// Syntax</span>
+define(CONSTANT_NAME, value);
+ 
+<span class="color-comment">// Example</span>
+define('USERNAME', 'Peter');<code></code>
+$currentUser = USERNAME;    <span class="color-comment">// without leading $ sign</span></pre>
+
+<p><span class="line-heading">Constant Naming Convention:</span> A constant is a noun comprising one or more words. Constants are in uppercase, with words joined with underscores.</p>
+
+<p>Constants are not expanded inside the double-quoted strings. You need to use the string concatenation operator (.) to join constants with other strings.</p>
+
+<h4>Control Structures</h4>
+
+<h5>Conditional Flow Control</h5>
+
+<table class="table-program">
+<tr>
+<th>Syntax</th>
+<th>Example</th>
+</tr>
+<tr>
+<td><pre class="color-syntax">
+<span class="color-comment">// if-then</span>
+if (<em>test</em>) {
+   <em>trueBlock</em>;
+}</pre></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+<span class="color-comment">// if-then-else</span>
+if (<em>test</em>) {
+   <em>trueBlock</em>;
+} else {
+   <em>falseBlock</em>;
+}</pre></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+<span class="color-comment">// Shorthand if-else expression
+// Return the value of <em>trueExpression</em> if the <em>test</em> is TRUE;
+// Otherwise, return the value of <em>falseExpression</em></span>
+<em>test</em> ? <em>trueExpression</em> : <em>falseExpression</em>;
+ 
+<span class="color-comment">// Shorthand ternary
+// Since PHP 5.3, you can write:</span>
+expr ?: value-if-false
+   <span class="color-comment">// same as &quot;expr ? expr : value-if-false&quot; (i.e., leaving out the middle part)</span>
+</pre></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+<span class="color-comment">// nested-if</span>
+if (<em>test1</em>) {
+   <em>block1</em>;
+} elseif (<em>test2</em>) {
+   <em>block2</em>;
+} elseif (<em>test3</em>) {
+  .......
+} else {
+   <em>elseBloc</em>k;
+}</pre></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+<span class="color-comment">// switch-case</span>
+switch (<em>selector</em>) {
+   case <em>value1</em>: <em>block1</em>; break;
+   case <em>value2</em>: block2; break;
+   ......
+   default: <em>defaultBlock</em>;
+}</pre></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+<span class="color-comment">// Alternative switch-case syntax</span>
+switch (<em>selector</em>):
+   case <em>value1</em>: <em>block1</em>; break;
+   case <em>value2</em>: block2; break;
+   ......
+   default: <em>defaultBlock</em>;
+endswitch;</pre></td>
+<td>&nbsp;</td>
+</tr>
+</table>
+
+<h5>Loop Flow Control</h5>
+
+<table class="table-program">
+<tr>
+<th>Syntax</th>
+<th>Example</th>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+<span class="color-comment">// while loop</span>
+while (<em>test</em>) {
+   <em>trueBlock</em>;
+}</pre></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+<span class="color-comment">// do-while loop</span>
+do {
+   <em>trueBlock</em>;
+} while (<em>test</em>);</pre></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+<span class="color-comment">// for loop</span>
+for (<em>initialization</em>; <em>test</em>; <em>post-processing</em>) {
+   <em>trueBlock</em>;
+}</pre></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+break;   <span class="color-comment">// Breaking out the innermost loop</span></pre></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+continue;  <span class="color-comment">// Skip the rest of statements and 
+           // continue to the next iteration of the loop</span><em></em></pre></td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+<td><pre class="color-syntax">
+<span class="color-comment">// Do the body for each element of an array</span>
+foreach (<em>arrayVar</em> as <em>itemVar</em>) {
+   <em>body</em>;
+}</pre></td>
+<td>&nbsp;</td>
+</tr>
+
+</table>
+
+<h5>The <span class="font-code">include</span> and <span class="font-code">require</span> Statements</h5>
+
+<ul>
+
+<li><span class="line-heading font-code">include</span>: the <code>include</code> statement tells the PHP processor to fetch the file and load its contents.</li>
+
+<li><span class="line-heading font-code">include_once</span>: to include the file only once. It is recommended to use <code>include_once</code>, instead of <code>include</code>.</li>
+
+<li><span class="line-heading font-code">require</span> and <span class="line-heading font-code">require_once</span>: The <code>require</code> is identical to <code>include</code>, except that it handles errors differently. If an error occurs, the <code>include</code> generates a warning, and continues executing the script. The <code>require</code> generates a fatal error, and terminates the script.</li>
+
+<li><code>require_once</code> is recommended.</li>
+</ul>
+
+<h5><span class="font-code">exit</span> and <span class="font-code">die</span></h5>
+
+<p>&quot;<code>exit str</code>&quot; echos the str and exit the script. &quot;<code>die(str)</code>&quot; does the same thing.</p>
+
+<p>&quot;<code>exit</code>&quot; is a PHP construct instead of a function, hence, you can write &quot;<code>exit str</code>&quot;. But &quot;<code>exit(str)</code>&quot; is also acceptable.</p>
+
+<h4>Indexed Arrays and Associative Arrays</h4>
+
+<p>An array is a collection of elements (not necessarily of the same type - as PHP is lossy-type).</p>
+
+<p>To define and initialize an array, <code>array(<em>elm1</em>, <em>elm2</em>, ..., <em>elmN</em>)</code>. Staring with PHP 5.4, you can also use simpler square brackets in the form of <code>[<em>elm1</em>, <em>elm2</em>, ..., <em>elmN</em>]</code>. For examples,</p>
+
+<pre class="color-example">
+&lt;?php
+$a1 = <span class="color-new">array('a', 2, 'c', TRUE)</span>; <span class="color-comment"> // mixed contents</span>
+var_dump($a1);
+<span class="color-comment">// array(4) {</span>
+<span class="color-comment">//   [0]=&gt; string(1) &quot;a&quot;</span>
+<span class="color-comment">//   [1]=&gt; int(2)</span>
+<span class="color-comment">//   [2]=&gt; string(1) &quot;c&quot;</span>
+<span class="color-comment">//   [3]=&gt; bool(true)</span>
+<span class="color-comment">// }</span>
+ 
+<span class="color-comment">// From PHP 5.4, use simpler square bracket [], instead of array()</span>
+$a2 = <span class="color-new">['a', 2, 'c', TRUE]</span>;
+var_dump($a2);
+ 
+<span class="color-comment">// You can include the trailing commas without causing syntax error!</span>
+$a3 = ['a', 2, 'c', TRUE<span class="color-new">,</span>];
+var_dump($a3);
+?&gt;</pre>
+
+<p>To reference an element of an array, use <code><em>arrayName</em>[<em>index</em>]</code>. The index begins at 0. This type of array is also called <em>Indexed Array</em>.</p>
+
+<p>In PHP, arrays are dynamically sized. To insert element into an array, you can explicitly provide the index number, or leave it empty. The new element will be appended to the end of the array.</p>
+<p>For example,</p>
+
+<pre class="color-example">
+&lt;?php
+$a1 = ['zero', 11, 2.2];
+var_dump($a1);  <span class="color-comment"> // Index 0 to 2</span>
+ 
+<span class="color-comment">// Append elements to the end of an array</span>
+<span class="color-comment">// PHP's arrays are dynamically allocated</span>
+$a1[] = 'three'; <span class="color-comment"> // Index 3</span>
+$a1[] = 'four';  <span class="color-comment"> // Index 4</span>
+$a1[7] = 'seven';<span class="color-comment"> // Skip indexes 5 and 6</span>
+ 
+<span class="color-comment">// Referencing elements of an array (missing indexes cause errors)</span>
+for ($i = 0; $i &lt;= 7; ++$i) {
+   echo &quot;$a1[$i], &quot;;
+}
+echo &quot;\n&quot;;
+ 
+<span class="color-comment">// Use the foreach loop (missing indexes are skipped)</span>
+foreach($a1 as $item) {
+   echo &quot;$item, &quot;;
+}
+?&gt;</pre>
+
+<p>Take note that:</p>
+<ol>
+<li>The elements need not of the same type.</li>
+<li>The size is dynamically adjusted for new elements.</li>
+<li>The index need not be contiguous. But you cannot use the missing indexes. This is because PHP's array is actually an <em>associate array</em> with integer key - to be described in the next section.</li>
+<li>It is convenient to use <code>var_dump()</code> to display the detail content of an array, which is handy in debugging.</li>
+</ol>
+
+<h5>Built-in Array Functions</h5>
+<ul>
+
+<li><span class="line-heading font-code">is_array($var)</span>: returns TRUE if <code>$var</code> is an array.</li>
+
+<li><span class="line-heading font-code">count($array)</span>: returns the number of elements in the given array.</li>
+
+<li><span class="line-heading font-code">in_array($value, $array)</span>: returns TRUE if the array contains the given value.</li>
+
+<li><span class="line-heading font-code">sort($array), sort($array, SORT_NUMERIC), sort($array, SORT_STRING)</span>: sort the elements of the given array. <code>sort()</code> operates on the array directly (by reference).</li>
+
+<li><span class="line-heading font-code">rsort($array, SORT_NUMERIC), rsort($array, SORT_STRING)</span>: sort in <em>reverse</em> order.</li>
+
+<li><span class="line-heading font-code">shuffle($array)</span>: put the elements in random order. <code>shuffle()</code> also operates on the array directly.</li>
+
+<li><span class="line-heading font-code">implode($glue, $array)</span>: join the array elements with the <code>$glue</code> string. For example,
+<pre class="color-example">
+$a = array('apple', 'orange', 'banana');
+echo implode('|', $a);
+   <span class="color-comment">// apple|orange|banana</span></pre>
+</li>
+
+<li><span class="line-heading font-code">explode($delimiter, $str)</span>: takes a string and tokenizes into an array based on the delimiter.
+<pre class="color-example">
+&lt;?php
+$days='Mon,Tus,Wed,Thu';
+$dayArray = <span class="color-new">explode</span>(',', $days);
+var_dump($dayArray);
+?&gt;</pre>
+<pre class="output">
+array (size=4)
+  0 =&gt; string 'Mon' (length=3)
+  1 =&gt; string 'Tus' (length=3)
+  2 =&gt; string 'Wed' (length=3)
+  3 =&gt; string 'Thu' (length=3)</pre>
+</li>
+
+<li><span class="line-heading font-code">array_push($array, $value1, $value2,...)</span>: pushes one or more elements to the end of the array.  If there is only one element, you can use &quot;<code>$array[] = value</code>&quot;.</li>
+
+<li><span class="line-heading font-code">array_pop($array)</span>: pops the last element off the array.</li>
+
+<li><span class="line-heading font-code">array_shift($array)</span>: shift an element off the beginning of the array.</li>
+
+<li><span class="line-heading font-code">array_unshift($array, $value1, $value2,...)</span>: prepend one or more elements at the beginning of the array.</li>
+
+
+<li><span class="line-heading font-code">reset($array), end($array)</span>: returns the first element and last element of the array, respectively.</li>
+</ul>
+
+<h5>Associative Arrays</h5>
+
+<p>An <em>associative array</em> is a collection of <em>key-value pairs</em> (or <em>name-value pairs</em>). Unlike array, which is indexed by a numeric integer, an associative array is index by a key-string. To initialize an associative array, use <code>array(<em>key1</em>=&gt;<em>value1</em>, <em>key2</em>=&gt;<em>value2</em>, ...)</code>. To reference an element, use <code><em>arrayName</em>[<em>key</em>]</code>. For example,</p>
+
+<pre class="color-example">
+&lt;?php
+<span class="color-comment">// Define and initialize an associative array</span>
+$myAssoArray = array('one'=&gt;'Monday', 'two'=&gt;'Tuesday', 3=&gt;33.33);
+var_dump($myAssoArray);
+ 
+<span class="color-comment">// Insert new element. Again, associative array are dynamically allocated</span>
+$myAssoArray['four'] = 'Thursday';
+ 
+<span class="color-comment">// Referencing elements of an associative array</span>
+echo $myAssoArray['one'] . '&lt;br&gt;';
+echo $myAssoArray[3] . '&lt;br&gt;';
+ 
+print_r($myAssoArray);   <span class="color-comment">// print in readable format</span>
+echo '&lt;br&gt;';
+<span class="color-comment"></span> 
+<span class="color-comment">// Use the foreach loop (missing indexes are skipped)</span>
+foreach($myAssoArray as $key =&gt; $value) {
+   echo &quot;$key: $value&lt;br&gt;&quot;;
+}
+
+<span class="color-comment">// You can use isset() function to check if a key exists (assigned a value)</span>
+echo (isset($myAssoArray['four']) ? 'Key &quot;four&quot; is set' : 'Key &quot;four&quot; is NOT set') . '&lt;br&gt;';
+echo (isset($myAssoArray['five']) ? 'Key &quot;five&quot; is set' : 'Key &quot;five&quot; is NOT set') . '&lt;br&gt;';
+ 
+<span class="color-comment">// Use unset() to remove a key-value pair</span>
+unset($myAssoArray['four']);
+var_dump($myAssoArray);
+?&gt;</pre>
+
+<p>Take note that PHP does NOT differentiate between Indexed Array and Associative Array.</p>
+
+<h5>Built-in Associative-Array Functions</h5>
+
+<ul>
+<li><span class="line-heading font-code">isset($var)</span>: Return TRUE if the given var is set and is not NULL, e.g. <code>isset($a['first'])</code>.</li>
+
+<li><span class="line-heading font-code">array_key_exists($key, $array)</span>: Return TRUE if the given key is set (possibly having NULL value).</li>
+
+<li><span class="line-heading font-code">unset(<em>$var</em>)</span>: unset the given var, e.g., <code>unset($a['first'])</code>.</li>
+
+<li><span class="line-heading font-code">extract($array)</span>: extract each element of the given associative array and turn them into variables, e.g., the element <code>'one'=&gt;'Monday'</code> will be extracted as <code>$one='Monday'</code>.
+<pre class="color-example">
+&lt;?php
+$dayArray = array('one' =&gt; 'Monday', 'two' =&gt; 'Tuesday', 'three' =&gt; 'Wednesday' );
+<span class="color-new">extract</span>($dayArray);
+var_dump($one);
+var_dump($two);
+var_dump($three);
+?&gt;</pre>
+<pre class="output">
+string 'Monday' (length=6)
+string 'Tuesday' (length=7)
+string 'Wednesday' (length=9)</pre>
+</li>
+
+<li><span class="line-heading font-code">compact($var1, $var2, ...)</span>: compact is the reverse of <code>extract</code>, it compact the given variables into an associative array of key-value pairs.
+<pre class="color-example">
+&lt;?php
+$one = 'Monday';
+$two = 'Tuesday';
+$three = 'Wednesday';
+$dayArray = <span class="color-new">compact</span>('one', 'two', 'three');
+var_dump($dayArray);
+?&gt;</pre>
+<pre class="output">
+array (size=3)
+  'one' =&gt; string 'Monday' (length=6)
+  'two' =&gt; string 'Tuesday' (length=7)
+  'three' =&gt; string 'Wednesday' (length=9)</pre>
+</li>
+</ul>
+
+
+<h4>Functions</h4>
+<p>A PHP function:</p>
+<ol>
+<li>receives arguments (or parameters) from the caller,</li>
+<li>performs operations defined in the function body, and</li>
+<li>returns a single piece of result to the caller.</li>
+</ol>
+
+<p>The syntax is as follows:</p>
+
+<pre class="color-syntax">
+&lt;?php
+function <em>functionName</em>(<em>parameter</em>, ...) {
+   <em>functionBody</em>;
+   return <em>returnValue</em>;
+}
+?&gt;</pre>
+
+<p>Examples,</p>
+
+<pre class="color-example">
+&lt;?php
+<span class="color-comment">// Define a function called sayHello</span>
+<span class="color-new">function sayHello($name) {
+   return &quot;Hello, $name&quot;;
+}</span>
+ 
+<span class="color-comment">// Invoke the function sayHello</span>
+echo '&lt;p&gt;'.<span class="color-new">sayHello('Peter')</span>.'&lt;/p&gt;';
+$myName = 'Paul';
+echo '&lt;p&gt;'.<span class="color-new">sayHello($myName)</span>.'&lt;/p&gt;';
+?&gt;</pre>
+
+<h5>Pass by Reference</h5>
+
+<p>In the above example, the parameters are passed into the function <em>by value</em>. That is, a clone copy is made and pass into the function. Changes within the function body will not be reflected in the original variable.</p>
+
+<p>You can also pass the parameters into a function by <em>reference</em>. In this case, the address of the variable is passed into the function. Change to the value within the function will be reflected in the variable. To pass parameters into functions by reference, append a <code>&amp;</code> sign to the variable. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// $v2 passed by reference</span>
+function funByRef($v1, &amp;$v2) {
+  $v1 = $v1 * 2;
+  $v2 = $v2 * 2;
+  var_dump($v1); <span class="color-comment">// int(6)</span>
+  var_dump($v2); <span class="color-comment">// int(10)</span>
+}
+
+$a = 3;
+$b = 5;
+funByRef($a, $b);
+var_dump($a);  <span class="color-comment">// int(3)  - no change</span>
+var_dump($b);  <span class="color-comment">// int(10) - change thru the function</span></pre>
+
+<h5>Default Value for Trailing Arguments</h5>
+
+<p>Caller can omit trailing arguments, which can be set to some default values. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// $v2 can be omitted and takes the default value</span>
+function funWithDefault($v1, $v2 = 8) {
+  return $v1 + $v2;
+}
+
+$a = 3;
+$b = 5;
+var_dump(funWithDefault($a));     <span class="color-comment">// int(11) - $v2 default</span>
+var_dump(funWithDefault($a, $b)); <span class="color-comment">// int(8)</span>
+//var_dump(funWithDefault());     <span class="color-comment">// error</span></pre>
+
+<h5>Function Overloading</h5>
+<p>PHP does NOT support function overloading (unlike C++/Java). But you can set default trailing parameter values to simulate function overloading.</p>
+
+
+<h5>Commonly-used PHP Built-in Functions - Output</h5>
+
+<ul>
+
+<li><span class="line-heading font-code">print</span>: similar to <code>echo</code>. <code>print</code> and <code>echo</code> are actually language constructs instead of functions. Hence, there is no need for parentheses for their arguments.</li>
+
+<li><span class="line-heading font-code">printf(<em>formatString</em>, <em>var</em>, ...)</span>: similar to C's <code>printf()</code>.</li>
+
+<li><span class="line-heading font-code">sprintf(<em>formatString</em>, <em>var</em>, ...)</span>: returns the formatting string, instead of sending it to the output.</li>
+</ul>
+
+<h5>Commonly-used PHP Built-in Functions - Date/Time</h5>
+
+<ul>
+<li><span class="line-heading font-code">time()</span>: returns the current timestamp in Unix-style, i.e., number of seconds since January 1, 1970.</li>
+
+<li><span class="line-heading font-code">mktime(<em>hour</em>, <em>minute</em>, <em>second</em>, <em>month</em>, <em>day</em>, <em>year</em>)</span>: returns a timestamp instance of the given date/time.</li>
+
+<li><span class="line-heading font-code">date(<em>formatSpecifier</em>)</span>: format and print the current time (as returned by <code>time()</code>).</li>
+
+<li><span class="line-heading font-code">date(<em>formatSpecifier</em>, <em>timeStamp</em>)</span>: format and print the given <code>timeStamp</code>.</li>
+
+<li><span class="line-heading font-code">date_default_timezone_set(<em>timeZoneIdentifier</em>)</span>: set the default time zone for all the time and date functions, default is UTC (or GMT).</li>
+
+
+</ul>
+
+<p>For example,</p>
+<pre class="color-example">
+&lt;?php
+<span class="color-comment">// default time zone is GMT (or UTC)</span>
+echo date('Y-m-d h:i:s a') . '&lt;br&gt;';
+   <span class="color-comment">// Year:   Y (yyyy), y (yy)</span>
+   <span class="color-comment">// Month:  m (01-12) M (Jan-Dec)</span>
+   <span class="color-comment">// Day:    d (01-31) j(1-31) D (Mon-Sun)</span>
+   <span class="color-comment">// Hour:   G (0-23) H(00-23) h(01-12) a (am/pm) A (AM/PM)</span>
+   <span class="color-comment">// Minute: i (00-59)</span>
+   <span class="color-comment">// Second: s (00-59)</span>
+ 
+echo date('r') . '&lt;br&gt;';
+   <span class="color-comment">// r: RFC2822 full date/time</span>
+   <span class="color-comment">// c: ISO8601 full date/time</span>
+ 
+date_default_timezone_set('Asia/Singapore');
+echo date('Y-m-d G:i:s') . '&lt;br&gt;';
+echo date('r', time()) . '&lt;br&gt;';
+?&gt;</pre>
+
+<p>Many date manipulation functions are available, e.g., <code>date_add()</code>, <code>date_sub()</code>, <code>date_diff()</code>, etc. Check the PHP manual for details.</p>
+
+<h5>System Call</h5>
+<p>You can use <code>exec()</code> to do a system call.</p>
+
+<pre class="color-example">
+<span class="color-comment">// Syntax</span>
+exec(<em>command</em>, <em>output</em>, status);
+ 
+<span class="color-comment">// Example</span>
+exec(escapeshellcmd('dir'), $output, $status);</pre>
+
+<p>[TODO]</p>
+
+<h4>Scope of Variables</h4>
+
+<h5>Page's Global Variable (with Page-Scope)</h5>
+
+<p>The scope of variables is within the page that they are defined. They are available to the included and required files. On the other hand, the variables defined in the included and required files are also available immediately after the <code>include</code> an <code>require</code>. In other words, the <code>include</code> and <code>require</code> file are treated as part of the page.</p>
+<p>The variable is not available to other pages. PHP calls the scope of these variables <em>global</em>. It is more appropriate to be called page-scope.</p>
+<p>HTTP is a state-less protocol. To pass a variable from a page to another page requires proper session management.</p>
+
+<h5>Function's Local Variables</h5>
+
+<p>A variable defined within a function is a local variable of the function, and it is not visible outside the function.</p>
+
+<h5>Keyword <span class="font-code">global</span></h5>
+
+<p>Inside a function, to access a variable defined outside the function, you need to use the keyword <code>global</code>. For example,</p>
+
+<pre class="color-example">
+&lt;?php
+<span class="color-new">$count = 0;</span>
+ 
+<span class="color-comment">// Define a function containing static variable</span>
+function countUp() {
+   <span class="color-new">global $count;</span>
+   $count++;
+   return $count;
+}
+ 
+<span class="color-comment">// Invoke the function multiple times</span>
+echo countUp().' '.countUp().' '.countUp().' ';
+?&gt;</pre>
+
+<p>Take note that the keyword <code>global</code> does not make the variable a global variable! This is really a bad choice of keyword!</p>
+
+<h5><span class="font-code">$GLOBALS</span> Associative Array</h5>
+
+<p>PHP stores all the page-scope global variables in a the <code>$GLOBALS</code> associative array.</p>
+
+<p>Hence, within a function, instead of using <code>global</code> keyword, you can also access variable defined outside the function via the <code>$GLOBALS</code> associative array. For example,</p>
+
+<pre class="color-example">
+&lt;?php
+$count = 0;   <span class="color-comment">// Store in $GLOBALS['count']</span>
+ 
+<span class="color-comment"></span>function countUp() {
+   ++<span class="color-new">$GLOBALS['count']</span>;
+   return <span class="color-new">$GLOBALS['count']</span>;
+}
+ 
+<span class="color-comment">// Invoke the function multiple times</span>
+echo countUp().' '.countUp().' '.countUp().' ';
+?&gt;</pre>
+
+<h5>Keyword <span class="font-code">static</span></h5>
+
+<p>Within a function, you can declare a variable <code>static</code>. That variable retains its value across multiple invocations. For example,</p>
+
+<pre class="color-example">
+&lt;?php
+<span class="color-comment">// Define a function containing static variable</span>
+function countUp() {
+   <span class="color-comment">// This statement is run only for the first invocation and skipped for &quot;subsequent&quot; invocations</span>
+  <span class="color-new"> static $count = 0;</span>
+   $count++;
+   return $count;
+}
+ 
+<span class="color-comment">// Invoke the function multiple times</span>
+echo countUp().' '.countUp().' '.countUp().' ';
+?&gt;</pre>
+
+<h5>Superglobal Variables</h5>
+
+<p>As mentioned, in PHP, global variables refers to the page-scope variables within a page. PHP pre-defines some variables, which is available in all pages, called superglobal variables. They are associative array:</p>
+
+<ul>
+<li><span class="line-heading font-code">$_GET</span>: an associative array of GET request key-value pairs.</li>
+<li><span class="line-heading font-code">$_POST</span>: an associative array of POST request key-value pairs.</li>
+<li><span class="line-heading font-code">$_COOKIE</span>: an associative array of key-value pairs in the request cookie.</li>
+<li><span class="line-heading font-code">$_REQUEST</span>: contains GET, POST and COOKIE data from the request message</li>
+<li><span class="line-heading font-code">$_SERVER</span>: server information, such as <code>$_SERVER['PHP_SELF']</code> shows the filename of the current page.</li>
+<li><span class="line-heading font-code">$_SESSION</span>: for session management</li>
+<li><span class="line-heading font-code">$_FILES</span>: uploaded file</li>
+<li><span class="line-heading font-code">$_ENV</span>: environment variables</li>
+<li><span class="line-heading font-code">$GLOBALS</span>: maintains all page-scope global variable, accessible within functions.</li>
+</ul>
+
+<p>You can do a <code>var_dump()</code> to view the contents of these superglobals, e.g., <code>var_dump($GLOBALS)</code>.</p>
+
+<h4>File Handling</h4>
+<p><span class="line-heading font-code">file_exists(<em>filename</em>)</span>: returns TRUE if the given file exists.</p>
+
+<pre class="color-example">
+&lt;?php
+file_exists('out.txt') ? echo 'File exits' : echo 'File does not exist';
+ 
+$fh = fopen('out.txt', 'w') or die('Cannot open file');
+$outText = &lt;&lt;&lt;_END
+Testing Line 1
+Testing Line 2
+Testing Line 3
+_END;
+fwrite($fh, $outText) or die('Cannot write to file');
+fwrite($fh, 'Done') or die('Cannot write to file');
+fclose($fh);
+echo 'Write Done!';
+ 
+$fh = fopen('out.txt', 'r') or die('Cannot open file');
+$inText = fgets($fh);     <span class="color-comment">// read one line</span>
+echo $inText;
+$inText = fread($fh, 3);  <span class="color-comment">// read 3 lines</span>
+echo $inText;
+fclose($fh);
+echo 'Read Done!';
+?&gt;</pre>
+
+<ul>
+<li><span class="line-heading font-code">r</span>: read from the beginning of the file.</li>
+<li><span class="line-heading font-code">r+</span>: read from the beginning of the file and allow write.</li>
+<li><span class="line-heading font-code">w</span>: truncate the file and write from the beginning of the file.</li>
+<li><span class="line-heading font-code">w+</span>: truncate the file and write from the beginning of the file, allow read.</li>
+<li><span class="line-heading font-code">a</span>: append, write to the end of the file.</li>
+<li><span class="line-heading font-code">a+</span>: append with read. write to the end of the file.</li>
+</ul>
+
+<p><span class="line-heading font-code">copy(<em>inFile</em>, <em>outFile</em>)</span>: </p>
+<p><span class="line-heading font-code">rename(<em>oldFile</em>, <em>newFile</em>)</span>: </p>
+<p><span class="line-heading font-code">unlink(<em>filename</em>)</span>: delete file</p>
+<p><span class="line-heading font-code">mkdir()</span>: make directory</p>
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>PHP mother site @ <a href="http://www.php.net">http://www.php.net</a>; &quot;PHP Manual&quot; @ <a href="http://php.net/manual/en/index.php">http://php.net/manual/en/index.php</a>; &quot;PHP Language Reference&quot; @ <a href="http://www.php.net/manual/en/langref.php">http://www.php.net/manual/en/langref.php</a>.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: PHP 5.4.9-4 (Ubuntu 13.04)<br />
+Last modified: September, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

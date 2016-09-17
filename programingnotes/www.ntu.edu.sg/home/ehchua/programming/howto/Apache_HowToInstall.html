@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Install and Get Started with Apache 2</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>How To Install and Get Started with Apache 2</h1>
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Install Apache 2 (For Windows)</h3>
+
+<p>Apache HTTP Server, a popular <em>industrial-strength</em> web server, is provided free (with source codes) by the Apache Software Foundation (@ <a href="http://www.apache.org/">http://www.apache.org</a>).</p>
+
+<p>The mother site for Apache HTTP Server is <a href="http://httpd.apache.org/">http://httpd.apache.org</a>.  There are a few production versions available currently: 2.0, 2.2 and 2.4 (known as Apache 2).  The legacy release 1.3 (Apache 1) is no longer supported.</p>
+
+<p>At the time of re-writing (September 2014), the latest stable &quot;source&quot; release is 2.4.10 (you need to compile yourself). But the latest Windows &quot;binaries&quot; is 2.2.25 (32-bit version). Surprising, the AMP bundles such as WampServer 2.5 has Apache 2.4.9, XAMPP 1.8.3 has Apache 2.4.10?!</p>
+
+<p><span class="line-heading">Download: </span>
+From Apache HTTP Server mother site <a href="http://httpd.apache.org/">http://httpd.apache.org</a> <a href="http://httpd.apache.org/download.cgi"></a> &rArr; Choose the latest release (2.4.<em>xx</em>)  &rArr; Download <a href="http://httpd.apache.org/download.cgi"></a> &rArr; Binaries <a href="http://httpd.apache.org/download.cgi"></a> &rArr; <a href="http://httpd.apache.org/download.cgi"> </a>Win32  <a href="http://httpd.apache.org/download.cgi"></a> &rArr; Select the win32 with openssl, e.g., &quot;<code>httpd-2.2.25-win32-x86-openssl-0.9.8y.msi</code>&quot;.</p>
+
+<p> Read the installation guide @ <a href="http://httpd.apache.org/docs">http://httpd.apache.org/docs</a> &rArr; &quot;Documentation 2.4/2.2&quot; &rArr; &quot;Reference Manual, Compiling and Installing&quot;.</p>
+
+<p><span class="line-heading">Install: </span>Run the downloaded installer.</p>
+
+<ul>
+<li>Provide your &quot;domain&quot;, &quot;server name&quot; and &quot;administrator's email&quot;. <br />
+  For testing, enter &quot;<code>test.com</code>&quot; for domain name, &quot;<code>localhost</code>&quot; as the server name, and something for the administrator's email. We shall re-configure them later after the installation.</li>
+
+<li>For testing, select &quot;Only for for current user, on port 8000, when started manually&quot;.</li>
+
+<li>Choose &quot;typical&quot; installation.</li>
+
+<li>Select your installation directory. I shall assume that Apache HTTP Server is installed in the directory &quot;<code>d:\myProject\apache2</code>&quot;. Hereafter, I shall denote the Apache installed directory as &quot;<code>&lt;APACHE_HOME&gt;</code>&quot;.</li>
+</ul>
+
+<p>You shall get these sub-directories upon successful installation:</p>
+<ul>
+<li><code>bin</code>: contains the binaries (or executables), such as Apache (&quot;<code>httpd.exe</code>&quot;) and Apache Monitor (&quot;<code>ApacheMonitor.exe</code>&quot;).</li>
+<li><code>conf</code>: contains the configuration files, such as the main configuration file &quot;<code>httpd.conf</code>&quot;.</li>
+<li><code>manual</code>: Apache HTTP server documentation. Start with &quot;<code>index.html</code>&quot; or &quot;<code>index.html.en</code>&quot;.</li>
+<li><code>htdocs</code>: the default Apache's document root directory.</li>
+</ul>
+
+<h3>Configuring Apache 2</h3>
+
+<p>The configuration file for Apache HTTP server is called &quot;<code>httpd.conf</code>&quot; (in directory &quot;<code>&lt;APACHE_HOME&gt;\conf</code>&quot;). Browse through the configuration file and check these directives:</p>
+
+<ul>
+<li><strong><code>Listen</code></strong>: The original &quot;<code>httpd.conf</code>&quot; uses TCP port 80 (pre-assigned default for HTTP) for production and 8000 for testing.  For testing, you may choose a port number between 1024 to 65535 (which is not used by an existing application - you can issue the command &quot;<code>netstat</code>&quot; to check the existing connections). We shall run the Apache at port 8000.
+
+<pre class="color-command">
+<span class="color-comment"># Listen: Allows you to bind Apache to specific IP addresses and/or ports.</span>
+Listen <strong>8000</strong></pre>
+</li>
+
+<li><strong><code>ServerName</code></strong>: Set to your DNS hostname, or IP address (to find out your IP address, run command &quot;<code>ipconfig</code>&quot;), or your computer name, or &quot;localhost&quot; (localhost is meant for local loop-back testing only, you can also use the localhost's IP address 127.0.0.1), followed by the  port number chosen above.
+
+<pre class="color-command">
+<span class="color-comment"># ServerName gives the name and port that the server uses to identify itself.
+# If your host doesn't have a registered DNS name, enter its IP address here.</span>
+ServerName <strong>localhost:8000</strong></pre>
+</li>
+
+<li><strong><code>ServerRoot</code></strong>: your Apache installed directory <code>&lt;APACHE_HOME&gt;</code>.</li>
+
+<li><strong><code>DocumentRoot</code></strong>: the document root directory, i.e., home directory of the server. It is set to &quot;<code>&lt;APACHE_HOME&gt;\htdocs</code>&quot; by default.
+
+<pre class="color-example">
+DocumentRoot &quot;&lt;APACHE_HOME&gt;/htdocs&quot;
+ 
+<span class="color-comment"># First, configure the &quot;default&quot; to be a very restrictive</span>
+&lt;Directory /&gt;
+    Options FollowSymLinks
+    AllowOverride None
+    Order deny,allow
+    Deny from all
+&lt;/Directory&gt;
+ 
+<span class="color-comment"># Document Root Directory</span>
+&lt;Directory &quot;D:/bin/Apache2.2/htdocs&quot;&gt;
+    Options Indexes FollowSymLinks
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+&lt;/Directory&gt;</pre></li>
+</ul>
+
+<h3>Start/Shutdown Apache 2</h3>
+
+<p><span class="line-heading">Start the Server: </span>The Apache executable is called &quot;<code>httpd.exe</code>&quot; located in &quot;<code>&lt;APACHE_HOME&gt;\bin</code>&quot;. To display the help menu and check all the available options, start a CMD shell, and issue:</p>
+
+<pre class="color-command"><span class="color-comment">// change directory to &lt;APACHE_HOME&gt;\bin
+// Assume that Apache was installed in d:\myProject\apache2</span>
+prompt&gt; <strong>d:</strong>
+&gt; <strong>cd \myProject\apache2\bin</strong>
+  
+<span class="color-comment">// Display the help menu</span>
+&gt; <strong>httpd -h</strong>
+</pre>
+
+<p> Before you can run your server, you need to install the <em>Apache Service</em> by running the following command (You need <em>administrator right</em> to install  services).</p>
+
+<pre class="color-command">
+<span class="color-comment">// Install Apache HTTP server as a Windows service</span>
+&gt; <strong>httpd -k install</strong></pre>
+
+<p>You can start the Apache by:</p>
+<pre class="color-command">
+<span class="color-comment">// Start the Apache HTTP server</span>
+&gt; <strong>httpd -k start</strong></pre>
+
+<p>Apache 2 provide a GUI <em>Apache Monitor</em> (&quot;<code>ApacheMonitor.exe</code>&quot; in &quot;<code>&lt;APACHE_HOME&gt;\bin</code>&quot;), which can be used to start/stop Apache, after the Apache servicce is installed. Apache monitor starts automatically with an icon in the task bar. Otherwise, run &quot;<code>ApacheMonitor.exe</code>&quot;.</p>
+
+<p>After the Apache server is started, launch a web browser and access the server using URL:</p>
+
+<pre class="color-command">http://<span class="style1"><em>ServerHostNameOrIPAddress</em>:<em>port</em></span></pre>
+
+<p>You could use &quot;localhost&quot; (IP address 127.0.0.1) for local loop-back testing if your browser runs in the same machine as the server.</p>
+
+<pre class="color-command">
+http://localhost:8000</pre>
+
+<img class="image-left" src="images/ApacheHomePage.png"  alt="it works" />
+
+<p>You could shutdown the Apache server either from the <em>Apache Monitor</em> or by running command:</p>
+<pre class="color-command">&gt; <strong>httpd -k stop</strong></pre>
+
+<p>You could uninstall the Apache service by:</p>
+<pre class="color-command">&gt; <strong>httpd -k uninstall</strong></pre>
+
+
+<p>You could remove the &quot;Apache Monitor&quot; from the &quot;Startup&quot; list.</p>
+
+
+<h3>If Things Go Wrong...</h3>
+<ul>
+<li>Check the error message on the Apache's console.</li>
+<li>Check the log files at &quot;<code>logs\errors.log</code>&quot;.</li>
+<li>[TODO]</li>
+</ul>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ul>
+<li>Apache HTTP Server Mother Site @ <a href="http://www.apache.org/">www.apache.org</a></li>
+<li>Apache Documentation @ directory &quot;<code>Manual</code>&quot;</li>
+</ul>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Apache 2.2.25 (Windows)<br />
+Last modified: September, 2014</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>A Quick-Start Tutorial on Apache Struts 2</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>A Quick-Start Tutorial on Struts 2</h1>
+<h2></h2>
+
+<h3>Introduction</h3>
+<p>Structs, an open-source Apache project at <a href="http://struts.apache.org/">http://struts.apache.org</a>, is a MVC (Model-View-Controller) framework for creating user interfaces for Java web application. Struts is an extension of Java Servlets and JSP. Struts is in direct competition with JSF (Java Server Faces).</p>
+<p>[TODO] struts functions, comparison of struts and JSF.</p>
+
+<h3>Develop and Deploy Struts Application on Tomcat</h3>
+
+<p>Before writing our first Struts program, I shall assume that you have installed and configured Tomcat server. I shall also assume that Tomcat is running on port 8080 and denote the Tomcat's installed directory as <code>$CATALINA_HOME</code>. (Otherwise, read &quot;<a href="../howto/ApachePlusTomcat_HowTo.html">How to install Tomcat</a>&quot;.)</p>
+<p>I also assume that you understand basic Java server-side technologies such as Java Servlets, JSP (JavaServer Pages), and Java Web Applications.</p>
+
+<h4>Download the Struts Runtime Libraries</h4>
+<ol>
+<li>Download the Struts runtime libraries from <a href="http://struts.apache.org/">http://struts.apache.org</a>. Select &quot;Downloads&quot; &rArr; &quot;Releases&quot; &rArr; Select the latest General Availability (GA) release, e.g., &quot;Struts 2.1.8.1&quot; &rArr; &quot;Full Distribution&quot; &rArr; &quot;<code>struts-2.1.8.1-all.zip</code>&quot;.</li>
+
+<li>Unzip.</li>
+<li>The runtime libraries are kept in sub-directory &quot;<code>lib</code>&quot;, which includes 71 jar-files. To deploy Struts application in Tomcat, these libraries must be available to Tomcat. You could copy the selected jar-files into Tomccat's &quot;<code>lib</code>&quot; directory (i.e., <code>$CATALINA_HOME\lib</code>), which will be available to all the web applications. You could also place the jar-files into a specific web context's &quot;<code>lib</code>&quot; directory, which will be available to only the particular web application.</li>
+</ol>
+
+<h4>Deploy and Run the Sample Applications Provided</h4>
+<p>The downloaded Struts package contains a few ready-to-deploy sample applications in directory &quot;<code>apps</code>&quot;, in the form of war-files. In particular, a &quot;blank&quot; application template for which you can use to start writing your own codes. War-file (Web Application Archive) uses ZIP algorithm to compress and group files. You can extract the contents of war-file using WINZIP, WINRAR, or any other ZIP programs.</p>
+<p>To deploy a sample application, simply copy the war-file into Tomcat's &quot;<code>webapps</code>&quot; directory (<code>$CATALINA_HOME\webapps</code>). Let's copy the &quot;blank&quot; sample application <code>struts2-blank-2.1.8.1.war</code> into Tomcat's &quot;<code>webapps</code>&quot;. Start your Tomcat. The war-file will be unzipped and deployed automatically. Observer the following message in the Tomcat's console:</p>
+
+<pre class="code-listing">
+INFO: Deploying web application archive struts2-blank-2.1.8.1.war
+May 1, 2010 11:32:41 AM com.opensymphony.xwork2.util.logging.jdk.JdkLogger info
+INFO: Parsing configuration file [struts-default.xml]
+May 1, 2010 11:32:41 AM com.opensymphony.xwork2.util.logging.jdk.JdkLogger info
+INFO: Parsing configuration file [struts-plugin.xml]
+May 1, 2010 11:32:41 AM com.opensymphony.xwork2.util.logging.jdk.JdkLogger info
+INFO: Parsing configuration file [struts.xml]</pre>
+
+<p>The following directories are extracted from the war-file under &quot;<code>webapps</code>&quot;:</p>
+<img class="image-center" src="images/Struts2_BlankDirectory.png" />
+
+<p>A Java web application has a <em>standard</em> directory for storing various type of files:</p>
+<ul>
+  <li>&quot;<code>$CATALINA_HOME</code>\<code>webapps\</code><code>struts2-blank-2.1.8.1</code>&quot;: This directory is known as <em>context root</em> of the web application &quot;<code>struts2-blank-2.1.8.1</code>&quot;, which keeps the  &quot;<code>html</code>&quot;, &quot;<code>jsp</code>&quot; files accessible by the users. In this example, the home page &quot;<code>index.html</code>&quot;.</li>
+  <li>&quot;<code>$CATALINA_HOME</code>\<code>webapps\</code><code>struts2-blank-2.1.8.1</code><code>\WEB-INF</code>&quot;: This directory is hidden from user and keeps the configuration files. You keep the configuration file in this directory and program codes in its sub-directories. In this example, it contains a configuration file &quot;<code>web.xml</code>&quot; for configuring this web application.</li>
+  <li>&quot;<code>$CATALINA_HOME</code>\<code>webapps\</code><code>struts2-blank-2.1.8.1</code><code>\WEB-INF\src</code>&quot;: Keep the java program source files (optional).</li>
+  <li>&quot;<code>$CATALINA_HOME</code>\<code>webapps\</code><code>struts2-blank-2.1.8.1</code><code>\WEB-INF\classes</code>&quot;: Keep the java classes.</li>
+  <li>&quot;<code>$CATALINA_HOME</code>\<code>webapps\</code><code>struts2-blank-2.1.8.1</code><code>\WEB-INF\lib</code>&quot;: keep the runtime libraries (jar-files) for this application.</li>
+  <li>&quot;<code>$CATALINA_HOME</code>\<code>webapps\</code><code>struts2-blank-2.1.8.1</code><code>\META-INF</code>&quot;:</li>
+</ul>
+
+<p>Start Tomcat. Observe these message in the Tomcat's console:</p>
+<pre class="code-listing">
+May 1, 2010 4:18:56 PM org.apache.catalina.startup.HostConfig deployWAR
+INFO: Deploying web application archive <strong>struts2-blank-2.1.8.1.war
+</strong>May 1, 2010 4:18:56 PM com.opensymphony.xwork2.util.logging.jdk.JdkLogger info
+INFO: Parsing configuration file [struts-default.xml]
+May 1, 2010 4:18:57 PM com.opensymphony.xwork2.util.logging.jdk.JdkLogger info
+INFO: Parsing configuration file [struts-plugin.xml]
+May 1, 2010 4:18:57 PM com.opensymphony.xwork2.util.logging.jdk.JdkLogger info
+INFO: Parsing configuration file [struts.xml]</pre>
+
+<p>To access the sample struts application, issue URL <code>http://loaclhost:8080/struts2-blank-2.1.8.1</code> from a web browser. The home page &quot;<code>index.html</code>&quot; redirect to &quot;<code>example\Helloworld.jsp</code>&quot;. Browse thru the source code of these pages.</p>
+<p>Try <code>http://loaclhost:8080/struts2-blank-2.1.8.1/example/Welcome.jsp</code>, and browse thru the source codes for these pages in &quot;<code>example</code>&quot; sub-directory.</p>
+
+
+<h4>First Example: Hello-world</h4>
+
+<p>Let's write a Hello-world Struts application.</p>
+
+<h5>Define a new Web Context &quot;hellostructs2&quot; in Tomcat</h5>
+<ul>
+<li>First of all, define a new <em>web context</em> (<em>web application</em>) called &quot;<code>hellostruts2</code>&quot; in Tomcat for our Struts Hello-world application, by creating the standard directory structure for the web context (as shown in the figure below). Create a directory called &quot;<code>hellostruts2</code>&quot;, under the Tomcat's <code>webapps</code> directory (<code>$CATALINA_HOME\webapps</code>). Create a sub-directory &quot;<code>WEB-INF</code>&quot; under &quot;<code>hellostruts2</code>&quot;. Create sub-directories: &quot;<code>classes</code>&quot;, &quot;<code>lib</code>&quot; and &quot;<code>src</code>&quot; under &quot;<code>WEB-INF</code>&quot;. Take note that the directory names are case-sensitive.
+<img class="image-left" src="images/Struts2_HelloDirectory.png" />
+</li>
+
+<li>Copy the struts runtime jar-file into &quot;<code>lib</code>&quot;: <code>commons-fileupload-1.2.1.jar</code>, <code>commons-io-1.3.2.jar</code>, <code>freemarker-2.3.15.jar</code>, <code>ognl-2.7.3.jar</code>, <code>struts2-core-2.1.8.1.jar</code>, <code>xwork-core-2.1.6.jar</code>.</li>
+
+</ul>
+
+
+<h5>Configure &quot;hellostruts2&quot; - &quot;web.xml&quot; and &quot;struts.xml&quot;</h5>
+<p>Create the following web configuration file &quot;<code>web.xml</code>&quot;. Save in &quot;<code>$CATALINA_HOME\webapps\hellostruts2\WEB-INF</code>&quot;. The <code>&lt;filter&gt;</code> tag sets up the struts's dispatcher. The <code>&lt;filter-mapping&gt;</code> maps URL pattern &quot;<code>/*</code>&quot; (all requests under the root) to struts.</p>
+
+<pre class="code-listing">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;web-app version=&quot;2.5&quot; xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; 
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;&gt;
+  &lt;filter&gt;
+    &lt;filter-name&gt;<strong>struts2</strong>&lt;/filter-name&gt;
+    &lt;filter-class&gt;<strong>org.apache.struts2.dispatcher.FilterDispatcher</strong>&lt;/filter-class&gt;
+  &lt;/filter&gt;
+  &lt;filter-mapping&gt;
+    &lt;filter-name&gt;<strong>struts2</strong>&lt;/filter-name&gt;
+    &lt;url-pattern&gt;<strong>/*</strong>&lt;/url-pattern&gt;
+  &lt;/filter-mapping&gt;
+&lt;/web-app&gt;
+</pre>
+
+<p>Create the following configuration file for struts &quot;<code>struts.xml</code>&quot;. Save in &quot;<code>$CATALINA_HOME\webapps\hellostruts2\WEB-INF\classes</code>&quot;. An <em>action</em> called <code>HelloWorld</code> is declared, which is mapped to <code>hello.HelloWorld</code> class. If the action returns a string &quot;<code>Success</code>&quot;, invoke &quot;<code>/response.jsp</code>&quot;.</p>
+
+<pre class="code-listing">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE struts PUBLIC
+    &quot;-//Apache Software Foundation//DTD Struts Configuration 2.0//EN&quot;
+    &quot;http://struts.apache.org/dtds/struts-2.0.dtd&quot;&gt;
+   
+&lt;struts&gt;
+  &lt;package name=&quot;default&quot; extends=&quot;struts-default&quot;&gt;
+    <strong>&lt;action name=&quot;HelloWorld&quot; class=&quot;hello.HelloWorld&quot;&gt;
+      &lt;result name=&quot;Success&quot;&gt;/response.jsp&lt;/result&gt;
+    &lt;/action&gt;
+</strong>  &lt;/package&gt;
+&lt;/struts&gt;
+</pre>
+
+<h5>Write the Hello-world Struts 2 Application</h5>
+
+<p><strong>&quot;<code>input.jsp</code>&quot;</strong>: save under the context root &quot;<code>$CATALINA_HOME\webapps\hellostruts2</code>&quot;. This page is used to produce the following form:</p>
+
+<img class="image-center" src="images/Struts2_HelloInputForm.png" />
+
+<pre class="code-listing">
+&lt;%@page contentType=&quot;text/html&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@taglib uri=&quot;/struts-tags&quot; prefix=&quot;s&quot; %&gt;
+   
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Hello World&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;User Input Form&lt;/h1&gt;
+  &lt;s:form action=&quot;HelloWorld&quot; &gt;
+    &lt;s:textfield name=&quot;name&quot; label=&quot;Enter Your Name: &quot; /&gt;
+    &lt;s:submit value=&quot;Send&quot; /&gt;
+  &lt;/s:form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<ul>
+  <li>The taglib directive declares the struts 2 tags, with prefix <code>'s'</code>.</li>
+  <li>The <code>&lt;s:form&gt;</code> defines a HTML form, with processing action of &quot;<code>HelloWorld</code>&quot;. The &quot;<code>HelloWorld</code>&quot; action is mapped to &quot;<code>hello.HelloWorld</code>&quot; class (in &quot;<code>struts.xml</code>&quot;).</li>
+  <li>The <code>&lt;s:textfield&gt;</code> define a text field element. The value will be captured in a field &quot;<code>name</code>&quot; of the &quot;<code>hello.HelloWorld</code>&quot; class.</li>
+</ul>
+
+<p><strong>Class &quot;<code>hello.HelloWorld</code>&quot;</strong>: save as &quot;<code>hellostruts2\WEB-INF\src\hello\HelloWorld.java</code>&quot;</p>
+
+<pre class="code-listing">
+package hello;
+   
+public class HelloWorld {
+    private String message;
+    private String name;
+  
+    public String execute() {
+        setMessage(&quot;Hello, &quot; + getName());
+        return &quot;Success&quot;;
+    }
+  
+    public String getMessage() {
+        return message;
+    }
+  
+    public void setMessage(String message) {
+        this.message = message;
+    }
+  
+    public String getName() {
+        return name;
+    }
+  
+    public void setName(String name) {
+        this.name = name;
+    }
+}</pre>
+
+<ul>
+<li>To compile this Java source code using JDK, change the current directory to &quot;<code>hellostruts2\WEB-INF</code>&quot;, and use <code>-d</code> option to set the output directory:
+  <pre class="code-command">
+&gt; javac -d classes src\hello\HelloWorld.java
+</pre>
+</li>
+<li>We need to define a <code>execute()</code> method, which returns a string. From &quot;<code>struts.xml</code>&quot;, if the return result is &quot;<code>Success</code>&quot;, forward to &quot;<code>\response.jsp</code>&quot;.</li>
+<li>Two properties, <code>name</code> and <code>message</code>, are defined together with the public getters and setters.</li>
+</ul>
+
+<p>&quot;<code><strong>response.jsp</strong></code>&quot;: saved as &quot;<code>hellostruts2\response.jsp</code>&quot;. This page accesses the &quot;<code>message</code>&quot; property of the class &quot;<code>hello.HelloWorld</code>&quot;, and has a &quot;Back&quot; button to return to &quot;<code>/input.jsp</code>&quot;.</p>
+<pre class="code-listing">
+&lt;%@page contentType=&quot;text/html&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@taglib uri=&quot;/struts-tags&quot; prefix=&quot;s&quot; %&gt;
+   
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Response Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;&lt;s:property value=&quot;message&quot; /&gt;&lt;/h1&gt;
+  &lt;s:form action=&quot;/input.jsp&quot; &gt;
+    &lt;s:submit value=&quot;Back&quot; /&gt;
+  &lt;/s:form&gt;
+   
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+
+<h5>Start Tomcat</h5>
+<p>Start the Tomcat server. Check for the following messages to confirm that web context &quot;<code>hellostruts2</code>&quot; has been started.</p>
+<pre class="code-output">May 1, 2010 4:18:59 PM org.apache.catalina.startup.HostConfig deployDirectory<br />INFO: Deploying web application directory hellostruts2<br />May 1, 2010 4:18:59 PM com.opensymphony.xwork2.util.logging.commons.CommonsLogger info<br />INFO: Parsing configuration file [struts-default.xml]<br />May 1, 2010 4:18:59 PM com.opensymphony.xwork2.util.logging.commons.CommonsLogger info<br />INFO: Parsing configuration file [struts-plugin.xml]<br />May 1, 2010 4:18:59 PM com.opensymphony.xwork2.util.logging.commons.CommonsLogger info<br />INFO: Parsing configuration file [struts.xml]</pre>
+
+<h5>Run the Struts Application</h5>
+<p>Issue URL:</p>
+<pre class="code-command">http://localhost:8080/hellostruts2/input.jsp
+</pre>
+
+<p>Try &quot;View Source&quot; the see the output produced by &quot;<code>input.jsp</code>&quot; and &quot;<code>response.jsp</code>&quot;.</p>
+<p>&nbsp;</p>
+
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>Apache Tomcat @ <a href="http://tomcat.apache.org/">http://tomcat.apache.org</a>.</li>
+<li>Struts @ <a href="http://struts.apache.org">http://struts.apache.org</a>.</li>
+<li>JavaServer Pages (JSP) Home Page @ <a href="http://java.sun.com/products/jsp/">http://java.sun.com/products/jsp</a>, and Developer Site @ <a href="https://jsp.dev.java.net/">https://jsp.dev.java.net</a>.</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: JDK 1.6, Tomcat 6.0.26, Struts 2.1.8.1<br />
+Last modified: May 1, 2010</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

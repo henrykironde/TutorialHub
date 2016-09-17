@@ -1,0 +1,477 @@
+/* 
+ * Universal selector - clear all the margin and padding
+ */
+* {
+  margin: 0;
+  padding: 0;
+}
+/* 
+ * Set default style for all the tags.
+ * Apply to the main content division as well.
+ */
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333333;
+  background-color: #c5e9f3;
+  text-align: justify;
+}
+/*
+ * "wrap-outer" wraps "header", "wrap-inner" and "footer" divisions
+ */
+#wrap-outer {
+  margin: 20px;
+  padding: 0;
+}
+/*
+ * "wrap-inner" wraps "content-header", "content-main" and "content-footer" divisions
+ */
+#wrap-inner {
+  margin: 0;
+  padding: 15px 15px 25px 15px;
+  border: 1px solid #ddd;
+  box-shadow: 5px 5px 0 #ddd;
+  background-color: #ffffff;
+}
+#content-header {
+  margin: 0;
+  padding: 50px 0 10px 0;
+}
+#content-main {
+  margin: 0;
+  padding: 30px 0 20px 0;
+}
+#content-footer {
+  margin: 30px 0 0 0;
+  padding: 0;
+  font-size: 90%;
+  text-align: right;
+  color: #8a6d3b;
+  border-top: 4px solid #0c9b74;
+}
+/*
+ *  The main "header" & "footer" divisions
+ */
+.header-footer {
+  margin: 10px 0 5px 0;
+  padding: 5px 4px;
+  color: #8a6d3b;
+  font-size: 90%;
+  text-align: right;
+}
+.header-footer a {
+  color: #8a6d3b;
+  text-decoration: underline;
+}
+a {
+  color: #337ab7;
+  text-decoration: none;
+}
+a:hover,
+a:focus {
+  color: #23527c;
+  text-decoration: underline;
+}
+a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+a.references {
+  display: block;
+  width: 30em;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 4em 0 0 0;
+}
+p.references {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 4em 0 0 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.1;
+  text-align: left;
+  margin-top: 21px;
+  margin-bottom: 5.25px;
+}
+h1,
+h2 {
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+h3,
+h4 {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+h5,
+h6 {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+h1,
+h2,
+h3,
+h4 {
+  color: #286090;
+}
+h5,
+h6 {
+  color: #333333;
+}
+h1 {
+  font-size: 42px;
+}
+h2 {
+  font-size: 38px;
+}
+h3 {
+  font-size: 24px;
+  margin-top: 33.6px;
+  padding-bottom: 4px;
+  border-bottom: thin solid #5bc0de;
+}
+h4 {
+  font-size: 18px;
+  margin-top: 27.3px;
+  padding-bottom: 3px;
+  border-bottom: thin dotted #5bc0de;
+}
+h5 {
+  font-size: 15px;
+}
+h6 {
+  font-size: 12px;
+}
+p {
+  margin-top: 10.5px;
+  margin-bottom: 5.25px;
+}
+small,
+.small {
+  font-size: 85%;
+}
+.big {
+  font-size: 110% !important;
+}
+mark {
+  background-color: #fcf8e3;
+  padding: .2em;
+}
+/*
+ * General classes
+ */
+.center-block {
+  margin: 10px auto;
+  /* auto margin-left and margin-right to center the table */
+}
+.side-note {
+  margin-top: 21px;
+  margin-bottom: 21px;
+  margin-left: 40px;
+  padding: 1px 10px 10px 10px;
+  background-color: #fcf8e3;
+}
+.side-note h5 {
+  margin-top: 10.5px;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.text-center {
+  text-align: center;
+}
+.text-justify {
+  text-align: justify;
+}
+.text-nowrap {
+  white-space: nowrap;
+}
+.text-lowercase {
+  text-transform: lowercase;
+}
+.text-uppercase {
+  text-transform: uppercase;
+}
+.text-capitalize {
+  text-transform: capitalize;
+}
+.underline {
+  text-decoration: underline;
+}
+ul,
+ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 12.6px;
+  margin-left: 2em;
+  /* show the bullets/numbers */
+}
+ul ul,
+ol ul,
+ul ol,
+ol ol {
+  /* nested list */
+  margin-bottom: 0;
+}
+ul li,
+ol li {
+  margin-top: 0;
+  margin-bottom: 4.2px;
+}
+ul {
+  /* first level ul */
+  list-style-image: url(images/BulletSquare.png);
+}
+ul ul {
+  /* 2nd level ul */
+  list-style-image: url(images/BulletRound.png);
+}
+ul ul u1 {
+  /* 3rd level ul */
+  list-style-type: circle;
+  list-style-image: none;
+}
+ol {
+  /* first level ol */
+  list-style-type: decimal;
+}
+ol ol {
+  /* 2nd level ol */
+  list-style-type: lower-alpha;
+}
+ol ol o1 {
+  /* 3rd level ol */
+  list-style-type: lower-roman;
+}
+code,
+.code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  letter-spacing: normal;
+  /* override the headings */
+}
+code,
+.code {
+  font-size: 92%;
+  line-height: 1.42857143;
+}
+kbd {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #ffffff;
+  background-color: #333333;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+pre {
+  display: block;
+  padding: 4px 8px;
+  margin: 3px 5px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border: solid 2px #f8f8f8;
+  /* slight 3D shape */
+}
+/* Control mainly for <pre>, <div>, <span> */
+.syntax,
+.command {
+  background-color: #d9edf7;
+}
+.example {
+  background-color: #eef7ea;
+}
+.output {
+  background-color: #eeeeee;
+}
+/* Character level control for code listing */
+.comment {
+  color: #009900;
+  /* green */
+}
+.new {
+  color: #e31b23;
+}
+.error {
+  color: #e31b23;
+}
+.plain {
+  color: #333333;
+  border: 0;
+  margin: 0;
+  padding: 4px 0 0 0;
+}
+.highlight {
+  color: #e31b23;
+  background-color: #fcf8e3;
+}
+.lead {
+  color: #444;
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  padding: 0.2em 0;
+}
+.lead-code {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  color: #e31b23;
+  font-size: 14px;
+  font-weight: normal;
+}
+/*
+ * for positioning images 
+ */
+.image-center {
+  /* center horizontally an image */
+  display: block;
+  margin: 10px auto;
+}
+.image-border {
+  border: #ddd thin solid;
+}
+.image-float-left {
+  float: left;
+  margin: 8px 15px 15px 0;
+  border: #ddd thin solid;
+}
+.image-float-right {
+  float: right;
+  margin: 8px 0 15px 15px;
+  border: #ddd thin solid;
+}
+.float-clear {
+  clear: both;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: inherit;
+}
+td,
+th {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+table pre {
+  /* reset for <pre> under table */
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+/* Striped Table  */
+.table-zebra {
+  margin: 0 auto;
+  /* center */
+  padding: 0;
+  width: 100%;
+  /* Default setting for all cells in this table, inherited */
+  background-color: #e7f0f8;
+  /* default-color: lighter */
+  text-align: left;
+  vertical-align: top;
+}
+.table-zebra tr > th {
+  /* header cells */
+  margin: 0;
+  border: 1px solid white;
+  padding: 5px 10px;
+  color: #ffffff;
+  /* white text on dark background */
+  background-color: #009dd9;
+  font-size: 108%;
+  letter-spacing: 1px;
+  text-align: center;
+}
+.table-zebra tr > td {
+  /* data cells */
+  margin: 0;
+  border: 1px solid white;
+  padding: 4px 8px;
+  /* color, font, text inherited from table */
+  vertical-align: top;
+}
+.table-zebra tr:nth-child(odd) > td {
+  /* odd rows */
+  background-color: #cbdff1;
+  /* darker */
+}
+/* For tabulating program codes */
+.table-program {
+  margin: 5px auto 8px auto;
+  /* center */
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  vertical-align: top;
+}
+.table-program th {
+  padding: 5px 10px;
+}
+.table-program td {
+  padding: 2px 8px;
+}
+.col-line-number {
+  width: 40px;
+  background-color: #d9edf7;
+}
+.col-program {
+  background-color: #eef7fb;
+}
+/*
+ * For the "Table of Content" generated by JavaScript
+ * in <div id="toc">
+ */
+#wrap-toc {
+  display: block;
+  background: none repeat scroll 0 0 #d9edf7;
+  float: right;
+  width: 240px;
+  z-index: 100;
+  line-height: 1.42857143;
+  margin: 0 0 10px 15px;
+  padding: 8px 8px 8px 8px;
+  text-align: left;
+  white-space: nowrap;
+  /* min-height: 180px;  */
+}
+#wrap-toc h5 {
+  letter-spacing: 1px;
+  margin: 0;
+  padding: 0.5em 0;
+}
+a#show-toc {
+  color: #8a6d3b;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+#toc {
+  overflow: auto;
+}
+#toc a.toc-H3 {
+  margin-left: 0px;
+  font-size: 15px;
+}
+#toc a.toc-H4 {
+  margin-left: 20px;
+  font-size: 14px;
+}
+#toc a.toc-H5 {
+  margin-left: 40px;
+  font-size: 14px;
+}

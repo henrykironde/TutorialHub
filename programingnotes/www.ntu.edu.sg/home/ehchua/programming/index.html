@@ -1,0 +1,524 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>yet another insignificant Programming Notes</title>
+<link href="css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<link href="css/programming_index_v1.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- Header -->
+<div id="header">
+  <h5>yet another insignificant...</h5>
+  <h1>programming notes</h1>
+</div>
+
+<!-- Navigation menu  -->
+<div id="menu">
+<table>
+<tr>
+  <td><a href="#HowTo">How-To</a></td>
+  <td>|</td>
+  <td><a href="#Java">Java</a></td>
+  <td>|</td>
+  <td><a href="#SQL">Database</a></td>
+  <td>|</td>
+  <td><a href="#clientSide">Client-Side</a></td>
+  <td>|</td>
+  <td><a href="#serverSide">Server-Side</a></td>
+  <td>|</td>
+  <td><a href="#webapp">Webapp</a></td>
+  <td>|</td>
+  <td><a href="#Game">Game</a></td>
+  <td>|</td>
+  <td><a href="#OpenGL">OpenGL</a></td>
+  <td>|</td>
+  <td><a href="#Cpp">C/C++</a></td>
+  <td>|</td>
+  <td><a href="#Android">Android</a></td>
+</tr>
+</table>
+</div> <!-- end of "menu" division -->
+
+<div id="wrap-inner">
+
+<!-- left panel -->
+<div class="panel">
+
+<div class="entry">
+<h4 id="SurvivalGuide">Before Getting Started...</h4>
+
+<ul>
+<li><a href="howto/CMD_Survival.html" >Programmer's Survival Guide for Windows</a></li>
+<li><a href="howto/Unix_SurvivalGuide.html">Programmer's Survival Guide for Mac &amp; Ubuntu</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="IM1003">IM1003 Object-oriented Programming</h4>
+<ul>
+<li><a href="howto/JDK_HowTo.html">How to install JDK 8</a></li>
+<li>(Week 3) <a href="howto/EclipseJava_HowTo.html" >Eclipse</a> OR <a href="howto/NetBeans_HowTo.html" >NetBeans</a></li>
+
+</ul>
+
+<h5>Java Basics</h5>
+<ul>
+<li><a href="java/J1a_Introduction.html" >1. Introduction to Java Programming</a></li>
+<li><a href="java/J2_Basics.html" >2. Java Basics</a></li>
+<li><a href="java/J2a_BasicsExercises.html" >Exercises: Java Basics</a></li>
+</ul>
+
+<h5>Java OOP</h5>
+<ul>
+<li><a href="java/J3a_OOPBasics.html" >3a. OOP Basics</a></li>
+<li><a href="java/J3b_OOPInheritancePolymorphism.html" >3b. OOP Composition, Inheritance &amp; Polymorphism</a></li>
+<li><a href="java/J3c_OOPWrappingUp.html" >3c. OOP Wrapping-Up</a></li>
+<li><a href="java/J3f_OOPExercises.html" >Exercises: OOP</a></li>
+<li><a href="java/J3d_String.html" >4a. String is Special</a></li>
+</ul>
+
+<h5>Java Graphics</h5>
+<ul>
+<li><a href="java/J4a_GUI.html" >5a. Graphical User Interface (GUI)</a></li>
+<li><a href="java/J4b_CustomGraphics.html" >5b. Custom Graphics</a></li>
+<li><a href="java/GraphicsExercises.html">Exercises: Graphics Programming</a></li>
+</ul>
+
+<h5>Case Study / Assignment</h5>
+<ul>
+<li><a href="java/JavaGame_Sudoku.html" >Graphics Programming Assignment - Sudoku</a></li>
+<li><a href="java/JavaGame_MineSweeper.html" >Graphics Programming Assignment - Mine Sweeper</a></li>
+<li><a href="java/JavaGame_TicTacToe.html" >Case Study: Graphics Programming - Tic-tac-toe</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="IM2073Web">IM2073 Web Programming</h4>
+<ul>
+  <li><a href="sql/MySQL_HowTo.html" >Session 1: How to Install MySQL Server and Get Started with SQL</a></li>
+  <li><a href="java/JDBC_Basic.html" >Session 2a: Introduction to Java Database Programming</a></li>
+  <li><a href="howto/Tomcat_HowTo.html" >Session 2b: How to Install Tomcat Server and Get Started with Java Servlet Programming</a></li>
+  <li><a href="java/JavaServletCaseStudy.html" >Session 3: WebApp Case Study</a></li>
+</ul>
+</div>
+
+
+<div class="entry">
+<h4 id="IM2073mobile">IM2073 Mobile Programming</h4>
+<ul>
+  <li><a href="android/Android_project.pdf" >Project Instructions</a></li>
+  <li><a href="android/Android_HowTo.html" >Session 1: Android - How to install &amp; Get Started</a></li>
+  <li><a href="android/Android_BasicsUI.html" >Session 2: Android - Basics: User Interfaces and Activities</a></li>
+  <li><a href="android/Android_Networking.html" >For your project: Android Networking</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="HowTo">How to Install &amp; Get Started...</h4>
+<ul>
+  <li><a href="howto/JDK_HowTo.html">JDK 8</a></li>
+  <li><a href="howto/Environment_Variables.html" >Environment Variables (<code>PATH</code>, <code>CLASSPATH</code>, <code>JAVA_HOME</code>)</a></li>
+  <li><a href="howto/EclipseJava_HowTo.html" >Eclipse 4.5 for Java</a></li>
+  <li><a href="howto/NetBeans_HowTo.html" >NetBeans 8.1 for Java</a></li>
+  <li><a href="howto/EclipseCpp_HowTo.html" >Eclipse 4.3 (Kepler) for C/C++</a></li>
+  <li><a href="howto/CodeBlocks_HowTo.html" >CodeBlocks for C/C++</a></li>
+  <li><a href="howto/Tomcat_HowTo.html" >Tomcat 7/8</a></li>
+  <li><a href="howto/Tomcat_More.html" >More Tomcat 7</a></li>
+  <li><a href="howto/Apache_HowToInstall.html" >Apache 2.2 - How to Install</a></li>
+  <li><a href="howto/Apache_HowToConfigure.html" >Apache 2.2 - How to Configure</a></li>
+  <li><a href="howto/ApachePlusTomcat_HowTo.html" >Apache 2 with Tomcat 6</a></li>
+  <li><a href="sql/MySQL_HowTo.html" >MySQL 5.7</a></li>
+  <li><a href="sql/MySQL5.6_HowTo.html" >MySQL 5.6</a></li>
+  <li><a href="howto/Git_HowTo.html" >Git</a></li>
+  <li><a href="howto/Wiki_HowTo.html" >Wiki Text</a></li>
+  <li><a href="howto/NtuVpn.html" >NTU VPN</a></li>
+</ul>
+
+<h5>Windows</h5>  
+<ul>
+<li><a href="howto/CMD_Survival.html" >Programmer's Survival Guide for Windows</a></li>
+<li><a href="howto/CMD_HowTo.html" >Windows Basics</a></li>
+<li><a href="howto/Cygwin_HowTo.html" >Cygwin &amp; MinGW</a> (for Windows)</li>
+<li><a href="howto/Vcpp_HowTo.html" >Visual C++ 2010/2008 Express</a></li>
+<li><a href="webprogramming/AMP_Setup.html" >Setup WAMP Server</a></li>
+</ul>
+
+<h5>Unix, Linux, Ubuntu &amp; Mac OS X</h5>  
+<ul>
+<li><a href="howto/Unix_SurvivalGuide.html">Programmer's Survival Guide for Mac &amp; Ubuntu</a></li>
+<li><a href="howto/Unix_Basics.html">Unix Basics</a></li>
+<li><a href="howto/Ubuntu_HowTo.html">Ubuntu Desktop - Install &amp; Setup</a></li>
+<li><a href="webprogramming/AMP_Setup.html">Ubuntu - Setup LAMP Server</a></li>
+<li><a href="howto/UbuntuServer_HowTo.html">Ubuntu Server</a></li>
+<li><a href="howto/MacUsers_HowTo.html">Mac OS X - JDK, MySQL, Tomcat...</a></li>
+<li><a href="webprogramming/AMP_Setup.html">Mac OS X - Setup MAMP Server</a></li>
+</ul>
+
+<h5>Error Messages</h5>  
+<ul>
+  <li><a href="howto/ErrorMessages.html">Common Error Messages (JDK, MySQL, Tomcat....)</a></li>
+</ul>
+</div>
+
+
+<div class="entry">
+<h4 id="Android">Android</h4>
+<ul>
+  <li><a href="android/Android_HowTo.html" >Android - How to install &amp; Get Started</a></li>
+  <li><a href="android/Android_BasicsUI.html" >Android - Basics and User Interfaces</a></li>
+  <li><a href="android/Android_BasicsMore.html" >Android - More Basics</a></li>
+  <li><a href="android/Android_2D.html" >Android - Custom 2D Graphics</a></li>
+  <li><a href="android/Android_3D.html" >Android - 3D Graphics in OpenGL ES</a></li>
+  <li><a href="android/Android_Networking.html" >Android - Networking</a></li>
+  <li><a href="android/Android_NDK.html" >Android - Native Development Kit (NDK)</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="arduino">Arduino</h4>
+<ul>
+  <li><a href="arduino/Arduino.html" >Arduino - Get Started</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="SoftwareNotes">Software Notes</h4>
+<ul>
+  <li><a href="howto/SharewareList.html" >Recommended Shareware/Freeware</a></li>
+  <li><a href="howto/SoftwareNotes.html" >Windows, Office, Firefox, Dreamweaver &amp; Others</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="ICPC">ICPC</h4>
+<ul>
+  <li><a href="icpc/icpc_getting_started.html" >Getting Started</a></li>
+  <li><a href="icpc/icpc_programming_tips.html" >Tips, Trick &amp; Tweaks</a></li>
+  <li class="under-construction">PC^2 (U/C)</li>
+</ul>
+</div>
+<!--
+<div class="entry">
+<h4 id="teaching">My Teaching</h4>
+<ul>
+  <li><a href="teaching/im3072.html" >IM3072</a></li>
+  <li><a href="teaching/ee5706.html" >EE5706</a></li>
+  <li><a href="teaching/im1003.html" >IM1003</a></li>
+  <li><a href="teaching/im1003.html" >EE5703</a></li>
+</ul>
+</div>
+-->
+
+</div> <!-- end of left panel -->
+
+<!-- right panel -->
+<div class="panel">
+
+<div class="entry">
+<h4 id="Java">Java Programming - Part I</h4>
+<h5>For First-Time Programmers</h5>
+<ul>
+  <li><a href="java/J1a_Introduction.html" >1. Introduction to Java Programming</a></li>
+</ul>
+
+<h5>For  New Comers to Java &amp; OOP</h5>
+<ul>
+  <li><a href="java/J2_Basics.html" >2. Java Basics</a></li>
+  <li><a href="java/J2a_BasicsExercises.html" >Exercises: Java Basics</a></li>
+  <li><a href="java/J3a_OOPBasics.html" >3a. OOP Basics</a></li>
+  <li><a href="java/J3b_OOPInheritancePolymorphism.html" >3b. OOP Composition, Inheritance &amp; Polymorphism</a></li>
+  <li><a href="java/J3c_OOPWrappingUp.html" >3c. OOP Wrapping-Up</a></li>
+  <li><a href="java/J3f_OOPExercises.html" >Exercises: OOP</a></li>
+  <li><a href="java/J3d_String.html" >4a. String is Special</a></li>
+  <li><a href="java/JavaEnum.html" >4b. Enumeration (enum)</a></li>
+  <li><a href="java/J5a_ExceptionAssert.html" >4c. Exception Handling &amp; Assertion</a></li>
+  <li><a href="java/JavaReference.html" >4d. Java Reference</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="PowerTools">Power Users</h4>
+<ul>
+<li><a href="java/DataRepresentation.html" >Data Representation - Integers, Floating-Point Numbers &amp; Character Sets</a></li>
+<li><a href="howto/Regexe.html" >Regular Expression (Regex)</a></li>
+</ul>
+</div>
+
+<div class="entry">
+
+<h4 id="JavaPart2">Java Programming - Part II</h4>
+<h5>Intermediate Java</h5>
+<ul>  
+  <li><a href="java/J4a_GUI.html" >5a. Graphical User Interface (GUI)</a></li>
+  <li><a href="java/J4a_GUI_2.html" >5b. Graphical User Interface (GUI) Part II</a></li>
+  <li><a href="java/J4b_CustomGraphics.html" >5c. Custom Graphics</a></li>
+  <li><a href="java/GraphicsExercises.html">Exercises: Graphics Programming</a></li>
+  <li><a href="java/JavaGame_TicTacToe.html" >Case Study: Graphics Programming - Tic-tac-toe</a></li>
+  <li><a href="java/JavaGame_TicTacToe_AI.html" >Case Study: Graphics Programming Part II - AI</a></li>
+  <li><a href="java/J4c_AppletWebstart.html" >5d. Applet &amp; WebStart Application</a></li>
+  <li><a href="java/J4d_GUIMisc.html" >5e. Swing - Templates, Misc &amp; How-To</a></li>
+  <li><a href="java/J5e_multithreading.html" >6a. Multithreading</a></li>
+  <li><a href="java/J5b_IO.html" >6b. Basic Input &amp; Output (I/O)</a></li>
+  <li><a href="java/J5b_IO_advanced.html" >6c. Advanced I/O</a></li>
+  <li><a href="java/J6a_Networking.html" >6d. Networking</a></li>
+  <li><a href="java/J5c_Collection.html" >7a. The Collection Framework</a></li>
+  <li><a href="java/JavaGeneric.html" >7b. Generics</a></li>
+  <li><a href="java/Annotation.html" >7c. Annotation</a></li>
+</ul>  
+
+<h5>Special Topics in  Java</h5>
+<ul>
+  <li><a href="java/JavaUnitTesting.html" >Java Unit Testing - JUnit &amp; TestNG</a></li>
+  <li class="under-construction">Java Build - Ant &amp; Maven [TODO]</li>
+  <li><a href="java/DateTimeCalendar.html" >Calendar, Date and Time</a></li>
+  <li><a href="java/J6d_xml.html" >XML and Java</a></li>
+  <li><a href="java/Java_Regexe.html" >Regular Expression (Regex) and Java</a></li>
+  <li><a href="java/J9f_JavaBeans.html" >JavaBeans</a></li>
+  <li><a href="java/JavaLogging.html" >Java Logging Framework</a></li>
+  <li><a href="java/JavaNativeInterface.html" >Java Native Interface (JNI)</a></li>
+</ul>
+  
+<h5>Java Appendices</h5>
+<ul>
+  <li><a href="java/J9b_Javadocs.html" >JDK API Documentation</a></li>
+  <li><a href="java/J9c_PackageClasspath.html" >Packages and CLASSPATH</a></li>
+  <li><a href="java/J9d_Jar.html" >Java Archive (JAR)</a></li>
+  <li><a href="java/Java_Misc.html" >Java Miscellaneous How-To</a></li>
+  <li class="under-construction">JDK 1.6's New Features [TODO]</li>
+  <li><a href="java/JDK7_NewFeatures.html" >JDK 1.7's New Features</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="JavaME">Java ME</h4>
+<ul>
+  <li><a href="howto/JavaME_HowTo.html" >1. Java ME: Getting Started, Basics &amp; Game Programming</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="Game">Java Game Programming</h4>
+<ul>
+  <li><a href="java/J8a_GameIntro-BouncingBalls.html" >1. Introduction: The World of Bouncing Balls</a></li>
+  <li><a href="java/J8b_Game_2DGraphics.html" >2. 2D Graphics, Java 2D and Images</a></li>
+  <li><a href="java/J8c_PlayingSound.html" >3. Playing Sound</a></li>
+  <li><a href="java/J8d_Game_Framework.html" >4. Java Game Framework</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="clientSide">Client-Side Programming</h4>
+<ul>
+  <li><a href="webprogramming/HTML_CSS_Basics.html" >HTML/CSS Basics</a></li>
+  <li><a href="webprogramming/HTML_CSS_Intermediate.html" >HTML/CSS Intermediate</a></li>
+  <li><a href="webprogramming/HTML_CSS_tips.html" >HTML/CSS Tips &amp; How-To</a></li>
+  <li><a href="webprogramming/JavaScript_Introduction.html" >JavaScript Basics</a></li>
+  <li><a href="webprogramming/jQuery_Basics.html" >jQuery &amp; Ajax</a></li>
+  <li><a href="webprogramming/JavaScript_Examples.html" >JavaScript/jQuery Advanced Examples</a></li>
+  <li><a href="webprogramming/HTML5.html" >HTML5/CSS3 Advanced Features</a></li>
+  <li><a href="webprogramming/BootStrapAndRelated.html" >Bootstrap, Font Awesome, Parsley and Others</a></li>
+  <li><a href="webprogramming/AngularJS_Basics.html" >Angular JS</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="SQL">Database Programming</h4>
+
+<h5>MySQL</h5>
+<ul>
+  <li><a href="sql/MySQL_HowTo.html" >1. MySQL 1: How to Install and Get Started</a></li>
+  <li><a href="sql/MySQL_Beginner.html" >2. MySQL 2: By Examples for Beginners</a></li>
+  <li><a href="sql/Relational_Database_Design.html" >3. Relational Database Design</a></li>
+  <li><a href="sql/MySQL_Intermediate.html" >4. MySQL 3: Intermediate</a></li>
+  <li><a href="sql/SampleDatabases.html" >5. SQL Sample Databases</a></li>
+  <li><a href="sql/SQLMisc.html" >6. MySQL 4: Miscellaneous</a></li>
+</ul>
+
+<h5>JDBC</h5>
+<ul>
+  <li><a href="java/JDBC_Basic.html" >1. Introduction to Java Database Programming (JDBC)</a></li>
+  <li><a href="java/JDBC_Basic2.html" >2. Intro to JDBC - Part 2</a></li>
+  <li><a href="java/JDBC_Intermediate.html" >3. JDBC Intermediate</a></li>
+</ul>
+
+<h5>PostgreSQL</h5>
+<ul>
+  <li><a href="sql/PostgreSQL_GetStarted.html" >1. PostgreSQL: Get Started</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="serverSide">Server-side Programming</h4>
+<h5>Java Servlet/JSP</h5>
+<ul>
+  <li><a href="howto/Tomcat_HowTo.html" >0. How to Install Tomcat and Get Started</a></li>
+  <li><a href="java/JavaServletCaseStudy.html" >1. Java Servlets Case Study</a></li>
+  <li><a href="java/JavaServlets.html" >2. Java Servlets</a></li>
+  <li><a href="java/JavaServletExamples.html" >3. Tomcat's Java Servlet Examples Explained</a></li>
+  <li><a href="howto/Tomcat_More.html" >4. More on Tomcat</a></li>
+  <li><a href="java/JavaServletCaseStudyPart2.html" >5. Java Servlets Case Study Continue</a></li>
+
+  <li><a href="java/JSPByExample.html" >6. Getting Started with JSP by Examples</a></li>
+  <li><a href="java/JavaServerPages.html" >7. JavaServer Pages (JSP)</a></li>
+  <li><a href="java/JavaServerFaces.html" >8. JavaServer Faces (JSF)</a></li>
+  <li><a href="java/JavaWebDBApp.html" >9. Java Web Database Applications</a></li>
+  <li><a href="java/Struts2.html" >10. Struts</a></li>
+  <li><a href="java/JavaWebServices.html" >11. Java Web Services</a></li>
+</ul>  
+
+<h5 id="php">PHP</h5>
+<ul>
+  <li><a href="webprogramming/AMP_Setup.html">0. Setup AMP (Apache/MySQL/PHP</a>)</li>
+  <li><a href="webprogramming/php1_basics.html">1. PHP Basics</a></li>
+  <li><a href="webprogramming/php2_webapps.html">2. PHP/MySQL Webapps</a></li>
+  <li><a href="webprogramming/php5_OOP.html">3. OOP in PHP</a></li>
+  <li><a href="webprogramming/php3_misc.html">5. PHP Miscellaneous</a></li>
+  <li><a href="webprogramming/php4_testing.html">6. PHP Unit Testing</a></li>
+</ul>
+
+<h5>Perl</h5>
+<ul>
+  <li><a href="webprogramming/Perl1_Basics.html" >1. Perl Basics</a></li>
+  <li><a href="webprogramming/Perl2_Regexe.html" >2. Regular Expression, File IO &amp; Text Processing</a></li>
+</ul>
+
+<h5>Python</h5>
+<ul>
+  <li><a href="webprogramming/Python1_Basics.html">1. Python Basics</a></li>
+  <li><a href="webprogramming/Python2_Apps.html">2. Python Database &amp; Webapp</a></li>
+  <li><a href="webprogramming/Python3_Flask.html">3. Python Webapp with Flask</a></li>
+<!--  <li><a href="webprogramming/Python4_DataAnalysis.html">4. Data Analysis with Python</a></li> -->  
+</ul>
+
+<h5>Node.js</h5>
+<ul>
+  <li><a href="webprogramming/NodeJS_Basics.html">1. Node.js Basics</a></li>
+</ul>
+
+</div>
+
+<div class="entry">
+<h4 id="webapp">Webapps</h4>
+
+<h5>Basics</h5>
+<ul>
+  <li><a href="webprogramming/Webapp_Terms.html">Terminology</a></li>
+</ul>
+
+<h5>Testing</h5>
+<ul>
+  <li><a href="webprogramming/WebappTesting.html">Webapp Acceptance Testing with Selenium</a></li>
+</ul>
+
+<h5>Security</h5>
+<ul>
+  <li><a href="webprogramming/Webapp_Security.html">Advanced Webapps Security</a></li>
+</ul>
+
+<h5>Misc</h5>
+<ul>
+  <li><a href="webprogramming/Webapp_Advanced.html">Advanced Webapps Tips</a></li>
+</ul>
+</div>
+
+
+<div class="entry">
+<h4 id="protocol">Web Protocols</h4>
+<ul>
+  <li><a href="webprogramming/HTTP_Basics.html" >HTTP 1: Basics</a></li>
+  <li><a href="webprogramming/HTTP_StateManagement.html" >HTTP 2: State Management</a></li>
+  <li><a href="webprogramming/HTTP_Authentication.html" >HTTP 3: Authentication</a></li>
+  <li><a href="webprogramming/HTTP_SSL.html" >HTTP 4: SSL</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="OpenGL">3D Graphics &amp; OpenGL</h4>
+
+<h5>Setup on Various  Platforms</h5>
+<ul>
+  <li><a href="opengl/HowTo_OpenGL_C.html" >OpenGL in C/C++</a></li>
+  <li><a href="opengl/JOGL2.0.html" >JOGL 2.0</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="opengl/JOGL1.1.html" >JOGL 1.1</a></li>
+  <li><a href="opengl/LWJGL2.8.html">LWJGL 2.8</a></li>
+  <li><a href="opengl/Java3D.html" >Java 3D</a></li>
+</ul>
+
+<h5>Computer Graphics with OpenGL</h5>
+<ul>
+  <li><a href="opengl/CG_Introduction.html" >CG 1. Introduction to OpenGL</a></li>
+  <li><a href="opengl/CG_BasicsTheory.html" >CG 2. Computer Graphics - Basic Theory</a></li>
+  <li><a href="opengl/CG_Examples.html" >CG 3. OpenGL Examples</a></li>
+  <li class="under-construction">CG 3. Computer Graphics - Curves &amp; Surfaces [TODO]</li>
+  <li class="under-construction">CG 4. OpenGL Shading Language (GLSL) [TODO]</li>
+  <li><a href="opengl/References_OpenGL.html" >References &amp; Resources</a></li>
+</ul>
+
+<h5>OpenGL|ES</h5>
+<ul>
+  <li><a href="android/Android_3D.html" >3D Graphics in OpenGL ES (for Android)</a></li>
+</ul>
+<h5>Physics Engine</h5>
+<ul>
+  <li><a href="game/BulletPhysics_JBullet.html" >Bullet Physics &amp; JBullet Physics Engine</a></li>
+</ul>
+</div>
+
+<div class="entry">
+<h4 id="Cpp">C/C++ Programming</h4>
+<h5>C++ Programming Language</h5>
+<ul>
+  <li><a href="cpp/cp0_Introduction.html" >0. C++ Introduction</a></li>
+  <li><a href="cpp/cp1_Basics.html" >1. C++ Basics</a></li>
+  <li><a href="cpp/cp2_MoreBasics.html" >2. C++ More Basics</a></li>
+  <li><a href="cpp/cp3_OOP.html" >3. C++ OOP Basics</a></li>
+  <li><a href="cpp/cp4_PointerReference.html" >4. C++ Pointers, References &amp; Dynamic Allocation</a></li>
+  <li><a href="cpp/cp5_OOPExamples.html" >5. C++ OOP Examples</a></li>
+  <li><a href="cpp/cp6_Inheritance.html" >6. C++ OOP Inheritance &amp; Polymorphism</a></li>
+  <li><a href="cpp/cp7_OperatorOverloading.html" >7. C++ Operator Overloading</a></li>
+  <li><a href="cpp/cp8_Template.html" >8. C++ Template &amp; Generic Programming</a></li>
+  <li><a href="cpp/cp9_String.html" >9. C++ Strings</a></li>
+  <li><a href="cpp/cp9_STL.html" >10. C++  Libraries &amp; STL</a></li>
+  <li><a href="cpp/cp10_IO.html" >11. C++ IO Streams &amp; File IO</a></li>
+  <li><a href="cpp/cp11_TipsTraps.html" >12. C++ Misc, Tips &amp; Traps</a></li>
+  <li><a href="cpp/DataStructureAlgorithm.html" >13. Data Structure and Algorithm in C++</a></li>
+</ul>
+ 
+<h5>C Programming Language</h5>
+<ul>
+  <li><a href="cpp/c0_Introduction.html" >0. C Introduction</a></li>
+  <li><a href="cpp/c1_Basics.html" >1. C Basics</a></li>
+</ul>
+
+<h5>C/C++ Compilers and IDEs</h5>
+<ul>
+  <li><a href="cpp/gcc_make.html" >GCC and Make</a></li>
+  <li><a href="howto/CodeBlocks_HowTo.html" >CodeBlocks for C/C++</a></li>
+  <li><a href="howto/EclipseCpp_HowTo.html" >Eclipse for C/C++</a></li>
+  <li><a href="howto/vcpp_HowTo.html" >Visual C++</a></li>
+</ul>
+</div>
+
+</div> <!-- end of right panel -->
+
+<div id="content-footer" style="clear:both">
+<p class="p-last-modified">Last modified: January, 2016</p>
+</div>
+
+</div>  <!-- End the "wrap-inner" division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer">
+<p>Feedback, comments, corrections, and errata can be sent to Chua Hock-Chuan (ehchua@ntu.edu.sg) &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#wrap-outer">TOP</a><br />
+These are my teaching notes which I share with anyone interested. I update some articles more often than others, based on feedback received on the usefulness of the articles.</p>
+</div>
+
+</div>  <!-- End the wrap-outer division -->
+
+</body>
+</html>

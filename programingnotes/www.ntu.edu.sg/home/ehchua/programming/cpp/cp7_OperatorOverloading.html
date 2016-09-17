@@ -1,0 +1,2226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Object-oriented Programming (OOP) in C++</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>C++ Programming Language</h1>
+<h2>Operator Overloading</h2>
+</div>
+
+<div id="content-main">
+
+<p>Operator overloading means that the operation performed by the operator depends on the <em>type</em> of operands provided to the operator. For example, (a) the bit left-shift operator <code>&lt;&lt;</code> is overloaded to perform stream insertion if the left operand is a <code>ostream</code> object such as <code>cout</code>; (b) the operator <code>*</code> could means multiplication for two numbers of built-in types or indirection if it operates on an address. C++ lets you extend operator overloading to user-defined types (classes).</p>
+<p>Operator overloading is similar to function overloading, where you have many versions of the same function differentiated by their parameter lists.</p>
+
+<h3>Overloaded Operators in the <span class="font-code">string</span> class</h3>
+
+<p>As an example, the C++ <code>string</code> class (in header <code>&lt;string&gt;</code>) overloads these operators to work on <code>string</code> objects:</p>
+
+<ul>
+<li>String comparison (<code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>): For example, you can use <code>str1 == str2</code> to compare the contents of two <code>string</code> objects.</li>
+<li>Stream insertion and extraction (<code>&lt;&lt;</code>, <code>&gt;&gt;</code>): For example, you can use <code>cout &lt;&lt; str1</code> and <code>cin &gt;&gt; str2</code> to output/input <code>string</code> objects.</li>
+<li>Strings concatenation (<code>+</code>, <code>+=</code>): For example, <code>str1 + str2</code> concatenates two <code>string</code> objects to produce a new <code>string</code> object; <code>str1 += str2</code> appends <code>str2</code> into <code>str1</code>.</li>
+<li> Character indexing or subscripting <code>[]</code>: For example, you can use <code>str[<em>n</em>]</code> to get the <code>char</code> at index <code><em>n</em></code>; or <code>str[<em>n</em>] = c</code> to  modify the <code>char</code> at index <code><em>n</em></code>. Take note that <code>[]</code> operator does not perform index-bound check, i.e., you have to ensure that the index is within the bounds. To perform index-bound check, you can use <code>string</code>'s <code>at()</code> member function.</li>
+<li>Assignment (<code>=</code>): For example, <code>str1 = str2</code> assigns <code>str2</code> into <code>str1</code>.</li>
+</ul>
+
+<h5>Example</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test overloaded operators in the C++ string class
+   (TestStringOverloadOperators.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;string&gt;   <span class="color-comment"> // needed to use the string class</span>
+using namespace std;
+ 
+int main() {
+   string msg1(&quot;hello&quot;);
+   string msg2(&quot;HELLO&quot;);
+   string msg3(&quot;hello&quot;);
+ 
+  <span class="color-comment"> // Relational Operators (comparing the contents)</span>
+   cout &lt;&lt; boolalpha;
+   cout &lt;&lt; (msg1 == msg2) &lt;&lt; endl; <span class="color-comment"> // false</span>
+   cout &lt;&lt; (msg1 == msg3) &lt;&lt; endl; <span class="color-comment"> // true</span>
+   cout &lt;&lt; (msg1 &lt; msg2)  &lt;&lt; endl; <span class="color-comment"> // false (uppercases before lowercases)</span>
+ 
+  <span class="color-comment"> // Assignment</span>
+   string msg4 = msg1;
+   cout &lt;&lt; msg4 &lt;&lt; endl; <span class="color-comment"> // hello</span>
+ 
+  <span class="color-comment"> // Concatenation</span>
+   cout &lt;&lt; (msg1 + &quot; &quot; + msg2) &lt;&lt; endl; <span class="color-comment"> // hello HELLO</span>
+   msg3 += msg2;
+   cout &lt;&lt; msg3 &lt;&lt; endl; <span class="color-comment"> // helloHELLO</span>
+ 
+  <span class="color-comment"> // Indexing</span>
+   cout &lt;&lt; msg1[1] &lt;&lt; endl;    <span class="color-comment"> // 'e'</span>
+   cout &lt;&lt; msg1[99] &lt;&lt; endl;   <span class="color-comment"> // garbage (no index-bound check)</span>
+<span class="color-comment">// cout &lt;&lt; msg1.at(99) &lt;&lt; endl;<span class="color-comment"> // out_of_range exception</span></span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p><span class="line-heading">Notes</span>: The relational operators (<code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>), <code>+</code>, <code>&lt;&lt;</code>, <code>&gt;&gt;</code> are overloaded as non-member functions, where the left operand could be a non-<code>string</code> object (such as C-string, <code>cin</code>, <code>cout</code>); while <code>=</code>, <code>[]</code>, <code>+=</code> are overloaded as member functions where the left operand must be a <code>string</code> object. I shall elaborate later.</p>
+
+<h3>User-defined Operator Overloading</h3>
+
+<h4>&quot;<span class="font-code">operator</span>&quot; Functions</h4>
+
+<p>To overload an operator, you use a special function form called an <em>operator function</em>, in the form of <code>operatorΔ()</code>, where <code>Δ</code> denotes the operator to be overloaded:</p>
+
+<pre class="color-syntax">
+<em>return-type</em> <strong>operator</strong>&Delta;(<em>parameter-list</em>)</pre>
+
+<p>For example, <code>operator+()</code> overloads the <code>+</code> operator; <code>operator&lt;&lt;()</code> overloads the <code>&lt;&lt;</code> operator. Take note that <code>Δ</code> must be an existing C++ operator. You cannot create you own operator.</p>
+
+<h4>Example: Overloading <span class="font-code">'+'</span> Operator for the <span class="font-code">Point</span> Class as Member Function</h4>
+
+<p>In this example, we shall overload the <code>'+'</code> operator in the <code>Point</code> class to support addition of two <code>Point</code> objects. In other words, we can write <code>p3 = p1+p2</code>, where <code>p1</code>, <code>p2</code> and <code>p3</code> are <code>Point</code> objects, similar to the usual arithmetic operation. We shall construct a new <code>Point</code> instance <code>p3</code> for the sum, without changing the <code>p1</code> and <code>p2</code> instances.</p>
+
+<h5><span class="font-code">Point.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* The Point class Header file (Point.h) */</span>
+#ifndef POINT_H
+#define POINT_H
+ 
+class Point {
+private:
+   int x, y;<span class="color-comment"> // Private data members</span>
+ 
+public:
+   Point(int x = 0, int y = 0);<span class="color-comment"> // Constructor</span>
+   int getX() const;<span class="color-comment"> // Getters</span>
+   int getY() const;
+   void setX(int x);<span class="color-comment"> // Setters</span>
+   void setY(int y);
+   void print() const;
+   <span class="color-new">const Point operator+(const Point &amp; rhs) const;</span>
+         <span class="color-comment">// Overload '+' operator as member function of the class</span>
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>We overload the <code>+</code> operator via a member function <code>operator+()</code>, which shall add this instance (left operand) with the <code>rhs</code> operand, construct a new instance containing the sum and and return it <em>by value</em>. We cannot return by reference a local variable created inside the function, as the local variable would be destroyed when the function exits.</li>
+<li>The <code>rhs</code> operand is passed by reference for performance.</li>
+<li>The member function is declared <code>const</code>, which cannot modify data members.</li>
+<li>The return value is declared <code>const</code>, so as to prevent it from being used as <em>lvalue</em>. For example, it prevents writing <code>(p1+p2) = p3</code>, which is meaningless and could be due to misspelling <code>(p1+p2) == p3</code>.</li>
+</ul>
+
+<h5><span class="font-code">Point.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* The Point class Implementation file (Point.cpp) */</span>
+#include &quot;Point.h&quot;
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-comment">// Constructor - The default values are specified in the declaration</span>
+Point::Point(int x, int y) : x(x), y(y) { }<span class="color-comment"> // Using initializer list</span>
+ 
+<span class="color-comment">// Getters</span>
+int Point::getX() const { return x; }
+int Point::getY() const { return y; }
+ 
+<span class="color-comment">// Setters</span>
+void Point::setX(int x) { this-&gt;x = x; }
+void Point::setY(int y) { this-&gt;y = y; }
+ 
+<span class="color-comment">// Public Functions</span>
+void Point::print() const {
+   cout &lt;&lt; &quot;(&quot; &lt;&lt; x &lt;&lt; &quot;,&quot; &lt;&lt; y &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+}
+ 
+<span class="color-comment">// Member function overloading '+' operator</span>
+<span class="color-new">const Point Point::<strong>operator+</strong>(const Point &amp; rhs) const {
+   return Point(x + rhs.x, y + rhs.y);
+}</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>The function allocates a new <code>Point</code> object with the sums of <code>x</code>'s and <code>y</code>'s, and returns this object by <code>const</code> value.</li>
+</ul>
+
+<h5><span class="font-code">TestPoint.cpp</span></h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+#include &quot;Point.h&quot;
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   Point p1(1, 2), p2(4, 5);
+  <span class="color-comment"> // Use overloaded operator +</span>
+   Point p3 = <span class="color-new">p1 + p2</span>;
+   p1.print(); <span class="color-comment"> // (1,2)</span>
+   p2.print(); <span class="color-comment"> // (4,5)</span>
+   p3.print(); <span class="color-comment"> // (5,7)</span>
+ 
+  <span class="color-comment"> // Invoke via usual dot syntax, same as p1+p2</span>
+   Point p4 = <span class="color-new">p1.operator+(p2)</span>;
+   p4.print(); <span class="color-comment"> // (5,7)</span>
+ 
+  <span class="color-comment"> // Chaining</span>
+   Point p5 = <span class="color-new">p1 + p2 + p3 + p4</span>;
+   p5.print(); <span class="color-comment"> // (15,21)</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>You can invoke the overloaded operator via <code>p1+p2</code>, which will be translated into the dot operation <code>p1.operator+(p2)</code>.</li>
+<li>The <code>+</code> operator supports chaining (cascading) operations, as <code>p1+p2</code> returns a <code>Point</code> object.</li>
+
+</ul>
+
+<h4>Restrictions on Operator Overloading</h4>
+
+<ul>
+<li>The overloaded operator must be an existing and valid operator. You cannot create your own operator such as &oplus;.</li>
+
+<li>Certain C++ operators cannot be overloaded, such as <code>sizeof</code>, dot (<code>.</code> and <code>.*</code>), scope resolution (<code>::</code>) and conditional (<code>?:</code>).</li>
+
+<li>The overloaded operator must have at least one operands of the user-defined types. You cannot overload an operator working on fundamental types. That is, you can't overload the <code>'+'</code> operator for two <code>int</code>s (fundamental type) to perform subtraction.</li>
+
+<li>You cannot change the syntax rules (such as associativity, precedence and number of arguments) of the overloaded operator.</li>
+</ul>
+
+<h3>Overloading Operator via &quot;<span class="font-code">friend</span>&quot; non-member function</h3>
+
+<h4>Why can't we always use Member Function for Operator Overloading?</h4>
+
+<p>The<code> </code>member function <code>operator&Delta;()</code> can only be invoked from an object via the dot operator, e.g., <code>p1.operator&Delta;(p2)</code>, which is equivalent to <code>p1 &Delta; p2</code>. Clearly the left operand <code>p1</code> should be an object of that particular class. Suppose that we want to overload a binary operator such as <code>*</code> to multiply the object <code>p1</code> with an <code>int</code> literal, <code>p1*5</code> can be translated into <code>p1.operator*(5)</code>, but <code>5*p1<span class="color-comment"></span></code> cannot be represented using member function. One way to deal with this problem is only allow user to write <code>p1*5</code> but not <code>5*p1</code>, which is not user friendly and break the rule of commutativity. Another way is to use a non-member function, which does not invoke through an object and dot operator, but through the arguments provided. For example, <code>5*p1<span class="color-comment"></span></code> could be translated to <code>operator+(5, p1)</code>.</p>
+
+<p>In brief, you cannot use member function to overload an operator if the left operand is not an object of that particular class.</p>
+
+<h4>&quot;<span class="font-code">friend</span>&quot; Functions</h4>
+
+<p>A regular non-member function cannot directly access the private data of the objects given in its arguments. A special type of function, called <code>friend</code>s, are allowed to access the private data.</p>
+
+<p>A &quot;friend&quot; function of a class, marked by the keyword <code>friend</code>, is a function defined outside the class, yet its argument of that class has unrestricted access to all the class members (<code>private</code>, <code>protected</code> and <code>public</code> data members and member functions). Friend functions can enhance the performance, as they eliminate the need of calling public member functions to access the private data members.</p>
+
+
+<h4>Example: Overloading <span class="font-code">&lt;&lt;</span> and <span class="font-code">&gt;&gt;</span> Operators of <span class="font-code">Point</span> class using non-member <span class="font-code">friend</span> Functions</h4>
+
+
+<p>In this example, we shall overload <code>&lt;&lt;</code> and <code>&gt;&gt;</code> operators to support stream insertion and extraction of <code>Point</code> objects, i.e., <code>cout &lt;&lt; <em>aPoint</em></code>, and <code>cin &gt;&gt; <em>aPoint</em></code>. Since the left operand is not a <code>Point</code> object (<code>cout</code> is an <code>ostream</code> object and <code>cin</code> is an <code>istream</code> object), we cannot use member function, but need to use non-member<code> </code>function for operator overloading. We shall make these functions <code>friend</code>s of the <code>Point</code> class, to allow them to access the private data members directly for enhanced performance.</p>
+
+<h5><span class="font-code">Point.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* The Point class Header file (Point.h) */</span>
+#ifndef POINT_H
+#define POINT_H
+ 
+#include &lt;iostream&gt;
+ 
+<span class="color-comment">// Class Declaration</span>
+class Point {
+private:
+   int x, y;
+ 
+public:
+   Point(int x = 0, int y = 0);
+   int getX() const;<span class="color-comment"> // Getters</span>
+   int getY() const;
+   void setX(int x);<span class="color-comment"> // Setters</span>
+   void setY(int y);
+ 
+   <span class="color-new">friend std::ostream &amp; operator&lt;&lt;(std::ostream &amp; out, const Point &amp; point);
+   friend std::istream &amp; operator&gt;&gt;(std::istream &amp; in, Point &amp; point);</span>
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>Friends are neither <code>public</code> or <code>private</code>, and can be listed anywhere within the class declaration.</li>
+
+<li>The <code>cout</code> and <code>cin</code> need to be passed into the function by reference, so that the function accesses the <code>cout</code> and <code>cin</code> directly (instead of a clone copy by value).</li>
+
+<li>We return the <code>cin</code> and <code>cout</code> passed into the function by reference too, so as to support cascading operations. For example, <code>cout &lt;&lt; p1 &lt;&lt; endl</code> will be interpreted as <code>(cout &lt;&lt; p1) &lt;&lt; endl</code>.</li>
+<li>In <code>&lt;&lt;</code>, the reference parameter <code>Point</code> is declared as <code>const</code>. Hence, the function cannot modify the <code>Point</code> object. On the other hand, in <code>&gt;&gt;</code>, the <code>Point</code> reference is non-const, as it will be modified to keep the input.</li>
+<li>We use fully-qualified name <code>std::istream</code> instead of placing a &quot;<code>using namespace std;</code>&quot; statement in the header. It is because this header could be included in many files, which would include the <code>using</code> statement too and may not be desirable.</li>
+
+</ul>
+
+<h5><span class="font-code">Point.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* The Point class Implementation file (Point.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;Point.h&quot;
+using namespace std;
+ 
+<span class="color-comment">// Constructor - The default values are specified in the declaration</span>
+Point::Point(int x, int y) : x(x), y(y) { }<span class="color-comment"> // using member initializer list</span>
+ 
+<span class="color-comment">// Getters</span>
+int Point::getX() const { return x; }
+int Point::getY() const { return y; }
+ 
+<span class="color-comment">// Setters</span>
+void Point::setX(int x) { this-&gt;x = x; }
+void Point::setY(int y) { this-&gt;y = y; }
+ 
+<span class="color-new">ostream &amp; operator&lt;&lt;(ostream &amp; out, const Point &amp; point) {
+   out &lt;&lt; &quot;(&quot; &lt;&lt; point.x &lt;&lt; &quot;,&quot; &lt;&lt; point.y &lt;&lt; &quot;)&quot;;  <span class="color-comment">// access private data</span>
+   return out;
+}
+ 
+istream &amp; operator&gt;&gt;(istream &amp; in, Point &amp; point) {
+   cout &lt;&lt; &quot;Enter x and y coord: &quot;;
+   in &gt;&gt; point.x &gt;&gt; point.y;  <span class="color-comment">// access private data</span>
+   return in;
+}</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>The function definition does not require the keyword <code>friend</code>, and the <code><em>ClassName</em>::</code> scope resolution qualifier, as it does not belong to the class.</li>
+
+<li>The <code>operator&lt;&lt;()</code> function is declared as a friend of <code>Point</code> class. Hence, it can access the private data members <code>x</code> and <code>y</code> of its argument <code>Point</code> directly.  <code>operator&lt;&lt;()</code> function is NOT a friend of <code>ostream</code> class, as there is no need to access the private member of <code>ostream</code>.</li>
+
+<li>Instead of accessing private data member <code>x</code> and <code>y</code> directly, you could use public member function <code>getX()</code> and <code>getY()</code>. In this case, there is no need to declare <code>operator&lt;&lt;()</code> as a friend of the <code>Point</code> class. You could simply declare a regular function prototype in the header.
+<pre class="color-example">
+<span class="color-comment">// Function prototype</span>
+ostream &amp; operator&lt;&lt;(ostream &amp; out, const Point &amp; point);
+ 
+<span class="color-comment">// Function definition</span>
+ostream &amp; operator&lt;&lt;(ostream &amp; out, const Point &amp; point) {
+   out &lt;&lt; "(" &lt;&lt; <span class="color-new">point.getX()</span> &lt;&lt; &quot;,&quot; &lt;&lt; <span class="color-new">point.getY()</span> &lt;&lt; &quot;)&quot;;
+   return out;
+}</pre>
+Using <code>friend</code> is recommended, as it enhances performance. Furthermore, the overloaded operator becomes part of the extended public interface of the class, which helps in ease-of-use and ease-of-maintenance.</li>
+</ul>
+
+<h5><span class="font-code">TestPoint.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+#include &lt;iostream&gt;
+#include &quot;Point.h&quot;
+using namespace std;
+ 
+int main() {
+   Point p1(1, 2), p2;
+ 
+  <span class="color-comment"> // Using overloaded operator &lt;&lt;</span>
+   <span class="color-new">cout &lt;&lt; p1</span> &lt;&lt; endl;   <span class="color-comment"> // support cascading</span>
+   <span class="color-new">operator&lt;&lt;(cout, p1)</span>; <span class="color-comment"> // same as cout &lt;&lt; p1</span>
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Using overloaded operator &gt;&gt;</span>
+   <span class="color-new">cin &gt;&gt; p1</span>;
+   cout &lt;&lt; p1 &lt;&lt; endl;
+   <span class="color-new">operator&gt;&gt;(cin, p1)</span>; <span class="color-comment"> // same as cin &gt;&gt; p1</span>
+   cout &lt;&lt; p1 &lt;&lt; endl;
+   <span class="color-new">cin &gt;&gt; p1 &gt;&gt; p2</span>;     <span class="color-comment"> // support cascading</span>
+   cout &lt;&lt; p1 &lt;&lt; endl;
+   cout &lt;&lt; p2 &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The overloaded <code>&gt;&gt;</code> and <code>&lt;&lt;</code> can also be used for file input/output, as the file IO stream <code>ifstream/ofstream</code> (in <code>fstream</code> header) is a subclass of <code>istream/ostream</code>. For example,</p>
+
+<pre class="color-example">
+#include &lt;fstream&gt;
+#include &quot;Point.h&quot;
+using namespace std;
+ 
+int main() {
+   Point p1(1, 2);
+ 
+   <span class="color-new">ofstream fout(&quot;out.txt&quot;);</span>
+   <span class="color-new">fout &lt;&lt; p1</span> &lt;&lt; endl;
+ 
+   <span class="color-new">ifstream fin(&quot;in.txt&quot;);</span><span class="color-comment"> // contains &quot;3 4&quot;</span>
+   <span class="color-new">fin &gt;&gt; p1;</span>
+   cout &lt;&lt; p1 &lt;&lt; endl;
+}</pre>
+
+<h3>Overloading Binary Operators</h3>
+
+<p>All C++ operators are either <em>binary</em> (e.g., <code>x + y</code>) or <em>unary</em> (e.g. <code>!x</code>, <code>-x</code>), with the exception of <em>tenary</em> conditional operator (<code>? :</code>) which cannot be overloaded.</p>
+
+<p>Suppose that we wish to overload the binary operator <code>==</code> to compare two <code>Point</code> objects. We could do it as a <em>member function</em>  or <em>non-member function</em>.</p>
+
+<ol>
+<li>To overload as a <em>member function</em>, the declaration is as follows:
+  <pre class="color-example">class Point {
+public:
+   <span class="color-new">bool operator==(const Point &amp; rhs) const;</span>  <span class="color-comment">// p1.operator==(p2)</span>
+   ......
+};</pre>
+
+The compiler translates &quot;<code>p1 == p2</code>&quot; to &quot;<code>p1.operator==(p2)</code>&quot;, as a member function call of object <code>p1</code>, with argument <code>p2</code>.<br />
+
+<p>Member function can only be used if the left operand is an object of that particular class.</p>
+
+</li>
+
+<li>To overload as a <em>non-member function</em>, which is often declared as a <code>friend</code> to access the private data for enhanced performance, the declaration is as follows:
+  <pre class="color-example">class Point {
+   <span class="color-new">friend bool operator==(const Point &amp; lhs, const Point &amp; rhs);</span> <span class="color-comment">// operator==(p1,p2)</span>
+   ......
+};</pre>
+
+The compiler translates the expression &quot;<code>p1 == p2</code>&quot; to &quot;<code>operator==(p1, p2)</code>&quot;.</li>
+</ol>
+
+<h3>Overloading Unary Operators</h3>
+
+<p>Most of the unary operators are prefix operators, e.g., <code>!x</code>, <code>-x</code>. Hence, prefix is the norm for unary operators. However, unary increment and decrement come in two forms: prefix (<code>++x</code>, <code>--x</code>) and postfix (<code>x++</code>, <code>x--</code>). We to a mechanism to differentiate the two forms.</p>
+
+<h4>Unary Prefix Operator</h4>
+
+<p>Example of unary prefix operators are <code>!x</code>, <code>-x</code>, <code>++x</code> and <code>--x</code>. You could do it as a non-member function as well as member function. For example, to overload the prefix increment operator <code>++</code>:</p>
+
+<ol>
+<li>To overload as a non-member <code>friend</code> function:
+<pre class="color-example">class Point {
+   <span class="color-new">friend Point &amp; operator++(Point &amp; point);</span>
+   ......
+};</pre>
+
+The compiler translates &quot;<code>++p</code>&quot; to &quot;<code>operator++(p)</code>&quot;.</li>
+
+<li>To overload as a member function:
+<pre class="color-example">class Point {
+public:
+   <span class="color-new">Point &amp; operator++();</span>  <span class="color-comment">// this Point</span>
+   ......
+};</pre>
+
+The compiler translates &quot;<code>++p</code>&quot; to &quot;<code>p.operator++()</code>&quot;.</li>
+</ol>
+
+<p>You can use either member function or non-member friend function to overload unary operators, as their only operand shall be an object of that class.</p>
+
+<h4>Unary Postfix Operator</h4>
+
+<p>The unary increment and decrement operators come in two forms: prefix (<code>++x</code>, <code>--x</code>) and postfix (<code>x++</code>, <code>x--</code>). Overloading postfix operators (such as <code>x++</code>, x--) present a challenge. It ought to be differentiated from the prefix operator (<code>++x</code>, <code>--x</code>). A &quot;dummy&quot; argument is therefore introduced to indicate postfix operation as shown below. Take note that postfix <code>++</code> shall save the old value, perform the increment, and then return the saved value by value.</p>
+
+<ol>
+<li>To overload as non-member <code>friend</code> function:
+<pre class="color-example">class Point {
+   <span class="color-new">friend const Point operator++(Point &amp; point, int dummy);</span>
+};</pre>
+
+The compiler translates &quot;<code>pt++</code>&quot; to &quot;<code>operator++(pt, 0)</code>&quot;. The <code>int</code> argument is strictly a <em>dummy value</em> to differentiate prefix from postfix operation.</li>
+
+<li>To overload as a member function:
+<pre class="color-example">class Point {
+public:
+   <span class="color-new">const Point operator++(int dummy);</span>  <span class="color-comment">// this Point</span>
+   ......
+};</pre>
+
+The compiler translates &quot;<code>pt++</code>&quot; to &quot;<code>pt.operator++(0)</code>&quot;.</li>
+</ol>
+
+<h4>Example: Overloading Prefix and Postfix <span class="font-code">++</span> for the <span class="font-code">Counter</span> Class</h4>
+
+<h5><span class="font-code">Counter.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* The Counter class Header file (Counter.h) */</span>
+#ifndef COUNTER_H
+#define COUNTER_H
+#include &lt;iostream&gt;
+ 
+class Counter {
+private:
+   int count;
+public:
+   Counter(int count = 0);  <span class="color-comment"> // Constructor</span>
+   int getCount() const;     <span class="color-comment">// Getters</span>
+   void setCount(int count);<span class="color-comment"> // Setters</span>
+   <span class="color-new">Counter &amp; operator++();</span>             <span class="color-comment"> // ++prefix</span>
+   <span class="color-new">const Counter operator++(int dummy);</span><span class="color-comment"> // postfix++</span>
+ 
+   friend std::ostream &amp; operator&lt;&lt;(std::ostream &amp; out, const Counter &amp; counter);
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>The prefix function returns a reference to this instance, to support chaining (or cascading), e.g., <code>++++c</code> as <code>++(++c)</code>. However, the return reference can be used as lvalue with unexpected operations (e.g., <code>++c = 8</code>).</li>
+<li>The postfix function returns a <code>const</code> object by value. A <code>const</code> value cannot be used as lvalue. This prevents chaining such as <code>c++++</code>. Although it would be interpreted as <code>(c++)++</code>. However, <code>(c++)</code> does not return this object, but an temporary object. The subsequent <code>++</code> works on the temporary object.</li>
+<li>Both prefix and postfix functions are non-<code>const</code>, as they modify the data member <code>count</code>.</li>
+
+</ul>
+
+<h5><span class="font-code">Counter.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* The Counter class Implementation file (Counter.cpp) */</span>
+#include &quot;Counter.h&quot;
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-comment">// Constructor - The default values are specified in the declaration</span>
+Counter::Counter(int c) : count(c) { }<span class="color-comment"> // using member initializer list</span>
+ 
+<span class="color-comment">// Getters</span>
+int Counter::getCount() const { return count; }
+ 
+<span class="color-comment">// Setters</span>
+void Counter::setCount(int c) { count = c; }
+ 
+<span class="color-comment">// ++prefix, return reference of this</span>
+<span class="color-new">Counter &amp; Counter::operator++() {
+   ++count;
+   return *this;
+}</span>
+ 
+<span class="color-comment">// postfix++, return old value by value</span>
+<span class="color-new">const Counter Counter::operator++(int dummy) {
+   Counter old(*this);
+   ++count;
+   return old;
+}</span>
+ 
+<span class="color-comment">// Overload stream insertion &lt;&lt; operator</span>
+ostream &amp; operator&lt;&lt;(ostream &amp; out, const Counter &amp; counter) {
+   out &lt;&lt; counter.count;
+   return out;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>The prefix function increments the <code>count</code>, and returns this object by reference.</li>
+<li>The postfix function saves the old value (by constructing a new instance with this object via the copy constructor), increments the <code>count</code>, and return the saved object by value.</li>
+<li>Clearly, postfix operation on object is less efficient than the prefix operation, as it create a temporary object. If there is no subsequent operation that relies on the output of prefix/postfix operation, use prefix operation.</li>
+</ul>
+
+<h5><span class="font-code">TestCounter.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+#include &quot;Counter.h&quot;
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   Counter c1;
+   cout &lt;&lt; c1 &lt;&lt; endl;    <span class="color-comment"> // 0</span>
+   cout &lt;&lt; <span class="color-new">++c1</span> &lt;&lt; endl;  <span class="color-comment"> // 1</span>
+   cout &lt;&lt; c1 &lt;&lt; endl;    <span class="color-comment"> // 1</span>
+   cout &lt;&lt; <span class="color-new">c1++</span> &lt;&lt; endl;  <span class="color-comment"> // 1</span>
+   cout &lt;&lt; c1 &lt;&lt; endl;    <span class="color-comment"> // 2</span>
+   cout &lt;&lt; <span class="color-new">++++c1</span> &lt;&lt; endl;<span class="color-comment"> // 4</span>
+<span class="color-comment">//</span> cout &lt;&lt; <span class="color-new">c1++++</span> &lt;&lt; endl;<span class="color-comment"> // error caused by const return value</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>Take note of the difference in <code>cout &lt;&lt; c1++</code> and <code>cout &lt;&lt; ++c1</code>. Both prefix and postfix operators work as expected.</li>
+<li><code>++++c1</code> is allowed and works correctly. <code>c1++++</code> is disallowed, because it would produce incorrect result.</li>
+
+</ul>
+
+
+<h3>Example: Putting them together in <span class="font-code">Point</span> Class</h3>
+
+<p>This example overload binary operator <code>&lt;&lt;</code> and <code>&gt;&gt;</code> as non-member functions for stream insertion and stream extraction. It also overload unary <code>++</code> (postfix and prefix) and binary <code>+=</code> as member function; and <code>+</code>, <code>+=</code> operators.</p>
+
+<h5><span class="font-code">Point.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* The Point class Header file (Point.h) */</span>
+#ifndef POINT_H
+#define POINT_H
+#include &lt;iostream&gt;
+ 
+class Point {
+private:
+   int x, y;
+ 
+public:
+   explicit Point(int x = 0, int y = 0);
+   int getX() const;
+   int getY() const;
+   void setX(int x);
+   void setY(int y);
+   Point &amp; operator++();             <span class="color-comment"> // ++prefix</span>
+   const Point operator++(int dummy);<span class="color-comment"> // postfix++</span>
+   const Point operator+(const Point &amp; rhs) const;<span class="color-comment"> // Point + Point</span>
+   const Point operator+(int value) const;          <span class="color-comment"> // Point + int</span>
+   Point &amp; operator+=(int value);          <span class="color-comment"> // Point += int</span>
+   Point &amp; operator+=(const Point &amp; rhs);<span class="color-comment"> // Point += Point</span>
+ 
+   friend std::ostream &amp; operator&lt;&lt;(std::ostream &amp; out, const Point &amp; point); <span class="color-comment">// out &lt;&lt; point</span>
+   friend std::istream &amp; operator&gt;&gt;(std::istream &amp; in, Point &amp; point);        <span class="color-comment">// in &gt;&gt; point</span>
+   friend const Point operator+(int value, const Point &amp; rhs);<span class="color-comment"> // int + Point</span>
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">Point.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* The Point class Implementation file (Point.cpp) */</span>
+#include &quot;Point.h&quot;
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-comment">// Constructor - The default values are specified in the declaration</span>
+Point::Point(int x, int y) : x(x), y(y) { }
+ 
+<span class="color-comment">// Getters</span>
+int Point::getX() const { return x; }
+int Point::getY() const { return y; }
+ 
+<span class="color-comment">// Setters</span>
+void Point::setX(int x) { this-&gt;x = x; }
+void Point::setY(int y) { this-&gt;y = y; }
+ 
+<span class="color-comment">// Overload ++Prefix, increase x, y by 1</span>
+Point &amp; Point::operator++() {
+   ++x;
+   ++y;
+   return *this;
+}
+ 
+<span class="color-comment">// Overload Postfix++, increase x, y by 1</span>
+const Point Point::operator++(int dummy) {
+   Point old(*this);
+   ++x;
+   ++y;
+   return old;
+}
+ 
+<span class="color-comment">// Overload Point + int. Return a new Point by value</span>
+const Point Point::operator+(int value) const {
+   return Point(x + value, y + value);
+}
+ 
+<span class="color-comment">// Overload Point + Point. Return a new Point by value</span>
+const Point Point::operator+(const Point &amp; rhs) const {
+   return Point(x + rhs.x, y + rhs.y);
+}
+ 
+<span class="color-comment">// Overload Point += int. Increase x, y by value</span>
+Point &amp; Point::operator+=(int value) {
+   x += value;
+   y += value;
+   return *this;
+}
+ 
+<span class="color-comment">// Overload Point += Point. Increase x, y by rhs</span>
+Point &amp; Point::operator+=(const Point &amp; rhs) {
+   x += rhs.x;
+   y += rhs.y;
+   return *this;
+}
+ 
+<span class="color-comment">// Overload &lt;&lt; stream insertion operator</span>
+ostream &amp; operator&lt;&lt;(ostream &amp; out, const Point &amp; point) {
+   out &lt;&lt; &quot;(&quot; &lt;&lt; point.x &lt;&lt; &quot;,&quot; &lt;&lt; point.y &lt;&lt; &quot;)&quot;;
+   return out;
+}
+ 
+<span class="color-comment">// Overload &gt;&gt; stream extraction operator</span>
+istream &amp; operator&gt;&gt;(istream &amp; in, Point &amp; point) {
+   cout &lt;&lt; &quot;Enter x and y coord: &quot;;
+   in &gt;&gt; point.x &gt;&gt; point.y;
+   return in;
+}
+ 
+<span class="color-comment">// Overload int + Point. Return a new point</span>
+const Point operator+(int value, const Point &amp; rhs) {
+   return rhs + value;  <span class="color-comment">// use member function defined above</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">TestPoint.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+#include &lt;iostream&gt;
+#include &quot;Point.h&quot;
+using namespace std;
+ 
+int main() {
+   Point p1(1, 2);
+   cout &lt;&lt; p1 &lt;&lt; endl;  <span class="color-comment"> // (1,2)</span>
+ 
+   Point p2(3,4);
+   cout &lt;&lt; p1 + p2 &lt;&lt; endl;<span class="color-comment"> // (4,6)</span>
+   cout &lt;&lt; p1 + 10 &lt;&lt; endl;<span class="color-comment"> // (11,12)</span>
+   cout &lt;&lt; 20 + p1 &lt;&lt; endl;<span class="color-comment"> // (21,22)</span>
+   cout &lt;&lt; 10 + p1 + 20 + p1 &lt;&lt; endl;<span class="color-comment"> // (32,34)</span>
+ 
+   p1 += p2;
+   cout &lt;&lt; p1 &lt;&lt; endl;<span class="color-comment"> // (4,6)</span>
+   p1 += 3;
+   cout &lt;&lt; p1 &lt;&lt; endl;<span class="color-comment"> // (7,9)</span>
+ 
+   Point p3; <span class="color-comment"> // (0,0)</span>
+   cout &lt;&lt; p3++ &lt;&lt; endl;<span class="color-comment"> // (0,0)</span>
+   cout &lt;&lt; p3 &lt;&lt; endl;  <span class="color-comment"> // (1,1)</span>
+   cout &lt;&lt; ++p3 &lt;&lt; endl;<span class="color-comment"> // (2,2)</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Implicit Conversion via Single-argument Constructor &amp; Keyword &quot;<span class="font-code">explicit</span>&quot;</h3>
+
+<p>In C++, a <em>single-argument</em> constructor can be used to implicitly convert a value to an object. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+class Counter {
+private:
+   int count;
+public:
+   <span class="color-new">Counter(int c = 0)</span> : count(c) { }
+         <span class="color-comment">// A single-argument Constructor which takes an int
+         // It can be used to implicitly convert an int to a Counter object</span>
+   int getCount() const { return count; }   <span class="color-comment"> // Getter</span>
+   void setCount(int c) { count = c; }<span class="color-comment"> // Setter</span>
+};
+ 
+int main() {
+   <span class="color-new">Counter c1</span>;<span class="color-comment"> // Declare an instance and invoke default constructor</span>
+   cout &lt;&lt; c1.getCount() &lt;&lt; endl; <span class="color-comment"> // 0</span>
+ 
+   <span class="color-new">c1 = 9</span>;
+    <span class="color-comment"> // Implicit conversion</span>
+    <span class="color-comment"> // Invoke single-argument constructor Counter(9) to construct a temporary object.</span>
+    <span class="color-comment"> // Then copy into c1 via memberwise assignment.</span>
+   cout &lt;&lt; c1.getCount() &lt;&lt; endl; <span class="color-comment"> // 9</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>This implicit conversion can be confusing. C++ introduces a keyword &quot;<code>explicit</code>&quot; to disable implicit conversion. Nonetheless, you can still perform explicit conversion via type cast operator. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+class Counter {
+private:
+   int count;
+public:
+   <span class="color-new">explicit</span> Counter(int c = 0) : count(c) { }
+     <span class="color-comment"> // Single-argument Constructor</span>
+     <span class="color-comment"> // Use keyword &quot;explicit&quot; to disable implicit automatic conversion in assignment</span>
+   int getCount() const { return count; }   <span class="color-comment"> // Getter</span>
+   void setCount(int c) { count = c; }<span class="color-comment"> // Setter</span>
+};
+ 
+int main() {
+   Counter c1;<span class="color-comment"> // Declare an instance and invoke default constructor</span>
+   cout &lt;&lt; c1.getCount() &lt;&lt; endl; <span class="color-comment"> // 0</span>
+ 
+<span class="color-comment">//</span> <span class="color-new">Counter c2 = 9;</span>
+    <span class="color-comment"> // error: conversion from 'int' to non-scalar type 'Counter' requested
+</span> 
+   <span class="color-new">c1 = (Counter)9;</span> <span class="color-comment"> // Explicit conversion via type casting operator</span>
+   cout &lt;&lt; c1.getCount() &lt;&lt; endl; <span class="color-comment"> // 9</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Example: The <span class="font-code">MyComplex</span> Class</h3>
+
+<p>The <code>MyComplex</code> class is simplified from the C++ STL's <code>complex</code> template class. I strongly recommend that you study the source code of <code>complex</code> (in the <code>complex</code> header) - you can download the source code for GNU GCC.</p>
+<h5><span class="font-code">MyComplex.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * The MyComplex class header (MyComplex.h)
+ * Follow, modified and simplified from GNU GCC complex template class
+ */</span>
+#ifndef MY_COMPLEX_H
+#define MY_COMPLEX_H
+ 
+#include &lt;iostream&gt;
+ 
+class MyComplex {
+private:
+   double real, imag;
+ 
+public:
+   explicit MyComplex (double real = 0, double imag = 0);<span class="color-comment"> // Constructor</span>
+   MyComplex &amp; operator+= (const MyComplex &amp; rhs);<span class="color-comment"> // c1 += c2</span>
+   MyComplex &amp; operator+= (double real);          <span class="color-comment"> // c += double</span>
+   MyComplex &amp; operator++ ();                     <span class="color-comment"> // ++c</span>
+   const MyComplex operator++ (int dummy);        <span class="color-comment"> // c++</span>
+   bool operator== (const MyComplex &amp; rhs) const;  <span class="color-comment"> // c1 == c2</span>
+   bool operator!= (const MyComplex &amp; rhs) const;  <span class="color-comment"> // c1 != c2</span>
+ 
+  <span class="color-comment"> // friends</span>
+   friend std::ostream &amp; operator&lt;&lt; (std::ostream &amp; out, const MyComplex &amp; c);<span class="color-comment"> // out &lt;&lt; c</span>
+   friend std::istream &amp; operator&gt;&gt; (std::istream &amp; in, MyComplex &amp; c);       <span class="color-comment"> // in &gt;&gt; c</span>
+   friend const MyComplex operator+ (const MyComplex &amp; lhs, const MyComplex &amp; rhs);<span class="color-comment"> // c1 + c2</span>
+   friend const MyComplex operator+ (double real, const MyComplex &amp; rhs); <span class="color-comment"> // double + c</span>
+   friend const MyComplex operator+ (const MyComplex &amp; lhs, double real); <span class="color-comment"> // c + double</span>
+};
+ 
+#endif
+ </pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>I prefer to list the <code>private</code> section before the <code>public</code> section in the class declaration to have a quick look at the internal of the class for ease of understanding.</li>
+<li>I named the <code>private</code> data members <code>real</code> and <code>imag</code>, that potentially crash with the function parameters. I resolves the crashes via <code>this-&gt;</code> pointer if needed. Some people suggest to name <code>private</code> data members with a trailing underscore (e.g., <code>real_</code>, <code>imag_</code>) to distinguish from the function parameters. As private members are not expose to the users, strange names are acceptable. The C++ compiler uses leading underscore(s) to name its variables internally (<code>_xxx</code> for data members, <code>__xxx</code> for local variables).</li>
+
+<li>The constructor is declared <code>explicit</code>. This is because a single-argument constructor can be used for implicit conversion, in this case, from <code>double</code> to <code>MyComplex</code>, e.g.,
+<pre class="color-example">
+<span class="color-comment">// Without explicit</span>
+MyComplex c = 5.5;  <span class="color-comment">// Same as MyComplex c = (MyComplex)5.5;</span></pre>
+The keyword <code>explicit</code> disables implicit conversion.
+<pre class="color-example">
+<span class="color-comment">// With explicit</span>
+MyComplex c = 5.5;
+   <span class="color-comment">// error: conversion from 'double' to non-scalar type 'MyComplex' requested</span>
+MyComplex c = (MyComplex)5.5;   <span class="color-comment">// Okay</span></pre>
+Avoid implicit conversion, as it is hard to track and maintain.</li>
+
+<li>The constructor sets the default value for <code><code></code>real</code> and <code>imag</code> to 0.</li>
+<li>We overload the stream insertion operator <code>&lt;&lt;</code> to print a <code>MyComplex</code> object on a <code>ostream</code> (e.g., <code>cout &lt;&lt; c</code>). We use a non-member friend function (instead of member function) as the left operand (<code>cout</code>) is not a <code>MyComplex</code> object. We declare it as friend of the <code>MyComplex</code> class to allow direct access of the private data members. The function return a reference of the invoking <code>ostream</code> object to support cascading operation, e.g. <code>cout &lt;&lt; c &lt;&lt; endl;</code>.</li>
+<li>We overload the prefix increment operator (e.g., <code>++c</code>) and postfix increment operator (e.g., c++) as member functions. They increases the real part by 1.0. Since both prefix and postfix operators are unary, a dummy <code>int</code> argument is assigned to postfix <code>operator++()</code> to distinguish it from prefix <code>operator++()</code>. The prefix operator returns a reference to this object, but the postfix returns a value. We shall explain this in the implementation.</li>
+<li>We overload the plus operator <code>+</code> to perform addition of two <code>MyComplex</code> objects, a <code>MyComplex</code> object and a <code>double</code>. Again, we use non-member friend function as the left operand may not be a <code>MyComplex</code> object. The <code>+</code> shall return a new object, with no change to its operands.</li>
+<li>As we overload the <code>+</code> operator, we also have to overload <code>+=</code> operator.</li>
+<li>The function's reference/pointer parameters will be declared <code>const</code>, if we do not wish to modify the original copy. On the other hand, we omit <code>const</code> declaration for built-in types (e.g., double) in the class declaration as they are passed by value - the original copy can never be changed.</li>
+<li>We declare the return values of <code>+</code> operator as <code>const</code>, so that they cannot be used as <em>lvalue</em>. It is to prevent meaningless usages such as <code>(c1+c2) = c3</code> (most likely misspelling <code>(c1 + c2) == c3</code>).</li>
+<li>We also declare the return value of <code>++</code> as <code>const</code>. This is to prevent <code>c++++</code>, which could be interpreted as <code>(c++)++</code>. However, as <code>C++</code> return by value a temporary object (instead of the original object), the subsequent <code>++</code> works on the temporary object and yields incorrect output. But <code>++++c</code> is acceptable as <code>++c</code> returns this object by reference.</li>
+</ul>
+
+<h5><span class="font-code">MyComplex.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* The MyComplex class implementation (MyComplex.cpp) */</span>
+#include &quot;MyComplex.h&quot;
+ 
+<span class="color-comment">// Constructor</span>
+MyComplex::MyComplex (double r, double i) : real(r), imag(i) { }
+ 
+<span class="color-comment">// Overloading += operator for c1 += c2</span>
+MyComplex &amp; MyComplex::operator+= (const MyComplex &amp; rhs) {
+   real += rhs.real;
+   imag += rhs.imag;
+   return *this;
+}
+ 
+<span class="color-comment">// Overloading += operator for c1 += double (of real)</span>
+MyComplex &amp; MyComplex::operator+= (double value) {
+   real += value;
+   return *this;
+}
+ 
+<span class="color-comment">// Overload prefix increment operator ++c (real part)</span>
+MyComplex &amp; MyComplex::operator++ () {
+  ++real;  <span class="color-comment"> // increment real part only</span>
+  return *this;
+}
+ 
+<span class="color-comment">// Overload postfix increment operator c++ (real part)</span>
+const MyComplex MyComplex::operator++ (int dummy) {
+   MyComplex saved(*this);
+   ++real; <span class="color-comment"> // increment real part only</span>
+   return saved;
+}
+ 
+<span class="color-comment">// Overload comparison operator c1 == c2</span>
+bool MyComplex::operator== (const MyComplex &amp; rhs) const {
+   return (real == rhs.real &amp;&amp; imag == rhs.imag);
+}
+ 
+<span class="color-comment">// Overload comparison operator c1 != c2</span>
+bool MyComplex::operator!= (const MyComplex &amp; rhs) const {
+   return !(*this == rhs);
+}
+ 
+<span class="color-comment">// Overload stream insertion operator out &lt;&lt; c (friend)</span>
+std::ostream &amp; operator&lt;&lt; (std::ostream &amp; out, const MyComplex &amp; c) {
+   out &lt;&lt; '(' &lt;&lt; c.real &lt;&lt; ',' &lt;&lt; c.imag &lt;&lt; ')';
+   return out;
+}
+ 
+<span class="color-comment">// Overload stream extraction operator in &gt;&gt; c (friend)</span>
+std::istream &amp; operator&gt;&gt; (std::istream &amp; in, MyComplex &amp; c) {
+   double inReal, inImag;
+   char inChar;
+   bool validInput = false;
+  <span class="color-comment"> // Input shall be in the format &quot;(real,imag)&quot;</span>
+   in &gt;&gt; inChar;
+   if (inChar == '(') {
+      in &gt;&gt; inReal &gt;&gt; inChar;
+      if (inChar == ',') {
+         in &gt;&gt; inImag &gt;&gt; inChar;
+         if (inChar == ')') {
+            c = MyComplex(inReal, inImag);
+            validInput = true;
+         }
+      }
+   }
+   if (!validInput) in.setstate(std::ios_base::failbit);
+   return in;
+}
+ 
+<span class="color-comment">// Overloading + operator for c1 + c2</span>
+const MyComplex operator+ (const MyComplex &amp; lhs, const MyComplex &amp; rhs) {
+   MyComplex result(lhs);
+   result += rhs; <span class="color-comment"> // uses overload +=</span>
+   return result;
+  <span class="color-comment"> // OR return MyComplex(lhs.real + rhs.real, lhs.imag + rhs.imag);</span>
+}
+ 
+<span class="color-comment">// Overloading + operator for c + double</span>
+const MyComplex operator+ (const MyComplex &amp; lhs, double value) {
+   MyComplex result(lhs);
+   result += value; <span class="color-comment"> // uses overload +=</span>
+   return result;
+}
+ 
+<span class="color-comment">// Overloading + operator for double + c</span>
+const MyComplex operator+ (double value, const MyComplex &amp; rhs) {
+   return rhs + value;  <span class="color-comment"> // swap and use above function</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>The prefix <code>++</code> increments the real part, and returns this object by reference. The postfix <code>++</code> saves this object, increments the real part, and returns the saved object by value. Postfix operation is clearly less efficient than prefix operation!</li>
+
+<li>The <code>+</code> operators use the <code>+=</code> operator (for academic purpose).</li>
+
+<li>The friend functions is allow to access the private data members.</li>
+<li>The overloaded stream insertion operator <code>&lt;&lt;</code> outputs &quot;<code>(real,imag)</code>&quot;.</li>
+<li>The overloaded stream extraction operator <code>&gt;&gt;</code> inputs &quot;<code>(real,imag)</code>&quot;. It sets the <code>failbit</code> of the <code>istream</code> object if the input is not valid.</li>
+</ul>
+
+<h5><span class="font-code">TestMyComplex.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver for MyComplex class (TestMyComplex.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &quot;MyComplex.h&quot;
+ 
+int main() {
+   std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(2);
+ 
+   MyComplex c1(3.1, 4.2);
+   std::cout &lt;&lt; c1 &lt;&lt; std::endl; <span class="color-comment"> // (3.10,4.20)</span>
+   MyComplex c2(3.1);
+   std::cout &lt;&lt; c2 &lt;&lt; std::endl; <span class="color-comment"> // (3.10,0.00)</span>
+ 
+   MyComplex c3 = c1 + c2;
+   std::cout &lt;&lt; c3 &lt;&lt; std::endl; <span class="color-comment"> // (6.20,4.20)</span>
+   c3 = c1 + 2.1;
+   std::cout &lt;&lt; c3 &lt;&lt; std::endl; <span class="color-comment"> // (5.20,4.20)</span>
+   c3 = 2.2 + c1;
+   std::cout &lt;&lt; c3 &lt;&lt; std::endl; <span class="color-comment"> // (5.30,4.20)</span>
+ 
+   c3 += c1;
+   std::cout &lt;&lt; c3 &lt;&lt; std::endl; <span class="color-comment"> // (8.40,8.40)</span>
+   c3 += 2.3;
+   std::cout &lt;&lt; c3 &lt;&lt; std::endl; <span class="color-comment"> // (10.70,8.40)</span>
+ 
+   std::cout &lt;&lt; ++c3 &lt;&lt; std::endl;<span class="color-comment"> // (11.70,8.40)</span>
+   std::cout &lt;&lt; c3++ &lt;&lt; std::endl;<span class="color-comment"> // (11.70,8.40)</span>
+   std::cout &lt;&lt; c3   &lt;&lt; std::endl;<span class="color-comment"> // (12.70,8.40)</span>
+ 
+<span class="color-comment">// c1+c2 = c3; <span class="color-comment"> // error: c1+c2 returns a const</span></span>
+<span class="color-comment">// c1++++;     <span class="color-comment"> // error: c1++ returns a const</span></span>
+ 
+<span class="color-comment">// MyComplex c4 = 5.5; <span class="color-comment"> // error: implicit conversion disabled</span></span>
+   MyComplex c4 = (MyComplex)5.5; <span class="color-comment"> // explicit type casting allowed</span>
+   std::cout &lt;&lt; c4 &lt;&lt; std::endl;<span class="color-comment"> // (5.50,0.00)</span>
+ 
+   MyComplex c5;
+   std::cout &lt;&lt; &quot;Enter a complex number in (real,imag): &quot;;
+   std::cin &gt;&gt; c5;
+   if (std::cin.good()) {  <span class="color-comment">// if no error</span>
+      std::cout &lt;&lt; c5 &lt;&lt; std::endl;
+   } else {
+      std::cerr &lt;&lt; &quot;Invalid input&quot; &lt;&lt; std::endl;
+   }
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Dynamic Memory Allocation in Object</h3>
+
+<p>If you dynamically allocate memory in the constructor, you need to provide your own destructor, copy constructor and assignment operator to manage the dynamically allocated memory. The defaults provided by the C++ compiler do not work for dynamic memory.</p>
+
+<h4>Example: <span class="font-code">MyDynamicArray</span></h4>
+
+<h5><span class="font-code">MyDynamicArray.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * The MyDynamicArray class header (MyDynamicArray.h)
+ * A dynamic array of double elements
+ */</span>
+#ifndef MY_DYNAMIC_ARRAY_H
+#define MY_DYNAMIC_ARRAY_H
+ 
+#include &lt;iostream&gt;
+ 
+class MyDynamicArray {
+private:
+   int size_;  <span class="color-comment"> // size of array</span>
+   double * ptr; <span class="color-comment"> // pointer to the elements</span>
+ 
+public:
+   explicit MyDynamicArray (int n = 8);        <span class="color-comment"> // Default constructor</span>
+   explicit MyDynamicArray (const MyDynamicArray &amp; a);<span class="color-comment"> // Copy constructor</span>
+   MyDynamicArray (const double a[], int n);   <span class="color-comment"> // Construct from double[]</span>
+   ~MyDynamicArray();                          <span class="color-comment"> // Destructor</span>
+ 
+   const MyDynamicArray &amp; operator= (const MyDynamicArray &amp; rhs);<span class="color-comment"> // Assignment a1 = a2</span>
+   bool operator== (const MyDynamicArray &amp; rhs) const;    <span class="color-comment"> // a1 == a2</span>
+   bool operator!= (const MyDynamicArray &amp; rhs) const;    <span class="color-comment"> // a1 != a2</span>
+ 
+   double operator[] (int index) const; <span class="color-comment"> // a[i]</span>
+   double &amp; operator[] (int index);     <span class="color-comment"> // a[i] = x</span>
+ 
+   int size() const { return size_; }   <span class="color-comment"> // return size of array</span>
+ 
+  <span class="color-comment"> // friends</span>
+   friend std::ostream &amp; operator&lt;&lt; (std::ostream &amp; out, const MyDynamicArray &amp; a);<span class="color-comment"> // out &lt;&lt; a</span>
+   friend std::istream &amp; operator&gt;&gt; (std::istream &amp; in, MyDynamicArray &amp; a);       <span class="color-comment"> // in &gt;&gt; a</span>
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>In C++, the you cannot use the same name for a data member and a member function. As I would like to have a public function called <code>size()</code>, which is consistent with the C++ STL, I named the data member <code>size_</code> with a trailing underscore, following C++'s best practices. Take note that leading underscore(s) are used by C++ compiler for its internal variables (e.g., <code>_xxx</code> for data members and <code>__xxx</code> for local variables).</li>
+<li>As we will be dynamically allocating memory in the constructor, we provide our own version of destructor, copy constructor and assignment operator to manage the dynamically allocated memory. The defaults provided by the C++ compiler do not work on dynamic memory.</li>
+<li>We provide 3 constructors: a default constructor with an optional size, a copy constructor to construct an instance by copying another instance, and a construct to construct an instance by copying from a regular array.</li>
+<li>We provide 2 version of indexing operators: one for read operation (e.g., <code>a[i]</code>) and another capable of write operation (e.g., <code>a[i] = x</code>). The read version is declared as a <code>const</code> member function; whereas the write version return a reference to the element, which can be used as <em>lvalue</em> for assignment.</li>
+
+</ul>
+
+<h5><span class="font-code">MyDynamicArray.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* The MyDynamicArray class implementation (MyDynamicArray.cpp) */</span>
+#include &lt;stdexcept&gt;
+#include &quot;MyDynamicArray.h&quot;
+ 
+<span class="color-comment">// Default constructor</span>
+MyDynamicArray::MyDynamicArray (int n) {
+   if (n &lt;= 0) {
+      throw std::invalid_argument(&quot;error: size must be greater then zero&quot;);
+   }
+ 
+  <span class="color-comment"> // Dynamic allocate memory for n elements</span>
+   size_ = n;
+   ptr = new double[size_];
+   for (int i = 0; i &lt; size_; ++i) {
+      ptr[i] = 0.0; <span class="color-comment"> // init all elements to zero</span>
+   }
+}
+ 
+<span class="color-comment">// Override the copy constructor to handle dynamic memory</span>
+MyDynamicArray::MyDynamicArray (const MyDynamicArray &amp; a) {
+  <span class="color-comment"> // Dynamic allocate memory for a.size_ elements and copy</span>
+   size_ = a.size_;
+   ptr = new double[size_];
+   for (int i = 0; i &lt; size_; ++i) {
+      ptr[i] = a.ptr[i]; <span class="color-comment"> // copy each element</span>
+   }
+}
+ 
+<span class="color-comment">// Construct via a built-in double[]</span>
+MyDynamicArray::MyDynamicArray (const double a[], int n) {
+  <span class="color-comment"> // Dynamic allocate memory for a.size_ elements and copy</span>
+   size_ = n;
+   ptr = new double[size_];
+   for (int i = 0; i &lt; size_; ++i) {
+      ptr[i] = a[i]; <span class="color-comment"> // copy each element</span>
+   }
+}
+ 
+<span class="color-comment">// Override the default destructor to handle dynamic memory</span>
+MyDynamicArray::~MyDynamicArray() {
+   delete[] ptr; <span class="color-comment"> // free dynamically allocated memory</span>
+}
+ 
+<span class="color-comment">// Override the default assignment operator to handle dynamic memory</span>
+const MyDynamicArray &amp; MyDynamicArray::operator= (const MyDynamicArray &amp; rhs) {
+   if (this != &amp;rhs) { <span class="color-comment"> // no self assignment</span>
+      if (size_ != rhs.size_) {
+        <span class="color-comment"> // reallocate memory for the array</span>
+         delete [] ptr;
+         size_ = rhs.size_;
+         ptr = new double[size_];
+      }
+     <span class="color-comment"> // Copy elements</span>
+      for (int i = 0; i &lt; size_; ++i) {
+         ptr[i] = rhs.ptr[i];
+      }
+   }
+   return *this;
+}
+ 
+<span class="color-comment">// Overload comparison operator a1 == a2</span>
+bool MyDynamicArray::operator== (const MyDynamicArray &amp; rhs) const {
+   if (size_ != rhs.size_) return false;
+ 
+   for (int i = 0; i &lt; size_; ++i) {
+      if (ptr[i] != rhs.ptr[i]) return false;
+   }
+   return true;
+}
+ 
+<span class="color-comment">// Overload comparison operator a1 != a2</span>
+bool MyDynamicArray::operator!= (const MyDynamicArray &amp; rhs) const {
+   return !(*this == rhs);
+}
+ 
+<span class="color-comment">// Indexing operator - Read</span>
+double MyDynamicArray::operator[] (int index) const {
+   if (index &lt; 0 || index &gt;= size_) {
+      throw std::out_of_range(&quot;error: index out of range&quot;);
+   }
+   return ptr[index];
+}
+ 
+<span class="color-comment">// Indexing operator - Writable a[i] = x</span>
+double &amp; MyDynamicArray::operator[] (int index) {
+   if (index &lt; 0 || index &gt;= size_) {
+      throw std::out_of_range(&quot;error: index out of range&quot;);
+   }
+   return ptr[index];
+}
+ 
+<span class="color-comment">// Overload stream insertion operator out &lt;&lt; a (as friend)</span>
+std::ostream &amp; operator&lt;&lt; (std::ostream &amp; out, const MyDynamicArray &amp; a) {
+   for (int i = 0; i &lt; a.size_; ++i) {
+      out &lt;&lt; a.ptr[i] &lt;&lt; ' ';
+   }
+   return out;
+}
+ 
+<span class="color-comment">// Overload stream extraction operator in &gt;&gt; a (as friend)</span>
+std::istream &amp; operator&gt;&gt; (std::istream &amp; in, MyDynamicArray &amp; a) {
+   for (int i = 0; i &lt; a.size_; ++i) {
+      in &gt;&gt; a.ptr[i];
+   }
+   return in;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>Constructor: [TODO]</li>
+<li>Copy Constructor:</li>
+<li>Assignment Operator:</li>
+<li>Indexing Operator:</li>
+
+</ul>
+
+<h5><span class="font-code">TestMyDynamicArray.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver for MyDynamicArray class (TestMyDynamicArray.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &quot;MyDynamicArray.h&quot;
+ 
+int main() {
+   std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(1) &lt;&lt; std::boolalpha;
+ 
+   MyDynamicArray a1(5);
+   std::cout &lt;&lt; a1 &lt;&lt; std::endl; <span class="color-comment"> // 0.0 0.0 0.0 0.0 0.0</span>
+   std::cout &lt;&lt; a1.size() &lt;&lt; std::endl; <span class="color-comment"> // 5</span>
+ 
+   double d[3] = {1.1, 2.2, 3.3};
+   MyDynamicArray a2(d, 3);
+   std::cout &lt;&lt; a2 &lt;&lt; std::endl;<span class="color-comment"> // 1.1 2.2 3.3</span>
+ 
+   MyDynamicArray a3(a2);  <span class="color-comment"> // Copy constructor</span>
+   std::cout &lt;&lt; a3 &lt;&lt; std::endl;<span class="color-comment"> // 1.1 2.2 3.3</span>
+ 
+   a1[2] = 8.8;
+   std::cout &lt;&lt; a1[2] &lt;&lt; std::endl; <span class="color-comment"> // 8.8</span>
+<span class="color-comment">// std::cout &lt;&lt; a1[22] &lt;&lt; std::endl;<span class="color-comment"> // error: out_of_range</span></span>
+ 
+   a3 = a1;
+   std::cout &lt;&lt; a3 &lt;&lt; std::endl;<span class="color-comment"> // 0.0 0.0 8.8 0.0 0.0</span>
+ 
+   std::cout &lt;&lt; (a1 == a3) &lt;&lt; std::endl; <span class="color-comment"> // true</span>
+   std::cout &lt;&lt; (a1 == a2) &lt;&lt; std::endl; <span class="color-comment"> // false</span>
+ 
+   const int SIZE = 3;
+   MyDynamicArray a4(SIZE);
+   std::cout &lt;&lt; &quot;Enter &quot; &lt;&lt; SIZE &lt;&lt; &quot; elements: &quot;;
+   std::cin &gt;&gt; a4;
+   if (std::cin.good()) {
+      std::cout &lt;&lt; a4 &lt;&lt; std::endl;
+   } else {
+      std::cerr &lt;&lt; &quot;Invalid input&quot; &lt;&lt; std::endl;
+   }
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<a class="references" href="../howto/References.html#cpp">Link to &quot;C++ References &amp; Resources&quot;</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Cygwin/MinGW GCC 4.6.2<br />
+Last modified: May, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Node JS Tutorial: The Basics</title>
+
+<!-- @@ start change in v1 -->
+<link rel="stylesheet" href="../css/programming_notes_v1.css">
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+<script src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Node.js</h1>
+<h2>Basics</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction</h3>
+
+<p>JavaScripts typically run under a web browser (such as Chrome, Firefox). Node.js is a JavaScript engine that allows you to run JavaScript in standalone manner, without using a browser.</p>
+
+<p>Node.js can also be used as a web server. This is popular because you can use the same JavaScript language to program the client as well as the server.</p>
+
+<p>[TODO]</p>
+
+<h3>Installation</h3>
+
+<h5>On Ubuntu</h5>
+<ol>
+<li>Download Node.js from <a href="https://nodejs.org/">https://nodejs.org/</a>. Choose Linux platform (e.g., <code>node-v0.12.3-linux-x64.tar.gz</code>).</li>
+
+<li>Unzip into a directory of your choice (e.g., <code>/usr/local</code> or <code>/usr/local/lib</code>).</li>
+
+<li>Node.js has two executables in its <code>bin</code> sub-directory: <code>node</code> (the standalone JavaScript engine) and <code>npm</code> (Node.js Package Manager). Instead of adding the <code>bin</code> directory to the PATH, you can create symlinks in one of the PATH directories. For example, I create symlinks in <code>/usr/local/bin</code> (which is in the PATH), as follows:
+<pre class="color-command">
+$ cd /usr/local/bin
+ 
+<span class="color-comment">// Create symlinks, may need to sudo</span>
+$ ln -s /<em>path-to-nodejs</em>/bin/node
+$ ln -s /<em>path-to-nodejs</em>/bin/npm
+ 
+<span class="color-comment">// Set to executable, may need to sudo</span>
+$ chmod +x node
+$ chmod +x npm</pre></li>
+
+<li>To test the Node engine, run <code>node</code> and enter JavaScript statements:
+<pre class="color-command">
+$ node
+&gt; console.log('hello');
+hello
+undefined
+&gt; console.log(11 + 22);
+33
+undefined
+&gt; .exit</pre></li>
+</ol>
+
+<h5>Install Other node packages</h5>
+
+<p>You can install other node packages easily via npm (Node.js Package Manager). For example,</p>
+
+<pre class="color-command">
+<span class="color-comment">// Install Less, a CSS preprocessor. May need to sudo</span>
+$ npm install -g less
+      <span class="color-comment">// Installed under /usr/local/lib/node_modules/less</span>
+      <span class="color-comment">// A symlink lessc created in /usr/local/bin</span>
+ 
+<span class="color-comment">// Install Gulp, an automation tool. May need to sudo</span>
+$ npm install -g gulp
+      <span class="color-comment">// Installed under /usr/local/lib/node_modules/gulp</span>
+      <span class="color-comment">// A symlink gulp created in /usr/local/bin</span></pre>
+
+<h3>Node.js By Examples</h3>
+
+<h4>Example 1: Node as a Web Server</h4>
+
+<p>Create the following JavaScript file, and save as &quot;NodeExHttp.js&quot; in a directory of your choice.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// NodeExHttp.js: Running Node as a web server</span>
+var http = require('http');
+http.createServer(function (request, response) {
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  response.end('&lt;h1&gt;Hello World&lt;/h1&gt;');
+}).listen(9999, 'localhost');
+console.log('HTTP Server running at http://localhost:9999/');</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Run the <code>NodeExHttp.js</code> using Node.js (as a standalone program) as follows, which starts a HTTP server process.</p>
+
+<pre class="color-command">
+$ cd /<em>path-to-JavaScript</em>
+$ node NodeEx1.js
+HTTP Server running at http://localhost:9999/
+</pre>
+
+<p>From a browser (Chrome, Firefox), issue URL http://localhost:9999/. You shall see the hello-world message.</p>
+
+<p>To stop the server, press Ctrl-C (or Ctrl-Shift-C).</p>
+
+<h5>How It Works?</h5>
+<ol>
+<li>[TODO]</li>
+</ol>
+
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+
+<ol>
+<li>Node.js mother site @ <a href="https://nodejs.org/">https://nodejs.org/.</a>.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Node.js v0.12.3<br>
+Last modified: May, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

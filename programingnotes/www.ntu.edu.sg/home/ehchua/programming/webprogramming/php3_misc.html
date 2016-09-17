@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Getting Started with PHP</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>PHP</h1>
+<h2>Miscellaneous</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Miscellaneous How-To</h3>
+
+<h4>System Independent EOL, Directory Separator, etc</h4>
+
+<p>You can get the system independent EOL, directory separator via these constants:</p>
+
+<ul>
+<li><span class="line-heading">Newline (or End-of-Line)</span>: <code>PHP_EOL</code></li>
+<li><span class="line-heading">Directory Separator</span>: <code>DIRECTORY_SEPARATOR</code></li>
+</ul>
+
+<p>For example,</p>
+
+<pre class="color-example">
+&lt;?php
+var_dump(DIRECTORY_SEPARATOR);
+var_dump(bin2hex(PHP_EOL));    <span class="color-comment">// print string in hex</span>
+?&gt;</pre>
+
+<h4>How to Get the Filename from Full Path?</h4>
+
+<p>Use the built-in function <code>basename()</code>. For example,</p>
+
+<pre class="color-example">
+&lt;?php
+$path = &quot;/var/www/html/index.php&quot;;
+$filenameExt = basename($path);          <span class="color-comment">// &quot;index.php&quot;</span>
+var_dump($filenameExt);
+$filename    = basename($path, ".php");  <span class="color-comment">// &quot;index&quot;</span>
+var_dump($filename);
+?&gt;</pre>
+
+<h4>The Current Page Filename</h4>
+
+<p>The current <em>full-path filename</em> is kept in system variable <code>$_SERVER['PHP_SELF']</code>. You can use function <code>basename()</code> to get the filename without the path; or <code>basename(path, suffix)</code> to get the filename without the extension. For example,</p>
+
+<pre class="color-example">
+&lt;?php
+var_dump($_SERVER['PHP_SELF']);                   <span class="color-comment">// e.g., 'test/test.php'</span>
+var_dump(basename($_SERVER['PHP_SELF']));         <span class="color-comment">// e.g., 'test.php'</span>
+var_dump(basename($_SERVER['PHP_SELF'], '.php')); <span class="color-comment">// e.g., 'test'</span>
+?&gt;</pre>
+
+<h4>Redirect to Another Page</h4>
+<p>Use the <code>header()</code> function, followed by an <code>exit</code> command (not too continue the current script). For example,</p>
+
+<pre class="color-example">
+&lt;?php
+header('Location: http://www.example.com/');
+exit;
+<span class="color-comment">// Remember to place an exit, so that the rest of the script will not be executed.</span>
+?&gt;</pre>
+
+<p>To reload (refresh) the current page, you may:</p>
+
+<pre class="color-example">
+&lt;?php
+header('Location: ' . $_SERVER['PHP_SELF']);
+exit;
+<span class="color-comment">// Remember to place an exit, so that the rest of the script will not be executed.</span>
+?&gt;</pre>
+
+<h4>Printing Array</h4>
+
+<p>Use built-in function <code>implode()</code> to join the elements of the array into a string, e.g.,</p>
+
+<pre class="color-example">
+$a = array(11, 22, 33);
+echo implode(',', $a);   <span class="color-comment">'11,22,33'</span></pre>
+
+<p>On the other hand, the <code>explode()</code> splits a string into an array.</p>
+
+<pre class="color-example">
+$str1 = 'apple,orange,banana';
+var_dump(explode(',', $str1));
+
+$str2 = 'apple orange banana';
+var_dump(explode(' ', $str2));</pre>
+
+<h4>Negative Array Index vs. Negative String Positional Index</h4>
+
+<p>You can use negative array key in an associative array. For example,</p>
+<pre class="color-example">
+$a = array(-1 =&gt; 5);
+echo $a[-1];
+var_dump($a);</pre>
+
+<p>Negative array key is difference from negative positional index for string, which indexes position from the rear of the string. For example,</p>
+
+<pre class="color-example">
+$rest = substr(&quot;abcdef&quot;, -1);    <span class="color-comment">// returns &quot;f&quot;</span>
+$rest = substr(&quot;abcdef&quot;, -2);    <span class="color-comment">// returns &quot;ef&quot;</span>
+$rest = substr(&quot;abcdef&quot;, -3, 1); <span class="color-comment">// returns &quot;d&quot;</span></pre>
+
+<h4>Send mail from PHP</h4>
+
+<p>[TODO]</p>
+
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>PHP mother site @ <a href="http://www.php.net">http://www.php.net</a>; &quot;PHP Manual&quot; @ <a href="http://php.net/manual/en/index.php">http://php.net/manual/en/index.php</a>; &quot;PHP Language Reference&quot; @ <a href="http://www.php.net/manual/en/langref.php">http://www.php.net/manual/en/langref.php</a>.</li>
+<li>PHP MySQL extension @ </li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: PHP 5.4.9-4 (Ubuntu 13.04)<br />
+Last modified: September, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

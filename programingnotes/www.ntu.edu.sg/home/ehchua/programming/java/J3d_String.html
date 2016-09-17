@@ -1,0 +1,494 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>String is Special - Java Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>Java String is Special</h2>
+</div>
+
+<div id="content-main">
+
+<h3>A Brief Summary of the <span class="font-code">String</span> Class</h3>
+<p>A Java <code>String</code> contains an immutable sequence of Unicode characters. Unlike C/C++, where string is simply an array of <code>char</code>, A Java <code>String</code> is an object of the class <code>java.lang</code>. </p>
+
+<p>Java <code>String</code> is, however, special. Unlike an ordinary class:</p>
+<ul>
+<li><code>String</code> is associated with string literal in the form of double-quoted texts such as &quot;Hello, world!&quot;. You can assign a string literal directly into a <code>String</code> variable, instead of calling the constructor to create a <code>String</code> instance.</li>
+<li>The <code>'+'</code> operator is overloaded to concatenate two <code>String</code> operands. <code>'+'</code> does not work on any other objects such as <code>Point</code> and <code>Circle</code>.</li>
+<li><code>String</code> is <em>immutable</em>. That is, its content cannot be modified once it is created. For example, the method <code>toUpperCase()</code> constructs and returns a new <code>String</code> instead of modifying the its existing content.</li>
+</ul>
+
+<p>The commonly-used method in the <code>String</code> class are summarized below. Refer to the JDK API for <code>java.lang.String</code> a complete listing.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Length</span>
+int length()       <span class="color-comment">// returns the length of the String</span>
+boolean isEmpty()  <span class="color-comment">// same as <em>thisString</em>.length == 0</span>
+&nbsp;
+<span class="color-comment">// Comparison</span>
+boolean equals(String another) <span class="color-comment">// CANNOT use '==' or '!=' to compare two Strings in Java</span>
+boolean equalsIgnoreCase(String another)
+int compareTo(String another)  <span class="color-comment">// return 0 if this string is the same as another;
+                               // &lt;0 if lexicographically less than another; or &gt;0</span>
+int compareToIgnoreCase(String another)
+boolean startsWith(String another)
+boolean startsWith(String another, int fromIndex)  <span class="color-comment">// search begins at fromIndex</span>
+boolean endsWith(String another)
+&nbsp;
+<span class="color-comment">// Searching &amp; Indexing</span>
+int indexOf(String search)
+int indexOf(String search, int fromIndex)
+int indexOf(int character)
+int indexOf(int character, int fromIndex)      <span class="color-comment">// search forward starting at fromIndex</span>
+int lastIndexOf(String search)
+int lastIndexOf(String search, int fromIndex)  <span class="color-comment">// search backward starting at fromIndex</span>
+int lastIndexOf(int character)
+int lastIndexOf(int character, int fromIndex)
+&nbsp;
+<span class="color-comment">// Extracting a char or part of the String (substring)</span>
+char charAt(int index)              <span class="color-comment">// index from 0 to String's length - 1</span>
+String substring(int fromIndex)
+String substring(int fromIndex, int endIndex)  <span class="color-comment">// exclude endIndex</span>
+&nbsp;
+<span class="color-comment">// Creating a new String or char[] from the original (Strings are immutable!)</span>
+String toLowerCase()
+String toUpperCase()
+String trim()          <span class="color-comment">// create a new String removing white spaces from front and back</span>
+String replace(char oldChar, char newChar)  <span class="color-comment">// create a new String with oldChar replaced by newChar</span>
+String concat(String another)               <span class="color-comment">// same as <em>thisString</em> + another</span>
+char[] toCharArray()                        <span class="color-comment">// create a char[] from this string</span>
+void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin)  <span class="color-comment">// copy into dst char[]</span>
+&nbsp;
+<span class="color-comment">// Static methods for converting primitives to String</span>
+static String ValueOf(<em>type arg</em>)  <span class="color-comment">// <em>type</em> can be primitives or char[]</span>
+&nbsp;
+<span class="color-comment">// Static method resulted in a formatted String using format specifiers</span>
+static String format(String formattingString, Object... args)   <span class="color-comment">// same as printf()</span>
+&nbsp;
+<span class="color-comment">// Regular Expression (JDK 1.4)</span>
+boolean matches(String regexe)
+String replaceAll(String regexe, String replacement)
+String replaceAll(String regexe, String replacement)
+String[] split(String regexe)             <span class="color-comment">// Split the String using regexe as delimiter,
+                                          // return a String array</span>
+String[] split(String regexe, int count)  <span class="color-comment">// for count times only</span></pre>
+
+<h5>Static method <span class="font-code">String.format()</span> (JDK 1.5)</h5>
+
+<p>The <code>static</code> method <code>String.format()</code> (introduced in JDK 1.5) can be used to produce a formatted <code>String</code> using C-like <code>printf()</code>'s format specifiers. The <code>format()</code> method has the same form as <code>printf()</code>. For example,</p>
+
+<pre class="color-example">
+String.format(&quot;%.1f&quot;, 1.234);   <span class="color-comment">// returns String &quot;1.2&quot;</span></pre>
+
+<p><code>String.format()</code> is useful if you need to produce a simple formatted <code>String</code> for some purposes (e.g., used in method <code>toString()</code>).  For complex string, use <code>StringBuffer</code>/<code>StringBuilder</code> with a <code>Formatter</code>. If you simply need to send a simple formatted string to the console, use <code>System.out.printf()</code>, e.g.,</p>
+
+<pre class="color-example">
+System.out.printf(&quot;%.1f&quot;, 1.234);</pre>
+
+<h3><span class="font-code">String</span> is Really Special</h3>
+
+<p>Strings receive <em>special treatment</em> in Java, because they are used  frequently in a program. Hence, efficiency (in terms of computation and storage) is crucial.</p>
+
+<p>The designers of Java decided to retain  primitive types in an object-oriented language, instead of making everything an object, so as to improve the performance of the language.  Primitives are stored in the call stack, which require less storage spaces and are cheaper to manipulate. On the other hand, objects are stored in the program heap, which require complex memory management and more storage spaces.</p>
+
+<p>For performance reason, Java's <code>String</code> is designed to be in between a primitive and a class. The special features in <code>String</code> include:</p>
+
+<ul>
+<li>The <code>'+'</code> operator, which performs addition on primitives (such as <code>int</code> and <code>double</code>), is overloaded to operate on <code>String</code> objects. <code>'+'</code>  performs concatenation for two <code>String</code> operands.<br />
+Java does not support <em>operator overloading</em> for software engineering consideration.  In a language that supports operator overloading like C++, you can turn a <code>'+'</code> operator to perform a subtraction, resulted in poor codes.  The <code>'+'</code> operator is the <em>only</em> operator that is internally overloaded to support string concatenation in Java. Take note that <code>'+'</code> does not work on any two arbitrary objects, such as <code>Point</code>s or <code>Circle</code>s.</li>
+<li>A <code>String</code> can be constructed by either:
+<ol>
+<li>directly assigning a string <em>literal</em> to a <code>String</code> reference - <em>just like a primitive</em>, or</li>
+<li>via the &quot;<code>new</code>&quot; operator and constructor, similar to any other classes.  However, this is not commonly-used and is not recommended.</li>
+</ol>
+
+<p>For example,</p>
+<pre class="color-example">
+String str1 = &quot;Java is Hot&quot;;           <span class="color-comment">// Implicit construction via string literal</span>
+String str2 = new String(&quot;I'm cool&quot;);  <span class="color-comment">// Explicit construction via new</span></pre>
+
+<p>In the first statement, <code>str1</code> is declared as a <code>String</code> reference and initialized with a string literal <code>&quot;Java is Hot&quot;</code>.  In the second statement, <code>str2</code> is declared as a <code>String</code> reference and initialized via the <code>new</code> operator and constructor to contain <code>&quot;I'm cool&quot;</code>.</p>
+</li>
+
+<li><code>String</code> literals are stored in <em>a common pool</em>.  This facilitates  <em>sharing of storage</em> for strings with the same contents to conserve storage. <code>String</code> objects allocated via <code>new</code> operator are stored in the heap, and there is no sharing of storage for the same contents.</li>
+</ul>
+
+<h4>String Literal vs. String Object</h4>
+
+<img class="image-float-right" src="images/OOP_StringLliteralVsObject.png" alt="OOP_StringLliteralVsObject.png" />
+
+<p>As mentioned, there are two ways to construct a string: implicit construction by assigning a string literal or explicitly creating a <code>String</code> object via the <code>new</code> operator and constructor. For example,</p>
+<pre class="color-example">
+String s1 = &quot;Hello&quot;;              <span class="color-comment">// String literal</span>
+String s2 = &quot;Hello&quot;;              <span class="color-comment">// String literal</span>
+String s3 = s1;                   <span class="color-comment">// same reference</span>
+String s4 = new String(&quot;Hello&quot;);  <span class="color-comment">// String object</span>
+String s5 = new String(&quot;Hello&quot;);  <span class="color-comment">// String object</span></pre>
+
+<p>Java has provided a special mechanism for keeping the <code>String</code> literals - in a so-called <em>string common pool</em>.  If two string literals have the same contents, they will share the same storage inside the common pool.  This approach is adopted to <em>conserve storage</em> for frequently-used strings.  On the other hand, <code>String</code> objects created via the <code>new</code> operator and constructor are kept in the heap.  Each <code>String</code> object in the heap has its own storage just like any other object.  There is no sharing of storage in heap even if two <code>String</code> objects have the same contents.</p>
+
+<p>You can use the method <code>equals()</code> of the <code>String</code> class to compare the contents of two <code>String</code>s.  You can use the relational equality operator <code>'=='</code> to compare the references (or pointers) of two objects.  Study the following codes:</p>
+<pre class="color-example">
+s1 == s1;         <span class="color-comment">// true, same pointer</span>
+s1 == s2;         <span class="color-comment">// true, s1 and s1 share storage in common pool</span>
+s1 == s3;         <span class="color-comment">// true, s3 is assigned same pointer as s1</span>
+s1.equals(s3);    <span class="color-comment">// true, same contents</span>
+s1 == s4;         <span class="color-comment">// false, different pointers</span>
+s1.equals(s4);    <span class="color-comment">// true, same contents</span>
+s4 == s5;         <span class="color-comment">// false, different pointers in heap</span>
+s4.equals(s5);    <span class="color-comment">// true, same contents</span></pre>
+
+<p>Important Notes:</p>
+<ul>
+<li>In the above example, I used relational equality operator <code>'=='</code> to compare the references of two <code>String</code> objects.  This is done to demonstrate the differences between string literals sharing storage in the common pool and <code>String</code> objects created in the heap.  <span class="color-error">It is a <em>logical error</em> to use <code>(str1 == str2)</code> in your program to <em>compare the contents</em> of two <code>String</code>s.</span></li>
+<li><code>String</code> can be created by directly assigning a <code>String</code> literal which is shared in a common pool.  It is uncommon and not recommended to use the <code>new</code> operator to construct a <code>String</code> object in the heap.</li>
+</ul>
+
+<p>[TODO] Explain the method <code>String.intern()</code>.</p>
+
+<h4>String is Immutable</h4>
+<p>Since string literals with the same contents share storage in the  common pool, Java's <code>String</code> is designed to be <em>immutable</em>.  That is, once a <code>String</code> is constructed, its contents cannot be modified.  Otherwise, the other <code>String</code> references sharing the same storage location will be affected by the change, which can be unpredictable and therefore is undesirable.  Methods such as <code>toUpperCase()</code> might appear to modify the contents of a <code>String</code> object.  In fact, a completely new <code>String</code> object is created and returned to the caller.  The original <code>String</code> object will be deallocated, once there is no more references, and subsequently garbage-collected.</p>
+
+<p>Because <code>String</code> is immutable, it is not efficient to use <code>String</code> if you need to modify your string frequently (that would create many new <code>String</code>s occupying new storage areas).  For example,</p>
+<pre class="color-example">
+<span class="color-comment">// inefficient codes</span>
+String str = &quot;Hello&quot;;
+for (int i = 1; i &lt; 1000; ++i) {
+   str = str + i;
+}</pre>
+<p>If the contents of a <code>String</code> have to be modified frequently, use the <code>StringBuffer</code> or <code>StringBuilder</code> class instead.</p>
+
+<h3><span class="font-code">StringBuffer</span> &amp; <span class="font-code">StringBuilder</span></h3>
+<p>As explained earlier,  <code>String</code>s are <em>immutable</em> because <code>String</code> literals with same content share the same storage in the string common pool. Modifying the content of one <code>String</code> directly may cause adverse side-effects to other <code>String</code>s sharing the same storage.</p>
+<p> JDK provides two classes to support <em>mutable</em> strings: <code>StringBuffer</code> and <code>StringBuilder</code> (in core package <code>java.lang</code>) . A <code>StringBuffer</code> or <code>StringBuilder</code> object is just like any ordinary object, which are stored in the heap and not shared, and therefore, can be modified without causing adverse side-effect to other objects.</p>
+<p><code>StringBuilder</code> class was introduced in JDK 1.5. It is the same as <code>StringBuffer</code> class, except that <code>StringBuilder</code> is <em>not synchronized</em> for multi-thread operations. However, for single-thread program, <code>StringBuilder</code>, without the synchronization overhead, is more efficient.</p>
+
+<h4><span class="font-code">java.lang.StringBuffer</span></h4>
+
+<p>Read the JDK API specification for <code>java.lang.StringBuffer</code>.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Constructors</span>
+StringBuffer()             <span class="color-comment">// an initially-empty StringBuffer</span>
+StringBuffer(int size)     <span class="color-comment">// with the specified initial size</span>
+StringBuffer(String s)     <span class="color-comment">// with the specified initial content</span>
+&nbsp;
+<span class="color-comment">// Length</span>
+int length()
+&nbsp;
+<span class="color-comment">// Methods for building up the content</span>
+StringBuffer append(<em>type arg</em>)  <span class="color-comment">// <em>type</em> could be primitives, char[], String, StringBuffer, etc</span>
+StringBuffer insert(int offset, <em>arg</em>)
+&nbsp;
+<span class="color-comment">// Methods for manipulating the content</span>
+StringBuffer delete(int start, int end)
+StringBuffer deleteCharAt(int index)
+void setLength(int newSize)
+void setCharAt(int index, char newChar)
+StringBuffer replace(int start, int end, String s)
+StringBuffer reverse()
+&nbsp;
+<span class="color-comment">// Methods for extracting whole/part of the content</span>
+char charAt(int index)
+String substring(int start)
+String substring(int start, int end)
+String toString()
+&nbsp;
+<span class="color-comment">// Methods for searching</span>
+int indexOf(String searchKey)
+int indexOf(String searchKey, int fromIndex)
+int lastIndexOf(String searchKey)
+int lastIndexOf(String searchKey, int fromIndex)</pre>
+
+<p>Take note that <code>StringBuffer</code> is an ordinary object. You need to use a constructor to create a <code>StringBuffer</code> (instead of assigning to a <code>String</code> literal). Furthermore, <code>'+'</code> operator does not apply to objects, including the <code>StringBuffer</code>. You need to use a proper method such as <code>append()</code> or <code>insert()</code> to manipulating a <code>StringBuffer</code>.</p>
+
+<p>To create a string from parts, It is more efficient to use <code>StringBuffer</code> (multi-thread) or <code>StringBuilder</code> (single-thread) instead of via <code>String</code> concatenation. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Create a string of YYYY-MM-DD HH:MM:SS</span>
+int year = 2010, month = 10, day = 10;
+int hour = 10, minute = 10, second = 10;
+String dateStr = new StringBuilder()
+      .append(year).append(&quot;-&quot;).append(month).append(&quot;-&quot;).append(day).append(&quot; &quot;)
+      .append(hour).append(&quot;:&quot;).append(minute).append(&quot;:&quot;).append(second).toString();
+System.out.println(dateStr);
+   
+<span class="color-comment">// StringBuilder is more efficient than String concatenation</span>
+String anotherDataStr = year + &quot;-&quot; + month + &quot;-&quot; + day + &quot; &quot; + hour + &quot;:&quot; + minute + &quot;:&quot; + second;
+System.out.println(anotherDataStr);</pre>
+
+
+<p>JDK compiler, in fact, uses both <code>String</code> and <code>StringBuffer</code> to handle string concatenation via the <code>'+'</code> operator.  For examples,</p>
+<pre class="color-example">
+String msg = &quot;a&quot; + &quot;b&quot; + &quot;c&quot;;</pre>
+<p>will be compiled into the following codes for better efficiency:</p>
+<pre class="color-example">
+String msg = new StringBuffer().append(&quot;a&quot;).append(&quot;b&quot;).append(&quot;c&quot;).toString();</pre>
+<p>Two objects are created during the process, an intermediate <code>StringBuffer</code> object and the returned <code>String</code> object.</p>
+
+<p><span class="line-heading">Rule of Thumb: </span><code>String</code>s are more efficient if they are not modified (because they are shared in the string common pool).  However, if you have to modify the content of a string frequently (such as a status message), you should use the <code>StringBuffer</code> class (or the <code>StringBuilder</code> described below) instead.</p>
+
+<h4><span class="font-code">java.lang.StringBuilder</span> (JDK 1.5)</h4>
+<p>JDK 1.5 introduced a new <code>StringBuilder</code> class (in package <code>java.lang</code>), which is almost identical to the <code>StringBuffer</code> class, except that it is <em>not synchronized</em>.  In other words, if multiple threads are accessing a <code>StringBuilder</code> instance at the same time, its integrity cannot be guaranteed.  However, for a single-thread program (most commonly), doing away with the overhead of synchronization makes the <code>StringBuilder</code> faster.</p>
+
+<p><code>StringBuilder</code> is API-compatible with the <code>StringBuffer</code> class, i.e., having the same set of constructors and methods, but with no guarantee of synchronization.  It can be a drop-in replacement for <code>StringBuffer</code> under a <em>single-thread</em> environment.</p>
+
+<h4>Benchmarking <span class="font-code">String/StringBuffer/StringBuilder</span></h4>
+
+<p>  The following program compare the times taken to reverse a long string via a <code>String</code> object and a <code>StringBuffer</code>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// Reversing a long String via a String vs. a StringBuffer</span>
+public class StringsBenchMark {
+   public static void main(String[] args) {
+      long beginTime, elapsedTime;
+ 
+      <span class="color-comment">// Build a long string</span>
+      String str = &quot;&quot;;
+      int size = 16536;
+      char ch = 'a';
+      beginTime = System.nanoTime();   <span class="color-comment">// Reference time in nanoseconds</span>
+      for (int count = 0; count &lt; size; ++count) {
+         str += ch;
+         ++ch;
+         if (ch &gt; 'z') {
+            ch = 'a';
+         }
+      }
+      elapsedTime = System.nanoTime() - beginTime;
+      System.out.println(&quot;Elapsed Time is &quot; + elapsedTime/1000 + &quot; usec (Build String)&quot;);
+ 
+      <span class="color-comment">// Reverse a String by building another String character-by-character in the reverse order</span>
+      String strReverse = &quot;&quot;;
+      beginTime = System.nanoTime();
+      for (int pos = str.length() - 1; pos &gt;= 0 ; pos--) {
+         strReverse += str.charAt(pos);   <span class="color-comment">// Concatenate</span>
+      }
+      elapsedTime = System.nanoTime() - beginTime;
+      System.out.println(&quot;Elapsed Time is &quot; + elapsedTime/1000 + &quot; usec (Using String to reverse)&quot;);
+ 
+      <span class="color-comment">// Reverse a String via an empty StringBuffer by appending characters in the reverse order</span>
+      beginTime = System.nanoTime();
+      StringBuffer sBufferReverse = new StringBuffer(size);
+      for (int pos = str.length() - 1; pos &gt;= 0 ; pos--) {
+         sBufferReverse.append(str.charAt(pos));      <span class="color-comment">// append</span>
+      }
+      elapsedTime = System.nanoTime() - beginTime;
+      System.out.println(&quot;Elapsed Time is &quot; + elapsedTime/1000 + &quot; usec (Using StringBuffer to reverse)&quot;);
+ 
+      <span class="color-comment">// Reverse a String by creating a StringBuffer with the given String and invoke its reverse()</span>
+      beginTime = System.nanoTime();
+      StringBuffer sBufferReverseMethod = new StringBuffer(str);
+      sBufferReverseMethod.reverse();     <span class="color-comment">// use reverse() method</span>
+      elapsedTime = System.nanoTime() - beginTime;
+      System.out.println(&quot;Elapsed Time is &quot; + elapsedTime/1000 + &quot; usec (Using StringBuffer's reverse() method)&quot;);
+ 
+      <span class="color-comment">// Reverse a String via an empty StringBuilder by appending characters in the reverse order</span>
+      beginTime = System.nanoTime();
+      StringBuilder sBuilderReverse = new StringBuilder(size);
+      for (int pos = str.length() - 1; pos &gt;= 0 ; pos--) {
+         sBuilderReverse.append(str.charAt(pos));
+      }
+      elapsedTime = System.nanoTime() - beginTime;
+      System.out.println(&quot;Elapsed Time is &quot; + elapsedTime/1000 + &quot; usec (Using StringBuilder to reverse)&quot;);
+ 
+      <span class="color-comment">// Reverse a String by creating a StringBuilder with the given String and invoke its reverse()</span>
+      beginTime = System.nanoTime();
+      StringBuffer sBuilderReverseMethod = new StringBuffer(str);
+      sBuilderReverseMethod.reverse();
+      elapsedTime = System.nanoTime() - beginTime;
+      System.out.println(&quot;Elapsed Time is &quot; + elapsedTime/1000 + &quot; usec (Using StringBuidler's reverse() method)&quot;);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Elapsed Time is 332100 usec (Build String)
+Elapsed Time is <strong>346639</strong> usec (Using String to reverse)
+Elapsed Time is <strong>2028</strong> usec   (Using StringBuffer to reverse)
+Elapsed Time is 847 usec    (Using StringBuffer's reverse() method)
+Elapsed Time is <strong>1092</strong> usec   (Using StringBuilder to reverse)
+Elapsed Time is 836 usec    (Using StringBuidler's reverse() method)</pre>
+
+<p>Observe <code>StringBuilder</code> is 2x faster than <code>StringBuffer</code>, and 300x faster than <code>String</code>. The <code>reverse()</code> method is the fastest, which take about the same time for <code>StringBuilder</code> and <code>StringBuffer</code>.</p>
+
+<h3><span class="font-code">java.util.StringTokenizer</span></h3>
+<p>Very often, you need to break a line of texts into tokens delimited by white spaces. The <code>java.util.StringTokenizer</code> class supports this.</p> 
+
+<p>For example, the following program reverses the words in a String.</p>
+<pre class="color-example">
+<span class="color-comment">// Reverse the words in a String using StringTokenizer</span>
+import java.util.StringTokenizer;
+public class StringTokenizerTest {
+   public static void main(String[] args) {
+      String str = &quot;Monday Tuesday Wednesday Thursday Friday Saturday Sunday&quot;;
+      String strReverse;
+      StringBuilder sb = new StringBuilder();
+      StringTokenizer st = new StringTokenizer(str);
+   
+      while (st.hasMoreTokens()) {
+         sb.insert(0, st.nextToken());
+         if (st.hasMoreTokens()) {
+            sb.insert(0, &quot; &quot;);
+         }
+      }
+      strReverse = sb.toString();
+      System.out.println(strReverse);
+   }
+}</pre>
+
+<pre class="color-syntax">
+<span class="color-comment">// Constructors</span>
+StringTokenizer(String s)  <span class="color-comment">// Constructs a StringTokenizer for the given string,
+                           // using the default delimiter set of &quot; \t\n\r\f&quot;
+                           // (i.e., blank, tab, newline, carriage-return, and form-feed).
+                           // Delimiter characters themselves will not be treated as tokens.</span> 
+StrintTokenizer(String s, String delimiterSet)  <span class="color-comment">// Use characters in delimiterSet as delimiters.</span>
+&nbsp;
+<span class="color-comment">// Methods</span>
+boolean hasNextToken()     <span class="color-comment">// Returns true if next token available</span>
+String nextToken()         <span class="color-comment">// Returns the next token</span>
+&nbsp;
+<span class="color-comment">// Code Sample</span>
+StringTokenizer tokenizer = new StringTokenizer(aString);
+while (tokenizer.hasNextToken()) {
+   String token = tokenizer.nextToken();
+   .....
+}</pre>
+
+<p>The JDK documentation stated that &quot;<code>StringTokenizer</code> is a legacy class that is retained for compatibility reasons although its use is discouraged in new code. It is recommended that anyone seeking this functionality use the <code>split()</code> method of <code>String</code> or the <code>java.util.regex</code> package instead.&quot;</p>
+
+<p>For example, the following program uses the split() method of the String class to reverse the words of a String.</p>
+<pre class="color-example"><span class="color-comment">
+// Reverse the words in a String using split() method of the String clas</span>s
+public class <strong>StringSplitTest</strong> {
+   public static void main(String[] args) {
+      String str = &quot;Monday Tuesday Wednesday Thursday Friday Saturday Sunday&quot;;
+      String[] tokens = str.split(&quot;\\s&quot;);  <span class="color-comment">// white space '\s' as delimiter</span>
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i &lt; tokens.length; ++i) {
+         sb.insert(0, tokens[i]);
+         if (i &lt; tokens.length - 1) {
+            sb.insert(0, &quot; &quot;);
+         }
+      }
+      String strReverse = sb.toString();
+      System.out.println(strReverse);
+   }
+}</pre>
+
+<h3>Regular Expression (Regexe), Patterns &amp; Matches (JDK 1.4)</h3>
+<p>Read &quot;<a href="Java_Regexe.html">Regular Expression in Java</a>&quot;.</p>
+
+<a class="references" href="../howto/References.html#java">LINK TO JAVA REFERENCES &amp; RESOURCES</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7<br />
+Last modified: April, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

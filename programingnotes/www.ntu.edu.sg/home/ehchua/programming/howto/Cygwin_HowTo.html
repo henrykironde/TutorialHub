@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How To setup and use Cygwin and MinGW</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Cygwin &amp; MinGW (for Windows)</h1>
+<h2>How To Install and Get Started</h2>
+</div>
+
+<div id="content-main">
+
+
+<h3 id="cygwin">How to Install Cygwin</h3>
+
+<p>Cygwin (pronounced as SIG-win) = GNU + Cygnus + Windows. The mother site for Cygwin is <a href="http://www.cygwin.com">www.cygwin.com</a>.</p>
+<p>According to the developers, &quot;Cygwin is a Open-source <em>Linux</em>-like environment for <em>Windows</em>. It consists of two parts: </p>
+<ul>
+  <li>A DLL (<code>cygwin1.dll</code>) which acts as a Linux API emulation layer providing  substantial Linux API functionality. </li>
+  <li>A collection of tools which provide Linux look and feel.&quot;</li>
+</ul>
+
+<p>To install Cygwin:</p>
+
+<h5>Step 1: Download Setup</h5>
+Download the setup program &quot;setup.exe&quot; from <a href="http://www.cygwin.com">www.cygwin.com</a>.</p>
+
+<h5>Step 2:  Run Setup to Select, Download &amp; Install Cygwin Packages</h5>
+Run &quot;setup.exe&quot; &rArr; Install from Internet &rArr; select a directory (avoid installing in &quot;Program Files&quot; because of that &quot;blank&quot; character) &rArr; choose &quot;Local Package Directory&quot; which saves the downloaded installation files &rArr; select your Internet proxy setting &rArr; choose a download mirror site. 
+(If &quot;choose download site&quot; box is empty, add &quot;ftp://mirror.averse.net/pub/cygwin&quot; in the &quot;User URL&quot;. You can find all the mirror sites from <a href="http://cygwin.com/mirrors.lst">http://cygwin.com/mirrors.lst</a>.)</p>
+<p>Select the packages that you wish to install.</p>
+
+<p><strong>Important</strong>: For programmers, you certainly need to open the &quot;Devel&quot; (Development) category and select &quot;gcc&quot;, &quot;g++&quot;, &quot;gdb&quot;, &quot;make&quot;, and others, which are not part of the default selection.</p>
+
+<p>Browse thru all the categories. Complete the installation process. You can always re-run &quot;setup.exe&quot; to install additional packages later.</p>
+
+<h5>Step 3: Setup PATH</h5>
+Include the Cygwin Binary directory  (<code>bin</code>) in the PATH environment variable.</p>
+<p>Suppose that your Cygwin is installed in directory &quot;<code>c:\cygwin</code>&quot;.  From &quot;Control Panel&quot; &rArr; System &rArr; (Vista only) Advanced System Settings &rArr; Advanced &rArr;  Environment Variables &rArr; System Variables &rArr; Select variable named &quot;PATH&quot; &rArr;  Edit &rArr; Add &quot;<code>c:\cygwin\bin;</code>&quot; in front of the existing PATH entry.  Note that the semi-colon serves as the <em>directory separator</em> to separate Cygwin from the rest of directory paths.</p>
+
+<h5>Step 4: Verify Cygwin</h5>
+Start the Cygwin Command shell (<code>bash</code> or <code>sh</code>) by running &quot;<code>cygwin.bat</code>&quot;. You shall see the command prompt &quot;<code>$</code>&quot;. You may need to create the users' group and password files by running the following commands:</p>
+<pre class="color-example">
+$ mkpasswd –l &gt; /etc/passwd
+$ mkgroup –l &gt; /etc/group</pre>
+
+<p>Try out some Unix commands (you need to read a Unix book  - there is no short-cut in learning), e.g.,</p>
+<table class="table-program">
+<tr>
+<td style="width:20%">
+<pre class="color-example">
+$ ls
+$ dir
+$ pwd
+$ cd <em>newdir</em>
+$ cd ..
+$ cd /</pre>
+</td>
+<td>
+<pre class="color-explanation">
+List the current directory
+Similar to &quot;ls&quot;
+Print (or display) the current working directory
+Change current working directory to <em>newdir</em>
+Change current working directory to its &quot;parent&quot; directory
+Change current working directory to its &quot;root&quot; directory</pre>
+</td>
+</tr>
+</table>
+
+<p>Need help?  Try:</p>
+<table class="table-program">
+<tr>
+<td style="width=20%">
+<pre class="color-example">
+$ man<em> comman</em>d
+$ man –k <em>keyword</em>
+$ man –f <em>command</em>
+$ whatis <em>command</em>
+$ info <em>command</em>
+$ help</pre>
+</td>
+<td>
+<pre class="color-explanation">
+Display the manual pages for <em>command</em>
+Display commands containing <em>keyword</em>
+Display a brief description of <em>command</em>
+Same as &quot;man –f <em>command</em>&quot;
+Display the information pages for <em>command</em>
+Display the help menu</pre>
+</td>
+</tr>
+</table>
+
+<p>On bash shell, after setting the directory to the the &quot;root&quot; (via &quot;<code>cd /</code>&quot;), you could find a directory called &quot;<code>cygdrive</code>&quot; (via &quot;<code>ls</code>&quot; or &quot;<code>dir</code>&quot;), where all the hard disks are mounted. &quot;<code>cd cygdrive</code>&quot; and &quot;<code>ls</code>&quot; lists all the hard disks, e.g., &quot;<code>c</code>&quot;, &quot;<code>d</code>&quot;, etc.</p>
+<p>You may mount your C drive (&quot;<code>c:</code>&quot;) as &quot;<code>/c</code>&quot; instead of the default &quot;<code>/cygdrive/c</code>&quot; via this command:</p>
+<table class="table-program">
+<tr>
+<td style="width=20%">
+<pre class="color-example">
+$ mount c: \c
+$ mount</pre>
+</td>
+<td>
+<pre class="color-explanation">
+Mount Drive &quot;C:&quot; as &quot;\c&quot;
+Display the current mounts</pre>
+</td>
+</tr>
+</table>
+
+<p>You could  invoke the Cygwin programs and utilities via the Windows' Command Prompt (&quot;<code>cmd.exe</code>&quot;) instead of bash shell (provided the PATH is set properly), e.g.,</p>
+
+<pre class="color-example">
+&gt; ls -alR
+&gt; man gcc</pre>
+
+<h3 id="mingw">How to install MinGW</h3>
+
+<p>MinGW (short for &quot;Minimalist GNU for Windows&quot;), is a minimalist (i.e., small but fewer features compared with cygwin) development environment for native Microsoft Windows applications, in particular:</p>
+
+<ol>
+<li>A port of the GNU Compiler Collection (GCC), including C, C++, ADA and Fortran compilers;</li>
+<li>GNU Binutils for Windows (assembler, linker, archive manager).</li>
+<li>MSYS (short for &quot;Minimal SYStem&quot;), is a bash Shell command line interpreter.</li>
+</ol>
+
+<p>To install MinGW:</p>
+
+<ol>
+<li>Goto MinGW mother site at <a href="http://www.mingw.org/">http://www.mingw.org/</a> &rArr; Downloads &rArr; Installer &rArr; click on &quot;<code>mingw-get-inst</code>&quot; link to download the installer.</li>
+
+<li>Run the downloaded installer.
+
+<ol>
+<li>Set the installation directory. (Try to use a directory name without spaces, e.g., &quot;<code>d:\myproject\mingw</code>&quot;. Try not to install under &quot;<code>Program Files</code>&quot; or &quot;<code>Desktop</code>&quot;.)</li>
+
+<li>In MinGW Installation Manager, select &quot;Installation&quot; &rArr; &quot;Update Catalogue&quot;  &rArr; Select all packages in &quot;Basic Setup&quot; &rArr; continue.</li>
+ 
+</ol></li>
+ 
+<li>Setup environment variable PATH to include &quot;<code>&lt;MINGW_HOME&gt;/bin</code>&quot; where <code>&lt;MINGW_HOME&gt;</code> is the MinGW installed directory that you have chosen in the previous step.</li>
+<li>Verify the GCC installation by listing the version of <code>gcc,</code> <code>g++</code> and <code>gdb</code>:
+  <pre class="color-command">
+&gt; <strong>gcc --version</strong>
+g++ (GCC) 4.8.1
+......
+ 
+&gt; <strong>g++ --version</strong>
+g++ (GCC) 4.8.1
+......
+ 
+&gt; <strong>gdb --version</strong>
+GNU gdb (GDB) 7.6.1
+......</pre>
+</li>
+</ol>
+
+<h3>Writing C/C++ Programs using GCC in Cygwin or MinGW (under Windows)</h3>
+<p>Read &quot;<a href="../cpp/gcc_make.html">GCC and Make</a>&quot;.</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+  <li>Cygwin Mother Site @ <a href="http://www.cygwin.com/">www.cygwin.com</a>.</li>
+  <li>MinGW mother site @ <a href="http://www.mingw.org">www.mingw.org</a>.</li>
+</ol>
+
+
+</div> 
+<!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Cygwin ??, MinGW ??<br />
+Last modified: January, 2014</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

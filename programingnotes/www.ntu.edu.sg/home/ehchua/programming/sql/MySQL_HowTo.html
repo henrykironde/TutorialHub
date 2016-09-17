@@ -1,0 +1,909 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Install MySQL 5 (on Windows, Mac OS X, Ubuntu) and Get Started with SQL</title>
+
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>How to Install MySQL 5.7 (on Windows, Mac OS X, Ubuntu) and 
+Get Started with SQL Programming</h1>
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+<p>This article is applicable to MySQL 5.7. There are some changes in MySQL 5.7 over 5.6. Read &quot;<a href="MySQL5.6_HowTo.html">How to Install MySQL 5.6</a>&quot; for installing MySQL 5.6.</p>
+
+<p>This practical can be completed in a 3-hour session.</p>
+
+<h3 id="intro">Introduction to Relational Database and SQL</h3>
+
+<h4>Relational Databases</h4>
+
+<p>A <em>relational database</em> organizes data in <em>tables</em>. A <em>table</em> has <em>rows</em> (or <em>records</em>) and <em>columns</em> (or <em>fields</em>). Tables are <em>related</em> based on common columns to eliminate <em>data redundancy</em> and ensure <em>data integrity</em>.</p>
+
+<p>Popular Relationship Database  Management System (RDBMS) includes the commercial Oracle, IBM DB2, Microsoft SQL Server and Access, SAP SyBase and Teradata; and the free MySQL, PostgreSQL, Embedded Apache Derby (Java DB), mSQL (mini SQL), SQLite and Apache OpenOffice's Base.</p>
+
+<h4>Structure Query Language (SQL)</h4>
+
+<p>A high-level language, called <em>Structure Query Language</em> (SQL), had been designed for interacting with the relational databases. SQL defines a set of commands, such as <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>CREATE TABLE</code>, <code>DROP TABLE</code>, and etc.</p>
+
+<p>Edgar F. Codd (of IBM) proposed the Relational Database Model in 1970. SQL, one of the earlier  programming language, was subsequently developed by Donald D. Chamberlin and Raymond F. Boyce at IBM in the early 1970s. Oracle, subsequently, took it to a new height.</p>
+<p>ANSI (American National Standard Institute) established the first SQL standard in 1986 (SQL-86 or SQL-87) -  adopted by ISO/IEC as &quot;ISO/IEC 9075&quot; - followed in 1989 (SQL-89), 1992 (SQL-92 or <span class="underline">SQL2</span>), 1999 (SQL-99 or <span class="underline">SQL3</span>), 2003 (SQL-2003), 2006 (SQL-2006) and 2011 (SQL-2011). However, most of the database vendors have their own directs, e.g., PL/SQL (Oracle), Transact-SQL (Microsoft, SAP), PL/pgSQL (PostgreSQL).</p>
+
+<h4>SQL By Examples</h4>
+
+<p>A relational database system contains many <em>databases</em>. A database comprises one or more <em>tables</em>. A table have <em>rows</em> (or <em>records</em>) and <em>columns</em> (or <em>fields</em>).</p>
+
+<p>Suppose we have created a table called <code>class101</code>, in a database called <code>studentdb</code>, with 3 columns: <code>id</code>, <code>name</code> and <code>gpa</code>. A column has a data type. We choose: <code>INT</code> (integer) for column <code>id</code>, <code>FLOAT</code> (floating-point number) for <code>gpa</code>, and <code>VARCHAR(50)</code> (variable-length string of up to 50 characters) for <code>name</code>. There are 4 rows in the table as follows:</p>
+
+<pre class="color-example">
+Database: <strong>studentdb</strong>
+Table: <strong>class101</strong>
++-----------+--------------------+-------------+
+| <strong>id</strong> (INT)  | <strong>name</strong> (VARCHAR(50)) | <strong>gpa</strong> (FLOAT) |
++-----------+--------------------+-------------+
+|   1001    | Tan Ah Teck        |  4.5        |
+|   1002    | Mohammed Ali       |  4.8        |
+|   1003    | Kumar              |  4.8        |
+|   1004    | Kevin Jones        |  4.6        |
++-----------+--------------------+-------------+</pre>
+
+<p>SQL provides an easy and intuitive way to interact with relational databases.</p>
+
+<h5><span class="font-code">SELECT</span></h5>
+<pre class="color-example">
+<span class="color-comment">-- SYNTAX</span>
+<span class="color-new">SELECT <em>column1</em>, <em>column2</em>, ... FROM <em>tableName</em> WHERE <em>criteria</em></span>
+<span class="color-new">SELECT * FROM <em>tableName</em> WHERE <em>criteria</em></span>
+ 
+<span class="color-comment">-- EXAMPLES</span>
+<strong>SELECT name, gpa FROM class101</strong>
+   <span class="color-comment">-- Select columns name and gpa from table class101.</span>
+   +--------------+------+
+   | name         | gpa  |
+   +--------------+------+
+   | Tan Ah Teck  |  4.5 |
+   | Mohammed Ali |  4.8 |
+   | Kumar        |  4.8 |
+   | Kevin Jones  |  4.6 |
+   +--------------+------+
+ 
+<strong>SELECT * FROM class101</strong>
+<span class="color-comment">   -- Select ALL columns from table class101.
+   -- The wildcard * denotes all the columns.</span>
+   +------+--------------+------+
+   | id   | name         | gpa  |
+   +------+--------------+------+
+   | 1001 | Tan Ah Teck  |  4.5 |
+   | 1002 | Mohammed Ali |  4.8 |
+   | 1003 | Kumar        |  4.8 |
+   | 1004 | Kevin Jones  |  4.6 |
+   +------+--------------+------+
+ 
+<strong>SELECT name, gpa FROM class101 WHERE gpa &gt;= 4.7</strong>
+   <span class="color-comment">-- Select columns name and gpa, where the rows meet the criteria.
+   -- You can compare numbers using =, &gt;, &lt;, &gt;=, &lt;=, &lt;&gt; (!=)</span>
+   +--------------+------+
+   | name         | gpa  |
+   +--------------+------+
+   | Mohammed Ali |  4.8 |
+   | Kumar        |  4.8 |
+   +--------------+------+
+    
+<strong>SELECT name, gpa FROM class101 WHERE name = 'Tan Ah Teck'</strong>
+   <span class="color-comment">-- Full-match (= or !=) on string. Strings are enclosed in single quotes.</span>
+   +-------------+------+
+   | name        | gpa  |
+   +-------------+------+
+   | Tan Ah Teck |  4.5 |
+   +-------------+------+
+ 
+<strong>SELECT name FROM class101 WHERE name LIKE 'k%'</strong>
+   <span class="color-comment">-- Use &quot;LIKE&quot; for string pattern-matching, with
+   --   wildcard % matches zero or more (any) characters;
+   --   wildcard _ matches one (any) character.</span>
+   +-------------+
+   | name        |
+   +-------------+
+   | Kumar       |
+   | Kevin Jones |
+   +-------------+
+ 
+<strong>SELECT * FROM class101 WHERE gpa &gt; 4 AND name LIKE 'k%' ORDER BY gpa DESC, name ASC</strong>
+   <span class="color-comment">-- Use AND, OR, NOT to combine simple conditions.
+   -- Order the results in DESC (descending) or ASC (Ascending)</span>
+   +------+-------------+------+
+   | id   | name        | gpa  |
+   +------+-------------+------+
+   | 1003 | Kumar       |  4.8 |
+   | 1004 | Kevin Jones |  4.6 |
+   +------+-------------+------+</pre>
+
+<h5><span class="font-code">DELETE</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">-- SYNTAX</span>
+<span class="color-new">DELETE FROM <em>tableName</em> WHERE <em>criteria</em></span>
+ 
+<span class="color-comment">-- EXAMPLES</span>
+DELETE FROM class101
+  <span class="color-comment">-- Delete ALL rows from the table class101! Beware that there is NO UNDO!</span>
+DELETE FROM class101 WHERE id = 33
+  <span class="color-comment">-- Delete rows that meet the criteria.</span></pre>
+  
+<h5><span class="font-code">INSERT</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">-- SYNTAX</span>
+<span class="color-new">INSERT INTO <em>tableName</em> VALUES (<em>firstColumnValue</em>, ..., <em>lastColumnValue</em>)</span>       <span class="color-comment">-- All columns</span>
+<span class="color-new">INSERT INTO <em>tableName</em> (<em>column1</em>, <em>column2</em>, ...) VALUES (<em>value1</em>, <em>value2</em>, ...)</span>  <span class="color-comment">-- Selected Columns</span>
+ 
+<span class="color-comment">-- Example</span>
+INSERT INTO class101 VALUES (1001, 'Tan Ah Teck', 4.5)
+  <span class="color-comment">-- List value of all columns.</span>
+INSERT INTO class101 (name, gpa) VALUES ('Peter Jones', 4.55)
+  <span class="color-comment">-- Missing fields will be set to their default values or NULL</span></pre>
+
+<h5><span class="font-code">UPDATE</span></h5>
+<pre class="color-example">
+<span class="color-comment">-- SYNTAX</span>
+<span class="color-new">UPDATE <em>tableName</em> SET <em>column</em> = <em>value</em> WHERE <em>criteria</em></span>
+ 
+<span class="color-comment">-- EXAMPLES</span>
+UPDATE class101 SET gpa = 5.0                                  <span class="color-comment">-- ALL rows</span>
+UPDATE class101 SET gpa = gpa + 1.0 WHERE name = 'Tan Ah Teck' <span class="color-comment">-- Selected rows</span></pre>
+
+<h5><span class="font-code">CREATE TABLE</span></h5>
+
+<pre class="color-example">
+<span class="color-comment">-- SYNTAX</span>
+<span class="color-new">CREATE TABLE <em>tableName</em> (<em>column1Name</em> <em>column1Type</em>, <em>column2Name</em> <em>column2Type</em>, ...)</span>
+ 
+<span class="color-comment">-- EXAMPLES</span>
+CREATE TABLE class101 (id INT, name VARCHAR(50), gpa FLOAT)</pre>
+
+<h5><span class="font-code">DROP TABLE</span></h5>
+<pre class="color-example">
+<span class="color-comment">-- SYNTAX</span>
+<span class="color-new">DROP TABLE <em>tableName</em></span>
+ 
+<span class="color-comment">-- EXAMPLES</span>
+DROP TABLE class101  <span class="color-comment">-- Delete the table. Beware that there is No UNDO!!!</span></pre>
+
+<h5>Notes:</h5>
+<ol>
+<li><span class="line-heading">Case Sensitivity</span>: SQL keywords, names (identifiers), strings may or may not be case-sensitive, depending on the implementation.
+
+<ul>
+<li> In MySQL, the <em>keywords</em> are NOT case-sensitive. For clarity, I  show the keywords in uppercase in this article.</li>
+<li>For programmers, it is BEST to treat the <em>names (identifiers)</em> and <em>strings</em> as case-sensitive. <br />
+[In MySQL, column-names are always case insensitive; but table-names are case-sensitive in Unix, but case-insensitive in Windows (confused!!). Case-sensitivity in string comparison depends on the <em>collating sequence</em> used (?!).]</li></ul>
+
+</li>
+<li><span class="line-heading">Quotes for String</span>: SQL strings are enclosed in single quotes, but most implementations (such as MySQL) also accept double quotes.</li></ol>
+
+<h3>Introduction to MySQL Relational Database Management System (RDBMS)</h3>
+
+<p>SQL is a <em>language</em> for interacting with relational databases. On the other hand, MySQL is a <em>software system</em> - a Relational Database Management System.</p>
+
+<p>MySQL is one of the most used, and possibly the best <em>industrial-strength</em>, <em>open-source</em> and <em>free</em> Relational Database Management System (RDBMS). MySQL was developed by Michael &quot;Monty&quot; Widenius and David Axmark in 1995. It was   owned by a Swedish company called MySQL AB, which was bought over by Sun   Microsystems in 2008. Sun Microsystems was acquired by Oracle in 2010.</p>
+
+<p>MySQL is successful, not only because it is free and open-source (there are many free   and open-source databases, such as Apache Derby (Java DB), mSQL (mini SQL), SQLite, PostgreSQL and Apache OpenOffice's Base), but also for its speed,   ease of use, reliability, performance, connectivity (full networking support), portability (run on most OSes, such as Unix, Windows, Mac), security (SSL support), small size, and rich features. MySQL supports all features expected in a high-performance relational database, such as transactions, foreign key, replication, subqueries, stored procedures, views and triggers.</p>
+
+<p>MySQL is often deployed in a LAMP (Linux-Apache-MySQL-PHP), WAMP (Windows-Apache-MySQL-PHP), or MAMP (Mac-Apache-MySQL-PHP) environment. All components in LAMP is free and open-source, inclusive of the Operating System.</p>
+
+<p>The mother site for MySQL is <a href="http://www.mysql.com">www.mysql.com</a>. The ultimate reference for MySQL is the &quot;MySQL Reference Manual&quot;, available at <a href="http://dev.mysql.com/doc/">http://dev.mysql.com/doc</a>. The reference manual is huge - the PDF  has over 3700 pages!!!</p>
+
+<img class="image-center image-border" src="images/MySQL_DBMS.png" alt="image" />
+
+<p>MySQL  operates as a <em>client-server</em> system  over TCP/IP network. The server runs on a machine with an IP address, on a chosen TCP port number.  The default TCP port number for MySQL is 3306. Users can access the server via a client program, connecting to the server at the given IP address and TCP port number.</p>
+
+<p>A MySQL database server contains one or more <em>databases</em>. A database contains one or more <em>tables</em>. A table consists of <em>rows</em> (or <em>records</em>) and <em>columns</em> (or <em>fields</em>).</p>
+
+<h3 id="MySQL-install">How to Install MySQL 5.7 and Get Started with SQL Programming</h3>
+
+<p>I want you to install MySQL on your own machine, because I want you to learn how to install, customize and operate <em>complex industrial</em> software system. Installation could be the hardest part in this exercise.</p>
+
+<h4>Step 1: Download and Install MySQL</h4>
+
+<div class="side-note">
+
+<p class="line-heading">For Windows</p>
+
+<ol>
+<li>Download MySQL <span class="color-new">ZIP ARCHIVE</span> from <a href="http://dev.mysql.com/downloads/mysql/">http://dev.mysql.com/downloads/mysql/</a>:
+  <ol>
+<li>Choose &quot;General Available (GA) Releases&quot; tab.</li>
+<li>In &quot;Select Platform&quot;, choose &quot;Microsoft Windows&quot;.</li>
+<li>Under &quot;Other Downloads&quot;, download &quot;<span class="color-new">Windows (x86, 64-bit), ZIP ARCHIVE</span>&quot; or &quot;<span class="color-new">Windows (x86, 32-bit), ZIP ARCHIVE</span>&quot;.
+(You can check whether your Windows is 32-bit or 64-bit from &quot;Control Panel&quot; &rArr; System &rArr; System &rArr; System Type.)</li>
+
+<li>There is NO need to &quot;Sign-up&quot; - Just click &quot;No thanks, just start my downloads!&quot;.</li>
+</ol></li>
+
+<li>Create a project directory, say &quot;<code>d:\myProject</code>&quot; or &quot;<code>c:\myProject</code>&quot;.<br />
+  UNZIP the downloaded file into your project directory. MySQL will be unzipped as &quot;<code>d:\myProject\<strong>mysql-5.7.{<em>xx</em>}-winx64</strong></code>&quot;.<br />
+For <em><strong>ease of use</strong></em>, we shall shorten and rename the directory to &quot;<code>d:\myProject\<strong>mysql</strong></code>&quot;. Take note and remember your MySQL installed directory!!!</li>
+<li>(NEW since MySQL 5.7.7) Initialize the database: Start a CMD (as administrator) and issue these commands:
+  <pre class="color-command">
+<span class="color-comment">// Change directory to the MySQL installed directory
+// Suppose that your MySQL installed directory is d:\myProject\mysql</span>
+<strong>d:</strong>
+<strong>cd \myProject\mysql\bin</strong>
+ 
+<span class="color-comment">// Initialize the database. Create a root user without password. Show the message on console</span>
+<strong>mysqld --initialize --console</strong>
+......
+...... [Note] <span class="color-new">A temporary password is generated for root@localhost: xxxxxxxx</span></pre>
+During the installation, a superuser called <code>root</code> is created with a temporary random password, as shown above. <span class="color-new"><strong>TAKE NOTE of the root's PASSWORD, COPY and save it somewhere, and Take a Picture!!!!</strong></span>
+</li>
+<li>If you make a mistake somewhere, delete the entire MySQL directory, and repeat step 2 and 3.</li>
+</ol>
+</div>
+
+
+<div class="side-note">
+<p class="line-heading">For Mac OS X</p>
+
+<ol>
+<li>Download the MySQL &quot;<span class="color-new">DMG Archive</span>&quot; from
+  <a href="http://dev.mysql.com/downloads/mysql/">http://dev.mysql.com/downloads/mysql/</a>:
+  <ol>
+<li>Choose &quot;General Available (GA) Releases&quot; tab.</li>
+  <li>In &quot;Select Platform&quot;, choose the &quot;Mac OS X&quot;.</li>
+  
+  <li>Select the appropriate &quot;<span class="color-new">DMG Archive</span>&quot; for your specific Mac OS version:
+    
+  <ul>
+  <li>Click the Apple logo &rArr; &quot;About this Mac&quot; to check your Mac OS version.</li>
+    
+  <li>Read <a href="http://support.apple.com/kb/ht3696">http://support.apple.com/kb/ht3696</a> to check if your Mac OS is 32-bit or 64-bit.</li>
+  </ul>
+    For example, for Lion (10.7) and Core i7 processor, choose &quot;Mac OS X ver. 10.7 (x86, 64-bit), DMG Archive (117.5M)&quot;.</li>
+  
+  <li>There is NO need to &quot;Sign-up&quot; - Just click &quot;No thanks, just start my download&quot;.</li>
+</ol></li>
+
+<li>To install MySQL: 
+  <ol>
+<li>Go to &quot;Downloads&quot;  &rArr; Double-click &quot;<code>.dmg</code>&quot; file downloaded.</li>
+
+<li>Double-click the &quot;<code>mysql-5.7.{<em>xx</em>}-osx10.<em>x</em>-<em>xxx</em>.pkg</code>&quot;</li>
+<li>Follow the screen instructions to install MySQL. During the 
+installation, a superuser called <code>root</code> is created with a temporary random password. <span class="color-new"><strong>TAKE NOTE of the root's PASSWORD, COPY and save it somewhere,  and Take a picture!!!!</strong></span><br />
+</li>
+
+<li>MySQL will be installed in <span class="color-new">&quot;<code>/usr/local/</code><code>mysql</code>&quot;</span>. Take note of this installed directory!!</li>
+
+<li>Eject the &quot;.<code>dmg</code>&quot; file.</li>
+</ol>
+
+<li>If you make a mistake somewhere, stop the server (Click Apple Icon &rArr; System Preferences &rArr; MySQL &rArr; Stop), remove the directories <span class="color-new">&quot;<code>/usr/local/</code><code>mysql-5.7.{xx}...</code>&quot;</span>, and re-run the installation. Re-start the server (Click Apple Icon &rArr; System Preferences &rArr; MySQL &rArr; Start). You may need to re-start your machine.</li>
+</ol>
+</div>
+
+<div class="side-note">
+<p class="line-heading">For Ubuntu</p>
+
+<p>Refer to &quot;<a href="../howto/Ubuntu_HowTo.html#mysql">How to install MySQL 5 on Ubuntu</a>&quot;.</p>
+</div>
+
+<br />
+
+<p>I shall assume that MySQL is installed in directory <code>d:\myProject\mysql</code> (for Windows) or <code>/usr/local/mysql</code> (for Macs). But you need to <span class="color-new"><strong>TAKE NOTE OF YOUR MySQL INSTALLED DIRECTORY</strong></span>. Hereafter, I shall denote the MySQL installed directory as <code>&lt;MYSQL_HOME&gt;</code> in this article.</p>
+
+
+<h4>Step 3:  Start the Server</h4>
+
+<p>The MySQL is a <em>client-server</em> system. The database is run as a <em>server</em> application. Users access the database server via a <em>client</em> program, locally or remotely thru the net, as illustrated:</p>
+
+<img class="image-center image-border" src="images/MySQLClientServer.png"  alt="image" />
+
+<ol>
+<li>The <em>server</em> program is called &quot;<code>mysqld</code>&quot; (with a suffix <code>'d'</code>, which stands for <em>daemon</em> - a daemon is a non-interactive process running in the background).</li>
+<li>The <em>client</em> program is called &quot;<code>mysql</code>&quot; (without the <code>'d'</code>).</li>
+</ol>
+
+<p>The   programs <code>mysqld</code> and <code>mysql</code> are kept in the &quot;<code>bin</code>&quot; sub-directory of the MySQL installed directory.</p>
+
+<h5>Startup Server</h5>
+
+<div class="side-note">
+<p class="line-heading">For Windows</p>
+<p>To start the database server, launch a CMD shell:</p>
+
+<pre class="color-command"><span class="color-comment">-- Change the current directory to MySQL's &quot;bin&quot; directory
+-- Assume that the MySQL installed directory is &quot;d:\myProject\mysql&quot;</span>
+<strong>d:</strong>                       <span class="color-comment">-- Set the current drive</span>
+<strong>cd \myProject\mysql\bin</strong>  <span class="color-comment">-- Change Directory to the MySQL's bin directory</span>
+ 
+<span class="color-comment">-- Start the MySQL Database Server</span>
+<strong>mysqld --console</strong>
+......
+......
+XXXXXX XX:XX:XX [Note] <span class="color-new">mysqld: ready for connections</span>.
+Version: '5.6.xx-community'  socket: ''  <span class="color-new">port: 3306</span>  MySQL Community Server (GPL)</pre>
+<p><strong>Notes</strong>: The <code>--console</code> option directs the server output messages to the console. Without this option, you will see a blank screen.</p>
+</div>
+
+
+<div class="side-note">
+<p class="line-heading">For Mac OS X</p>
+<p><strong>The EASY WAY</strong>: Via  the graphical control. Click Apple Icon &rArr; System Preferences &rArr; MySQL &rArr; Start.</p>
+</div>
+
+<p>The MySQL database server is now started,  and ready to handle clients' requests.</p>
+
+
+
+<p><span class="line-heading">Anything that can possibly go wrong, does!</span> Read &quot;<a href="../howto/ErrorMessages.html#MySQLErrorsInstall">Common Problems in Starting the MySQL Server after Installation</a>&quot;.</p>
+
+
+<h5>Shutdown Server</h5>
+
+<div class="side-note">
+<p class="line-heading">For Windows</p>
+
+<p>The quickest way to shut down the database server is to press Ctrl-C to initiate a <em>normal shutdown</em>. DO NOT KILL the server via the window's CLOSE button.</p>
+<p>Observe these messages from the MySQL server console:</p>
+<pre class="output">XXXXXX XX:XX:XX [Note] mysqld: <span class="color-new">Normal shutdown</span>
+......
+XXXXXX XX:XX:XX  InnoDB: Starting shutdown...
+XXXXXX XX:XX:XX  InnoDB: Shutdown completed; log sequence number 0 44233
+......
+XXXXXX XX:XX:XX [Note] mysqld: <span class="color-new">Shutdown complete</span></pre>
+
+</div>
+
+<div class="side-note">
+
+<p class="line-heading">For Mac OS X</p>
+
+<p><strong>The EASY WAY</strong>: Via  the graphical control. Click Apple Icon &rArr; System Preferences &rArr; MySQL &rArr; Stop.</p>
+</div>
+
+<p><span class="line-heading">WARNING</span>: You should properly shutdown the MySQL server. Otherwise, you might corrupt the database and might have problems restarting it. BUT, if you encounter problem shutting down the server normally, you may kill the  &quot;<code>mysqld</code>&quot; process in <strong>Task Manager</strong> (for Windows); or <strong>Activity Monitor</strong> (for Mac OS X); or <strong>System Monitor</strong> (for Ubuntu).</p>
+
+
+<h4>Step 4:  Start a Client</h4>
+
+<p>Recall that the MySQL is a client-server system. Once the server is started, one or more clients can be connected to the database server. A client could be run on the same machine (local client); or from another machine  over the net (remote client).</p>
+
+<p>To login to the MySQL server, you need to provide a <em>username</em> and <em>password</em>. During the installation, MySQL creates a <em>superuser</em> called &quot;<code>root</code>&quot; with a temporary random password. I hope that you have taken note of this password!!</p>
+
+<p>The MySQL installation provides a command-line client program called &quot;<code>mysql</code>&quot;. (Recall that the server program is called &quot;<code>mysqld</code>&quot; with a suffix <code>'d'</code>; the client program does not have the suffix '<code>d</code>').</p>
+
+<p>Let's start a command-line client with the superuser &quot;<code>root</code>&quot;.</p>
+<p>First, <span class="color-new">make sure that the server is running</span>. See previous step to re-start the server if it has been shutdown.</p>
+
+<div class="side-note">
+
+<p class="line-heading">For Windows</p>
+<p>Start another <span class="color-new"><strong>NEW</strong></span> CMD shell to run the client:</p>
+
+<pre class="color-command">
+<span class="color-comment">-- Change the current directory to &lt;MYSQL_HOME&gt;\bin.
+-- Assume that the MySQL is installed in &quot;d:\myProject\mysql&quot;.</span>
+<strong>d:</strong>                       <span class="color-comment">-- Change the current drive</span>
+<strong>cd \myProject\mysql\bin</strong>  <span class="color-comment">-- Change Directory to YOUR MySQL's &quot;bin&quot; directory</span>
+   
+<span class="color-comment">-- Start a client as superuser &quot;root&quot;</span>
+<span class="color-highlight"><strong>mysql -u root -p</strong></span>
+Enter password:
+   <span class="color-new">// Enter the root's password set during installation.
+   // NOTHING will be shown for maximum security.</span>
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 1
+Server version: 5.1.39-community MySQL Community Server (GPL)
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+<strong><span class="color-highlight">mysql&gt;</span></strong>
+<span class="color-comment">-- Client started. The prompt changes to &quot;mysql&gt;&quot;.
+-- You can now issue SQL commands.</span></pre>
+
+</div>
+
+<div class="side-note">
+
+<p class="line-heading">For Mac OS X</p>
+<p>Open a <span class="color-new"><strong>NEW</strong></span> &quot;Terminal&quot; and issue these commands to start a MySQL client with superuser <code>root</code>:</p>
+
+<pre class="color-command">
+<span class="color-comment">-- Change the current directory to &lt;MYSQL_HOME&gt;\bin.</span>
+<strong>cd /usr/local/mysql/bin</strong>
+ 
+<span class="color-comment">-- Start a client with superuser &quot;root&quot;</span>
+<span class="color-highlight"><strong>./mysql -u root -p</strong></span>
+Enter password:     
+   <span class="color-new">// Enter the root's password set during installation.
+   // NOTHING will be shown for maximum security.</span> 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+......
+<strong><span class="color-highlight">mysql&gt;</span></strong>
+<span class="color-comment">-- Client started. The prompt changes to &quot;mysql&gt;&quot;.
+-- You can now issue SQL commands.</span></pre>
+
+</div>
+
+<p><span class="line-heading">(Skip Unless...) </span>Read &quot;<a href="../howto/ErrorMessages.html#MySQLErrorsClient">Common Problems in Starting the MySQL Client</a>&quot;.</p>
+
+<h4>Step 5: Change the Password for the Superuser &quot;root&quot;</h4>
+<p>As mentioned earlier, the MySQL installation creates a <em>superuser</em> called &quot;<code>root</code>&quot; with a temporary random password. &quot;<code>root</code>&quot; is a <em>privileged user</em> that can do anything, including deleting all the databases. You are required to change the root's password after logging in.</p>
+
+<h5>Change the Password for  &quot;root&quot;</h5>
+
+<p>Let's continue with our client session started earlier.</p>
+<p></p>
+<pre class="color-command">
+<span class="color-comment"></span><span class="color-comment">-- Change password for 'root'@'localhost'. Replace xxxx with your chosen password
+-- <span class="color-new">(For my students: use xxxx as the password. Otherwise,</span>
+--   <span class="color-new">you will ask me what is your password next week.)</span>
+-- Take note that strings are to be enclosed by a pair of single-quotes.</span>
+mysql&gt; <strong>alter user 'root'@'localhost' identified by '<span class="color-new">xxxx</span>';</strong>
+Query OK, 0 rows affected (0.00 sec)
+ 
+<span class="color-comment">-- logout and terminate the client program</span>
+mysql&gt; <strong>quit</strong>
+Bye</pre>
+
+<h5>Re-Start a Client as &quot;root&quot; with the New Password</h5>
+
+<p>We have just changed the password for <code>root</code> and exited the client. Start a client and login as <code>root</code> again. Enter the password when prompted.</p>
+
+<div class="side-note">
+<p class="line-heading">For Windows</p>
+<pre class="color-command"><span class="color-comment">-- Change the current working directory to &lt;MYSQL_HOME&gt;\bin</span>
+<strong>mysql -u root -p</strong>
+Enter password:    <span class="color-new">// Type your password and enter. NOTHING will be shown for security.</span>
+Welcome to the MySQL monitor.
+......  
+<span class="color-highlight">mysql&gt;</span>
+<span class="color-comment">-- client started, ready to issue SQL command</span></pre>
+</div>
+
+<div class="side-note">
+<p class="line-heading">For Mac OS X</p>
+<pre class="color-command"><span class="color-comment">-- Change the current working directory to /usr/local/mysql/bin</span>
+<strong>cd /usr/local/mysql/bin</strong>
+./<strong>mysql -u root -p</strong>
+Enter password:    <span class="color-new">// Type your password and enter. NOTHING will be shown for security.</span>
+Welcome to the MySQL monitor.
+......
+<span class="color-highlight">mysql&gt;</span>
+<span class="color-comment">-- client started, ready to issue SQL command</span></pre>
+
+</div>
+
+<h4>Step 6:  Create a New User</h4>
+<p>The superuser &quot;root&quot; is privileged, which is meant for database administration and is not meant for operational. We shall create a new user - let's call it &quot;<code>myuser</code>&quot; -  with a lesser privilege. To create a new user,  start a client with superuser &quot;<code>root</code>&quot;:</p>
+
+<pre class="color-command">
+<span class="color-comment">-- Start a client, IF IT IS NOT STARTED</span>
+<strong>mysql -u root -p</strong>     <span class="color-comment">// Windows</span>
+<strong>./mysql -u root -p</strong>   <span class="color-comment">// Mac OS X</span>
+   
+<span class="color-comment">-- Create a new user called &quot;myuser&quot;, which can login from localhost, with password &quot;xxxx&quot;</span>
+mysql&gt; <strong>create user 'myuser'@'localhost' identified by '<span class="color-new">xxxx</span>';</strong>
+Query OK (0.01 sec)
+   
+<span class="color-comment">-- Grant permission to myuser</span>
+mysql&gt; <strong>grant all on *.* to 'myuser'@'localhost';</strong>
+Query OK (0.01 sec)
+   
+<span class="color-comment"></span>mysql&gt; <strong>quit</strong></pre>
+
+<h5>Explanation</h5>
+<ul>
+<li><span class="line-heading-code-new">CREATE USER 'myuser'@'localhost' IDENTIFIED BY 'xxxx'</span><br />
+We use the command &quot;<code>create user</code>&quot; to create a new user called <code>'myuser'@'localhost'</code>, who can login to the server locally from the same machine (but not remotely from another machine), with password &quot;<code>xxxx</code>&quot;.</li>
+
+<li><span class="line-heading-code-new">GRANT ALL ON *.* TO 'myuser'@'localhost'</span><br />
+The newly created user has NO privilege to perform any database operation including <code>select</code>. We use the &quot;<code>grant</code>&quot; command to grant &quot;<code>all</code>&quot; the privileges (including <code>select</code>, <code>insert</code>, <code>delete</code>, and so on) to this new user on ALL the databases and ALL the tables (&quot;<code>on *.*</code>&quot;). This new user, in practice, has the same privilege as <code>root</code>, except that it cannot issue <code>grant</code> command. For production, you should grant only the necessary privileges on selected databases and selected tables, e.g., &quot;<code>grant select</code>, <code>insert</code>, <code>update on studentdb.*</code>&quot; - it can issue <code>select</code>, <code>insert</code> and <code>update</code> (but no <code>delete</code>, <code>create/drop table</code>) on ALL the tables of the database <code>studentdb</code> only.</li>
+</ul>
+
+<h4>Step 7:  Create a new Database, a new Table in the Database, Insert Records, Query and Update</h4>
+<p>A  MySQL server contains many <em>databases</em>. A database contains many <em>tables</em>. A table contains <em>rows</em> (<em>records</em>) and <em>columns</em> (<em>fields</em>).</p>
+
+<p>Let's create a database called &quot;<code>studentdb</code>&quot;, and  a table called &quot;<code>class101</code>&quot; in the database. The table shall have three columns: <code>id</code> (of the type <code>INT</code> - integer), <code>name</code> (of the type <code>VARCHAR(50)</code> - variable-length string of up to 50 characters), <code>gpa</code> (of the type <code>FLOAT</code> - floating-point number).</p>
+
+<p><span class="line-heading">CAUTION</span>: Programmers don't use <em>blank</em> and <em>special characters</em> in names (database names, table names, column names). It is either not supported, or will pose you many more challenges.</p>
+
+<p><span class="line-heading">TIPS:</span> Before we proceed, here are some tips on using the client:</p>
+<ul>
+<li>You need to terminate your command with a semicolon (<code>;</code>), which sends the command to the server for processing. E.g.,
+<pre class="color-command">
+mysql&gt; <strong>select * from class101 <span class="color-highlight">;</span></strong>
+<span class="color-comment">-- Send the command to the server for processing</span></pre>
+</li>
+<li>You can use <code>\c</code> to <em>cancel</em> (<em>abort</em>) the current command. E.g.,
+<pre class="color-command">
+mysql&gt; <strong>select * from class101 <span class="color-highlight">\c</span></strong>
+<span class="color-comment">-- abort (cancel) the command</span></pre>
+</li>
+<li>A command can span several lines. The prompt for subsequent lines changes to <code>-&gt;</code>. You need to terminate the command with a semicolon (<code>;</code>). E.g.,
+<pre class="color-command">
+mysql&gt; <strong>select * </strong>
+    -&gt; <strong>from class101</strong>
+    -&gt; 
+    -&gt; <strong><span class="color-highlight">;</span></strong>
+<span class="color-comment">-- A command can span several lines, ended with a semicolon.</span></pre></li>
+<li>If you open a single quote, without closing it, the prompt changes to <code>'&gt;</code>. For example,
+  <pre class="color-command">
+mysql&gt; <strong>select 'xxx</strong>
+    <strong><span class="color-highlight">'&gt;</span></strong> <strong>'\c</strong>        <span class="color-comment">// close the single-quote and abort</span></pre></li>
+
+<li>You can use up/down arrow keys to retrieve the previous/next commands (from the history commands).</li>
+<li>(For Windows) You should enable copy/paste functions of CMD shell. To enable copy/paste, click the CMD's icon &rArr; Properties &rArr; Options &rArr; Edit Options &rArr; Check &quot;QuickEdit Mode&quot;. You can then select the desired texts and use a &quot;right-click&quot; to copy the selected text; another &quot;right-click&quot; to paste.</li>
+</ul>
+
+<p>Let's start a client with our newly-created user &quot;<code>myuser</code>&quot;.</p>
+
+<pre class="color-command">
+<span class="color-comment">-- Start a client, IF IT IS NOT STARTED
+-- cd to the MySQL's bin directory</span>
+<strong>mysql -u myuser -p  </strong>   <span class="color-comment">// Windows</span>
+<strong>./mysql -u myuser -p</strong>   <span class="color-comment">// Mac OS X</span>
+   
+<span class="color-comment">-- Create a new database called &quot;studentdb&quot;</span>
+mysql&gt; <strong>create database if not exists studentdb;</strong>
+Query OK, 1 row affected (0.08 sec)
+   
+<span class="color-comment">-- list all the databases in this server</span>
+mysql&gt; <strong>show databases;</strong>
++--------------------+
+| Database           |
++--------------------+
+| ......             |
+| <strong>studentdb</strong>          |
+| ......             |
++--------------------+
+x rows in set (0.07 sec)
+   
+<span class="color-comment">-- Use &quot;studentdb&quot; database as the default database
+-- You can refer to tables in the default database by the <em>tablename</em> alone, instead of <em>databasename</em>.<em>tablename</em></span>
+mysql&gt; <strong>use studentdb;</strong>
+Database changed
+   
+<span class="color-comment">-- Remove the table &quot;class101&quot; in the default database if it exists</span>
+mysql&gt; <strong>drop table if exists class101;</strong>
+Query OK, 0 rows affected (0.15 sec)
+   
+<span class="color-comment">-- Create a new table called &quot;class101&quot; in the default database 
+--  with 3 columns of the specified types</span>
+mysql&gt; <strong>create table class101 (id int, name varchar(50), gpa float);</strong>
+Query OK, 0 rows affected (0.15 sec)
+   
+<span class="color-comment">-- List all the tables in the default database &quot;studentdb&quot;</span>
+mysql&gt; <strong>show tables;</strong>
++---------------------+
+| Tables_in_studentdb |
++---------------------+
+| <strong>class101</strong>            |
++---------------------+
+1 row in set (0.00 sec)
+   
+<span class="color-comment">-- Describe the &quot;class101&quot; table (list its columns' definition)</span>
+mysql&gt; <strong>describe class101;</strong>
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| id    | int(11)     | YES  |     | NULL    |       |
+| name  | varchar(50) | YES  |     | NULL    |       |
+| gpa   | float       | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.04 sec)
+   
+<span class="color-comment">-- Insert a row into &quot;class101&quot; table.
+-- Strings are to be single-quoted. No quotes for INT and FLOAT.</span>
+mysql&gt; <strong>insert into class101 values (11, 'Tan Ah Teck', 4.8);</strong>
+Query OK, 1 row affected (0.03 sec)
+   
+<span class="color-comment">-- Insert another row</span>
+mysql&gt; <strong>insert into class101 values (22, 'Mohamed Ali', 4.9);</strong>
+Query OK, 1 row affected (0.03 sec)
+   
+<span class="color-comment">-- Select all columns (*) from table &quot;class101&quot;</span>
+mysql&gt; <strong>select * from class101;</strong>
++----+-------------+------+
+| id | name        | gpa  |
++----+-------------+------+
+| 11 | Tan Ah Teck |  4.8 |
+| 22 | Mohamed Ali |  4.9 |
++----+-------------+------+
+2 rows in set (0.00 sec)
+  
+<span class="color-comment">-- Select columns from table &quot;class101&quot; with criteria</span>
+mysql&gt; <strong>select name, gpa from class101 where gpa &gt; 4.85;</strong>
++-------------+------+
+| name        | gpa  |
++-------------+------+
+| Mohamed Ali |  4.9 |
++-------------+------+
+1 rows in set (0.00 sec)
+  
+<span class="color-comment">-- Update selected records</span>
+mysql&gt; <strong>update class101 set gpa = 4.4 where name = 'Tan Ah Teck';</strong>
+Query OK, 1 row affected (0.05 sec)<br />Rows matched: 1  Changed: 1  Warnings: 0   
+ 
+mysql&gt; <strong>select * from class101;</strong>
++----+-------------+------+
+| id | name        | gpa  |
++----+-------------+------+
+| 11 | Tan Ah Teck |  4.4 |
+| 22 | Mohamed Ali |  4.9 |
++----+-------------+------+
+2 rows in set (0.00 sec)
+ 
+<span class="color-comment">-- delete selected records</span>
+mysql&gt; <strong>delete from class101 where id = 22;</strong>
+Query OK, 1 row affected (0.03 sec)
+   
+mysql&gt; <strong>select * from class101;</strong>
++----+-------------+------+
+| id | name        | gpa  |
++----+-------------+------+
+| 11 | Tan Ah Teck |  4.4 |
++----+-------------+------+
+1 rows in set (0.00 sec)
+ 
+<span class="color-comment">-- You can store SQL commands in a FILE (called SQL script) and run the script.
+-- Use a programming text editor to <span class="color-new"><strong>CREATE a NEW FILE</strong></span> called &quot;mycommands.sql&quot; 
+--   containing the following three SQL statements.
+-- <strong>(For Windows)</strong> Save the file under &quot;d:\myProject&quot;.
+-- <strong>(For Mac OS X)</strong> Save the file under &quot;Documents&quot;.
+<span class="color-new"><strong>insert into class101 values (33, 'Kumar', 4.8);
+insert into class101 values (44, 'Kevin', 4.6);
+Select * from class101;</strong></span>
+
+-- Once you have created the file, you can use the following &quot;source&quot; command 
+--   to run the SQL script.
+-- You need to provide the full path to the script.
+-- <strong>(For Windows)</strong> The filename is d:\myProject\mycommands.sql.
+-- <strong>(For Mac OS X)</strong> The filename is ~/Documents/mycommands.sql</span>
+mysql&gt; <strong>source <span class="color-new">d:\myProject</span>\mycommands.sql   <span class="color-comment">// For Windows</span></strong>
+mysql&gt; <strong>source <span class="color-new">~/Documents</span>/mycommands.sql    <span class="color-comment">// For Mac OS X</span></strong>
+Query OK, 1 row affected (0.00 sec)   <span class="color-comment">-- INSERT command output</span>
+Query OK, 1 row affected (0.00 sec)   <span class="color-comment">-- INSERT command output</span>
++------+-------------+------+         <span class="color-comment">-- SELECT command output</span>
+| id   | name        | gpa  |
++------+-------------+------+
+|   11 | Tan Ah Teck |  4.4 |
+|   33 | Kumar       |  4.8 |
+|   44 | Kevin       |  4.6 |
++------+-------------+------+
+3 rows in set (0.00 sec)</pre>
+
+<h5>Exercises:</h5>
+<ol>
+<li>Select records with names starting with letter <code>'K'</code>. (Hints: <code>name like 'K%'</code>)</li>
+<li>Select records with names NOT starting with letter <code>'K'</code>. (Hints: <code>name NOT like ...</code>)</li>
+<li>Select records with <code>gpa</code> between 4.35 and 4.65. (Hints: <code>test-1 AND test-2</code>)</li>
+<li>Select records with names having a letter <code>'e'</code>. (Hints: <code>name like '%e%'</code>)</li>
+<li>Select records with names having a letter <code>'e'</code> or <code>'a'</code>. (Hints: <code>test-1 OR test-2</code>)</li>
+<li>Select records with names NOT having a letter <code>'e'</code> or <code>'a'</code>. (Hints: <code>NOT (test-1 OR test-2)</code>)</li>
+<li>Select records with names having a letter <code>'e'</code> and <code>gpa &ge; 4.5</code>.</li>
+</ol>
+
+<p><span class="line-heading">(Skip Unless... )</span> Read &quot;<a href="../howto/ErrorMessages.html#MySQLErrorsUsingClient">Common Problems in Using the mysql Client</a>&quot;.</p>
+
+<h4>More Exercises</h4>
+
+<ol>
+<li>Show all the databases.</li>
+<li>Create a new database called &quot;<code>ABCTrading</code>&quot;.</li>
+<li>Set the &quot;<code>ABCTrading</code>&quot; database as the default database.</li>
+<li>Show all the tables in the default database.</li>
+<li>Create a new table called &quot;<code>products</code>&quot; with the columns and type indicated below.
+  <pre class="color-example">
++-------+----------+-------------+----------+---------+
+| id    | category | name        | quantity | price   |
+| (INT) | CHAR(3)  | VARCHAR(20) | (INT)    | (FLOAT) |
++-------+----------+-------------+----------+---------+
+| 1001  | PEN      | Pen Red     |     5000 |  1.23   |
+| 1002  | PEN      | Pen Blue    |     8000 |  1.25   |
+| 1003  | PEN      | Pen Black   |     2000 |  1.25   |
+| 1004  | PCL      | Pencil 2B   |    10000 |  0.49   |
+| 1005  | PCL      | Pencil 2H   |     9000 |  0.48   |
++-------+----------+-------------+----------+---------+</pre></li>
+
+<li> Show the table description.</li>
+<li>Insert the above records and list all the records.</li>
+<li>List records with name containing &quot;<code>Pencil</code>&quot;.</li>
+<li>List records with price &ge; 1.0.</li>
+<li>Increase the price of all items by 10%, and list all the records.</li>
+<li>Remove &quot;Pen Red&quot; from the table, and list all the records.</li>
+
+</ol>
+
+<h3>Many-to-many Relationship</h3>
+
+<p>In a bookstore, a book is written by one or more authors; an author may write zero or more books. This is known as a <em>many-to-many relationship</em>. It is IMPOSSIBLE to capture many-to-many relationship in a SINGLE table with a fixed number of columns,  without duplicating any piece of information! For example, if you organize the data in the table below, you will not know how many author columns to be used; and you need to repeat all the data for repeating authors.</p>
+<img src="images/ManyToManyInOneTable.png" alt="many-to-many"/>
+
+<p> The many-to-many relationship between books and authors can be modeled with 3 tables, as shown below. A <code>books</code> table contains data about books (such as title and price); an <code>authors</code> table contains data about the authors (such as name and email). A table called <code>books_authors</code> joins the <code>books</code> and <code>authors</code> tables and captures the <em>many-to-many</em> relationship between <code>books</code> and <code>authors</code>.</p>
+
+<img class="image-left image-border" src="images/BookStore_ManyToMany.png"  alt="image" />
+
+<h5>Exercises</h5>
+
+<ol>
+<li>Create a database called &quot;<code>mybookstore</code>&quot;.</li>
+<li>Use &quot;<code>mybookstore</code>&quot; as the default database.</li>
+<li>Create 3 tables &quot;<code>books</code>&quot;, &quot;<code>authors</code>&quot;, and &quot;<code>books_authors</code>&quot; in the database &quot;<code>mybookstore</code>&quot;, with column names and types as shown.</li>
+<li>Insert the respective records into the tables. List the contents of each of the tables.</li>
+<li>Try this query and explain the output:
+  <pre class="color-example">
+SELECT books.title, books.price, authors.name
+   FROM books, books_authors, authors
+   WHERE <span class="color-new"><strong>books.isbn = books_authors.isbn</strong></span>
+      AND <span class="color-new"><strong>authors.authorID = books_authors.authorID</strong></span>
+      AND authors.name = 'Tan Ah Teck';</pre>
+</li>
+<li>List all the books (<code>title</code>, <code>price</code>, <code>qty</code>) by &quot;Tan Ah Teck&quot; with <code>price</code> less than <code>20</code>.</li>
+<li>List all the authors (<code>name</code> and <code>email</code>) for the book title &quot;Java for Dummies&quot;.</li>
+<li>List all the books (<code>title</code>, <code>price</code>, <code>qty</code>) and all the authors (<code>name</code> and <code>email</code>) for books with title beginning with &quot;Java&quot; (Hints: <code>title LIKE 'Java%'</code>).</li>
+
+</ol>
+
+<h3 id="Backup">Backup and Restore Databases</h3>
+
+<h4>Backup via &quot;<span class="font-code">mysqldump</span>&quot; Utility Program</h4>
+
+<p>You can use the <code>&quot;mysqldump&quot;</code> utility program to back up the entire server (all databases), selected databases, or selected tables of a database. The &quot;<code>mysqldump</code>&quot; program generates a SQL script that can later be executed to re-create the databases, tables and their rows.</p>
+
+
+<p>For example, the following command backups the entire &quot;<code>studentdb</code>&quot; database to a SQL script called &quot;<code>backup_studentdb.sql</code>&quot;.</p>
+
+<div class="side-note">
+<p class="line-heading">For Windows</p>
+<pre class="color-command">
+<span class="color-comment">-- Start a <span class="color-highlight">NEW</span> &quot;cmd&quot;</span>
+<strong>d:</strong>
+<strong>cd \myProject\mysql\bin</strong>
+<strong>mysqldump -u myuser -p --databases studentdb &gt; &quot;d:\myProject\backup_studentdb.sql&quot;</strong></pre>
+</div>
+
+<div class="side-note">
+<p class="line-heading">For Mac OS X</p>
+<pre class="color-command">
+<span class="color-comment">-- Start a <span class="color-highlight">NEW</span> &quot;terminal&quot;</span>
+<strong>cd /usr/local/mysql/bin</strong>
+<strong>./mysqldump -u myuser -p --databases studentdb &gt; ~/Documents/backup_studentdb.sql</strong>
+     <span class="color-comment">// ~ denotes the home directory of the current login user</span></pre>
+
+</div>
+
+<p>Study the output file, which contains <code>CREATE DATABASE</code>, <code>CREATE TABLE</code> and <code>INSERT</code> statements to re-create the database and tables dumped.</p>
+
+<h4>Restore via &quot;<span class="font-code">source</span>&quot; command in a mysql client</h4>
+
+<p>You can restore from the backup by running the &quot;<code>source</code>&quot; command in a MySQL client. For example, to restore the <code>studentdb</code> backup earlier:</p>
+
+<div class="side-note">
+<p class="line-heading">For Windows</p>
+<pre class="color-command">
+<span class="color-comment">-- Start a MySQL client</span>
+<strong>d:</strong>
+<strong>cd \myproject\mysql\bin</strong>
+<strong>mysql -u myuser -p</strong>
+<span class="color-comment">-- Run the backup script to recreate the database</span>
+mysql&gt; <strong>drop database if exists studentdb;</strong>
+mysql&gt; <strong>source d:\myProject\backup_studentdb.sql</strong></pre>
+</div>
+
+<div class="side-note">
+<p class="line-heading">For Mac OS X</p>
+<pre class="color-command">
+<span class="color-comment">-- Start a MySQL client</span>
+<strong>cd /usr/local/mysql/bin</strong>
+<strong>./mysql -u myuser -p</strong>
+<span class="color-comment">-- Run the backup script to recreate the database</span>
+mysql&gt; <strong>drop database if exists studentdb;</strong>
+mysql&gt; <strong>source ~/Documents/backup_studentdb.sql</strong></pre>
+</div>
+
+<h3>Summary of Frequently-Used Commands</h3>
+
+<h5>(For Windows) Starting MySQL Server and Client</h5>
+<pre class="color-syntax">
+<span class="color-comment">-- Start the Server</span>
+cd <span class="color-new"><em>path-to-mysql-bin</em></span>
+mysqld --console
+ 
+<span class="color-comment">-- Shutdown the Server</span>
+Ctrl-c
+ 
+<span class="color-comment">-- Start a Client</span>
+cd <span class="color-new"><em>path-to-mysql-bin</em></span>
+mysql -u <em>username</em> -p</pre>
+ 
+<h5>(For Mac OS X) Starting MySQL Server and Client</h5>
+<pre class="color-syntax">
+<span class="color-comment">-- Start/shutdown the Server: 
+-- Use Graphical Control</span>
+ 
+<span class="color-comment">-- Start a Client</span>
+cd /usr/local/mysql/bin
+./mysql -u <em>username</em> -p</pre>
+ 
+
+
+<h5>Frequently-used MySQL Commands</h5>
+<p>MySQL commands are NOT case sensitive.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">-- General</span>
+;           <span class="color-comment">-- Sends command to server for processing (or \g)</span>
+\c          <span class="color-comment">-- Cancels (aborts) the current command</span>
+ 
+<span class="color-comment">-- Database-level</span>
+DROP DATABASE <em>databaseName</em>;                 <span class="color-comment">-- Deletes the database</span>
+DROP DATABASE IF EXISTS <em>databaseName</em>;       <span class="color-comment">-- Deletes only if it exists</span>
+CREATE DATABASE <em>databaseName</em>;               <span class="color-comment">-- Creates a new database</span>
+CREATE DATABASE IF NOT EXISTS <em>databaseName</em>; <span class="color-comment">-- Creates only if it does not exists</span>
+SHOW DATABASES;                             <span class="color-comment">-- Shows all databases in this server</span>
+   
+<span class="color-comment">-- Set default database.
+-- Otherwise you need to use the fully-qualified name, in the form 
+--   of &quot;<em>databaseName.tableName</em>&quot;, to refer to a table.</span>
+USE <em>databaseName</em>
+   
+<span class="color-comment">-- Table-level</span>
+DROP TABLE <em>tableName</em>;
+DROP TABLE IF EXISTS <em>tableName</em>;
+CREATE TABLE <em>tableName</em> (<em>column1Definition</em>, <em>column2Definition</em>, ...);
+CREATE TABLE IF NOT EXISTS <em>tableName</em> (<em>column1Definition</em>, <em>column2Definition</em>, ...);
+SHOW TABLES;              <span class="color-comment">-- Shows all the tables in the default database</span>
+DESCRIBE <em>tableName</em>;       <span class="color-comment">-- Describes the columns for the table</span>
+DESC <em>tableName</em>;           <span class="color-comment">-- Same as above</span>
+   
+<span class="color-comment">-- Record-level (CURD - create, update, read, delete)</span>
+INSERT INTO <em>tableName</em> VALUES (<em>column1Value</em>, <em>column2Value</em>,...);
+INSERT INTO <em>tableName</em> (<em>column1Name</em>, ..., <em>columnNName</em>) 
+   VALUES (<em>column1Value</em>, ..., <em>columnNValue</em>);
+DELETE FROM <em>tableName</em> WHERE <em>criteria</em>;
+UPDATE <em>tableName</em> SET <em>columnName</em> = <em>expression</em> WHERE <em>criteria</em>;
+SELECT <em>column1Name</em>, <em>column2Name, ...</em> FROM <em>tableName</em> 
+   WHERE <em>criteria</em>
+   ORDER BY <em>columnAName</em> <span class="underline">ASC</span>|DESC, <em>columnBName</em> <span class="underline">ASC</span>|DESC, ...;
+  
+<span class="color-comment">-- Running a script of MySQL statements</span>
+SOURCE <em>full-Path-Filename</em></pre>
+
+
+<a class="references" href="../howto/References.html#mysql">Link to MySQL References &amp; Resources</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: MySQL Community Server 5.7.11, Windows 10, Mac OS X 10.10, Ubuntu 14.04<br />
+Last modified: February, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

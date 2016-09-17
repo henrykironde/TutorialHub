@@ -1,0 +1,101 @@
+/*
+ * "wrap-outer" wraps header, wrap-inner and footer
+ */
+#wrap-outer {
+	margin: 35px 35px;
+	padding: 0;
+}
+
+/* 
+ * "header" division
+ */
+#header {
+	margin: 0;
+	border: 0;
+	padding: 0;
+	color: rgb(11, 83, 149);
+}
+#header h1 {
+	padding: 0.2em 0 0 0;
+}
+#header h5 {
+	margin: 0;
+	border: 0;
+	padding: 0;
+	color: #444;
+	font-weight: 400;
+}
+
+/*
+ *  Menu Division
+ */
+#menu {
+	margin: 40px 0 20px 0;
+/*	border-top: 2px solid rgb(165, 194, 73); */
+/*	border-top: 4px solid #ccc; */
+	border-top: 2px solid rgb(16, 207, 155);
+	border-bottom: 2px solid rgb(16, 207, 155);
+	padding: 6px 8px;
+	font-size: 14px;
+}
+#menu a {
+	font-family: "Century Gothic", "Segoe UI", Arial, Helvetica, sans-serif;
+	padding: 0 15px;
+	font-weight: 500;
+	font-size: 16px;
+	color: rgb(192, 80, 77);
+/*    color: rgb(126, 150, 50); */
+}
+#menu a:focus, #menu a:hover {
+	color: rgb(152, 72, 7);  /* orange, darker 50% */
+	text-decoration: underline;
+}
+#wrap-inner {
+	margin: 0;
+	border: 1px solid #ddd;
+	padding: 25px 20px;
+}
+#content-main {
+	margin: 0;
+	padding: 10px 0;
+}
+
+.panel {
+	float: left;
+	width: 48%;
+	margin: 0 1%;
+}
+.entry {
+	margin: 0 0 15px 0;
+	background-color: rgb(231, 246, 239);
+	padding: 2px 15px;
+	box-shadow: 3px 3px 0 #ddd;
+/*	border: 2px solid #eee;  */
+}
+.entry h4 {   /* section heading */
+	font-family: "Century Gothic", "Trebuchet MS", Arial, Helvetica, sans-serif;
+	padding: 0.5em 0 0.2em 0;
+}
+.entry h5 {   /* sub-section heading */
+    color: #666;
+	padding: 0.5em 0 0 0;
+}
+.entry ul {
+	margin: 0;
+	padding: 2px 10px;
+	list-style: none outside none;
+	line-height: 150%;
+}
+.under-construction {
+	color: #888;
+}
+
+a {
+/*	color: rgb(15, 111, 198); */
+    color: #000;
+	text-decoration: none;
+}
+a:focus, a:hover {
+	color: rgb(152, 72, 7);  /* orange, darker 50% */
+	text-decoration: underline;
+}

@@ -1,0 +1,425 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Reference - Java Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>Java Reference</h2>
+</div>
+
+<div id="content-main">
+
+<p>This chapter provides the technical references.</p>
+
+<h3>Keywords &amp; Reserved Words</h3>
+
+<p>Java's keywords are:</p>
+<ul>
+<li>Primitive types: <code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code>, <code>char</code>, <code>boolean</code>.</li>
+
+<li>Flow control: <code>if</code>, <code>else</code>, <code>switch</code>, <code>case</code>, <code>default</code>, <code>for</code>, <code>while</code>, <code>do</code>, <code>break</code>, <code>continue</code>.</li>
+
+<li>Access Control Modifiers: <code>private</code>, <code>public</code>, <code>protected</code>.</li>
+<li>Other Modifiers: <code>final</code> (content cannot be modified), <code></code><code>static</code>, <code></code><code>abstract</code>, <code>native</code>, <code>synchronized</code> (locking in multithreading), <code>transient</code> (non-serialized variable), <code>volatile</code> (variable might be modified asynchronously in multithreading).</li>
+
+<li>Method-related: <code>return</code>, <code>void</code>.</li>
+
+<li>Class-related: <code>class</code>, <code>interface</code>, <code>enum</code>, <code>super</code>, <code>this</code>, <code>new</code>, <code>import</code>, <code>package</code>, <code>extends</code>, <code>implements</code>, <code>instanceof</code>.</li>
+
+<li>Exception and Assertion: <code>try</code>, <code>catch</code>, <code>finally</code>, <code>throws</code>, <code>throw</code>, <code>assert</code>.</li>
+<li>Others: <code>strictfp</code> (strict floating-point that conform to IEEE 754 specification, applicable to class and method).</li>
+</ul>
+
+<p>There are two reserved words (not used currently): <code>goto</code>, <code>const</code>.</p>
+
+<p>There are two <code>boolean</code> literals: <code>true</code>, <code>false</code>; and one special literal <code>null</code> for objects without references.</p>
+
+<p>Note: JDK 1.4 added <code>assert</code>. JDK 1.5 added <code>enum</code>. There are 50 keywords/reversed words and 3 reserved literals, as of JDK 1.5,</p>
+
+<h3>Operators &amp; Precedences</h3>
+<p>The entire list of operators in Java is summarized below:</p>
+<ul>
+<li>Assignment:  <code>=</code></li>
+<li>Arithmetic: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code></li>
+<li>Increment and decrement:  <code>++</code>, <code>--</code></li>
+<li>Comparison:  <code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code></li>
+<li>Logical:  <code>&amp;&amp;</code>, <code>||</code>, <code>!</code>, <code>^</code></li>
+<li>Bitwise:  <code>&amp;</code>, <code>|</code>, <code>~</code>, <code>^</code>, <code>&lt;&lt;</code>, <code>&gt;&gt;</code>, <code>&gt;&gt;&gt;</code></li>
+<li>Compound Assignment:  <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>%=</code>, <code>&amp;=</code>, <code>|=</code>, <code>^=</code>, <code>&lt;&lt;=</code>, <code>&gt;&gt;=</code>, <code>&gt;&gt;&gt;=</code></li>
+<li>Conditional: <code>?</code>, <code>:</code></li>
+<li>Others: <code>new</code>, <code>instanceof</code>, <code>(<em>type</em>)</code>, dot (<code>.</code>), array index <code>[]</code></li>
+</ul>
+
+<p>The following table arranges the operators according to their precedences from the highest to the lowest (in groups).</p>
+
+<table class="table-zebra" style="width:70%">
+  <tr>
+<th>Category</th>
+<th>Operator</th>
+<th>Description</th>
+<th>Associativity</th>
+  </tr>
+<tr>
+<td>Parentheses, Dot</td>
+<td>
+<span class="font-code">()</span><br />
+<span class="font-code">()</span><br />
+<span class="font-code">[]</span><br />
+<span class="font-code">.</span>
+</td>
+<td>
+Parenthesis<br />
+Function call<br />
+Array index<br />
+Member variable/method accessor</td>
+<td>left to right</td>
+</tr>
+<tr class="tr-alt">
+<td>Unary Postfix Increment/Decrement</td>
+<td>
+<span class="font-code"><em>expr</em>++</span><br />
+<span class="font-code"><em>expr</em>--</span>
+</td>
+<td>
+Postfix increment<br />
+Postfix decrement</td>
+<td>right to left</td>
+</tr>
+
+<tr>
+<td>Unary Prefix Operators</td>
+<td><span class="font-code">++<em>expr</em></span><br />
+<span class="font-code">--<em>expr</em></span><br />
+<span class="font-code">+<em>expr</em></span><br />
+<span class="font-code">-<em>expr</em></span><br />
+<span class="font-code">!<em>expr</em></span><br />
+<span class="font-code">~<em>expr</em></span></td>
+<td>Prefix increment<br />
+Prefix decrement<br />
+Prefix unary plus<br />
+Prefix unary minus<br />
+Prefix unary logical NOT (for boolean)<br />
+Prefix unary bitwise NOT (for integers)</td>
+<td>right to left</td>
+</tr>
+<tr class="tr-alt">
+<td>Unary Prefix type-cast &amp;<br />object creation</td>
+<td><span class="font-code">(type)<em>expr</em></span><br />
+<span class="font-code">new</span></td>
+<td>Prefix unary type casting<br />
+Construct new instance</td>
+<td>right to left<br />
+  -</td>
+</tr>
+<tr>
+<td>Arithmetic multiplicative</td>
+<td>
+<span class="font-code">*</span><br />
+<span class="font-code">/</span><br />
+<span class="font-code">%</span>
+</td>
+<td>
+Multiplication<br />
+Division<br />
+Integer Modulus or Remainder</td>
+<td>left to right</td>
+</tr>
+<tr class="tr-alt">
+<td>Arithmetic additive</td>
+<td>
+<span class="font-code">+</span><br />
+<span class="font-code">-</span>
+</td>
+<td>
+Addition, String concatenation<br />
+Subtraction</td>
+<td>left to right</td>
+</tr>
+<tr>
+<td>Bit-Shift</td>
+<td>
+<span class="font-code">&gt;&gt;</span><br />
+<span class="font-code">&gt;&gt;&gt;</span><br />
+<span class="font-code">&lt;&lt;</span>
+</td>
+<td>
+Right signed bit-shift<br />
+Right unsigned bit_shift<br />
+Left bit-shift</td>
+<td>left to right</td>
+</tr>
+<tr class="tr-alt">
+<td>Comparison</td>
+<td>
+<span class="font-code">&lt;</span><br />
+<span class="font-code">&lt;=</span><br />
+<span class="font-code">&gt;</span><br />
+<span class="font-code">&gt;=</span><br />
+<span class="font-code">instanceof</span>
+</td>
+<td>
+Less than<br />
+Less than or equal to<br />
+Greater than<br />
+Greater than or equal to<br />
+check type of an instance</td>
+<td>left to right</td>
+</tr>
+<tr>
+<td>Equality Comparison</td>
+<td>
+<span class="font-code">==</span><br />
+<span class="font-code">!=</span>
+</td>
+<td>
+Equality<br />
+Not equal<br />
+</td>
+<td>left to right</td>
+</tr>
+<tr class="tr-alt">
+<td>Bitwise AND</td>
+<td>
+<span class="font-code">&amp;</span></td>
+<td>
+Bitwise AND for integers<br />
+Logical AND for booleans</td>
+<td>left to right</td>
+</tr>
+<tr>
+<td>Bitwise XOR</td>
+<td>
+<span class="font-code">^</span></td>
+<td>Bitwise XOR for integers<br />
+  Logical XOR for booleans</td>
+<td>left to right</td>
+</tr>
+<tr class="tr-alt">
+<td>Bitwise OR</td>
+<td><span class="font-code">|</span></td>
+<td>Bitwise OR for integers<br />
+  Logical OR for booleans</td>
+<td>left to right</td>
+</tr>
+
+<tr>
+<td>Logical AND</td>
+<td>
+<span class="font-code">&amp;&amp;</span>
+</td>
+<td>
+Logical AND
+
+for booleans</td>
+<td>left to right</td>
+</tr>
+
+<tr class="tr-alt">
+<td>Logical OR</td>
+<td>
+<span class="font-code">||</span>
+</td>
+<td>
+Logical OR for booleans</td>
+<td>left to right</td>
+</tr>
+
+<tr>
+<td>Conditional</td>
+<td>
+<span class="font-code">? :</span>
+</td>
+<td>
+Shorthand if-else</td>
+<td>-</td>
+</tr>
+
+<tr class="tr-alt">
+<td>Assignment &amp;<br />Compound Assignment</td>
+<td>
+<span class="font-code">=</span><br />
+<span class="font-code">+=</span><br />
+<span class="font-code">-=</span><br />
+<span class="font-code">*=</span><br />
+<span class="font-code">/=</span><br />
+<span class="font-code">%=</span><br />
+<span class="font-code">&amp;=</span><br />
+<span class="font-code">|=</span><br />
+<span class="font-code">^=</span><br />
+<span class="font-code">&lt;&lt;=</span><br />
+<span class="font-code">&gt;&gt;=</span><br />
+<span class="font-code">&gt;&gt;&gt;=</span></td>
+<td>
+Assignment<br />
+Addition compound assignment<br />
+Subtraction compound assignment<br />
+Multiplication compound assignment<br />
+Division compound assignment<br />
+Integer modulus compound assignment<br />
+Bitwise AND compound assignment<br />
+Bitwise OR compound assignment<br />
+Bitwise XOR compound assignment<br />
+Bit-left-shift compound assignment<br />
+Bit-signed-right-shift compound assignment<br />
+Bit-unsigned-right-shift compound assignment</td>
+<td>right to left</td>
+</tr>
+
+</table>
+
+<p>Notes:</p>
+<ul>
+<li>Comparison operators (<code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code>) take precedence over Logical AND/OR operators (<code>&amp;&amp;, </code><code>||</code>).  Hence,
+<pre class="color-example">
+x == 3 || x == 5    <span class="color-comment">// is the same as (x == 3) || (x == 5)</span>
+x &gt;= 3 &amp;&amp; x &lt;= 5    <span class="color-comment">// is the same as (x &gt;= 3) &amp;&amp; (x &lt;= 5)</span>
+</pre>
+</li>
+
+<li>Logical AND <code>'&amp;&amp;'</code> takes precedence over logical OR <code>'||'</code>.  Hence,
+<pre class="color-example">
+x || y &amp;&amp; z || w    <span class="color-comment">// x || (y &amp;&amp; z) || w  (take note!)</span>
+x &amp;&amp; y || z &amp;&amp; w    <span class="color-comment">// (x &amp;&amp; y) || (z &amp;&amp; w)</span>
+</pre>
+</li>
+
+<li><code>'&amp;'</code>, <code>'|'</code> and <code>'^'</code>, when apply to <code>boolean</code>s, perform logical operations as in logical AND (<code>&amp;&amp;</code>), OR (<code>||</code>) and XOR (<code>^</code>). However, the order of precedence is: <code>'&amp;'</code>, <code>'^'</code>, <code>'|'</code>, <code>'&amp;&amp;'</code> and <code>'||'</code>.</li>
+
+<li><code>System.out.println(+++i)</code> is interpreted as <code>System.out.println(++(+i))</code> and result in compilation error! <code>System.out.println(+(++i))</code> is valid. <code>++++i</code> is invalid as <code>++(++i)</code> results in <code>++(<em>value</em>)</code>.</li>
+<li>Most operators (such as addition) is left associative, i.e., <code>1+2+3</code> is interpreted as <code>((1+2)+3)</code>. Some operators (such as assignment) is right associative, i.e., <code>i=j=k= 5</code> is interpreted as <code>(i=(j=(k=5)))</code>.</li>
+</ul>
+
+<h3>Classes</h3>
+<p>The syntax for defining a <code>class</code> is as follows:</p>
+<pre class="color-syntax">
+<strong>public</strong>|<strong>protected</strong>|<em>default</em>             <span class="color-comment">// Access control modifier</span>
+<strong>private</strong>|<strong>static</strong>                       <span class="color-comment">// For nested class only</span>
+<strong>abstract</strong>                             <span class="color-comment">// Contain abstract methods</span>
+<strong>final</strong>                                <span class="color-comment">// Cannot be sub-classed</span>
+<strong>class</strong> <em>ClassName</em>                      <span class="color-comment">// Class identifier</span>
+<strong>&lt;</strong><em>G</em><strong>&gt;</strong>                                  <span class="color-comment">// Generic formal type parameter</span>
+<strong>extends</strong> <em>ASingleSuperClass</em>            <span class="color-comment">// Only one superclass</span>
+<strong>implements</strong> <em>Interface1</em>,...,<em>InterfaceN</em> <span class="color-comment">// Multiple interfaces allowed</span>
+<strong>{</strong>
+   <em>class-body</em>                <span class="color-comment">// Contains member variables,</span>
+                             <span class="color-comment">//  constructors, member methods,</span>
+                             <span class="color-comment">//  and other helper's methods.</span>
+<strong>}</strong>
+</pre>
+
+<p>A <code>public</code> class is accessible by all the classes in the system.  A <code>protected</code> class is accessible by classes in the same package and its subclasses.  The <em>default</em> access control modifier is package or friendly, i,e, accessible by class in the same package only.</p>
+
+<p>A <em>nested class</em> can have class modifier of <code>private</code> and <code>static</code>.  A <code>private</code> nested class is accessible within the enclosing outer class.  <code>Static</code> nested class belongs to the enclosing outer class instead of an instance of the outer class. A non-static nested class is called an <em>inner class</em>.</p>
+
+<p>An <code>abstract</code> class contains one or more <code>abstract</code> methods.  An <code>abstract</code> method is a method declaration with only signature and no implementation.  An <code>abstract</code> class cannot be instantiated.  To use an <code>abstract</code> class, you have to derive a subclass which provides implementation to all the <code>abstract</code> methods.  You can then instantiate the concrete subclass.  An <code>abstract</code> class (and also <code>interface</code>) is used to specify a &quot;unified public interface&quot; which is independent from its actual implementation, which enables programmers to program at the interface, instead of the implementation.</p>
+
+<p>A <code>final</code> class cannot be sub-classed.</p>
+
+<p>JDK 1.5 introduces a new feature called <em>generics</em>, which allows you to abstract over types. You can be generic about type in the definition using a type formal parameter (e.g., ArrayList&lt;G&gt;), but specific in the types during the instantiation (e.g., ArrayList&lt;Integer&gt;).</p> 
+
+<p>A class may &quot;<code>extends</code>&quot; from one and only one superclass.  The subclass inherits all the variables and methods of its direct superclass and ancestors.  Java supports only <em>single inheritance</em>.</p>
+
+<p>A class may &quot;<code>implements</code>&quot; one or more interfaces.  An interface contains a set of <code>abstract</code> methods and possible some constants (<code>public</code> <code>static</code> <code>final</code> variables) to provide common contract, protocol for communication between classes.  A class <code>implements</code> an <code>interface</code> must provide implementation to all the <code>abstract</code> methods declared in the <code>interface</code>.  An <code>interface</code>, as its name implied, provide a &quot;unified public interface&quot; for all classes that implement the interface.  This enables programmers to program at the interface, instead of the actual implementation.</p>
+
+<p>The class body may contain member variables, constructors, public methods, private helper methods and others.</p>
+
+<img class="image-center" src="images/UML_ClassInstance.png" />
+
+<p>Class are organized in hierarchy, i.e., superclass and subclass.</p>
+<img class="image-center" src="images/UML_Inheritance.png" />
+
+
+<h3>Variables</h3>
+<p>The syntax for declaring a <em>variable</em> is as follows:</p>
+<pre class="color-example">
+<strong>public</strong>|<strong>protected</strong>|<em>default</em>|<strong>private</strong>   <span class="color-comment">// Access control modifier</span>
+<strong>static</strong>|<em>default</em>                     <span class="color-comment">// Class vs. instance variable</span>
+<strong>final</strong>                              <span class="color-comment">// Reference cannot be modified</span>
+<strong>transient</strong>                          <span class="color-comment">// Need not be serialized</span>
+<strong>volatile</strong>                           <span class="color-comment">// For threads</span>
+<em>type</em> <em>variableIdentifier</em>            <span class="color-comment">// type and identifier</span>
+</pre>
+
+<p>A <code>public</code> variable is accessible by all the classes.  A <code>protected</code> variable is accessible by classes in the same package and the derived subclass.  The default access control modifier allows access by classes in the same package.  A <code>private</code> variable is accessible only within this class definition.</p>
+
+<p>A <code>static</code> variable (or class variable) belongs to the class.  All the instances of this class share the same storage for the <code>static</code> variable.  The default non-static variable (or instance variable) belongs to the instances.  Each instance has its own copy of instance variables.</p>
+
+<p>The reference to a final variable cannot be modified once assigned.  For primitive variables, they are constants.  For variable of reference type, the reference value cannot be changed once assigned, but the object referenced can be modified.</p>
+
+<p>A transient variable will not be serialized, when a state of the object is serialized (e.g., to an external storage or network).</p>
+
+<h3>Methods</h3>
+<p>The syntax for declaring a <em>method</em> is as follows:</p>
+<pre class="color-syntax">
+<strong>public</strong>|<strong>protected</strong>|<em>default</em>|<strong>private</strong>   <span class="color-comment">// Access control modifier</span>
+<strong>static</strong>|<em>default</em>                     <span class="color-comment">// Class vs. instance method</span>
+<strong>abstract</strong>                           <span class="color-comment">// No implementation</span>
+<strong>final</strong>                              <span class="color-comment">// Subclass cannot override</span>
+<strong>native</strong>                             <span class="color-comment">// Written in native codes</span>
+<strong>synchronized</strong>                       <span class="color-comment">// Thread-safe, lock the object</span>
+<strong>&lt;</strong><em>G</em><strong>&gt;</strong>                                <span class="color-comment">// Generic type formal parameter</span>
+<em>returnType</em> <em>methodName</em> <strong>(</strong><em>argumentList</em><strong>)</strong>
+<strong>throws</strong> <em>Exception1</em>,...,<em>ExceptionN</em>   <span class="color-comment">// Pass these Exceptions to caller</span>
+<strong>{</strong>
+   <em>methodBody</em>;
+<strong>}</strong>
+</pre>
+
+<p>A method receives zero or more arguments from its caller, carries out the operations defined in the body, and returns a primitive value, or a reference to an object, or <code>void</code> (i.e., nothing) to the caller.  A method that is not returning <code>void</code> must contain a <code>return</code> statement, which returns a value to the caller of the type as declared in the method's signature.</p>
+
+<p>Method's arguments of primitive types are passed by value.  Method’s arguments of reference types (i.e., objects) are passed by reference (i.e., the handle or pointer is passed). [Strictly speaking, all arguments are passed by value.  For primitive types, a value is copied and passed into the method and the original value cannot be accessed or modified.  For reference types, a copy of the reference is passed into the method and the original reference cannot be changed.  In the method’s body, you can use the passed reference to modify the object or calling its methods.]</p>
+
+<p>Method modifiers <code>public</code>, <code>protected</code>, <em>package</em>, <code>private</code>, <code>static</code> carry the same meaning as variables.</p>
+
+<p>An <code>abstract</code> method declares only the method's signature, without the actual implementation.  A method's signature consists of the method name, argument list and the return type.  Implementation of the abstract method is to be provided by a subclass.</p>
+
+<p>A final method cannot be overridden in the subclasses.</p>
+
+<p>A native method is not written in Java, but in native platform format, written in other languages like C.</p>
+
+<p>A <code>synchronized</code> method is <em>thread-safe</em>.  The lock of the object (where the method is defined) must be secured before the <code>synchronized</code> method can be executed.  This locks out the object from the other threads.  The lock is released after the method completes.</p>
+
+<p>Java supports method overloading, which means that the same method name can have a few implementation differentiated by the type, number and order of arguments.</p>
+
+<p>A constructor is a special method, which has the same name as the class but without the return type.  Constructors are used to initialize an instance.  In Java, we use <code>new</code> operator followed by a call to a constructor to instantiate an object.</p>
+
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>[TODO]</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7.3_03<br />
+Last modified: May, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

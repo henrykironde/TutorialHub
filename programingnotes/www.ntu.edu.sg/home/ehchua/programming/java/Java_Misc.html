@@ -1,0 +1,738 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Programming - Miscellaneous How-To</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming</h1>
+<h2>Miscellaneous How-To</h2>
+</div>
+
+<div id="content-main">
+
+
+<h3 id="format_to_string">How to format a <span class="font-code">float</span>/<span class="font-code">double</span> into a <span class="font-code">String</span></h3>
+
+<p>The method <code>printf()</code> can be used to format a <code>float/double</code> to a output stream. However, it does not return a <code>String</code>. In JDK 1.5, a new <code>static</code> method <code>format()</code> is added to the <code>String</code> class, which is similar to <code>printf()</code>, but returns a <code>String</code>. For example,</p>
+
+<pre class="color-example">
+String strDouble = String.format(&quot;%8.2f&quot;, 1.23456);
+</pre>
+
+<p>Alternatively, we could use the <code>java.util.Formatter</code> class.</p>
+<pre class="color-example">
+<span class="color-comment">// Allocate a Formatter on the StringBuilder</span>
+StringBuilder sb = new StringBuilder();
+Formatter formatter = new Formatter(sb);  <span class="color-comment">// Send all outputs to StringBuilder</span>
+<span class="color-comment">// format() has the same syntax as printf()</span>
+formatter.format("%.2f", totalPrice);     <span class="color-comment">// 2 decimal places</span></pre>
+
+<h3>How to Clone an Object (Copy by Value)</h3>
+
+<p>The easiest way is to write a <em>copy constructor</em>, which takes the object to be cloned, construct a new object by copying all the variables (states). For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre>
+</td>
+<td>
+<pre>
+public class Circle {
+   public double radius;
+ 
+   public Circle(double radius) {
+      this.radius = radius;
+   }
+   public Circle() {
+      this.radius = 0.0;
+   }
+  <span class="color-comment"> // Copy Constructor</span>
+   <span class="color-new">public Circle(Circle another) {
+      this.radius = another.radius;
+   }</span>
+ 
+   public void setRadius(double radius) {
+      this.radius = radius;
+   }
+ 
+   public double getRadius() {
+      return radius;
+   }
+ 
+   public static void main(String[] args) {
+      Circle c1 = new Circle(1.1);
+      System.out.println(c1.getRadius()); <span class="color-comment"> // 1.1</span>
+      <span class="color-new">Circle c2 = new Circle(c1);</span><span class="color-comment"> // Construct c2 by cloning c1</span>
+      System.out.println(c2.getRadius()); <span class="color-comment"> // 1.1</span>
+      c2.setRadius(2.2);
+      System.out.println(c1.getRadius()); <span class="color-comment"> // 1.1</span>
+      System.out.println(c2.getRadius()); <span class="color-comment"> // 2.2</span>
+ 
+      <span class="color-new">Circle c3 = c1;</span><span class="color-comment"> // Assign the reference of c1 to c3</span>
+                     <span class="color-comment"> // c1 and c3 points to the same object</span>
+      System.out.println(c3.getRadius()); <span class="color-comment"> // 1.1</span>
+      c1.setRadius(3.3);
+      System.out.println(c3.getRadius()); <span class="color-comment"> // 3.3</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>If the object contains object members, you need to do a <em>deep copy</em>, i.e., clone the object members as well.</p>
+
+<h5><span class="font-code">Cloneable</span> Interface and <span class="font-code">Object</span>'s <span class="font-code">clone()</span> method</h5>
+
+<p>The <code>java.lang.Cloneable</code> interface defines a method called <code>clone()</code>. The <code>java.lang.Object</code> provides a method called <code>clone()</code> to create a clone copy. To use the <code>Object</code>'s <code>clone()</code> method, the class shall implement the <code>cloneable</code> interface and invoke the inherited <code>clone()</code> method from <code>Object</code>. the For example,</p>
+
+<pre class="color-example">
+public class Circle <span class="color-new">implements Cloneable</span> { .... }
+
+Circle c1 = new Circle(1.1);
+Circle c2 = <span class="color-new">(Circle)c1.clone()</span>;
+   <span class="color-comment">// Invoke the inherited Object's clone() method.
+   // clone() returns an Object, need to downcast to Circle</span></pre>
+
+<p>However, the <code>Object</code>'s <code>clone()</code> method makes a <em>shallow copy</em>, i.e., it copies only the first level of variables and does not do a <em>deep copy</em> for object members. Classes implementing <code>Cloneable</code> interface is recommended to override the inherited <code>Object</code>'s <code>clone()</code> method to perform deep copying. Avoid using <code>Object</code>'s <code>clone()</code>.</p>
+
+<h3 id="static_array">How to initialize a <span class="font-code">static</span> array of objects</h3>
+<p>Suppose that we have a class called <code>Book</code>, as follows:</p>
+<pre class="color-example">
+public class Book {
+   private String title;
+   private float price;
+ 
+   public Book(String title, float price) {  <span class="color-comment">// Constructor</span>
+      this.title = title;
+      this.price = price;
+   }
+ 
+   public String getTitle() { return title; }
+   public float  getPrice() { return price; }
+}</pre>
+
+<p>Suppose that we want to create a <code>static</code> array of <code>Book</code>s for global access. We need to use the <em>static initializer</em> as follows:</p>
+
+<pre class="color-example">
+<span class="color-comment">/**
+ * Book Database
+ * Contain a static array of Book, and static methods for operation.
+ * The array index is used as the bookID.
+ */</span>
+public class BookDB {
+   private static Book[] books;
+ 
+   static {      <span class="color-comment">// static initializer block</span>
+      books = new Book[2];
+      books[0] = new Book(&quot;Java for Dummies&quot;, 19.99f);
+      books[1] = new Book(&quot;More Java for Dummies&quot;, 29.99f);
+   }
+ 
+   public static int size() {
+      return books.length;
+   }
+ 
+   public static String getTitle(int bookID) {
+      return books[bookID].getTitle();
+   }
+ 
+   public static float getPrice(int bookID) {
+      return books[bookID].getPrice();
+   }
+ 
+   <span class="color-comment">// Testing</span>
+   public static void main(String[] args) {
+      System.out.println(BookDB.size());
+      System.out.println(BookDB.getTitle(0));
+      System.out.println(BookDB.getPrice(0));
+   }
+}</pre>
+
+<h3 id="vector_hashtable">Why Java <span class="font-code">Vector</span> and <span class="font-code">Hashtable</span> are considered obsolete or deprecated?</h3>
+<p><code>Vector</code> and <code>Hastable</code> were introduced in ...</p>
+<p>Read <a href="http://stackoverflow.com/questions/1386275/why-java-vector-class-is-considered-obsolete-or-deprecated">http://stackoverflow.com/questions/1386275/why-java-vector-class-is-considered-obsolete-or-deprecated.</a></p>
+
+<p>Use <code>ArrayList</code> to replace <code>Vector</code>, and <code>HashMap</code> for <code>Hashtable</code>.</p>
+
+<h3 id="printing_newline">Printing Newline with <span class="font-code">'\n'</span></h3>
+<p>Line delimiter (or new line) is platform dependent. Windows uses <code>&quot;\r\n&quot;</code> (<code>\r</code> for <em>carriage return</em> with ASCII code <code>0DH</code> or decimal <code>13</code>; <code>\n</code> for line feed with ASCII code <code>0AH</code> or decimal <code>10</code>); Unix and Mac OS X uses <code>&quot;\n&quot;</code> alone; Mac OS up to version 9 uses <code>&quot;\r&quot;</code>.</p>
+
+<p>The default line separator is kept in system property <code>line.separator</code>. You could print it as follows:</p>
+<pre class="color-example">
+String str = System.getProperty(&quot;line.separator&quot;);
+for (int i = 0; i &lt; str.length(); ++i) {
+   System.out.printf(&quot;%02X(hex) &quot;, (int)str.charAt(i));  <span class="color-comment">// %02X: Pad with 0, 2 spaces, in hex</span>
+}</pre>
+<pre class="output">
+0D(hex) 0A(hex)</pre>
+
+<p> Using <code>'\n'</code> in <code>print()</code>, <code>println()</code> and <code>printf()</code> methods to print a line feed (<code>0AH</code>) may result in non-portable codes.</p>
+
+<p>It is recommended to use <code>System.out.println()</code> to print a system-specific new line, or <code>printf()</code> with format specifier &quot;<code>%n</code>&quot;, instead of &quot;<code>\n</code>&quot; for system-specific new line.</p>
+
+<h3 id="system_properties">System Properties</h3>
+
+<p>Java maintains a set of system properties for its operations. Each system property is a key-value (<code>String</code>-<code>String</code>) pair such as <code>&quot;java.version&quot;=&quot;1.7.0_09&quot;</code>. You can retrieve all the system properties via <code>System.getProperties()</code>. You can also retrieve individual property via <code>System.getProperty(<em>key</em>)</code>. For example,</p>
+
+<pre class="color-example">
+import java.util.Properties;
+public class PrintSystemProperties {
+   public static void main(String[] a) {
+      <span class="color-comment">// List all System properties</span>
+      Properties pros = System.getProperties();
+      pros.list(System.out);
+ 
+      <span class="color-comment">// Get a particular System property given its key</span>
+      <span class="color-comment">// Return the property value or null</span>
+      System.out.println(System.getProperty(&quot;java.home&quot;));
+      System.out.println(System.getProperty(&quot;java.library.path&quot;));
+      System.out.println(System.getProperty(&quot;java.ext.dirs&quot;));
+      System.out.println(System.getProperty(&quot;java.class.path&quot;));
+   }
+}</pre>
+
+<p>The important system properties are:</p>
+
+<ol>
+
+<li>JRE related:
+<ul>
+<li><span class="line-heading font-code">java.home</span>: JRE home directory, e.g., &quot;<code>C:\Program Files\Java\jdk1.7.0_09\jre</code>&quot;.</li>
+<li><span class="line-heading font-code">java.library.path</span>: JRE library search path for search native libraries. It is usually but not necessarily taken from the environment variable <code>PATH</code>.</li>
+<li><span class="line-heading font-code">java.class.path</span>: JRE <code>CLASSPATH</code>, e.g., <code>.</code> (for current working directory).</li>
+<li><span class="line-heading font-code">java.ext.dirs</span>: JRE extension library path(s), e.g, &quot;<code>C:\Program Files\Java\jdk1.7.0_09\jre\lib\ext;C:\Windows\Sun\Java\lib\ext</code>&quot;.</li>
+<li><span class="line-heading font-code">java.version</span>: JRE version, e.g., <code>1.7.0_09</code>.</li>
+<li><span class="line-heading font-code">java.runtime.version</span>: JRE version, <code>e.g. 1.7.0_09-b05</code>.</li>
+</ul></li>
+
+<li>File related:
+  <ul>
+<li><span class="line-heading font-code">file.separator</span>: symbol for file directory separator such as <code>d:\test\test.java</code>. The default is <code>\</code> for windows or <code>/</code> for Unix/Mac.</li>
+<li><span class="line-heading font-code">path.separator</span>: symbol for separating path entries, e.g., in <code>PATH</code> or <code>CLASSPATH</code>. The default is <code>;</code> for windows or <code>:</code> for Unix/Mac.</li>
+<li><span class="line-heading font-code">line.separator</span>: symbol for end-of-line (or new line). The default is <code>&quot;\r\n&quot;</code> for windows or <code>&quot;\n&quot;</code> for Unix/Mac OS X.</li></ul></li>
+
+<li>User related:
+<ul>
+<li><span class="line-heading font-code">user.name</span>: the user's name.</li>
+<li><span class="line-heading font-code">user.home</span>: the user's home directory.</li>
+<li><span class="line-heading font-code">user.dir</span>: the user's current working directory.</li>
+</ul></li>
+
+<li>OS related:
+  <ul>
+<li><span class="line-heading font-code">os.name</span>: the OS's name, e.g., &quot;Windows 7&quot;.</li>
+<li><span class="line-heading font-code">os.version</span>: the OS's version, e.g., &quot;6.1&quot;.</li>
+<li><span class="line-heading font-code">os.arch</span>: the OS's architecture, e.g., &quot;x86&quot;.</li>
+</ul></li>
+</ol>
+
+<p>Access to system properties can be restricted by the Java security manager and policy file. By default, Java programs have unrestricted access to all the system properties.</p>
+
+<h4>Which JRE?</h4>
+<p>In system property <code>java.home</code>.</p>
+<p>[TODO]</p>
+
+<h4>Where are the Java Extension Library Paths?</h4>
+<p>In system property <code>java.ext.dirs</code>. There could be more than one extension library paths.</p>
+<p>[TODO]</p>
+
+<h3 id="java_security">Java Security Manager and Policy File</h3>
+<p><span class="line-heading">Reference</span>:</p>
+<ol>
+<li>Java Tutorial's &quot;<a href="http://docs.oracle.com/javase/tutorial/security/tour2/index.html">Quick Tour of Controlling Applications</a>&quot;.</li>
+
+<li>Java Tutorial's Trail &quot;<a href="http://docs.oracle.com/javase/tutorial/security/index.html">Security Features in Java SE</a>&quot;.</li>
+<li>Permissions in JDK 7 @ <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/permissions.html">http://docs.oracle.com/javase/7/docs/technotes/guides/security/permissions.html</a>.</li>
+</ol>
+
+<h4>Security Manager</h4>
+<p>Java runtime does NOT automatically install a security manager when it runs Java application. As the result, the Java applications have unrestricted access to all the system. For example, the following Java program (a) read system property &quot;<code>user.home</code>&quot;, (b) read from file &quot;<code>in.txt</code>&quot;, (c) write to file &quot;<code>out.txt</code>&quot;.</p>
+
+<pre class="color-example">
+import java.util.*;
+import java.io.*;
+public class TestPermissions {
+   public static void main(String[] args) throws Exception {
+      <span class="color-comment">// Read System Property</span>
+      System.out.println(System.getProperty(&quot;user.home&quot;));
+ 
+      <span class="color-comment">// Read File</span>
+      Scanner in = new Scanner (new File(&quot;in.txt&quot;));
+      int num1 = in.nextInt();
+      int num2 = in.nextInt();
+      System.out.println(&quot;The 2 numbers are: &quot; + num1 + &quot;, &quot; + num2);
+ 
+      <span class="color-comment">// Write File</span>
+      Formatter out = new Formatter(new File(&quot;out.txt&quot;));
+      int sum = num1 + num2;
+      System.out.println(&quot;The sum is &quot; + sum);
+      out.format(&quot;%d&quot;, sum);
+      out.close();
+   }
+}</pre>
+
+<p>Create the input file &quot;<code>in.txt</code>&quot; with 2 number &quot;<code>1 2</code>&quot;. Compile and run the program. Everything shall be fine as Java programs have unrestricted permissions, if security manager is not installed.</p>
+
+<p>To explicitly install a Java security manager, run JRE with option <code>-Djava.security.manager</code>.</p>
+
+<pre class="color-syntax">
+java -Djava.security.manager TestPermissions</pre>
+
+<p>You shall receive a security exception:</p>
+<pre class="output">
+Exception in thread &quot;main&quot; java.security.AccessControlException: access denied (&quot;java.util.PropertyPermission&quot; &quot;user.home&quot; &quot;read&quot;)</pre>
+
+
+<p>The security manager, by default, fetches the permissions from <code>&lt;JRE_HOME&gt;\lib\security\java.policy</code>. Take a look at this policy file, it grants read permission to many system properties, but NOT including &quot;<code>user.home</code>&quot;.</p>
+
+<p>If you commented out the <code>System.getProperty()</code> line and run the program with security manager, you will receive this error:</p>
+
+<pre class="output">
+Exception in thread &quot;main&quot; java.security.AccessControlException: access denied (&quot;java.io.FilePermission&quot; &quot;out.txt&quot; &quot;write&quot;)</pre>
+
+<p>You have not write access to &quot;<code>out.txt</code>&quot;. However, you do have read access to &quot;<code>in.txt</code>&quot;.</p>
+
+<h4>Granting Permissions</h4>
+<p>The security manager, by default, fetches the system policy file from <code>&lt;java.home&gt;\lib\security\java.policy</code>, where <code>&lt;java.home&gt;</code> is the Java system property &quot;<code>java.home</code>&quot;, which defaults to JRE home directory.</p>
+
+<p>Let's create a user policy file called &quot;<code>myjava.policy</code>&quot; to grant the permissions needed for the above program. Suppose that the program and the files are location at &quot;<code>d:\myproject</code>&quot;.</p>
+
+<pre class="color-example">
+grant codeBase &quot;file:/D:/myproject/&quot; {
+   permission java.util.PropertyPermission &quot;user.home&quot;, &quot;read&quot;;
+   permission java.io.FilePermission &quot;D:/myproject/out.txt&quot;, &quot;write&quot;;
+};</pre>
+
+<p>The <code>codeBase</code> indicates the base directory of the executing program, which shall be a URL beginning with a protocol such as <code>file:</code> for local programs (or <code>http:</code> for applets).  A <code>codeBase</code> ends with "<code>/</code>" matches all class files (not JAR files) in the specified directory. A <code>codeBase</code> ends with "<code>/*</code>" matches all class files and JAR files. A <code>codeBase</code> ends with "<code>/-</code>" matches all class files and JAR files in the directory and its subdirectories.</p>
+<p>In the above policy file, we grant read permission to system property &quot;<code>user.home</code>&quot;, and write file permission to &quot;<code>out.txt</code>&quot;.</p>
+
+<p>To include the user policy file (in addition to the system policy files), use command-line option <code>-Djava.security.policy</code>:</p>
+<pre class="color-command">
+D:\myproject&gt; java -Djava.security.manager -Djava.security.policy=myjava.policy TestPermissions</pre>
+
+<p>The program shall now complete its execution.</p>
+
+<p>If you use double equal <code>==</code> in assigning policy file, the system policy files will be ignore. That is, only the specified policy file will be used.</p>
+<pre class="color-command">
+D:\myproject&gt; java -Djava.security.manager -Djava.security.policy<span class="color-new">==</span>myjava.policy TestPermissions</pre>
+
+
+<h4>Including User Policy Files</h4>
+
+<p>By default, the security manager fetches these policy files, as specified in its property file located at <code>&lt;JRE_HOME&gt;\lib\security\java.security</code>:</p>
+
+<pre class="color-example">
+policy.url.1=file:${java.home}/lib/security/java.policy
+policy.url.2=file:${user.home}/.java.policy</pre>
+
+
+<p>where &quot;<code>java.home</code>&quot; and &quot;<code>user.home</code>&quot; are Java system properties.</p>
+
+<p>To include user policy file(s), you could either:</p>
+
+<ol>
+<li>Include it in JRE's command-line option <code>-Djava.security.policy</code> as in the above example.</li>
+
+<li>Include it in the security properties file <code>&lt;JRE_HOME&gt;\lib\security\java.security</code>, as follows:
+  <pre class="color-example">
+policy.url.3=file:/D:/myproejct/myjava.policy</pre>
+
+</li>
+
+</ol>
+
+<h4>Types of Permission</h4>
+
+<p>Each permission has a type (e.g., <code>java.io.FilePermission</code>, <code>java.util.PropertyPermission</code>), a target name (e.g., property name or filename) and a comma-separated list of one or more actions (e.g., read, write).</p>
+<p>Permissions can be granted to programs under a <code>codeBase</code>.</p>
+
+<p>The commonly-used permission types are:</p>
+<ol>
+<li><span class="line-heading font-code">java.security.AllPermission</span>: All the permissions. For example, the default system policy file grants <code>AllPermission</code> to all the classes and JAR files in the Java extension paths:
+  <pre class="color-example">
+grant codeBase &quot;file:${{java.ext.dirs}}/*&quot; {
+	permission java.security.AllPermission;
+};</pre>
+
+Granting <code>AllPermission</code> practically disables security manager and shall be done with great care.</li>
+
+<li><span class="line-heading font-code">java.io.FilePermission</span>: grant permission to file and directory.<br />
+A pathname ends with &quot;<code>/*</code>&quot; indicates all files in that directory; &quot;<code>/-</code>&quot; indicates all file in that directory and subdirectories; &quot;*&quot; indicates all file in the current working directory; &quot;<code>-</code>&quot; indicates all files in the current working directory and its subdirectories; <code>&lt;&lt;ALL FILES&gt;&gt;</code> indicates any file.<br  />
+The actions (comma-separated) include: read, write, delete, and execute (allow <code>Runtime.exec()</code>).</li>
+
+<li><span class="line-heading font-code">java.net.SocketPermission</span>: permit access to a network via socket.<br />
+The target name consists of <code>hostname:port</code>. A port specification of &quot;<code>n-</code>&quot; indicate port number <code>n</code> and above; &quot;<code>-n</code>&quot; all port number <code>n</code> and below.<br />
+The actions include: <code>accept</code>, <code>connect</code>, <code>listen</code> and <code>resolve</code> (DNS lookup). When use with localhost, <code>listen</code> is the only meaningful action.<br />
+For example, the default system policy file grant listen permission to localhost of port 1024 and above (un-privilege port).
+<pre class="color-example">
+permission java.net.SocketPermission "localhost:1024-", "listen";</pre>
+</li>
+
+<li><span class="line-heading font-code">java.util.PropertyPermission</span>: The target name is a property name. The actions include: <code>read</code> and <code>write</code>.</li>
+
+<li><span class="line-heading font-code">java.lang.RuntimePermission</span>: Only target name without action, e.g., the target &quot;<code>stopThread</code>&quot; permits stopping of threads via calls to the <code>Thread</code>'s <code>stop()</code> method.</li>
+
+<li><span class="line-heading font-code">java.sql.SQLPermission</span>: [TODO]</li>
+
+</ol>
+
+<h4>Signing Code and Granting Permission</h4>
+<p>[TODO]</p>
+
+
+<h3 id="exec">Run External Process from Java</h3>
+
+<p>You could use either <code>Runtime.getRuntime.exec()</code> or a <code>ProcessBuilder</code>.</p>
+
+<h4><span class="font-code">exec()</span> method</h4>
+<p>The API doc for <code>exec()</code> of <code>java.lang.Runtime</code> is:</p>
+
+<pre class="color-syntax">
+public Process exec(String command) throws IOException
+<span class="color-comment">// Executes the specified string command in a separate process.
+// It returns a java.lang.Process object</span>.</pre>
+
+<p>The <code>Process</code> object provides a <code>waitFor()</code> method, which &quot;causes the current thread to wait, if necessary, until the process represented by this <code>Process</code> object has terminated.&quot; <code>waitFor()</code> returns the exit value of the subprocess (with 0 for normal termination).</p>
+
+<h5>Example</h5>
+<pre class="color-example">
+public class <strong>TestExec</strong> {
+   public static void main(String[] a) {
+      <span class="color-comment">// Invoke external command via exec(), which returns a Process</span>
+      Process p = null;
+      try {
+         p = <span class="color-new">Runtime.getRuntime().exec</span>(&quot;javac Add2Numbers.java&quot;);  <span class="color-comment">// Compile</span>
+      } catch (java.io.IOException ex) {}
+ 
+      <span class="color-comment">// Wait for the process to complete</span>
+      try {
+         <span class="color-new">int exitValue = p.waitFor();</span>
+         System.out.println(&quot;Process Completed with exit value of &quot; + exitValue);
+      } catch (InterruptedException ex) {}
+   }
+}</pre>
+
+<p>You can optionally specifies an environment (a set of name=value pairs<code></code>) and an initial working directory.</p>
+
+<p>The <code>Add2Numbers</code> reads 2 integer from <code>System.in</code> and prints their sum to <code>System.out</code>, as follows:</p>
+
+<pre class="color-example">
+import java.util.Scanner;
+public class <strong>Add2Numbers</strong> {
+   public static void main(String[] args) {
+      Scanner in = new Scanner(System.in);
+      int num1 = in.nextInt();
+      int num2 = in.nextInt();
+      System.out.println(num1 + num2);
+   }
+}</pre>
+
+<h5>With Input/Output for the Subprocess</h5>
+
+<p>By default, the subprocess' standard input, output and error will be piped from/to the parent process. You can access the standard input via stream obtained from subprocess' <code>getOutputStream()</code> (output stream of the parent process is piped into the subprocess' standard input). Similarly, you can obtain the standard output stream of the subprocess via <code>getInputStream()</code> (input to parent process); and standard error via <code>getErrorStream()</code>. For example,</p>
+
+<pre class="color-example">
+import java.io.*;
+public class TestExecRedirect {
+   public static void main(String[] a) {
+      try {
+         Process p = <span class="color-new">Runtime.getRuntime().exec</span>(&quot;java Add2Numbers&quot;);  <span class="color-comment">// Execute with input/output</span>
+ 
+         <span class="color-comment">// Write into the standard input of the subprocess</span>
+         PrintStream pin = new PrintStream(new BufferedOutputStream(<span class="color-new">p.getOutputStream()</span>));
+         <span class="color-comment">// Read from the standard output of the subprocess</span>
+         BufferedReader pout = new BufferedReader(new InputStreamReader(<span class="color-new">p.getInputStream()</span>));
+ 
+         <span class="color-comment">// Pump in input</span>
+         pin.print(&quot;1 2&quot;);
+         pin.close();
+ 
+         <span class="color-comment">// Save the output in a StringBuffer for further processing</span>
+         StringBuffer sb = new StringBuffer();
+         int ch;
+         while ((ch = pout.read()) != -1) {
+            sb.append((char)ch);
+         }
+         System.out.println(sb);
+ 
+         int exitValue = <span class="color-new">p.waitFor()</span>;
+         System.out.println(&quot;Process Completed with exit value of &quot; + exitValue);
+      } catch (IOException ex) {
+      } catch (InterruptedException ex) {}
+   }
+}</pre>
+
+<h4><span class="font-code">ProcessBuilder</span></h4>
+<p>JDK 1.5 introduces a new <code>ProcessBuilder</code> class in <code>java.lang</code>, which manages command, environment, initial working directory, as well as standard input, output and error of a process. To use the <code>ProcessBuilder</code>, construct an instance and invoke its <code>start()</code> method. <code>start()</code> returns a <code>Process</code> object.</p>
+
+<h5>Example</h5>
+
+<pre class="color-example">
+public class TestProcessBuilder {
+   public static void main(String[] a) {
+      try {
+         <span class="color-comment">// Allocate a ProcessBuilder for the command</span>
+         ProcessBuilder pb = <span class="color-new">new ProcessBuilder</span>(&quot;javac&quot;, &quot;Add2Numbers.java&quot;);  <span class="color-comment">// Compile (no standard input)</span>
+         <span class="color-comment">// Start the process</span>
+         Process p = <span class="color-new">pb.start()</span>;
+         <span class="color-comment">// Wait for the process to complete</span>
+         int exitValue = <span class="color-new">p.waitFor()</span>;
+         System.out.println(&quot;Process Completed with exit value of &quot; + exitValue);
+      } catch (java.io.IOException ex) {
+      } catch (InterruptedException ex) {}
+   }
+}</pre>
+
+<h5>Redirecting Input/Output of the Subprocess to Files</h5>
+
+<p>Same as  <code>exec()</code>, by default, subprocess reads input from a pipe and write output and error to a pipe of the parent process. In <code>ProcessBuilder</code>, you can conveniently redirect the subprocess' input, output and error to a file (as of JDK 1.7), as follows:</p>
+<pre class="color-example">
+import java.io.File;
+public class <strong>TestProcessBuilderRedirect</strong> {
+   public static void main(String[] a) {
+      try {
+         ProcessBuilder pb = <span class="color-new">new ProcessBuilder</span>(&quot;java&quot;, &quot;Add2Numbers&quot;);  <span class="color-comment">// Execute (with standard input and output)</span>
+ 
+         File log = new File(&quot;error.log&quot;);
+//         pb.redirectErrorStream(true);  <span class="color-comment">// merge output and error streams</span>
+         <span class="color-new">pb.redirectInput(ProcessBuilder.Redirect.from</span>(new File(&quot;in.txt&quot;)));
+         <span class="color-new">pb.redirectOutput(ProcessBuilder.Redirect.to</span>(new File(&quot;out.txt&quot;)));
+         <span class="color-new">pb.redirectError(ProcessBuilder.Redirect.appendTo</span>(new File(&quot;error.log&quot;)));
+ 
+         Process p = <span class="color-new">pb.start()</span>;
+         int exitValue = p.waitFor();
+         System.out.println(&quot;Process Completed with exit value of &quot; + exitValue);
+      } catch (java.io.IOException ex) {
+      } catch (InterruptedException ex) {}
+   }
+}</pre>
+
+<p>However, the redirect methods work only for files. For other IO streams, you need to access via <code>Process</code>' <code>getOutputStream()</code> and <code>getInputStream()</code> (as in the <code>exec()</code> section's example).</p>
+
+<h3 id="redirect">How to Redirect Standard Input, Output and Error Streams</h3>
+<p>You can re-direct the standard input (<code>System.in</code>), standard output (<code>System.out</code>) and standard error (<code>System.err</code>) to another IO stream (such as file or network socket) via <code>static</code> methods <code>System.setIn()</code>, <code>System.setOut()</code> and <code>System.setErr()</code>. The signature of the methods are:</p>
+
+<pre class="color-syntax">
+public static void setIn(InputStream in)
+public static void setOut(PrintStream out)
+public static void setErr(PrintStream err)</pre>
+
+<p>For example,</p>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre>
+</td>
+<td>
+<pre>
+import java.io.*;
+import java.util.*;
+public class TestRedirect {
+   public static void main(String[] args) throws IOException {
+      PrintStream sysout =
+         new PrintStream(
+            new BufferedOutputStream(
+               new FileOutputStream(&quot;out.txt&quot;, true))); <span class="color-comment">// append outputs to file</span>
+ 
+ 
+      InputStream sysin =
+         new BufferedInputStream(
+            new FileInputStream(&quot;in.txt&quot;));
+ 
+      <span class="color-comment">// Redirect to file</span>
+      System.setIn(sysin);
+      System.setOut(sysout);
+      System.setErr(sysout);  <span class="color-comment">// merge error and output streams</span>
+ 
+ 
+      <span class="color-comment">// Test inputting/outputting</span>
+      Scanner in = new Scanner(System.in);
+      System.err.println(&quot;Let's begin...&quot;);
+      System.out.print(&quot;Enter two integers: &quot;);
+      int num1 = in.nextInt();
+      int num2 = in.nextInt();
+      int sum = num1 + num2;
+      System.out.println(&quot;The sum is &quot; + sum);
+ 
+      sysout.flush();
+      sysout.close();
+      sysin.close();
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>[TODO] Check on <code>FileWriter</code> and <code>FileReader</code>, instead of <code>FileInputStream</code> and <code>FileOutputStream</code>.</p>
+
+<h3 id="file_append">How to Append to a File</h3>
+<p>Use these constructors of the <code>FileOutputStream</code> and <code>FileWriter</code>, which take a second <code>boolean</code> argument to indicate append:</p>
+
+<pre class="color-syntax">
+FileWriter(File file, boolean append)
+FileWriter(String fileName, boolean append)
+FileOutputStream(File file, boolean append)
+FileOutputStream(String name, boolean append)</pre>
+
+<p>See &quot;<a href="#redirect">How to Redirect Standard Input, Output and Error Streams</a>&quot; for example.</p>
+
+<h3>Array Miscellaneous</h3>
+
+<h4>The <span class="font-code">java.util.Arrays</span> Class</h4>
+
+<p>The <code>java.util.Arrays</code> contains various methods for manipulating arrays (such as sorting and searching). It also contains a static factory that allows arrays to be viewed as lists.</p>
+
+<p>It contains <code>static</code> methods:</p>
+<ul>
+<li><code>Arrays.toString(anArray)</code>: to print the given array. It is overloaded to support all primitive-element array like <code>int[]</code>, <code>double[]</code>, etc.</li>
+<li><code>Arrays.copyOf(srcArray, length)</code>: Return a copy of the <code>srcArray</code> truncate/pad to the given <code>length</code>. [You can also use <code>anArray.clone()</code> to create a copy of an array.]</li>
+</ul>
+
+<h4>Assign an Array to Another</h4>
+
+<p>For example,</p>
+<pre class="color-example">
+int[] a1 = {1, 2, 3};
+int[] a2 = a1;   <span class="color-comment">// assign a2 to the same reference as a1</span>
+System.out.println(Arrays.toString(a2));   <span class="color-comment">// [1, 2, 3]</span></pre>
+
+<p>In Java, arrays are reference object.</p>
+
+<h3>Compound Assignment (e.g., <span class="font-code">+=</span>) has an implicit cast</h3>
+
+<p>For example,</p>
+<pre class="color-example">
+int n = 1;
+n = n + 1.5; <span class="color-comment">// error: incompatible types: possible lossy conversion from double to int</span>
+n += 1.5;    <span class="color-comment">// no error!</span></pre>
+
+<p>The compound assignment does not produce a compilation error because a implicit cast is added, as follows:</p>
+<pre class="color-example">
+int n = 1;
+n += 1.5;  <span class="color-comment">// same as n = (int)(n + 1.5)</span></pre>
+
+<p>Hence, <code>x += y</code> is not really <code>x = x + y</code>, but <code>x = (<em>typeOfX</em>)(x + y)</code>.</p>
+
+<h5>What is <span class="font-code">=+</span>?</h5>
+
+<p><code>a =+ b</code> is actually <code>a = (+b)</code>. <code>a =- b</code> is <code>a = (-b)</code>. <code>a =*b</code> produces an error.</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>[TODO]</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.6<br />
+Last modified: March, 2011</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

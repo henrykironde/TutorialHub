@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<!-- @@ start change in v2 -->
+<title>AngularJS Tutorial: The Basics</title>
+<link rel="stylesheet" href="../css/programming_notes_v2.css">
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>Table of Contents <a id="show-toc" href="#show-toc">(Hide)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>AngularJS Basics</h1>
+<h2>(Not for the dummies)</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v2 -->
+
+<h3>Introduction</h3>
+<p>AngularJS is a client-side JavaScript MVC (Model-View-Controller) Framework (like backbone.js and ember.js), which helps you to organize your JavaScripts in the MVC manner.</p>
+
+<p>AngularJS is meant to replace jQuery, which is simply a JavaScript library. AngularJS is certainly more powerful than jQuery. However, it is much more difficult to learn and use, hence, not as popular as jQuery. jQuery also has a huge installed base with thousands of plug-ins to extend it functions.</p>
+
+<p>AngularJS's features:</p>
+<ul>
+<li>MVC Framework: </li>
+<li>Single Page Application (SPA) Framework: </li>
+<li>Facilitate unit testing and end-to-end testing.</li>
+</ul>
+
+<p>This results in fewer lines, less boilerplate, cleaner, reusable and testable codes.</p>
+
+<p>AngularJS 1.3, combined with jQuery and Bootstrap, lets you rapidly build webapp front-end that uses RESTful web services at the backend, for both desktops and mobiles.</p>
+
+
+
+<p>[TODO]</p>
+
+<h3>Installation</h3>
+
+<p>AngularJS is a JavaScript file called <code>angular.js</code>. To use it, download <code>angular.js</code> or the minified <code>angular.min.js</code> from <a href="https://angularjs.org/">https://angularjs.org/</a> and include it in the HTML document. Alternatively, you can use a copy provided by a CDN (Context Distribution Network), e.g., check the Google Developers @ <a href="https://developers.google.com/speed/libraries/">https://developers.google.com/speed/libraries/</a>.</p>
+
+<h5>AngularJS Template</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="comment">&lt;!-- NGTemplate.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;YOUR TITLE HERE&lt;/title&gt;
+<span class="new">&lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js&quot;&gt;&lt;/script&gt;</span>
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;Hello, world&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How It Works?</h5>
+<ol>
+<li>Include the minified <code>angular.min.js</code> (or <code>angular.js</code>) under a <code>&lt;script&gt;</code>. In the above example, I used the Google's CDN, but you can also serve your local copy.</li>
+
+<li>You can place the <code>&lt;script&gt;</code> in the <code>&lt;head&gt;</code> section; or just before the end of body (<code>&lt;/body&gt;</code>) for better responsiveness.</li>
+</ol>
+
+<h3>AngularJS By Examples</h3>
+
+<h4>Example 1: Data Binding</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="comment">&lt;!-- NGExDataBind.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;AngularJS Example: Data Binding&lt;/title&gt;
+&lt;/head&gt;
+&lt;body <span class="new">data-ng-app</span>&gt;
+&lt;input type=&quot;text&quot; <span class="new">data-ng-model=&quot;yourName&quot;</span> placeholder=&quot;Enter your name&quot;&gt;
+&lt;p&gt;Hello, <span class="new">&lt;span data-ng-bind=&quot;yourName&quot;&gt;&lt;/span&gt;</span>&lt;/p&gt;
+&lt;p&gt;Hello again, <span class="new">{{yourName}}</span>&lt;/p&gt;
+&lt;script src=&quot;https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Load the HTML file on a web browser (e.g., Chrome, Firefox). Enter something on the input text field, and observe the results.</p>
+
+<h5>How It Works?</h5>
+
+<ol>
+<li>We bind the <code>&lt;body&gt;</code> element as an AngularJS app via the HTML attribute <code>data-ng-app</code>. You can also use attribute <code>ng-app</code> without the <code>data-</code>. But, <code>ng-app</code> will fail HTML5 validation, as HTML5 does not define such an attribute. On the other hand, HTML5 defines <code>data-*</code> as so-called custom attributes, which will not be validated. AngularJS typically binds to HTML DOM element via <code>data-ng-*</code> (or <code>ng-*</code>) attributes.</li>
+
+<li>This example illustrates <em>data binding</em> between the value of an input field and a DOM element. We named the input field via an HTML attribute <code>data-ng-model</code> (or <code>ng-model</code>). After that, we can bind the input value to another DOM element via <code>data-ng-bind</code> (or <code>ng-bind</code>). Once bound, whenever the input value changes, AngularJS updates the bound element and refreshes the UI.</li>
+
+<li>AngularJS further simplifies the binding syntax to <code>{{<em>var-name</em>}}</code>, as it is used frequently.</li>
+</ol>
+
+<h4>Example 1: With Twitter Bootstrap</h4>
+<p>[TODO]</p>
+
+
+<h4>Example 2: Separating Model, View and Controller (MVC)</h4>
+<p>[TODO]</p>
+
+<h4>Example 3: Unit Testing via Karma and End-to-end testing via Protractor</h4>
+<p>[TODO]</p>
+
+<!-- @@ start change in v1 -->
+<a class="references" href="../howto/References.html#">REFERENCES &amp; RESOURCES</a>
+
+<ol>
+<li>Angular JS mother site @ <a href="https://angularjs.org/">https://angularjs.org/</a>.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: AngularJS v1.3.15<br>
+Last modified: June, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+<!-- @@ start change in v2 -->
+<!-- jQuery API and custom JavaScripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="../scripts/programming_notes_v2.js"></script>
+<!-- @@ end change in v2 -->
+</body>
+</html>

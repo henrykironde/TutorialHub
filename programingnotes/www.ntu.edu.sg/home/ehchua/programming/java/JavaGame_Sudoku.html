@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Game Programming - Sudoku</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Graphics Programming</h1>
+<h2>Assignment - Sudoku</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Rules of Game</h3>
+<p>You could wiki &quot;Sudoku&quot; to understand the rules of the game.</p>
+
+<p>Sudoku is a single-player mind game. &quot;The objective is to fill a 9×9 grid with digits 1 to 9, so that each column, each row, and each of the nine 3×3 sub-grids (also called &quot;boxes&quot;, &quot;blocks&quot;, &quot;regions&quot;, or &quot;sub-squares&quot;) contains all of the digits from 1 to 9. The puzzle setter provides a partially completed grid, which for a well-posed puzzle has a unique solution.&quot;</p>
+
+<h3>Graphical Display</h3>
+
+<img class="image-float-right" src="images/GameSudoku.png" alt="GameSudoku.png" />
+
+<p> Start with the GUI for display. The GUI codes is simple. You can simply use a 9x9 <code>JTextFields</code> arranged in a 9x9 <code>GridLayout</code>.</p>
+<p>The steps for producing the display are:</p>
+<ul>
+  <li>Set the <code>JFrame</code>'s content-pane to 9&times;9 <code>GridLayout</code>. Create 9&times;9 <code>JTextField</code>s (called <code>tfCells</code>) and add to the content-pane. The <code>JTextField</code>s shall contain the string &quot;1&quot; to &quot;9&quot; (the number from the puzzle or the number guessed) or empty string (for blank cells).</li>
+  <li>Initialize the game by reading in an input puzzle (<code>int[9][9] puzzle</code>) with blank cells (handled by <code>boolean[9][9] masks</code>), and populate the <code>tfCells</code> arrays. Set the non-empty cells to non-editable containing the number from the <code>puzzle</code>; and set the empty cells to editable containing an empty string.</li>
+</ul>
+
+<p>Study the following codes. Fill in the <code>main()</code> method (<code>[TODO 1]</code>), run the program, which shall produce the display.</p>
+
+<pre class="color-example">
+import java.awt.*;       <span class="color-comment"> // Uses AWT's Layout Managers</span>
+import java.awt.event.*; <span class="color-comment"> // Uses AWT's Event Handlers</span>
+import javax.swing.*;    <span class="color-comment"> // Uses Swing's Container/Components</span>
+ 
+<span class="color-comment">/**
+ * The Sudoku game.
+ * To solve the number puzzle, each row, each column, and each of the
+ * nine 3×3 sub-grids shall contain all of the digits from 1 to 9
+ */</span>
+public class Sudoku extends JFrame {
+  <span class="color-comment"> // Name-constants for the game properties</span>
+   public static final int GRID_SIZE = 9;   <span class="color-comment"> // Size of the board</span>
+   public static final int SUBGRID_SIZE = 3;<span class="color-comment"> // Size of the sub-grid</span>
+ 
+  <span class="color-comment"> // Name-constants for UI control (sizes, colors and fonts)</span>
+   public static final int CELL_SIZE = 60;  <span class="color-comment"> // Cell width/height in pixels</span>
+   public static final int CANVAS_WIDTH  = CELL_SIZE * GRID_SIZE;
+   public static final int CANVAS_HEIGHT = CELL_SIZE * GRID_SIZE;
+                                            <span class="color-comment"> // Board width/height in pixels</span>
+   public static final Color OPEN_CELL_BGCOLOR = Color.YELLOW;
+   public static final Color OPEN_CELL_TEXT_YES = new Color(0, 255, 0); <span class="color-comment"> // RGB</span>
+   public static final Color OPEN_CELL_TEXT_NO = Color.RED;
+   public static final Color CLOSED_CELL_BGCOLOR = new Color(240, 240, 240);<span class="color-comment"> // RGB</span>
+   public static final Color CLOSED_CELL_TEXT = Color.BLACK;
+   public static final Font FONT_NUMBERS = new Font(&quot;Monospaced&quot;, Font.BOLD, 20);
+ 
+  <span class="color-comment"> // The game board composes of 9x9 JTextFields,</span>
+  <span class="color-comment"> // each containing String &quot;1&quot; to &quot;9&quot;, or empty String</span>
+   private JTextField[][] tfCells = new JTextField[GRID_SIZE][GRID_SIZE];
+ 
+  <span class="color-comment"> // Puzzle to be solved and the mask (which can be used to control the</span>
+  <span class="color-comment"> //  difficulty level).</span>
+  <span class="color-comment"> // Hardcoded here. Extra credit for automatic puzzle generation</span>
+  <span class="color-comment"> //  with various difficulty levels.</span>
+   private int[][] puzzle =
+      {{5, 3, 4, 6, 7, 8, 9, 1, 2},
+       {6, 7, 2, 1, 9, 5, 3, 4, 8},
+       {1, 9, 8, 3, 4, 2, 5, 6, 7},
+       {8, 5, 9, 7, 6, 1, 4, 2, 3},
+       {4, 2, 6, 8, 5, 3, 7, 9, 1},
+       {7, 1, 3, 9, 2, 4, 8, 5, 6},
+       {9, 6, 1, 5, 3, 7, 2, 8, 4},
+       {2, 8, 7, 4, 1, 9, 6, 3, 5},
+       {3, 4, 5, 2, 8, 6, 1, 7, 9}};
+  <span class="color-comment"> // For testing, open only 2 cells.</span>
+   private boolean[][] masks =
+      {{false, false, false, false, false, true, false, false, false},
+       {false, false, false, false, false, false, false, false, true},
+       {false, false, false, false, false, false, false, false, false},
+       {false, false, false, false, false, false, false, false, false},
+       {false, false, false, false, false, false, false, false, false},
+       {false, false, false, false, false, false, false, false, false},
+       {false, false, false, false, false, false, false, false, false},
+       {false, false, false, false, false, false, false, false, false},
+       {false, false, false, false, false, false, false, false, false}};
+ 
+   <span class="color-comment">/**
+    * Constructor to setup the game and the UI Components
+    */</span>
+   public Sudoku() {
+      Container cp = getContentPane();
+      cp.setLayout(new GridLayout(GRID_SIZE, GRID_SIZE)); <span class="color-comment"> // 9x9 GridLayout</span>
+ 
+     <span class="color-comment"> // Allocate a common listener as the ActionEvent listener for all the</span>
+     <span class="color-comment"> //  JTextFields</span>
+     <span class="color-comment"> // ... [TODO 3] (Later) ....</span>
+ 
+     <span class="color-comment"> // Construct 9x9 JTextFields and add to the content-pane</span>
+      for (int row = 0; row &lt; GRID_SIZE; ++row) {
+         for (int col = 0; col &lt; GRID_SIZE; ++col) {
+            tfCells[row][col] = new JTextField();<span class="color-comment"> // Allocate element of array</span>
+            cp.add(tfCells[row][col]);           <span class="color-comment"> // ContentPane adds JTextField</span>
+            if (masks[row][col]) {
+               tfCells[row][col].setText(&quot;&quot;);    <span class="color-comment"> // set to empty string</span>
+               tfCells[row][col].setEditable(true);
+               tfCells[row][col].setBackground(OPEN_CELL_BGCOLOR);
+ 
+              <span class="color-comment"> // Add ActionEvent listener to process the input</span>
+              <span class="color-comment"> // ... [TODO 4] (Later) ...</span>
+            } else {
+               tfCells[row][col].setText(puzzle[row][col] + &quot;&quot;);
+               tfCells[row][col].setEditable(false);
+               tfCells[row][col].setBackground(CLOSED_CELL_BGCOLOR);
+               tfCells[row][col].setForeground(CLOSED_CELL_TEXT);
+            }
+           <span class="color-comment"> // Beautify all the cells</span>
+            tfCells[row][col].setHorizontalAlignment(JTextField.CENTER);
+            tfCells[row][col].setFont(FONT_NUMBERS);
+         }
+      }
+ 
+     <span class="color-comment"> // Set the size of the content-pane and pack all the components</span>
+     <span class="color-comment"> //  under this container.</span>
+      cp.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+      pack();
+ 
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); <span class="color-comment"> // Handle window closing</span>
+      setTitle(&quot;Sudoku&quot;);
+      setVisible(true);
+   }
+ 
+   <span class="color-comment">/** The entry main() entry method */</span>
+   public static void main(String[] args) {
+     <span class="color-comment"> // [TODO 1] (Now)</span>
+      <span class="color-comment">// Check Swing program template on how to run the constructor</span>
+      .......
+   }
+
+   <span class="color-comment">// Define the Listener Inner Class</span>
+   <span class="color-comment">// ... [TODO 2] (Later) ...</span>
+}</pre>
+
+<h3>Event Handling</h3>
+<p>Next, we shall program the event handling.</p>
+<p>We shall use a common instance of a Named Inner Class (called <code>InputListener</code>) as the <code>ActionEvent</code> listener for &quot;all&quot; the editable <code>JTextField</code>s. Hence, in the <code>actionPerformed()</code>, we need to identify the particular <code>JTextField</code> (in terms of <code>row</code> and <code>col</code>) that trigger the event. You could use the <code>ActionEvent.getSource()</code> method to retrieve the source object that has fired the event and compare the object with all the 9&times;9 <code>JTextField</code>s.</p>
+<p>Place the inner class at [TODO 2].</p>
+
+<pre class="color-example">
+  <span class="color-comment"> // [TODO 2]
+   // Inner class to be used as ActionEvent listener for ALL JTextFields</span>
+   private class InputListener implements ActionListener {
+ 
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        <span class="color-comment"> // All the 9*9 JTextFileds invoke this handler. We need to determine
+         // which JTextField (which row and column) is the source for this invocation.</span>
+         int rowSelected = -1;
+         int colSelected = -1;
+ 
+        <span class="color-comment"> // Get the source object that fired the event</span>
+         JTextField source = (JTextField)e.getSource();
+        <span class="color-comment"> // Scan JTextFileds for all rows and columns, and match with the source object</span>
+         boolean found = false;
+         for (int row = 0; row &lt; GRID_SIZE &amp;&amp; !found; ++row) {
+            for (int col = 0; col &lt; GRID_SIZE &amp;&amp; !found; ++col) {
+               if (tfCells[row][col] == source) {
+                  rowSelected = row;
+                  colSelected = col;
+                  found = true; <span class="color-comment"> // break the inner/outer loops</span>
+               }
+            }
+         }
+ 
+         <span class="color-comment">/*
+          * [TODO 5]
+          * 1. Get the input String via tfCells[rowSelected][colSelected].getText()
+          * 2. Convert the String to int via Integer.parseInt().
+          * 3. Assume that the solution is unique. Compare the input number with
+          *    the number in the puzzle[rowSelected][colSelected].  If they are the same,
+          *    set the background to green (Color.GREEN); otherwise, set to red (Color.RED).
+          */</span>
+ 
+        <span class="color-comment"> /* 
+          * [TODO 6] Check if the player has solved the puzzle after this move.
+          * You could update the masks[][] on correct guess, and check the masks[][] if
+          * any input cell pending.
+          */</span>
+      }
+   }</pre>
+
+<p>In <code>Sudoku.java</code>'s constructor:</p>
+
+<ol>
+<li>Declare and allocate a common instance called <code>listener</code> of the <code>InputListener</code> class:
+
+<pre class="color-example">
+<span class="color-comment">// [TODO 3]</span>
+InputListener listener = new InputListener();</pre></li>
+
+<li>All editable JTextField shall add this common instance as its <code>ActionEvent</code> listener:
+<pre class="color-example">
+<span class="color-comment">// [TODO 4]</span>
+tfCells[row][col].addActionListener(listener);   <span class="color-comment">// For all editable rows and cols</span></pre></li>
+
+</ol>
+<p>Continue the <code>actionPerformed()</code> to check if the input number is acceptable in that particular <code>(rowSelected, colSelected)</code> (<code>[TODO 5]</code> and <code>[TODO 6]</code>).</p>
+
+<p>Some useful methods of <code>JTextField</code> are as follows. You can check the Java API for more methods.</p>
+<pre class="color-example">
+setBackground(Color <em>c</em>)  <span class="color-comment">// Set the background color of the component</span>
+setForeground(Color <em>c</em>)  <span class="color-comment">// Set the text color of the JTextField</span>
+setFont(Font <em>f</em>)         <span class="color-comment">// Set the font used by the JTextField</span>
+setHorizontalAlignment(int <em>align</em>);  <span class="color-comment">// <em>align</em>: JTextField.CENTER, JTextField.LEFT, JTextField.RIGHT</span>
+</pre>
+
+<p>Common colors are defined via constants such as <code>Color.RED</code>, <code>Color.GREEN</code>, <code>Color.BLUE</code>, and etc.</p>
+
+<h3>Hints and Miscellaneous</h3>
+
+<ul>
+<li>This is a moderately complex program. You need to use the graphics debugger under Eclipse/NetBeans to debug your program logic.</li>
+
+<li>Check the JDK API on the classes and methods available under Swing.</li>
+
+<li>You can use the following <code>static</code> method to pop up a dialog box with a message:
+<pre class="color-example">
+JOptionPane.showMessageDialog(null, &quot;Congratulation!&quot;);</pre></li>
+
+<li>To check the sub-grid, you could use <code>InputRow/3</code> and <code>InputCol/3</code> to get the <code>subGridRow</code> and <code>subGridCol</code>. The <code>(row, col)</code>'s for the sub-grip are <code>(subGridRow*3 + 0|1|2, subGridCol*3 + 0|1|2)</code>.</li>
+
+<li>There are many ways to automatically generate a new puzzle, e.g.,
+<ol>
+<li>Start with a solved puzzle, add a random number between 1-9 to all the cells and modulo 9.</li>
+<li>Start with a solved puzzle, swap rows/columns among 1-2-3, 4-5-6, 7-8-9.</li>
+<li>[TODO]</li>
+</ol></li>
+
+<li>There are many ways to set the difficulty level, e.g.,
+<ol>
+<li>Control the number of un-revealed cells.</li>
+<li>[TODO]</li>
+</ol></li>
+
+</ul>
+
+<h3>More Credits</h3>
+
+<ul>
+<li>A good Sudoku engine shall accept any &quot;valid&quot; number at the time of input (no duplicate in row, column and sub-grid), but signal a conflict whenever it is detected. Highlight the conflicting cells.</li>
+<li>Re-organize your codes, with methods such as <code>initGame()</code>, <code>getPuzzle()</code>, etc. Better still, apply your OO knowledge to write a separate class called <code>Puzzle</code>, and etc.</li>
+<li>Beautify your graphical interface, e.g., color, font, layout, etc.</li>
+<li>Choice of puzzles and difficulty levels.</li>
+<li>Create a status bar (<code>JTextField</code> at the south zone of <code>BorderLayout</code>) to show the messages (e.g., number of cells remaining) (google &quot;java swing statusbar&quot;).</li>
+<li>Create a menu bar for options such as &quot;File&quot; (&quot;New Game&quot;, &quot;Reset Game&quot;, &quot;Exit&quot;), &quot;Options&quot;, and &quot;Help&quot; (Use <code>JMenuBar</code>, <code>JMenu</code>, and <code>JMenuItem</code> classes).</li>
+<li>Timer (pause/resume), score, progress bar.</li>
+<li>A side panel for command, display, strategy?</li>
+<li>Automatic puzzle generation with various difficulty level.</li>
+<li>The sample program processes <code>ActionEvent</code> of the <code>JTextField</code>, which requires user to push the ENTER key. Try <code>KeyEvent</code> with <code>keyTyped()</code> handler; or other means that does not require pushing of ENTER key.</li>
+<li>Sound effect, background music, enable/disable sound?</li>
+<li>High score and player name?</li>
+<li>Hints and cheats (reveal a cell, or reveal all cells with number n)?</li>
+<li>Choice of display  &quot;theme&quot;?</li>
+<li>Use of images and icons?</li>
+<li>......</li>
+</ul>
+
+<h3>(Advanced) Subclassing JTextField</h3>
+<p>The <code>javax.swing.JTextField</code> does not contain identifiers (such as row and column). You can actually create your subclass of <code>JTextField</code> to provide the additional functionality, which will greatly simplify your programming. E.g,.</p>
+
+<pre class="color-example">
+import javax.swing.JTextField;
+ 
+public class Cell extends JTextField {
+  <span class="color-comment"> // Package access</span>
+   int row, col;     <span class="color-comment"> // row and col of this JTextField</span>
+
+   <span class="color-comment">// More?! For examples,</span>
+   int numberPuzzle; <span class="color-comment"> // The puzzle number</span>
+   boolean isOpened; <span class="color-comment"> // to be solved?</span>
+<span class="color-comment"></span>   int numberGuess;   <span class="color-comment">// The number entered/display</span>
+   boolean isValid;
+}</pre>
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.8.0_66<br />
+Last modified: April, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

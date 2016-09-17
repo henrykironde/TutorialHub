@@ -1,0 +1,1475 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Android Basics and User Interfaces</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Android Programming</h1>
+<h2>Basics: User Interfaces and Activities</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Introduction</h3>
+
+<p>Android is an <em>Operating System for mobile devices</em> developed by Google, which is built upon Linux kernel. Android competes with Apple's iOS (for iPhone/iPad), RIM's Blackberry,  Microsoft's Windows Phone, Symbian OS, and many other proprietary mobile OSes.</p>
+
+<h5>Brief History and Versions</h5>
+
+<ul>
+<li>In 2005, Google acquired a start-up called Android Inc. and started to work on the Android platform, in particular the Dalvik Java Virtual Machine (JVM).</li>
+
+<li>In 2007, a group of mobile handset producers and computing companies (including Google, Samsung, Motorola, Sony Ericsson, Intel,  T-mobile, and Vodaphone) formed the <em><q>Open Handset Alliance</q></em> (OHA) to develop an open and non-proprietary mobile operating platform. The Android beta version was released in November 2007.</li>
+
+<li>In September 2008, Google released Android SDK 1.0, and placed it under open-source license. Android 1.x  did not support soft keyboard and required physical keypad. Android 1.5 (codenamed Cupcake - Android versions are codenamed after desserts) fixed this problem and including new features such as media recording and playback, widgets, and added supports to native codes. Android 1.6 (Donut) introduced support for different screen resolutions.</li>
+<li>In October 2009, Google released Android SDK 2.0 (Éclair), which supports HTML 5, flash and multi-touch screens. Android 2.2 (Froyo) added just-in-time (JIT)
+  compilation to the Dalvik virtual machine, which greatly improves the performance. Android 2.3 (Gingerbread) added supports for the OpenGL ES 2.0, and a new concurrent garbage collector to the Dalvik VM.</li>
+
+<li>In March 2011, Google released Android SDK 3.0 (Honeycomb) - the first <em>tablet-only</em> Android platform. Android 3.0 supports wide screen and multi-core processors, and USB peripherals. Android 3.0 does not run on smart phones.</li>
+<li>Android 4.0 (Ice Cream Sandwich) was released in October 2011, which is the result of merging Honeycomb (3.1) and Gingerbread (2.3) to support both smart phones and tablets.</li>
+<li>Android 4.1 (Jelly Bean) was released in June 2012. It introduces the new features such as new Google search experience.</li>
+<li>Android 4.4 (Kitkat) was released in October 2013, which is optimized to run on a greater range of devices.</li>
+<li>Android 5 (Lollipop) was released in November 2014.</li>
+<li>Android 6 (Marshmallow) was released in October 2015.</li>
+</ul>
+
+<p>Android platform is identified by two numbers: a version name (<code>x.y</code>) and an API level number (a running integer starts from 1, which is used in the Android Market/Google Play to identify new version).</p>
+
+<table class="table-zebra" style="width:60%">
+<tr>
+<th>Year</th>
+<th>Version</th>
+<th>Codename</th>
+<th>API Level</th>
+</tr>
+
+<tr>
+  <td>2009, Apr</td>
+<td>1.5</td>
+<td>Cupcake</td>
+<td>3</td>
+</tr>
+
+<tr>
+  <td>2009, Sep</td>
+<td>1.6</td>
+<td>Donut</td>
+<td>4</td>
+</tr>
+
+<tr>
+  <td>2009, Oct</td>
+<td>2.0 - 2.1</td>
+<td>Eclair</td>
+<td>7</td>
+</tr>
+
+<tr>
+  <td>2010, Mar</td>
+<td>2.2</td>
+<td>Froyo</td>
+<td>8</td>
+</tr>
+
+<tr>
+  <td>2010, Dec</td>
+<td>2.3 - 2.3.2</td>
+<td rowspan="2">Ginderbread</td>
+<td>9</td>
+</tr>
+
+<tr>
+  <td>&nbsp;</td>
+<td>2.3.3 - 2.3.7</td>
+<td>10</td>
+</tr>
+
+<tr>
+<td>2011, Feb</td>
+<td>3.0</td>
+<td rowspan="3">Honeycomb</td>
+<td>11</td>
+</tr>
+
+<tr>
+<td>&nbsp;</td>
+<td>3.1</td>
+<td>12</td>
+</tr>
+
+<tr>
+<td>&nbsp;</td>
+<td>3.2</td>
+<td>13</td>
+</tr>
+
+<tr>
+  <td>2011, Oct</td>
+<td>4.0 - 4.0.2</td>
+<td rowspan="2">Ice Cream Sandwich</td>
+<td>14</td>
+</tr>
+
+<tr>
+  <td>&nbsp;</td>
+<td>4.0.3 - 4.0.4</td>
+<td>15</td>
+</tr>
+
+<tr>
+  <td>2012, Jun</td>
+<td>4.1</td>
+<td rowspan="3">Jelly Bean</td>
+<td>16</td>
+</tr>
+<tr>
+  <td>&nbsp;</td>
+  <td>4.2</td>
+  <td>17</td>
+</tr>
+<tr>
+  <td>&nbsp;</td>
+  <td>4.3</td>
+  <td>18</td>
+</tr>
+<tr>
+  <td>2013, Oct</td>
+  <td>4.4</td>
+  <td>KitKat</td>
+  <td>19</td>
+</tr>
+<tr>
+  <td>2014, Nov</td>
+  <td>5.0</td>
+  <td rowspan="2">Lollipop</td>
+  <td>21</td>
+</tr>
+<tr>
+  <td>2015, Mar</td>
+  <td>5.1</td>
+  <td>22</td>
+</tr>
+<tr>
+  <td>2015, Oct</td>
+  <td>6.0</td>
+  <td>Marshmallow</td>
+  <td>23</td>
+</tr>
+
+</table>
+
+<img class="image-float-left" src="images/Android_robot.png" alt="Android Robot" />
+
+<p>The <em>mascot</em> for Android is a little green robot, who is still nameless.</p>
+
+<h3 class="float-clear">The Android Platform</h3>
+
+<img class="image-center" src="images/Android_StackDetails.png" alt="Android Stack" />
+
+<h5>Linux Kernel and Device Drivers</h5>
+
+<p>The Linux kernel is responsible for the OS functions, such as processor, memory, file, power management. The device drivers includes display, camera, keypad, flash memory, communications (GSM telephony, 3G, WiFi, bluetooth, Near-Field Contact-less communication), accessories (GPS, compass, accelerator), and etc.</p>
+
+
+<h5>Dalvik Virtual Machine</h5>
+
+<p>Dalvik VM (DVM) was developed by Google, led by Dan Bornstein, to optimize the performance of Java applications on mobile devices with limited capabilities (Dalvik is actually the name of a town in Iceland). DVM takes the traditional Java classes (&quot;<code>.class</code>&quot;) and combines them into one or more Dalvik Executable (&quot;<code>.dex</code>&quot;) files. By removing duplicate information among the Java classes, it reduces the resultant file size compared with the traditional JAR file. However, as a result, the DVM is not binary-compatible with Java Virtual Machine (JVM). You need to convert the &quot;<code>.class</code>&quot; into &quot;<code>.dex</code>&quot;.</p>
+
+<p>Android 2.2 (Froyo) added a JIT (Just-in-time) compiler and Android 2.3 (Gingerbread) added a concurrent garbage collector to improve the runtime performance.</p>
+<p>Android SDK uses XML file extensively. All the XML files are compiled into binary files to improve the performance.</p>
+
+<h5>Native C/C++ Libraries</h5>
+
+<p>The native C/C++ libraries include:</p>
+<ul>
+<li>Google's Skia: for 2D graphics support (also used in Google's Chrome).</li>
+<li>Khronos Group's OpenGL ES: for 3D graphics support.</li>
+<li>WebKit: for browser support (also used in Google's Chrome).</li>
+<li>FreeType: for font support.</li>
+<li>SSL (Secure Socket Layer): for secure communications.</li>
+<li>SQLite: a lightweight relational database system.</li>
+<li>PacketVideo's OpenCore: video/audio record and playback in various format.</li>
+<li>Others.</li>
+</ul>
+
+<h5>Android Java API Packages</h5>
+
+<p>The API reference is available @ <a href="http://developer.android.com/reference/packages.html">http://developer.android.com/reference/packages.html</a>.</p>
+<ul>
+<li><code>android.app</code>:</li>
+<li><code>android.view</code>, <code>android.widget</code>:</li>
+<li><code>andrioid.graphics</code>, <code>android.animation</code>:</li>
+<li><code>android.media</code>, <code>android.speech</code>, <code>android.telephony</code>:</li>
+<li><code>android.net</code>:</li>
+<li><code>android.bluetooth</code>, <code>android.location</code>:</li>
+<li><code>android.provider</code>, <code>android.content</code>, <code>android.database</code>:</li>
+<li><code>android.gesture</code>:</li>
+<li><code>android.sax</code>:</li>
+<li><code>android.security</code>:</li>
+<li><code>android.test</code>, <code>junit.framework</code>, <code>junit.runner</code>:</li>
+<li><code>android.text</code>, <code>android.util</code>:</li>
+<li><code>java.lang</code>, <code>java.io</code>, <code>java.nio</code>,  <code>java.text</code>, <code>java.util</code></li>
+<li><code>java.net</code>, <code>javax.net</code>:</li>
+<li><code>java.security</code>, <code>java.crypto</code>:</li>
+<li><code>java.sql</code>, <code>javax.sql</code>:</li>
+<li><code>javax.xml</code>, <code>org.json</code>, <code>org,w3c.dom</code>, <code>org.xml.sax</code>, <code>org.xmlpull</code>:</li>
+<li><code>org.apache.http</code>:</li>
+</ul>
+
+<p>Android supports a subset of JavaSE (no AWT and Swing). There is no JavaME library in Android.</p>
+
+<h3>Android Application Framework</h3>
+
+<p>Android application framework is radically different from traditional programming frameworks, such as C/C++ and Java. There is no single entry point (you can't find the <code>main()</code>?!). This is because the Android apps are targeted at mobile devices with limited capabilities. &quot;Reusing&quot; components from other applications is crucial to reduce their footprint.</p>
+<p>Android applications consist of components, and can communicate and use components of other applications seamlessly (e.g., making a phone call, or taking a photo), without including the codes of the other applications or   linking to it. An Android app can simply start other application's component by instantiate Java objects for that component. An Android application does not have a single entry point (there is no <code>main()</code> method), but consists of components that can be instantiated and run as the need arises.</p>
+<p>There are four main types of application components:</p>
+
+<ol>
+<li>Activity: An activity has a <em>single screen</em>, which usually composes of one of more views. An activity <em>interacts</em> with the user to perform one task.</li>
+<li>Service: Background processes (similar to Windows' service or Unix's daemon), e.g., playing music.</li>
+<li>Broadcast Receiver: Receives and reacts to system messages, e.g., low battery life.</li>
+<li>Content Provider: Android defines a <em>content provider</em> mechanism for applications to share data without exposing the underlying  implementation. Via content provider, your application can share data with other applications, or use data from another application (e.g., from SQLite Database).</li>
+</ol>
+
+
+<h3>Android Programming Basics</h3>
+
+<h4>Android Developer Website</h4>
+
+<p>The Android developer website @ <a href="http://developer.android.com/index.html">http://developer.android.com</a>, is crucial for developing Android app. It has three main items: Design, Develop, and Distribute. Begin with the &quot;Develop&quot;, which contains Android Training, API Guides, Reference and Tools. In this article, I shall follow closely with &quot;Android Training&quot; and &quot;API Guides&quot;, but explain in my perspective.</p>
+
+<h4>Revisit Hello-world</h4>
+
+<p>Let us revisit the Hello-world program, reproduced as follow:</p>
+
+<pre class="color-example">
+package com.example.helloandroid;
+   
+import android.app.Activity;
+import android.os.Bundle;
+<span class="color-new">import android.widget.TextView;</span>
+   
+public class <strong>MainActivity extends Activity</strong> {
+    <span class="color-comment">/** Called when the activity is first created. */</span>
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        <span class="color-new">TextView textView = new TextView(this);</span> <span class="color-comment">// Construct a TextView UI component</span>
+        <span class="color-new">textView.setText(&quot;Hello, world!&quot;);</span>      <span class="color-comment">// Set text for TextView</span>
+        <span class="color-new">setContentView(textView);</span>               <span class="color-comment">// This Activity sets content to the TextView</span>
+    }
+}</pre>
+
+<h5>Activity</h5>
+<p>An Android application typically comprises several activities. An activity has a <em>single screen</em>, which usually composes of one of more views. An activity, as its name implied, <em>interacts</em> with the user to do ONE (and only ONE) thing, such as viewing data, creating data, or editing data.</p>
+
+<h5>View</h5>
+<p>Views are UI <em>components</em> (or widget, or control) (such as button, label, text field) as well as <em>containers</em> (of components), that could be used to build the user interface. In the Hello-world, we use a view called <code>TextView</code> to display the message.</p>
+<p>Android supports many core JDK packages, except graphics packages AWT and Swing. It provides its own 2D graphics supports, via views and widgets. It supports 3D graphics via OpenGL ES.</p>
+
+<h5>Fragment</h5>
+<p>Fragment was introduced in Android 3.0 to support wider screen, which could be difficult to put all the functions in a single activity. Fragments are like <em>sub-activities</em>. An activity can display one or more fragments on the screen at the same time. For a smaller screen, an activity is more likely to contain just one fragment.</p>
+
+<h5><span class="font-code">AndroidManifest.xml</span></h5>
+<p>Each application has a manifest, or <em>application descriptor</em>, to describe its contents, resources and behaviors, such as the list of activities, services, intents and permissions. For example, the hello-world's manifest is as follow:</p>
+
+<pre class="color-example">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    <span class="color-new">package=&quot;com.example.helloandroid&quot;</span> &gt;
+ 
+    &lt;application
+        android:allowBackup=&quot;true&quot;
+        android:icon=&quot;@drawable/ic_launcher&quot;
+        android:label=&quot;@string/app_name&quot;
+        android:theme=&quot;@style/AppTheme&quot; &gt;
+        &lt;activity
+            <span class="color-new">android:name=&quot;.MainActivity&quot;</span>
+            android:label=&quot;@string/app_name&quot; &gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
+                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+    &lt;/application&gt;
+&lt;/manifest&gt;</pre>
+
+
+<ul>
+<li>The root element <code>&lt;manifest&gt;</code> defines the XML name space and Java package name.</li>
+
+<li>The <code>&lt;application&gt;</code> element specifies the <em>icon</em>, <em>label</em> and <em>theme</em> for this app. It contains one ore more <code>&lt;activity&gt;</code> elements.</li>
+
+<li>This application has one activity. The <code>&lt;activity&gt;</code> element declares its <em>Java class name</em> (&quot;<code>MainActivity</code>&quot; in package <code>com.example.helloandroid</code>); and <em>label</em> (to be displayed as the screen title). It may contain <code>&lt;intent-filter&gt;</code> to declare the intent for this activity.</li>
+
+<li>The <code>&lt;intent-filter&gt;</code> declares that this activity is the entry point (<code>android.intent.action.MAIN</code>) of the application. This activity is to be added to the application launcher (<code>android.intent.category.LAUNCHER</code>).</li>
+</ul>
+
+<p>(The Android Application Descriptor file <code>AndroidManifest.xml</code> is similar to Web Application Deployment Descriptor <code>web.xml</code> in a JavaEE web application.)</p>
+
+<h5>Intent</h5>
+<p>An intent, as its name implied, declares an <em>intention</em> to do something, such as launching an activity, broadcasting a message, starting a service, display a web page, dialing or answering a phone call.  An intent could be initiated by your application, or by the system to notify your application about a specific event (such as an incoming phone call or text message). Intents are like &quot;glue&quot; that enable different activities from different applications to work together.</p>
+
+<p>For example, the <code>&lt;intent-filter&gt;</code> in the above manifest declares that this activity is the entry point (<code>android.intent.action.MAIN</code>) of the application, and it shall be added to be application launcher (<code>android.intent.category.LAUNCHER</code>).</p>
+
+<h4>Activities</h4>
+
+<p>As mentioned, an <em>activity</em> is usually presented in a single screen composing of views (UI components, widgets or controls), which interacts with the users to perform a single, focused task (e.g., viewing information, editing data, or entering data).</p>
+
+<p>An Android app typically has one or more activities (one or more screens). One of the activities is marked as the startup activity, which in turn starts the next activity, via the <em>intent</em>.</p>
+<p> To create an activity, we extend the <code>android.app.Activity</code> class, and override some of its methods (in particular <code>onCreate()</code>) to provide our own implementation. A typical template of an <code>Activity</code> is as follows:</p>
+
+<pre class="color-example">
+package com.example.......;
+   
+import android.app.Activity;
+import android.os.Bundle;
+   
+public class ..... <span class="color-new">extends Activity</span> {
+    <span class="color-comment">/** Called back when the activity is first created. */</span>
+    @Override
+    public void <span class="color-new">onCreate</span>(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ......
+        setContentView(......); <span class="color-comment">// Set the content-view of this Activity's screen</span>
+ 
+        <span class="color-comment">// To use XML Layout, use
+        //   setContentView(R.layout.xxx);
+        // to map layout specified in res/layout/xxx.xml</span>
+    }
+}</pre>
+
+<p>You can set this activity's content-view grammatically or via a XML layout file.</p>
+
+<h3>User Interface - Views, ViewGroups and Resources</h3>
+
+<p>An <code>Activity</code> interacts with the user, via a visual UI on a screen. The UI is placed on the <code>Activity</code> via the  <code>Activity</code>'s <code>setContentView()</code> method. In Android, the UI composes of <code>View</code> and <code>ViewGroup</code> objects, organized in a single view-tree structure.</p>
+<p> A <code>View</code> is an interactive UI component (or widget or control),  such as button and text field. It controls a <em>rectangular area</em> on the screen. It is responsible for drawing itself and   handling events (such as clicking, entering texts). Android provides many ready-to-use <code>View</code>s such as <code>TextView</code>, <code>EditText</code>, <code>Button</code>, <code>RadioButton</code>, etc, in package <code>android.widget</code>. You can also create your custom <code>View</code> by extending <code>android.view.View</code>.</p>
+<p> A <code>ViewGroup</code> is an <em>invisible container</em> used to <em>layout</em> the <code>View</code> components. Android provides many ready-to-use <code>ViewGroup</code>s such as <code>LinearLayout</code>, <code>RelativeLayout</code>, <code>TableLayout</code> and <code>GridLayout</code> in package <code>android.widget</code>. You can also create your custom <code>ViewGroup</code> by extending from <code>android.view.ViewGroup</code>. </p>
+<p> <code>View</code>s and <code>ViewGroup</code>s are organized in a single tree structure called <em>view-tree</em>. You can create a view-tree either using programming codes or describing it in a XML layout file. XML layout is recommended as it separates the presentation view  from the controlling logic, which provides modularity and flexibility in your program design. Once a view-tree is constructed, you can add the <em>root</em> of the view-tree to the <code>Activity</code> as the content view via <code>Activity</code>'s <code>setContentView()</code> method.</p>
+
+<p>There are two approaches in constructing the UI:</p>
+<ol>
+<li>Via the XML Layout file: For example, in &quot;<a href="Android_HowTo.html#androidXML">Hello-world in XML Layout</a>&quot;, we layout all the UI components in an XML file. This approach is more flexible, with the view separated from the business logic, and therefore recommended.</li>
+<li>Via the programming codes, as in the above Hello-world example. Use this approach only if absolutely necessary.</li>
+</ol>
+
+
+<h4>Example 1: <span class="font-code">View</span>s (<span class="font-code">TextView</span>, <span class="font-code">RadioButton</span>, <span class="font-code">Button</span>) and <span class="font-code">ViewGroup</span> (<span class="font-code">LinearLayout</span>)</h4>
+
+<img class="image-float-right" src="images/Basics_Counter.png" alt="Counter" />
+
+<p>Let's illustrate the view-tree with a simple &quot;Counter&quot; example as illustrated.</p>
+
+<p>The UI consists of a text field (<code>android.widget.TextView</code>), two radio buttons (<code>android.widget.RadioButton</code>) and a button (<code>android.widget.Button</code>), arranged linearly in vertical orientation (<code>android.widget.LinearLayout</code>).</p>
+<p>Close the previous project, via &quot;File&quot; &rArr; Close Project.</p>
+
+<p>Create an Android project with &quot;Application Name&quot; of &quot;<code>Counter</code>&quot;, &quot;Domain&quot; of &quot;<code>example.com</code>&quot;. Create an activity &quot;<code>MainActivity</code>&quot; with layout &quot;<code>activity_main</code>&quot;.</p>
+
+<h5>Layout <span class="font-code">res\layout\content_main.xml</span>, Strings <span class="font-code">res\values\strings.xml</span>, Dimensions <span class="font-code">res\values\dimens.xml</span></h5>
+
+<p>Expand the project node, and replace the &quot;<code>res\layout\content_main.xml</code>&quot; with the following codes:</p>
+
+<pre class="color-example">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot;
+    android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot;
+    android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
+    app:layout_behavior=&quot;@string/appbar_scrolling_view_behavior&quot;
+    tools:context=&quot;com.example.counter.MainActivity&quot;
+    tools:showIn=&quot;@layout/activity_main&quot;&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/txtCountId&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:background=&quot;#cccccc&quot;
+        android:gravity=&quot;right&quot;
+        android:padding=&quot;@dimen/padding_medium&quot;
+        android:layout_margin=&quot;@dimen/padding_small&quot; /&gt;
+ 
+    &lt;RadioGroup
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;horizontal&quot; &gt;
+        &lt;RadioButton
+            android:id=&quot;@+id/rBtnUpId&quot;
+            android:text=&quot;@string/rBtnUpLabel&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:checked=&quot;true&quot; /&gt;
+        &lt;RadioButton
+            android:id=&quot;@+id/rBtnDownId&quot;
+            android:text=&quot;@string/rBtnDownLabel&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot; /&gt;
+    &lt;/RadioGroup&gt;
+ 
+    &lt;Button
+        android:id=&quot;@+id/btnCountId&quot;
+        android:text=&quot;@string/btnCountLabel&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot; /&gt;
+&lt;/LinearLayout&gt;</pre>
+
+
+<p>There will be  errors on <code>@string</code> and <code>@dimen</code>. These are references, which we shall define later.</p>
+
+<p>The &quot;<code>content_main.xml</code>&quot;  layout file describes a view-tree, composing of <code>View</code>s (UI components) and <code>ViewGroup</code>s (layouts) objects. The root of this view-tree is a <code>LinearLayout</code>, which has 3 children: <code>TextView</code>, <code>RadioGroup</code> and <code>Button</code>. <code>RadioGroup</code> is also a layout <code>ViewGroup</code> which has two children of <code>RadioButton</code>.</p>
+<p>Each object has its own set of properties (or attributes). The common attributes are:</p>
+
+<ul>
+<li><code>id</code>: an identifier used for referencing the object. We use a special syntax <code>@+id/<em>idName</em></code>, with a <code>'+'</code> sign to ask the Android SDK to generate a new ID resource. To reference an element, we use syntax <code>@id/<em>idName</em></code>, without the <code>'+'</code> sign.<br  />
+For example, in the <code>Button</code> declaration, we generate a new <code>id</code> called <code>btnCountId</code> as follow:
+  <pre class="color-example">&lt;Button android:<span class="color-new">id=&quot;@+id/btnCountId&quot;</span> ...... /&gt;
+</pre>
+Once the <code>id</code> is set up, we can use this <code>id</code> to reference the object and manipulate the object in our programming codes. For example, in our <code>MainActivity</code>, we can retrieve a reference to the button, via method <code>findViewById()</code>, and attach an on-click event handler:
+
+<pre class="color-example">
+<span class="color-comment">// Retrieve a reference to the Button by finding it by its id - in the form of R.id.<em>idname</em></span>
+Button btnCount = <span class="color-new">(Button) findViewById(R.id.btnCountId);</span>
+btnCount.setOnClickListener(new OnClickListener() {
+   @Override
+   public void onClick(View v) { ...... }
+});</pre>
+
+(This approach is very similar to JavaScript programming, which uses <code>document.getElementById(&quot;<em>idname</em>&quot;)</code> to retrieve an element, and process the element or attach an event handler such as <code>onclick</code>.)</li>
+
+<li><code>layout_width</code> and <code>layout_height</code>: specifying the rectangular area of the <code>View</code> or <code>ViewGroup</code>. It is recommended to use a <em>relative</em> measurement, such as <code>MATCH_PARENT</code> (as big as its parent, called <code>FILL_PARENT</code> before API level 8) or <code>WRAP_CONTENT</code> (big enough to enclose its content). You can also provide an <em>absolute</em> measurement by specifying a floating-point number with a unit, e.g., 12.5dp. The available measurement units are px (pixels), dp or dip (density-independent pixels), sp (scaled pixels based on preferred font size), in (inches), and mm (millimeters).<br  />
+In our example, the <code>LinearLayout</code> fills the screen width and height (<code>layout_width=&quot;match_parent&quot;</code>, <code>layout_height=&quot;match_parent&quot;</code>). The <code>TextView</code> fill the screen's width (<code>layout_width=&quot;match_parent&quot;</code>), with a height big enough to enclose its content (<code>layout_height=&quot;wrap_content&quot;</code>). The <code>RadioGroup</code>, <code>RadioButton</code> and <code>Button</code> have width and height big enough to hold their contents (<code>layout_width=&quot;wrap_content&quot;</code>, <code>layout_height=&quot;wrap_content&quot;</code>).</li>
+<li><code>text</code>: specifying an initial text for a text field, or a label for a button. Instead of hardcoding the text in the XML layout file, it is recommended to provide a string reference in the form of <code>@string/<em>stringName</em></code> in the layout file,  and place the actual text in &quot;<code>res\values\strings.xml</code>&quot;. In this way, you could provide different strings for different locales (languages and countries) for internationalization (i18n) support.<br  />
+For this example, we used string references <code>rBtnUpLabel</code> and <code>rBtnDownLabel</code> (for <code>RadioButton</code>) and <code>btnCountLabel</code> (for <code>Button</code>).<br  />
+Next, open &quot;<code><strong>res\values\strings.xml</strong></code>&quot; to ADD the actual strings, as follows:
+
+<pre class="color-example">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;resources&gt;
+    <span class="color-comment">&lt;!-- DO NOT REMOVE the existing entries --&gt;</span>
+    ......
+
+    <span class="color-comment">&lt;!-- ADD the following entries --&gt;</span>
+    <span class="color-new">&lt;string name=&quot;btnCountLabel&quot;&gt;Count&lt;/string&gt;
+    &lt;string name=&quot;rBtnUpLabel&quot;&gt;Count Up&lt;/string&gt;
+    &lt;string name=&quot;rBtnDownLabel&quot;&gt;Count Down&lt;/string&gt;</span>
+&lt;/resources&gt;</pre>
+</li>
+
+<li><code>orientation=&quot;horizontal|vertical&quot;</code>: For layouts such as <code>LinearLayout</code> and <code>RadioGroup</code>, you can specify whether to arrange its children in horizontal or vertical orientation. In our example, the <code>LinearLayout</code> uses vertical orientation, while <code>RadioGroup</code> uses horizontal.</li>
+<li>others: There are many other attributes. Some attributes are applicable to a certain object only. For example, we use <code>checked=&quot;true&quot;</code> to set the initial state of a <code>RadioButton</code>. For the <code>TextView</code>, we use <code>&quot;background=&quot;#cccccc&quot;</code> to set its background to lightgrey (<code>#RRGGBB</code>), <code>gravity=&quot;right&quot;</code> to right-align the text, <code>layout_margin=&quot;@dimen/padding_small&quot;</code> to set the margin of the layout element, and <code>padding=&quot;@dimen/padding_medium&quot;</code> to set the padding between the text and the borders.<br />
+Open &quot;<strong><code>res\values\dimens.xml</code></strong>&quot; to ADD the following dimension resources:
+
+<pre class="color-example">
+&lt;resources&gt;
+    <span class="color-comment">&lt;!-- DO NOT REMOVE the existing entries --&gt;</span>
+    ......
+
+    <span class="color-comment">&lt;!-- ADD the following entries --&gt;</span>
+    <span class="color-new">&lt;dimen name=&quot;padding_medium&quot;&gt;5dp&lt;/dimen&gt;
+    &lt;dimen name=&quot;padding_small&quot;&gt;3dp&lt;/dimen&gt;</span>
+&lt;/resources&gt;</pre>
+
+</li>
+</ul>
+
+<h5><span class="font-code">MainActivity.java</span></h5>
+<p>Let's complete our example by writing the <code>MainActivity.java</code> to process the button-clicks. Replace the <code>onCreate()</code> method as follows:</p>
+
+<pre class="color-example">
+package ......;
+ 
+import ......;
+<span class="color-new">import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.RadioButton;</span>
+ 
+public class MainActivity extends ...... {
+ 
+   <span class="color-comment">// References to UI views</span>
+   <span class="color-new">TextView    txtCount;
+   RadioButton rBtnUp, rBtnDown;
+   Button      btnCount;
+ 
+   int count = 0;</span> <span class="color-comment">// counter value</span>
+ 
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_main);
+ 
+      <span class="color-comment">// Retrieve references to UI views via their ID in XML layout</span>
+      <span class="color-new">rBtnUp   = (RadioButton) findViewById(R.id.rBtnUpId);
+      rBtnDown = (RadioButton) findViewById(R.id.rBtnDownId);
+      txtCount = (TextView)    findViewById(R.id.txtCountId);
+      txtCount.setText(String.valueOf(count)); <span class="color-comment">// Display initial count</span>
+ 
+      btnCount = (Button) findViewById(R.id.btnCountId);
+      <span class="color-comment">// Process the button on-click event via an anonymous inner class</span>
+      btnCount.setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            if (rBtnUp.isChecked()) { <span class="color-comment">// Counting up</span>
+               count++;
+            } else if (rBtnDown.isChecked()) { <span class="color-comment">// Counting down</span>
+               count--;
+            }
+            txtCount.setText(String.valueOf(count));
+         }
+      });</span>
+
+      <span class="color-comment">// No Change for the following lines in onCreate().
+      // These creates the toolbar and the email button.</span>
+      Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+      setSupportActionBar(toolbar);
+
+      FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+      fab.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+         }
+      });
+   }
+
+   <span class="color-comment">// Don't touch the rest of the methods</span>
+   ........
+}</pre>
+
+<h5>Dissecting <span class="font-code">MainActivity.java</span></h5>
+
+<ul>
+
+<li>We set the content-view of this application to <code>R.layout.activity_main</code> (<code>res\layout\activity_main.xml</code>).</li>
+
+<li>We retrieve references to the <code>View</code> components <code>TextView</code>, 2 <code>RadioButton</code>s and <code>Button</code>, via <code>findViewById()</code> given the respective resource ID.</li>
+<li>For the <code>Button</code>, we set the on-click handler via <code>setOnClickListener()</code>. We use an inner class implementing <code>OnClickListener</code> and override the <code>onClick()</code> handler.</li>
+
+</ul>
+
+<h5>Run the Application</h5>
+<p>Now, you can run the application.</p>
+
+<h5>Generated <span class="font-code">AndroidManifest.xml</span></h5>
+
+<p>Each Android application has a <em>manifest</em> file (or <em>application descriptor</em>) named <code>AndroidManifest.xml</code>, in the project's root directory. It describes the application components. The manifest is generated automatically by the Eclipse ADT:</p>
+
+<pre class="color-example">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    <span class="color-new">package=&quot;com.example.counter&quot;</span> &gt;
+ 
+    &lt;application
+        android:allowBackup=&quot;true&quot;
+        android:icon=&quot;@drawable/ic_launcher&quot;
+        android:label=&quot;@string/app_name&quot;
+        android:theme=&quot;@style/AppTheme&quot; &gt;
+        &lt;activity
+            android:name=&quot;.<span class="color-new">MainActivity</span>&quot;
+            android:label=&quot;@string/app_name&quot; &gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
+                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+    &lt;/application&gt;
+&lt;/manifest&gt;</pre>
+
+<p>In our example,</p>
+<ul>
+<li>The <code>&lt;manifest&gt;</code> element specifies the Java package name and program version. It contains one <code>&lt;application&gt;</code> element.</li>
+<li>The <code>&lt;application&gt;</code> element specifies the icon and label used in mobile device's &quot;apps&quot; menu. It contains one ore more <code>&lt;activity&gt;</code> elements.</li>
+<li>This application has one activity named <code>MainActivity</code>. The <code>&lt;activity&gt;</code> element declares its program name (<code>MainActivity</code> in package <code>com.example.counter</code>) and label (string reference <code>app_name</code>, where actual text in <code>res\values\strings.xml</code>). It may contain <code>&lt;intent-filter&gt;</code>.</li>
+<li>The <code>&lt;intent-filter&gt;</code> declares that this activity is the entry point (<code>intent.action.MAIN</code>) of the application and is included in the app launcher (<code>intent.category.LAUNCHER</code>).</li>
+</ul>
+
+<h5>Specifying the <span class="font-code">onClick</span> Handler in the Layout XML File</h5>
+
+<p>Instead of using <code>Button</code>'s <code>setOnClickListener()</code> to register a listener object, we could also specify the <code>onClick</code> handler (called <code>btnCountOnClickHandler()</code>) directly in the layout XML file. For example,</p>
+
+<pre class="color-example">
+&lt;Button
+   android:id=&quot;@+id/btnCountId&quot;
+   android:text=&quot;@string/btnCountLabel&quot;
+   android:layout_width=&quot;wrap_content&quot;
+   android:layout_height=&quot;wrap_content&quot;
+   <span class="color-new">android:onClick=&quot;btnCountOnClickHandler&quot;</span> /&gt;</pre>
+
+<p>In &quot;<code>MainActivity.java</code>&quot;, you program the event handler method <code>btnCountOnClickHandler()</code>, as follows:</p>
+
+<pre class="color-example">
+package ......;
+ 
+import ......;
+  
+public class MainActivity ...... {
+ 
+  <span class="color-comment"> // References to UI views</span>
+   TextView txtCount;
+   RadioButton rBtnUp, rBtnDown;
+   Button btnCount;
+ 
+   int count = 0;<span class="color-comment"> // counter value</span>
+ 
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_main);
+ 
+     <span class="color-comment"> // Retrieve references to UI views by their id in XML layout</span>
+      rBtnUp = (RadioButton) findViewById(R.id.rBtnUpId);
+      rBtnDown = (RadioButton) findViewById(R.id.rBtnDownId);
+      txtCount = (TextView) findViewById(R.id.txtCountId);
+      txtCount.setText(String.valueOf(count));<span class="color-comment"> // Display initial count</span>
+      btnCount = (Button) findViewById(R.id.btnCountId);
+      <span class="color-new">// Remove the setOnClickListener()</span>
+      ......
+   }
+
+   <span class="color-comment">// Button's onClick handler (set in XML layout)  </span>
+   <span class="color-new">public void btnCountOnClickHandler(View v) {
+      if (rBtnUp.isChecked()) {<span class="color-comment">          // Counting up</span>
+         count += 2;   <span class="color-comment">// Step of 2</span>
+      } else if (rBtnDown.isChecked()) {<span class="color-comment"> // Counting down</span>
+         count -= 2;   <span class="color-comment">// Step of 2</span>
+      }
+      txtCount.setText(String.valueOf(count));
+   }</span>
+
+   ......
+   ......
+}</pre>
+
+<p>Try it out!</p>
+
+<p>The <code>btnCountOnClickHandler()</code> takes a <code>View</code> object as parameter, corresponding to the <code>View</code> (i.e., the <code>Button</code> or the <em>source</em> object) that triggers the handler.</p>
+
+
+<p>In the earlier codes, I showed the Java &quot;listener&quot; code for the benefit of Java programmers, but you should use the <code>onClick</code> handler, as it is much easier to code.</p>
+
+<h4>Example 2: Relative Layout</h4>
+
+<img class="image-float-right" src="images/Basics_CounterRelative.png" alt="counter relative" />
+
+<p>Let us modify our program to use <code>RelativeLayout</code>, instead of <code>LinearLayout</code>. In  relative layout, the UI are arranged relative to each others.</p>
+
+<h5>Layout <span class="font-code">res\layout\content_main_relative.xml</span></h5>
+
+<p>We shall use the same project (as the previous example), but specifying a new XML layout file.</p>
+<p>Create a new XML layout file called <code>content_main_relative.xml</code> in <code>res\layout</code> folder. Right-click on the <code>res\layout</code> node ⇒ New  ⇒  File &rArr; Enter &quot;<code>content</code><code>_main_relative.xml</code>&quot;) as follows:</p>
+
+<pre class="color-example">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot;
+    android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
+    app:layout_behavior=&quot;@string/appbar_scrolling_view_behavior&quot;
+    tools:context=&quot;com.example.counter.MainActivity&quot;
+    tools:showIn=&quot;@layout/activity_main&quot;&gt;
+ 
+    &lt;TextView
+        android:id=&quot;@+id/txtCountId&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:background=&quot;#cccccc&quot;
+        android:gravity=&quot;right&quot;
+        android:padding=&quot;@dimen/padding_medium&quot;
+        android:layout_margin=&quot;@dimen/padding_small&quot; /&gt;
+ 
+    &lt;RadioGroup
+        android:id=&quot;@+id/radioGroupId&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;horizontal&quot;
+        <span class="color-new">android:layout_below=&quot;@id/txtCountId&quot;
+        android:layout_alignParentRight=&quot;true&quot;</span>&gt;
+        &lt;RadioButton
+            android:id=&quot;@+id/rBtnUpId&quot;
+            android:text=&quot;@string/rBtnUpLabel&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:checked=&quot;true&quot; /&gt;
+        &lt;RadioButton
+            android:id=&quot;@+id/rBtnDownId&quot;
+            android:text=&quot;@string/rBtnDownLabel&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot; /&gt;
+    &lt;/RadioGroup&gt;
+ 
+    &lt;Button
+        android:id=&quot;@+id/btnCountId&quot;
+        android:text=&quot;@string/btnCountLabel&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        <span class="color-new">android:onClick=&quot;btnCountOnClickHandler&quot;
+        android:layout_below=&quot;@id/radioGroupId&quot;
+        android:layout_alignParentRight=&quot;true&quot;</span> /&gt;
+&lt;/RelativeLayout&gt;</pre>
+
+
+<p>We use the <code>RelativeLayout</code> as the root element. In relative layout, we need to assign an <code>id</code> to elements that would be used for reference. As mentioned, to create an <code>id</code>, we use a special syntax <code>@+id/<em>idName</em></code>, with a <code>'+'</code> sign to ask the Eclipse ADT to generate an <code>id</code>. To reference an element, we use the syntax <code>@id/<em>idName</em></code>.</p>
+
+<p>In relative layout, we could use <code>layout_below</code>, <code>layout_toLeftOf</code>, <code>layout_toRightOf</code>, <code>layout_alignParentRight</code>, <code>layout_alignTop</code>, etc, (defined in <code>android.widget.RelativeLayout.LayoutParams</code>) to arrange a UI view relative to another view.</p>
+
+<p>In this example, the <code>RadioGroup</code> is placed below the <code>EditText</code> and right-aligned with its parent <code>RelativeLayout</code>. The <code>Button</code> is placed below the <code>RadioGroup</code>, and also right-aligned with its parent <code>RelativeLayout</code>.</p>
+
+<h5><span class="font-code">activity_main.xml</span></h5>
+
+<p>Modify the <code>&lt;include&gt;</code> as follows:</p>
+
+<pre class="color-example">
+    ......
+    ......
+    &lt;include layout="@layout/<span class="color-new">content_main_relative</span>" /&gt;
+    ......
+    ......</pre>
+
+<h4>More Layouts</h4>
+<p>Study the various UI layouts @ <a href="http://developer.android.com/guide/topics/ui/declaring-layout.html">http://developer.android.com/guide/topics/ui/declaring-layout.html</a>:</p>
+
+<ul>
+  <li><code>LinearLayout</code>: A <code>ViewGroup</code> that displays its <code>View</code> children in linear direction, either horizontally or vertically.</li>
+  <li><code>RelativeLayout</code>: A <code>ViewGroup</code> that display its <code>View</code> children in relative position to each others or to the parent. e.g., below, align (top, left, right, bottom), margin (top, left, right, bottom).</li>
+  <li><code>ListView</code>: A scrollable list of items.</li>
+  <li><code>GridView</code>: A scrollable grid of rows and columns.</li>
+</ul>
+
+<h4>Example 3: Using the Graphical Layout Tool</h4>
+
+<p>Instead of coding in XML, we can also design a user interface using the Graphical Layout Tool.</p>
+<p>Create a new Android project with &quot;Application Name&quot; of &quot;<code>CountGraphicTool</code>&quot;, domain of &quot;<code>example.com</code>&quot;, main activity &quot;<code>MainActivity</code>&quot; and layout &quot;<code>activity_main</code>&quot;.</p>
+
+<p>To design the UI using Graphical Layout Tool:</p>
+
+<ol>
+<li>Open &quot;<code>content_main.xml</code>&quot;, select the &quot;Design&quot; tab.</li>
+<li>Remove all the existing widgets: select the  <code>TextView</code> &quot;hello, world&quot; &rArr; Delete.</li>
+<li>From the &quot;Palette&quot; &rArr; Expand &quot;Widgets&quot;  &rArr; Drag and drop a &quot;<code>Button</code>&quot; into the display   &rArr; Position the <code>Button</code>. Take note that the default layout is relative layout (shown in the &quot;Component Tree&quot; panel).</li>
+<li>From the &quot;Palette&quot;  &rArr; Expand &quot;Widgets&quot;  &rArr; Drag and drop a &quot;<code>Plain TextView</code>&quot; into the display below the button.  In &quot;Properties&quot; panel, set &quot;<code>layout:width</code>&quot; to &quot;<code>match_parent</code>&quot;, &quot;<code>background</code>&quot; to &quot;<code>#cccccc</code>&quot;, and &quot;<code>Text</code>&quot; to &quot;<code>0</code>&quot;.</li>
+<li>Study the XML codes generated, by selecting the &quot;Text&quot; tab.</li>
+<li>Creating a string resource by opening the &quot;<code>Strings.xml</code>&quot;, and add this entry:
+<pre class="color-example">&lt;string name=&quot;count_label&quot;&gt;Count&lt;/string&gt;</pre></li>
+<li>Go back to &quot;<code>content_main.xml</code>&quot;, choose the &quot;Design&quot; mode. Select the <code>Button</code>. In the &quot;Properties&quot; sheet, under &quot;Text&quot;, push the &quot;browse&quot; button (marked as ...) and select &quot;<code>count_label</code>&quot; which we have just created.</li>
+<li>Select the <code>Button</code> &rArr; Under &quot;Properties&quot;  &rArr; &quot;<code>onClick</code>&quot;, enter <code>&quot;btnCountOnClickHandler&quot;</code> (similar to the previous example).</li>
+<li>Modify the <code>MainActivity.java</code> to include the <code>btnCountOnClickHandler()</code> method:
+<pre class="color-example">
+......
+import android.view.View;<br />import android.widget.TextView;
+
+public class MainActivity extends ...... {<br />
+    TextView txtCount;
+    int count = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        txtCount = (TextView) findViewById(R.id.textView);  <span class="color-comment">// Check the ID from Properties!</span>
+    }
+
+    public void btnCountOnClickHandler(View v) {
+        count++;
+        txtCount.setText(String.valueOf(count));
+    }
+    .......
+    .......
+}</pre></li>
+<li>(Optional) Add  2 radio buttons for count up/down, by drag and drop a &quot;Radio Group&quot; from &quot;Form Widgets&quot;, similar to the previous example. Modify the <code>MainActivity.java</code> to include the radio buttons.</li>
+</ol>
+
+<p>Why using the Graphical Layout Tool? Coding in XML is difficult in laying out the widgets! You didn't feel it because you copied the XML codes from me instead of writing yourself!</p>
+
+
+<h4>Example 4: Simple Calculator</h4>
+
+<img class="image-float-right" src="images/Basics_CalculatorSimple.png" alt="Calculator" />
+
+<p>Create an Android project with application name of <code>Calculator</code>, domain name of &quot;<code>example.com</code>&quot;, activity of &quot;<code>MainActivity</code>&quot;, and layout of &quot;<code></code><code>activity_main</code>&quot;.</p>
+
+<h5>Layout <span class="font-code">res\layout\content_main.xml</span></h5>
+
+<p>The UI consists of a <code>TextView</code> for displaying the result and 16 <code>Button</code>s. We use <code>TableLayout</code> to layout the buttons in rows and columns as illustrated.</p>
+
+<pre class="color-example">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot;
+    android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
+    app:layout_behavior=&quot;@string/appbar_scrolling_view_behavior&quot;
+    tools:context=&quot;com.example.calculator.MainActivity&quot;
+    tools:showIn=&quot;@layout/activity_main&quot;&gt;
+ 
+    &lt;TextView
+        android:id=&quot;@+id/txtResultId&quot;
+        android:layout_width=&quot;fill_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:background=&quot;#cccccc&quot;
+        android:gravity=&quot;right&quot; /&gt;
+ 
+    &lt;TableLayout
+        android:id=&quot;@+id/tableId&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_below=&quot;@id/txtResultId&quot; &gt;
+        &lt;TableRow&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnNum7Id&quot;
+                android:text=&quot;7&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnNum8Id&quot;
+                android:text=&quot;8&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnNum9Id&quot;
+                android:text=&quot;9&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnDivId&quot;
+                android:text=&quot;/&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+        &lt;/TableRow&gt;
+        &lt;TableRow&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnNum4Id&quot;
+                android:text=&quot;4&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnNum5Id&quot;
+                android:text=&quot;5&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnNum6Id&quot;
+                android:text=&quot;6&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnMulId&quot;
+                android:text=&quot;*&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+        &lt;/TableRow&gt;
+        &lt;TableRow&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnNum1Id&quot;
+                android:text=&quot;1&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnNum2Id&quot;
+                android:text=&quot;2&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnNum3Id&quot;
+                android:text=&quot;3&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnSubId&quot;
+                android:text=&quot;-&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+        &lt;/TableRow&gt;
+        &lt;TableRow&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnNum0Id&quot;
+                android:text=&quot;0&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnClearId&quot;
+                android:text=&quot;C&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnEqualId&quot;
+                android:text=&quot;=&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+            &lt;Button
+                android:id=&quot;@+id/btnAddId&quot;
+                android:text=&quot;+&quot;
+                android:layout_width=&quot;fill_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_weight=&quot;1&quot; /&gt;
+        &lt;/TableRow&gt;
+    &lt;/TableLayout&gt;
+&lt;/RelativeLayout&gt;</pre>
+
+<h5><span class="font-code">MainActivity.java</span></h5>
+
+<pre class="color-example">
+package ......;
+ 
+import ......;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.TextView;
+import android.widget.Button;
+ 
+public class MainActivity extends ...... {
+ 
+   private TextView txtResult; <span class="color-comment">// Reference to EditText of result</span>
+   private int result = 0;     <span class="color-comment">// Result of computation</span>
+   private String inStr = &quot;0&quot;; <span class="color-comment">// Current input string</span>
+   <span class="color-comment">// Previous operator: '+', '-', '*', '/', '=' or ' ' (no operator)</span>
+   private char lastOperator = ' ';
+ 
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_main);
+ 
+      <span class="color-comment">// Retrieve a reference to the EditText field for displaying the result.</span>
+      txtResult = (TextView) findViewById(R.id.txtResultId);
+      txtResult.setText(&quot;0&quot;);
+ 
+      <span class="color-comment">// Register listener (this class) for all the buttons</span>
+      BtnListener listener = new BtnListener();
+      ((Button) findViewById(R.id.btnNum0Id)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnNum1Id)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnNum2Id)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnNum3Id)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnNum4Id)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnNum5Id)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnNum6Id)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnNum7Id)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnNum8Id)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnNum9Id)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnAddId)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnSubId)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnMulId)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnDivId)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnClearId)).setOnClickListener(listener);
+      ((Button) findViewById(R.id.btnEqualId)).setOnClickListener(listener);
+
+      ......
+   }
+ 
+   private class BtnListener implements OnClickListener {
+      <span class="color-comment">// On-click event handler for all the buttons</span>
+      @Override
+      public void onClick(View view) {
+         switch (view.getId()) {
+         <span class="color-comment">// Number buttons: '0' to '9'</span>
+         case R.id.btnNum0Id:
+         case R.id.btnNum1Id:
+         case R.id.btnNum2Id:
+         case R.id.btnNum3Id:
+         case R.id.btnNum4Id:
+         case R.id.btnNum5Id:
+         case R.id.btnNum6Id:
+         case R.id.btnNum7Id:
+         case R.id.btnNum8Id:
+         case R.id.btnNum9Id:
+            String inDigit = ((Button) view).getText().toString();
+            if (inStr.equals(&quot;0&quot;)) {
+               inStr = inDigit; <span class="color-comment">// no leading zero</span>
+            } else {
+               inStr += inDigit; <span class="color-comment">// accumulate input digit</span>
+            }
+            txtResult.setText(inStr);
+            <span class="color-comment">// Clear buffer if last operator is '='</span>
+            if (lastOperator == '=') {
+               result = 0;
+               lastOperator = ' ';
+            }
+            break;
+ 
+         <span class="color-comment">// Operator buttons: '+', '-', '*', '/' and '='</span>
+         case R.id.btnAddId:
+            compute();
+            lastOperator = '+';
+            break;
+         case R.id.btnSubId:
+            compute();
+            lastOperator = '-';
+            break;
+         case R.id.btnMulId:
+            compute();
+            lastOperator = '*';
+            break;
+         case R.id.btnDivId:
+            compute();
+            lastOperator = '/';
+            break;
+         case R.id.btnEqualId:
+            compute();
+            lastOperator = '=';
+            break;
+ 
+         <span class="color-comment">// Clear button</span>
+         case R.id.btnClearId:
+            result = 0;
+            inStr = &quot;0&quot;;
+            lastOperator = ' ';
+            txtResult.setText(&quot;0&quot;);
+            break;
+         }
+      }
+ 
+      <span class="color-comment">// User pushes '+', '-', '*', '/' or '=' button.</span>
+      <span class="color-comment">// Perform computation on the previous result and the current input number,</span>
+      <span class="color-comment">// based on the previous operator.</span>
+      private void compute() {
+         int inNum = Integer.parseInt(inStr);
+         inStr = &quot;0&quot;;
+         if (lastOperator == ' ') {
+            result = inNum;
+         } else if (lastOperator == '+') {
+            result += inNum;
+         } else if (lastOperator == '-') {
+            result -= inNum;
+         } else if (lastOperator == '*') {
+            result *= inNum;
+         } else if (lastOperator == '/') {
+            result /= inNum;
+         } else if (lastOperator == '=') {
+            <span class="color-comment">// Keep the result for the next operation</span>
+         }
+         txtResult.setText(String.valueOf(result));
+      }
+   }
+
+   ......
+   ......
+}</pre>
+
+<h5>Dissecting <span class="font-code">MainActivity.java</span></h5>
+
+<p>We define an inner class called <code>BtnListener</code> which implements the <code>OnClickListener</code>. We then create a <code>BtnListener</code> object and register the same object to all the 16 <code>Button</code>s. In the on-click event handler, we inspect the <code>View</code> object's <code>id</code> to dispatch the appropriate action.</p>
+
+<p>[TODO more]</p>
+
+<h5>Using the <span class="font-code">onClick</span> handler in the Layout XML file</h5>
+<p>The program could be simpler, if we specify the <code>Button</code>'s <code>onClick</code> handler in the Layout XML file (I decided to show the Java event-listener code for the benefits of Java programmers):</p>
+
+<ol>
+<li>You can use the <em>same</em> <code>onClick</code> handler for ALL buttons as follows:
+
+<pre class="color-example">
+<span class="color-comment">&lt;!-- For ALL the buttons --&gt;</span>
+&lt;Button
+   ......
+   <span class="color-new">android:onClick=&quot;btnOnClickHandler&quot;</span> /&gt;</pre>
+
+Follow the previous example, rewrite the <code>MainActivity.java</code> to support the <code>btnOnClickHandler()</code>.</li>
+
+<li>Alternatively, you can use <em>different</em> handlers for <em>different group</em> of buttons, e.g., <code>numBtnOnClickHander()</code> for 10 &quot;number&quot; buttons, <code>oprBtnOnClickHandler()</code> for '<code>+</code>', '<code>-</code>', '<code>*</code>', '<code>/</code>' and '<code>=</code>' buttons, and <code>clearBtnOnClickHandler()</code> for the &quot;clear&quot; button. Rewrite the <code>MainActivity.java</code> to support these handlers.</li>
+</ol>
+
+<h3>Starting Another Activity</h3>
+<h4>Example 5: Using an Intent to Start a Second Activity</h4>
+
+<img class="image-float-right" src="images/Basics_GetMessage.png" alt="Get Message" />
+<img class="image-float-right float-clear" src="images/Basics_DisplayMessage.png" alt="Display Message" />
+
+<p>In this example, we shall illustrate how to write an app with two activities (two screens), and use an <code>Intent</code> to start the second activity from the first one. As mentioned, an <code>Intent</code>, as its name implies, is an intention to do something - in most cases, start another activity. <code>Intents</code> are like &quot;glue&quot; that enables different activities from different application to work together.</p>
+
+<p>The first activity prompts user to enter a message (into an <code>EditText</code>) and launch the second activity to display the message, when &quot;Send&quot; <code>Button</code> is pressed.</p>
+
+<h5>Create a new Project with the First Activity &quot;<span class="font-code">GetMessageActivity.java</span>&quot;</h5>
+
+Create a new Android project with Application name of &quot;<code>Test Intent</code>&quot;, Company domain of &quot;<code>example.com</code>&quot;. Create an activity named &quot;<code>GetMessageActivity</code>&quot; with layout name &quot;<code>activity_get_message</code>&quot;.
+
+<h5>Layout of the First Activity - &quot;<span class="font-code">res\layout\content_get_message.xml</span>&quot;</h5>
+
+<p>A &quot;<code>RelativeLayout</code>&quot; is used with two views: an <code>EditText</code> (a text field for user to enter text) and a <code>Button</code>. The <code>EditText</code> has a &quot;<code>hint</code>&quot; string, which will be shown when the field is empty. Button has a &quot;<code>onClick</code>&quot; hander called <code>sendMessage</code>, to be written in the activity.</p>
+<pre class="color-example">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot;
+    android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
+    app:layout_behavior=&quot;@string/appbar_scrolling_view_behavior&quot;
+    tools:context=&quot;com.example.testintent.GetMessageActivity&quot;
+    tools:showIn=&quot;@layout/activity_get_message&quot;&gt;
+
+    &lt;EditText
+        android:id=&quot;@+id/txtMessageID&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:hint=&quot;@string/message&quot; /&gt;
+
+    &lt;Button
+        android:id=&quot;@+id/btnSend&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_below=&quot;@id/txtMessageID&quot;
+        android:layout_alignParentRight=&quot;true&quot;
+        android:text=&quot;@string/btnSendLabel&quot;
+        android:onClick=&quot;sendMessage&quot; /&gt;
+&lt;/RelativeLayout&gt;
+</pre>
+
+<p>Take note that &quot;<code>content_get_message.xml</code>&quot; is included inside &quot;<code>activity_get_message.xml</code>&quot;, as in the previous examples.</p>
+
+<h5>Strings &quot;<span class="font-code">res\values\string.xml</span>&quot;</h5>
+
+<p>Include the following string references, which was used in the above layout:</p>
+
+<pre class="color-example">
+&lt;string name=&quot;btnSendLabel&quot;&gt;Send&lt;/string&gt;
+&lt;string name=&quot;message&quot;&gt;Enter your text here&lt;/string&gt;</pre>
+
+<h5>First Activity - &quot;<span class="font-code">GetMessageActivity.java</span>&quot;</h5>
+
+<pre class="color-example">
+package ......;
+ 
+import ......;
+import android.content.Intent;
+import android.view.View;
+import android.widget.EditText;
+ 
+public class GetMessageActivity ...... {
+   public final static String EXTRA_MESSAGE = &quot;com.example.testintent.MESSAGE&quot;;
+ 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_get_message);
+        ......
+        ......
+    }
+ 
+    <span class="color-comment">/** Called when the user selects the Send button */</span>
+    public void sendMessage(View view) {
+        <span class="color-comment">// Create an Intent to start the second activity</span>
+        Intent intent = new Intent(this, DisplayMessageActivity.class);
+        <span class="color-comment">// Retrieve the message entered and put into the Intent</span>
+        EditText txtMessage = (EditText) findViewById(R.id.txtMessageID);
+        String message = txtMessage.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, message);  <span class="color-comment">// key-value pair</span>
+        <span class="color-comment">// Start the intended activity</span>
+        startActivity(intent);
+    }
+
+    ......
+    ......
+}</pre>
+
+<p>This activity includes the &quot;Send&quot; <code>Button</code>'s <code>onClick</code> handler <code>sendMessage()</code>. It creates an <code>Intent</code> object for launching the second activity called &quot;<code>DisplayMessageActivity</code>&quot;. It then retrieves the message entered into the <code>EditText</code>, puts the message into the <code>Intent</code> object, with a key &quot;<code>EXTRA_MESSAGE</code>&quot;, and starts the intended activity.</p>
+
+<h5>The Second Activity</h5>
+
+<p>We need to call our second activity &quot;<code>DisplayMessageActivity</code>&quot;, as declared in the <code>Intent</code>. We shall use a new layout called &quot;<code>activity_display_message</code>&quot;.</p>
+<p>Right-click on &quot;Java&quot; node &rArr; New  &rArr; Activity  &rArr; Blank Activity  &rArr; Enter &quot;<code>DisplayMessageActivity</code>&quot;    &rArr; In &quot;Hierarchical Parent&quot;, browse to select the &quot;<code>GetMessageActivity</code>&quot;   &rArr; In &quot;Package name&quot;, enter &quot;<code>com.example.testintent</code>&quot; &rArr; Finish.</p>
+
+<h5>Layout of the Second Activity - &quot;<span class="font-code">res\layout\content_display_message</span>&quot;</h5>
+
+<p>This layout contain one view - a <code>TextView</code> to display the message received from the first activity.</p>
+
+<pre class="color-example">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot;
+    android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
+    app:layout_behavior=&quot;@string/appbar_scrolling_view_behavior&quot;
+    tools:context=&quot;com.example.DisplayMessageActivity&quot;
+    tools:showIn=&quot;@layout/activity_display_message&quot;&gt;
+
+    &lt;TextView
+        android:id=&quot;@+id/txtDisplayID&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot; /&gt;
+&lt;/RelativeLayout&gt;</pre>
+
+<h5><span class="font-code">DisplayMessageActivity.java</span></h5>
+
+<p>Modify the <code>onCreate()</code> as follows:.</p>
+
+<pre class="color-example">
+package ......;
+ 
+import ......;
+import android.content.Intent;
+import android.widget.TextView;
+ 
+public class DisplayMessageActivity ...... {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_display_message);
+
+        ......
+        ......
+
+        <span class="color-comment">// Get the message from the intent</span>
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(GetMessageActivity.EXTRA_MESSAGE);
+
+        <span class="color-comment">// Get the display TextView for this activity and display the message</span>
+        TextView txtDisplay = (TextView) findViewById(R.id.txtDisplayID);
+        txtDisplay.setText(message);
+    }
+ 
+    ......
+    ......
+}</pre>
+
+<p>This activity gets the <code>Intent</code> object that started it via <code>getInent()</code>, and retrieves the message put into the <code>Intent</code> via its key. It then puts the message on the <code>TextView</code>.</p>
+<p>Take note that the content-view is set to &quot;<code>R.layout.activity_display_message</code>&quot; which corresponds to the &quot;<code>res\layout\activity_display_message.xml</code>&quot; we have created earlier.</p>
+
+<h5><span class="font-code">AndroidManifest.xml</span></h5>
+
+<p>Check out the manifest. A new activity has been declared (automatically by Android Studio) as follows:</p>
+
+<pre class="color-example">
+......
+&lt;activity
+   <span class="color-new">android:name=&quot;.DisplayMessageActivity&quot;</span>
+   android:label=&quot;@string/title_activity_display_message&quot;
+   <span class="color-new">android:parentActivityName=&quot;.GetMessageActivity&quot; &gt;</span>
+   &lt;meta-data
+      android:name=&quot;android.support.PARENT_ACTIVITY&quot;
+      android:value=&quot;com.example.testintent.GetMessageActivity&quot; /&gt;
+&lt;/activity&gt;
+</pre>
+
+<p>The name of the activity is &quot;<code>DisplayMessageActivity</code>&quot; (in current package). There is no need for the <code>&lt;intent-filter&gt;</code> as this activity is launched from the first activity.</p>
+
+<p>A string reference is also created in &quot;<code>res\values\string.xml</code>&quot;:</p>
+
+<pre class="color-example">&lt;string name=&quot;title_activity_display_message&quot;&gt;</pre>
+<pre>DisplayMessageActivity</pre>
+<pre class="color-example">&lt;/string&gt;
+</pre>
+
+<h5>Run the App</h5>
+<p>Now, you can run the app.</p>
+
+<h4>Example 6: Returning Result from Second Activity</h4>
+
+<img class="image-float-right" src="images/Basics_GetMessageWithReturn.png" alt="Get Message with Return" />
+<img class="image-float-right float-clear" src="images/Basics_DisplayMessageWithReturn.png"  alt="Display Message with Return" />
+
+<p>In this example, we shall illustrate how the second activity can return a result back to the first activity.</p>
+
+
+
+<h5>First Activity - &quot;<span class="font-code">GetMessageActivity.java</span>&quot;</h5>
+
+<p>Modify the first activity &quot;<code>GetMessageActivity.java</code>&quot; to use <code>startActivityForResult()</code> to start the second activity and receive the result (instead of <code>startActivity()</code>). Also include an <code>onActivityResult()</code> handler to handle the returned result.</p>
+
+<pre class="color-example">
+package ......;
+ 
+import ......;
+<span class="color-new">import android.widget.Toast;</span>
+ 
+public class GetMessageActivity ...... {
+   public final static String EXTRA_MESSAGE = &quot;com.example.testintent.MESSAGE&quot;;
+   <span class="color-new">private int requestCode = 1;</span>
+ 
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_get_message);
+      ......
+   }
+ 
+   <span class="color-comment">/** Called when the user clicks the &quot;Send&quot; button */</span>
+   public void sendMessage(View view) {
+      <span class="color-comment">// Retrieve the message entered</span>
+      EditText txtMessage = (EditText) findViewById(R.id.txtMessageID);
+      String message = txtMessage.getText().toString();
+ 
+      <span class="color-comment">// Create an Intent to start the second activity</span>
+      Intent intent = new Intent(this, DisplayMessageActivity.class);
+      intent.putExtra(EXTRA_MESSAGE, message);
+      <span class="color-new">startActivityForResult(intent, requestCode);</span>
+   }
+ 
+   <span class="color-comment">/** Called Back when the second activity returns a result */</span>
+   <span class="color-new">public void onActivityResult(int resultRequestCode, int resultCode, Intent result) {
+      if (resultRequestCode == requestCode) {
+         if (resultCode == RESULT_OK) {
+            Toast.makeText(this, result.getData().toString(), Toast.LENGTH_LONG).show();
+         }
+      }
+   }</span>
+
+   ......
+   ......
+}</pre>
+
+<p>On the <code>onActivityResult()</code> handler, we use the <code>Intent</code>'s <code>getData()</code> to retrieve the return string, and display on a <code>Toast</code> (a floating view of text message) for <code>Toast.LENGTH_LONG</code> of times.</p>
+
+<h5>Layout of Second Activity - &quot;<span class="font-code">res\layout\content_display_message.xml</span>&quot;</h5>
+
+<p>Add an <code>EditView</code> and a <code>Button</code> in the layout as follows:</p>
+
+<pre class="color-example">
+&lt;RelativeLayout ...... &gt;
+ 
+    &lt;TextView ...... /&gt;
+ 
+<span class="color-new">    &lt;EditText
+        android:id=&quot;@+id/txtReturnedID&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_below=&quot;@id/txtDisplayID&quot;
+        android:hint=&quot;@string/message&quot; /&gt;
+ 
+    &lt;Button
+        android:id=&quot;@+id/btnReturn&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_below=&quot;@id/txtReturnedID&quot;
+        android:layout_alignParentRight=&quot;true&quot;
+        android:text=&quot;@string/btnReturnLabel&quot;
+        android:onClick=&quot;<strong>returnMessage</strong>&quot; /&gt;</span>
+&lt;/RelativeLayout&gt;</pre>
+
+<p>We specify the <code>onClick</code> handler for the <code>Button</code> as <code>returnMessage()</code>.</p>
+
+<p>Include this string reference in res\values\string.xml:</p>
+<pre class="color-example">&lt;string name=&quot;btnReturnLabel&quot;&gt;Return&lt;/string&gt;
+</pre>
+
+<h5>Second Activity - &quot;<span class="font-code">DisplayMessageActivity.java</span>&quot;</h5>
+
+<p>Modify the second activity to return a message to the first activity that started it.</p>
+
+<pre class="color-example">
+package ......;
+ 
+import ......;
+<span class="color-new">import android.net.Uri;
+import android.view.View;
+import android.widget.EditText;</span>
+
+public class DisplayMessageActivity ...... {
+ 
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_display_message);
+
+      ......
+      ......
+ 
+      <span class="color-comment">// Get the message entered in the first activity from the intent</span>
+      Intent intent = getIntent();
+      String message = intent.getStringExtra(GetMessageActivity.EXTRA_MESSAGE);
+ 
+      <span class="color-comment">// Get the display TextView for this activity and display the message</span>
+      TextView txtDisplay = (TextView) findViewById(R.id.txtDisplayID);
+      txtDisplay.setText(message);
+   }
+ 
+   <span class="color-comment">// onClick handler for Button &quot;Return&quot;</span>
+   <span class="color-new">public void returnMessage(View view) {
+      Intent result = new Intent();</span>
+      <span class="color-comment">// Retrieve the string entered in the EditView</span>
+      <span class="color-new">EditText txtReturn = (EditText) findViewById(R.id.txtReturnedID);
+      String returnMessage = txtReturn.getText().toString();</span>
+      <span class="color-comment">// Set the message back</span>
+      <span class="color-new">result.setData(Uri.parse(returnMessage));
+      setResult(RESULT_OK, result);</span>
+      <span class="color-comment">// Close the activity</span>
+      <span class="color-new">finish();</span>
+   }
+
+   ......
+   ......
+}</pre>
+
+<p>Upon clicking of &quot;Return&quot; button, the handler retrieves the <code>Intent</code> object, set the return data (via <code>setData()</code>). It then sets the result code (via <code>setResult()</code>) and closes this activity (via <code>finish()</code>).</p>
+
+<h5>Run the App</h5>
+<p>Now, re-run the app. Observe the toast message.</p>
+
+<p>&nbsp;</p>
+
+<a class="references" href="../howto/References.html#android">Link to Android's References and Resources</a>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Android 6.0 (Marshmallow), Android Studio 1.5.1<br />
+Last modified: 17 March, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

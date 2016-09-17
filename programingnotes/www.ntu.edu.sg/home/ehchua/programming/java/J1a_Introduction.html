@@ -1,0 +1,1292 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>An Introduction to Java Programming for First-time Programmers - Java Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Introduction to Java Programming<br />
+(for Novices &amp; First-Time Programmers)</h1> 
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+
+<h3>Getting Started - Your First Java Program</h3>
+
+<p>You should have already installed Java Development Kit (JDK) and wrote a Hello-world program. Otherwise, Read &quot;<a href="../howto/JDK_HowTo.html">How to Install JDK</a>&quot;.</p>
+
+<p>Let us revisit the Hello-world program that prints a  message &quot;Hello, world!&quot; to the display console.</p>
+
+<p><span class="line-heading">Step 1: Write the Source Code:</span> Enter the following source codes, which defines a <em>class</em> called &quot;<code>Hello</code>&quot;, using a programming text editor (such as TextPad or NotePad++ for Windows; jEdit or gedit for Mac OS X; gedit for Ubuntu). Do not enter the line numbers (on the left panel), which were added to aid in the explanation.</p>
+<p>Save the source file as &quot;<code>Hello.java</code>&quot;. A Java source file should be saved with a file extension of &quot;<code>.java</code>&quot;. The filename shall be the same as the classname - in this case &quot;<code>Hello</code>&quot;. Filename and classname are case-sensitive.</p>
+
+<table class="table-program">
+  <col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * First Java program, which says &quot;Hello, world!&quot;
+ */</span>
+public class <strong>Hello</strong> {   <span class="color-comment">// Save as &quot;Hello.java&quot;</span>
+   public static void main(String[] args) {  <span class="color-comment">// program entry point</span>
+      System.out.println(&quot;Hello, world!&quot;);   <span class="color-comment">// print message</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p><span class="line-heading">Step 2: Compile the Source Code:</span> Compile the source code &quot;<code>Hello.java</code>&quot; into  Java bytecode &quot;<code>Hello.class</code>&quot; using the JDK Compiler &quot;<code>javac</code>&quot;. Start a CMD Shell (Windows) or Terminal (UNIX/Linux/Mac OS X) and issue these commands:</p>
+
+<pre class="color-command">
+<span class="color-comment">// Change directory (cd) to the directory containing the source code &quot;Hello.java&quot;</span>
+<strong>javac Hello.java</strong></pre>
+
+<p><span class="line-heading">Step 3: Run the Program:</span> Run the program using Java Runtime &quot;<code>java</code>&quot;, by issuing this command:</p>
+
+<pre class="color-command">
+<strong>java Hello</strong>
+Hello, world!</pre>
+
+<h5>Brief Explanation of the Program</h5>
+
+<p><span class="line-heading-code-new">/* ...... */<br />
+// ... until the end of the line</span><br />
+These are called <em>comments</em>. Comments are NOT executable and are ignored by the compiler. But they provide useful explanation and documentation to your readers (and to yourself three days later). There are two kinds of comments:</p>
+
+<ol>
+<li><em>Multi-Line Comment</em>: begins with <code>/*</code> and ends with <code>*/</code>, and may span more than one lines (as in Lines 1-3).</li>
+
+<li><em>End-of-Line (Single-Line) Comment</em>: begins with <code>//</code> and lasts until the end of the current line (as in Lines 4, 5, and 6).</li>
+</ol>
+
+<p><span class="line-heading-code-new">public <strong>class</strong> Hello {<br /> 
+&nbsp;&nbsp;&nbsp;......<br />
+}</span><br />
+The basic unit of a Java program is a <em>class</em>. A class called &quot;<code>Hello</code>&quot; is defined via the keyword &quot;<code>class</code>&quot; in Lines 4-8. The braces <code>{......}</code> encloses the <em>body</em> of the class.</p>
+
+<p>In Java, the name of the source file must be the same as the name of the class with a mandatory file extension of &quot;<code>.java</code>&quot;. Hence, this file MUST be saved as &quot;<code>Hello.java</code>&quot;, case-sensitive.</p>
+
+<p><span class="line-heading-code-new">public static void <strong>main</strong>(String[] args) {<br />&nbsp;&nbsp;&nbsp;......<br />}</span><br />
+Lines 5-7 defines the so-called <code>main()</code> <em>method</em>, which is the <em>entry point</em> for program  execution. Again, the braces <code>{......}</code> encloses the <em>body</em> of the method, which contains programming statements.</p>
+
+<p><span class="line-heading-code-new">System.out.println(&quot;Hello, world!&quot;);</span><br />
+In Line 6, the programming statement <code>System.out.println(&quot;Hello, world!&quot;)</code> is used to print the  string &quot;Hello, world!&quot; to the display console. A <em>string</em> is surrounded by a pair of double quotes and contain texts. The text will be printed as it is, without the double quotes. A programming statement ends with a semi-colon (<code>;</code>).</p>
+
+<h3>Java Terminology and Syntax</h3>
+
+<p><span class="line-heading">Comments</span>: A <em>multi-line comment</em> begins with <code>/*</code> and ends with <code>*/</code>, and may span multiple lines. An <em>end-of-line (single-line) comment</em> begins with <code>//</code> and lasts till the end of the current line. Comments are NOT executable statements and are ignored by the compiler. But they provide useful explanation and documentation. I strongly suggest that you write comments <em>liberally</em> to explain your thought and logic.</p>
+
+<p><span class="line-heading">Statement</span>: A programming <em>statement</em> performs a single piece of programming action. It is terminated by a semi-colon (<code>;</code>), just like an English sentence is ended with a period, as in Lines 6.</p>
+
+<p><span class="line-heading">Block</span>: A <em>block</em> is a group of programming statements enclosed by a pair of braces <code>{}</code>. This group of statements is treated as one single unit. There are two blocks in the above program. One contains the <em>body</em> of the class <code>Hello</code>. The other contains the <em>body</em> of the <code>main()</code> method. There is no need to put a semi-colon after the closing brace.</p>
+
+<p><span class="line-heading">Whitespaces</span>: Blank, tab, and newline are collectively called <em>whitespace</em>. Extra whitespaces are ignored, i.e., only one whitespace is needed to separate the tokens. Nonetheless, extra whitespaces improve the readability, and I strongly suggest you use extra spaces and newlines <em>liberally</em>.</p>
+
+<p><span class="line-heading">Case Sensitivity</span>: Java is <em>case sensitive</em> - a <em>ROSE</em> is NOT a <em>Rose</em>, and is NOT a <em>rose</em>. The <em>filename</em> is also case-sensitive.</p>
+
+<h3>Java Program Template</h3>
+<p>You can use the following <em>template</em> to write your Java programs. Choose a meaningful &quot;<em>Classname</em>&quot; that reflects the <em>purpose</em> of your program, and write your programming statements inside the body of the <code>main()</code> method. Don't worry about the other terms and keywords now. I will explain them in due course. Provide comments in your program!</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Comment to state the purpose of the program
+ */</span>
+public class <span class="color-new"><em>Classname</em></span> {  <span class="color-comment"> // Choose a meaningful <em>Classname</em>. Save as &quot;<em>Classname</em>.java&quot;</span>
+   public static void main(String[] args) {  <span class="color-comment">// Entry point of the program</span>
+      <span class="color-new">// Your programming statements here!</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Output via <span class="font-code">System.out.println()</span> and <span class="font-code">System.out.print()</span></h3>
+
+<p>You can use <code>System.out.println()</code> (print-line) or <code>System.out.print()</code> to print message to the display console:</p>
+
+<ul>
+<li><code>System.out.println(<em>aString</em>)</code> (print-line) prints the given <em>aString</em>, and advances the <em>cursor</em> to the beginning of the next line.</li>
+
+<li><code>System.out.print(<em>aString</em>)</code> prints <em>aString</em> but places the cursor after the printed string.</li>
+</ul>
+
+<p>Try the following program and explain the output produced:</p>
+
+<table class="table-program">
+<tr>
+<td class="color-line-number-width">
+<pre class="color-line-number">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre class="color-listing">
+<span class="color-comment">/*
+ * Test System.out.println() (print-line) and System.out.print()
+ */</span>
+public class <strong>PrintTest</strong> {  <span class="color-comment"> // Save as &quot;PrintTest.java&quot;</span>
+   public static void main(String[] args) {
+      System.out.println(&quot;Hello, world!&quot;); <span class="color-comment">// Advance the cursor to the beginning of next line after printing</span>
+      System.out.println();   <span class="color-comment">             // Print a empty line</span>
+      System.out.print(&quot;Hello, world!&quot;);   <span class="color-comment">// Cursor stayed after the printed string</span>
+      System.out.println(&quot;Hello,&quot;);
+      System.out.print(&quot; &quot;);   <span class="color-comment">            // Print a space</span>
+      System.out.print(&quot;world!&quot;);
+      System.out.println(&quot;Hello, world!&quot;);
+   }
+}</pre>
+</td>
+</tr>
+</table>
+
+<p>The expected outputs are:</p>
+<pre class="output">
+Hello, world!
+&nbsp;
+Hello, world!Hello,
+ world!Hello, world!</pre>
+
+<h5>Exercises</h5>
+<ol>
+<li>Print each of the following patterns. Use one <code>System.out.println(...)</code> (print-line) statement for each line of outputs.
+  <pre class="output">
+* * * * *      * * * * *    * * * * *
+ * * * * *     *       *     *     *
+* * * * *      *       *      *   * 
+ * * * * *     *       *       * *
+* * * * *      * * * * *        *
+   (a)            (b)          (c)</pre></li>
+</ol>
+
+ 
+<h3>Let's Write a Program to Add a Few Numbers</h3>
+<p>Let us write a program to add five integers and display their sum, as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Add five integers and display their sum
+ */</span>
+public class <strong>FiveNumberSum</strong> {  <span class="color-comment"> // Save as &quot;FiveNumberSum.java&quot;</span>
+   public static void main(String[] args) {
+      int number1 = 11;  <span class="color-comment">// Declare 5 integer variables and assign a value</span>
+      int number2 = 22;
+      int number3 = 33;
+      int number4 = 44;
+      int number5 = 55;
+      int sum;  <span class="color-comment">// Declare an int variable called sum to hold the sum</span>
+      sum = number1 + number2 + number3 + number4 + number5;  <span class="color-comment">// Compute sum</span>
+      System.out.print(&quot;The sum is &quot;);  <span class="color-comment">// Print a descriptive string</span>
+      System.out.println(sum);  <span class="color-comment">// Print the value<em></em> stored in variable sum</span>
+   }
+}</pre></td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected output is:</p>
+<pre class="output">
+The sum is 165</pre>
+
+<h5>How It Works?</h5>
+<p><span class="line-heading-code-new">int number1 = 11;<br />
+int number2 = 22;<br />
+int number3 = 33;<br />
+int number4 = 44;<br />
+int number5 = 55;</span><br />
+These five statements declare five <code>int</code> (integer) <em>variables</em> called <code>number1</code>, <code>number2</code>, <code>number3</code>, <code>number4</code>, and <code>number5</code>; and <em>assign</em>  values of 11, 22, 33, 44 and 55 to the variables, respectively, via the so-called <em>assignment operator</em> <code>'='</code>. You could also declare many variables in one statement separated by commas, e.g.,</p>
+
+<pre class="color-plain">
+int number1 = 11, number2 = 22, number3 = 33, number4 = 44, number5 = 55;<code></code></pre>
+
+<p><span class="line-heading-code-new">int sum;</span><br />
+  declares an <code>int</code> (integer) variable called <code>sum</code>, without assigning an initial value.</p>
+
+<p><span class="line-heading-code-new">sum = number1 + number2 + number3 + number4 + number5;</span><br />
+  computes the sum of <code>number1</code> to <code>number5</code> and assign the result to the variable <code>sum</code>. The symbol '<code>+</code>' denotes <em>arithmetic addition</em>, just like Mathematics.</p>
+
+<p><span class="line-heading-code-new">System.out.print(&quot;The sum is &quot;);<br />
+System.out.println(sum);</span><br />
+Line 13 prints a descriptive string. A <code>String</code> is surrounded by double quotes, and will be printed <em>as it is</em> (without the double quotes). Line 14 prints the <em>value</em> stored in the variable <code>sum</code> (in this case, the sum of the five numbers). You should not surround a variable to be printed by double quotes; otherwise, the text will get printed instead of the value stored in the variable.</p>
+
+<h5>Exercise</h5>
+<ol>
+<li>Modify the above program to print the product of 5 integers. Use a variable called <code>product</code> to hold the product, and <code>*</code> for multiplication.</li>
+</ol>
+
+<h3>What is a Program?</h3>
+
+<img class="image-float-right" src="images/Construct_Sequential.png" alt="sequential flow" />
+<p>A <em>program</em> is <em>a sequence of instructions</em> (called <em>programming statements</em>), executing one after another - usually in a <em>sequential</em> manner, as illustrated in the following flow chart.</p>
+
+<h5>Example</h5>
+<p>The following program prints the area and circumference of a circle, given its radius. Take note that the programming statements are executed sequentially - one after another in the order that they were written.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Print the area and circumference of a circle, given its radius.
+ */</span>
+public class <strong>CircleComputation</strong> {  <span class="color-comment">// Saved as &quot;CircleComputation.java&quot;</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Declare double (real-number) variables to hold radius, area and circumference</span>
+      double radius, area, circumference;
+      <span class="color-comment">// Declare a constant for PI</span>
+      final double PI = 3.14159265;
+      
+      <span class="color-comment">// Assign a value to radius</span>
+      radius = 1.2;
+      <span class="color-comment">// Compute area and circumference</span>
+      area = radius * radius * PI;
+      circumference = 2.0 * radius * PI;
+      
+      <span class="color-comment">// Print results</span>
+      System.out.print(&quot;The radius is &quot;);  <span class="color-comment">// Print description</span>
+      System.out.println(radius);          <span class="color-comment">// Print the value stored in the variable</span>
+      System.out.print(&quot;The area is &quot;);
+      System.out.println(area);
+      System.out.print(&quot;The circumference is &quot;);
+      System.out.println(circumference);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected outputs are:</p>
+<pre class="output">
+The radius is 1.2
+The area is 4.523893416
+The circumference is 7.5398223600000005</pre>
+
+<h5>How It Works?</h5>
+<p><span class="line-heading-code-new">double radius, area, circumference;<br />
+</span>
+declare three <code>double</code> variables <code>radius</code>, <code>area</code> and <code>circumference</code>. A <code>double</code> variable can hold a real number (or floating-point number, with an optional fractional part).</p>
+
+<p><span class="line-heading-code-new">final double PI = 3.14159265;<br />
+</span>
+declare a <code>double</code> variables called <code>PI</code> and assign a value. <code>PI</code> is declared <code>final</code>, i.e., its value cannot be changed.</p>
+
+
+<p><span class="line-heading-code-new">radius = 1.2;</span><br />
+assigns a value (real number) to the <code>double</code> variable <code>radius</code>.</p>
+
+<p><span class="line-heading-code-new">area = radius * radius * PI;<br />
+circumference = 2.0 * radius * PI;<br />
+</span>
+compute the <code>area</code> and <code>circumference</code>, based on the value of <code>radius</code> and <code>PI</code>.</p>
+
+<p><span class="line-heading-code-new">System.out.print(&quot;The radius is &quot;);<br />
+System.out.println(radius);<br />
+System.out.print(&quot;The area is &quot;);<br />
+System.out.println(area);<br />
+System.out.print(&quot;The circumference is &quot;);<br />
+System.out.println(circumference);<br /></span>
+print the results with proper descriptions.</p>
+
+<br />
+
+<p>Take note that the programming statements inside the <code>main()</code> method are executed one after another, in a <em>sequential</em> manner.</p>
+
+<h5>Exercises</h5>
+
+<ol>
+<li>Follow the above example, write a program (called <code>RectangleComputation</code>) to print the area and perimeter of a rectangle, given its length and width (in <code>double</code>s).</li>
+<li>Follow the above example, write a program (called <code>CylinderComputation</code>) to print the surface area and volume of a cylinder, given its radius and height (in <code>double</code>s).</li>
+</ol>
+
+
+<h3>What is a Variable?</h3>
+
+<p>Computer programs manipulate (or process) data. A <em>variable</em> is a storage location (like a house, a pigeon hole, a letter box) that stores a piece of data for processing. It is called <em>variable</em> because you can change the value stored inside.</p>
+
+<p>More precisely, a <em>variable</em> is a <em>named</em> storage location, that stores a <em>value</em> of a particular data <em>type</em>. In other words, a <em>variable</em> has a <span class="underline"><em>name</em></span>, a <span class="underline"><em>type</em></span> and stores a <span class="underline"><em>value</em></span> of that type.</p>
+
+<ul>
+<li>A variable has a <em>name</em> (aka <em>identifier</em>), e.g., <code>radius</code>, <code>area</code>, <code>age</code>, <code>height</code>. The name is needed to uniquely identify each variable, so as to assign a value to the variable (e.g., <code>radius = 1.2</code>), as well as to retrieve the value stored (e.g., <code>radius * radius * 3.14159265</code>).</li>
+
+<li>A variable has a <em>type</em>. Examples of <em>type</em> are:
+<ul>
+<li><code>int</code>: meant for integers (or whole numbers or fixed-point numbers), such as <code>123</code> and <code>-456</code>;</li>
+<li><code>double</code>: meant for floating-point numbers or real numbers, such as <code>3.1416</code>, <code>-55.66</code>, having an optional decimal point and fractional part.</li>
+<li><code>String</code>: meant for texts such as <code>&quot;Hello&quot;</code>, <code>&quot;Good Morning!&quot;</code>. Strings shall be enclosed with a pair of double quotes.</li>
+</ul>
+</li>
+
+<li>A variable can store a <em>value</em> of the declared <em>type</em>. It is important to take note that a variable in most programming languages is associated with a <em>type</em>, and can only store value of that particular type. For example, a <code>int</code> variable can store an integer value such as <code>123</code>, but NOT a real number such as <code>12.34</code>, nor texts such as <code>&quot;Hello&quot;</code>. The concept of <em>type</em> was introduced into the early programming languages to simplify interpretation of data.</li>
+
+</ul>
+
+<p>The following diagram illustrates three types of variables: <code>int</code>, <code>double</code> and <code>String</code>. An <code>int</code> variable stores an integer  (whole number); a <code>double</code> variable stores a real number (which includes integer as a special form of real number); a <code>String</code> variable stores texts.</p>
+<img class="image-center" src="images/JavaBasics_Variable.png" alt="variable" />
+
+<h5>Declaring and Using Variables</h5>
+<p>To use a variable, you need to first <em>declare</em> its <em>name</em> and <em>type</em>, in one of the following syntaxes:</p>
+<pre class="color-syntax">
+<em>type</em> <em>varName</em>;                 <span class="color-comment">// Declare a variable of a type</span>
+<em>type</em> <em>varName1</em>, <em>varName2</em>,...;  <span class="color-comment">// Declare multiple variables of the same type</span>
+<em>type</em> <em>varName </em>= <em>initialValue</em>;  <span class="color-comment">// Declare a variable of a type, and assign an initial value</span>
+<em>type</em> <em>varName1 </em>= <em>initialValue1</em>, <em>varName2 </em>= <em>initialValue2</em>,... ;  <span class="color-comment">// Declare variables with initial values</span></pre>
+
+<p>For examples,</p>
+<pre class="color-example">
+int sum;              <span class="color-comment">// Declare a variable named &quot;sum&quot; of the type &quot;int&quot; for storing an integer.
+                      // Terminate the statement with a semi-colon.</span>
+double average;       <span class="color-comment">// Declare a variable named &quot;average&quot; of the type &quot;double&quot; for storing a real number.</span>
+int number1, number2; <span class="color-comment">// Declare 2 &quot;int&quot; variables named &quot;number1&quot; and &quot;number2&quot;, separated by a comma.</span>
+int height = 20;      <span class="color-comment">// Declare an &quot;int&quot; variable, and assign an initial value.</span>
+String msg = &quot;Hello&quot;; <span class="color-comment">// Declare a &quot;String&quot; variable, and assign an initial value.</span></pre>
+
+<p>Take note that:</p>
+<ul>
+<li>Each <em>variable declaration statement</em> begins with a <em>type</em> name, and works for only that type. That is, you cannot mix 2 types in one variable declaration statement.</li>
+<li>Each <em>statement</em> is terminated with a semi-colon (<code>;</code>).</li>
+<li>In multiple-variable declaration, the names are separated by commas (<code>,</code>).</li>
+<li>The symbol <code>'='</code>, known as the <em>assignment operator</em>, can be used to assign an initial value to a variable.</li>
+</ul>
+
+<p> More examples,</p>
+
+<pre class="color-example">
+int number;   <span class="color-comment">        // Declare a variable named &quot;number&quot; of the type &quot;int&quot; (integer).</span>
+number = 99;  <span class="color-comment">        // Assign an integer value of 99 to the variable &quot;number&quot;.</span>
+number = 88;  <span class="color-comment">        // Re-assign a value of 88 to &quot;number&quot;.</span>
+number = number + 1;  <span class="color-comment">// Evaluate &quot;number + 1&quot;, and assign the result back to &quot;number&quot;.</span>
+int sum = 0;  <span class="color-comment">        // Declare an int variable named &quot;sum&quot; and assign an initial value of 0.</span>
+sum = sum + number;  <span class="color-comment"> // Evaluate &quot;sum + number&quot;, and assign the result back to &quot;sum&quot;, i.e. add number into sum.</span>
+int num1 = 5, num2 = 6;  <span class="color-comment">// Declare and initialize 2 int variables in one statement, separated by a comma.</span>
+double radius = 1.5;  <span class="color-comment">// Declare a variable named &quot;radius&quot;, and initialize to 1.5.</span>
+String msg;           <span class="color-comment">// Declare a variable named msg of the type &quot;String&quot;</span>
+msg = &quot;Hello&quot;;        <span class="color-comment">// Assign a double-quoted text string to the String variable.</span>
+<span class="color-error">int number;</span>           <span class="color-comment">// ERROR: A variable named &quot;number&quot; has already been declared.</span>
+<span class="color-error">sum = 55.66;</span>          <span class="color-comment">// ERROR: The variable &quot;sum&quot; is an int. It cannot be assigned a double.</span>
+<span class="color-error">sum = &quot;Hello&quot;;</span>        <span class="color-comment">// ERROR: The variable &quot;sum&quot; is an int. It cannot be assigned a string.</span></pre>
+
+<p>Take note that:</p>
+<ul>
+<li>Each variable can only be declared once. (You cannot have two houses with the same address.)</li>
+<li>In Java, you can declare a variable anywhere inside your program, as long as it is declared before it is being used.</li>
+<li>Once a variable is declared, you can <em>assign</em> and <em>re-assign</em> a value to that variable, via the <em>assignment operator</em> <code>'='</code>.</li>
+<li>Once the <em>type</em> of a variable is declared, it can only store a value of that particular <em>type</em>. For example, an <code>int</code> variable can hold only integer such as <code>123</code>, and NOT floating-point number such as <code>-2.17</code> or text string such as <code>&quot;Hello&quot;</code>.</li>
+<li> Once declared, the <em>type</em> of a variable CANNOT be changed.</li>
+</ul>
+
+<h5><span class="font-code">x=x+1</span>?</h5>
+
+<p>Assignment in programming (denoted as <code>'='</code>) is different from equality in Mathematics (also denoted as <code>'='</code>). E.g., &quot;<code>x=x+1</code>&quot; is invalid in Mathematics. However, in programming, it means compute the value of <code>x</code> plus 1, and <em>assign</em> the result back to variable <code>x</code>.</p>
+
+<p>&quot;x+y=1&quot; is valid in Mathematics, but is invalid in programming. In programming, the RHS (Right-Hand Side) of <code>'='</code> has to be evaluated to a value; while the LHS (Left-Hand Side) shall be a variable. 
+  That is, evaluate the RHS first, then assign the result to LHS.</p>
+<p>Some languages uses <code>:=</code> as the assignment operator to avoid confusion with equality.</p>
+
+<h3>Basic Arithmetic Operations</h3>
+
+<p>The basic <em>arithmetic operations</em> are:</p>
+
+<table class="table-zebra" style="width:60%">
+<tr>
+<th>Operator</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+
+<tr>
+<td><code>+</code></td>
+<td>Addition</td>
+<td><code>x + y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>-</code></td>
+<td>Subtraction</td>
+<td><code>x - y</code></td>
+</tr>
+
+<tr>
+<td><code>*</code></td>
+<td>Multiplication</td>
+<td><code>x * y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>/</code></td>
+<td>Division</td>
+<td><code>x / y</code></td>
+</tr>
+
+<tr>
+<td><code>%</code></td>
+<td>Modulus (Remainder)</td>
+<td><code>x % y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>++</code></td>
+<td>Increment by 1 (Unary)</td>
+<td><code>++x</code> or <code>x++</code></td>
+</tr>
+
+<tr>
+<td><code>--</code></td>
+<td>Decrement by 1 (Unary)</td>
+<td><code>--x</code> or <code>x--</code></td>
+</tr>
+</table>
+
+
+<p>Addition, subtraction, multiplication, division and remainder are <em>binary operators</em> that take two operands (e.g., <code>x + y</code>); while negation (e.g., <code>-x</code>), increment and decrement (e.g., <code>++x</code>, <code>--x</code>) are <em>unary operators</em> that take only one operand.</p>
+
+<h5>Example</h5>
+
+<p> The following program illustrates these arithmetic operations:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Test Arithmetic Operations
+ */</span>
+public class <strong>ArithmeticTest</strong> {     <span class="color-comment">// Save as &quot;ArithmeticTest.java&quot;</span>
+   public static void main(String[] args) {
+      int number1 = 98; <span class="color-comment">// Declare an int variable number1 and initialize it to 98</span>
+      int number2 = 5;  <span class="color-comment">// Declare an int variable number2 and initialize it to 5</span>
+      int sum, difference, product, quotient, remainder;  <span class="color-comment">// Declare 5 int variables to hold results</span>
+   
+      <span class="color-comment">// Perform arithmetic Operations</span>
+      sum = number1 + number2;
+      difference = number1 - number2;
+      product = number1 * number2;
+      quotient = number1 / number2;
+      remainder = number1 % number2;
+  
+      <span class="color-comment">// Print results</span>
+      System.out.print(&quot;The sum, difference, product, quotient and remainder of &quot;);  <span class="color-comment">// Print description</span>
+      System.out.print(number1);      <span class="color-comment">// Print the value of the variable</span>
+      System.out.print(&quot; and &quot;);
+      System.out.print(number2);
+      System.out.print(&quot; are &quot;);
+      System.out.print(sum);
+      System.out.print(&quot;, &quot;);
+      System.out.print(difference);
+      System.out.print(&quot;, &quot;);
+      System.out.print(product);
+      System.out.print(&quot;, &quot;);
+      System.out.print(quotient);
+      System.out.print(&quot;, and &quot;);
+      System.out.println(remainder);
+   
+      ++number1;  <span class="color-comment">// Increment the value stored in the variable &quot;number1&quot; by 1
+                  // Same as &quot;number1 = number1 + 1&quot;</span>
+      --number2;  <span class="color-comment">// Decrement the value stored in the variable &quot;number2&quot; by 1
+                  // Same as &quot;number2 = number2 - 1&quot;</span>
+      System.out.println(&quot;number1 after increment is &quot; + number1);<span class="color-comment">  // Print description and variable
+</span>      System.out.println(&quot;number2 after decrement is &quot; + number2);
+      quotient = number1 / number2; 
+      System.out.println(&quot;The new quotient of &quot; + number1 + &quot; and &quot; + number2 
+            + &quot; is &quot; + quotient);
+   }
+}</pre></td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected outputs are:</p>
+<pre class="output">
+The sum, difference, product, quotient and remainder of 98 and 5 are 103, 93, 490, 19, and 3
+number1 after increment is 99
+number2 after decrement is 4
+The new quotient of 99 and 4 is 24</pre>
+
+<h5>How It Works?</h5>
+
+<p><span class="line-heading-code-new">int number1 = 98;<br />
+  int 
+  number2 = 5;<br />
+int sum, difference, product, quotient, remainder;<br />
+</span>
+  declare all the variables <code>number1</code>, <code>number2</code>, <code>sum</code>, <code>difference</code>, <code>product</code>, <code>quotient</code> and <code>remainder</code> needed in this program. All variables are of the type <code>int</code> (integer).</p>
+  
+<p><span class="line-heading-code-new">sum = number1 + number2;<br />
+difference = number1 - number2;<br />
+product = number1 * number2;<br />
+quotient = number1 / number2;<br />
+remainder = number1 % number2;<br /></span>
+  carry out the arithmetic operations on <code>number1</code> and <code>number2</code>. Take note that division of two integers produces a <em>truncated</em> integer, e.g., <code>98/5 &rarr; 19</code>, <code>99/4 &rarr; 24</code>, and <code>1/2 &rarr; 0</code>.</p>
+
+<p><span class="line-heading-code-new">System.out.print(&quot;The sum, difference, product, quotient and remainder of &quot;);<br />
+......<br />
+</span>
+prints the results of the arithmetic operations, with the appropriate string descriptions in between. Take note that text strings are enclosed within double-quotes, and will get printed as they are, including the white spaces but without the double quotes. To print the <em>value</em> stored in a variable, no double quotes should be used. For example,</p>
+
+<pre class="color-plain">
+System.out.println(&quot;sum&quot;);   <span class="color-comment">// Print text string &quot;sum&quot; - as it is</span>
+System.out.println(sum);     <span class="color-comment">// Print the value stored in variable sum, e.g., 98</span></pre>
+
+<p><span class="line-heading-code-new">++number1;<br />
+  --number2;<br />
+</span>
+  illustrate the increment and decrement operations. Unlike <code>'+'</code>, <code>'-'</code>, <code>'*'</code>, <code>'/'</code> and <code>'%'</code>, which work on two operands (<em>binary operators</em>), <code>'++'</code> and <code>'--'</code> operate on only one operand (<em>unary operators</em>). <code>++x</code> is equivalent to <code>x = x + 1</code>, i.e., increment x by 1.</p>
+
+<p><span class="line-heading-code-new">System.out.println(&quot;number1 after increment is &quot; + number1);<br />
+System.out.println(&quot;number2 after decrement is &quot; + number2);<br />
+</span>
+print the new values stored after the increment/decrement operations. Take note that instead of using many <code>print()</code> statements as in Lines 18-31, we could simply place all the items (text strings and variables) into one <code>println()</code>, with the items separated by <code>'+'</code>. In this case, <code>'+'</code> does not perform <em>addition</em>. Instead, it <em>concatenates</em> or <em>joins</em> all the items together.</p>
+
+<h5>Exercises</h5>
+
+<ol>
+<li>Combining Lines 18-31 into one single <code>println()</code> statement, using <code>'+'</code> to <em>concatenate</em> all the items together.</li>
+<li>Introduce one more <code>int</code> variable called <code>number3</code>, and assign it an integer value of <code>77</code>. Compute and print the <em>sum</em> and <em>product</em> of all the three numbers.</li>
+<li>In Mathematics, we could omit the multiplication sign in an arithmetic expression, e.g., <code>x = 5a + 4b</code>. In programming, you need to explicitly provide all the operators, i.e., <code>x = 5*a + 4*b</code>. Try printing the sum of <code>31</code> times of <code>number1</code> and <code>17</code> times of <code>number2</code> and <code>87</code> time of <code>number3</code>.</li>
+</ol> 
+ 
+ 
+<h3>What If Your Need To Add a Thousand Numbers? Use a Loop</h3>
+<p>Suppose that you want to add all the integers from <code>1</code> to <code>1000</code>. If you follow the previous example, you would require a thousand-line program! Instead, you could use a so-called <em>loop</em> in your program to perform a <em>repetitive</em> task, that is what the computer is good at.</p>
+
+<h5>Example</h5>
+
+<p>Try  the following program, which sums all the integers from a lowerbound (<code>=1</code>) to an upperbound (<code>=1000</code>) using a so-called <em>while-loop</em>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Sum from a lowerbound to an upperbound using a while-loop
+ */</span>
+public class RunningNumberSum { <span class="color-comment"> // Save as &quot;RunningNumberSum.java&quot;</span>
+   public static void main(String[] args) {
+      int lowerbound = 1;     <span class="color-comment"> // Store the lowerbound</span>
+      int upperbound = 1000;  <span class="color-comment"> // Store the upperbound</span>
+      int sum = 0;  <span class="color-comment"> // Declare an int variable &quot;sum&quot; to accumulate the numbers</span>
+                    <span class="color-comment"> // Set the initial sum to 0</span>
+     <span class="color-comment"> // Use a while-loop to repeatedly sum from the lowerbound to the upperbound</span>
+      int number = lowerbound;
+      while (number &lt;= upperbound) {
+         sum = sum + number; <span class="color-comment"> // Accumulate number into sum</span>
+         ++number;           <span class="color-comment"> // Next number</span>
+      }
+     <span class="color-comment"> // Print the result</span>
+      System.out.println(&quot;The sum from &quot; + lowerbound + &quot; to &quot; + upperbound + &quot; is &quot; + sum);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected output is:</p>
+<pre class="output">
+The sum from 1 to 1000 is 500500</pre>
+
+<h5>How It Works?</h5>
+
+<p><span class="line-heading-code-new">int lowerbound = 1;<br />
+int upperbound = 1000;<br />
+</span>
+declare two <code>int</code> variables to hold the upperbound and lowerbound, respectively.</p>
+
+<p><span class="line-heading-code-new">int sum = 0;<br />
+</span>
+  declares an <code>int</code> variable to hold the sum. This variable will be used to <em>accumulate</em> over the steps in the repetitive loop, and thus initialized to 0.</p>
+  
+<p><span class="line-heading-code-new">int number = lowerbound;<br />
+  while (number &lt;= upperbound) {<br />
+&nbsp;&nbsp;&nbsp;sum = sum + number;<br />
+&nbsp;&nbsp;&nbsp;++number;<br />
+}<br />
+</span>
+This is the so-called <em>while-loop</em>. A <em>while-loop</em> takes the following syntax:</p>
+
+<img class="image-float-right" src="../cpp/images/Construct_WhileLoop.png" alt="for-loop" />
+
+<pre class="color-syntax">
+<em>initialization-statement</em>;
+<strong>while (</strong><em>test</em><strong>) {</strong>
+   <em>loop-body</em><strong>;</strong>
+<strong>}</strong>
+<em>next-statement</em>;</pre>
+
+<p>As illustrated in the  flow chart, the <em>initialization</em> statement is first executed. The <em>test</em> is then checked.  If <em>test</em> is true, the <em>body</em> is executed. The <em>test</em> is checked again and the process repeats until the <em>test</em> is false.  When the <em>test</em> is false, the loop completes and program execution continues to the <em>next statement</em> after the loop.</p>
+
+<p>In our program, the <em>initialization</em> statement declares an <code>int</code> variable named <code>number</code> and initializes it to <code>lowerbound</code>.  The <em>test</em> checks if <code>number</code> is equal to or less than the <code>upperbound</code>. If it is true, the current value of <code>number</code> is added into the <code>sum</code>, and the statement <code>++number</code> increases the value of <code>number</code> by 1. The <em>test</em> is then checked again and the process repeats until the <em>test</em> is false (i.e., <code>number</code> increases to <code>upperbound+1</code>), which causes the loop to terminate. Execution then continues to the next statement (in Line 17).</p>
+<p> In this example, the loop repeats <code>upperbound-lowerbound+1</code> times. After the loop is completed, Line 17 prints the result with a proper description.</p>
+
+<p><span class="line-heading-code-new">System.out.println(&quot;The sum from &quot; + lowerbound + &quot; to &quot; + upperbound + &quot; is &quot; + sum);<br /></span>
+prints the results.</p>
+
+<h5>Exercises</h5>
+
+<ol>
+<li>Modify the above program to sum all the numbers from <code>9</code> to <code>888</code>. (<em>Ans</em>: <code>394680</code>.)</li>
+
+<li>Modify the above program to sum all the <em>odd</em> numbers between <code>1</code> to <code>1000</code>. (<em>Hint</em>: Change the <em>post-processing</em> statement to &quot;<code>number = number + 2</code>&quot;. <em>Ans</em>: <code>250000</code>)</li>
+
+<li>Modify the above program to sum all the numbers between <code>1</code> to <code>1000</code> that are divisible by <code>7</code>. (<em>Hint</em>: Modify the initialization and post-processing statements. <em>Ans</em>: <code>71071</code>.)</li>
+
+<li>Modify the above program to find the sum of the <em>square</em> of all the numbers from <code>1</code> to <code>100</code>, i.e. <code>1*1 + 2*2 + 3*3 +...</code> (<em>Ans</em>: <code>338350</code>.)</li>
+
+<li>Modify the above program (called <code>RunningNumberProduct</code>) to compute the <em>product</em> of all the numbers from <code>1</code> to <code>10</code>. (<em>Hint</em>: Use a variable called <code>product</code> instead of <code>sum</code> and initialize <code>product</code> to 1. <em>Ans</em>: <code>3628800</code>.)</li>
+</ol>
+ 
+<h3>Conditional (or Decision)</h3>
+
+<p>What if you want to sum all the odd numbers and also all the even numbers between <code>1</code> and <code>1000</code>? There are many ways to do this. You could declare two variables: <code>sumOdd</code> and <code>sumEven</code>. You can then use a <em>conditional</em> statement to check whether the number is odd or even, and accumulate the number into the respective sums. The program is as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+23
+24</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Sum the odd numbers and the even numbers from a lowerbound to an upperbound
+ */</span>
+public class <strong>OddEvenSum</strong> {  <span class="color-comment">// Save as &quot;OddEvenSum.java&quot;</span>
+   public static void main(String[] args) {
+      int lowerbound = 1, upperbound = 1000;  <span class="color-comment">// lowerbound and upperbound</span>
+      int sumOdd  = 0;    <span class="color-comment">// For accumulating odd numbers, init to 0</span>
+      int sumEven = 0;    <span class="color-comment">// For accumulating even numbers, init to 0</span>
+      int number = lowerbound;
+      while (number &lt;= upperbound) {
+         if (number % 2 == 0) {  <span class="color-comment">// Even</span>
+            sumEven += number;   <span class="color-comment">// Same as sumEven = sumEven + number</span>
+         } else {   <span class="color-comment">             // Odd</span>
+            sumOdd += number;    <span class="color-comment">// Same as sumOdd = sumOdd + number</span>
+         }
+         ++number;  <span class="color-comment">// Next number</span>
+      } 
+      <span class="color-comment">// Print the result</span>
+      System.out.println(&quot;The sum of odd numbers from &quot; + lowerbound + &quot; to &quot; + upperbound + &quot; is &quot; + sumOdd);
+      System.out.println(&quot;The sum of even numbers from &quot; + lowerbound + &quot; to &quot; + upperbound + &quot;  is &quot; + sumEven);
+      System.out.println(&quot;The difference between the two sums is &quot; + (sumOdd - sumEven));
+   }
+}</pre></td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected outputs are:</p>
+<pre class="output">
+The sum of odd numbers from 1 to 1000 is 250000
+The sum of even numbers from 1 to 1000  is 250500
+The difference between the two sums is -500</pre>
+
+<h5>How It Works?</h5>
+
+<p><span class="line-heading-code-new">int lowerbound = 1, upperbound = 1000;<br />
+</span>
+declares and initializes the upperbound and lowerbound.</p>
+
+<p><span class="line-heading-code-new">int sumOdd  = 0;<br />
+int sumEven = 0;<br /></span>
+  declare two <code>int</code> variables named <code>sumOdd</code> and <code>sumEven</code> and initialize them to 0, for accumulating the odd and even numbers, respectively.</p>
+
+<p><span class="line-heading-code-new">if (number % 2 == 0) {<br />
+&nbsp;&nbsp;&nbsp;sumEven += number;<br />
+} else {<br />
+&nbsp;&nbsp;&nbsp;sumOdd += number;<br />
+}<br />
+</span>
+This is a <em>conditional</em> statement.  The conditional statement can take one these forms: <em>if-then</em> or  <em>if-then-else</em>.</p>
+
+<img class="image-float-right" src="images/Construct_IfElse.png" alt="if-then-else" />
+<img class="image-float-right" src="images/Construct_IfThen.png" alt="if-then" />
+
+<pre class="color-syntax">
+<span class="color-comment">// if-then</span>
+<strong>if (</strong> <em>test</em><em></em> <strong>) {</strong>
+   <em>true-body</em><strong>;</strong>
+<strong>}</strong>
+<span class="color-comment">// if-then-else</span>
+<strong>if (</strong> <em>test</em><em></em> <strong>) {</strong>
+   <em>true-body</em><strong>;</strong>
+<strong>} else {</strong>
+   <em>false-body</em><strong>;</strong>
+<strong>}</strong></pre>
+
+<p>For a <em>if-then</em> statement, the <em>true-body</em> is executed if the <em>test </em> is true.  Otherwise, nothing is done and the execution continues to the next statement. For a <em>if-then-else</em> statement, the <em>true-body</em> is executed if the <em>test</em> is true;  otherwise, the <em>false-body</em> is executed.  Execution is then continued to the next statement.</p>
+
+<p>In our program, we use the <em>remainder</em> or <em>modulus</em> operator <code>(%)</code> to compute the remainder of <code>number</code> divides by <code>2</code>. We then compare the remainder with <code>0</code> to test for even number.</p>
+<p>Furthermore, <code>sumEven += number</code> is a <em>shorthand</em> for <code>sumEven = sumEven + number</code>.</p>
+
+<h5>Comparison Operators</h5>
+
+<p>There are six comparison (or relational) operators:</p>
+
+<table class="table-zebra" style="width:60%">
+<tr>
+<th>Operator</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+
+<tr>
+<td><code>==</code></td>
+<td>Equal to</td>
+<td><code>x == y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>!=</code></td>
+<td>Not equal to</td>
+<td><code>x != y</code></td>
+</tr>
+
+<tr>
+<td><code>&gt;</code></td>
+<td>Greater than</td>
+<td><code>x &gt; y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>&gt;=</code></td>
+<td>Greater than or equal to</td>
+<td><code>x &gt;= y</code></td>
+</tr>
+
+<tr>
+<td><code>&lt;</code></td>
+<td>Less than</td>
+<td><code>x &lt; y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>&lt;=</code></td>
+<td>Less than or equal to</td>
+<td><code>x &lt;= y</code></td>
+</tr>
+</table>
+
+<p>Take note that the comparison operator for equality is a double-equal sign <code>(==)</code>; whereas a single-equal sign <code>(=)</code> is the assignment operator.</p>
+
+<h5>Combining Simple Conditions</h5>
+
+<p>Suppose that you want to check whether a number <code>x</code> is between <code>1</code> and <code>100</code> (inclusive), i.e., <code>1 &lt;= x &lt;= 100</code>.  There are two <em>simple conditions</em> here, <code>(x &gt;= 1) AND (x &lt;= 100)</code>.  In Java, you cannot write <code>1 &lt;= x &lt;= 100</code>, but need to write <code>(x &gt;= 1) &amp;&amp; (x &lt;= 100)</code>, where &quot;<code>&amp;&amp;</code>&quot; denotes the &quot;<code>AND</code>&quot; operator.  Similarly, suppose that you want to check whether a number <code>x</code> is divisible by 2 <span class="underline">OR</span> by 3, you have to write <code>(x % 2 == 0) || (x % 3 == 0)</code> where &quot;<code>||</code>&quot; denotes the &quot;<code>OR</code>&quot; operator.</p>
+<p>There are three so-called <em>logical operators</em> that operate on the <em>boolean</em> conditions:</p>
+
+<table class="table-zebra" style="width:60%">
+<tr>
+<th>Operator</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+
+<tr>
+<td><code>&amp;&amp;</code></td>
+<td>Logical AND</td>
+<td><code>(x &gt;= 1) &amp;&amp; (x &lt;= 100)</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>||</code></td>
+<td>Logical OR</td>
+<td><code>(x &lt; 1) || (x &gt; 100)</code></td>
+</tr>
+
+<tr>
+<td><code>!</code></td>
+<td>Logical NOT</td>
+<td><code>!(x == 8)</code></td>
+</tr>
+</table>
+
+<p>For examples:</p>
+<pre class="color-example">
+<span class="color-comment">// Return true if x is between 0 and 100 (inclusive)</span>
+(x &gt;= 0) &amp;&amp; (x &lt;= 100)  <span class="color-comment">// AND (&amp;&amp;)</span>
+<span class="color-comment">// Incorrect to use 0 &lt;= x &lt;= 100</span>
+&nbsp; 
+<span class="color-comment">// Return true if x is outside 0 and 100 (inclusive)</span>
+(x &lt; 0) || (x &gt; 100)       <span class="color-comment">// OR (||)</span>
+!((x &gt;= 0) &amp;&amp; (x &lt;= 100))  <span class="color-comment">// NOT (!), AND (&amp;&amp;)</span>
+&nbsp;
+<span class="color-comment">// Return true if &quot;year&quot; is a leap year</span>
+<span class="color-comment">// A year is a leap year if it is divisible by 4 but not by 100, or it is divisible by 400.</span>
+((year % 4 == 0) &amp;&amp; (year % 100 != 0)) || (year % 400 == 0)
+</pre>
+
+<h5>Exercises</h5>
+
+<ol>
+<li>Write a program to sum all the integers between 1 and 1000, that are divisible by 13, 15 or 17, but not by 30.</li>
+<li>Write a program to print all the leap years between AD1 and AD2010, and also print the number of leap years. (Hints: use a variable called <code>count</code>, which is initialized to zero. Increment the <code>count</code> whenever a leap year is found.)</li>
+</ol>
+
+<h3>More on Type <span class="font-code">double</span> and Floating-Point Numbers</h3>
+<p>Recall that a <em>variable</em> in Java has a <em>name</em> and a <em>type</em>, and can hold a <em>value</em> of only that particular <em>type</em>. We have so far used a type called <code>int</code>. A <code>int</code> variable holds  an integer, such as <code>123</code> and <code>-456</code>; it cannot hold a real number, such as <code>12.34</code>.</p>
+
+<p>In programming, real numbers such as <code>3.1416</code> and  <code>-55.66</code> are called <em>floating-point numbers</em>, and belong to a type called <code>double</code>. You can express floating-point numbers in <em>fixed notation</em> (e.g., <code>1.23</code>, <code>-4.5</code>) or <em>scientific notation</em> (e.g., <code>1.2e3</code>, <code>-4E-5</code>) where <code>e</code> or <code>E</code> denote the exponent of base 10.</p>
+
+<h5>Example</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Convert temperature between Celsius and Fahrenheit
+ */</span>
+public class ConvertTemperature { <span class="color-comment"> // Save as &quot;ConvertTemperature.java&quot;</span>
+   public static void main(String[] args) {
+      double celsius, fahrenheit;
+ 
+      celsius = 37.5;
+      fahrenheit = celsius * 9.0 / 5.0 + 32.0;
+      System.out.println(celsius + &quot; degree C is &quot; + fahrenheit + &quot; degree F.&quot;);
+ 
+      fahrenheit = 100.0;
+      celsius =  (fahrenheit - 32.0) * 5.0 / 9.0;
+      System.out.println(fahrenheit + &quot; degree F is &quot; + celsius + &quot; degree C.&quot;);
+ 
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected outputs are:</p>
+<pre class="output">
+37.5 degree C is 99.5 degree F.
+100.0 degree F is 37.77777777777778 degree C.</pre>
+
+<h3>Mixing <span class="font-code">int</span> and <span class="font-code">double</span>, and Type Casting</h3>
+<p>Although you can use a <code>double</code> to keep an integer value (e.g., <code>double count = 5.0</code>, as floating-point numbers includes integers as special case), you should use an <code>int</code> for integer, as <code>int</code> is far more efficient than <code>double</code>, in terms of running time, accuracy and storage requirement.</p>
+<p>At times, you may need both <code>int</code> and <code>double</code> in your program. For example, keeping the <em>sum</em> from 1 to 1000 as <code>int</code>, and their <em>average</em> as <code>double</code>.  You need to be <em>extremely careful</em> when different types are mixed.</p>
+<p>It is important to note that:</p>
+<ul>
+<li>Arithmetic operations (<code>'+'</code>, <code>'-'</code>, <code>'*'</code>, <code>'/'</code>) of two <code>int</code>'s produce an <code>int</code>; while arithmetic operations of two <code>double</code>'s produce a <code>double</code>. Hence, <code>1/2 &rarr; 0</code> (take that this is truncated to 0, not 0.5) and <code>1.0/2.0 &rarr; 0.5</code>.</li>
+<li>Arithmetic operations of an <code>int</code> and a <code>double</code> produce a <code>double</code>. Hence, <code>1.0/2 &rarr; 0.5</code> and <code>1/2.0 &rarr; 0.5</code>.</li>
+</ul>
+<p>You can assign an integer value to a <code>double</code> variable. The integer value will be converted to a double value automatically, e.g., <code>3 &rarr; 3.0</code>. For examples,</p>
+<pre class="color-example">
+int i = 3;
+double d;
+d = i;    <span class="color-comment">// 3 &rarr; 3.0, d = 3.0</span>
+d = 88;   <span class="color-comment">// 88 &rarr; 88.0, d = 88.0</span>
+double nought = 0;  <span class="color-comment">// 0 → 0.0; there is a subtle difference between int 0 and double 0.0</span>
+</pre>
+
+<p>However, you CANNOT assign a <code>double</code> value directly to an <code>int</code> variable. This is because the <em>fractional</em> part could be lost, and the Java compiler signals an error in case that you were not aware. For example,</p>
+<pre class="color-example">
+double d = 5.5;
+int i;
+<span class="color-error">i = d;</span>     <span class="color-comment">// error: possible loss of precision</span>
+<span class="color-error">i = 6.6;</span>   <span class="color-comment">// error: possible loss of precision</span></pre>
+
+<h5>Type Casting Operators</h5>
+
+<p>To assign an <code>double</code> value to an <code>int</code> variable, you need to explicitly invoke a <em>type-casting operation</em> to <em>truncate the fractional part</em>, as follows:</p>
+
+<pre class="color-syntax"><em></em>(<em>new-type</em>)<em>expression</em>;</pre>
+
+<p>For example,</p>
+
+<pre class="color-example">
+double d = 5.5;
+int i;
+i = (int) d;   <span class="color-comment">     // Type-cast the value of double d, which returns an int value,
+                    // assign the resultant int value to int i</span>.
+<span class="color-comment">                    // The value stored in d is not affected.</span>
+i = (int) 3.1416;   <span class="color-comment">// i = 3</span>
+</pre>
+
+<p>Take note that type-casting operator, in the form of <code>(int)</code> or <code>(double)</code>, applies to one operand immediately after the operator (i.e., unary operator).</p>
+<p>Type-casting is an operation, like increment or addition, which operates on a operand and return a value (in the specified type), e.g., <code>(int)3.1416</code> takes a <code>double</code> value of <code>3.1416</code> and returns <code>3</code> (of type <code>int</code>); <code>(double)5</code> takes an <code>int</code> value of <code>5</code> and returns <code>5.0</code> (of type <code>double</code>).</p>
+
+<h5>Example</h5>
+<p>Try the following program and explain the outputs produced:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Find the sum and average from a lowerbound to an upperbound
+ */</span>
+public class <strong>TypeCastingTest</strong> {   <span class="color-comment">// Save as &quot;TypeCastingTest.java&quot;</span>
+   public static void main(String[] args) {
+      int lowerbound = 1, upperbound = 1000;
+      int sum = 0;      <span class="color-comment">// sum is &quot;int&quot;</span>
+      double average;   <span class="color-comment">// average is &quot;double&quot;</span><span class="color-comment">
+ 
+      // Compute the sum (in &quot;int&quot;)</span>
+      int number = lowerbound;
+      while (number &lt;= upperbound) {
+         sum = sum + number;
+         ++number;
+      }
+      System.out.println(&quot;The sum from &quot; + lowerbound + &quot; to &quot; + upperbound + &quot; is &quot; + sum);
+ 
+      <span class="color-comment">// Compute the average (in &quot;double&quot;)</span>
+      average = sum / (upperbound - lowerbound + 1);
+      System.out.println(&quot;Average 1 is &quot; + average);
+      average = (double)sum / (upperbound - lowerbound + 1);
+      System.out.println(&quot;Average 2 is &quot; + average);
+      average = sum / 1000;
+      System.out.println(&quot;Average 3 is &quot; + average);
+      average = sum / 1000.0;
+      System.out.println(&quot;Average 4 is &quot; + average);
+      average = (double)(sum / 1000);
+      System.out.println(&quot;Average 5 is &quot; + average);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected output are:</p>
+<pre class="output">
+The sum from 1 to 1000 is 500500
+Average 1 is 500.0  <span class="color-comment">&lt;== incorrect</span>
+Average 2 is 500.5
+Average 3 is 500.0  <span class="color-comment">&lt;== incorrect</span>
+Average 4 is 500.5
+Average 5 is 500.0  <span class="color-comment">&lt;== incorrect</span></pre>
+
+<p>The first average is incorrect, as <code>int/int</code> produces an <code>int</code> (of <code>500</code>), which is  converted to <code>double</code> (of <code>500.0</code>) to be stored in <code>average</code> (of <code>double</code>).</p>
+
+<p>For the second average, the value of <code>sum</code> (of <code>int</code>) is first converted to <code>double</code>. Subsequently, <code>double/int</code> produces a <code>double</code>.</p>
+
+<p>For the fifth average, <code>int/int</code> produces an <code>int</code> (of <code>500</code>), which is casted to <code>double</code> (of <code>500.0</code>) and assigned to <code>average</code> (of <code>double</code>).</p>
+
+<h5>Exercises</h5>
+
+<ol>
+<li>Write a program called <code>HarmonicSeriesSum</code> to compute the sum of a harmonic series <code>1 + 1/2 + 1/3 + 1/4 + .... + 1/n</code>, where <code>n = 1000</code>. Keep the sum in a <code>double</code> variable. Take note that <code>1/2</code> gives <code>0</code>, but <code>1.0/2</code> gives <code>0.5</code>.<br  />
+Try computing the sum for <code>n=1000</code>, <code>5000</code>, <code>10000</code>, <code>50000</code>, <code>100000</code>.<br  />
+Hints:
+<pre class="color-example">
+public class <strong>HarmonicSeriesSum</strong> {   <span class="color-comment">// Saved as &quot;HarmonicSeriesSum.java&quot;</span>
+   public static void main (String[] args) {
+      int numTerms = 1000;
+      double sum = 0.0;      <span class="color-comment">// For accumulating sum in double</span>
+      int denominator = 1;
+      while (denominator &lt;= numTerms) {
+          <span class="color-comment">// Beware that int/int gives int</span>
+          ......
+          ++denominator;  <span class="color-comment">// next</span>
+      }
+      <span class="color-comment">// Print the sum</span>
+      ......
+   }
+}</pre></li>
+
+<li>Modify the above program (called <code>GeometricSeriesSum</code>) to compute the sum of this series: <code>1 + 1/2 + 1/4 + 1/8 + ....</code> (for <code>1000</code> terms).<br />
+Hints: Use post-processing statement of <code>denominator *= 2</code>, which is a shorthand for <code>denominator = denominator * 2</code>.</li>
+
+</ol>
+
+<h3>Summary</h3>
+<p>I have presented the basics for you to get start in programming. To learn programming, you need to understand the syntaxes and features involved in the programming language that you chosen, and you have to practice, practice and practice, on as many problems as you could.</p>
+
+<br />
+
+<a class="references" href="../howto/References.html#java">Link TO &quot;Java References &amp; Resources&quot;</a>
+
+
+
+<!-- @@ start change in v1 -->
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.8.0_66<br />
+Last modified: March, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

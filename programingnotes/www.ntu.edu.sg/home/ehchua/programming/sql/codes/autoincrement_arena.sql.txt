@@ -1,0 +1,157 @@
+/*
+ * Playing with "AUTO_INCREMENT" Integer data types
+ */
+
+/*
+ * Set up the database
+ */
+-- SHOW DATABASES;
+-- DROP DATABASE IF EXISTS `the_arena`;
+CREATE DATABASE IF NOT EXISTS `the_arena`;
+USE `the_arena`;
+-- SHOW TABLES;
+
+/*
+ * Create a table with an AUTO_INCREMENT integer column
+ */
+DROP TABLE IF EXISTS `autoincrement_arena`;
+CREATE TABLE IF NOT EXISTS `autoincrement_arena` (
+   `id`    INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+                             -- Use INT for AUTO_INCREMENT to avoid over-run
+                             -- Only one AUTO_INCREMENT column
+                             -- Default starting value is 1
+   `desc`  VARCHAR(20)   NULL,
+   PRIMARY KEY(`id`)
+);
+DESCRIBE `autoincrement_arena`;
+SHOW CREATE TABLE `autoincrement_arena` \G
+/*
+CREATE TABLE `autoincrement_arena` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `desc` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+*/
+
+-- Show the last insert ID
+SELECT LAST_INSERT_ID();   
+   -- Return a meaningless value before the first insert command
+
+/*
+ * Insert records with valid values.
+ */
+INSERT INTO `autoincrement_arena` VALUES
+  (NULL, 'ID 1'), (0, 'ID 2');    
+  -- Use NULL for AUTO_INCREMENT column (recommended)
+  -- Can also use 0
+SELECT * FROM `autoincrement_arena`;
+
+-- Show the last insert ID.
+-- For insert with multiple rows, return the id of the first inserted row.
+SELECT LAST_INSERT_ID();   -- Returns 1
+
+INSERT INTO `autoincrement_arena` VALUES
+  (NULL, 'ID 3'), (NULL, 'ID 4');
+SELECT * FROM `autoincrement_arena`;
+SELECT LAST_INSERT_ID();   -- Returns 3
+
+-- DELETE does not reset the auto_increment value
+DELETE FROM `autoincrement_arena`; -- delete all rows
+INSERT INTO `autoincrement_arena` VALUES
+  (NULL, 'ID 5'), (NULL, 'ID 6');
+SELECT * FROM `autoincrement_arena`;
+SELECT LAST_INSERT_ID();   -- Returns 5
+
+-- But the TRUNCATE TABLE command resets the auto-increment value
+-- TRUNCATE empties a table completely. Extreme care as other referenced tables may be affected.
+TRUNCATE TABLE `autoincrement_arena`;  -- empty the table completely
+INSERT INTO `autoincrement_arena` VALUES
+  (NULL, 'ID 1'), (NULL, 'ID 2');
+SELECT * FROM `autoincrement_arena`;
+SELECT LAST_INSERT_ID();   -- Returns 1
+
+/*
+ * Insert records with set values for AUTO_INCREMENT column
+ */
+-- Arbitrary number
+INSERT INTO `autoincrement_arena` VALUES (88, 'ID 88'), (NULL, 'Continue to ID 89');   -- Okay 88, 89
+SELECT * FROM `autoincrement_arena`;
+SELECT LAST_INSERT_ID();    -- Returns 89
+
+-- Use a deleted number
+DELETE FROM `autoincrement_arena` WHERE `id` = 2;
+INSERT INTO `autoincrement_arena` VALUES (2, 'ID 2'), (NULL, 'Continue to ID 90');   -- Okay 2, 90
+SELECT * FROM `autoincrement_arena`;
+SELECT LAST_INSERT_ID();    -- 90
+
+/*
+ * Insert records with invalid values
+ */
+-- Duplicate number
+INSERT INTO `autoincrement_arena` VALUES (2, 'Duplicate Primary Key not allowed');   -- Error for duplicate primary key value
+SELECT LAST_INSERT_ID();    -- 90
+
+-- Negative - invalid number
+INSERT INTO `autoincrement_arena` VALUES (-9, 'Negative ID substituted by auto value');   -- warning and replaced by auto value
+SHOW WARNINGS;
+SELECT * FROM `autoincrement_arena`;
+SELECT LAST_INSERT_ID();     -- 91
+
+/*
+ * Setting the auto-increment starting number in CREATE TABLE (default is 1)
+ */
+DROP TABLE IF EXISTS `autoincrement_arena`;
+CREATE TABLE IF NOT EXISTS `autoincrement_arena` (
+   `id`    TINYINT UNSIGNED  AUTO_INCREMENT,
+           -- Use TINYINT [0, 255] to illustrate run-over
+   `desc`  VARCHAR(20)   DEFAULT NULL,
+   PRIMARY KEY(`id`)
+)  AUTO_INCREMENT = 254;   -- auto-increment starts at 254
+DESCRIBE `autoincrement_arena`;
+SHOW CREATE TABLE `autoincrement_arena` \G
+/*
+CREATE TABLE `autoincrement_arena` (
+  `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `desc` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=254 DEFAULT CHARSET=latin1
+*/
+
+INSERT INTO `autoincrement_arena` VALUES
+  (NULL, 'ID 254'), (0, 'ID 255');
+SELECT * FROM `autoincrement_arena`;
+SELECT LAST_INSERT_ID();   -- 254
+
+-- We have reached the maximum TINYINT UNSIGNED of 255.
+-- Auto-increment value does not wrap but capped at maximum and trigger an error!!
+INSERT INTO `autoincrement_arena` VALUES (NULL, 'Auto does not wrap');
+-- ERROR 1062 (23000): Duplicate entry '255' for key 'PRIMARY'
+
+/*
+ * Reset the auto_increment column by removing and recreating the auto-increment column.
+ * Do this with extreme care, as it might break the references to other tables.
+ */
+ALTER TABLE `autoincrement_arena` DROP COLUMN `id`;
+-- Need to redefine the column as the primary key, and FIRST as the first column (default last column)
+ALTER TABLE `autoincrement_arena` ADD COLUMN `id` TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY FIRST;
+SELECT * FROM `autoincrement_arena`;
+
+/*
+ * Altering the auto-increment starting number
+ */
+ALTER TABLE `autoincrement_arena` AUTO_INCREMENT = 99;
+INSERT INTO `autoincrement_arena` VALUES (NULL, 'ID 99');
+SELECT * FROM `autoincrement_arena`;
+SELECT LAST_INSERT_ID();   -- 99
+
+-- Settin a auto-increment number below the current maximum value has no effect
+ALTER TABLE `autoincrement_arena` AUTO_INCREMENT = 44;
+INSERT INTO `autoincrement_arena` VALUES (NULL, 'Continue to 100');
+SELECT * FROM `autoincrement_arena`;
+SELECT LAST_INSERT_ID();
+
+/*
+ * Another way to get the "next" Auto_increment value is querying the information_schema database.
+ * This is the "next" insert ID, and is different from LAST_INSERT_ID().
+ */
+SELECT auto_increment FROM information_schema.tables WHERE table_name='autoincrement_arena';

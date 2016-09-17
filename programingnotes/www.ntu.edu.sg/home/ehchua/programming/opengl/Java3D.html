@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to install Java3D</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>How to Install Java 3D</h1>
+<h2></h2>
+
+<p>Java 3D is a high-level API for 3D graphics, which is implemented on top of low-level API such as OpenGL and DirectX. Java 3D is based on the so-called <em>scene graph</em>, which emphasizes on the scene design and composes of geometries, transformations, lighting, material, transform, textures, etc, instead of low-level rendering.</p>
+
+<p>The mother site for Java 3D is <a href="https://java3d.dev.java.net/">https://java3d.dev.java.net</a> and  <a href="http://java.sun.com/javase/technologies/desktop/java3d/">http://java.sun.com/javase/technologies/desktop/java3d</a>.</p>
+<h3>Installing Java 3D</h3>
+<p>Download Java 3D from the Java 3D mother site @ <a href="https://java3d.dev.java.net/">https://java3d.dev.java.net</a>. Choose &quot;Downloads&quot; &rArr; &quot;Binary Downloads&quot;.</p>
+
+<ul>
+<li>Zip binaries (<code>j3d-1_5_2-windows-i586.zip</code>): unzip into a directory of your choice (e.g., <code>d:\bin\j3d-1.5.2</code>). The installed directory shall be referred to as <code>$J3D_HOME</code> (Unix notation) or <code>%J3D_HOME%</code> (Windows notation).<br />
+You shall get two sub-directories: &quot;<code>lib\ext</code>&quot; (<code>j3dcore.jar</code>,<code> j3dutils.jar</code>, <code>vecmath.jar</code>) and &quot;<code>bin</code>&quot; (<code>j3dcore-xxx.dll</code>). The jar files must be included in the <code>CLASSPATH</code> environment variable. The native libraries (<code>dll</code>) path must be included in <code>java.library.path</code> (or <code>PATH</code> environment variable).</li>
+<li>API Documentation &amp; Utils (<code>j3d-1_5_2-api-docs.zip</code>): Unzip under <code>$J3D_HOME</code>, and rename (shorten) the directory as &quot;<code>doc</code>&quot;.</li>
+<li>Source code (<code>j3d-1_5_2-src.zip</code>, <code>vecmath-1_5_2-src.zip</code>): Create a sub-directory called &quot;<code>src</code>&quot; under <code>$J3D_HOME</code>, and Unzip into <code>$J3D_HOME\src</code>.</li>
+</ul>
+
+<p>Take note that Java 3D includes a library called <code>vecmath</code> (vector mathematics) to support vector and matrix operations.</p>
+<p>You could optionally download the example source codes, JOALMixer (for interfacing with the JOAL - 3D audio).</p>
+
+<h3>Writing your First Java 3D Program</h3>
+
+<h4>In Eclipse 3.5</h4>
+<ol>
+<li>Create a new Java project, says &quot;<code>J3DGettingStart</code>&quot;.</li>
+<li>Configure the project to include the JAR files and native libraries.
+
+<ul>
+<li>Right-click on the project &rArr; &quot;Properties&quot; 
+&rArr; &quot;Java Build Path&quot; &rArr; Select the &quot;Libraries&quot; tab &rArr; &quot;Add External JAR...&quot; &rArr; Navigate to <code>$J3D_HOME\lib\ext</code> and select <code>j3dcore.jar</code>, <code>j3dutils.jar</code> and <code>vecmath.jar</code>.</li>
+
+<li>Expand the &quot;Referenced Libraries&quot; nodes (under the project) &rArr; Right-click on &quot;<code>j3dcore.jar</code>&quot; &rArr; &quot;Properties&quot;:<br />
+
+In &quot;Java Source Attachment&quot; &rArr;  &quot;Location path&quot; &rArr; &quot;External Folder&quot; to select <code>$J3D_HOME\src</code>.<br />
+In &quot;Javadoc Location&quot; &rArr; &quot;Javadoc URL&quot; &rArr; &quot;Browse&quot; and select <code>$J3D_HOME\doc</code>.<br />
+In &quot;Native Library&quot; 
+&rArr; &quot;Location Path&quot; &rArr; &quot;External Folder&quot; to select <code>$J3D\bin</code> (which contains the <code>dll</code>'s).<br />
+Repeat the above steps for the other JAR files.</li>
+</ul>
+</li>
+
+<li>Create a new class under the project, called &quot;<code>HelloUniverse.java</code>&quot;. Enter the following codes:
+
+<pre class="code-listing">
+import com.sun.j3d.utils.universe.*;
+import com.sun.j3d.utils.geometry.ColorCube;
+import javax.media.j3d.*;
+import javax.vecmath.*;
+import java.awt.*;
+import javax.swing.*;
+   
+<span class="code-comment">/**
+ * Simple Java 3D example to display a rotating color cube.
+ */</span>
+public class HelloUniverse extends JFrame {
+   
+   <span class="code-comment">// Constructor</span>
+   public HelloUniverse() {
+      <span class="code-comment">// Setup a SimpleUniverse by referencing a Canvas3D</span>
+      GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
+      Canvas3D canvas = new Canvas3D(config);
+      Container cp = this.getContentPane();
+      cp.setLayout(new BorderLayout());
+      cp.add(canvas, BorderLayout.CENTER);
+      SimpleUniverse universe = new SimpleUniverse(canvas);
+   
+      <span class="code-comment">// Set up the viewer looking into the scene.</span>
+      universe.getViewingPlatform().setNominalViewingTransform();
+   
+      <span class="code-comment">// Create the content branch and add it to the universe</span>
+      BranchGroup scene = createSceneGraph();
+      universe.addBranchGraph(scene);
+   
+      <span class="code-comment">// Configure this JFrame</span>
+      this.setSize(250, 250);
+      this.setTitle(&quot;Hello Universe&quot;);
+      this.setVisible(true);
+   }
+   
+   <span class="code-comment">// Create the content branch</span>
+   public BranchGroup createSceneGraph() {
+      <span class="code-comment">// Create the root node of the content branch</span>
+      BranchGroup nodeRoot = new BranchGroup();
+   
+      <span class="code-comment">// Create the TransformGroup node, which is writable to support
+      // animation, and add it under the root</span>
+      TransformGroup nodeTrans = new TransformGroup();
+      nodeTrans.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+      nodeRoot.addChild(nodeTrans);
+   
+      <span class="code-comment">// Create a visual object node (color cube) and add it to the scene.</span>
+      nodeTrans.addChild(new ColorCube(0.4));
+  
+      <span class="code-comment">// Create a Behavior node to rotate the cube add it to the scene.</span>
+      Transform3D yAxis = new Transform3D();
+      Alpha timing = new Alpha(-1, 4000);
+      RotationInterpolator nodeRotator = new RotationInterpolator(timing,
+            nodeTrans, yAxis, 0.0f, (float)Math.PI * 2.0f);
+      BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 100.0);
+      nodeRotator.setSchedulingBounds(bounds);
+      nodeRoot.addChild(nodeRotator);
+   
+      <span class="code-comment">// Compile to perform optimizations on this content branch.</span>
+      nodeRoot.compile();
+  
+      return nodeRoot;
+   }
+   
+   <span class="code-comment">// Entry main method to invoke the constructor on the event dispatcher thread.</span>
+   public static void main(String args[]) {
+      java.awt.EventQueue.invokeLater(new Runnable() {
+         public void run() {
+            new HelloUniverse();
+         }
+      });
+   }
+}
+</pre>
+
+<p>The output is as follows:</p>
+<img class="image-left" src="images/Java3D_HelloJ3DOutput.png" />
+</li>
+
+</ol>
+
+<p>NOTE: If you receive an error message &quot;<code>SEVERE: java.lang.UnsatisfiedLinkError: no xxx in java.library.path</code>&quot;, print out the entries in <code>java.library.path</code> (un-comment the <code>System.out.println()</code> statement) and check if <code>$J3D_HOME\bin</code> is included. By default, <code>java.library.path</code> mirrors the <code>PATH</code> environment variable. You might add <code>$J3D_HOME\bin</code> into the PATH environment, or move the <code>dll</code>'s to one of the JDK binary path, as reflected by <code>java.library.path</code>.</p>
+
+<h4>In NetBeans 6.7</h4>
+<p>[TODO]</p>
+
+<h4>With JDK/Editor</h4>
+<p>[TODO]</p>
+
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<p><strong>Websites</strong>:</p>
+<ul>
+<li>Java 3D mother sites @ <a href="https://java3d.dev.java.net/">https://java3d.dev.java.net</a>, <a href="http://java.sun.com/javase/technologies/desktop/java3d/">http://java.sun.com/javase/technologies/desktop/java3d</a>.</li>
+<li>Popular Java 3D sites: <a href="http://www.j3d.org">www.j3d.org</a>, <a href="http://www.java3d.org">www.java3d.org</a>.</li>
+<li>Java 3D Demos @ <a href="http://www.duling.us/kevin/Java3D/">http://www.duling.us/kevin/Java3D</a>.</li>
+</ul>
+<p><strong>Tutorials</strong>:</p>
+<ul>
+<li>Greq Hopkins, &quot;The Joy of Java 3D&quot;, available @ <a href="http://www.java3d.org/tutorial.html">http://www.java3d.org/tutorial.html</a>.</li>
+<li>Dennis J Bouvier, &quot;Java 3D API Tutorial&quot;, Sun Microsystems, available @ <a href="http://java.sun.com/developer/onlineTraining/java3d/">http://java.sun.com/developer/onlineTraining/java3d</a>.</li>
+<li>Java 3D Examples &amp; Demos, Sun Microsystems, avaiable at <a href="https://java3d.dev.java.net/">https://java3d.dev.java.net</a> under &quot;Examples&quot;.</li>
+<li>Ben Moxon, &quot;The Little Purple Dude Walks - A Limited Adventure in Java3D&quot;, available @ <a href="http://www.benmoxon.info/Java3d">http://www.benmoxon.info/Java3d</a>.</li>
+</ul>
+
+<p><strong>Boooks</strong>:</p>
+<ul>
+<li>Andrew Davison, &quot;Pro Java 6 3D Game Development, Java 3D, JOGL, JInput, and JOAL APIs&quot;, 2007.</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: JDK 1.6, Java3D 1.5.2<br />
+Last modified: November 10, 2009</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

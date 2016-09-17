@@ -1,0 +1,4 @@
+# Prevent development and old documentation from showing up in search results.
+User-agent: *
+# Disallow: /dev
+Disallow: /release

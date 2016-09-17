@@ -1,0 +1,1604 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Applet &amp; WebStart Rich Internet Applications - Java Programming Tutorial</title>
+
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2> Applets &amp; Web Start Applications<br />
+- Java Rich Internet Applications (RIA)</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Applets</h3>
+
+<p>An <em>applet</em> is a Java program, which can be <em>downloaded</em> from a remote server and <em>executes inside the web browser</em> of the local machine.  Applets are executed inside the browser via the so-called &quot;Java Plug-in&quot;, which is a <acronym title="Java Runtime Environment">JRE</acronym> capable of running Java applets in a secure manner (just like most web browsers have plug-ins for running flash, JavaScript, VBScript and other programs).</p>
+
+<h4>Hello-World Applet</h4>
+<p>Let's begin by writing an applet that says &quot;Hello, world!&quot; inside the browser.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre>
+</td>
+<td>
+<pre>
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+<span class="color-comment">/**
+ *  First Java Applet to say &quot;Hello, world&quot; on your web browser
+ */</span>
+public class HelloApplet extends Applet {  <span class="color-comment">// save as &quot;HelloApplet.java&quot;</span>
+   public void paint(Graphics g) {
+      setBackground(Color.CYAN);   <span class="color-comment">// set background color</span>
+      g.setColor(Color.BLACK);     <span class="color-comment">// set foreground text color</span>
+      g.setFont(new Font(&quot;Times New Roman&quot;, Font.BOLD, 30)); <span class="color-comment">// set font face, bold and size</span>
+      g.drawString(&quot;Hello, world&quot;, 20, 80);  <span class="color-comment">// draw string with baseline at (20, 80)</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Compile the applet using the JDK compiler &quot;<code>javac.exe</code>&quot;:</p>
+<pre class="color-command">
+&gt; javac HelloApplet.java
+</pre>
+
+<p>You CANNOT run the applet using JDK's Runtime &quot;<code>java.exe</code>&quot;.  
+Applet is a graphic program that runs inside a web browser, using the web browser's Java plug-in JRE. 
+Applet is embedded in an HTML page (in much the same way as images, audios,  videos and other programs are embedded in an HTML file).</p>
+<p> To run an applet, you need to create a HTML file, which embeds the applet.
+  Use a text editor to create the following HTML file and save it as &quot;<code>HelloApplet.html</code>&quot; (or any filename of your choice).  Note that HTML, unlike Java, is not case sensitive, and places no restriction on the filename.</p>
+  
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre>
+</td>
+<td>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Hello-World Applet&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h3&gt;My first Java applet says:&lt;/h3&gt;
+  &lt;applet code=&quot;HelloApplet.class&quot; width=&quot;400&quot; height=&quot;150&quot;
+          alt=&quot;Error loading applet!&quot;&gt;
+  &lt;/applet&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+  
+<img class="image-float-right" src="images/Applet_HelloWorld.gif" alt="Applet_HelloWorld.gif" />
+
+<p>You can run the applet by loading the HTML file into a web browser.</p>
+<p>Double-click the &quot;<code>HelloApplet.html</code>&quot; in Windows Explorer (or from the browser, select &quot;file&quot; menu &rArr; &quot;open&quot; &rArr; &quot;browse&quot; and select &quot;<code>HelloApplet.html</code>&quot;, or drag the HTML file into the browser).</p>
+
+<h5>Applet Security</h5>
+<p>Starting from JRE 1.8.0, you need to configure the &quot;Java security&quot; to run the applets:</p>
+<ol>
+<li>Control Panel &rArr; Java &rArr; Security.</li>
+<li>Check &quot;Enable Java content in the browser&quot;.</li>
+<li>Set the security level to high.</li>
+<li>Add site to &quot;Exception Site List&quot;: Click &quot;Edit Site List&quot; &rArr; Add &rArr; Enter site URL, e.g., file:///D:/ (for local D drive), http://www.ntu.edu.sg/home/ehchua/programming/ (my programming site).</li>
+</ol>
+
+<h5>&quot;<span class="font-code">appletviewer</span>&quot; Utility</h5>
+
+<p>JDK provides a utility called &quot;<code>appletviewer.exe</code>&quot; for testing applet, in the early days of Java. Since web browser is everywhere nowadays, you should use a web browser to see the actual effect instead. You should try on all the common browsers (such as IE, firefox, chrome, safari) if you want to put your applet in production. <code>appletviewer</code> processes only the <code>&lt;applet&gt;</code> tag, and ignores all other tags in the HTML file.  To use the <code>appletviewer</code>, issue the following command:</p>
+
+<pre class="color-command">
+&gt; appletviewer HelloApplet.html
+</pre>
+
+<h5>Dissecting the <span class="font-code">&quot;HelloApplet.java</span>&quot;</h5>
+<ul>
+<li>If you are familiar with GUI programming, you will find the applet familiar, we will explain the details in the later section.</li>
+<li>Lines 10 and 11 set the background and foreground color to cyan and black, respectively.</li>
+<li>Line 12 sets the text font to &quot;Times New Roman&quot;, 30-point and bold.</li>
+<li>In Line 13, we use the method <code>drawString()</code> of the <code>Graphics</code> class to draw the <code>String</code> &quot;Hello, world!&quot; starting at baseline co-ordinates of (20, 80) on the applet display area inside the web browser.</li>
+</ul>
+
+<h5>Dissecting the &quot;<span class="font-code">HelloApplet.html</span>&quot;</h5>
+<ul>
+<li>HTML uses markup tags for formatting and hyper-linking documents; and embedding other entities such as images, audios, videos and programs.</li>
+<li><code>&lt;html&gt;</code> (line 1) and <code>&lt;/html&gt;</code> (line 10) are a pair of container tags enclosing the entire HTML script.  Container Tags consist of a pair of start-tag (in syntax of <code>&lt;tag-name&gt;</code>) and end-tag (in syntax of <code>&lt;/tag-name&gt;</code>), and contain data between the tags.</li>
+<li>An HTML script is divided into two sections:  a HEAD section enclosed by <code>&lt;head&gt;</code> (line 2) and <code>&lt;/head&gt;</code> (line 4) and a BODY section enclosed by <code>&lt;body&gt;</code> (line 5) and <code>&lt;/body&gt;</code> (line 9).</li>
+<li>In the HEAD section, you can give a title for the page (enclosed within <code>&lt;title&gt;</code> and <code>&lt;/title&gt;</code> in line 3).  The title will be shown on the browser's title bar.</li>
+<li>In our body section, the <code>&lt;p&gt;</code> and <code>&lt;/p&gt;</code> tags (line 6) contain a paragraph.  The <code>&lt;applet&gt;</code> and <code>&lt;/applet&gt;</code> tags (lines 7 to 8) embed a Java applet program.</li>
+<li>In the <code>&lt;applet&gt;</code> start-tag, attribute &quot;<code>code</code>&quot; is used to specify the applet's class file; attributes &quot;<code>width</code>&quot; and &quot;<code>height</code>&quot; are used to specify the applet display area inside the browser's window (in this example, 400&times;150 pixels).</li>
+<li>HTML is not case sensitive.</li>
+</ul>
+
+<h4>More Applets (in JDK's Demo)</h4>
+<p>Try the &quot;demo&quot; applet provided by the JDK (under directory <code>demo\applets</code>&quot;). Since JDK 1.7, you need to download the demo separately.  For examples, &quot;Clock&quot;, &quot;MoleculeViewer&quot;, &quot;SortDemo&quot;, and &quot;TicTacToe&quot;.  You may study these applets' source files and the associated HTML files.</p>
+
+<h4>HTML's <span class="font-code">&lt;Applet&gt;</span> Tag</h4>
+<p>HTML provides an <code>&lt;applet&gt;...&lt;/applet&gt;</code> container tag for embedding Java applet, with the following attributes:</p>
+
+<ul>
+<li><code>code=&quot;<em>JavaClassName</em>&quot;</code>: Specifies the applet class name, with the &quot;<code>.class</code>&quot; extension.</li>
+
+<li><code>width</code>, <code>height</code>: Specify the width and height of the applet's display area inside the browser.</li>
+<li><code>alt</code>: (optional) alternate text if the applet fails to be displayed.</li>
+<li><code>codebase</code>: (optional) specifies the <em>base path</em> of the applet's class. The default base path for the applet is the same path as the HTML file.</li>
+<li><code>archive</code>: (optional) specifies the JAR file that contains the applet classes. If your applet involves more than one classes, it is common and more efficient to jar (i.e., zip) them together into a single JAR file for distribution.</li>
+</ul>
+
+<p>The <code>&lt;applet&gt;</code> tag is deprecated in HTML 4.01 in favor of a more general <code>&lt;object&gt;</code> tag. However, it is still commonly-used today and widely supported by the web browsers.</p>
+
+<p>You can use <code>&lt;param&gt;</code> tag to pass parameters into applet.</p>
+
+<h4>Jaring-Up Classes</h4>
+<p>If your applet involves more than one classes, it is easier and more efficient to jar them up into a single file for distribution, as jar compresses the file size (using the ZIP algorithm).</p>
+
+<p>For example, suppose that our applet has two classes: a main class called <code>HelloAppletAgain.java</code> and a helper class called <code>HelloAppletHelper.java</code>.</p>
+
+<pre class="color-example">
+<span class="color-comment">/** Main class */</span>
+import java.applet.Applet;
+import java.awt.*;
+public class HelloAppletAgain extends Applet {
+   public void paint (Graphics g) {
+      setBackground(Color.GREEN); <span class="color-comment">// set background color</span>
+      g.setColor(Color.BLUE);     <span class="color-comment">// set foreground text color</span>
+      g.drawString((new HelloAppletHelper()).getMessage(), 5, 30);
+   }
+}</pre>
+
+<pre class="color-example"><span class="color-comment">/** Helper class to return a greeting message */</span>
+public class HelloAppletHelper {
+   public String getMessage() {
+      return &quot;Hello, world again!&quot;;
+   }
+}</pre>
+
+<p>You can jar the classes together using the JDK utility &quot;<code>jar.exe</code>&quot; from cmd shell. Alternatively, IDE like Eclipse/NetBeans can create a jar file easily.</p>
+<pre class="color-command">&gt; jar -cvf HelloAppletAgain.jar *.class
+</pre>
+
+<p>The following HTML script starts the applet. The attribute &quot;<code>archive</code>&quot; specifies the location of the jar file.</p>
+<pre class="color-example">&lt;html&gt;
+  &lt;head&gt;&lt;title&gt;Java Applet&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;My Java Applet says:&lt;/h2&gt;
+  &lt;applet 
+     <span class="color-new">code=&quot;HelloAppletAgain.class&quot;
+     archive=&quot;HelloAppletAgain.jar&quot;</span>
+     width=&quot;400&quot; height=&quot;100&quot;
+     alt=&quot;Error loading applet&quot;&gt;&lt;/applet&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>Read &quot;<a href="J9d_Jar.html#jarcreate">Creating JAR File</a>&quot; and &quot;<a href="J9d_Jar.html#jardeploy">Using JAR File for Deployment</a>&quot; for more discussion on JAR file.</p>
+
+<h3>More On Applets</h3>
+<p>Applets are mobile programs.  In the old days, we used to correct the data in magnetic tape (or punch cards) and bring the data to the computer for processing.  With mobile program, you can send the program (which is much smaller) down to the data site and processed the data locally.  This is possible as Java program are portable and run on all platforms.</p>
+
+<p>With the availability of mobile programs such as applets, why buy word processor, spreadsheet or some expensive software?  Just download an applet, use it and discard after use!</p>
+
+<p>There are two problems.  Firstly, applets take times to download over the network and also take times to startup (this is not really a problem today).  Secondly and more importantly, applets are <em>alien</em> programs that run on your local machine.  What stops someone from writing an applet that compromises your system - or worse, damages your machine?  Nobody today will run an alien program in the local machine with all kinds of computer viruses running around.</p>
+
+<p>There is strict security in place in the built-in JVM for running applets to prevent the applets from compromising your system.</p>
+
+<p>In JDK 1.0, applets are considered as &quot;non-trusted&quot; codes and run inside a so-called <em>sand box</em> with no access to local file system and network resources.  Applets cannot do nasty outside the sandbox.  These includes:</p>
+<ul>
+<li>Applets cannot read or write local files.</li>
+<li>Applets cannot execute local programs.</li>
+<li>Applets cannot connect to any machine on the network except the machine from which they are downloaded.</li>
+</ul>
+
+<p>The &quot;sandbox&quot; model places too much restriction on what applets can do, which resulted in a classical <em>catch-22</em> situation: Applets are powerful Java programs that can perform powerful tasks.  They are so powerful that may damage your local machine.  Security is therefore put in place so that they cannot do damages.  This limits the power and usefulness of applets and renders applets useless.  Applets are not commonly used today.</p>
+
+<p>JDK 1.1 introduced the notion of &quot;trusted&quot; codes.  You can package an applet using JAR file, and sign the JAR file with your digital signature (much like signing a document or a cheque using a pen).  The digital signature authenticates the source of the applets.  The recipients of the applet will be presented with the digital certificate of the signer.  They can then decide whether to trust the signer and run the applet or reject the applet.  If a recipient accepts the applet, applet has full access to the local file system and network resource, just like any local Java application.</p>
+
+<p>From JDK 1.2 onwards, JVM employs a security manager, which manages the system security based on a customizable security policy file.  You can grant an applet specific permissions (such as reading local file) and deny other permissions (such as writing local file) by tailoring the security policy file.  In other words, you have control of the kinds of accesses to be granted from JDK 1.2.  This is in contrast of &quot;no-access sandbox&quot; in JDK 1.0 and &quot;full-access&quot; for trusted-applet in JDK 1.1.</p>
+
+<p>Applets can be used to create dynamic and interactive web contents.  Applets made Java popular in the early days.  However, their usage is limited in the Internet environment.  The security restrictions imposed on applets severely limit their functionality.  JavaScript and Flash are more popular today for creating dynamic web contents on the client side nowadays.  The power of Java has shifted to the server-side programming especially in the enterprise JavaEE environment and for the embedded wireless devices in the JavaME.  Applets could still be useful in an Intranet environment, where network bandwidth and granting for access permission is not a concern.</p>
+
+<p>JDK 1.4 introduced a deployment technology called <em>Java Web Start</em> to simplify the deployment of Java applications over the network.  With Java Web Start, you can deploy a full-feature Java application (unlike applets, which run inside a browser) over the network.  The downloaded application will be &quot;cached&quot; inside your local machine for subsequent re-uses.  Upon subsequent activation, the Java Web Start checks if there is an update to the cached application.  It downloads the newer version if there is one; otherwise, it launches the cached copy.</p>
+
+<p>JDK 1.6 Update 10 provides many improvements on Applet. It unifies the deployment of Applet and Web Start Apps (called Rich Internet Applications). I shall describe in the later section.</p>
+
+<h4>AWT <span class="font-code">Applet</span></h4>
+
+<img class="image-float-right" src="images/AWT_Applet.gif" alt="AWT_Applet.gif" />
+<img class="image-float-right" src="images/Applet_ClassDiagram.png" alt="Applet_ClassDiagram.png" />
+
+<p>I assume that you are familiar with GUI programming (otherwise, read the relevant sections).</p>
+<ul>
+<li>A GUI application extends from <code>java.awt.Frame</code> (AWT) or <code>javax.swing.JFrame</code> (Swing). An applet's top-level container is <code>java.applet.Applet</code> (AWT) or <code>javax.swing.JApplet</code> (Swing). The class hierarchy of <code>Applet</code> and <code>JApplet</code> is as shown in the class diagram.</li>
+<li>Applet does not have constructor.  Instead, we override the <code>init()</code> method to initialize the GUI display when the applet is loaded into the web browser.</li>
+</ul>
+
+<h5>Example: <span class="font-code">AWTAppletCounter</span></h5>
+
+<p>Let's write a simple counter applet via AWT's <code>java.applet.Applet</code>, as shown.</p>
+<h5><span class="font-code">AWTAppletCounter.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+import java.applet.Applet;
+import java.awt.*;
+import java.awt.event.*;
+ 
+<span class="color-comment">/** An AWT counter applet */</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class AWTCounterApplet extends Applet {
+   private TextField tfCount; <span class="color-comment">// for displaying the counter value</span>
+   private int count = 0;     <span class="color-comment">// counter's value</span>
+ 
+   <span class="color-comment">/** init() runs when the Applet is loaded */</span>
+   @Override
+   public void init() {
+      setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+      setBackground(new Color(204, 238, 241));  <span class="color-comment">// light blue</span>
+      add(new Label(&quot;Counter: &quot;));      <span class="color-comment">// Label</span>
+      tfCount = new TextField(&quot;0&quot;, 10); <span class="color-comment">// TextField</span>
+      tfCount.setEditable(false);
+      add(tfCount);
+      Button btnCount = new Button(&quot;Count&quot;);  <span class="color-comment">// Button</span>
+      add(btnCount);
+ 
+      <span class="color-comment">// Handling the button-click</span>
+      btnCount.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            ++count;
+            tfCount.setText(count + &quot;&quot;);
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">AWTAppletCounter.html</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre>
+</td>
+<td>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;An AWT Applet&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;p&gt;An AWT applet of counter:&lt;/p&gt;
+  &lt;applet code=&quot;AWTAppletCounter.class&quot; width=&quot;250&quot; height=&quot;100&quot;
+       alt=&quot;Error Loading Applet!&quot;&gt;
+  &lt;/applet&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h4>Swing <span class="font-code">JApplet</span></h4>
+
+<img class="image-float-right" src="images/Applet_ClassDiagram.png" alt="Applet_ClassDiagram.png" />
+
+<p>A Swing applet:</p>
+<ul>
+<li>Extends from <code>javax.swing.JApplet</code> (instead of <code>java.applet.Applet</code>).</li>
+<li>Use the Swing components in <code>javax.swing</code> (instead of AWT components in <code>java.awt</code>). Swing components begin with a prefix &quot;J&quot;, e.g., <code>JTextField</code>, <code>JButton</code>, and <code>JLabel</code>.</li>
+<li>Retrieve the content-pane <code>Container</code> from the top-level container <code>JApplet</code>, via <code>getContentPane()</code>, and add the components into the content-pane.</li>
+</ul>
+
+<h5>Example: <span class="font-code">SwingAppletCounter</span></h5>
+
+<p>Let's convert the previous <code>AWTAppletCounter</code> into Swing.</p>
+
+<h5><span class="font-code">SwingAppletCounter.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+ 
+<span class="color-comment">/** A Swing Counter Applet */</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class SwingCounterApplet extends <span class="color-new">JApplet</span> {
+   private JTextField tfCount; <span class="color-comment">// for displaying the counter value</span>
+   private int count = 0;      <span class="color-comment">// counter's value</span>
+ 
+   <span class="color-comment">/** init() runs when the applet is loaded */</span>
+   @Override
+   public void init () {
+      try {
+         <span class="color-comment">// Run GUI codes in the Event-Dispatcher thread for thread safety</span>
+         <span class="color-comment">// Use invokeAndWait() so that init() does not exit before GUI constructed</span>
+         SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+               createGUI();
+            }
+         });
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+ 
+   <span class="color-comment">/** Setup the GUI components */</span>
+   private void createGUI() {
+      Container cp = getContentPane();  <span class="color-comment">// &quot;this&quot; JApplet gets content-pane</span>
+      cp.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+      cp.setBackground(new Color(204, 238, 241));
+ 
+      cp.add(new JLabel(&quot;Counter: &quot;));
+      tfCount = new JTextField(&quot;0&quot;, 10);
+      tfCount.setEditable(false);
+      cp.add(tfCount);
+      JButton btnCount = new JButton(&quot;Count&quot;);
+      cp.add(btnCount);
+ 
+      btnCount.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            <span class="color-comment">// Increase the count and show it in the TextField</span>
+            ++count;
+            tfCount.setText(count + &quot;&quot;);
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Similarly, provide an HTML file to run the applet.</p>
+
+<p>Notes:</p>
+
+<ul>
+<li>A Swing's <code>JApplet</code>, similar to other Swing's top-level containers such as <code>JFrame</code>, has a <em>root pane</em>, which contains the <em>content-pane</em> and an optional <em>menubar</em>.</li>
+<li>We use <code>SwingUtilities.invokeAndWait()</code> to run the GUI codes in the event-dispatcher thread (instead of <code>invokeLater()</code> for <code>JFrame</code> application). <code>invokeAndWait()</code> ensures that <code>init()</code> does not exit before the GUI codes completes, to avoid some subtle problems.</li>
+</ul>
+
+<h4>Java Console</h4>
+<p>Applets are run inside a web browser via the web browser's &quot;Java Plug-in&quot;. This &quot;Java Plug-in&quot; provides a &quot;Java Console&quot;, for managing the Java Plug-in and the applets. The <code>system.out.print()</code> and <code>system.err.print()</code> issued by applets are directed to this console. (Recall that to print on the applet, you need to use <code>drawString()</code> inside the <code>paint()</code> or <code>paintComponent()</code>.)</p>
+<p>To enable Java Console, goto &quot;Control Panel&quot; &rArr; &quot;Java&quot; &rArr; &quot;Advanced&quot; tab &rArr; &quot;Java console&quot; &rArr; &quot;Show console&quot;. You should enable your Java console during applet development, so as to monitor the error messages.</p>
+
+<h4>Passing Parameters from HTML File into an Applet</h4>
+
+<p>You can pass parameters into an applet via the <code>&lt;param name=&quot;<em>paramName</em>&quot; value=&quot;<em>paramValue</em>&quot; /&gt;</code> tag nested within the <code>&lt;applet&gt;</code> (or <code>&lt;object&gt;</code>) tag. Inside the applet codes, you can use <code>getParameter(String <em>paramName</em>)</code> to get the <code><em>paramValue</em></code> (<code>String</code>); or <code>null</code> if the parameter does not exist. For example,</p>
+
+<h5><span class="font-code">SwingAppletParamTest.java</span></h5>
+
+<p>This applet gets a parameter called &quot;<code>message</code>&quot; from the HTML file, via the <code>getParameter()</code> method.</p>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre></td>
+<td>
+<pre>
+import java.awt.*;
+import javax.swing.*;
+ 
+<span class="color-comment">/** A Swing Counter Applet */</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class SwingAppletParamTest extends JApplet {
+   String msg;
+ 
+   <span class="color-comment">/** init() runs when the applet is loaded */</span>
+   @Override
+   public void init () {
+      <span class="color-comment">// Get the parameter from the HMTL file</span>
+      <span class="color-new">msg = getParameter(&quot;message&quot;);
+      if (msg == null) msg = &quot;Hi&quot;;
+</span> 
+      try {
+         <span class="color-comment">// Run GUI codes in the Event-Dispatcher thread for thread safety</span>
+         <span class="color-comment">// Use invokeAndWait() so that init() does not exit before GUI constructed</span>
+         SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+               createGUI();
+            }
+         });
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+ 
+   <span class="color-comment">/** Setup the GUI components */</span>
+   private void createGUI() {
+      Container cp = getContentPane();  <span class="color-comment">// &quot;this&quot; JApplet gets content-pane</span>
+      cp.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+      cp.setBackground(new Color(204, 238, 241));
+      cp.add(new JLabel(msg, JLabel.CENTER));
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">SwingAppletParamTest.html</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre>
+</td>
+<td>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;A Swing Applet with Parameter&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h3&gt;A Swing Applet with Parameter&lt;/h3&gt;
+  &lt;applet code=&quot;SwingAppletParamTest.class&quot; width=&quot;300&quot; height=&quot;60&quot;
+       alt=&quot;Error Loading Applet!&quot;&gt;
+    <span class="color-new">&lt;param name=&quot;message&quot; value=&quot;Hello, world!&quot; /&gt;</span>
+  &lt;/applet&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Applet's Life Cycle &amp; Methods</h4>
+
+<img class="image-float-right" src="images/Applet_LifeCycle.png" alt="Applet_LifeCycle.png" />
+
+<p>The <code>java.applet.Applet</code> class defines these call-back methods for managing the life-cycle of the applets.</p>
+
+<ul>
+<li><strong><code>init()</code>:</strong> called back (only once) when the applet is first loaded to initialize variables, resize the applet, setting up GUI components, and etc.</li>
+
+<li><strong><code>start()</code>:</strong>  called back by the browser after the <code>init()</code> to start the applet running (similar to <code>main()</code> in Java application). The <code>start()</code> method is run every time the applet becomes active after it has been inactive.</li>
+
+<li><strong><code>stop()</code>:</strong> called back when the user leaves the page on which the applet is running, reloads the page, or minimizes the browser, to terminate the applet's running threads.</li>
+
+<li><strong><code>destroy()</code>:</strong> called back when the applet is about to be purged from memory.  Multithreaded applets can use the <code>destroy()</code> to stop any live threads. Normally, the Java garbage collector takes care of memory management.</li>
+
+<li><strong><code>paint()</code>:</strong> called back when the applet drawing area must be refreshed, e.g., another window partially covers the applet etc.</li>
+</ul>
+
+<h4>Interacting with JavaScript</h4>
+<p>[TODO]</p>
+
+<h3>Java Web Start Applications (JDK 1.4)</h3>
+
+<h4>Introduction</h4>
+<p>Java Web Start was introduced in JDK 1.4 to simplify the deployment of full-feature Java applications (instead of applet) over the web.</p>
+
+<p>Traditional desktop applications are usually platform dependent and cannot be deployed over the web. Java Applets (since JDK 1.0) provide a mean to deliver and distribute Java applications over the network.  However, applets take considerable times to download, load, and execute.  Applets are not <em>full-feature</em> GUI application, as it extends from <code>java.applet.Applet</code> or <code>javax.swing.JApplet</code> (instead of <code>javax.swing.JFrame</code>). If you re-run an applet, you have to download the applet all over again, even if there is no change in code.</p>
+
+<p>Java Web Start, works like Java applets, allow you to deliver and distribute Java applications to your clients over the network. Unlike applets,  almost any full-feature Java application that runs on desktop can be delivered. The downloaded Java applications will be &quot;cached&quot; inside the local machine for subsequent re-uses.  In the subsequent launch, the Java Web Start checks if there is an update to the cached version.  It downloads the new version if there exists; otherwise, the cached copy will be launched.</p>
+
+<p>The process can be summarized as follows:</p>
+<ol>
+<li>A user launches a Web Start application, either via a web browser, desktop or other means.</li>
+<li>Web Start runtime queries the web to determine whether the resources needed for the requested application are already downloaded and cached.  If the most recent version of the application is cached, the application will be launched from the local cache immediately.</li>
+<li>If the resources are not present or an upgrade is available, Web Start runtime will download the needed resources and then launch the application.  The downloaded resources will be cached for subsequent re-uses.</li>
+<li>An &quot;offline&quot; mode is available, which tries to query the web for any upgrade but time-out in a few seconds. If a new version is detected before the timeout, it will be downloaded, cached and launched.  Otherwise, the previously cached copy will be launched.</li>
+</ol>
+
+<h4>Web Start Security</h4>
+
+<p>Security is the paramount concern for deploying applications over the web.  As the deployed application runs inside the client's machine, it could maliciously or accidentally damage the client's machine if no proper security measures are taken.  As a general rule, nobody should run an alien program with unrestricted access to the local disks and network, if the source of the program cannot be satisfactorily authenticated.</p>
+
+<p>Security strategy for Java Web Start application is similar to Java applets.  Java Web Start applications can either:</p>
+<ol>
+<li>Run inside a &quot;sandbox&quot;, which is a protective environment with no access to local disks and network resources (other than connecting to the host where the application resides).  The security mode is meant for applications from a non-trusted source.</li>
+<li>Run with granted permissions, for signed applications from a trusted source.  The application provider must digitally sign the jar file.  The client will be prompted to accept the digital certificate of the provider before the application is launched.</li>
+</ol>
+
+<h4>Java Network Launching Protocol (JNLP)</h4>
+
+<p>Java Web Start is a Reference Implementation (RI) of the Java Network Launching Protocol (JNLP) technology.</p>
+
+<p>Java Web Start is designed as a &quot;helper application&quot; to a web browser.  A helper application is an add-on to a web browser, which will be activated if the browser receives a certain pre-configured MIME type.  When a user selects a link that is associated with a web start launch file (i.e., JNLP file with a MIME type of &quot;<code>application/x-java-jnlp-file</code>&quot; and file extension of &quot;<code>.jnlp</code>&quot;), the web browser passes the file to the Java Web Start helper application.  Web Start helper application will then automatically download, cache and run the selected Java application.</p>
+
+
+<h4>First Web Start Application</h4>
+<h5>Prepare the Application to be deployed</h5>
+
+<p>Let's deploy a Swing application called &quot;<code>SwingCounterWS</code>&quot; over the Internet via Web Start.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+ 
+<span class="color-comment">/** A counter application in Swing */</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class SwingCounterWS extends JFrame {
+   private JTextField tfCount; <span class="color-comment">// for displaying the counter value</span>
+   private int count = 0;      <span class="color-comment">// counter's value</span>
+ 
+   public SwingCounterWS() {
+      Container cp = getContentPane();
+      cp.setLayout(new FlowLayout());
+ 
+      cp.add(new JLabel(&quot;Counter: &quot;));
+      tfCount = new JTextField(&quot;0&quot;, 10);
+      tfCount.setEditable(false);
+      cp.add(tfCount);
+ 
+      JButton btnCount = new JButton(&quot;Count&quot;);
+      cp.add(btnCount);
+      btnCount.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            ++count;
+            tfCount.setText(count + &quot;&quot;);
+         }
+      });
+ 
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      setTitle(&quot;Swing Counter&quot;);    <span class="color-comment">// Set this JFrame's title</span>
+      setSize(300, 100);            <span class="color-comment">// Set initial window size</span>
+      setVisible(true);             <span class="color-comment">// Show it</span>
+   }
+ 
+   public static void main(String[] args) {
+      <span class="color-comment">// Run the GUI codes in the Event-Dispatcher thread for thread safety</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            new SwingCounter();  <span class="color-comment">// Let the constructor do the job</span>
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Compile and execute the application. It is important to note that this program is the same as any other Java standalone applications. In fact, any Java applications that can be run as JAR file can be deployed using Java Web Start.</p>
+
+<h5>Create a JAR File</h5>
+<p>Web Start applications are delivered in JAR files.  Hence, we have to jar-up all the classes and resources using the JDK utility <code>jar</code> as follows (or via IDE such as Eclipse/NetBeans):</p>
+<pre class="color-command">
+&gt; jar cvf SwingCounterWS.jar *.class
+</pre>
+
+<p>Take note that the inner class &quot;<code>SwingCounterWS$1.class</code>&quot; and &quot;<code>SwingCounterWS$2.class</code>&quot; are to be included in the JAR file.</p>
+
+<p>Read &quot;<a href="J9d_Jar.html#jarcreate">Creating JAR File</a>&quot; and &quot;<a href="J9d_Jar.html#jardeploy">Using JAR File for Deployment</a>&quot; for more discussion on JAR file.</p>
+
+<h5>Prepare a JNLP Configuration File</h5>
+
+<p>Create a network launching JNLP configuration file &quot;<code>SwingCounterWS.jnlp</code>&quot; as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+<span class="color-comment">&lt;!-- JNLP File for Swing Counter Application --&gt;</span>
+&lt;jnlp spec=&quot;1.0+&quot; codebase=&quot;.&quot; href=&quot;SwingCounterWS.jnlp&quot;&gt;
+   &lt;information&gt;
+      &lt;title&gt;Swing Counter Web Start&lt;/title&gt;
+      &lt;vendor&gt;ME&lt;/vendor&gt;
+      &lt;description&gt;Swing Counter Web Start&lt;/description&gt;
+   &lt;/information&gt;
+   &lt;resources&gt;
+      &lt;j2se version=&quot;1.4+&quot; /&gt;
+      <span class="color-new">&lt;jar href=&quot;SwingCounterWS.jar&quot; /&gt;</span>
+   &lt;/resources&gt;
+   <span class="color-new">&lt;application-desc main-class=&quot;SwingCounterWS&quot; /&gt;</span>
+&lt;/jnlp&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The &quot;<code>SwingCounterWS.jnlp</code>&quot; configuration file, as well as the application JAR file &quot;<code>SwingCounterWS.jar</code>&quot;, must be kept in the web server and accessible via the URL at the given codebase. You can use relative path such as &quot;.&quot; or absolute path such as <code>http://<em>host</em>:<em>port</em>/<em>path</em></code>.</p>
+
+<h5>Test the Web Start App locally</h5>
+
+<p>You can test your Web Start app locally by double-clicking the JNLP file on Windows' Explorer or thru JDK program &quot;<code>javaws</code>&quot;. Try it out.</p>
+
+<h5>Deploy the Web Start App under a Web Server</h5>
+
+<p>To deploy a Web Start app on a web server, we need to configure the server to recognize the Java Web Start MIME type. The MIME type of Web Start JNLP file is &quot;<code>application/x-java-jnlp-file</code>&quot; and the associated file extension is &quot;<code>.jnlp</code>&quot;.</p>
+
+<p><strong>Tomcat 6:</strong>  The MIME type is already defined in the web configuration file &quot;<code>$TOMCAT_HOME/conf/web.xml</code>&quot; as follows:</p>
+
+<pre class="color-syntax">
+&lt;mime-mapping&gt;
+   &lt;extension&gt;<strong>jnlp</strong>&lt;/extension&gt;
+   &lt;mime-type&gt;<strong>application/x-java-jnlp-file</strong>&lt;/mime-type&gt;
+&lt;/mime-mapping&gt;</pre>
+
+<p><strong>Apache Web Server 1.3/2.2:</strong>  Add the following line to the MIME-type configuration file &quot;<code>$APACHE_HOME\conf\mime.types</code>&quot;.</p>
+
+<pre class="color-syntax">
+<strong>application/x-java-jnlp-file   jnlp</strong></pre>
+
+<p>The above configuration directs the web server to insert a response header &quot;<code>Content-type: application/x-java-jnlp-file</code>&quot; if a request to a file with extension &quot;<code>.jnlp</code>&quot; is made.  The web browser, upon receipt of this &quot;<code>Content-type</code>&quot; response header, will pass the JNLP downloaded to the Web Start helper application.</p>
+
+<h5>Test your Web Start App over the Web</h5>
+<img class="image-float-right" src="images/WebStart_SwingCounter.gif" alt="WebStart_SwingCounter.gif" />
+
+<p>You are now ready to run your first Java Web Start Application over the web.  The initial launch of a web start application is via a web browser.  Subsequently, you can re-launch the application via web browser, desktop, start menu or Web Start Application Manager.</p>
+
+<ol>
+<li>Start a web browser and either directly reference the JNLP file via <code>http://<em>host</em>:<em>port</em>/<em>path</em>/SwingCounter.jnlp</code> or place the JNLP file as a hyperlink of an HTML file as follows:
+<pre class="color-example">
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;First Web Start&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Web Start Application&lt;/h1&gt;
+  <strong>&lt;a href=&quot;SwingCounter.jnlp&quot;&gt;Launch &quot;Swing Counter Application&quot;&lt;/a&gt;</strong>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+</li>
+
+<li>Subsequently, you can re-launch the application from the Web Start Application Manager, web browser, or command shell as follows:
+<pre class="color-command">
+&gt; javaws http://<em>host</em>:<em>port</em>/<em>path</em>/SwingCounter.jnlp
+</pre>
+
+<p>where &quot;<code>javaws</code>&quot; is the Java Web Start program in &quot;<code>$JAVA_HOME\bin\javaws.exe</code>&quot;.</p>
+</li>
+</ol>
+
+
+<p>For debugging purpose, you could turn on the Web Start Java Console by checking &quot;File&quot; &rArr; &quot;Preferences&quot; &rArr; &quot;Advanced&quot; &rArr; &quot;Show Java Console and Log Output&quot;.</p>
+
+
+<p>Try:</p>
+
+<ol>
+
+<li>Re-launch the  application again.</li>
+<li>Start the Web Start Application Manager and run the  application.</li>
+<li>Delete the application from the local cache using the Application Manager. Re-launch the  application.</li>
+<li>Stop the Web Server and run the application.</li>
+<li>Modify the JNLP file and include <code>&lt;offline-allowed /&gt;</code> within <code>&lt;information&gt;</code> as follows:
+<pre class="color-example">&lt;information&gt;
+  ......
+  <strong>&lt;offline-allowed /&gt;</strong>
+&lt;/information&gt;
+</pre>
+
+<p>Try running the application with the Web Server running, as well as stopped.</p>
+</li>
+
+<li>Request for unrestricted access by including the following <code>&lt;security&gt;</code> element under the <code>&lt;jnlp&gt;</code> root element:
+
+<pre class="color-example">
+&lt;jnlp&gt;
+  ......
+  &lt;security&gt;
+    <strong>&lt;all-permissions /&gt;</strong>
+  &lt;/security&gt;
+&lt;/jnlp&gt;
+</pre>
+
+Try running the application.  Observe and explain the result.</li>
+
+<li>All Java applications that can be executed via JAR files can be deployed using Web Start. Now, try deploying others GUI applications that you have written, following the above steps.</li>
+</ol>
+
+
+<p>To reduce the file size of the class file (so as to reduce the download time), you can choose not to generate debug information during the compilation process:</p>
+<pre class="color-command">
+&gt; javac <strong>–g:none</strong> <em>ClassName</em>.java
+</pre>
+
+<h4>JAR Files &amp; Web Start App</h4>
+
+<h5>Signing JAR files with a Test Certificate</h5>
+<p>The Java Web Start application, by default, run inside a &quot;sandbox&quot; with restrictive access to local disks and network.  To request for unrestricted access, all the JAR files must be signed.  The client will then be prompted to accept the provider's certificate before the application can be started.</p>
+<p>Read &quot;<a href="J9d_Jar.html#jarsign">Signing and Verifying a JAR file</a>&quot; on how to sign a JAR file with a test certificate.</p>
+
+<h5>Accessing Resources from JAR files</h5>
+
+<p>All application resources (such as images, files, native libraries, <code>ResourceBundle</code> and properties-files) must be delivered in JAR files and specified in the <code>&lt;resources&gt;</code> element of the JNLP file.  Since these resource are part of the JAR file, the resources can only be loaded into the application using the <code>ClassLoader.getResource()</code> (which returns a <code>java.net.URL</code>) or <code>ClassLoader.getResourceAsStream()</code> (which returns an <code>java.io.InputStream</code>). Reading resources from the JAR file is within the <em>sandbox</em>.  The JAR files need not be digitally signed.</p>
+<p>Read &quot;<a href="J9d_Jar.html#jarread">Reading Resources from JAR File</a>&quot;.</p>
+
+<h3 id="javaria">Java's Rich Internet Applications (RIA) - Applets &amp; Web Start Apps (JDK 1.6u10)</h3>
+
+<p><strong>Reference:</strong></p>
+<ol>
+<li>Java Tutorial's &quot;Deployment&quot; Trail @ <a href="http://docs.oracle.com/javase/tutorial/deployment/index.html">http://docs.oracle.com/javase/tutorial/deployment/index.html</a>, which Applet and Web Start Application - collectively known as Java's Rich Internet Applications (RIAs).</li>
+<li>Java Tutorial's &quot;Deployment In-Depth&quot; @ <a href="http://docs.oracle.com/javase/tutorial/deployment/deploymentInDepth/index.html">http://docs.oracle.com/javase/tutorial/deployment/deploymentInDepth/index.html</a>.</li>
+</ol>
+
+
+<p>Both Java applets and Java Web Start applications are  referred to as Java Rich Internet Applications (RIAs) - applications that take advantage of Internet and launched over the web. RIAs are easier to distribute than standard applications, because they're launched from the web browser. They're also more secure - they can only access the user's system in highly controlled ways (i.e., sandbox), unless and until the developer signs the code and the user accepts the security certificate.</p>
+
+<p>Applets run inside the browser; while Web Start apps run outside the browser. Starting from JDK 1.6u10,  these two deployment options have been substantially unified, so  that a properly structured program can be easily deployed either  inside the browser (as Applet) or outside the browser (as Web Start App).</p>
+
+<h4>Component-Based Architecture for RIAs</h4>
+
+<p>A properly-designed RIA application shall follow the <em>component-based architecture</em> as follow:</p>
+
+<ol>
+<li>Create a class called <code>MyTopJPanel</code> that is a subclass of <code>javax.swing.JPanel</code>. Lay out your GUI components in the constructor of the <code>MyTopJPanel</code> class.</li>
+
+<li>To develop an applet, create a class called <code>MyApplet</code> that is a subclass of top-level container <code>javax.swing.JApplet</code>. In the <code>init()</code> method of <code>MyApplet</code>, instantiate <code>MyTopJPanel</code> and set it as the <code>MyApplet</code>'s content-pane.</li>
+<li>To develop an application, create a class called <code>MyApp</code> that is a subclass of top-level container <code>javax.swing.JFrame</code>. In the constructor of <code>MyApp</code>, instantiate <code>MyTopPanel</code> and set is as the <code>MyApp</code>'s content-pane. Alternatively, you can include a <code>main()</code> method in the <code>MyTopJPanel</code> class, which allocates a <code>JFrame</code>. This <code>main()</code> method would be used to run the code as an application, but ignored by applet.</li>
+</ol>
+
+<p>This is called <em>component-based architecture</em>, as the main panel is written as a <em>component</em> (subclass of <code>javax.swing.JComponent</code> or <code>java.awt.Component</code>, such as <code>javax.swing.JPanel</code> or <code>java.awt.Panel</code>). The top-level <em>container</em> (such as <code>javax.swing.JFrame</code>, <code>javax.swing.JApplet</code>, <code>java.awt.Frame</code>, or <code>java.applet.Applet</code>) are separated from the main panel in the launching class.</p>
+
+<h5>Example</h5>
+
+<p>Let's rewrite the earlier counter example following component-based architecture.</p>
+
+<p><span class="line-heading"><span class="font-code">CounterPanel.java</span></span>: The top-level component (<code>JPanel</code>) for the graphics application.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+package mypackage;
+ 
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+ 
+<span class="color-comment">/** Top-panel of a Simple Counter */</span>
+public class CounterPanel extends JPanel {
+   private JTextField tfCount; <span class="color-comment">// for displaying the counter value</span>
+   private int count = 0;      <span class="color-comment">// counter's value</span>
+ 
+   <span class="color-comment">/** Constructor to setup the GUI components */</span>
+   public CounterPanel() {
+      setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+ 
+      add(new JLabel(&quot;Counter: &quot;));
+      tfCount = new JTextField(&quot;0&quot;, 10);
+      tfCount.setEditable(false);
+      add(tfCount);
+      JButton btnCount = new JButton(&quot;Count&quot;);
+      add(btnCount);
+ 
+      btnCount.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            <span class="color-comment">// Increase the count and show it in the TextField</span>
+            ++count;
+            tfCount.setText(count + &quot;&quot;);
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p><span class="line-heading font-code">CounterApplet.java</span>: the main program for launching applet, which extends <code>JApplet</code> - the top-level container for applet.</p>
+
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+package mypackage;
+ 
+import javax.swing.*;
+ 
+public class CounterApplet extends JApplet {
+ 
+   <span class="color-comment">/** init() runs when the applet is loaded */</span>
+   @Override
+   public void init () {
+      try {
+         <span class="color-comment">// Run GUI codes in the Event-Dispatcher thread for thread safety</span>
+         <span class="color-comment">// Use invokeAndWait() so that init() does not exit before GUI constructed</span>
+         SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+               CounterApplet.this.setContentPane(new CounterPanel());
+            }
+         });
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+}
+ </pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p><span class="line-heading font-code">CounterMain.java</span>: the main program for launching application, subclass of JFrame - the top-level container for GUI application.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre></td>
+<td>
+<pre>
+package mypackage;
+ 
+import javax.swing.*;
+ 
+public class CounterMain extends JFrame {
+ 
+   <span class="color-comment">/** Constructor to set up the GUI components */</span>
+   public CounterMain() {
+      setContentPane(new CounterPanel());
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      setTitle(&quot;Counter&quot;);
+      setSize(300, 100);
+      setVisible(true);  <span class="color-comment">// show it</span>
+   }
+ 
+   <span class="color-comment">/** The entry main() method */</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Run GUI codes in Event-Dispatching thread for thread-safety</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            new CounterMain();  <span class="color-comment">// Let the constructor do the job</span>
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Try running the application.</p>
+<p>Alternatively, you could include the following <code>main()</code> method inside the <code>CounterPanel</code> for launching the application, as follows:</p>
+
+<pre class="color-example">
+   <span class="color-comment">/** The entry main() method */</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Run GUI codes in Event-Dispatching thread for thread-safety</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            JFrame frame = new JFrame();
+            frame.setContentPane(new CounterPanelwithMain());
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setTitle(&quot;Counter&quot;);
+            frame.setSize(300, 100);
+            frame.setVisible(true);
+         }
+      });
+   }</pre>
+
+<p>Try running the application.</p>
+
+<h5>JAR</h5>
+
+<p>For deployment, you need to jar-up all the classes and the relevant resources (such as image, properties files, libraries) into a single JAR file. You can use the command-line <code>jar</code> tool, or more conveniently, via IDE such as Eclipse or NetBeans. Read &quot;<a href="J9d_Jar.html#jarcreate">Creating JAR File</a>&quot; on how to create JAR file.</p>
+
+<p>For example,</p>
+
+<pre class="color-command">
+&gt; <strong>jar cvf counter.jar mypackage\*.class</strong>
+added manifest
+adding: mypackage/CounterApplet$1.class(in = 581) (out= 373)(deflated 35%)
+adding: mypackage/CounterApplet.class(in = 577) (out= 378)(deflated 34%)
+adding: mypackage/CounterMain$1.class(in = 422) (out= 297)(deflated 29%)
+adding: mypackage/CounterMain.class(in = 749) (out= 494)(deflated 34%)
+adding: mypackage/CounterPanel$1.class(in = 981) (out= 534)(deflated 45%)
+adding: mypackage/CounterPanel.class(in = 1231) (out= 674)(deflated 45%)</pre>
+
+
+<h4>Deploy as Applet</h4>
+
+<p>Applets (run inside web browser via the web browser's Java Plug-in) can be deployed either using:</p>
+
+<ol>
+<li>the traditional HTML &lt;applet&gt; tag, which is under severe security restrictions (i.e., sandbox); or</li>
+<li>Java Network Launch Protocol (JNLP), which have access to powerful JNLP APIs and extensions (since JDK 6u10).</li>
+</ol>
+
+<h5>Using HTML <span class="font-code">&lt;applet&gt;</span> Tag</h5>
+
+<p>Provide the following HTML file (say &quot;<code>CounterApplet.html</code>&quot;) with an <code>&lt;applet&gt;</code> tag, where attribute &quot;<code>code</code>&quot; specifies the applet main class (with the <code>init()</code> method) (the &quot;<code>.class</code>&quot; seems to be optional nowadays); &quot;<code>archive</code>&quot; specifies the jar file. You can also use optional attribute &quot;<code>codebase</code>&quot; (default to current directory) to specify the <code>codebase</code> directory.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre>
+</td>
+<td>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Counter Applet&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h3&gt;A Simple Counter Applet:&lt;/h3&gt;
+  <span class="color-new">&lt;applet code=&quot;mypackage.CounterApplet.class&quot;
+       width=&quot;300&quot; height=&quot;100&quot;
+       archive=&quot;counter.jar&quot;&gt;
+  &lt;/applet&gt;</span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h5>Using JNLP via Next-Generation Java Plug-in (JDK 1.6u10)</h5>
+
+<p> &quot;Java Plug-in&quot; is a web browser plug-in that provides a <acronym title="Java Runtime Evnironment">JRE</acronym> for executing Java applets inside the web browser. Since JDK 1.6u10, the so-called &quot;Next-Generation Java Plug-in&quot; provides support to launch applets directly from JNLP files, unifying deployment of Java application inside the browser (as Applets) and outside the browser (as Java Web Start Apps).</p>
+
+<p>To deploy applet via JNLP, first create the following JNLP file (called &quot;<code>CounterJNLPApplet.jnlp</code>&quot;):</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;jnlp href=&quot;CounterJNLPApplet.jnlp&quot;&gt;
+   &lt;information&gt;
+      &lt;title&gt;Counter Applet&lt;/title&gt;
+      &lt;vendor&gt;Someone&lt;/vendor&gt;
+   &lt;/information&gt;
+   &lt;resources&gt;
+      &lt;j2se version=&quot;1.6+&quot; /&gt;
+      <span class="color-new">&lt;jar href=&quot;Counter.jar&quot; main=&quot;true&quot; /&gt;</span>
+   &lt;/resources&gt;
+   <span class="color-new">&lt;applet-desc
+      name=&quot;Counter Applet&quot;
+      width=&quot;350&quot;
+      height=&quot;150&quot;
+      main-class=&quot;mypackage.CounterApplet&quot;&gt;
+   &lt;/applet-desc&gt;</span>
+&lt;/jnlp&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Next, create a HTML file with a simplified <code>&lt;applet&gt;</code> tag (called &quot;<code>CounterJNLPApplet.html</code>&quot;, which reference the JNLP file. Take note attribute &quot;<code>code</code>&quot; and &quot;<code>archive</code>&quot; are omitted, which is retrieved from the referenced JNLP file; and the &quot;<code>width</code>&quot; and &quot;<code>height</code>&quot; in the <code>&lt;applet&gt;</code> tag is used.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre>
+</td>
+<td>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Counter JNLP Applet&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h3&gt;A Simple Counter Applet:&lt;/h3&gt;
+  &lt;applet width=&quot;300&quot; height=&quot;100&quot;&gt;
+     <span class="color-new">&lt;param name=&quot;jnlp_href&quot; value=&quot;CounterJNLPApplet.jnlp&quot;&gt;</span>
+  &lt;/applet&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Backward Compatibility</h5>
+<p>JNLP Applet is only supported in the &quot;Next-generation Java Plug-in&quot; available since JDK 1.6u10. For backward compatibility, you could include the &quot;<code>code</code>&quot; and &quot;<code>archive</code>&quot; attributes in the <code>&lt;applet&gt;</code> tag. The next-generation Java Plug-in will deploy via JNLP, if available; while the &quot;older&quot; Java Plug-in will use them to deploy the applet.  For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Counter JNLP Applet&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h3&gt;A Simple Counter Applet&lt;/h3&gt;
+  &lt;p&gt;Use Next-generation Java Plug-in (JDK 1.6u10 and above) but fall back to old Java Plug-in for older releases.&lt;/p&gt;
+  &lt;applet code=&quot;mypackage.CounterApplet&quot;
+       width=&quot;300&quot; height=&quot;100&quot;&gt;
+       archive=&quot;counter.jar&quot;&gt;
+     &lt;param name=&quot;jnlp_href&quot; value=&quot;CounterJNLPApplet.jnlp&quot;&gt;
+  &lt;/applet&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Deploy as Web Start App</h4>
+
+<p>Web Start application does not seem to be popular?! I included here for completeness.</p>
+
+<p>We can deploy any Java standalone application as Web Start application, which can be launched over the Internet. Let's deploy the <code>CounterMain</code> (not the applet) as Web Start app. First, you need to jar-up all the classes and relevant resources. Next, create the following JNLP configuration file (called &quot;<code>CounterMain.jnlp</code>&quot;):</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;jnlp spec=&quot;1.0+&quot; href=&quot;CounterMain.jnlp&quot;&gt;
+   &lt;information&gt;
+      &lt;title&gt;Counter Web Start App&lt;/title&gt;
+      &lt;vendor&gt;Someone&lt;/vendor&gt;
+   &lt;/information&gt;
+   &lt;resources&gt;
+      &lt;j2se version=&quot;1.4+&quot; /&gt;
+      <span class="color-new">&lt;jar href=&quot;Counter.jar&quot; main=&quot;true&quot; /&gt;</span>
+   &lt;/resources&gt;
+   <span class="color-new">&lt;application-desc
+      name=&quot;Counter Web Start&quot;
+      main-class=&quot;mypackage.CounterMain&quot;&gt;
+   &lt;/application-desc&gt;</span>
+&lt;/jnlp&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>You can try testing the Web Start app locally by double-clicking the JNLP file.</p>
+
+<h4>Deploy as a Standalone Application (Executable JAR File)</h4>
+<p>To deploy as an standalone application, which you need to distribute manually (instead of RIA which can be distributed and launched over the Internet). you need to  create a JAR file with a manifest that specifies the <code>Main-Class</code>. Read &quot;<a href="J9d_Jar.html#jarcreate">Creating JAR File</a>&quot; and &quot;<a href="J9d_Jar.html#jardeploy">Using JAR File for Deployment</a>&quot; for more discussion on JAR file.</p>
+
+<p>The application can be launched via:</p>
+<pre class="color-command">
+&gt; java -jar counter.jar</pre>
+
+
+<h4>Deployment Toolkit Script and <span class="font-code">pack200</span> Tool (JDK 1.6u10)</h4>
+
+<p>The Deployment Toolkit Script is a set of JavaScripts that can be used to deploy rich Internet applications (RIAs) (Applets and Web Start Apps) consistently across various browser and operating systems. It can be accessed via <code>http://www.java.com/js/deployJava.js</code> or <code>https://www.java.com/js/deployJava.js</code>. These scripts are handy for production deployment.</p>
+<p>Read Java Tutorial's &quot;Deployment In-Depth&quot; @ <a href="http://docs.oracle.com/javase/tutorial/deployment/deploymentInDepth/index.html">http://docs.oracle.com/javase/tutorial/deployment/deploymentInDepth/index.html</a> on how to use the scripts for deploying applets and web start apps.</p>
+
+<p>JDK 1.6u10 also provides a command-line tool called <code>pack200</code> (and <code>unpack200</code>), which can be used to further compress the JAR file, to reduced the downloading time. Read &quot;<code>pack200</code> - JAR Packing tool&quot; @ <a href="http://docs.oracle.com/javase/7/docs/technotes/tools/share/pack200.html">http://docs.oracle.com/javase/7/docs/technotes/tools/share/pack200.html</a>.</p>
+
+<h4>JNLP Extensions for 3rd-Party APIs</h4>
+<p>JNLP supports an extension mechanism, which can be used to deploy <em>complex</em> applications with 3rd-party APIs.</p>
+<p>For example, the following JNLP can be used to deploy JOGL applets/applications, where the relevant JOGL JAR files and native libraries would be provided by the 3rd-party. Check out the extension JNLP file.</p>
+
+<pre class="color-example">
+&lt;jnlp&gt;
+   ......
+   &lt;resources&gt;
+      &lt;j2se version=&quot;1.4+&quot; /&gt;
+      &lt;jar href=&quot;myjoglapp.jar&quot; main=&quot;true&quot; /&gt;
+      <span class="color-new">&lt;extension name=&quot;jogl-all-awt&quot; href=&quot;http://jogamp.org/deployment/v2.0-rc8/jogl-all-awt.jnlp&quot; /&gt;</span>
+   &lt;/resources&gt;
+   ......
+&lt;/jnlp&gt;</pre>
+
+<p>There is also an older technique called <code>JNLPAppletLauncher</code>.</p>
+
+<a class="references" href="../howto/References.html#java">LINK TO JAVA REFERENCES &amp; RESOURCES</a>
+
+<p class="references">MORE REFERENCES &amp; RESOURCES</p>
+<ol>
+  <li>Java Tutorial's &quot;Deployment&quot; Trail @ <a href="http://docs.oracle.com/javase/tutorial/deployment/index.html">http://docs.oracle.com/javase/tutorial/deployment/index.html</a>, which covers the Applet and Web Start Application, collectively called Rich Internet Applications (RIAs), and &quot;Deployment in-depth&quot;. MUST READ!</li>
+  <li>JDK 7 Documentation, &quot;Java Rich Internet Applications Development and Deployment&quot; @ <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jweb/index.html">http://docs.oracle.com/javase/7/docs/technotes/guides/jweb/index.html</a>.</li>
+  <li>JDK's Applet Demo (under the &quot;<code>demo\applets</code>&quot; folder).</li>
+  <li>Java Web Start Home Page.</li>
+  <li>Java Network Launching Protocol (JNLP)  Specification.</li>
+  <li>Apache Web Server @ <a href="http://www.apache.org/">http://www.apache.org</a> and Tomcat Web Server @ <a href="http://tomcat.apache.org/">http://tomcat.apache.org</a>.</li>
+  <li>Public Key Infrastructure (PKI) and Digital  Certificates.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7.3<br />
+Last modified: May, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

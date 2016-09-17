@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HTML5 and CSS3 Tutorial: Advanced Features</title>
+<link rel="stylesheet" href="../css/programming_notes_v1.css">
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+<script src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+
+<h1>HTML5 &amp; CSS3</h1>
+<h2>Advanced Features</h2>
+
+</div>
+
+<!-- begin main content div -->
+<div id="content-main">
+
+<p>The basics features of HTML5 and CSS3 has been covered in &quot;<a href="HTML_CSS_Basics.html">HTML5/CSS3 Basics</a>&quot;. This articles covers the advanced features of HTML5/CSS3.</p> 
+
+<h3>Canvas API</h3>
+
+<p>References:</p>
+<ol>
+<li>MDC's Canvas Tutorial @ <a href="https://developer.mozilla.org/en/Canvas_tutorial">https://developer.mozilla.org/en/Canvas_tutorial</a>.</li>
+<li>WHTAWG's Canvas API specification @ <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html">http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html</a>.</li>
+</ol>
+
+<p>Before HTML5, drawing on the browser screen usually involves absolutely position and stretching an image using CSS or using plug-ins like flash. HTML5 provides a &quot;Canvas API&quot; for drawing primitives such as line, arc, rectangle, as well as supporting transformation, just like any 2D Graphics API. Canvas is supported in most of the modern browsers, such as Firefox, Chrome, and latest IE.</p>
+
+<p>To use canvas API, first create a canvas element via the new <code>&lt;canvas&gt;&lt;/canvas&gt;</code> tag, e.g.,</p>
+
+<table class="table-program">
+<col class="col-line-number">
+<col class="col-program">
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- H5CanvasTest.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot; &gt;
+  &lt;title&gt;Test HTML5 Canvas API&lt;/title&gt;
+  &lt;style&gt;
+    <span class="color-new">#canvas {
+      border: 1px solid red;
+    }</span>
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;Testing HTML5 Canvas&lt;/h2&gt;
+  <span class="color-new">&lt;canvas id=&quot;canvas&quot; height=&quot;200&quot; width=&quot;300&quot;&gt;Canvas is not supported&lt;/canvas&gt;</span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How it Works?</h5>
+
+<ol>
+<li>[TODO]</li>
+<li>The default width and height is 300 by 150 pixels.</li>
+</ol>
+
+<h4>Let's Draw Some Simple Shapes</h4>
+
+<p>The steps of using canvas are as follows:</p>
+<ol>
+<li>Create a canvas using the HTML5's new <code>&lt;canvas id=&quot;canvas&quot;&gt;&lt;/canvas&gt;</code> tag with a unique <code>id</code>.</li>
+
+<li>Write a JavaScript:
+<ol>
+<li>Use <code>canvas = document.getElementById(&quot;canvas&quot;)</code> to select the canvas element.</li>
+<li>Use <code>context = canvas.getContext(&quot;2d&quot;)</code> to get the 2D drawing context. Currently, only 2D context is supported.</li>
+<li>You can use the <code>context</code> to draw shapes and perform transformation.</li>
+</ol></li>
+</ol>
+
+<h5>Example: Draw/Fill a Rectangle, a Triangle and a Circle</h5>
+
+<img class="image-left" src="images/HTML5_DrawShapes.png" alt="HTML Canvas Example">
+
+<table class="table-program">
+<col class="col-line-number">
+<col class="col-program">
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54</pre>
+</td>
+<td>
+<pre class="color-listing">
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- H5CanvasDrawPrimitives.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot; &gt;
+&lt;title&gt;HTML5 Drawing Primitive Shapes&lt;/title&gt;
+&lt;style&gt;
+#canvas {
+  border: 1px solid red;
+}
+&lt;/style&gt;
+ 
+&lt;script&gt;
+window.addEventListener(&quot;load&quot;, draw, true);
+ 
+function draw() {
+  <span class="color-comment">// Retrieve the canvas element and set its CSS style</span>
+  var canvas = document.getElementById(&quot;canvas&quot;);
+  canvas.width  = 500;
+  canvas.height = 300;
+  <span class="color-comment">// Get the 2D drawing context for the canvas element</span>
+  var context = canvas.getContext(&quot;2d&quot;);
+ 
+  <span class="color-comment">// Draw a Rectangle using the rect primitive</span>
+  context.fillStyle = &quot;rgb(0, 255, 0)&quot;;
+  context.fillRect(30, 80, 100, 120);  <span class="color-comment">// x, y, width, height</span>
+  context.strokeStyle = &quot;#0000FF&quot;;
+  context.strokeRect(30, 80, 100, 120);
+ 
+  <span class="color-comment">// Draw a triangle using path</span>
+  context.beginPath();
+  context.moveTo(150, 50);
+  context.lineTo(200, 180);
+  context.lineTo(100, 180);
+  context.closePath();
+  context.fillStyle = &quot;rgba(0, 0, 255, 0.5)&quot;;  <span class="color-comment">// transparent</span>
+  context.fill();
+  context.stroke();
+ 
+  <span class="color-comment">// Fill a circle using path</span>
+  context.beginPath();
+  <span class="color-comment">// centerX, centerY, radius, beginAngle, engAngle, antiClockwise</span>
+  context.arc(220, 180, 50, 0, Math.PI*2, true);
+  context.fillStyle=&quot;red&quot;;
+  context.fill();  <span class="color-comment">// closePath() implicitly</span>
+}
+&lt;/script&gt;
+&lt;/head&gt;
+ 
+&lt;body&gt;
+  &lt;h2&gt;HTML5 Drawing Primitive Shapes&lt;/h2&gt;
+  &lt;canvas id=&quot;canvas&quot;&gt;Canvas is not supported&lt;/canvas&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</table>
+
+<h5>How it Works?</h5>
+
+<p>[TODO]</p>
+
+<p>To check if canvas is supported, you could use the following script:</p>
+<pre class="color-example">
+var canvas = document.getElementById(&quot;canvasID&quot;);
+if (canvas.getContext){
+  var context = canvas.getContext(&quot;2d&quot;);
+  <span class="color-comment">// drawing codes here</span>
+} else {
+  <span class="color-comment">// canvas-unsupported codes here</span>
+}</pre>
+
+<h4>Draw/Fill Primitive Shapes</h4>
+
+<ul>
+  <li>Coordinate System: The origin (0, 0) is at the top-left corner, with x-axis pointing to the right and y-axis pointing downward. This is consistent with most 2D graphics system.</li>
+  <li>Color and Style:
+    <pre class="color-syntax">attribute any strokeStyle; <span class="color-comment">// default black</span>
+attribute any fillStyle;   <span class="color-comment">// default black</span></pre>
+Color can be specified via &quot;<code>#rrggbb</code>&quot; (from &quot;<code>#000000</code>&quot; to &quot;<code>#FFFFFF</code>&quot;), &quot;<code>rgb(r, g, b)</code>&quot;, &quot;<code>rgba(r, g, b, a)</code>&quot; (where <code>0&le;r,g,b&le;255</code> and <code>0&le;a&le;1</code> specifies the transparency), or CSS color literals (such as &quot;<code>red</code>&quot;, &quot;<code>green</code>&quot;, &quot;<code>blue</code>&quot;).</li>
+
+<li>Rectangle: The canvas API supports only one primitive shape - rectangle.  All the other shapes are formed using path.
+  <pre class="color-syntax">void clearRect(double topLeftX, double topLeftY, double width, double height);
+  <span class="color-comment">// Clear the rectangular area, i.e., set to transparent.</span>
+void fillRect(double topLeftX, double topLeftY, double width, double height);
+  <span class="color-comment">// Fill the rectangular area with fillStyle.</span>
+void strokeRect(double topLeftX, double topLeftY, double width, double height);
+  <span class="color-comment">// Draw the outline of the rectangle, with strokeStyle.</span></pre>
+</li>
+
+<li>Path: These steps are need to render using path:
+
+<ol>
+  <li>Call the <code>beginPath()</code> to start a path, which may contain many sub-paths (such as line, arc). The <code>beginPath()</code> resets (clears) the sub-path list.</li>
+  <li>Define a path using <code>rect()</code>, <code>arc()</code>, or <code>xxxTo()</code>.</li>
+  <li>Optionally call the <code>closePath()</code> to form a close loop, i.e., join the last point to the first point with a straight line.</li>
+  <li>Invoke <code>fill()</code> and/or <code>stroke()</code> to fill the path or render the outline. If <code>fill()</code> is used, the open shape will be closed and there is no need to <code>closePath()</code>.</li>
+  </ol>
+
+  <pre class="color-syntax">void beginPath();
+  <span class="color-comment">// Start a path, clear the sub-path list</span>
+void closePath();
+  <span class="color-comment">// Join the last point and the first point with a straight line.</span>
+ 
+void moveTo(double x, double y);
+  <span class="color-comment">// Position without joining with previous point.</span>
+
+void lineTo(double x, double y);
+void arcTo(double x1, double y1, double x2, double y2, double radius); 
+void quadraticCurveTo(double cpx, double cpy, double x, double y);
+void bezierCurveTo(double cp1x, double cp1y, double cp2x, double cp2y, double x, double y);
+void rect(double x, double y, double w, double h);
+void arc(double x, double y, double radius, double startAngle, double endAngle, optional boolean anticlockwise);
+  <span class="color-comment">// various Path: line, arc, curves, shape</span>
+ 
+void fill();    <span class="color-comment">// Fill the shape enclosed by the path</span>
+void stroke();  <span class="color-comment">// Draw the outline</span>
+</pre>
+</li>
+</ul>
+
+<h4>Transformation</h4>
+
+<p>The commonly-used JavaScript functions for transformation are:</p>
+
+<pre class="color-syntax">void save();     <span class="color-comment">// push state on state stack</span>
+void restore();  <span class="color-comment">// pop state stack and restore state</span>
+ 
+void translate(double x, double y);
+void rotate(double angle);
+void scale(double x, double y);
+void transform(double m11, double m12, double m21, double m22, double dx, double dy);
+void setTransform(double m11, double m12, double m21, double m22, double dx, double dy);</pre>
+
+<p>The default transform is the identity matrix.</p>
+
+<h5>Example</h5>
+
+<img class="image-left" src="images/HTML5_Transform.png" alt="HTML Canvas Example">
+
+<table class="table-program">
+<col class="col-line-number">
+<col class="col-program">
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56</pre>
+</td>
+<td>
+<pre class="color-listing">
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- H5CanvasTransform.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot; &gt;
+&lt;title&gt;HTML5 Transformation&lt;/title&gt;
+&lt;style&gt;
+#canvas {
+  border: 1px solid red;
+}
+&lt;/style&gt;
+ 
+&lt;script&gt;
+window.addEventListener(&quot;load&quot;, draw, true);
+ 
+function draw() {
+  <span class="color-comment">// Retrieve the canvas element and set its CSS style</span>
+  var canvas = document.getElementById(&quot;canvas&quot;);
+  canvas.width  = 300;
+  canvas.height = 200;
+  <span class="color-comment">// Get the 2D drawing context for the canvas element</span>
+  var context = canvas.getContext(&quot;2d&quot;);
+ 
+  context.save();  <span class="color-comment">// save the state</span>
+  context.translate(100, 50);
+  fillTriangle(context);  <span class="color-comment">// default styles;</span>
+ 
+  context.translate(120, 25);
+  fillTriangle(context);
+  var i;
+  for (i = 0; i &lt; 8; i++) {
+    context.rotate(Math.PI/6);
+    context.fillStyle = &quot;rgba(0, &quot; + (i*25) + &quot;, 0, 0.5)&quot;;
+    fillTriangle(context);
+  }
+ 
+  context.restore();  <span class="color-comment">// restore the saved state</span>
+  context.scale(1.5, 1.5);
+  fillTriangle(context);
+}
+ 
+function fillTriangle(context) {
+  context.beginPath();
+  context.moveTo(0, 0);
+  context.lineTo(50, 0);
+  context.lineTo(25, 50);
+  context.fill();
+}
+&lt;/script&gt;
+&lt;/head&gt;
+ 
+&lt;body&gt;
+  &lt;h2&gt;HTML5 Transformation&lt;/h2&gt;
+  &lt;canvas id=&quot;canvas&quot;&gt;Canvas is not supported&lt;/canvas&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</table>
+
+<h5>How It Works?</h5>
+
+<ol>
+<li>We usually invoke <code>save()</code> to push the state of the canvas onto the stack. The state includes all the transforms applied so far, the styles and the clipping path. We can restore the state via <code>restore()</code>, which pops the saved state from the stack.</li>
+
+<li><code>Translate()</code>, <code>rotate()</code> and <code>scale()</code> are referenced to the current origin, after the latest transform. Rotation is anti-clockwise measured in radian.</li>
+
+<li>The function <code>transform(m11, m12, m21, m22, dx, dy)</code> multiplies the current transform by the given transformation matrix:
+  <pre class="color-listing">
+m11 m12  dx
+m21 m22  dy
+  0   0   1</pre>
+
+where <code>(m11, m12, m21, m22)</code> represents the rotation and <code>(dx, dy)</code> represents translation.<br>
+The <code>setTransform(m11, m12, m21, m22, dx, dy)</code> set the transform to the given matrix, i.e., it resets the current transform to identity and then apply the <code>transform()</code> function.</li>
+
+</ol>
+
+<h4>Using Images</h4>
+
+<p>To draw an image on the canvas: Find a reference to an image object or other canvas object as a source, and invoke <code>drawImage()</code> function. </p>
+<p>You can construct an image reference and draw the image onto the canvas as follows:</p>
+
+<pre class="color-example">
+var myImg = new Image();      <span class="color-comment">// Create a new &lt;img&gt; element</span>
+myImg.src = &quot;imageFilename&quot;;  <span class="color-comment">// Set source path</span>
+myImg.onload = function() {   <span class="color-comment">// Wait till the image is loaded</span>
+  <span class="color-comment">// Do drawImage here</span>
+  drawImage(myImg, 0, 0);
+  ......
+};</pre>
+
+<p>You can also get an image reference via <code>document.images</code> property, or functions <code>document.getElementsByTagName(&quot;img&quot;)</code>, <code>document.getElementById(&quot;imageID&quot;)</code>.</p>
+
+<h5>Example:</h5>
+
+<p>[TODO]</p>
+
+<pre class="color-syntax">void drawImage(HTMLImageElement image, double x, double y);
+  <span class="color-comment">// Draw the image with top-left corner at x and y.</span>
+void drawImage(HTMLImageElement image, double x, double y, double width, double height);
+  <span class="color-comment">// Draw and scale the image to the specified width and height.</span>
+void drawImage(HTMLImageElement image, double srcX, double srcY, double srcWidth, double srcHeight, 
+               double destX, double destY, double destWidth, double destHeight);
+  <span class="color-comment">// Slice part of the source image and draw to the destination.</span>
+ 
+void drawImage(HTMLCanvasElement image, double dx, double dy);
+void drawImage(HTMLCanvasElement image, double dx, double dy, double dw, double dh);
+void drawImage(HTMLCanvasElement image, double double srcX, double srcY, double srcWidth, double srcHeight, 
+               double destX, double destY, double destWidth, double destHeight);
+ 
+void drawImage(HTMLVideoElement image, double dx, double dy);
+void drawImage(HTMLVideoElement image, double dx, double dy, double dw, double dh);
+void drawImage(HTMLVideoElement image, double srcX, double srcY, double srcWidth, double srcHeight, 
+               double destX, double destY, double destWidth, double destHeight);</pre>
+
+<h4>Styles</h4>
+
+<pre class="color-syntax"><span class="color-comment">// line caps/joins</span>
+attribute double lineWidth;   <span class="color-comment">// (default 1)</span>
+attribute DOMString lineCap;  <span class="color-comment">// &quot;butt&quot;, &quot;round&quot;, &quot;square&quot; (default &quot;butt&quot;)</span>
+attribute DOMString lineJoin; <span class="color-comment">// &quot;round&quot;, &quot;bevel&quot;, &quot;miter&quot; (default &quot;miter&quot;)</span>
+attribute double miterLimit;  <span class="color-comment">// (default 10)</span></pre>
+
+<h4>Animation</h4>
+<p>Read &quot;HTML5 Bouncing Ball&quot;.</p>
+
+<p>The steps are:</p>
+<ol>
+<li>Clear the canvas: via <code>fillRect()</code>.</li>
+<li>Save the canvas state.</li>
+<li>Draw the shape.</li>
+<li>Restore the canvas state.</li>
+</ol>
+
+<p>You can use the following functions to control the timing:</p>
+<ol>
+<li><code>setInterval()</code>:</li>
+<li><code>setTimeout()</code>: run once after the set timing expires.</li>
+</ol>
+
+
+<h4>Canvas API DOM Interface</h4>
+
+<pre class="color-syntax">
+interface <strong>HTMLCanvasElement</strong> : HTMLElement {
+  attribute unsigned long width;
+  attribute unsigned long height;
+
+  DOMString toDataURL(optional DOMString type, any... args);
+  void toBlob(FileCallback? callback, optional DOMString type, any... args);
+
+  object? getContext(DOMString contextId, any... args);
+};
+
+interface <strong>CanvasRenderingContext2D</strong> {
+  <span class="color-comment">// back-reference to the canvas</span>
+  readonly attribute HTMLCanvasElement canvas;
+
+  <span class="color-comment">// state</span>
+  void save(); <span class="color-comment">// push state on state stack</span>
+  void restore(); <span class="color-comment">// pop state stack and restore state</span>
+
+  <span class="color-comment">// transformations (default transform is the identity matrix)</span>
+  void scale(double x, double y);
+  void rotate(double angle);
+  void translate(double x, double y);
+  void transform(double a, double b, double c, double d, double e, double f);
+  void setTransform(double a, double b, double c, double d, double e, double f);
+
+  <span class="color-comment">// compositing</span>
+  attribute double globalAlpha; <span class="color-comment">// (default 1.0)</span>
+  attribute DOMString globalCompositeOperation; <span class="color-comment">// (default source-over)</span>
+
+  <span class="color-comment">// colors and styles</span>
+  attribute any strokeStyle; <span class="color-comment">// (default black)</span>
+  attribute any fillStyle; <span class="color-comment">// (default black)</span>
+  CanvasGradient createLinearGradient(double x0, double y0, double x1, double y1);
+  CanvasGradient createRadialGradient(double x0, double y0, double r0, double x1, double y1, double r1);
+  CanvasPattern createPattern(HTMLImageElement image, DOMString repetition);
+  CanvasPattern createPattern(HTMLCanvasElement image, DOMString repetition);
+  CanvasPattern createPattern(HTMLVideoElement image, DOMString repetition);
+
+  <span class="color-comment">// line caps/joins</span>
+  attribute double lineWidth; <span class="color-comment">// (default 1)</span>
+  attribute DOMString lineCap; <span class="color-comment">// &quot;butt&quot;, &quot;round&quot;, &quot;square&quot; (default &quot;butt&quot;)</span>
+  attribute DOMString lineJoin; <span class="color-comment">// &quot;round&quot;, &quot;bevel&quot;, &quot;miter&quot; (default &quot;miter&quot;)</span>
+  attribute double miterLimit; <span class="color-comment">// (default 10)</span>
+
+  <span class="color-comment">// shadows</span>
+  attribute double shadowOffsetX; <span class="color-comment">// (default 0)</span>
+  attribute double shadowOffsetY; <span class="color-comment">// (default 0)</span>
+  attribute double shadowBlur; <span class="color-comment">// (default 0)</span>
+  attribute DOMString shadowColor; <span class="color-comment">// (default transparent black)</span>
+
+  <span class="color-comment">// rects</span>
+  void clearRect(double x, double y, double w, double h);
+  void fillRect(double x, double y, double w, double h);
+  void strokeRect(double x, double y, double w, double h);
+
+  <span class="color-comment">// path API</span>
+  void beginPath();
+  void closePath();
+  void moveTo(double x, double y);
+  void lineTo(double x, double y);
+  void quadraticCurveTo(double cpx, double cpy, double x, double y);
+  void bezierCurveTo(double cp1x, double cp1y, double cp2x, double cp2y, double x, double y);
+  void arcTo(double x1, double y1, double x2, double y2, double radius); 
+  void rect(double x, double y, double w, double h);
+  void arc(double x, double y, double radius, double startAngle, double endAngle, optional boolean anticlockwise); 
+  void fill();
+  void stroke();
+  void drawSystemFocusRing(Element element);
+  boolean drawCustomFocusRing(Element element);
+  void scrollPathIntoView();
+  void clip();
+  boolean isPointInPath(double x, double y);
+
+  <span class="color-comment">// text</span>
+  attribute DOMString font; <span class="color-comment">// (default 10px sans-serif)</span>
+  attribute DOMString textAlign; <span class="color-comment">// &quot;start&quot;, &quot;end&quot;, &quot;left&quot;, &quot;right&quot;, &quot;center&quot; (default: &quot;start&quot;)</span>
+  attribute DOMString textBaseline; <span class="color-comment">// &quot;top&quot;, &quot;hanging&quot;, &quot;middle&quot;, &quot;alphabetic&quot;, &quot;ideographic&quot;, &quot;bottom&quot; (default: &quot;alphabetic&quot;)</span>
+  void fillText(DOMString text, double x, double y, optional double maxWidth);
+  void strokeText(DOMString text, double x, double y, optional double maxWidth);
+  TextMetrics measureText(DOMString text);
+
+  <span class="color-comment">// drawing images</span>
+  void drawImage(HTMLImageElement image, double dx, double dy);
+  void drawImage(HTMLImageElement image, double dx, double dy, double dw, double dh);
+  void drawImage(HTMLImageElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
+  void drawImage(HTMLCanvasElement image, double dx, double dy);
+  void drawImage(HTMLCanvasElement image, double dx, double dy, double dw, double dh);
+  void drawImage(HTMLCanvasElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
+  void drawImage(HTMLVideoElement image, double dx, double dy);
+  void drawImage(HTMLVideoElement image, double dx, double dy, double dw, double dh);
+  void drawImage(HTMLVideoElement image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
+
+  <span class="color-comment">// pixel manipulation</span>
+  ImageData createImageData(double sw, double sh);
+  ImageData createImageData(ImageData imagedata);
+  ImageData getImageData(double sx, double sy, double sw, double sh);
+  void putImageData(ImageData imagedata, double dx, double dy);
+  void putImageData(ImageData imagedata, double dx, double dy, double dirtyX, double dirtyY, double dirtyWidth, double dirtyHeight);
+};
+
+interface <strong>CanvasGradient</strong> {
+  <span class="color-comment">// opaque object</span>
+  void addColorStop(double offset, DOMString color);
+};
+
+interface <strong>CanvasPattern</strong> {
+  <span class="color-comment">// opaque object</span>
+};
+
+interface <strong>TextMetrics</strong> {
+  readonly attribute double width;
+};
+
+interface <strong>ImageData</strong> {
+  readonly attribute unsigned long width;
+  readonly attribute unsigned long height;
+  readonly attribute Uint8ClampedArray data;
+};</pre>
+
+<!--
+<h3>HTML5 Audio and Video</h3>
+<p>[TODO]</p>
+
+<h3>HTML5 Geolocation API</h3>
+<p>[TODO]</p>
+
+<h3>HTML5 Communication API</h3>
+<p>[TODO]</p>
+
+<h3>HTML5 WebSocket API</h3>
+<p>[TODO]</p>
+
+<h3>HTML5 Form API</h3>
+<p>[TODO]</p>
+
+<h3>HTML5 Web Workers API</h3>
+<p>[TODO]</p>
+
+<h3>HTML5 Web Storage API</h3>
+<p>[TODO]</p>
+
+<h3>HTML5 Offline Applications</h3>
+<p>[TODO]</p>
+-->
+
+<p>&nbsp;</p>
+<a class="references" href="../howto/References.html#HTML-CSS">Link To HTML/CSS References &amp; Resources</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: ???<br>
+Last modified: April, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

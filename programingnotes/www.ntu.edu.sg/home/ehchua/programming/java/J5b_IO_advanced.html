@@ -1,0 +1,365 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Advanced Input &amp; Output - Java Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>Advanced Input &amp; Output (I/O)</h2>
+</div>
+
+<div id="content-main">
+
+<h3>New I/O (<span class="font-code">java.nio</span>) (JDK 1.4)</h3>
+<p>JDK 1.4 introduced the so-called New I/O (or NIO), in <code>java.nio</code> package and its auxiliary packages, to support high performance and intensive I/O operations. NIO is meant to complement the existing Standard I/O (in <code>java.io</code> package), not as a replacement.</p>
+
+<h4>NIO Buffers - Class <span class="font-code">java.nio.Buffer</span></h4>
+
+<img class="image-center" src="images/IO_Processes.png" alt="IO_Processes.png" />
+
+<p>Physical I/O operation is thousands times slower than memory access. Hence, a chunk of data is often cache or buffer to improve the throughput.  As illustrated from the above diagram, many layers of cache exist between your Java application and physical disk.</p>
+<ul>
+<li>Disk Buffer is RAM that is built into the disk drive to store a block of data from the disk. The cost of transferring data from the disk surface to the disk buffer is by far the slowest and the most expensive operation, because it involves physical movement of the disk.</li>
+<li>OS Buffer: OS does its own buffering as it can cache more data and manage it more elegantly. This buffer can also be shared among the applications.</li>
+<li>Application Buffer: Application may optionally buffer its own data.</li>
+</ul>
+
+<p>NIO data transfer is through the so-called <em>buffer</em>s implemented in <code>java.nio.Buffer</code> class. A <code>Buffer</code> is similar to an array, except that it is implemented much more efficiently by closely coupled with the underlying operating system. A <code>Buffer</code> is a contiguous, linear storage. Similar to an array, a <code>Buffer</code> has a fixed capacity.</p>
+
+<img class="image-center" src="images/IO_NioBuffer.png" alt="IO_NioBuffer.png" />
+
+<p>The is a buffer class for each of the primitive types (except <code>boolean</code>), as shown in the above diagram. The <code>abstract</code> superclass <code>java.nio.Buffer</code> provides the common properties of all buffers, and define a small set of common operations.</p>
+<p>A <code>Buffer</code> has a <em>capacity</em>, <em>position</em>, <em>limit</em>, and an optional <em>mark</em>:</p>
+
+<ul>
+  <li>The <em>capacity</em> must be specified when the <code>Buffer</code> is constructed and cannot be changed (similar to an array). You can retrieve it via method <code>capacity()</code>.</li>
+  <li>The <em>limit</em> specifies the current occupancy. In other word, the buffer contains valid data in the range 0 to limit-1. You can retrieve the current limit via method <code>limit()</code> or set the <code>limit</code> via method <code>limit(int <em>newLimit</em>)</code>. Limit shall not be greater than capacity. </li>
+  <li>Unlike array, there is a so-called <em>position</em>  (or cursor) in a <code>Buffer</code> that indicates where the next piece of data is to be read or written. You can retrieve the current position via method <code>position()</code> or change the current position via method <code>position(int <em>newPosition</em>)</code>. Position shall not be greater than the limit.</li>
+<li>A <em>mark</em> provide a positional marker. You can mark the current position via the method <code>mark()</code>.</li>
+</ul>
+  
+<p><span class="line-heading">Data Transfer (Get/Put):</span> Each of the primitive buffers provides a set of <code>get()</code> and <code>put()</code> methods to read/write an element or a array of elements from/to the buffer. The position increases by the number of elements transferred. For example, the <code>IntBuffer</code> provides:</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// IntBuffer - Similar operations available for ByteBuffer, CharBuffer, 
+//             ShortBuffer, LongBuffer, FloatBuffer and DoubleBuffer</span>
+public int <strong>get</strong>()                  <span class="color-comment">// Reads an element from the current position (relative get)</span>
+public int <strong>get</strong>(int <em>position</em>)      <span class="color-comment">// Reads an element from the given <em>position</em> (absolute get)</span>
+public IntBuffer <strong>get</strong>(int[] <em>dest</em>)  <span class="color-comment">// Relative bulk get into the destination array</span>
+public IntBuffer get(int[] <em>dest</em>, int <em>offset</em>, int <em>length</em>)
+  
+public IntBuffer <strong>put</strong>(int <em>element</em>)                 <span class="color-comment">// relative put (at current position)</span>
+public IntBuffer <strong>put</strong>(int <em>position</em>, int <em>element</em>)   <span class="color-comment">// absolute put</span>
+public IntBuffer <strong>put</strong>(int[] <em>source</em>)                <span class="color-comment">// relative bulk put</span>
+public IntBuffer <strong>put</strong>(int[] <em>source</em>, int <em>offset</em>, int <em>length</em>)</pre>
+
+<p><code>ByteBuffer</code> is special. It provides additional <code>getXxx()</code>/<code>putXxx()</code> methods to parse raw bytes into other primitive types. It also can be used as the sources  and targets of I/O operations, which will be explained later in channel I/O.</p>
+<pre class="color-syntax"><span class="color-comment">// ByteBuffer additional getXxx()/putXxx()</span>
+public char <strong>getChar</strong>()              <span class="color-comment">// relative</span>
+public char <strong>getChar</strong>(int <em>position</em>)  <span class="color-comment">// absolute</span>
+public int <strong>getInt</strong>()
+public int <strong>getInt</strong>(int <em>position</em>)
+public long <strong>getLong</strong>()
+public long <strong>getInt</strong>(long <em>position</em>)
+public short <strong>getShort</strong>()
+public short <strong>getShort</strong>(int <em>position</em>)
+public float <strong>getFloat</strong>()
+public float <strong>getFloat</strong>(int <em>position</em>)
+public double <strong>getDouble</strong>()
+public double <strong>getDouble</strong>(int <em>position</em>)
+</pre>
+
+<p><span class="line-heading">Mark and Reset:</span> You can use <code>mark()</code> method to mark the current position. Invoking <code>reset()</code> sets the position to the previously-marked position. The mark may or may not be set. If the mark is not set, invoking <code>reset()</code> triggers an <code>InvalidMarkException</code>. If the mark is set, it should never be greater than the position (because the mark() marks the current position and position advances). The mark will be discarded when the position or the limit is adjusted to a value smaller than the mark. Hence, 0 &le; mark &le; position &le; limit &le; capacity.</p>
+<p><span class="line-heading">Clear, Flip and Rewind:</span></p>
+<ul>
+  <li><code>clear()</code>: sets the <code>position</code> to 0, <code>limit</code> to the <code>capacity</code>, and discards <code>mark</code>. It prepares the buffer for input.</li>
+<li><code>flip()</code>: sets the <code>limit</code> to the current <code>position</code>, <code>position</code> to 0, and discard <code>mark</code>. Buffer populated and ready for output.</li>
+<li><code>rewind()</code>: set the position to 0, and discard mark. It prepares the buffer for re-read.</li>
+</ul>
+
+<p><span class="line-heading">Creating a Buffer:</span> There are 3 ways to create a buffer:</p>
+<ol>
+<li>via method <code>allocate(int <em>capacity</em>)</code>, which allocates a new buffer, sets position to 0 and limit to capacity, and clear the mark.</li>
+<li>wrap an existing array into buffer via <code>wrap(type[] array, int offset, int length)</code> or <code>wrap(type[] array)</code> method.</li>
+<li>by creating a <em>view </em>of an existing <code>ByteBuffer</code> (to be discussed later).</li>
+</ol>
+
+<p><span class="line-heading">Direct vs Indirect Buffers:</span> A buffer can be direct or indirect. For a direct buffer, &quot;the JVM will make a best effort to perform native I/O operations directly upon it. That is, it will attempt to avoid copying the buffer's content to (or from) an intermediate buffer before (or after) each invocation of one of the underlying operating system's native I/O operations.&quot; In other words, direct buffer is more efficient.</p>
+<p>For byte buffer, you can allocate a direct <code>ByteBuffer</code> via the <code>allocateDirect(int capacity)</code> method. For other buffers (char, short, int, long, float, double), you need to first allocate a <code>ByteBuffer</code>, and then create a <em>view</em> via methods such as <code>asFloatBuffer()</code>. As these primitive types have unit of multiple bytes (e.g., an <code>int</code> is 4 bytes), you need to specify the byte order of either big-endian (big byte first) or little-endian (little byte first) via <code>order(ByteOrder <em>order</em>)</code> method. The <code><em>order</em></code> could be <code>ByteOrder.BIG_ENDIAN</code>, <code>ByteOrder.LITTLE_ENDIAN</code>, or <code>ByteOrder.nativeOrder()</code> which returns the native byte order of the underlying platform for you to write portable program.</p>
+
+<p><span class="line-heading">ByteBuffer:</span> <code>ByteBuffer</code> is special. To summarize:</p>
+<ol>
+<li>It is used in channel I/O (see channel I/O below).</li>
+<li>You can allocate <code>ByteBuffer</code> as direct. In this case, the JVM will make a best effort to perform native I/O directly for better performance.</li>
+<li>You can create a view as other buffer, such as FloatBuffer via <code>asFloatBuffer()</code>.</li>
+<li>You can get/put as other primitive types via <code>getXxx()</code> and <code>putXxx()</code>.</li>
+<li><code>MapByteBuffer</code> for mapped I/O.</li>
+</ol>
+
+<p><span class="line-heading">Example:</span> The following example allocates a direct <code>FloatBuffer</code> by creating a view of a direct <code>ByteBuffer</code>. It then populates the <code>FloatBuffer</code>. [This segment of codes is used in OpenGL ES rendering.]</p>
+<pre class="color-example">
+import java.nio.*;
+public class <strong>TestDirectBuffer</strong> {
+   public static void main(String[] args) {
+      <span class="color-comment">// 3 vertices (x, y, z) of the triangle</span>
+      float[] vertices = {
+          0.0f,  1.0f, 0.0f, <span class="color-comment">// top (x, y, z)</span>
+         -1.0f, -1.0f, 0.0f, <span class="color-comment">// left-bottom (x, y, z)</span>
+          1.0f, -1.0f, 0.0f  <span class="color-comment">// right-bottom (x, y, z)</span>
+      };
+ 
+      FloatBuffer vertexBuffer;
+ 
+      <span class="color-comment">// Setup vertex-array buffer. Vertices in float.</span>
+ 
+      <span class="color-comment">// Allocate a direct ByteBuffer for the vertices. A float has 4 bytes.</span>
+      ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);
+      <span class="color-comment">// Set the byte order (big-endian or little-endian) to the native</span>
+      <span class="color-comment">//  byte order of the underlying platform for portable program.</span>
+      vbb.order(ByteOrder.nativeOrder());
+      <span class="color-comment">// Create a direct FloatBuffer as a view of this ByteBuffer.</span>
+      <span class="color-comment">// Position is 0.</span>
+      vertexBuffer = vbb.asFloatBuffer();
+      <span class="color-comment">// Copy the data from float[] to the buffer from the current position.</span>
+      vertexBuffer.put(vertices);
+      <span class="color-comment">// Rewind by setting position to 0.</span>
+      vertexBuffer.position(0);
+ 
+      <span class="color-comment">// OpenGL can use the FloatBuffer directly</span>
+      <span class="color-comment">// gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);</span>
+   }
+}</pre>
+
+<p>More Examples [TODO]</p>
+
+<h4><span class="font-code">java.nio.MappedByteBuffer</span></h4>
+<p><code>MappedByteBuffer</code> is a so-called <em>direct</em> buffer that is managed by the OS, instead of the Java application. In other words, <code>MappedByteBuffer</code> can be used to wrap a region of OS buffer. Application can allocate different direct buffer to <em>view</em> the different portion of the OS buffer. [TODO more]</p>
+
+<h4>Channels (<span class="font-code">java.nio.channels.Channel</span>)</h4>
+
+<p>A <em>channel</em> represents a connection to a physical I/O device (such as file, network socket, or even another program). It is similar to Standard I/O's stream, but a more platform-dependent version of stream. Because channels have a closer ties to the underlying platform, they can achieve better I/O throughput. The types of channel include:</p>
+
+<ul>
+<li><code>FileChannel</code></li>
+<li><code>SocketChannel</code>: support non-blocking connection for TCP socket.</li>
+<li><code>DatagramChannel</code>: UDP Datagram-oriented socket.</li>
+</ul>
+
+<p>A <code>Channel</code> object can be obtained by calling the <code>getChannel()</code> methods of classes such as <code>java.io.FileInputStream</code>, <code>java.io.FileOutputStream</code>, <code>java.io.RandomAccessFile</code>, <code>java.net.Socket</code>, <code>java.net.ServerSocket</code>, <code>java.net.DatagramSocket</code>, and <code>java.net.MulticastSocket</code>.</p>
+
+<p>For example, you can obtained a <code>FileChannel</code> as follows:</p>
+<pre class="color-example">
+FileInputStream fis = new FileInputStream(&quot;in.dat&quot;);
+FileChannel fc = fis.getChannel();
+<span class="color-comment">// or</span>
+FileChannel fc = new FileInputStream(&quot;in.dat&quot;).getChannel();</pre>
+
+<p>A <code>FileChannel</code> obtained from a <code>FileInputStream</code> is read-only; while a <code>FileChannel</code> obtained from a <code>FileOutputStream</code> is write-only. While Stream I/O processes one byte at at time; channel I/O reads/write a buffer at a time. In standard I/O's stream, data is read/write into/from a byte or a byte-array. For <code>FileChannel</code>, data is transferred via a <code>ByteBuffer</code> object in <code>read()</code>/<code>write()</code> methods.</p>
+
+<pre class="color-syntax">
+public abstract int <strong>read</strong>(ByteBuffer dest)
+public abstract int <strong>write</strong>(ByteBuffer source)</pre>
+
+<p>You can transfer data between an input channel and an output channel directly via:</p>
+<pre class="color-syntax">
+public abstract long <strong>transferFrom</strong>(ReadableByteChannel source, long position, long count)
+public abstract long <strong>transferTo</strong>(long position, long count, WritableByteChannel target)</pre>
+
+<p><span class="line-heading">Example:</span> Copying a file using <code>FileChannel</code></p>
+
+<pre class="color-example">
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+ 
+public class FileChannelCopyJDK7 {
+   public static void main(String[] args) {
+      String inFileStr = &quot;test-in.jpg&quot;;
+      String outFileStr = &quot;test-out.jpg&quot;;
+      long startTime, elapsedTime;  <span class="color-comment">// for speed benchmarking</span>
+      int bufferSizeKB = 4;
+      int bufferSize = bufferSizeKB*1024;
+ 
+      <span class="color-comment">// Check file length</span>
+      File fileIn = new File(inFileStr);
+      System.out.println(&quot;File size is &quot; + fileIn.length() + &quot; bytes&quot;);
+      System.out.println(&quot;Buffer size is &quot; + bufferSizeKB + &quot; KB&quot;);
+ 
+      <span class="color-comment">// Using FileChannel with indirect ByteBuffer</span>
+      System.out.println(&quot;Using FileChannel with an indirect ByteBuffer of &quot; + bufferSizeKB + &quot; KB&quot;);
+      try (FileChannel in = new FileInputStream(inFileStr).getChannel();
+           FileChannel out = new FileOutputStream(outFileStr).getChannel()) {
+         <span class="color-comment">// Allocate an indirect ByteBuffer</span>
+         ByteBuffer bytebuf = ByteBuffer.allocate(bufferSize);
+ 
+         startTime = System.nanoTime();
+         int bytesCount;
+         while ((bytesCount = in.read(bytebuf)) &gt; 0) { <span class="color-comment">// Read data from file into ByteBuffer</span>
+            <span class="color-comment">// flip the buffer which set the limit to current position, and position to 0.</span>
+            bytebuf.flip();
+            out.write(bytebuf);  <span class="color-comment">// Write data from ByteBuffer to file</span>
+            bytebuf.clear();     <span class="color-comment">// For the next read</span>
+         }
+         elapsedTime = System.nanoTime() - startTime;
+         System.out.println(&quot;Elapsed Time is &quot;
+               + (elapsedTime / 1000000.0) + &quot; msec&quot;);
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+ 
+      <span class="color-comment">// Using FileChannel with direct ByteBuffer</span>
+      System.out.println(&quot;Using FileChannel with a direct ByteBuffer of &quot; + bufferSizeKB + &quot; KB&quot;);
+      try (FileChannel in = new FileInputStream(inFileStr).getChannel();
+           FileChannel out = new FileOutputStream(outFileStr).getChannel()) {
+         <span class="color-comment">// Allocate a &quot;direct&quot; ByteBuffer</span>
+         ByteBuffer bytebuf = ByteBuffer.allocateDirect(bufferSize);
+ 
+         startTime = System.nanoTime();
+         int bytesCount;
+         while ((bytesCount = in.read(bytebuf)) &gt; 0) { <span class="color-comment">// Read data from file into ByteBuffer</span>
+            <span class="color-comment">// flip the buffer which set the limit to current position, and position to 0.</span>
+            bytebuf.flip();
+            out.write(bytebuf);  <span class="color-comment">// Write data from ByteBuffer to file</span>
+            bytebuf.clear();     <span class="color-comment">// For the next read</span>
+         }
+         elapsedTime = System.nanoTime() - startTime;
+         System.out.println(&quot;Elapsed Time is &quot;
+               + (elapsedTime / 1000000.0) + &quot; msec&quot;);
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+ 
+      <span class="color-comment">// Using FileChannel with transferTo()</span>
+      System.out.println(&quot;Using FileChannel with transferTo()&quot;);
+      try (FileChannel in = new FileInputStream(inFileStr).getChannel();
+           FileChannel out = new FileOutputStream(outFileStr).getChannel()) {
+         startTime = System.nanoTime();
+         in.transferTo (0, in.size(), out);
+         elapsedTime = System.nanoTime() - startTime;
+         System.out.println(&quot;Elapsed Time is &quot;
+               + (elapsedTime / 1000000.0) + &quot; msec&quot;);
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+ 
+      <span class="color-comment">// Using Buffered Stream I/O</span>
+      System.out.println(&quot;Using Buffered Stream&quot;);
+      try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(inFileStr));
+           BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outFileStr))) {
+         startTime = System.nanoTime();
+         int bytesCount;
+         while ((bytesCount = in.read()) != -1) {
+            out.write(bytesCount);
+         }
+         elapsedTime = System.nanoTime() - startTime;
+         System.out.println(&quot;Elapsed Time is &quot; + (elapsedTime / 1000000.0) + &quot; msec&quot;);
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+ 
+      <span class="color-comment">// Using a programmer-managed 4K byte-array for Disk I/O</span>
+      System.out.println(&quot;Using a programmer-managed byte-array of &quot; + bufferSizeKB + &quot; KB&quot;);
+      try (FileInputStream in = new FileInputStream(inFileStr);
+           FileOutputStream out = new FileOutputStream(outFileStr)) {
+         startTime = System.nanoTime();
+         byte[] byteArray = new byte[bufferSize];    <span class="color-comment">// byte-array</span>
+         int bytesCount;
+         while ((bytesCount = in.read(byteArray)) != -1) {
+            out.write(byteArray, 0, bytesCount);
+         }
+         elapsedTime = System.nanoTime() - startTime;
+         System.out.println(&quot;Elapsed Time is &quot; + (elapsedTime / 1000000.0) + &quot; msec&quot;);
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+   }
+}</pre>
+
+<pre class="output">
+File size is 1378093 bytebuffer
+Buffer size is 4 KB
+
+Using FileChannel with an indirect ByteBuffer of 4 KB
+Elapsed Time is 14.649701 msec
+
+Using FileChannel with a direct ByteBuffer of 4 KB
+Elapsed Time is 8.032151 msec
+
+Using FileChannel with transferTo()
+Elapsed Time is 3.573988 msec
+
+Using Buffered Stream
+Elapsed Time is 125.604174 msec
+
+Using a programmer-managed byte-array of 4 KB
+Elapsed Time is 5.642199 msec</pre>
+
+<p><code>FileChannel</code> with a 4K direct <code>ByteBuffer</code> is faster than indirect <code>ByteBuffer</code>. Buffered Stream I/O is many times slower than <code>FileChannel</code>.  However, it is interesting to note that the programmer-managed byte-array is faster than some channels?!</p>
+<p>The following table compare the run-time for various buffer size with (a) Using <code>FileChannel</code> with an indirect ByteBuffer, (b) Using <code>FileChannel</code> with a direct ByteBuffer, (c) Using <code>FileChannel</code> with <code>transferTo()</code>, (d) Using Buffered Stream, (e) Using a programmer-managed byte-array.</p>
+
+<pre class="output">
+BufSize   (a)    (b)    (c)    (d)    (e)
+   4KB  16.67   9.73   <strong>3.33</strong> 124.21   7.72
+  16KB   6.92   3.39   <strong>1.86</strong> 110.85   4.06
+  32KB   3.95   2.75   <strong>1.76</strong> 109.60   2.90
+  64KB   3.26   2.15   <strong>1.88</strong> 109.77   2.96
+ 128KB   2.77   2.11   <strong>2.02</strong> 109.64   2.59
+ 256KB   2.49   <strong>1.66</strong>   1.80 109.10   2.55
+1024KB   3.57   <strong>1.86</strong>   1.97 109.08   5.88</pre>
+
+<p>[PENDING] Network I/O with NIO.<code> SocketChannel</code> and <code>DatagramChannel</code>.</p>
+
+<h4>Selectors</h4>
+<p>A number of channels can be registered with a <em>selector</em> (<code>java.nio.channels.Selector</code>). A selector provides a mechanism for waiting on channels until one ore more become available for data transfer.  It can be used to block the program until at least one channel is available for use. Examples are server applications that involves simultaneously waiting for responses on a number of session. [TODO]</p>
+
+<h4>Character Set (Charset) - <span class="font-code">java.nio.charset</span> package</h4>
+<p>[Covered in Basic I/O]</p>
+
+<h4>Regular Expression - <span class="font-code">java.util.regex</span> package</h4> 
+[TODO in regexe chapter]
+
+<h3>Advanced I/O in JDK 7</h3>
+<p>[TODO]</p>
+
+
+<a class="references" href="../howto/References.html#java">LINK TO JAVA REFERENCES &amp; RESOURCES</a>
+
+<p class="references">MORE REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>Java Online Tutorial on &quot;Basic I/O&quot; @ <a href="http://download.oracle.com/javase/tutorial/essential/io/index.html">http://download.oracle.com/javase/tutorial/essential/io/index.html</a>, in particular &quot;<a href="http://download.oracle.com/javase/tutorial/essential/io/fileio.html">File I/O (Featuring NIO.2)</a>&quot;.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7.0_03<br />
+Last modified: May, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+
+</body>
+</html>

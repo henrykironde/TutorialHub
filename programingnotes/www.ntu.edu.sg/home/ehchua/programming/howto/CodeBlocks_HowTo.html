@@ -1,0 +1,325 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to install CodeBlocks and Get Started with C/C++ Programming</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>CodeBlocks for C/C++ Programming</h1>
+<h2>How To Install and Get Started</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<p>CodeBlocks is an open-source, cross-platform (Windows, Linux, MacOS), and free C/C++ <acronym title="Integrated Development Environment">IDE</acronym>. It supports many compilers, such as GNU GCC (MinGW and Cygwin) and MS Visual C++. It supports interactive debugging (via GNU GDB or MS CDB). CodeBlocks is surprisingly versatile, and in my opinion, much better than the Visual Studio suite. The mother site of CodeBlocks is <a href="http://www.codeblocks.org">www.codeblocks.org</a>.</p>
+
+<h3>How to Install CodeBlocks 13.12</h3>
+
+<h5>Step 1: Download</h5>
+<p>Goto <a href="http://www.codeblocks.org/downloads">http://www.codeblocks.org/downloads</a>. Click &quot;Download the binary release&quot;. Select your operating platform (e.g., Windows 2000/XP/Vista/7). Download the installer with GCC Compiler, e.g., <code>codeblocks-13.12mingw-setup.exe</code> (98 MB) (which includes MinGW's GNU GCC compiler and GNU GDB debugger).</p>
+
+<h5>Step 2: Install</h5>
+<p>Run the downloaded installer. Accept the default options.</p>
+
+<p><span class="line-heading">Verify the Compiler's and Debugger's Path</span>: (For CodeBlocks 13.12 For Windows) Goto &quot;Settings&quot; menu ⇒ &quot;Compiler...&quot; ⇒ In &quot;Selected Compiler&quot;, choose &quot;GNU GCC Compiler&quot; ⇒  Select tab &quot;Toolchain Executables&quot; ⇒ Check the &quot;Compiler's Installation Directory&quot;. It shall be set to the &quot;MinGW&quot; sub-directory of the CodeBlocks installation directory, for example, suppose that CodeBlocks is installed in &quot;<code>c:\Program Files\codeblocks</code>&quot;, set it to &quot;<code>c:\Program Files\codeblocks\MinGW</code>&quot;.</p>
+<p>Similarly, check the debugger's path. Goto &quot;Settings&quot; menu ⇒ &quot;Debugger...&quot; ⇒ Expand &quot;GDB/CDB debugger&quot; ⇒  Select &quot;Default&quot; ⇒ In &quot;Executable path&quot;, provide the full-path name of &quot;<code>gdb.exe</code>&quot;, for example, &quot;<code>c:\Program Files\codeblocks\MinGW\bin\gdb.exe</code>&quot;.</p>
+
+<div class="side-note">
+<p class="line-heading">Notes For CodeBlocks 13.12 For Windows (Jan 2014)</p>
+<p>I encountered problem running debugger with CodeBlocks 13.12 bundled with MinGW (gcc v4.7.1 and gdb 7.5).</p>
+<p>I resolved by installing the latast MinGW (gcc 4.8.1, gdb 7.6.1) separately (See &quot;<a href="Cygwin_HowTo.html#mingw">How to install MinGW</a>&quot;), and configured the compiler's and debugger's path to the installed MinGW as in the above step.</p>
+<p>Alternatively, consider using Eclipse or Netbeans with Cygwin or MinGW GNU GCC compiler.</p>
+</div>
+
+<h3 id="WriteProgram">Writing C/C++ Programs in CodeBlocks</h3>
+
+<p>Read:</p>
+<ol>
+<li>CodeBlocks' Wiki @ <a href="http://wiki.codeblocks.org/index.php?title=Main_Page">http://wiki.codeblocks.org/index.php?title=Main_Page</a>, in particular, &quot;Creating a new project&quot; and &quot;Debug my Program&quot;.</li>
+</ol>
+
+<h4>Writing Toy Programs (without Creating a Project)</h4>
+<p>To write toy programs (such as few-line simple programming exercises):</p>
+<ol>
+<li>File &rArr; New &rArr; <strong>Empty File</strong>.</li>
+<li>Enter (copy and paste) the following codes:
+  <pre class="color-example">
+<span class="color-comment">// First C++ program to say Hello</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   cout &lt;&lt; &quot;Hello, world!&quot; &lt;&lt; endl;
+   return 0;
+}</pre>
+
+Save the file as &quot;<code>Hello.cpp</code>&quot; in your project directory (e.g., &quot;<code>d:\project</code>&quot;).</li>
+
+<li>Build (Compile and Link): Select &quot;Build&quot; menu &rArr; Build (Ctrl-F9).</li>
+<li>Run: Select &quot;Build&quot; menu &rArr; Run (Ctrl-F10).</li>
+</ol>
+
+<p>The drawback is you cannot debug program without creating a project.</p>
+
+<p>Read &quot;<a href="#commonerror">CodeBlocks' Common Errors</a>&quot; if ....</p>
+
+<h4 id="WriteProgramWithProject">Writing Programs (under Project)</h4>
+
+<p>Other than the few-line toy programs, you shall create a project for each of your application. A project contains related files such as source codes, header files, and relevant resources. Also, under CodeBlocks, you can only debug your program under a project - single-file program (in previous section) debugging is not supported.</p>
+<ol>
+<li>File &rArr; New &rArr; Project... &rArr; Console Application &rArr; Go.</li>
+
+<li>The &quot;Console Application&quot; wizard appears:
+
+  <ol>
+<li>Next</li>
+<li>Select &quot;C++&quot; &rArr; Next.</li>
+<li>In &quot;Project Title&quot;, enter &quot;<code>HelloProject</code>&quot;. In &quot;Folder to create project in&quot;, set to your working directory, e.g., &quot;<code>d:\project</code>&quot;. Accept the default for the rest &rArr; Next.<br />
+A project directory &quot;<code>HelloProject</code>&quot; will be created under &quot;<code>d:\project</code>&quot;, with a project configuration filename of &quot;<code>HelloProject.cbp</code>&quot;. You could later create more projects under this working directory &quot;<code>d:\project</code>&quot;.</li>
+<li>In &quot;Compiler&quot; field, accept the defaults of &quot;GNU GCC Compiler&quot; &rArr; Finish.</li>
+</ol></li>
+
+<li>Under the &quot;Management&quot; pane &rArr; Choose &quot;Projects&quot; tab &rArr; Expand the project node &quot;<code>HelloProject</code>&quot; &rArr; Expand &quot;Source&quot; node &rArr; Double-click &quot;<code>main.cpp</code>&quot;, which is a template program to say &quot;Hello, world!&quot;.</li>
+
+<li>To build the program, select &quot;Build&quot; menu &rArr; Build.</li>
+
+<li>To run the program, select &quot;Build&quot; menu &rArr; Run.</li>
+
+<li><strong>To create more source file or header file under the project</strong>:
+<ol>
+<li>File &rArr; New File... &rArr; Select C/C++ source or C/C++ header.</li>
+<li>C++ &rArr; Next.</li>
+<li>In &quot;Filename with full path&quot;  &rArr; Click the &quot;Navigate&quot; (...) button to navigate to the project directory and enter the new file name. Check both the &quot;Debug&quot; and &quot;Release&quot; boxes  (or &quot;All&quot;) &rArr; Finish.</li>
+  </ol>
+</li>
+</ol>
+
+<h5>Set Active Project</h5>
+<p>You can create more projects. However, the &quot;Build&quot; and &quot;Run&quot; commands are always apply to the <em>active</em> project, which is shown in bold. To activate a project: right-click on the project name &rArr; &quot;Activate Project&quot;.</p>
+
+<h5>Open an Existing Project</h5>
+<p>To open an existing project, either:</p>
+
+<ol>
+<li>From &quot;File&quot; menu &rArr; &quot;Recent Projects&quot; &rArr; Choose the desired project; or</li>
+<li>From &quot;File&quot; menu &rArr; &quot;Open...&quot; &rArr; Navigate to your project directory &rArr; Choose &quot;<em><code>ProjectName</code></em><code>.cbp</code>&quot;, where &quot;.cbp&quot; stands for CodeBlocks-Project.</li>
+
+</ol>
+
+<p>Read &quot;<a href="#commonerror">CodeBlocks' Common Errors</a>&quot; if ....</p>
+
+<h4>Writing Many Toy Programs under ONE Project</h4>
+<p>Although a project may contain many source files, there can only be one <code>main()</code> function among all the source files. That is, you cannot keep two toy programs (each having a <code>main()</code> function) in one project (you will get the error &quot;multiple definition of 'main'&quot; when you try to build the project).
+  You need to create one project for each toy program. This is clumsy!</p>
+
+<p>Codeblock, nonetheless, allow you to <em>add files</em> or <em>remove files</em> from a project. The removed files are not deleted and remain in the folder.  We could use this feature to write many toy programs under one project. The procedures are as follows:</p>
+
+<ol>
+<li>Create a C/C++ project called &quot;ToyProgramProject&quot; (read previous section on how to create a project). You shall get a &quot;<code>main.cpp</code>&quot; automatically.</li>
+<li>Write your toy program on &quot;<code>main.cpp</code>&quot;. Build and run the program.</li>
+<li>To write another program: select &quot;File&quot; &rArr; &quot;Save File as&quot; &rArr; enter a program name such as &quot;<code>myfirst.cpp</code>&quot;. Remove it from the project (because each project can only have one file with <code>main()</code>), by right-click on &quot;<code>myfirst</code><code>.cpp</code>&quot; &rArr; &quot;remove file from project&quot;.</li>
+<li>Continue to write your second toy program on &quot;<code>main.cpp</code>&quot;. Build and run.</li>
+<li>Repeat Step 3 and 4 for another toy program.</li>
+<li>Suppose that you wish to run &quot;<code>myfirst.cpp</code>&quot; again: First remove &quot;<code>main.cpp</code>&quot; from the project. Right-click on the project &rArr; Add File... &rArr; Choose &quot;<code>myfirst.cpp</code>&quot; &rArr; Open &rArr; Check both the &quot;Debug&quot; and &quot;Release&quot; box &rArr; OK. You can now build and run the &quot;<code>myfirst.cpp</code>&quot;.</li>
+</ol>
+
+<p>In brief, use the &quot;Add File&quot; and &quot;Remove File&quot; to place your desired toy program file (with the <code>main()</code> function) under the active project. You can then &quot;Build&quot; the project and &quot;Run&quot; your toy program.</p>
+
+<h3 id="commonerror">CodeBlocks' Common  Errors</h3>
+
+<h5>Cannot Compile any C/C++ Program after Installing CodeBlocks</h5>
+<p>Check:</p>
+<ol>
+<li>You downloaded the CodeBlocks with &quot;MinGW GNU C/C++ Compiler&quot; (e.g., &quot;<code>codeblocks-10.05mingw-setup.exe</code>&quot;).</li>
+<li>Goto &quot;Settings&quot; menu &rArr; &quot;Compiler...&quot; &rArr; Select tab &quot;Toolchain Executables&quot; &rArr; Check the &quot;Compiler's Installation Directory&quot;. It shall be set to the &quot;MinGW&quot; sub-directory of the CodeBlocks installation directory, e.g., &quot;<code>c:\Program Files\codeblocks\MinGW</code>&quot; suppose that CodeBlocks is installed in &quot;<code>c:\Program Files\codeblocks</code>&quot;.</li>
+</ol>
+
+<h5>Cannot Build or Run Program - Build/Run Buttons and Menu-Items are Grey and Not Selectable</h5>
+<p>A previous program is still running. You need to terminate the program by closing the output console window.</p>
+
+<h5>Error: undefined reference to `WinMain@16'</h5>
+<p>Check that you have a <code>main()</code> function in your function. Check your spelling of <code>main</code>!</p>
+
+<h5>(For C Programs) System Error: &quot;<em>xxx</em>.exe has stopped working&quot;</h5>
+<p>Check your <code>scanf()</code> function. You probably omitted the <code>'&amp;'</code> before the variable name.</p>
+
+<h3 id="Debug">Debugging C/C++ Program in CodeBlocks</h3>
+
+<p>Able to use a graphics debugger to debug program is crucial in programming. It could save you countless of hours guessing on what went wrong.</p>
+
+<h5>Step 0: Write a C++ Program</h5>
+<p>Follow the steps in &quot;<a href="#WriteProgramWithProject">Writing C++ Program (with Project)</a>&quot; to write the following C++ program, to be used for the debugging practice. This program computes and prints the factorial of <code><em>n</em></code> (<code>=1*2*3*...*<em>n</em></code>). The program, however, has a logical error and produce a wrong answer for <code><em>n</em>=20</code>. (It outputs &quot;The Factorial of 20 is -2102132736&quot; - a negative number?!).</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* 
+ * Compute the factorial of n, with n=20.
+ *    n! = 1*2*3*...*n  
+ */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   int n = 20;         <span class="color-comment">// To compute factorial of n</span>
+   int factorial = 1;  <span class="color-comment">// Initialize the product to 1</span>
+ 
+   int i = 1;
+   while (i &lt;= n) {
+      factorial = factorial * i;
+      i++;
+   }
+   cout &lt;&lt; &quot;The Factorial of &quot; &lt;&lt; n &lt;&lt; &quot; is &quot; &lt;&lt; factorial &lt;&lt; endl;
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Run the program and observe the output produced:</p>
+
+<pre class="output">
+The Factorial of 20 is -2102132736</pre>
+
+<p>Let's use the graphic debugger to debug the program.</p>
+
+<h5>Step 1: Set an Initial Breakpoint</h5>
+
+<img class="image-float-left" src="images/CBDebugSetBreakpoint.png" />
+
+<p>Set an initial <em>breakpoint</em> at <code>main()</code> function by clicking on the &quot;left-margin&quot; (right-side of the line number) of the line containing <code>main()</code>.  A red circle appears indicating a breakpoint has been set at that line. A <em>breakpoint</em> suspends program execution for you to examine the internal states.</p>
+
+<h5 class="float-clear">Step 2: Start Debugging</h5>
+
+<img class="image-float-left" src="images/CBDebugStart.png" />
+
+<p>From &quot;Debug&quot; menu, select &quot;Start (F8)&quot;. The program begins execution but suspends its execution at the breakpoint, i.e., <code>main()</code>. An <em>yellow arrow</em> (as shown in the diagram) appears and points at the <code>main()</code>, indicating this is the next statement to be executed.</p>
+
+<h5 class="float-clear">Step 3: Single-Step and Watch the Variables and Outputs</h5>
+
+<img class="image-float-right" src="images/CB12DebugToolbar.png" />
+<img class="image-float-right" src="images/CBDebugVariables.png" />
+
+<p>Click the &quot;Debugging Windows&quot; button on the &quot;Debug&quot; toolbar and select &quot;Watches&quot; to enable the &quot;Watch&quot; pane. (You could also do it from the &quot;Debug&quot; menu.)</p>
+
+<p>Click the &quot;Next line&quot; button on the &quot;Debug&quot; toolbar to <em>single-step</em> thru your program. At each of the step, you could examine the internal state of your program, such as the value of the variables (in the &quot;Watches&quot; pane), the outputs produced by your program (in the console), etc.</p>
+
+<p>Single-stepping thru the program and watching the values of the variables and the outputs produced is the ultimate mean in debugging programs - because it is exactly how the computer runs your program!</p>
+
+<h5>Step 4: Breakpoint, Run-To-Cursor, Continue and Stop</h5>
+
+<p>As mentioned, a breakpoint <em>suspends</em> program execution and   let you examine the internal states of the program. To set a breakpoint   on a particular line, click the left-margin of that line (or   select &quot;Toggle Breakpoint (F5)&quot; from &quot;Debug&quot; menu).</p>
+<p>The &quot;Continue&quot; resumes the program execution, up to the next breakpoint, or till the end of the program.</p>
+<p>Single-stepping thru a loop with a large count is time-consuming. You   could set a breakpoint at the statement immediately outside the loop   (e.g., Line 12 of the above program), and issue &quot;Continue&quot; to complete the   loop.</p>
+<p>Alternatively, you can place the cursor on a particular line,   right-click and select &quot;Run-To-Cursor&quot; to resume execution up to   this line.</p>
+<p> The &quot;Stop&quot; ends the debugging session. Always terminate your   current debugging session using &quot;Stop&quot; or &quot;Continue&quot; till the end of   the program.</p>
+
+<p><strong>Important:</strong> I can's stress more that <em>mastering the use of debugger</em> is crucial in programming. Explore the features provided by the debuggers.</p>
+
+<h5>Other Debugging Features</h5>
+
+<p><span class="line-heading">Step-Into and Step-Out:</span> To debug a <em>function</em>, you need to use &quot;Step-Into&quot; to step into the <em>first</em> statement of the function.  (&quot;Step-Over&quot; runs the function in a single step without stepping through the statements inside the function.) You could use &quot;Step-Out&quot; to return  to the caller, anywhere within the function. Alternatively, you can set a breakpoint inside a function.</p>
+<p><span class="line-heading">Watching a Variable:</span> To add a variable into the &quot;Watches&quot; panel, goto &quot;Debug&quot; &rArr; &quot;Edit Watch...&quot; &rArr; &quot;Add&quot; &rArr; Enter the variable name &rArr; You can select the format, or &quot;watch as array&quot;.</p>
+
+<h3>Tips and Tweaks</h3>
+<ol>
+
+<li><span class="line-heading">Re-format Source Code:</span> Right-click on the source file &rArr; Format this file (AStyle). [Source formatting feature is provided by a plugin called AStyle, which can be accessed via menu &quot;Plugins&quot; &rArr; &quot;Source Code Formatter (AStyle)&quot;. To configure the formatting styles, goto &quot;Settings&quot; &rArr; &quot;Editor...&quot; &rArr; &quot;Source Formatter&quot;.]</li>
+
+<li><span class="line-heading">Auto-Complete:</span> type the initial letters of a keyword/identifier and press Ctrl-space to list the available options.</li>
+
+<li><span class="line-heading">Abbreviation:</span> e.g., type &quot;for&quot; and press control-J to get the skeleton of for-loop. The abbreviation list can be configured in &quot;Settings&quot; menu &rArr; &quot;Editor...&quot; &rArr; &quot;Abbreviations&quot;.</li>
+
+<li><span class="line-heading">Zoom in/out on Editor Panel:</span> Either:
+  <ol>
+    <li>From &quot;Edit&quot; menu &rArr; &quot;Special Commands&quot; &rArr; &quot;Zoom&quot; &rArr; &quot;In&quot;, &quot;Out&quot;, or &quot;Reset&quot;, or</li>
+    <li>Hold the control key and zoom in/out via the mouse scroll wheel, or</li>
+    <li>Use keyboard shortcut: control number-pad + (zoom in), control number-pad / (zoom out).</li>
+  </ol>
+</li>
+
+<li><span class="line-heading">Configure Editor:</span> Right-click on the editor panel &rArr; &quot;Configure editor...&quot;.
+  <ol>
+    <li>Source Formatter: You can choose the &quot;Java&quot; style.</li>
+    <li>[TODO] more</li>
+  </ol>
+</li>
+
+<li>[How to link to API documentation?]</li>
+</ol>
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>CodeBlocks Mother Site @ <a href="http://www.codeblocks.org/">http://www.codeblocks.org/</a>.</li>
+
+<li>CodeBlocks' Wiki @ <a href="http://wiki.codeblocks.org/index.php?title=Main_Page">http://wiki.codeblocks.org/index.php?title=Main_Page</a>.</li>
+
+<li>CodeBlocks' User Manual @ <a href="http://www.codeblocks.org/user-manual">http://www.codeblocks.org/user-manual</a>.</li>
+</ol>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: CodeBlocks 13.12<br />
+Last modified: February, 2014</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

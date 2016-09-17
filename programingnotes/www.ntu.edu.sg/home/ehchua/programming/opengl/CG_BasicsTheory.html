@@ -1,0 +1,865 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>3D Graphics with OpenGL - The Basic Theory</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>3D  Graphics with OpenGL</h1>
+<h2>Basic Theory</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Computer Graphics Hardware</h3>
+
+<img class="image-center" src="images/Graphics3D_Hardware.png" />
+
+<h5>GPU (Graphics Processing Unit)</h5>
+<p>Modern day computer has dedicated Graphics Processing Unit (GPU) to produce images for the display, with its own graphics memory (or Video RAM or VRAM).</p>
+
+<h5>Pixels and Frame</h5>
+
+<img class="image-float-right float-clear" src="images/Graphics3D_DisplayCoord.png" />
+<p>All modern  displays are raster-based. A raster is a 2D rectangular grid of pixels (or picture elements). A pixel has two properties: a color and a position. Color is expressed in RGB (Red-Green-Blue) components - typically 8 bits per component or 24 bits per pixel (or <em>true color</em>). The position is expressed in terms of (x, y) coordinates. The origin (0, 0) is located at the top-left corner, with x-axis pointing right and y-axis pointing down. This is different from the conventional 2D Cartesian coordinates, where y-axis is pointing upwards.</p>
+<p>The number of color-bits per pixel is called the <em>depth</em> (or <em>precision</em>) of the display. The number of rows by columns of the rectangular grid is called the <em>resolution</em> of the display, which can range from 640x480 (VGA), 800x600 (SVGA), 1024x768 (XGA) to 1920x1080 (FHD), or even higher.</p>
+<h5>Frame Buffer and Refresh Rate</h5>
+
+<img class="image-float-right float-clear" src="images/Graphics3D_RasterScan.png" />
+
+<p>The color values of the pixels are stored in a special part of graphics memory called <em>frame buffer</em>. The GPU writes the color value into the frame buffer. The display reads the color values from the frame buffer row-by-row, from left-to-right, top-to-bottom, and puts each of the values onto the screen. This is known as <em>raster-scan</em>. The display refreshes its screen several dozen times per second, typically 60Hz for LCD monitors and higher for CRT tubes. This is known as the <em>refresh rate</em>.</p>
+<p> A complete screen image is called a <em>frame</em>.</p>
+
+<h5>Double Buffering and VSync</h5>
+
+<p>While the display is reading from the frame buffer to display the current frame, we might be updating its contents for the next frame (not necessarily in raster-scan manner). This would result in the so-called <em>tearing</em>, in which the screen shows parts of the old frame and parts of the new frame.</p>
+<p>This could be resolved by using so-called <em>double buffering</em>. Instead of using a single frame buffer, modern GPU uses two of them: a <em>front buffer</em> and a <em>back buffer</em>. The display reads from the front buffer, while we can write the next frame to the back buffer. When we finish, we signal to GPU to swap the front and back buffer (known as <em>buffer swap</em> or <em>page flip</em>).</p>
+<p>Double buffering alone does not solve the entire problem, as the buffer swap might occur at an inappropriate time, for example, while the display is in the middle of displaying the old frame. This is resolved via the so-called <em>vertical synchronization</em> (or <em>VSync</em>) at the end of the raster-scan. When we signal to the GPU to do a buffer swap, the GPU will wait till the next VSync to perform the actual swap, after the entire current frame is displayed.</p>
+
+<p>The most important point is: When the VSync buffer-swap is enabled, you cannot refresh the display faster than the refresh rate of the display!!! For the LCD/LED displays, the refresh rate is typically locked at 60Hz or 60 frames per second, or 16.7 milliseconds for each frame. Furthermore, if you application refreshes at a fixed rate, the resultant refresh rate is likely to be an integral factor of the display's refresh rate, i.e., 1/2, 1/3, 1/4, etc.</p>
+
+<h3>3D Graphics Rendering Pipeline</h3>
+
+<p>A <em>pipeline</em>, in computing terminology, refers to a series of processing stages in which the output from one stage is fed as the input of the next stage, similar to a factory assembly line or water/oil pipe. With massive parallelism, pipeline  can greatly improve the overall throughput.</p>
+
+<p>In computer graphics, <em>rendering</em> is the process of producing image on the display from model description.</p>
+
+<p>The <em>3D Graphics Rendering Pipeline</em> accepts description of 3D objects in terms of vertices of primitives (such as triangle, point, line and quad), and produces the color-value for the pixels on the display.</p>
+
+<img class="image-center" src="images/Graphics3D_Pipe.png" />
+
+<p>The 3D graphics rendering pipeline consists of the following main stages:</p>
+
+<ol>
+<li>Vertex Processing: Process and transform individual vertices.</li>
+<li>Rasterization: Convert each primitive (connected vertices) into a set of fragments. A fragment can be treated as a pixel in 3D spaces, which is aligned with the pixel grid, with attributes such as position, color, normal and texture.</li>
+<li>Fragment Processing: Process individual fragments.</li>
+<li>Output Merging: Combine the fragments of all primitives (in 3D space) into 2D color-pixel for the display.</li>
+</ol>
+
+<p>In modern GPUs, the vertex processing stage and fragment processing stage are programmable. You can write programs, known as <em>vertex shader</em> and <em>fragment shader</em> to perform your custom transform for vertices and fragments. The shader programs are written in C-like high level languages such as GLSL (OpenGL Shading Language), HLSL (High-Level Shading Language for Microsoft Direct3D), or Cg (C for Graphics by NVIDIA).</p>
+<p>On the other hand, the rasterization and output merging stages are not programmable, but configurable - via configuration commands  issued to the GPU.</p>
+
+<h3>Vertices, Primitives, Fragment and Pixels</h3>
+
+<h4>3D Graphics Coordinate Systems</h4>
+
+<img class="image-float-right" src="images/Graphics3D_RHS.png" />
+
+<p>OpenGL adopts the <em>Right-Hand Coordinate System</em> (RHS). In the RHS, the x-axis is pointing right, y-axis is pointing up, and z-axis is pointing out of the screen. With your right-hand fingers curving from the x-axis towards the y-axis, the thumb is pointing at the z-axis. RHS is <em>counter-clockwise</em> (CCW). The 3D Cartesian Coordinates is a RHS.</p>
+<p>Some graphics software (such as Microsoft Direct3D) use <em>Left-hand System</em> (LHS), where the z-axis is inverted. LHS is clockwise (CW). In this article, we shall adopt the RHS and CCW used in OpenGL.</p>
+
+<h4>Primitives</h4>
+
+<p>The inputs to the Graphics Rendering Pipeline are geometric <em>primitives</em> (such as triangle, point, line or quad), which is formed by <em>one or more vertices</em>.</p>
+
+<p>OpenGL supports three classes of geometric primitives: <em>points</em>, <em>line segments</em>, and <em>closed polygons</em>. They are specified via vertices. Each vertex is associated with its attributes such as the position, color, normal and texture. OpenGL provides 10 primitives as shown. Sphere, 3D box and pyramid are not primitives. They are typically assembled using primitive triangle or quad.</p>
+<img class="image-center" src="images/GL_GeometricPrimitives.png" />
+
+<h4>Vertices</h4>
+
+<p>Recall that <em>a primitive is made up of one or more vertices</em>. A <em>vertex</em>, in computer graphics, has these attributes:</p>
+<ol>
+<li>Position in 3D space <em>V</em>=(<em>x</em>, <em>y</em>, <em>z</em>): typically expressed in floating point numbers.</li>
+<li>Color: expressed in RGB (Red-Green-Blue) or RGBA (Red-Green-Blue-Alpha) components. The component values are typically normalized to the range of 0.0 and 1.0 (or 8-bit unsigned integer between 0 and 255). Alpha is used to specify the transparency, with alpha of 0 for totally transparent and alpha of 1 for opaque.</li>
+<li>Vertex-Normal <em>N</em>=(<em>n<sub>x</sub></em>, <em>n<sub>y</sub></em>, <em>n<sub>z</sub></em>): We are familiar with the concept of surface normal, where the normal vector is perpendicular to the surface. In computer graphics, however, we need to attach a normal vector to each vertex, known as <em>vertex-normal</em>. Normals are used to differentiate the front- and back-face, and for other processing such as lighting. Right-hand rule (or counter-clockwise) is used in OpenGL. The normal is pointing outwards, indicating the outer surface (or front-face).</li>
+<li>Texture <em>T</em>=(<em>s</em>, <em>t</em>): In computer graphics, we often wrap a 2D image to an object to make it seen realistic. A vertex could have a 2D texture coordinates (<em>s</em>, <em>t</em>), which provides a reference point to a 2D texture image.</li>
+<li>Others.</li>
+</ol>
+
+<h5>OpenGL Primitives and Vertices</h5>
+
+<img class="image-float-right" src="images/Graphics3D_Quad.png" />
+
+<p>As an example, the following OpenGL code segment specifies a color-cube, center at the origin. </p>
+<p>To create a geometric object or <em>model</em>, we use a pair of <code>glBegin(<em>PrimitiveType</em>)</code> and <code>glEnd()</code> to enclose the vertices that form the model. For <em>primitiveType</em> that ends with 'S' (e.g., <code>GL_QUADS</code>), we can define multiple shapes of the same type.</p>
+<p>Each of the 6 faces is a primitive quad (<code>GL_QUAD</code>). We first set the color via <code>glColor3f(<em>red</em>, <em>green</em>, <em>blue</em>)</code>. This color would be applied to all subsequent vertices until it is overridden. The 4 vertices of the quad are specified via <code>glVertex3f(<em>x</em>, <em>y</em>, <em>z</em>)</code>, in counter-clockwise manner such that the surface-normal is pointing outwards, indicating its front-face. All four vertices has this surface-normal as its vertex-normal.</p>
+
+<pre class="color-example">
+glBegin(GL_QUADS); <span class="color-comment">// of the color cube</span>
+ 
+   <span class="color-comment">// Top-face</span>
+   glColor3f(0.0f, 1.0f, 0.0f); <span class="color-comment">// green</span>
+   glVertex3f(1.0f, 1.0f, -1.0f);
+   glVertex3f(-1.0f, 1.0f, -1.0f);
+   glVertex3f(-1.0f, 1.0f, 1.0f);
+   glVertex3f(1.0f, 1.0f, 1.0f);
+ 
+   <span class="color-comment">// Bottom-face</span>
+   glColor3f(1.0f, 0.5f, 0.0f); <span class="color-comment">// orange</span>
+   glVertex3f(1.0f, -1.0f, 1.0f);
+   glVertex3f(-1.0f, -1.0f, 1.0f);
+   glVertex3f(-1.0f, -1.0f, -1.0f);
+   glVertex3f(1.0f, -1.0f, -1.0f);
+ 
+   <span class="color-comment">// Front-face</span>
+   glColor3f(1.0f, 0.0f, 0.0f); <span class="color-comment">// red</span>
+   glVertex3f(1.0f, 1.0f, 1.0f);
+   glVertex3f(-1.0f, 1.0f, 1.0f);
+   glVertex3f(-1.0f, -1.0f, 1.0f);
+   glVertex3f(1.0f, -1.0f, 1.0f);
+ 
+   <span class="color-comment">// Back-face</span>
+   glColor3f(1.0f, 1.0f, 0.0f); <span class="color-comment">// yellow</span>
+   glVertex3f(1.0f, -1.0f, -1.0f);
+   glVertex3f(-1.0f, -1.0f, -1.0f);
+   glVertex3f(-1.0f, 1.0f, -1.0f);
+   glVertex3f(1.0f, 1.0f, -1.0f);
+ 
+   <span class="color-comment">// Left-face</span>
+   glColor3f(0.0f, 0.0f, 1.0f); <span class="color-comment">// blue</span>
+   glVertex3f(-1.0f, 1.0f, 1.0f);
+   glVertex3f(-1.0f, 1.0f, -1.0f);
+   glVertex3f(-1.0f, -1.0f, -1.0f);
+   glVertex3f(-1.0f, -1.0f, 1.0f);
+ 
+   <span class="color-comment">// Right-face</span>
+   glColor3f(1.0f, 0.0f, 1.0f); <span class="color-comment">// magenta</span>
+   glVertex3f(1.0f, 1.0f, -1.0f);
+   glVertex3f(1.0f, 1.0f, 1.0f);
+   glVertex3f(1.0f, -1.0f, 1.0f);
+   glVertex3f(1.0f, -1.0f, -1.0f);
+ 
+glEnd(); <span class="color-comment">// of the color cube</span>
+</pre>
+
+<h5>Indexed Vertices</h5>
+<p>Primitives often share vertices. Instead of repeatedly specifying the vertices, it is more efficient to create an index list of vertices, and use the indexes in specifying the primitives.</p>
+
+<p>For example, the following code fragment specifies a pyramid, which is formed by 5 vertices. We first define 5 vertices in an index array, followed by their respectively color. For each of the 5 faces, we simply provide the vertex index and color index.</p>
+
+<pre class="color-example">
+float[] vertices = { <span class="color-comment">// 5 vertices of the pyramid in (x,y,z)</span>
+      -1.0f, -1.0f, -1.0f,  <span class="color-comment">// 0. left-bottom-back</span>
+       1.0f, -1.0f, -1.0f,  <span class="color-comment">// 1. right-bottom-back</span>
+       1.0f, -1.0f,  1.0f,  <span class="color-comment">// 2. right-bottom-front</span>
+      -1.0f, -1.0f,  1.0f,  <span class="color-comment">// 3. left-bottom-front</span>
+       0.0f,  1.0f,  0.0f   <span class="color-comment">// 4. top</span>
+};
+          
+float[] colors = {  <span class="color-comment">// Colors of the 5 vertices in RGBA</span>
+      0.0f, 0.0f, 1.0f, 1.0f,  <span class="color-comment">// 0. blue</span>
+      0.0f, 1.0f, 0.0f, 1.0f,  <span class="color-comment">// 1. green</span>
+      0.0f, 0.0f, 1.0f, 1.0f,  <span class="color-comment">// 2. blue</span>
+      0.0f, 1.0f, 0.0f, 1.0f,  <span class="color-comment">// 3. green</span>
+      1.0f, 0.0f, 0.0f, 1.0f   <span class="color-comment">// 4. red</span>
+};
+  
+byte[] indices = { <span class="color-comment">// Vertex indices of the 4 Triangles</span>
+      2, 4, 3,   <span class="color-comment">// front face (CCW)</span>
+      1, 4, 2,   <span class="color-comment">// right face</span>
+      0, 4, 1,   <span class="color-comment">// back face</span>
+      4, 0, 3    <span class="color-comment">// left face</span>
+};
+ 
+<span class="color-comment">// Transfer the arrays to vertex-buffer, color-buffer and index-buffer.
+// Draw the primitives (triangle) from the index buffer</span></pre>
+
+<h4>Pixel vs. Fragment</h4>
+<p>Pixels refers to the dots on the display, which are aligned in a 2-dimensional grid of a certain rows and columns corresponding to the display's resolution. A pixel is 2-dimensional, with a (<em>x</em>, <em>y</em>) position and a RGB color value (there is no alpha value for pixels). The purpose of the Graphics Rendering Pipeline is to produce the color-value for all the pixels for displaying on the screen, given the input primitives.</p>
+
+<img class="image-center" src="images/Graphics3D_VertexFragment.png" />
+<p>In order to produce the grid-aligned pixels for the display, the <em>rasterizer</em> of the graphics rendering pipeline, as its name implied, takes each input primitive and perform <em>raster-scan</em> to produce a set of grid-aligned fragments enclosed within the primitive. A fragment is 3-dimensional, with a (<em>x</em>, <em>y</em>, <em>z</em>) position. The (<em>x</em>, <em>y</em>) are aligned with the 2D pixel-grid. The <em>z</em>-value (not grid-aligned) denotes its depth. The z-values are needed to capture the relative depth of various primitives, so that the occluded objects can be discarded (or the alpha channel of transparent objects processed) in the output-merging stage.</p>
+<p>Fragments are produced via <em>interpolation</em> of the vertices. Hence, a fragment has all the vertex's attributes such as color, fragment-normal and texture coordinates.</p>
+<p>In modern GPU, vertex processing and fragment processing are programmable. The programs are called vertex shader and fragment shader.</p>
+<p>(Direct3D uses the term &quot;pixel&quot; for &quot;fragment&quot;.)</p>
+
+
+
+<h3>Vertex Processing</h3>
+
+<h4>Coordinates Transformation</h4>
+
+<p>The process used to produce a 3D scene on the display in Computer Graphics is like taking a photograph with a camera. It involves four transformations:</p>
+
+<ol>
+<li>Arrange the objects (or models, or avatar) in the world (<em>Model Transformation</em> or <em>World transformation</em>).</li>
+<li>Position and orientation the camera (<em>View transformation</em>).</li>
+<li>Select a camera lens (wide angle, normal or telescopic), adjust the focus length and zoom factor to set the camera's field of view (<em>Projection transformation</em>).</li>
+<li>Print the photo on a selected area of the paper (<em>Viewport transformation</em>) - in rasterization stage</li>
+</ol>
+
+<img class="image-center" src="images/Graphics3D_CoordTransform.png" />
+
+<p>A transform converts a vertex <em>V</em> from one space (or coordinate system) to another space <em>V'</em>. In computer graphics, transform is carried by multiplying the vector with a <em>transformation matrix</em>, i.e., <em><strong>V' = M V</strong></em>.</p>
+
+<h4>Model Transform (or Local Transform, or World Transform)</h4>
+
+<img class="image-center" src="images/Graphics3D_LocalSpace.png" />
+
+<p>Each object (or model or avatar) in a 3D scene is typically drawn in its own coordinate system, known as its <em>model space</em> (or <em>local space</em>, or <em>object space</em>). As we assemble the objects, we need to transform the <em>vertices</em> from their local spaces to the <em>world space</em>, which is common to all the objects. This is known as the <em>world transform</em>. The world transform consists of a series of scaling (scale the object to match the dimensions of the world), rotation (align the axes), and translation (move the origin).</p>
+
+<p>Rotation and scaling belong to a class of transformation called <em>linear transformation</em> (by definition, a linear transformation preserves vector addition and scalar multiplication). Linear transform and translation form the so-called <em>affine transformation</em>. Under an affine transformation, a straight line remains a straight line and ratios of distances between points are preserved.</p>
+
+<p>In OpenGL, a vertex <em><strong>V</strong></em> at (<em>x</em>, <em>y</em>, <em>z</em>) is represented as a 3x1 column vector:</p>
+
+<img src="images/Graphics3D_Vertex.png" />
+
+<p>Other systems, such as Direct3D, use a row vector to represent a vertex.</p>
+
+<h5>Scaling</h5>
+
+<p>3D <em>scaling</em> can be represented in a 3x3 matrix:</p>
+
+<img src="images/Graphics3D_Scaling.png" />
+
+<p>where <em>&alpha;<sub>x</sub></em>, <em>&alpha;<sub>y</sub></em> and <em>&alpha;<sub>z</sub></em> represent the scaling factors in <em>x</em>, <em>y</em> and <em>z</em> direction, respectively. If all the factors are the same, it is called <em>uniform scaling</em>.</p>
+
+<p>We can obtain the transformed result <em><strong>V'</strong></em> of vertex <strong><em>V</em></strong> via matrix multiplication, as follows:</p>
+<img src="images/Graphics3D_ScalingExample.png" />
+
+<h5>Rotation</h5>
+
+<p>3D <em>rotation</em> operates about <em>an axis of rotation</em> (2D rotation operates about a center of rotation). 3D Rotations about the <em>x</em>, <em>y</em> and <em>z</em> axes for an angle &theta; (measured in counter-clockwise manner) can be represented in the following 3x3 matrices:</p>
+
+<img src="images/Graphics3D_Rotation.png" />
+
+<p>The rotational angles about <em>x</em>, <em>y</em> and <em>z</em> axes, denoted as <em>&theta;<sub>x</sub></em>, <em>&theta;<sub>y</sub></em> and <em>&theta;<sub>z</sub></em>, are known as <em>Euler angles</em>, which can be used to specify any arbitrary orientation of an object. The combined transform is called <em>Euler transform</em>.</p>
+
+<p>[TODO] Link to Proof and illustration</p>
+
+<h5>Translation</h5>
+
+<p>Translation does not belong to linear transform, but can be modeled via a vector addition, as follows:</p>
+<img src="images/Graphics3D_Translation3D.png" />
+
+<p>Fortunately, we can  represent translation using a 4x4 matrices and obtain the transformed result via matrix multiplication, if the vertices are represented in the so-called 4-component <em>homogeneous coordinates</em> (<em>x</em>, <em>y</em>, <em>z</em>, 1), with an additional  forth <em>w</em>-component of 1. We shall describe the significance of the <em>w</em>-component later in projection transform. In general, if the <em>w</em>-component is not equal to 1, then (<em>x</em>, <em>y</em>, <em>z</em>, <em>w</em>) corresponds to Cartesian coordinates of (<em>x</em>/<em>w</em>, <em>y</em>/<em>w</em>, <em>z</em>/<em>w</em>). If <em>w</em>=0, it represents a vector, instead of a point (or vertex).</p>
+
+<p>Using the 4-component homogeneous coordinates, translation can be represented in a 4x4 matrix, as follows:</p>
+<img src="images/Graphics3D_TranslationMatrix.png" />
+
+<p>The transformed vertex <em><strong>V'</strong></em> can again be computed via matrix multiplication:</p>
+
+<img src="images/Graphics3D_TranslationExample.png" />
+
+<p>[TODO] Link to homogeneous coordinates</p>
+
+<h5>Summary of Affine Transformations</h5>
+
+<p>We rewrite the scaling and rotation into 4x4 matrices using the homogenous coordinates.</p>
+
+<img src="images/Graphics3D_AffineTransforms.png" />
+
+<h5>Successive Transforms</h5>
+<p>A series of successive affine transforms (<em><strong>T</strong></em><strong><sub>1</sub></strong>, <em><strong>T</strong></em><strong><sub>2</sub></strong>, <em><strong>T</strong></em><strong><sub>3</sub></strong>, ...) operating on a vertex <strong><em>V</em></strong> can be computed via concatenated matrix multiplications <em><strong>V' = ...T</strong></em><strong><sub>3</sub><em>T</em><sub>2</sub><em>T</em><sub>1</sub><em>V</em></strong>. The matrices can be combined before applying to the vertex because matrix multiplication is associative, i.e., <em><strong>T</strong></em><strong><sub>3</sub> (<em>T</em><sub>2</sub> (<em>T</em><sub>1</sub> <em>V</em>) )</strong> = <strong>( <em>T</em><sub>3</sub><em>T</em><sub>2</sub><em>T</em><sub>1</sub> ) <em>V</em></strong>.</p>
+
+<h5>Example</h5>
+<p>[TODO]</p>
+
+<h5>Transformation of Vertex-Normal</h5>
+
+<p>Recall that a vector has a vertex-normal, in addition to (<em>x</em>, <em>y</em>, <em>z</em>) position and color.</p>
+
+<p>Suppose that  <strong><em>M</em></strong> is a transform matrix, it can be applied to vertex-normal only if the transforms does not include non-uniform scaling. Otherwise, the transformed normal will not be orthogonal to the surface. For non-uniform scaling, we could use <strong>(<em>M</em><sup>-1</sup>)<sup>T</sup></strong> as the transform matrix, which ensure that the transformed normal remains orthogonal.</p>
+
+<p>[TODO] Diagram and more</p>
+
+<p>[TODO] Link to Proof</p>
+
+<h4>View Transform</h4>
+
+<p>After the world transform, all the objects are assembled into the world space. We shall now place the camera to capture the view.</p>
+
+<img class="image-center" src="images/Graphics3D_CameraSpace.png" />
+
+<h5>Positioning the Camera</h5>
+
+<p>In 3D graphics, we position the camera onto the world space by specifying three <em>view parameters</em>: EYE, AT and UP, in world space.</p>
+
+<ol>
+<li>The point EYE (<em>e<sub>x</sub></em>, <em>e<sub>y</sub></em>, <em>e<sub>z</sub></em>) defines the location of the camera.</li>
+<li>The vector AT  (<em>a<sub>x</sub></em>, <em>a<sub>y</sub></em>, <em>a<sub>z</sub></em>) denotes the direction where the camera is aiming at, usually at the center of the world or an object.</li>
+<li>The vector UP  (<em>u<sub>x</sub></em>, <em>u<sub>y</sub></em>, <em>u<sub>z</sub></em>) denotes the upward orientation of the camera roughly. UP is typically coincided with the y-axis of the world space. UP is roughly orthogonal to AT, but not necessary. As UP and AT define a plane, we can construct an orthogonal vector to AT in the camera space.</li>
+</ol>
+
+<p>Notice that the 9 values actually produce 6 degrees of freedom to position and orientate the camera, i.e., 3 of them are not independent.</p>
+
+<h5>OpenGL</h5>
+
+<p>In OpenGL, we can use the GLU function <code>gluLookAt()</code> to position the camera:</p>
+
+<pre class="color-syntax">
+void gluLookAt(GLdouble xEye, GLdouble yEye, GLdouble zEye, 
+               GLdouble xAt, GLdouble yAt, GLdouble zAt,
+               GLdouble xUp, GLdouble yUp, GLdouble zUp)</pre>
+
+<p>The default settings of <code>gluLookAt()</code> is:</p>
+<pre class="color-example">
+gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, -100.0, 0.0, 1.0, 0.0)</pre>
+
+<p>That is, the camera is positioned at the origin (0, 0, 0), aimed into the screen (negative z-axis), and faced upwards (positive y-axis). To use the default settings, you have to place the objects at negative z-values.</p>
+
+<h5>Computing the Camera Coordinates</h5>
+
+<p>From EYE, AT and UP, we first form the coordinate (<em>x<sub>c</sub></em>, <em>y<sub>c</sub></em>, <em>z<sub>c</sub></em>) for the camera, relative to the world space. We fix <em>z<sub>c</sub></em> to be the opposite of AT, i.e., AT is pointing at the -<em>z<sub>c</sub></em>. We can obtain the direction of <em>x<sub>c</sub></em> by taking the cross-product of AT and UP. Finally, we get the direction of <em>y<sub>c</sub></em> by taking the cross-product of <em>x<sub>c</sub></em> and <em>z<sub>c</sub></em>. Take note that UP is roughly, but not necessarily, orthogonal to AT.</p>
+
+<img src="images/Graphics3D_CameraCoord.png" />
+
+<h5>Transforming from World Space to Camera Space</h5>
+<p>Now, the world space is represented by standard orthonormal bases (<em>e</em><sub>1</sub>, <em>e</em><sub>2</sub>, <em>e</em><sub>3</sub>), where <em>e</em><sub>1</sub>=(1, 0, 0), <em>e</em><sub>2</sub>=(0, 1, 0) and <em>e</em><sub>3</sub>=(0, 0, 1), with origin at O=(0, 0, 0). The camera space has orthonormal bases (<em>x<sub>c</sub></em>, <em>y<sub>c</sub></em>, <em>z<sub>c</sub></em>) with origin at EYE=(<em>e<sub>x</sub></em>, <em>e<sub>y</sub></em>, <em>e<sub>z</sub></em>).</p>
+
+<p>It is much more convenience to express all the coordinates in the camera space. This is done via <em>view transform</em>.</p>
+
+<p>The view transform consists of two operations: a translation (for moving EYE to the origin), followed by a rotation (to axis the axes):</p>
+
+<img src="images/Graphics3D_ViewTranslationRotation.png" />
+
+<h5>The View Matrix</h5>
+
+<p>We can combine the two operations into one single <em>View  Matrix</em>:</p>
+<img src="images/Graphics3D_ViewMatrix.png" />
+
+<h5>Model-View Transform</h5>
+
+<p>In Computer Graphics, moving the objects relative to a fixed camera (<em>Model transform</em>), and moving the camera relative to a fixed object (<em>View transform</em>) produce the same image, and therefore are equivalent. OpenGL, therefore, manages the Model transform and View transform in the same manner on a so-called <em>Model-View matrix</em>. Projection transformation (in the next section) is managed via a <em>Projection matrix</em>.</p>
+
+<h4>Projection Transform - Perspective Projection</h4>
+
+<p>Once the camera is positioned and oriented, we need to decide what it can see (analogous to choosing the camera's field of view by adjusting the focus length and zoom factor), and how the objects are projected onto the screen. This is done by selecting a projection mode (perspective or orthographic) and specifying a viewing volume or <em>clipping volume</em>. Objects outside the clipping volume are clipped out of the scene and cannot be seen.</p>
+
+<h5>View Frustum in Perspective View</h5>
+
+<p>The camera has a limited field of view, which exhibits a <em>view frustum</em> (truncated pyramid), and is specified by four parameters: fovy, aspect, zNear and zFar.</p>
+
+<ol>
+<li>Fovy: specify the total vertical angle of view in degrees.</li>
+<li>Aspect: the ratio of width vs. height. For a particular <em>z</em>, we can get the height from the fovy, and then get the width from the aspect.</li>
+<li>zNear; the near plane.</li>
+<li>zFar: the far plane.</li>
+</ol>
+
+<p>The camera space (<em>x<sub>c</sub></em>, <em>y<sub>c</sub></em>, <em>z<sub>c</sub></em>) is renamed to the familiar (<em>x</em>, <em>y</em>, <em>z</em>) for convenience.</p>
+
+
+<img class="image-center" src="images/Graphics3D_CameraPerspective.png" />
+
+<p>The projection with view frustum is known as <em>perspective projection</em>, where objects nearer to the COP (Center of Projection) appear larger than objects further to the COP of the same size.</p>
+
+<p>An object outside the view frustum is not visible to the camera. It does not contribute to the final image and shall be discarded to improve the performance. This is known as <em>view-frustum culling</em>. If an object partially overlaps with the view frustum, it will be <em>clipped</em> in the later stage.</p>
+
+<h5>OpenGL</h5>
+
+<p>In OpenGL, there are two functions for choosing the perspective projection and setting its clipping volume:</p>
+<ol>
+<li>More commonly-used GLU function <code>gluPerspective()</code>:
+<pre class="color-syntax">
+void gluPerspective(GLdouble fovy, GLdouble aspectRatio, GLdouble zNear, GLdouble zFar)
+       <span class="color-comment">// fovy is the angle between the bottom and top of the projectors;
+       // aspectRatio is the ratio of width and height of the front (and also back) clipping plane;
+       // zNear and zFar specify the front and back clipping planes.</span></pre>
+</li>
+
+<li>Core GL function <code>glFrustum()</code>:
+<pre class="color-syntax">
+void glFrustum(GLdouble xLeft, GLdouble xRight, GLdouble yBottom, GLdouble yTop, GLdouble zNear, GLdouble zFar)
+       <span class="color-comment">// xLeft, xRight, yBottom and yTop specifies the front clipping plane.
+       // zNear and zFar specify the positions of the front and back clipping planes.</span></pre>
+</li>
+</ol>
+
+
+<h5>Clipping-Volume Cuboid</h5>
+
+<p>Next, we shall apply a so-called <em>projection matrix</em> to transform the view-frustum into a axis-aligned cuboid clipping-volume of 2x2x1 centered on the near plane, as illustrated. The near plane has z=0, whereas the far plane has z=-1. The planes have dimension of 2x2, with range from -1 to +1.</p>
+
+<img class="image-center" src="images/Graphics3D_ClipVolume.png" />
+
+<h5>The Perspective Projection Matrix</h5>
+
+<p>The projection matrix is given by:</p>
+
+<img src="images/Graphics3D_ProjectionMatrix.png" />
+
+<p>Take note that the last row of the matrix is no longer [0 0 0 1]. With input vertex of (x, y, z, 1), the resultant <em>w</em>-component would not be 1. We need to normalize the resultant homogeneous coordinates (x, y, z, w) to (x/w, y/w, z/w, 1) to obtain position in 3D space. (It is amazing that homogeneous coordinates can be used for translation, as well as the perspective projection.)</p>
+
+<p>[TODO] Link to Proof</p>
+
+<p>The final step is to flip the z-axis, so that the near plane is still located at z=0, but the far plane is flipped and located at z=1 (instead of z=-1). In other words, the larger the <em>z</em>, the further is the object. To perform flipping, we can simply negate the third row of the projection matrix.</p>
+
+<img class="image-center" src="images/Graphics3D_ClipVolumeFlip.png" />
+
+<img src="images/Graphics3D_ProjectionMatrixFlip.png" />
+
+<p>After the flip, the coordinate system is no longer a Right-Hand System (RHS), but becomes a Left-hand System (LHS).</p>
+
+<p>[TODO] Link to Proof</p>
+
+<h5>OpenGL's Model-View Matrix and Projection Matrix</h5>
+<p>OpenGL manages the transforms via two matrices: a <em>model-view matrix</em> (<code>GL_MODELVIEW</code> for handling model and view transforms) and a <em>projection matrix</em> (<code>GL_PROJECTION</code> for handling projection transform). These two matrices can be manipulated independently.</p>
+
+<p> We need to first select the matrix for manipulation via:</p>
+
+<pre class="color-syntax">void glMatrixMode(GLenum <em>matrix</em>)    <span class="color-comment">// Select matrix for manipulating, e.g., GL_PROJECTION, GL_MODELVIEW.</span></pre>
+
+<p>We can reset the currently selected matrix via:</p>
+
+<pre class="color-syntax">void glLoadIdentity()</pre>
+
+<p>We can save the value of the currently selected matrix onto the stack and restore it back via:</p>
+
+<pre class="color-syntax">
+void glPushMatrix()
+void glPopMatrix()</pre>
+
+<p>Push and pop use a stack and operate in a last-in-first-out manner, and can be nested.</p>
+
+<h4>Projection Transform - Orthographic Projection</h4>
+<p>Besides the commonly-used <em>perspective projection</em>, there is another so-called <em>orthographic projection</em> (or <em>parallel projection</em>), which is a special case where the camera is placed very far away from the world (analogous to using telescopic lens). The view volume for orthographic projection is a <em>parallelepiped</em> (instead of a frustum in perspective projection).</p>
+
+<img class="image-center" src="images/Graphics3D_Orthographic.png" />
+
+<h5>OpenGL</h5>
+<p>In OpenGL, we can use <code>glOrtho()</code> function to choose the orthographic projection mode and specify its clipping volume:</p>
+
+<pre class="color-syntax">
+void glOrtho(GLdouble xLeft, GLdouble xRight, GLdouble yBottom, GLdouble yTop, GLdouble zNear, GLdouble zFar)</pre>
+
+<p>For 2D graphics, we can use <code>gluOrtho2D()</code> (GLU function instead of GL) to choose 2D orthographic projection and set its clipping area:</p>
+
+<pre class="color-syntax">
+void gluOrtho2D(GLdouble xLeft, GLdouble xRight, GLdouble yBottom, GLdouble yTop)</pre>
+
+<p>The default 3D projection in OpenGL is the orthographic (instead of perspective) with parameters (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0), i.e., a cube with sides of 2.0, centered at origin.</p>
+
+<p>[TODO] Transform matrix</p>
+
+<h4>Outputs of the Vertex Processing Stage</h4>
+
+<p>Each vertex is transformed and positioned in the clipping-volume cuboid space, together with their vertex-normal. The x and y coordinates (in the range of -1 to +1) represent its position on the screen, and the z value (in the range of 0 to 1) represents its depth, i.e., how far away from the near plane. </p>
+<p>The vertex processing stage transform individual vertices. The relationships between vertices (i.e., primitives) are not considered in this stage.</p>
+
+
+<h3>Rasterization</h3>
+
+<p>In the previous vertex processing stage, the vertices, which is usually represented in a float value, are not necessarily aligned with the pixel-grid of the display. The relationship of vertices, in term of primitives, are also not considered.</p>
+<p>In this rasterization stage, each primitive (such as triangle, quad, point and line), which is defined by one or more vertices, are <em>raster-scan</em> to obtain a set of fragments enclosed within the primitive. Fragments can be treated as 3D pixels, which are aligned with the pixel-grid. The 2D pixels have a position and a RGB color value. The 3D fragments, which are <em>interpolated</em> from the vertices, have the same set of attributes as the vertices, such as position, color, normal, texture.</p>
+
+<img class="image-center" src="images/Graphics3D_Rasterization.png" />
+
+<p>The substages of rasterization include viewport transform, clipping, perspective division, back-face culling, and scan conversion. The rasterizer is not programmable, but configurable via the directives.</p>
+
+<h4>Viewport Transform</h4>
+
+<h5>Viewport</h5>
+<p>Viewport is a <em>rectangular display area</em> on the application   window, which is measured in screen's coordinates (in  pixels, with origin at the top-left corner). A viewport defines the size and shape of the   display area to map the projected scene captured by the camera onto the   application window. It may or may not occupy the entire screen.</p>
+<p>In 3D graphics, a viewport is 3-dimensional to support z-ordering, which is needed for situations such as ordering of overlapping windows.</p>
+
+<h5>OpenGL</h5>
+<p> In OpenGL, by default, the viewport is set to cover the entire application window. We can use the <code>glViewport()</code> function to choose a smaller area (e.g., for split-screen or multi-screen application).</p>
+
+<pre class="color-syntax">
+void glViewport(GLint <em>xTopLeft</em>, GLint <em>yTopLeft</em>, GLsizei <em>width</em>, GLsizei <em>height</em>)</pre>
+
+<p>We can also set the z-range of viewport via <code>glDepthRange()</code>:</p>
+
+<pre class="color-syntax">
+glDepthRange(GLint <em>minZ</em>, GLint <em>maxZ</em>)</pre>
+
+<h5>Viewport Transform</h5>
+
+<p>Our final transform, <em>viewport transform</em>, maps the clipping-volume (2x2x1 cuboid) to the 3D viewport, as illustrated.</p>
+
+<img class="image-center" src="images/Graphics3D_Viewport.png" />
+
+<p>Viewport transform is made up of a series of reflection (of y-axis), scaling (of x, y and z axes), and translation (of the origin from the center of the near plane of clipping volume to the top-left corner of the 3D viewport). The viewport transform matrix is given by:</p>
+
+<img src="images/Graphics3D_ViewportMatrix.png" />
+
+<p>If the viewport cover the entire screen, <code>minX=minY=minZ=0</code>, <code>w=screenWidth</code> and <code>h=screenHeight</code>.</p>
+
+<h5>Aspect Ratios of Viewport and Projection Plane</h5>
+
+
+<p>It is obvious that if the aspect ratio of the viewport (set via <code>glViewport()</code>) and the projection plane (set via <code>gluPerspective()</code>, <code>glOrtho()</code>) are not the same, the shapes will be distorted. Hence, it is important to use the same aspect ratio for the viewport and the projection plane.</p>
+<p>The <code>glViewport()</code> command should be included in <code>reshaped()</code> handler, so as to re-size the viewport whenever the window is   re-sized. It is important that the aspect ratio of the projection   plane is re-configure to match the viewport's aspect ratio, in   order not to distort the shapes. In other words, <code>glViewport()</code> and <code>gluPerpective()/glOrtho()</code> should be issued together.</p>
+
+<p>For example,</p>
+
+<pre class="color-example"><span class="color-comment">// Callback when the OpenGL's window is re-sized.</span>
+void reshape(GLsizei width, GLsizei height) {  <span class="color-comment">// GLsizei for non-negative integer</span>
+   if (height == 0) height = 1;                        <span class="color-comment">// To prevent divide by 0</span>
+   GLfloat <strong>aspect</strong> = (GLfloat)width / (GLfloat)height; <span class="color-comment">// Compute aspect ratio</span>
+   
+   <span class="color-comment">// Set the viewport (display area on the window) to cover the whole application window</span>
+   <strong>glViewport</strong>(0, 0, width, height);
+   
+   <span class="color-comment">// Adjust the aspect ratio of projection's clipping volume to match the viewport </span>
+   glMatrixMode(GL_PROJECTION);   <span class="color-comment">// Select Projection matrix</span>
+   glLoadIdentity();              <span class="color-comment">// Reset the Projection matrix</span>
+   
+   <span class="color-comment">// Either &quot;perspective projection&quot; or &quot;orthographic projection&quot;, NOT both
+   
+   // 3D Perspective Projection (fovy, aspect, zNear, zFar), relative to camera's eye position</span> 
+   <strong>gluPerspective</strong>(45.0, <strong>aspect</strong>, 0.1, 100.0);
+   
+   <span class="color-comment">// OR</span>
+
+   <span class="color-comment">// 3D Orthographic Projection (xLeft, xRight, yBottom, yTop, zNear, zFar),
+   // relative to camera's eye position.</span>
+   if (width &lt;= height) {
+      <strong>glOrtho</strong>(-1.0, 1.0, -1.0 / <strong>aspect</strong>, 1.0 / aspect, -1.0, 1.0);  <span class="color-comment">// aspect &lt;= 1</span>
+   } else {
+      <strong>glOrtho</strong>(-1.0 * aspect, 1.0 * <strong>aspect</strong>, -1.0, 1.0, -1.0, 1.0);  <span class="color-comment">// aspect &gt; 1</span>
+   }
+   
+   <span class="color-comment">// Reset the Model-View matrix</span>
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
+}</pre>
+
+
+<h4>Back-Face Culling</h4>
+
+<p>While view frustum culling discard objects outside the view frustum, back-face culling discard primitives which is not facing the camera.</p>
+
+<p>Back face can be declared based on the normal vector and the vector connecting the surface and the camera.</p>
+
+<p>Back-face culling shall not be enabled if the object is transparent and alpha blending is enabled.</p>
+
+<h5>OpenGL</h5>
+
+<p>In OpenGL, face culling is disabled by default, and both front-face and back-faces are rendered. We can use function <code>glCullFace()</code> to specify whether the back-face (<code>GL_BACK</code>) or front-face (<code>GL_FRONT</code>) or both (<code>GL_FRONT_AND_BACK</code>) shall be culled.</p>
+
+
+<h3>Fragment Processing</h3>
+
+<p>After rasterization, we have a set of fragments for each primitive. A fragment has a position, which is aligned to the pixel-grid. It has a depth, color, normal and texture coordinates, which are interpolated from the vertices.</p>
+
+<p>The fragment processing focuses on the <em>texture</em> and <em>lighting</em>, which has the greatest impact on the quality of the final image. We shall discussed texture and lighting in details in later sections.</p>
+
+<p>The operations involved in the fragment processor are:</p>
+<ol>
+<li>The first operation in fragment processing is texturing.</li>
+<li>Next, primary and secondary colors are combined, and fog calculation may be applied.</li>
+<li>The optional scissor test, alpha test, stencil test, and depth-buffer test are carried out, if enabled.</li>
+<li>Then, the optional blending, dithering, logical operation, and bitmasking may be performed.</li>
+</ol>
+
+<h3>Output Merging</h3>
+
+<h4>Z-Buffer and Hidden-Surface Removal</h4>
+
+<p><em>z-buffer</em> (or <em>depth-buffer</em>) can be used to remove   hidden surfaces (surfaces blocked by other surfaces and cannot be seen   from the camera). The z-buffer of the screen is initialized to 1 (farthest) and color-buffer initialized to the background color. For each fragment (of each primitive) processed, its z-value is checked against the buffer value. If its z-value is smaller than the z-buffer, its color and z-value are copied into the buffer. Otherwise, this fragment is occluded by another object and discarded. The fragments can be processed in any order, in this algorithm.</p>
+
+<h5>OpenGL</h5>
+
+<p>In OpenGL, to use z-buffer for hidden-surface removal via depth testing, we need to:</p>
+
+<ol>
+<li>Request for z-buffer via <code>glutInitDisplayMode()</code>:
+<pre class="color-syntax">glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | <strong>GLUT_DEPTH</strong>);     <span class="color-comment">// GLUT_DEPTH to request for depth-buffer</span></pre>
+</li>
+
+<li>Enable depth testing on z-buffer:
+  <pre class="color-syntax">glEnable(GL_DEPTH_TEST);</pre>
+</li>
+
+<li>Clear the z-buffer (to 1 denoting the farthest) and the color buffer (to the background color):
+  <pre class="color-syntax">glClear(GL_COLOR_BUFFER_BIT | <strong>GL_DEPTH_BUFFER_BIT</strong>);  <span class="color-comment">// Clear color and depth buffers</span></pre>
+</li>
+</ol>
+
+<h4>Alpha-Blending</h4>
+
+<p>Hidden-surface removal works only if the front object is totally <em>opaque</em>. In computer graphics, a fragment is not necessarily opaque, and could contain an alpha value specifying its degree of transparency. The alpha is typically normalized to the range of [0, 1], with 0 denotes totally transparent and 1 denotes totally opaque. If the fragment is not totally opaque, then part of its background object could show through, which is known as <em>alpha blending</em>. Alpha-blending and hidden-surface removal are mutually exclusive.</p>
+
+<p>The simplest  blending equation is as follows:</p>
+
+<p><em>c</em> = &alpha;<em><sub>s</sub>c<sub>s</sub></em> + (1 - &alpha;<em><sub>s</sub></em>)<em>c<sub>d</sub></em></p>
+
+<p>where <em>c<sub>s</sub></em> is the source color, &alpha;<em><sub>s</sub></em> is the source alpha, <em>c<sub>d</sub></em> is the destination (background) color. The 3 color channels RGB are applied independently.</p>
+<p>For this blending equation, the order of placing the fragment is important. The fragments must be sorted from back-to-front, with the largest z-value processed first. Also, the destination alpha value is not used.</p>
+
+<p>There are many other blending equations to achieve different effects.</p>
+
+<h5>OpenGL</h5>
+<p>In OpenGL, to perform alpha blending, we need to enable blending and disable depth-test (which performs hidden-surface removal). For example,</p>
+
+<pre class="color-example">
+if (blendingEnabled) {
+   glEnable(GL_BLEND);        <span class="color-comment">// Enable blending</span>
+   glDisable(GL_DEPTH_TEST);  <span class="color-comment">// Need to disable depth testing</span>
+} else {
+   glDisable(GL_BLEND);
+   glEnable(GL_DEPTH_TEST);
+}</pre>
+
+
+
+
+<h5>Source and Destination Blending Factors</h5>
+
+<p>In OpenGL, the <code>glBlendFunc()</code> function can be used to specify the so-called <em>source</em> and <em>destination blending factors</em>:</p>
+
+<pre class="color-syntax">
+void glBlendFunc(GLenum <em>sourceBlendingFactor</em>, GLenum <em>destinationBlendingFactor</em>)</pre>
+
+<p>Suppose that a new object (called <em>source</em>) is to be blended with the existing objects in the color buffer (called <em>destination</em>). The source's color is (<em>R<sub>s</sub></em>, <em>G<sub>s</sub></em>, <em>B<sub>s</sub></em>, <em>A<sub>s</sub></em>), and the destination's color is (<em>R<sub>d</sub></em>, <em>G<sub>d</sub></em>, <em>B<sub>d</sub></em>, <em>A<sub>d</sub></em>). The source and destination color values will be weighted with respective to the source blending factor and destination blending factor and combined to produce the resultant value. Each of the RGB components will be computed independently.</p>
+<p>For example, suppose the source blending factor for G component is <em>p</em> and the destination blending factor for G component is <em>q</em>, the resultant G component is <em>p</em>×<em>G<sub>s</sub></em> + <em>q</em>×<em>G<sub>d</sub></em>.</p>
+
+<p>There are many choices of the blending factors. For example, a popular choice is:</p>
+
+<pre class="color-syntax">glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);</pre>
+
+<p>where each component of the source is weighted by source's alpha value (<em>A<sub>s</sub></em>), and each component of the destination is weighted by 1-<em>A<sub>s</sub></em>. In this case, if the original color component's value is within [0.0, 1.0], the resultant value is guaranteed to be within this range. The drawback is that the final color depends on the order of rendering if many surfaces are added one after another (because the destination alpha value is not considered).</p>
+
+<p>Another example of blending factors is:</p>
+<pre class="color-syntax">glBlendFunc(GL_SRC_ALPHA, GL_ONE);</pre>
+
+<p>where each component of source is weighted by source's alpha value (<em>A<sub>s</sub></em>), and each component of the destination is weight by 1. The value may overflow/underflow. But the final color does not depends on the order of rendering when many objects are added.</p>
+
+<p>Other values for the blending factors include <code>GL_ZERO</code>, <code>GL_ONE</code>, <code>GL_SRC_COLOR</code>, <code>GL_ONE_MINUS_SRC_COLOR</code>, <code>GL_DST_COLOR</code>, <code>GL_ONE_MINUS_DST_COLOR</code>, <code>GL_SRC_ALPHA</code>, <code>GL_ONE_MINUS_SRC_ALPHA</code>, <code>GL_DST_ALPHA</code>, <code>GL_ONE_MINUS_DST_ALPHA</code>, <code>GL_CONSTANT_COLOR</code>, <code>GL_ONE_MINUS_CONSTANT_COLOR</code>, <code>GL_CONSTANT_ALPHA</code>, and     <code>GL_ONE_MINUS_CONSTANT_ALPHA</code>.</p>
+
+<p>The default for source blending factor is <code>GL_ONE</code>, and the default for destination blending factor is <code>GL_ZERO</code>. That is, opaque (totally non-transparent) surfaces.</p>
+
+<p>The computations also explain why depth-testing shall be disabled when alpha-blending is enabled. This is because the final color will be determined by blending between source and destination colors for   translucent surfaces, instead of relative depth (the color of the nearer surface) for opaque surfaces.</p>
+
+<h3>Lighting</h3>
+
+<p><em>Lighting</em> refers to the handling of interactions between the light sources and the objects in the 3D scene. Lighting is one of the most important factor in producing a realistic scene.</p>
+<p>The color that we see in the real world is the result of the interaction   between the light sources and the color material surfaces.  In other   words, three parties are involved: viewer, light sources, and the   material. When light (of a certain spectrum) from a light source strikes   a surface, some gets absorbed, some is reflected or scattered. The   angle of reflection depends on the angle of incidence and the surface   normal. The amount of scatterness depends on the smoothness and the   material of the surface. The reflected light also spans a certain color   spectrum, which depends on the color spectrum of the incident light and   the absorption property of the material. The strength of the reflected   light depends on the position and distance of the light source and the   viewer, as well as the material. The reflected light may strike other   surfaces, and some is absorbed and some is reflected again. The color   that we perceived about a surface is the reflected light hitting our   eye. In a 2D photograph or painting, objects appear to be   three-dimensional due to some small variations in colors, known as <em>shades</em>.</p>
+
+<p>The are two classes of lighting models:</p>
+<ol>
+<li>Local illumination: consider only the direct lightings. The color of the surface depends on the reflectance properties of the surface and the direct lightings.</li>
+<li>Global illumination: in real world, objects received indirect lighting reflected from other objects and the environment. The global illumination model consider indirect lightings reflected from other objects in the scene. Global illumination model is complex and compute intensive.</li>
+</ol>
+
+<h4>Phong Lighting Model for Light-Material Interaction</h4>
+<p>Phong lighting model is a local illumination model, which is compute inexpensive and extensively used especially in the earlier days. It considers four types of lightings: diffuse, specular, ambient and emissive.</p>
+
+<p>Consider a fragment <em>P</em> on a surface, four vectors are used: the light source <em>L</em>, the viewer <em>V</em>, the fragment-normal <em>N</em>, and the perfect reflector <em>R</em>. The perfect reflector <em>R</em> can be computed from the surface normal <em>N</em> and the incidence light <em>L</em>, according to Newton's law which states that the angle of incidence is equals to the angle of reflection.</p>
+
+<img class="image-center" src="images/Graphics3D_Lighting.png" />
+
+<h5>Diffuse Light</h5>
+
+<p>Diffuse light models distant directional light source (such as the sun light). The reflected light is scattered equally in all directions, and appears the same to all viewers regardless of their positions, i.e., independent of viewer vector <em>V</em>. The strength of incident light depends on the angle between the light source <em>L</em> and the normal <em>N</em>, i.e., the dot product between <em>L</em> and <em>N</em>.</p>
+
+<img class="image-center" src="images/Graphics3D_LightingDiffuse.png" />
+
+<p>The resultant color can be computed as follows:</p>
+
+<p>The strength of the incident light is <em>max</em>(<em>L</em>&sdot;<em>N</em>, 0). We use the <em>max</em> function to discard the negative number, i.e., the angle is more than 90 degree. Suppose the light source has color <em>s<sub>diff</sub></em>, and the fragment has diffusion reflectance of <em>m<sub>diff</sub></em>, the resultant color <em>c</em> is:</p>
+
+<p><em>c<sub>diff</sub></em> = <em>max</em>(<em>L</em>&sdot;<em>N</em>, 0) <em>s<sub>diff</sub></em> <em>m<sub>diff</sub></em></p>
+
+<p>where the RGB component of the color are computed independently.</p>
+
+<h5>Specular Light</h5>
+
+<p>The reflected light is concentrated along the direction of perfect reflector <em>R</em>. What a viewer sees depends on the angle (cosine) between <em>V</em> and <em>R</em>.</p>
+
+<img class="image-center" src="images/Graphics3D_LightingSpecular.png" />
+
+<p>The resultant color due to specular reflection is given by:</p>
+
+<p><em>c<sub>spec</sub></em> = <em>max</em>(<em>R</em>&sdot;<em>V</em>, 0)<sup><em>sh</em></sup> <em>s<sub>spec</sub></em> <em>m<sub>spec</sub></em></p>
+
+<p>the <em>sh</em> is known as the shininess factor. As <em>sh</em> increases, the light cone becomes narrower (because <em>R</em>&sdot;<em>V</em> &le; 1), the highlighted spot becomes smaller.</p>
+
+
+<h5>Ambient Light</h5>
+
+<p>A constant amount of light applied to every point of the scene. The resultant color is:</p>
+
+<p><em>c<sub>amb</sub></em> =<em>s<sub>amb</sub></em> <em>m<sub>amb</sub></em></p>
+
+
+<h5>Emissive Light</h5>
+<p>Some surfaces may emit light. The resultant color is <em>c<sub>em</sub></em> = <em>m<sub>em</sub></em></p>
+
+<h5>Resultant Color</h5>
+
+<p>The resultant color is the sum of the contribution in all the four components:</p>
+
+<p><em>c<sub>final</sub></em> =<em>c<sub>diff</sub></em> +<em> c<sub>spec</sub></em> + <em>c<sub>amb</sub></em> + <em>c<sub>em</sub></em></p>
+
+<h4>OpenGL's Lighting and Material</h4>
+
+<p>OpenGL provides point sources (omni-directional), spotlights   (directional with cone-shaped), and ambient light (a constant factor).   Light source may be located at a fixed position or infinitely far away.    Each source has separate ambient, diffuse, and specular components.   Each source has RGB components. The lighting calculation is performed on   each of the components independently (local illumination without considering the indirect lighting).  Materials are modeled in the   same manner. Each type of material has a separate ambient, diffuse, and   specular components, with parameters specifying the fraction that is   reflected for each corresponding component of the light sources.   Material may also have a emissive component.</p>
+
+<p>In OpenGL, you need to enable the lighting state, and each of the light sources, identified via <code>GL_LIGHT0</code> to <code>GL_LIGHT<em>n</em></code>.</p>
+
+<pre class="color-syntax">
+glEnable(GL_LIGHTING);  <span class="color-comment">// Enable lighting</span>
+glEnable(GL_LIGHT0);    <span class="color-comment">// Enable light source 0</span>
+glEnable(GL_LIGHT1);    <span class="color-comment">// Enable light source 1</span></pre>
+
+<p>Once lighting is enable, color assigned by <code>glColor()</code> are no longer used. Instead, the color depends on the light-material interaction and the viewer's position.</p>
+
+<p>You can use <code>glLight()</code> to define a light source (<code>GL_LIGHT0</code> to <code>GL_LIGHT<em>n</em></code>):</p>
+
+<pre class="color-syntax">
+void glLight[if](GLenum <em>lightSource</em>ID, GLenum <em>parameterName</em>, type <em>parameterValue</em>);
+void glLight[if]v(GLenum <em>lightSource</em>ID, GLenum <em>parameterName</em>, type *<em>parameterValue</em>);
+  <span class="color-comment">// <em>lightSource</em>ID: ID for the light source, GL_LIGHT0 to GL_LIGHT<em>n</em>.
+  // <em>parameterName</em>: such as GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_POSITION.
+  // <em>parameterValue</em>: values of the parameter.</span></pre>
+
+<p>The default for <code>GL_POSITION</code> is (0, 0, 1) relative to camera coordinates, so it is behind the default camera position (0, 0, 0).</p>
+
+<p><code>GL_LIGHT0</code> is special, with default value of white (1, 1, 1) for the <code>GL_AMBIENT</code>, <code>GL_DIFFUSE</code>, <code>GL_SPECULAR</code> components. You can enable <code>GL_LIGHT0</code> right away by using its default settings. For other light IDs (<code>GL_LIGHT1</code> to <code>GL_LIGHT<em>n</em></code>), the default is black (0, 0, 0) for <code>GL_AMBIENT</code>, <code>GL_DIFFUSE</code>, <code>GL_SPECULAR</code>.</p>
+
+<h5>Material</h5>
+<p>Similar to light source, a material has reflectivity parameters for <em>specular</em> (<code>GL_SPECULAR</code>), <em>diffuse</em> (<code>GL_DIFFUSE</code>) and <em>ambient</em> (<code>GL_AMBIENT</code>) components (for each of the RGBA color components), which specifies the fraction of light reflected. A surface may also <em>emit</em> light (<code>GL_EMISSION</code>). A surface has a shininess parameter (<code>GL_SHININESS</code>) - the higher the value, the more concentration of reflected-light in the small area around the perfect reflector and the surface appears to be shinier. Furthermore, a surface has two faces: front and back, that may have the same or different parameters. </p>
+
+<p>You can use <code>glMaterial()</code> function to specify these parameters for the front (<code>GL_FRONT</code>), back (<code>GL_BACK</code>), or both (<code>GL_FRONT_AND_BACK</code>) surfaces. The front face is determined by the surface normal (implicitly defined by the vertices with right-hand rule, or <code>glNormal()</code> function).</p>
+
+<pre class="color-syntax">
+void glMaterial[if](GLenum <em>face</em>, GLenum <em>parameterName</em>, <em>type parameterValue</em>)
+void glMaterial[if]v(GLenum <em>face</em>, GLenum <em>parameterName</em>, <em>type *parameterValues</em>)
+     <span class="color-comment">// <em>face</em>: GL_FRONT, GL_BACK, GL_FRONT_AND_BACK.
+     // <em>parameterName</em>: GL_DIFFUSE, GL_SPECULAR, GL_AMBIENT, GL_AMBIENT_AND_DIFFUSE, GL_EMISSION, GL_SHININESS.</span></pre>
+     
+<p>The default material has a gray surface (under white light), with a small amount of ambient reflection (0.2, 0.2, 0.2, 1.0), high diffuse reflection (0.8, 0.8, 0.8, 1.0), and no specular reflection (0.0, 0.0, 0.0, 1.0).</p>
+
+<h4>Vertex and Fragment Shaders</h4>
+
+<p>[TODO]</p>
+
+<h4>Global Illumination Model</h4>
+
+<p>[TODO]</p>
+
+<h3>Texture</h3>
+
+<img class="image-float-right" src="images/Graphics3D_TextureCoord.png" />
+<p>In computer graphics, we often overlay (or paste or wrap) images, called textures, over the graphical objects to make them realistic.</p>
+<p>An texture is typically a 2D image. Each element of the texture is called a texel (texture element), similar to pixel (picture element). The 2D texture coordinate (<em>s</em>, <em>t</em>) is typically normalized to [0.0, 1.0], with origin at the top-left corner, <em>s</em>-axis pointing right and <em>t</em>-axis pointing down. (Need to confirm whether this is true in OpenGL)</p>
+
+<h4>Texture Wrapping</h4>
+
+<p>Although the 2D texture coordinates is normalized to [0.0, 1.0], we can configure the behavior if the coordinates are outside the range.</p>
+
+<p>The typical solutions are:</p>
+<ol>
+<li>Clamp the texture coordinates to [0.0, 1.0] and ignore those outside this range.</li>
+<li>Wrap (or repeat) the texture along the s- or t-axis, or both. You may set to &quot;mirror&quot; mode so that the textures are continuous.</li>
+</ol>
+
+
+<p>In OpenGL, we use function <code>glTexParameter()</code> to configure the wrapping behavior for the s and t axes (<code>GL_TEXTURE_WRAP_S</code> and <code>GL_TEXTURE_WRAP_T</code>) individually. Two modes are supported: <code>GL_REPEAT</code> (repeat the texture pattern) and <code>GL_CLAMP</code> (do not repeat, but clamp to 0.0 to 1.0).</p>
+
+<pre class="color-syntax">
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);  <span class="color-comment">// Repeat the pattern</span>
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);   <span class="color-comment">// Clamped to 0.0 or 1.0</span>
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);</pre>
+
+<h4>Texture Filtering</h4>
+
+<p>In general, the resolution of the texture image is different from the displayed fragment (or pixel). If the resolution of the texture image is smaller, we need to perform so-called <em>magnification</em> to magnify the texture image to match the display. On the other hand, if the resolution of texture image is larger, we perform <em>minification</em>.</p>
+
+<h5>Magnification</h5>
+
+<p>The commonly used methods are:</p>
+
+<ol>
+<li>Nearest Point Filtering: the texture color-value of the fragment is taken from the nearest texel. This filter leads to &quot;blockiness&quot; as many fragments are using the same texel.</li>
+<li>Bilinear Interpolation: the texture color-value of the fragment is formed via bilinear interpolation of the four nearest texels. This  yields smoother result.</li>
+</ol>
+
+<img class="image-center" src="images/Graphics3D_MagNearest.png" />
+<img class="image-center" src="images/Graphics3D_MagLinear.png" />
+
+<h5>Minification</h5>
+<p>Minification is needed if the resolution of the texture image is larger than the fragment. Again, you can use the &quot;nearest-point sampling&quot; or &quot;bilinear interpolation&quot; methods.</p>
+<p>However, these sampling methods often to the so-called &quot;<em>aliasing artefact</em>&quot;, due the low sampling frequency compared with the signal. For example, a far-away object in perspective projection will look strange due to its high signal frequency.</p>
+<p>[TODO] diagarm on aliasing artefact</p>
+
+<h5>Minmaping</h5>
+
+<p>A better approach for performing minification is called <em>minmaping</em> (miniature maps), where lower resolutions of the texture image are created. For example, suppose the original image is 64x64   (Level 0), we can create lower resolution images at 32x32, 16x16, 8x8,   4x4, 2x2, 1x1. The highest resolution is referred to as level 0; the next   is level 1; and so on. We can then use the nearest matched-resolution texture image; or perform linear interpolation between the two nearest matched-resolution texture images.</p>
+
+<img class="image-center" src="images/Graphics3D_Minmap.png" />
+
+<h5>OpenGL Texture Filtering</h5>
+
+<p>In OpenGL, you can set the filter for magnification and minification independently.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Nearest Point Sampling - fast but visual artifacts</span>
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+<span class="color-comment">// 2x2 linear averaging - slower but smoother</span>
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);</pre>
+
+<p>We can use a single image and ask OpenGL to produce the lower-resolution images via command <code>gluBuild2DMipmaps()</code> (in place of <code>glTexImage2d()</code>).</p>
+
+<pre class="color-syntax">
+int gluBuild2DMipmaps(GLenum <em>target</em>, GLint <em>internalFormat</em>, GLsizei <em>width</em>, GLsizei <em>height</em>,
+                      GLenum <em>imageDataFormat</em>, GLenum <em>imageDataType</em>, const void *<em>imageData</em>)</pre>
+
+<p>We can then specify the mipmapping filter is to be used via:</p>
+
+<pre class="color-syntax">
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);                <span class="color-comment">// MAG filter is linear</span>
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST); <span class="color-comment">// MIN filter is mipmap</span></pre>
+
+<p>Furthermore, in perspective projection, the fast texture interpolating scheme may not handle the distortion caused by the perspective projection. The following command can be used to ask the renderer to produce a better texture image, in the expense of processing speed.</p>
+
+<pre class="color-syntax">
+glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);</pre>
+
+
+
+<a class="references" href="References_OpenGL.html">Link to OpenGL/Computer Graphics References and Resources</a>
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: ???<br />
+Last modified: July, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

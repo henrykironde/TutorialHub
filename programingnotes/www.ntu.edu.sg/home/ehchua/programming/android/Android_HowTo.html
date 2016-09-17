@@ -1,0 +1,466 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Install Android SDK and Get Started</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Android SDK</h1>
+<h2>How to Install and Get Started</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Introduction</h3>
+
+<img class="image-float-left" src="images/Android_robot.png" alt="Android Robot" />
+
+<p>Android is an <em>Operating System for mobile devices</em> developed by Google, which is built upon Linux kernel. Android competes with Apple's iOS (for iPhone/iPad), RIM's Blackberry,  Microsoft's Windows Phone, Symbian OS, and many other proprietary mobile OSes.</p>
+<p>The latest Android 6.0 supports Phone/Tablet, TV, Wear (watch and glass) and Automobile.</p>
+
+<h5 class="float-clear">Android Platform</h5>
+
+<p>Android is based on Linux  with a set of native core C/C++ libraries. Android applications are written in Java. However, they run on Android's own Java Virtual Machine, called Dalvik Virtual Machine (DVM) (instead of JDK's JVM) which is optimized to operate on the mobile devices.</p>
+
+<img class="image-center" src="images/Android_StackDetails.png" alt="Android Stack" />
+
+<p>The mother site for Android is <a href="http://www.android.com/">http://www.android.com</a>. For programmers and developers, visit <a href="http://developer.android.com/index.html">http://developer.android.com</a> to download the SDK, Android Training, API Guides and API documentation.</p>
+
+
+<h3 id="AndroidInstall" class="float-clear">Installing Android SDK and Android Studio IDE</h3>
+
+<p>Installing all the necessary software needed for Android programming takes times - from 30 minutes to <em>n</em> hours to forever - depending on your luck and your PC. You probably need a fairly decent PC to run the Android emulator and 5-10GB of free disk space!!!</p>
+
+<p>We need to install Android Studio, which is an IDE based on IntelliJ (a popular Java IDE); and Android SDK libraries.</p>
+
+<h5>Step 0: Pre-Installation Check List</h5>
+<ol>
+<li>Before installing Android SDK, you need to install Java Development Kit (JDK). Read &quot;<a href="../howto/JDK_HowTo.html">How to install JDK</a>&quot;. Ensure that your JDK is at or above 1.7. You can check your JDK version with command &quot;<code>javac -version</code>&quot;.</li>
+<li>The installation and many operations take a LONG time to complete. Do not stare at your screen or at the ceiling. Browse through the &quot;Android Training&quot; @ Android Developers (<a href="http://developer.android.com/index.html">http://developer.android.com</a>). There are three main menus: &quot;Design&quot;, &quot;Develop&quot;, and &quot;Distribute&quot;. Choose &quot;Develop&quot;, you can find the Android &quot;Training&quot;, &quot;API Guides&quot;, &quot;Reference&quot; and &quot;Tools&quot;. For beginners, browse through the &quot;Training&quot;.</li>
+</ol>
+
+<h5>Step 1: Install Android Studio IDE and Android SDK</h5>
+<h5>(For Windows)</h5>
+
+<ol>
+<li>Check that environment variable <code>JAVA_HOME</code> is set to the JDK installation directory via command &quot;<code>set JAVA_HOME</code>&quot;. Otherwise, set the <code>JAVA_HOME</code> via &quot;Control Panel&quot;. Check the detail steps <a href="../howto/Tomcat_HowTo.html#javahome">HERE</a>.</li>
+<li>Check the system requirements for Android Studio/SDK @ <a href="http://developer.android.com/sdk/index.html#Requirements">http://developer.android.com/sdk/index.html#Requirements</a>.</li>
+<li>Goto &quot;Android Developer&quot; @ <a href="http://developer.android.com/index.html">http://developer.android.com/index.html</a> &rArr; Select &quot;Get Android Studio&quot; &rArr; &quot;Download Android Studio For Windows&quot;, e.g., <code>android-studio-bundle-141.xxxxxx-windows.exe</code>, which is a huge file of 1.1GB.</li>
+<li>Run the downloaded installer. Follow the on-screen instruction and accept the defaults to complete the installation. You need about 5GB of free disk space!</li>
+</ol>
+
+<p>Take note that Android Studio IDE is installed in &quot;<code>C:\Program Files\Android\Android Studio</code>&quot; and Android SDK is installed in &quot;<code>C:\Users\<em>your-username</em>\AppData\Local\Android\sdk</code>&quot;.</p>
+
+<h5>(For Mac OS X)</h5>
+
+<ol>
+<li>Check the system requirements @ <a href="http://developer.android.com/sdk/index.html#Requirements">http://developer.android.com/sdk/index.html#Requirements</a>.</li>
+<li>Goto &quot;Android Developer&quot; @ <a href="http://developer.android.com/index.html">http://developer.android.com/index.html</a> &rArr; Select &quot;Get Android Studio&quot; &rArr; &quot;Download Android Studio For Mac&quot;. E.g., <code>android-studio-ide-141.xxxxxx-mac.dmg</code> (360MB).</li>
+<li>Launch the downloaded <code>.dmg</code> installation file.</li>
+<li>Drag and drop Android Studio into the &quot;Applications&quot; folder.<br />
+Note: If you see a warning that says the package is damaged and should be moved to the trash, go to System Preferences &rArr; Security &amp; Privacy &rArr; under Allow applications downloaded from &rArr; select Anywhere. Then run again.</li>
+</ol>
+
+<p>The Android SDK is installed in &quot;<code>~/Library/Android/sdk/</code>&quot;.</p>
+
+<h5>Step 2: Post-Installation - Adding More SDK Packages</h5>
+
+<p>The installation installed basic SDK packages. You still need to add a few more to run the Hello-world.</p>
+<p>Adding too many  SDK packages, especially the so-called system image for emulating different device (e.g., various phone/tablet), will take an extremely LONG time, especially if everyone is downloading and jamming up the network. The system images also take up a lot of disk space - more than 10 GB per API level!!! For our toy project, we only need a small set of SDK packages.</p>
+<p>[TODO] Check if it is possible to copy the SDK instead of downloading during installation?</p>
+
+<h5>(For Windows)</h5>
+
+
+<ol>
+<li>Launch Android Studio &rArr; Check &quot;I do not have previous version of Android Studio&quot; &rArr; Android studio setup wizard will download more SDK components &rArr; Wait for it to complete &rArr; Finish.</li>
+<li>Select &quot;Configure&quot; &rArr; &quot;SDK Manager&quot; &rArr; Select &quot;SDK Tools&quot; tab &rArr; Check &quot;Android Support Library&quot;, &quot;Intel x86 Emulator Accelerator (HAXM Installer)&quot; and &quot;Google USB Driver&quot; &rArr; Apply.</li>
+</ol>
+
+<h5>(For Mac OS X)</h5>
+
+<ol>
+<li>Launch Android Studio (from Applications)  &rArr; Android studio setup wizard will download more SDK components &rArr; Wait and wait and wait for it to complete &rArr; Finish. (If error occurs in installing &quot;platform-tools&quot; &rArr; Cancel.)</li>
+<li>Select &quot;Configure&quot; &rArr; &quot;SDK Manager&quot; &rArr; If error &quot;Please specify an Android SDK Location&quot; occurs, click &quot;Edit&quot; and COPY the SDK location &quot;<code>/Users/<em>...</em>/Library/Android/sdk</code>&quot;, then select &quot;Configure&quot; &rArr; Project defaults &rArr; Project structure &rArr; In &quot;Android SDK Location&quot;, PASTE it.</li>
+<li>Select &quot;Configure&quot; &rArr; &quot;SDK Manager&quot; &rArr; &quot;Launch Standalone SDK Manager&quot; &rArr; Click &quot;Deselect All&quot; (otherwise, it will take hours to install all the packages) &rArr; Check that these packages are &quot;installed&quot;; otherwise, check them to install:
+  
+  <ol>
+    <li>Under &quot;Tools&quot;:
+      <ol>
+        <li>&quot;Android SDK Tools&quot;</li>
+        <li>&quot;Android SDK Platform-tools&quot;</li>
+        <li>&quot;Android SDK Build-tools (highest version)&quot;</li>
+      </ol>
+    </li>
+    
+    <li>Under &quot;Android 6.0 (API 23):
+      <ol>
+        <li>&quot;SDK Platform&quot;</li>
+        <li>At least one &quot;System Image&quot;. If any of the &quot;xxxxxx System Images&quot; is already installed, okay. Otherwise, check &quot;Google APIs&quot; and &quot;Google APIs Intel x86 Atom System Image&quot; (which seems to be the fastest among a few I tried).<br />
+          [Notes: (1) System Image is huge (&gt;1GB each). (2) Android devices could be built on many different hardware processors, e.g., Intel x86, ARMv5, and ARMv7. Android SDK provides &quot;emulator&quot; for you to test your app on ALL hardware, by building a System-Image for EACH of the hardware. Our toy project does not need to be simulated on ALL hardware but just anyone of the hardware!]</li>
+      </ol>
+    </li>
+    
+    <li>Under &quot;Extras&quot;:
+      <ol>
+        <li>&quot;Android Support Library&quot;</li>
+        <li>&quot;Google Repository&quot;</li>
+        <li>&quot;Intel x86 Emulator Accelerator (HAXM Installer)&quot;</li>
+      </ol> 
+    </li>
+  </ol>
+Click &quot;Install <em>n</em> packages&quot;.
+  This step is SLOW! very SLOW! The SDK will be installed under &quot;<code>~/Library/Android/sdk</code>&quot; for Mac OS X.</li>
+</ol>
+
+<h3 id="AndroidFirstProgram">Write your First Android App</h3>
+
+<p>Android apps are written in Java, and use XML extensively. I shall assume that you have basic knowledge of Java  and XML.</p>
+<p>Take note that Android emulator is slow - VERY VERY VERY SLOW!!! Be Patient!!!</p>
+
+<h4>Hello-World</h4>
+
+<h5>Step 0: Read</h5>
+<p>Goto &quot;Android Training&quot; @ <a href="http://developer.android.com/training/index.html">http://developer.android.com/training/index.html</a>. Read &quot;Get Started&quot; and &quot;Building your first app&quot;.</p>
+
+<h5>Step 1: Create a New Android Project</h5>
+
+<ol>
+<li>Launch Android Studio.</li>
+<li> Choose &quot;Start a new Android Studio Project&quot;.</li>
+
+<li>In &quot;Create New Project&quot; dialog &rArr; Set &quot;Application Name&quot; to &quot;Hello Android&quot; (this will be the title in your app menu) &rArr; Set your &quot;Company Domain&quot; to &quot;<code>example.com</code>&quot; &rArr;  In &quot;Project Location&quot;, choose your project directory, e.g., <code>d:\myProject</code>, or use the default location &rArr; Leave the rest to their default values &rArr; Next.</li>
+<li>In &quot;Select the form factor your app will run on&quot; &rArr; Check &quot;Phone and Tablet&quot;  &rArr;  In &quot;Minimum SDK&quot;, choose &quot;API 8: Android 2.2 (Froyo)&quot; &rArr; Leave all of the other options (TV, Wear, and Glass) unchecked &rArr; Next.</li>
+<li>In &quot;Add an activity to Mobile&quot; dialog &rArr; Select &quot;Blank Activity&quot; (default) &rArr; Next.</li>
+<li>In &quot;Customize the Activity&quot; dialog &rArr; Set &quot;Activity Name&quot; to &quot;<code>MainActivity</code>&quot; &rArr; Set &quot;Layout Name&quot; to &quot;<code>activity_main</code>&quot; &rArr; Set &quot;Title&quot; to &quot;<code>MainActivity</code>&quot; &rArr; Set &quot;Menu Resource Name&quot; to &quot;menu_main&quot; (these are also the default values) &rArr; Finish.</li>
+<li> Be patient! It could take a while to set up the &quot;first&quot; app. The app appears after &quot;Indexing...&quot; (at the bottom status bar) completes. By default, a hello-world app is created.</li>
+
+</ol>
+
+<p><span class="line-heading">Problem &amp; Error Notes</span>:</p>
+<ol>
+<li>[March 2016] There is a bug in Android support design lib version 23.2.0, which cause an error &quot;The following classes could not be instantiated: <code>android.support.design.widget.FloatingActionButton</code>&quot; and took me a whole night to fix. But, this bug is fixed in 23.2.1 released on 11 March, 2016, so you do not need to fix.</li>
+<li>If everything fails, select &quot;File&quot; menu &rArr; &quot;Invalidate Caches / Restart...&quot; &rArr; and wait ...</li>
+</ol>
+
+<h5>Step 2: Setup Emulator (aka Android Virtual Device (AVD))</h5>
+<p>To run your Android app under the emulator, you need to first create an Android Virtual Devices (AVD). An AVD models a specific device (e.g., Brand-X Model-Y). You can create AVDs to emulate different android devices (e.g., phone/tablet, android version, screen size, and etc.).</p>
+
+<h5>(For Windows)</h5>
+<p>A virtual device called &quot;Nexus 5 API 23 x86&quot; was installed during the installation. Do nothing.</p>
+
+<h5>(For Mac OS X)</h5>
+<ol>
+<li>In Android studio, select &quot;Tools&quot; &rArr; Android &rArr; AVD Manager.</li>
+<li>Click &quot;Create Virtual Device&quot;.</li>
+<li>In &quot;Select Hardware&quot; dialog &rArr; Choose category of &quot;Phone&quot;, name of &quot;2.7&quot; QVGA&quot; (the smallest device available - you can try a bigger device later) &rArr; Next.</li>
+<li>In &quot;System Image&quot; &rArr; Next.</li>
+<li>In &quot;AVD Name&quot;, enter &quot;QVGA&quot; &rArr; Finish.</li>
+</ol>
+
+<h5>Step 3: Run the Android App On Emulator</h5>
+
+<ol>
+<li>Select the &quot;Run&quot; menu &rArr; &quot;Run app&quot; &rArr; Check &quot;Launch Emulator&quot;  &rArr; Select &quot;Nexus 5 ...&quot; (Windows) or &quot;QVGA&quot; (Macs) &rArr; OK.</li>
+
+<li> Be patient! It may take a few MINUTES to fire up the app on the emulator. You first see a black screen &rArr; then the word &quot;Android&quot; &rArr; then the wallpaper &rArr; then the &quot;Hello, world!&quot; message.<br />
+  Observe the console messages and wait until the message &quot;success&quot; flashes:
+  <pre class="output">
+Device connected: emulator-5554
+Device is ready: Nexus_5_API_23_x86 [emulator-5554]
+Target device: Nexus_5_API_23_x86 [emulator-5554]
+......
+Installing com.example.helloAndroid
+.....
+Success
+[Switch to logcat]</pre>
+If you have problem running the emulator, I suggest you try to run on a actual Android device (phone/pad) if you have one. Goto next step.</li>
+<li> DO NOT CLOSE the emulator, as it really takes a long time to start. You could always re-run the app (or run a new app) on the same emulator. Try re-run the app by selecting &quot;Run&quot; menu  &rArr; &quot;Run app&quot;  &rArr; Now &quot;Nexus 5 ...&quot; or &quot;QVGA&quot; should appear under &quot;Choose a running device&quot; (as it has already started) &rArr; Select it  &rArr; OK.</li>
+</ol>
+
+
+<p><span class="line-heading">Problem  &amp; Error Notes</span>:</p>
+<ol>
+<li>If you encountered error &quot;<strong>HAX is not working...</strong>&quot; &rArr; Open &quot;SDK Manager&quot;  &rArr; Check if &quot;Extras / Intel x86 Emulator Accelerator (HAXM Installer)&quot; is installed  &rArr; Place your cursor under &quot;Intel x86 Emulator Accelerator (HAXM Installer)&quot; to show the location of the downloaded installer (by default, &quot;<code>C:\Users\<em>your-username</em>\AppData\Local\Android\Sdk\extras\intel\Hardware_Accelerated_Execution_Manager</code>&quot; for Windows or &quot;<code>~/Library/Android/sdk</code>/<code>extras/intel/Hardware_Accelerated_Execution_Manager</code>&quot; for Mac OS X)   &rArr; Goto the the directory  and run &quot;<code>intelhaxm-android.exe</code>&quot; to install HAXM   &rArr; Be patient! The installer may take a while to launch   &rArr; Follow the screen instructions to complete the setup.<br />
+  Take note that: (a) In Wiindows, the &quot;<code>AppData</code>&quot; directory is hidden. You need to unhide via &quot;Control Panel&quot;  &rArr; &quot;Folder Options&quot;  (or &quot;File Explorer Options&quot; in Windows 10) &rArr; Check &quot;Show hidden files, folders, and drives&quot;. (b) In Mac OS X, the &quot;<code>Library</code>&quot; folder is hidden. You can unhide via &quot;Finder&quot;  &rArr; Go   &rArr; Home   &rArr; Settings  &rArr; Show View Option.<br />
+  If the problem persists, remove and then re-install.</li>
+<li>If you encountered error &quot;Intel virtualization technology (VT-x) is not turned on&quot;   &rArr; Check your BIOS setting to ensure that &quot;Intel virtualization technology&quot; is enabled. Shutdown and re-boot your PC to enter the BIOS setup. This is machine dependent. Google &quot;<em>Your-PC-brand-and-model</em> enter BIOS setup&quot;.<br />
+  If &quot;Intel virtualization technology&quot; is already enabled, this error is probably caused by your antivirus software. Disable your antivirus for this session and rerun.<br />
+  See <a href="http://stackoverflow.com/questions/21635504/error-during-installing-haxm-vt-x-not-working">http://stackoverflow.com/questions/21635504/error-during-installing-haxm-vt-x-not-working</a>.</li>
+<li>If you have problem creating AVD via &quot;AVD Manager&quot; (On Mac OS X having error &quot;Studio quit unexpectedly&quot;), open the AVD manager via command line as follows:
+  <pre class="color-command">
+<span class="color-comment">// For Mac OS X</span>
+cd ~/Library/Android/sdk/tools
+./android avd
+ 
+<span class="color-comment">// For Windows</span>
+cd C:\Users\<em>your-username</em>\AppData\Local\Android\sdk\tools
+android avd</pre>
+</li></ol>
+
+<h5>Step 4: Run the Android App on Real Devices</h5>
+
+<p>Reference: &quot;Running Your App&quot;, &quot;Run on Real Device&quot; @ <a href="http://developer.android.com/training/basics/firstapp/running-app.html">http://developer.android.com/training/basics/firstapp/running-app.html</a>.</p>
+
+<p>To run the Android app on a real device (Android Phone or Tablet):</p>
+
+<ol>
+<li>Connect the real device to your computer. Make sure that you have the &quot;USB Driver&quot; for your device installed on your computer. You can find the &quot;Google USB Driver&quot; @ <a href="http://developer.android.com/sdk/win-usb.html">http://developer.android.com/sdk/win-usb.html</a>, and Google's certified &quot;OEM USB Drivers&quot; @ <a href="http://developer.android.com/tools/extras/oem-usb.html">http://developer.android.com/tools/extras/oem-usb.html</a>. If you device is not certified there, good luck! It took me many hours to find a compatible driver for my cheap un-brand Tablet.</li>
+<li>Enable &quot;USB Debugging&quot; mode on your <em>real device</em>: <br />
+  (On Android 3.2 and older) 
+  From &quot;Settings&quot; &rArr; &quot;Applications&quot; &rArr; &quot;Development&quot; &rArr; Check &quot;USB Debugging&quot;. This allows Android SDK to transfer data between your computer and your device. 
+Also enable &quot;Unknown source&quot; from &quot;Applications&quot;. This allows applications from unknown sources to be installed on the device.<br /> 
+(On Android 4.0 and newer) From
+&quot;Settings&quot; &rArr; &quot;Developer options&quot; &rArr; Check &quot;USB Debugging&quot;.<br />
+(On Android 4.2/5.0 and newer) Need to enable &quot;Developer options&quot; via &quot;Settings&quot; 
+&rArr; About Phone &rArr; tap &quot;Build number&quot; seven (7) times until &quot;Developer Mode&quot; is displayed. Return to the previous screen to find &quot;Developer options&quot;.<br />
+ Ref: See <a href="https://www.kingoapp.com/root-tutorials/how-to-enable-usb-debugging-mode-on-android.htm">https://www.kingoapp.com/root-tutorials/how-to-enable-usb-debugging-mode-on-android.htm</a> for detailed screen shots. </li>
+
+<li>You shall see the message &quot;USB Debugging Connected&quot; when you plugs the USB cable into your computer.</li>
+<li>From Android Studio, select &quot;Run&quot; menu &rArr; &quot;Run app&quot;  &rArr; Your device shall be listed under &quot;Choose a running device&quot;  &rArr; Select the device &rArr; OK.</li>
+</ol>
+
+<p><span class="line-heading">Notes:</span> To delete a project, select &quot;File&quot; &rArr; &quot;Close Project&quot;  &rArr; On the &quot;Recent Projects&quot;  &rArr; Press &quot;Delete&quot; key on the project.</p>
+
+<h4>Hello-world &quot;by Coding&quot;</h4>
+
+<p>There are two ways to create User Interface (UI) on Android: (1) Write Java codes; (2) Layout via XML descriptions.</p>
+<p>Let's begin with writting Java codes (because I suppose to teach you programming). We shall continue from the &quot;Hello Android&quot; project created earlier.</p>
+
+<h5><span class="font-code">MainActivity.java</span></h5>
+
+<p>Expand the &quot;<code>app</code>&quot; node. Expand the &quot;<code>java</code>&quot; node. Expand the &quot;<code>com.example.helloandroid</code>&quot; package node. Open the &quot;<code>MainActivity.java</code>&quot; (which actually has been opened). REPLACE the <code>onCreate()</code> method as follows and add the import statement. Do not touch the rest of the codes.</p>
+
+<pre class="color-example">
+package ......;
+ 
+import ......;
+<span class="color-new">import android.widget.TextView;</span>   <span class="color-comment">// Add this line</span>
+ 
+public class MainActivity extends ...... {
+
+    <span class="color-comment">// REPLACE the ENTIRE onCreate() method as follows:</span>
+    <span class="color-new">@Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TextView textView = new TextView(this);   <span class="color-comment">// Construct a TextView UI component</span>
+        textView.setText(&quot;Hello, from my code!&quot;); <span class="color-comment">// Set the text message for TextView</span>
+        setContentView(textView);  <span class="color-comment">// this Activity sets its content to the TextView</span>
+    }</span>
+    
+    <span class="color-comment">// Do not touch the rest of the codes</span>
+    ......
+    ......
+}</pre>
+
+<p>Run the application (&quot;Run&quot; &rArr; &quot;Run app&quot;). You shall see the message &quot;Hello, from my code!&quot; displayed.</p>
+
+<h5>Dissecting the &quot;<span class="font-code">MainActivity.java</span>&quot; - Application, Activity &amp; View</h5>
+
+<p>An Android application could have one or more <code>Activity</code>.</p>
+<p>An <code>Activity</code>, which usually has a screen, is a single, focused thing that the user can <em>interact</em> with the application (hence called <em>activity</em>). The <code>MainActivity</code> extends the <code>android.app.Activity</code> class, and overrides the <code>onCreate()</code> method. The <code>onCreate()</code> is a call-back method, which is called by the Android system when the activity is launched.</p>
+<p>A <code>View</code> is a UI component (aka widget, or control). We construct a <code>TextView</code> (which is a subclass <code>View</code> for showing a text message), and set its text. We then set the content-view of the <code>MainActivity</code> screen to this <code>TextView</code>.</p>
+
+<h5>Android Application Descriptor File - &quot;<span class="font-code">AndroidManifest.xml</span>&quot;</h5>
+<p>Each Android application has a <em>manifest file</em> named <code>AndroidManifest.xml</code> under &quot;app &rArr; manifests&quot;. It <em>describes</em> the Android app. </p>
+
+<p>For example, our &quot;<code>Hello Android</code>&quot; application, with an activity <code>MainActivity</code>, has the following manifest (generated automatically by the Android Studio when the project was built):</p>
+
+<pre class="color-example">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    <span class="color-new">package=&quot;com.example.helloandroid&quot; &gt;</span>
+ 
+    <span class="color-new">&lt;application</span>
+        android:allowBackup=&quot;true&quot;
+        android:icon=&quot;@mipmap/ic_launcher&quot;
+        android:label=&quot;@string/app_name&quot;
+        android:theme=&quot;@style/AppTheme&quot; &gt;
+        <span class="color-new">&lt;activity</span>
+            <span class="color-new">android:name=&quot;.MainActivity&quot;</span>
+            android:label=&quot;@string/app_name&quot; &gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
+                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+    &lt;/application&gt;
+&lt;/manifest&gt;</pre>
+
+<ul>
+  <li>The <code>&lt;manifest&gt;</code> element specifies the package name.</li>
+  <li>The <code>&lt;manifest&gt;</code>  contains one <code>&lt;application&gt;</code> element.</li>
+<li>The <code>&lt;application&gt;</code> element specifies the icon, label (the application's title) and theme of this application. It contains one ore more <code>&lt;activity&gt;</code> elements.</li>
+<li>This application has one activity. The <code>&lt;activity&gt;</code> element declares its program name (&quot;<code>MainActivity</code>&quot; in default package); and label (the activity's screen title). It may contain <code>&lt;intent-filter&gt;</code>.</li>
+<li>The <code>&lt;intent-filter&gt;</code> declares that this activity is the entry point (<code>android.intent.action.MAIN</code>) of the application. This activity is to be added to the application launcher (<code>android.intent.category.LAUNCHER</code>).</li>
+</ul>
+
+<h4 id="androidXML">Hello-World using &quot;XML Layout&quot;</h4>
+
+<p>Instead of writing Java codes to create the user interface (UI) (as in the above example using a <code>TextView</code> component). It is more flexible and therefore recommended to layout your UI components via a descriptive XML layout file. In this way, you don't need to hardcode the views, and you can easily modify the look and feel of the application by editing the XML markups. The Java codes can therefore focus on the business logic.</p>
+<p> To improve the performance, the XML files are compiled into binary using the Android Asset Packaging Tool (aapt). The devices store them as binary, and the file is read in binary, instead of converting back to XML, for efficiency.</p>
+
+<p>Let's rewrite our hello-world to use XML layout.</p>
+
+<h5>Step 1: Create a New Android Application</h5>
+
+<p>Close the previous project, via &quot;File&quot; &rArr; Close Project (Always CLOSE the previous project before starting a new project).</p>
+
+<p>Create a new Android project with application name &quot;<code>Hello Android XML</code>&quot;, domain name  &quot;<code></code><code>example.com</code>&quot;. Select &quot;Phone and Tablet&quot;. Create a &quot;<code>BlankActivity</code>&quot; with &quot;Activity Name&quot; of &quot;<code>MainActivity</code>&quot;, &quot;Layout Name&quot; of &quot;<code>activity_main</code>&quot;, &quot;Title&quot; name of &quot;<code>MainActivity</code>&quot;, and &quot;Menu Resource Name&quot; of &quot;<code>menu_main</code>&quot;.</p>
+
+<h5>Step 2: Define the Layout in XML - &quot;<span class="font-code">res\layout\activity_main.xml</span>&quot; and &quot;<span class="font-code">res\layout\content_main.xml</span>&quot;</h5>
+
+<p>Expand the &quot;app&quot;, &quot;res (resource)&quot;, &quot;layout&quot; node. Open the &quot;<code>activity_main.xml</code>&quot;. Android Studio provides two views for this XML file: &quot;Design (or Graphical)&quot; and &quot;Text (or XML)&quot; - selectable at the bottom of the panel. Select the &quot;Text&quot; mode and study the codes:</p>
+
+<pre class="color-example">
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.helloandroidxml.MainActivity">
+
+    &lt;android.support.design.widget.AppBarLayout ...&gt;
+       ......
+    &lt;/android.support.design.widget.AppBarLayout>
+
+    <span class="color-new">&lt;include layout="@layout/content_main"</span> />
+
+    &lt;android.support.design.widget.FloatingActionButton ... /&gt;
+&lt;/android.support.design.widget.CoordinatorLayout&gt;
+</pre>
+
+<p>The &quot;<code>activity_main.xml</code>&quot;  includes &quot;<code>content_main.xml</code>&quot;. Open &quot;<code>res\layout\content_main.xml</code>&quot; and study the codes:</p>
+
+<pre class="color-example">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot;
+    android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot;
+    android:paddingTop=&quot;@dimen/activity_vertical_margin&quot;
+    app:layout_behavior=&quot;@string/appbar_scrolling_view_behavior&quot;
+    tools:context=&quot;com.example.helloandroidxml.MainActivity&quot;
+    tools:showIn=&quot;@layout/activity_main&quot;&gt;
+
+    <span class="color-new">&lt;TextView
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:text=&quot;Hello World!&quot; /&gt;</span>
+&lt;/RelativeLayout&gt;
+</pre>
+
+It declares a <code>TextView</code> (text field) that holds a text string &quot;<code>Hello World!</code>&quot;. The <code>TextView</code> component has width and height big enough to hold its content (&quot;<code>wrap_content</code>&quot;).
+<p>This activity's uses a &quot;relative-layout&quot;, where its components are arranged relative to each other. It has width and height matching its parent (&quot;<code>match_parent</code>&quot;) and some paddings.</p>
+
+<h5>Step 3: Defining String References and Values - &quot;<span class="font-code">res\values\string.xml</span>&quot;</h5>
+
+<p>Instead of hardcoding the Hello-World string directly inside the <code>TextView</code>, we shall use a string reference (similar to a variable) for better flexibility.</p>
+<p>Expand <code>res/values</code> node. Open <code>strings.xml</code>, and ADD the line in red:</p>
+
+<pre class="color-example">
+&lt;resources&gt;
+    &lt;string name=&quot;app_name&quot;&gt;Hello Android XML&lt;/string&gt;
+    &lt;string name=&quot;action_settings&quot;&gt;Settings&lt;/string&gt;
+    <span class="color-new">&lt;string name=&quot;hello&quot;&gt;Hello world from XML!&lt;/string&gt;</span>
+&lt;/resources&gt;</pre>
+
+<p>The &quot;<code>string.xml</code>&quot; defines 3 references/values:</p>
+<ul>
+<li>A string reference &quot;<code>hello</code>&quot; contains the value of &quot;<code>Hello world from XML!</code>&quot;.</li>
+<li>A string reference &quot;<code>app_name</code>&quot; contains the application's name, that you entered when you created the project.</li>
+<li>A string reference &quot;<code>action_setting</code>&quot;.</li>
+</ul>
+
+<p>Now, modify the &quot;<code>content_main.xml</code>&quot; to use the string reference &quot;<code>hello</code>&quot;, in the format &quot;<code>@string/hello</code>&quot;, as follows:</p>
+<pre class="color-example">
+    ......
+    &lt;TextView
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:text=&quot;<span class="color-new">@string/hello</span>&quot; /&gt;
+    ......</pre>
+
+
+<h5>Step 4: The Activity - &quot;<span class="font-code">MainActivity.java</span>&quot;</h5>
+
+<p>Next, study the &quot;<code>MainActitivy.java</code>&quot; (under <code>app/java/com.example.helloandroidxml</code>), as follows:</p>
+
+<pre class="color-example">
+package ......;
+ 
+import ......;
+ 
+public class MainActivity extends ...... {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        <span class="color-new">setContentView(R.layout.activity_main);</span>
+           <span class="color-comment">// Use &quot;activity_main.xml&quot; to layout the screen.
+           // &quot;activity_main.xml&quot; includes &quot;content_main.xml&quot; which we modified.</span>
+        ......
+    }
+ 
+    ......
+    ......
+}</pre>
+
+
+<p>The &quot;<code>MainActivity</code>&quot; sets its content-view to &quot;<code>R.layout.activity_main</code>&quot;, which is mapped to the XML layout file &quot;<code>res\layout\activity_main.xml</code>&quot; that we have studied earlier. The &quot;<code>activity_main.xml</code>&quot; includes &quot;<code>content_main.xml</code>&quot;, which we modified.</p>
+
+<h5>Step 5: Run the App</h5>
+
+<p>Run the application. You shall see the new string &quot;<code>Hello, from XML!</code>&quot;  displayed.</p>
+
+<h3>Next?</h3>
+<p>Continue with the &quot;Android Training&quot; @ <a href="http://developer.android.com/training/index.html">http://developer.android.com/training/index.html</a>.</p>
+<p>Read the Android &quot;API Guides&quot; @ <a href="http://developer.android.com/guide/components/index.html">http://developer.android.com/guide/components/index.html</a>, and Demos.</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>Android SDK @ <a href="http://developer.android.com/sdk/index.html">http://developer.android.com/sdk/index.html</a>.</li>
+<li>&quot;Android Training&quot; @ <a href="http://developer.android.com/training/index.html">http://developer.android.com/training/index.html</a>.</li>
+<li>Android &quot;API Guides&quot; @ <a href="http://developer.android.com/guide/components/index.html">http://developer.android.com/guide/components/index.html</a>.</li>
+</ol>
+
+<!-- @@ start change in v1 -->
+<a class="references" href="../howto/References.html#android">Link to Android's References and Resources</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Android 6.0 (Marshmallow), Android Studio 1.5.1<br />
+Last modified:18 March, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

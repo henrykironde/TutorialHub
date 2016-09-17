@@ -1,0 +1,995 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Logging Framework</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming</h1>
+<h2>Java Logging Framework</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction</h3>
+
+<p>Instead of using <code>System.err.println()</code> to write error message<!-- @@ start change in v1 -->s to the system console, JDK 1.4 provides a logging framework in package <code>java.util.logging</code>. The logging API allows you to write different log messages (such as error, informational, and configuration messages) to a central location (such as rotating logs) and configure the format and what level of messages are to be written.</p>
+
+<h3>Getting Started with Examples</h3>
+
+<h4>Example 1: Simple Use</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre>
+</td>
+<td>
+<pre>
+import java.util.logging.*;
+ 
+public class TestSimpleLogger {
+   <span class="color-comment">// Invoke the factory method to get a new Logger or return the existing Logger</span>
+   <span class="color-comment">//  of the fully-qualified class name.</span>
+   <span class="color-comment">// Set to static as there is one logger per class.</span>
+   <span class="color-new">private static final Logger logger = Logger.getLogger(TestSimpleLogger.class.getName());</span>
+ 
+   public static void main(String[] args) {
+      <span class="color-new">logger.info(&quot;Logging begins...&quot;);</span>   <span class="color-comment">// log INFO-level message</span>
+      try {
+         <span class="color-comment">// Simulating an Exception</span>
+         throw new Exception(&quot;Simulating an exception&quot;);
+      } catch (Exception ex){
+         <span class="color-new">logger.log(Level.SEVERE, ex.getMessage(), ex);</span>
+      }
+      <span class="color-new">logger.info(&quot;Done...&quot;);</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The outputs of the program is as follow. There are 3 log records. Each log record consists of the time-stamp, fully-qualified class name, method name and the message, and optional exception stack trace.</p>
+
+<pre class="output">
+Nov 15, 2012 3:59:09 PM TestSimpleLogger main
+<span class="color-new">INFO:</span> Logging begins...
+Nov 15, 2012 3:59:09 PM TestSimpleLogger main
+<span class="color-new">SEVERE:</span> Simulating an exception
+java.lang.Exception: Simulating an exception
+        at TestSimpleLogger.main(TestSimpleLogger.java:13)
+Nov 15, 2012 3:59:09 PM TestSimpleLogger main
+<span class="color-new">INFO:</span> Done...</pre>
+
+<h5>Dissecting the Program</h5>
+<ul>
+<li>The main entity of the logging framework is the <code>Logger</code> class (in package <code>java.util.logger</code>), on which your applications make logging calls.</li>
+
+<li><span class="line-heading-code-new">private static final Logger logger = Logger.getLogger(TestSimpleLogger.class.getName());</span><br />
+  To obtain a <code>Logger</code>, use the <code>static</code> factory method <code>Logger.getLogger(String <em>loggerName</em>)</code>. This method creates a new <code>Logger</code> or returns the existing <code>Logger</code> of the given <code><em>loggerName</em></code>. We typically use the fully-qualified class name (obtained via <code><em>ClassName</em>.class.getName()</code>) as the logger's name. The logger is declared <code>static</code> as there is typically one logger per class.</li>
+
+<li>We can control the output via the so-called <em>Logging Level</em> (in class <code>Level</code> of package <code>java.util.logging</code>). The pre-defined levels in descending order of severity are: <code>SERVER</code>, <code>WARNING</code>, <code>INFO</code>, <code>CONFIG</code>, <code>FINE</code>, <code>FINER</code>, <code>FINEST</code>.</li>
+
+<li><span class="line-heading-code-new">logger.info(...);</span>
+<br />
+To write a log record of a particular level, you can use the convenient methods: <code>severe(<em>msg</em>)</code>, <code>warning(<em>msg</em>)</code>, <code>info(<em>msg</em>)</code>, <code>config(<em>msg</em>)</code>, <code>fine(<em>msg</em>)</code>, <code>finer(<em>msg</em>)</code>, <code>finest(<em>msg</em>)</code> of a <code>Logger</code> object.</li>
+
+<li><span class="line-heading-code-new">logger.log(Level.SEVERE, &quot;Exception&quot;, ex);</span><br />
+To log an <code>Exception</code> object, you could use <code>log(<em>level</em>, <em>msg</em>, <em>exception</em>)</code> method. The above example throws an <code>Exception</code> in the <code>try</code> clause and logs the <code>Exception</code> in the <code>catch</code> clause.</li>
+<li>By default, the logger outputs log records of level <code>INFO</code> and above (i.e., <code>INFO</code>, <code>WARNING</code> and <code>SEVERE</code>) to standard error stream (<code>System.err</code>).</li>
+
+<li>You can redirect the <code>System.err</code> to a file via <code>System.setErr()</code> as follows:
+<pre class="color-example">
+PrintStream outPS =
+      new PrintStream(
+         new BufferedOutputStream(
+            new FileOutputStream("out.log", true)));  <span class="color-comment">// append is true</span>
+System.setErr(outPS);    <span class="color-comment">// redirect System.err</span></pre>
+</li>
+</ul>
+
+<h4>Example 2: Log to File via Logger's File Handler</h4>
+
+<p>Instead of logging to the <code>System.err</code>, you can also log to a file (or an <code>OutputStream</code>, or network socket, or memory buffer).</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+import java.io.IOException;
+import java.util.logging.*;
+ 
+public class TestFileLogger {
+   private static final Logger logger = Logger.getLogger(TestFileLogger.class.getName());
+ 
+   public static void main(String[] args) throws IOException {
+      <span class="color-comment">// Construct a default FileHandler.</span>
+      <span class="color-comment">// &quot;%t&quot; denotes the system temp directory, kept in environment variable &quot;tmp&quot;</span>
+      Handler fh = new FileHandler(&quot;%t/test.log&quot;, true);  <span class="color-comment">// append is true</span>
+<span class="color-comment">//    fh.setFormatter(new SimpleFormatter());  // Set the log format</span>
+      <span class="color-comment">// Add the FileHandler to the logger.</span>
+      logger.addHandler(fh);
+      <span class="color-comment">// Set the logger level to produce logs at this level and above.</span>
+      logger.setLevel(Level.FINE);
+ 
+      try {
+         <span class="color-comment">// Simulating Exceptions</span>
+         throw new Exception(&quot;Simulating an exception&quot;);
+      } catch (Exception ex){
+         logger.log(Level.SEVERE, ex.getMessage(), ex);
+      }
+      logger.info(&quot;This is a info-level message&quot;);
+      logger.config(&quot;This is a config-level message&quot;);
+      logger.fine(&quot;This is a fine-level message&quot;);
+      logger.finer(&quot;This is a finer-level message&quot;);
+      logger.finest(&quot;This is a finest-level message&quot;);  <span class="color-comment">// below the logger's level</span>
+ 
+      fh.flush();
+      fh.close();
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Dissecting the Program</h5>
+<ul>
+<li><span class="line-heading-code-new">private static final Logger logger = Logger.getLogger(TestFileLogger.class.getName());</span><br />
+Again, we invoke the factory method to obtain a <code>Logger</code> with the fully-qualified class name. This method creates a new <code>Logger</code> or returns an existing <code>Logger</code>.</li>
+
+<li><span class="line-heading-code-new">Handler fh = new FileHandler(&quot;%t/test.log&quot;);<br />
+logger.addHandler(fh);</span><br />
+To log a a file, allocate a <code>FileHandler</code> given a log-file name (with &quot;<code>%t</code>&quot; denotes the system temporary directory retrieved from the environment variable <code>TEMP</code> or <code>TMP</code>). Attach the <code>FileHandler</code> to the logger.</li>
+
+<li><span class="line-heading-code-new">logger.setLevel(Level.FINER);</span><br />
+You can set the level for the logger to discard messages below this level. You can use <code>Level.ALL</code> to log all levels and <code>Level.OFF</code> to discard all messages.</li>
+
+<li>Run the program and notice that there are two logs: the default <code>ConsoleHandler</code> (<code>System.err</code>) containing messages with level <code>INFO</code> and above; and the <code>FileHandler</code> containing messages with level <code>FINER</code> and above. The records in <code>FileHandler</code> is kept in XML format, e.g.,
+<pre class="color-example">
+&lt;record&gt;
+  &lt;date&gt;2011-11-25T15:18:50&lt;/date&gt;
+  &lt;millis&gt;1322205530355&lt;/millis&gt;
+  &lt;sequence&gt;0&lt;/sequence&gt;
+  &lt;logger&gt;TestFileLogger&lt;/logger&gt;
+  &lt;level&gt;SEVERE&lt;/level&gt;
+  &lt;class&gt;TestFileLogger&lt;/class&gt;
+  &lt;method&gt;main&lt;/method&gt;
+  &lt;thread&gt;1&lt;/thread&gt;
+  &lt;message&gt;java.lang.Exception: Simulating an exception&lt;/message&gt;
+  &lt;exception&gt;
+    &lt;message&gt;java.lang.Exception: Simulating an exception&lt;/message&gt;
+    &lt;frame&gt;
+      &lt;class&gt;TestFileLogger&lt;/class&gt;
+      &lt;method&gt;main&lt;/method&gt;
+      &lt;line&gt;21&lt;/line&gt;
+    &lt;/frame&gt;
+  &lt;/exception&gt;
+&lt;/record&gt;</pre>
+
+To use simple text format instead of the XML format for the file handler, uncomment this line to set the <code>Formatter</code>:
+<pre class="color-example">
+fh.setFormatter(new SimpleFormatter());</pre>
+</li>
+</ul>
+
+<h4>Example 4: Redirecting <span class="font-code">System.out</span> and <span class="font-code">System.err</span> to Log File</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39</pre>
+</td>
+<td>
+<pre>
+import java.io.*;
+import java.util.logging.*;
+ 
+public class TestFileLoggerRedirect {
+   private static final Logger logger = Logger.getLogger(TestFileLoggerRedirect.class.getName());
+ 
+   public static void main(String[] args) throws IOException {
+      <span class="color-comment">// Construct a default FileHandler.</span>
+      Handler fh = new FileHandler(&quot;test.log&quot;, true);  <span class="color-comment">// append is true</span>
+      fh.setFormatter(new SimpleFormatter());  <span class="color-comment">// Set the log format</span>
+      <span class="color-comment">// Add the FileHander to the logger.</span>
+      logger.addHandler(fh);
+      <span class="color-comment">// Set the logger level to produce logs at this level and above.</span>
+      logger.setLevel(Level.FINE);
+ 
+      <span class="color-comment">// Redirecting System.out and System.err</span>
+      PrintStream outPS =
+      new PrintStream(
+         new BufferedOutputStream(
+            new FileOutputStream(&quot;test.log&quot;, true)));  <span class="color-comment">// append is true</span>
+      System.setErr(outPS);    <span class="color-comment">// redirect System.err</span>
+      System.setOut(outPS);
+ 
+      try {
+         <span class="color-comment">// Simulating Exceptions</span>
+         throw new Exception(&quot;Simulating an exception&quot;);
+      } catch (Exception ex){
+         logger.log(Level.SEVERE, ex.getMessage(), ex);
+      }
+      logger.info(&quot;This is a info-level message&quot;);
+      logger.config(&quot;This is a config-level message&quot;);
+      logger.fine(&quot;This is a fine-level message&quot;);
+      logger.finer(&quot;This is a finer-level message&quot;);
+      logger.finest(&quot;This is a finest-level message&quot;);  <span class="color-comment">// below the logger's level</span>
+ 
+      System.out.println(&quot;Writing to System.out&quot;);
+      System.err.println(&quot;Writing to System.err&quot;);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h4>Example 3: Using a Set of Rotating Log Files</h4>
+<p>Read <a href="#rotatinglogfiles">HERE</a>.</p>
+
+<p>There is no reason to use <code>System.err.println()</code> if logging is enabled, unless they are issued thru legacy software. You can redirect <code>System.err</code> and <code>System.out</code> to the log 0 (active log) for rotating log.</p>
+
+<h3>Logging Framework Explained</h3>
+
+<h4>Key Classes in <span class="font-code">java.util.logging</span></h4>
+
+<img class="image-float-right" src="images/LoggingBlockDiagram.png" alt="image" />
+
+<p>The key elements in <code>java.util.logger</code> are:</p>
+
+<h5>Class <span class="font-code">Logger</span></h5>
+<p>The main entity on which your applications make logging calls. Loggers are normally named based on the fully-qualified class name and organized in a hierarchical manner. To obtain a <code>Logger</code>, invoke the <code>static</code> factory method <code>Logger.getLogger(String <em>loggerName</em>)</code>. This method will create a new <code>Logger</code> or return an existing <code>Logger</code> for the given <code><em>loggerName</em></code>. Since we typically use one logger per class, we assign it as a <code>static</code> variable of the class.</p>
+<h5>Class <span class="font-code">Level</span></h5>
+
+<p>A set of standard logging levels that can be used to control the output. You can configure your application to output log messages of a certain level and above, while discarding those below this level. The levels (defined in static constants of class <code>Level</code>) in descending order of severity are:</p>
+
+<ul>
+<li><code>Level.SEVERE</code>: a serious failure, which prevents normal execution of the program, for end users and system administrators.</li>
+<li><code>Level.WARNING</code>: a potential problem, for end users and system administrators.</li>
+<li><code>Level.INFO</code>: reasonably significant informational message for end users and system administrators.</li>
+<li><code>Level.CONFIG</code>: hardware configuration, such as CPU type.</li>
+<li><code>Level.FINE</code>, <code>Level.FINER</code>, <code>Level.FINEST</code>: three levels used for providing tracing information for the software developers.</li>
+</ul> 
+
+<p>In the logging API, these pre-defined levels are assigned an integer value, e.g., <code>SEVERE</code> is 1000 and <code>FINEST</code> is 300.</p>
+
+<p>In addition, <code>Level.OFF</code> (with value of <code>Integer.MAX_VALUE</code>) turns off logging and <code>Level.ALL</code> (with value of <code>Integer.MIN_VALUE</code>) logs all levels of messages. You can theoretically use custom integer value in your level.</p>
+
+<p>You can set the logging level in a configuration file. You can also set the logging level dynamically via the <code>Logger.setLevel()</code> method. For example,</p>
+<pre class="color-example">
+<span class="color-comment">// Output log messages of INFO and above</span>
+aLogger.setLevel(Level.INFO);</pre>
+
+<h5>Logging Methods</h5>
+<p>The <code>Logger</code> class provides a set of convenience method for writing log message for each of the logging levels:</p>
+
+<pre class="color-syntax">
+public void severe(String <em>msg</em>)
+public void warning(String <em>msg</em>)
+public void info(String <em>msg</em>)
+public void config(String <em>msg</em>)
+public void fine(String <em>msg</em>)
+public void finer(String <em>msg</em>)
+public void finest(String <em>msg</em>)
+</pre>
+
+<p>These methods forward the given message to all the registered output handlers if the logger is currently enabled for the given logging level.</p>
+
+<p>You can also use the general <code>log()</code>, <code>logp()</code> and <code>logrb()</code> methods to produce log records:</p>
+<pre class="color-syntax">
+<span class="color-comment">// Forward the message to all the output handlers if the logger is enabled for the level</span>
+public void log(Level <em>level</em>, String <em>msg</em>)
+<span class="color-comment">// Log Precise: similar to log() but specified explicit source class and method names</span>
+public void logp(Level <em>level</em>, String <em>sourceClass</em>, String <em>sourceMethod</em>, String <em>msg</em>)
+<span class="color-comment">// Log with ResourceBundle</span>
+public void logrb(Level <em>level</em>, String <em>sourceClass</em>, String <em>sourceMethod</em>, String <em>bundleName</em>, String <em>msgKey</em>)</pre>
+
+<h5>Class <span class="font-code">Handler</span></h5>
+
+<p>Each logger can have access to one or more handlers. The Logger forwards <code>LogRecord</code>s (on or above the logger's level) to all its registered handlers. The handler exports them to an external device. You can also assign a <code>Level</code> to a handler to control the outputs. The following handlers are provided:</p>
+
+<ul>
+<li><code>ConsoleHandler</code>: for writing to <code>System.err</code>.</li>
+<li><code>StreamHandler</code>: for writing to an <code>OutputStream</code>.</li>
+<li><code>FileHandler</code>: for writing to either a single log file, or a set of rotating log files.</li>
+<li><code>SocketHandler</code>: for writing to a TCP port.</li>
+<li><code>MemoryHandler</code>: for writing to memory buffers.</li>
+</ul>
+
+<h5>Class <span class="font-code">Formatter</span></h5>
+<p>Once the <code>Handler</code> decides to publish a <code>LogRecord</code> (i.e., it meets the <code>Level</code> and <code>Filter</code> check). It passes the <code>LogRecord</code> to the <code>Formatter</code> attached to format the <code>LogRecord</code> into a <code>String</code>. The available <code>Formatter</code>s are <code>SimpleFormatter</code> (for text message) and <code>XMLFormatter</code> (XML output). You can also build your own custom <code>Formatter</code>.</p>
+
+<p>The output of <code>SimpleFormatter</code> consists of time-stamp, class name, method name, level, message and possible exception (as in Example 1):</p>
+<pre class="color-example">
+Nov 25, 2011 2:05:48 PM com.mytest.SimpleUse doSomething
+<span class="color-new">SEVERE: java.lang.Exception: Simulating an exception</span>
+java.lang.Exception: Simulating an exception
+	at com.mytest.SimpleUse.doSomething(SimpleUse.java:18)
+	at com.mytest.SimpleUse.main(SimpleUse.java:26)</pre>
+
+<p>A sample output of <code>XMLFormatter</code> is (Example 2):</p>
+<pre class="color-example">
+&lt;record&gt;
+  &lt;date&gt;2011-11-25T15:18:50&lt;/date&gt;
+  &lt;millis&gt;1322205530355&lt;/millis&gt;
+  &lt;sequence&gt;0&lt;/sequence&gt;
+  &lt;logger&gt;TestFileLogger&lt;/logger&gt;
+  &lt;level&gt;SEVERE&lt;/level&gt;
+  &lt;class&gt;TestFileLogger&lt;/class&gt;
+  &lt;method&gt;main&lt;/method&gt;
+  &lt;thread&gt;1&lt;/thread&gt;
+  &lt;message&gt;java.lang.Exception: Simulating an exception&lt;/message&gt;
+  &lt;exception&gt;
+    &lt;message&gt;java.lang.Exception: Simulating an exception&lt;/message&gt;
+    &lt;frame&gt;
+      &lt;class&gt;TestFileLogger&lt;/class&gt;
+      &lt;method&gt;main&lt;/method&gt;
+      &lt;line&gt;21&lt;/line&gt;
+    &lt;/frame&gt;
+  &lt;/exception&gt;
+&lt;/record&gt;</pre>
+
+<h5>Class <span class="font-code">Filter</span></h5>
+<p>Besides the <code>Level</code>, you can attach a <code>Filter</code> to a <code>Logger</code> or <code>Handler</code> to filter out the log messages for fine-grain control. To create a <code>Filter</code>, you implement the Filter interface, and override the <code>isLoggable(LogRecord)</code> boolean method to decide if a given <code>LogRecord</code> should be published.</p>
+
+<pre class="color-syntax">
+interface Filter {
+   <span class="color-comment">// Returns true if the LogRecord is to be published.</span>
+   boolean isLoggable(LogRecord record);
+}</pre>
+
+<h4>Hierarchy of <span class="font-code">Logger</span>s and Passing of <span class="font-code">LogRecord</span>s to <span class="font-code">Handler</span>s</h4>
+<p>Loggers are organized in a hierarchical tree structure, with the <code>root</code> logger denoted by <code>&quot;&quot;</code> (empty string). Loggers are typically named based on the fully-qualified class name (e.g., <code>com.mytest.SimpleUse</code>) or package name (e.g., <code>com.mytest</code>). Take note that the hierarchy is artificially and strangely arranged based on the <em>dot</em>. That is, <code>com.mytest.SimpleUse</code> is the parent of <code>com.mytest.SimpleUse.Something</code>, although the later does not make sense in Java class hierarchy!</p>
+
+<p>If you did not set the level of a logger (or set the level to <code>null</code>), it inherits the level from its immediate parent.</p>
+
+<p>By default, the <code>root</code> logger (<code>&quot;&quot;</code>) has a <code>ConsoleHandler</code> that writes to <code>System.err</code>. Again, by default, the <code>ConsoleHandler</code> has a level of <code>INFO</code>, no <code>Filter</code>, with <code>SimpleFormatter</code>; the root logger also has a level of <code>INFO</code>.</p>
+
+<p>When a logger decides to produce a <code>LogRecord</code>, the logger not only passes the <code>LogRecord</code> to all its attached <code>Handler</code>(s), but it also forwards the <code>LogRecord</code> to its parent logger. The parent logger forwards the <code>LogRecord</code> to all its attached <code>Handler</code>(s) and its parent, without performing level or filter check. Eventually, the <code>LogRecord</code> reaches the <code>root</code> logger. By default, the <code>root</code> logger has a <code>ConsoleHandler</code> (that writes to <code>System.err</code>) with level of <code>INFO</code>.</p>
+
+<p>In Example 1,</p>
+<ul>
+<li>We did not create any handler. The <code>LogRecord</code>s are forwarded to the <code>root</code> logger's default <code>ConsoleHandler</code>.</li>
+
+<li>Try cutting some <code>FINE</code>, <code>FINER</code> logs. They will not be produced, as the <code>ConsoleHandler</code>'s level is <code>INFO</code>.</li>
+
+<li>We did not set the level of the logger. It inherits the level from its nearest parent (which is <code>root</code>, of default level of <code>INFO</code>).</li>
+<li>Try setting the level of this logger lower than <code>INFO</code>. It has no effect as the <code>ConsoleHandler</code> has a higher level.</li>
+<li>Try setting the level of this logger higher than <code>INFO</code> (says <code>WARNING</code>). This takes effect.</li>
+
+</ul>
+
+<p>In example 2,</p>
+<ul>
+<li>The <code>LogRecord</code>s are again forwarded to the root logger's default <code>ConsoleHandler</code>.</li>
+
+<li>In addition, we attach a <code>FileHandler</code> to the current logger. By default, the <code>FileHandler</code> has level of <code>ALL</code>, no <code>Filter</code>, with <code>XMLFormatter</code>.
+<pre class="color-example">
+private static final Logger logger = Logger.getLogger(SimpleUseFile.class.getName());
+......
+Handler fh = new FileHandler(&quot;%t/test.log&quot;);
+logger.addHandler(fh);  <span class="color-comment">// attach the handler to the current logger</span></pre></li>
+
+<li>Instead, it is common to attach the <code>FileHandler</code> to the <code>root</code> logger. In this way, the <code>FileHandler</code> will be available to all the loggers in the system.
+
+<pre class="color-example">
+Handler fh = new FileHandler(&quot;%t/test.log&quot;);
+<span class="color-comment">// Add the FileHander to the root (&quot;&quot;) logger, which is the ancestor of all loggers.</span>
+Logger.getLogger(&quot;&quot;).addHandler(fh);</pre></li>
+</ul>
+
+<p><span class="line-heading">Example</span>: The following program prints information about loggers.</p>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+package com.mytest;
+import java.util.logging.*;
+ 
+public class PrintLoggerInfo {
+   private static final Logger <span class="color-new">logger = Logger.getLogger(PrintLoggerInfo.class.getName())</span>;
+ 
+   public static void main(String[] args) {
+      System.out.println(&quot;This logger's level is &quot; + <span class="color-new">logger.getLevel()</span>);   <span class="color-comment">// null</span>
+      System.out.println(&quot;This logger's filter is &quot; + <span class="color-new">logger.getFilter()</span>); <span class="color-comment">// null</span>
+      System.out.println(&quot;Parent class is &quot; + <span class="color-new">logger.getParent()</span>);         <span class="color-comment">// RootLogger</span>
+      System.out.println(&quot;Parent classname is &quot; + logger.getParent().getName()); <span class="color-comment">// &quot;&quot;</span>
+ 
+      Logger <span class="color-new">root = Logger.getLogger(&quot;&quot;)</span>;
+      System.out.println(&quot;Root logger's level is &quot; + <span class="color-new">root.getLevel()</span>);   <span class="color-comment">// INFO</span>
+      System.out.println(&quot;Root logger's filter is &quot; + <span class="color-new">root.getFilter()</span>); <span class="color-comment">// null</span>
+      <span class="color-new">Handler[] handlers = root.getHandlers();</span>
+      for (Handler h : handlers) {
+         System.out.println(&quot;Handler is &quot; + h);                     <span class="color-comment">// ConsoleHandler</span>
+         System.out.println(&quot;Handler's level is &quot; + <span class="color-new">h.getLevel()</span>);  <span class="color-comment">// INFO</span>
+         System.out.println(&quot;Handler's filter is &quot; + <span class="color-new">h.getFilter()</span>); <span class="color-comment">// null</span>
+         System.out.println(&quot;Handler's formatter is &quot; + <span class="color-new">h.getFormatter()</span>); <span class="color-comment">// SimpleFormatter</span>
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Configuring Logging</h4>
+<h5>Class <span class="font-code">LogManager</span></h5>
+<p>There is a global <code>LogManager</code> responsible for creating and manager the loggers and maintaining the configuration.</p>
+<p>The default configuration establishes a single <code>ConsoleHandler</code> with level of <code>INFO</code> on the <code>root</code> logger for sending output to <code>System.err</code>.</p>
+
+<h5>Configuration File</h5>
+<p>[TODO]</p>
+
+<h4 id="rotatinglogfiles">Using a Set of Rotating Log Files</h4>
+
+<p>To create a set of rotating log files, use one of the following constructors to construct a <code>FileHandler</code>:</p>
+
+<pre class="color-syntax">
+FileHandler(String <em>filename</em>, int <em>fileSizeLimit</em>, int <em>fileCount</em>)
+  <span class="color-comment">// Initialize a FileHandler to write to a set of rotating log files.
+  //   <em>fileSizeLimit</em>: number of bytes
+  //   <em>fileCount</em>: number of files</span>
+FileHandler(String <em>filename</em>, int <em>fileSizeLimit</em>, int <em>fileCount</em>, boolean <em>append</em>)
+  <span class="color-comment">// with an append flag (true for append and false for override).</span></pre>
+
+<p>The filename shall consist of <code>%g</code>, which denotes the generation number. For example, &quot;<code>MyApp%g.log</code>&quot; with file count of 5, will create 5 log files, from <code>MyApp0.log</code> to <code>MyApp4.log</code>. As each file reaches (approximately) the given file-size limit, it is closed, rotated out, and a new file opened. The files are renamed as &quot;0&quot;, &quot;1&quot;, &quot;2&quot;, and so on, where &quot;0&quot; is the currently-used log file, and the highest number is the oldest one.</p>
+
+<p>By default, the <code>FileHandler</code> has level of <code>Level.ALL</code>, no <code>Filter</code>, using <code>XMLFormatter</code>.</p>
+
+<h5>Example</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre>
+</td>
+<td>
+<pre>
+package com.mytest;
+import java.io.IOException;
+import java.util.logging.*;
+ 
+public class TestRotatingFiles {
+   <span class="color-comment">// Invoke the factory method to a new Logger or return the existing Logger</span>
+   private static final Logger logger = Logger.getLogger(TestRotatingFiles.class.getName());
+ 
+   public static void main(String[] args) throws IOException {
+      <span class="color-comment">// Construct a set of rotating log files.</span>
+      <span class="color-comment">// &quot;%t&quot; denotes the system temp directory.</span>
+      <span class="color-comment">// &quot;%g&quot; denotes the generation number.</span>
+      <span class="color-comment">// File size is 1024 bytes (for testing)</span>
+      <span class="color-comment">// Number of files is 3, from 0 to 2.</span>
+      <span class="color-comment">// Append is true (not overriding).</span>
+      <span class="color-new">Handler files = new FileHandler(&quot;%t/test%g.log&quot;, 1024, 3, true);</span>
+      <span class="color-comment">// Use text formatter instead of default XML formatter</span>
+      <span class="color-comment">// Default level is ALL, no Filter.</span>
+      files.setFormatter(new SimpleFormatter());
+      <span class="color-comment">// Add the FileHander to the root logger.</span>
+      Logger.getLogger(&quot;&quot;).addHandler(files);
+ 
+      <span class="color-comment">// Start logging</span>
+      for (int i = 0; i &lt; 100; ++i) {
+         logger.info(&quot;Testing log message &quot; + i);
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Three log files, <code>test0.log</code>, <code>test1.log</code> and <code>test2.log</code> are created in the system temporary directory (based on the environment variable <code>TEMP</code> or <code>TMP</code>), with <code>test0.log</code> as the current log file and <code>test2.log</code> as the oldest.</p>
+
+<p>To detach the default console handler (which logs INFO-level and above):</p>
+<pre class="color-example">
+<span class="color-comment">// Remove the default console handler</span>
+Logger parentLogger = Logger.getLogger(&quot;&quot;); 
+Handler[] handlers = parentLogger.getHandlers();  
+for (Handler handler : handlers) {
+   parentLogger.removeHandler(handler);
+}</pre>
+
+
+<h4>Localization via <span class="font-code">ResourceBundle</span></h4>
+
+<p>Each logger may be associated with a <code>ResourceBundle</code> for mapping into localized message strings. You can use the method <code>logrb()</code> to create a log entry with a <code>ResourceBundle</code>.</p>
+<p>Example: [TODO]</p>
+
+<h4>Writing Custom <span class="font-code">Formatter</span></h4>
+<p>To write your custom <code>Formatter</code>, you extend from the base class <code>java.util.logging.Formatter</code>, and override the <code>format()</code> method. You may also override the <code>getHead()</code> and <code>getTail()</code> methods to wrap head   and tail strings around a set of formatted records, e.g., XML starting and ending elements. You could use the <code>formatMessage()</code> method which returns a localized string based on the <code>LogRecord</code> and possibly a <code>ResourceBundle</code> provided in the <code>logrb()</code> call.</p>
+
+<pre class="color-syntax">
+abstract String format(LogRecord record)
+  <span class="color-comment">// Format each LogRecord - to be overridden in subclass</span>
+String getHead(Handler h)
+  <span class="color-comment">// Called when the handler first use this formatter</span>
+String getTail(Handler h)
+  <span class="color-comment">// Called before this formatter is closed</span>
+String formatMessage(LogRecord record)
+  <span class="color-comment">// Format into a localized string</span></pre>
+
+<h5>Example</h5>
+<h5><span class="font-code">MyHtmlFormatter.java</span></h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57</pre>
+</td>
+<td>
+<pre>
+package com.mytest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.*;
+ 
+<span class="color-comment">/**
+ * Create a custom HTML logging Formatter to show the entries
+ * in a table with 3 columns: level, time-stamp and message.
+ */</span>
+public class MyHtmlFormatter extends Formatter {
+   <span class="color-comment">// This method is called for every log records to be published.</span>
+   <span class="color-comment">// Write an HTML row, with cells level, time-stamp and message</span>
+   @Override
+   public String format(LogRecord record) {
+      StringBuilder buf = new StringBuilder();
+      buf.append(&quot;&lt;tr&gt;&quot;);
+      <span class="color-comment">// Level - Show in red for levels on or above WARNING</span>
+      if (record.getLevel().intValue() &gt;= Level.WARNING.intValue()) {
+         buf.append(&quot;&lt;td style='color:red'&gt;&quot;);
+         buf.append(record.getLevel());
+      } else {
+         buf.append(&quot;&lt;td&gt;&quot;);
+         buf.append(record.getLevel());
+      }
+      buf.append(&quot;&lt;/td&gt;&quot;);
+      <span class="color-comment">// Time stamp</span>
+      buf.append(&quot;&lt;td&gt;&quot;);
+      buf.append(formatDateTime(record.getMillis()));
+      buf.append(&quot;&lt;/td&gt;&quot;);
+      <span class="color-comment">// Message</span>
+      buf.append(&quot;&lt;td&gt;&quot;);
+      buf.append(formatMessage(record));
+      buf.append(&quot;&lt;/td&gt;&quot;);
+      buf.append(&quot;&lt;/tr&gt;&quot;);
+      return buf.toString();
+   }
+ 
+   <span class="color-comment">// Called when the handler opens the formatter - Write HTML starting</span>
+   @Override
+   public String getHead(Handler h) {
+      return &quot;&lt;html&gt;&lt;body&gt;&lt;h2&gt;Log Entries&lt;/h2&gt;&lt;table border='1'&gt;&quot;
+           + &quot;&lt;tr&gt;&lt;th&gt;Level&lt;/th&gt;&lt;th&gt;Time&lt;/th&gt;&lt;th&gt;Message&lt;/th&gt;&lt;/tr&gt;&quot;;
+   }
+ 
+   <span class="color-comment">// Called when the handler closes the formatter - Write HTML ending</span>
+   @Override
+   public String getTail(Handler h) {
+      return &quot;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;&quot;;
+   }
+ 
+   <span class="color-comment">// Helper method to format the time-stamp</span>
+   private String formatDateTime(long millisecs) {
+      SimpleDateFormat dateFormat = new SimpleDateFormat(&quot;MMM dd,yyyy HH:mm:ss&quot;);
+      Date recordDate = new Date(millisecs);
+      return dateFormat.format(recordDate);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">TestMyHtmlFormatter.java</span></h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
+</td>
+<td>
+<pre>
+package com.mytest;
+import java.io.IOException;
+import java.util.logging.*;
+ 
+public class TestMyHtmlFormatter {
+   private final static Logger logger = Logger.getLogger(TestMyHtmlFormatter.class.getName());
+ 
+   <span class="color-comment">// Create a FileHandler and attach it to the root logger.</span>
+   <span class="color-comment">// Create a MyHtmlFormatter and attach to the FileHandler.</span>
+   public static void setupLogger() throws IOException {
+      Logger rootLogger = Logger.getLogger(&quot;&quot;);
+      Handler htmlFileHandler = new FileHandler(&quot;%t/log.html&quot;);
+      Formatter htmlFormatter = new MyHtmlFormatter();
+      rootLogger.addHandler(htmlFileHandler);
+      htmlFileHandler.setFormatter(htmlFormatter);
+   }
+ 
+   public void writeLog() {
+      logger.setLevel(Level.ALL);
+      logger.severe(&quot;This is a SEVERE-level log&quot;);
+      logger.warning(&quot;This is a WARNING-level log&quot;);
+      logger.info(&quot;This is a INFO-level log&quot;);
+      logger.finest(&quot;This is a FINEST-level log&quot;);
+      try {
+         <span class="color-comment">// Simulating Exceptions</span>
+         throw new Exception(&quot;Simulating an exception&quot;);
+      } catch (Exception ex){
+         logger.log(Level.SEVERE, ex.getMessage(), ex);
+      }
+   }
+ 
+   public static void main(String[] args) throws IOException {
+      setupLogger();
+      TestMyHtmlFormatter m = new TestMyHtmlFormatter();
+      m.writeLog();
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h4><span class="font-code">printStackTrace()</span></h4>
+<p>Older Java programs tend to use <code>printStackTrace()</code> in the <code>catch</code> clause to print the stack trace to the <code>System.err</code>, as follows:</p>
+
+<pre class="color-example">
+try {
+   ......
+} catch (Exception ex) {
+   <span class="color-comment">// Print the stack trace to System.err</span>
+   <span class="color-new">ex.printStackTrace();</span>
+}</pre>
+
+<p>The <code>printStackTrace()</code>, which is not thread-safe, is nowadays considered a bad practice and should not be used on the production codes. It is highly recommended to either remove the <code>printStackTrace()</code> from production code, or replaced by a more robust and powerful logging facility (such as Java Logging Framework or Log4j).</p>
+
+<p>For example, you can use the Java logging framework as follows to replace the <code>printStackTrace()</code>.</p>
+
+<pre class="color-example">
+public class MyClassName {
+   <span class="color-new">private static final Logger logger = Logger.getLogger(MyClassName.class.getName());</span>
+   .....
+   <span class="color-comment">// Within a method</span>
+      try {
+         ......
+      } catch (Exception ex) {
+         <span class="color-comment">// Log the stack trace</span>
+         <span class="color-new">logger.log(Level.SEVERE, ex.getMessage(), ex);</span>
+      }
+   .....   
+}</pre>
+
+<h5>Why <span class="font-code">printStackTrace()</span> is bad?</h5>
+
+<ul>
+<li>The <code>printStackTrace()</code> method is not <em>thread-safe</em> (and you can't synchronize on <code>System.err</code> and <code>System.out</code>). In other words, a multi-threaded application will likely interleave the stack traces and produce very confusing log entries. For agent applications, the stack traces could dirty the user prompt. On the other hand, Logger's methods are thread-safe. For example, although <code>ConsoleHandler</code> and <code>StreamHandler</code> publish to <code>System.err</code>, but the operation is synchronized - every thread that attempts to publish a log entry must acquire the lock on the monitor associated with the <code>StreamHandler</code> instance.</li>
+
+<li>Stack traces are meant for debugging by the developers during the development, not for end users in production. They should therefore be directed to a log file instead of console. End users shall not be exposed to the stack traces.</li>
+
+<li>Redirecting <code>System.err</code> to a file (via <code>System.setErr()</code>) may not solve the problem, because the log file could be huge. You need a set of rotating log files.</li>
+
+<li>Logging facilities are far more powerful than the simple <code>printStackTrace()</code>! You can control the amount of outputs produced. You can direct the outputs to console, file (including rotating log files), memory, and even network (send to a remote host or trigger a email?!).</li>
+
+<li>Stack trace, by itself, may not be sufficient to debug the program. Logging facility could be used to log additional information, system configuration, and program traces.</li>
+</ul>
+
+<h3>Log4j</h3>
+<p>Apache's Log4j is a popular Java logging framework, available @ <a href="http://logging.apache.org/">http://logging.apache.org</a>.</p>
+
+<p>To create a logger:</p>
+<pre class="color-example">
+import org.apache.log4j.Logger;
+......
+private static final Logger logger = Logger.getLogger(<em>MyClassName</em>.class);</pre>
+
+<p>[TODO]</p>
+
+<p class="references">REFERENCES</p>
+<ol>
+<li>Java Logging Overview @ <a href="http://docs.oracle.com/javase/1.4.2/docs/guide/util/logging/overview.html">http://docs.oracle.com/javase/1.4.2/docs/guide/util/logging/overview.html</a>.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7<br />
+Last modified: November, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

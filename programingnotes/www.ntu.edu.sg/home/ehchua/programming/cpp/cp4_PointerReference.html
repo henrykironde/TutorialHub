@@ -1,0 +1,1800 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>C++ Pointers and References</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>C++ Programming Language</h1>
+<h2>Pointers, References and Dynamic Memory Allocation</h2>
+</div>
+
+<div id="content-main">
+
+<p>Pointers, References and Dynamic Memory Allocation are the most powerful features in C/C++ language, which allows programmers to directly manipulate memory to <em>efficiently manage the memory </em>- the most critical and scarce resource in computer - <em>for best performance</em>. However, &quot;pointer&quot; is also the most complex and difficult feature in C/C++ language.  </p>
+<p>Pointers are extremely powerful because they allows you to access addresses and manipulate their contents. But they are also extremely complex to handle. Using them correctly, they could greatly improve the efficiency and performance. On the other hand, using them incorrectly could lead to many problems, from un-readable and un-maintainable codes, to infamous bugs such as memory leaks and buffer overflow, which may  expose your system to hacking. Many new languages (such as Java and C#) remove pointer from their syntax to avoid the pitfalls of pointers, by providing automatic memory management.</p>
+<p> Although you can write C/C++ programs without using pointers, however, it is difficult not to mention pointer in teaching C/C++ language. Pointer is probably not meant for novices and dummies.</p>
+
+
+<h3>Pointer Variables</h3>
+<p>A <em>computer memory location</em> has an <em>address</em> and holds a <em>content</em>. The <em>address</em> is a numerical number (often expressed in hexadecimal), which is hard for programmers to use directly. Typically, each address location holds 8-bit (i.e., 1-byte) of data. It is entirely up to the programmer to interpret the meaning of the data, such as integer, real number, characters or strings.</p>
+
+<p>To ease the burden of programming using numerical address and programmer-interpreted data, early programming languages (such as C) introduce the concept of variables. A variable is a <em>named</em> location that can store a <em>value</em> of a particular <em>type</em>. Instead of numerical addresses, names (or identifiers) are attached to certain addresses. Also, types (such as <code>int</code>, <code>double</code>, <code>char</code>) are associated with the contents for ease of interpretation of data.</p>
+<p>Each address location typically hold 8-bit (i.e., 1-byte) of data. A 4-byte <code>int</code> value occupies 4 memory locations. A 32-bit system typically uses 32-bit addresses. To store a 32-bit address, 4 memory locations are required.
+</p>
+<p>The following diagram illustrate the relationship between computers' memory <em>address</em> and <em>content</em>; and variable's <em>name</em>, <em>type</em> and <em>value</em> used by the programmers.</p>
+
+<img class="image-center" src="images/MemoryAddressContent.png" alt="MemoryAddressContent.png" />
+
+<h4>Pointer Variables (or Pointers)</h4>
+<p>A <em>pointer variable</em> (or <em>pointer</em> in short) is basically the same as the other variables, which can store a piece of data. Unlike normal variable which stores a value (such as an <code>int</code>, a <code>double</code>, a <code>char</code>), a <em>pointer stores a memory address</em>.</p>
+
+<h4>Declaring Pointers</h4>
+
+<p>Pointers must be declared before they can be used, just like a normal variable. The syntax of declaring a pointer is to place a <code>*</code> in front of the name. A pointer is associated with a type (such as <code>int</code> and <code>double</code>) too.</p>
+<pre class="color-syntax">
+<em>type</em> *<em>ptr</em>;   <span class="color-comment">// Declare a pointer variable called <em>ptr</em> as a pointer of <em>type</em></span>
+<span class="color-comment">// or</span>
+<em>type</em>* <em>ptr</em>;
+<span class="color-comment">// or</span>
+<em>type</em> * <em>ptr</em>;  <span class="color-comment">// I shall adopt this convention</span></pre>
+
+<p>For example,</p>
+<pre class="color-example">
+int * iPtr;     <span class="color-comment">// Declare a pointer variable called iPtr pointing to an int (an int pointer)</span>
+                <span class="color-comment">// It contains an address. That address holds an int value.</span>
+double * dPtr;  <span class="color-comment">// Declare a double pointer</span></pre>
+
+<p>Take note that you need to place a <code>*</code> in front of each pointer variable, in other words, <code>*</code> applies only to the name that followed. The <code>*</code> in the declaration statement is not an operator, but indicates that the name followed is a pointer variable. For example,</p>
+<pre class="color-example">
+int *p1, *p2, i;    <span class="color-comment">// p1 and p2 are int pointers. i is an int</span>
+int* p1, p2, i;     <span class="color-comment">// p1 is a int pointer, p2 and i are int</span>
+int * p1, * p2, i;  <span class="color-comment">// p1 and p2 are int pointers, i is an int</span></pre>
+
+<p><span class="line-heading">Naming Convention of Pointers:</span> Include a &quot;<code>p</code>&quot; or &quot;<code>ptr</code>&quot; as <em>prefix</em> or <em>suffix</em>, e.g., <code>iPtr</code>, <code>numberPtr</code>, <code>pNumber</code>, <code>pStudent</code>.</p>
+
+<h4>Initializing Pointers via the Address-Of Operator (<span class="font-code">&amp;</span>)</h4>
+
+<p>When you declare a pointer variable, its content is not initialized. In other words, it contains an address of &quot;somewhere&quot;, which is of course not a valid location. This is dangerous! You need to initialize a pointer by assigning it a valid address. This is normally done via the <em>address-of operator</em> (<code>&amp;</code>).</p>
+
+<p>The <em>address-of operator</em> (<code>&amp;</code>) operates on a variable, and returns the address of the variable. For example, if <code>number</code> is an <code>int</code> variable, <code>&amp;number</code> returns the address of the variable <code>number</code>.</p>
+<p>You can use the address-of operator to get the address of a variable, and assign the address to a pointer variable. For example,</p>
+<pre class="color-example">
+int number = 88;     <span class="color-comment">// An int variable with a value</span>
+int * pNumber;       <span class="color-comment">// Declare a pointer variable called pNumber pointing to an int (or int pointer)</span>
+<span class="color-highlight">pNumber = &amp;number;</span>  <span class="color-comment"> // Assign the address of the variable number to pointer pNumber</span>
+ 
+int * pAnother = &amp;number; <span class="color-comment">// Declare another int pointer and init to address of the variable number</span></pre>
+
+<img class="image-center" src="images/PointerDeclaration.png" alt="PointerDeclaration.png" />
+
+<p>As illustrated, the <code>int</code> variable <code>number</code>, starting at address <code>0x22ccec</code>, contains an <code>int</code> value <code>88</code>. The expression <code>&amp;number</code> returns the address of the variable <code>number</code>, which is <code>0x22ccec</code>. This address is then assigned to the pointer variable <code>pNumber</code>, as its initial value.</p>
+
+<p>The address-of operator (<code>&amp;</code>) can only be used on the RHS.</p>
+
+<h4>Indirection or Dereferencing Operator (<code>*</code>)</h4>
+
+<p>The <em>indirection operator</em> (or <em>dereferencing operator</em>) (<code>*</code>) operates on a pointer, and returns the value stored in the address kept in the pointer variable. For example, if <code>pNumber</code> is an <code>int</code> pointer, <code>*pNumber</code> returns the <code>int</code> value &quot;<em>pointed to</em>&quot; by <code>pNumber</code>.</p>
+<p>For example,</p>
+<pre class="color-example">
+int number = 88;
+int * pNumber = &amp;number;  <span class="color-comment">// Declare and assign the address of variable number to pointer pNumber (0x22ccec)</span>
+cout &lt;&lt; pNumber&lt;&lt; endl;   <span class="color-comment">// Print the content of the pointer variable, which contain an address</span><span class="color-comment"> (0x22ccec)</span>
+cout &lt;&lt; <span class="color-highlight">*pNumber</span> &lt;&lt; endl; <span class="color-comment">// Print the value &quot;pointed to&quot; by the pointer, which is an int (88)</span>
+*<span class="color-highlight">pNumber</span> = 99;            <span class="color-comment">// Assign a value to where the pointer is pointed to, NOT to the pointer variable</span>
+cout &lt;&lt; <span class="color-highlight">*pNumber</span> &lt;&lt; endl; <span class="color-comment">// Print the new value &quot;pointed to&quot; by the pointer (99)</span>
+cout &lt;&lt; number &lt;&lt; endl;   <span class="color-comment">// The value of variable number changes as well (99)</span></pre>
+
+<p>Take note that <code>pNumber</code> stores a memory address location, whereas <code>*pNumber</code> refers to the value stored in the address kept in the pointer variable, or the value pointed to by the pointer. </p>
+<p>As illustrated, a  variable (such as <code>number</code>) <em>directly</em> references a value, whereas a pointer <em>indirectly</em> references a value  through the memory address it stores. Referencing a value indirectly via a  pointer is called <em>indirection</em> or <em>dereferencing</em>.</p>
+<p>The indirection operator (<code>*</code>) can be used in both the RHS (<code>temp = *pNumber</code>) and the LHS (<code>*pNumber = 99</code>) of an assignment statement.</p>
+<p>Take note that the symbol <code>*</code> has different meaning in a declaration statement and in an expression. When it is used in a declaration (e.g., <code>int * pNumber</code>), it denotes that the name followed is a pointer variable. Whereas when it is used in a expression (e.g., <code>*pNumber = 99</code><code>; temp &lt;&lt; *pNumber;</code>), it refers to the value pointed to by the pointer variable.</p>
+
+<h4>Pointer has a Type Too</h4>
+<p>A pointer is associated with a type (of the value it points to), which is specified during declaration. A pointer can only hold an address of the declared type; it cannot hold an address of a different type.</p>
+
+<pre class="color-example">
+int i = 88;
+double d = 55.66;
+int * iPtr = &amp;i;    <span class="color-comment">// int pointer pointing to an int value</span>
+double * dPtr = &amp;d; <span class="color-comment">// double pointer pointing to a double value</span>
+ 
+iPtr = &amp;d;   <span class="color-error">// ERROR, cannot hold address of different type</span>
+dPtr = &amp;i;   <span class="color-error">// ERROR</span>
+iPtr = i;    <span class="color-error">// ERROR, pointer holds address of an int, NOT int value</span>
+ 
+int j = 99;
+iPtr = &amp;j;  <span class="color-comment">// You can change the address stored in a pointer</span></pre>
+
+<h5>Example</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Test pointer declaration and initialization (TestPointerInit.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   int number = 88;    <span class="color-comment">// Declare an int variable and assign an initial value</span>
+   int * pNumber;      <span class="color-comment">// Declare a pointer variable pointing to an int (or int pointer)</span>
+   pNumber = &amp;number;  <span class="color-comment">// assign the address of the variable number to pointer pNumber</span>
+ 
+   cout &lt;&lt; pNumber &lt;&lt; endl;  <span class="color-comment">// Print content of pNumber (0x22ccf0)</span>
+   cout &lt;&lt; &amp;number &lt;&lt; endl;  <span class="color-comment">// Print address of number (0x22ccf0)</span>
+   cout &lt;&lt; *pNumber &lt;&lt; endl; <span class="color-comment">// Print value pointed to by pNumber (88)</span>
+   cout &lt;&lt; number &lt;&lt; endl;   <span class="color-comment">// Print value of number (88)</span>
+ 
+   *pNumber = 99;            <span class="color-comment">// Re-assign value pointed to by pNumber</span>
+   cout &lt;&lt; pNumber &lt;&lt; endl;  <span class="color-comment">// Print content of pNumber (0x22ccf0)</span>
+   cout &lt;&lt; &amp;number &lt;&lt; endl;  <span class="color-comment">// Print address of number (0x22ccf0)</span>
+   cout &lt;&lt; *pNumber &lt;&lt; endl; <span class="color-comment">// Print value pointed to by pNumber (99)</span>
+   cout &lt;&lt; number &lt;&lt; endl;   <span class="color-comment">// Print value of number (99)</span>
+                             <span class="color-comment">// The value of number changes via pointer</span>
+ 
+   cout &lt;&lt; &amp;pNumber &lt;&lt; endl; <span class="color-comment">// Print the address of pointer variable pNumber (0x22ccec)</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Notes: The address values that you get are unlikely to be the same as mine. The OS loads the program in available free memory locations, instead of fixed memory locations.</p>
+
+<h4>Uninitialized Pointers</h4>
+
+<p>The following code fragment has a serious logical error!</p>
+
+<pre class="color-example">
+int * iPtr;
+*iPtr = 55;
+cout &lt;&lt; *iPtr &lt;&lt; endl;</pre>
+
+<p>The pointer <code>iPtr</code> was declared without initialization, i.e., it is pointing to &quot;somewhere&quot; which is of course an invalid memory location. The <code>*iPtr = 55</code> corrupts the value of &quot;somewhere&quot;! You need to initialize a pointer by assigning it a valid address. Most of the compilers does not signal an error or a warning for uninitialized pointer?!</p>
+
+<h4>Null Pointers</h4>
+
+<p>You can initialize a pointer to 0 or <code>NULL</code>, i.e., it points to nothing. It is called a <em>null pointer</em>. Dereferencing a null pointer (<code>*p</code>) causes an <code>STATUS_ACCESS_VIOLATION</code> exception.</p>
+
+<pre class="color-example">
+int * iPtr = 0;         <span class="color-comment">// Declare an int pointer, and initialize the pointer to point to nothing</span>
+cout &lt;&lt; <strong>*iPtr</strong> &lt;&lt; endl;  <span class="color-error">// ERROR! STATUS_ACCESS_VIOLATION exception</span>
+ 
+int * p = NULL;         <span class="color-comment">// Also declare a NULL pointer points to nothing</span></pre>
+
+<p>Initialize a pointer to null during declaration is a good software engineering practice.</p>
+<p>C++11 introduces a new keyword called <code>nullptr</code> to represent null pointer.</p>
+
+<h3>Reference Variables</h3>
+
+<p>C++ added the so-called <em>reference variables</em> (or <em>references</em> in short). A reference is an <em>alias</em>, or an <em>alternate name</em> to an existing variable. For example, suppose you make <code>peter</code> a reference (alias) to <code>paul</code>, you can refer to the person as either <code>peter</code> or <code>paul</code>.</p>
+
+<p>The main use of references is acting as function formal parameters to support pass-by-reference. In an reference variable is passed into a function, the function works on the original copy (instead of a clone copy in pass-by-value). Changes inside the function are reflected outside the function.</p>
+
+<p>A reference is similar to a pointer. In many cases, a reference can be used as an alternative to pointer, in particular, for the function parameter.</p>
+
+<h4>References (or Aliases) (<span class="font-code">&amp;</span>)</h4>
+
+<p>Recall that C/C++ use <code>&amp;</code> to denote the <em>address-of</em> operator in an expression. C++ assigns an additional meaning to <code>&amp;</code> in declaration to declare a reference variable.</p>
+<p>The meaning of symbol <code>&amp;</code> is different in an expression and in a declaration. When it is used in an expression, <code>&amp;</code> denotes the address-of operator, which returns the address of a variable, e.g., if <code>number</code> is an <code>int</code> variable, <code>&amp;number</code> returns the address of the variable <code>number</code> (this has been described in the above section).</p>
+
+<p>Howeve, when <code>&amp;</code> is used in a <em>declaration </em>(including <em>function formal parameters</em>), it is part of the type identifier and is used to declare a <em>reference variable</em> (or <em>reference</em> or <em>alias</em> or <em>alternate name</em>). It is used to provide <em>another name</em>, or <em>another reference</em>, or <em>alias</em> to an existing variable.</p>
+
+<p>The syntax is as follow:</p>
+
+<pre class="color-syntax">
+<em>type </em>&amp;<em>newName</em> = <em>existingName</em>;
+<span class="color-comment">// or</span>
+<em>type</em>&amp; <em>newName</em> = <em>existingName</em>;
+<span class="color-comment">// or</span>
+<em>type</em> &amp; <em>newName</em> = <em>existingName</em>;  <span class="color-comment">// I shall adopt this convention</span></pre>
+
+<p>It shall be read as &quot;<code><em>newName</em></code><em> is a reference to <code>exisitngName</code></em>&quot;, or "<code><em>newNew</em></code><em> is an alias of <code>existingName</code></em>". You can now refer to the variable as <code><em>newName</em></code> or <code><em>existingName</em></code>.</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test reference declaration and initialization (TestReferenceDeclaration.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   int number = 88;          <span class="color-comment">// Declare an int variable called number</span>
+   <span class="color-new">int &amp; refNumber = number;</span> <span class="color-comment">// Declare a reference (alias) to the variable number</span>
+                             <span class="color-comment">// Both refNumber and number refer to the same value</span>
+ 
+   cout &lt;&lt; number &lt;&lt; endl;    <span class="color-comment">// Print value of variable number (88)</span>
+   cout &lt;&lt; <span class="color-new">refNumber</span> &lt;&lt; endl; <span class="color-comment">// Print value of reference (88)</span>
+ 
+   <span class="color-new">refNumber = 99</span>;            <span class="color-comment">// Re-assign a new value to refNumber</span>
+   cout &lt;&lt; <span class="color-new">refNumber</span> &lt;&lt; endl;
+   cout &lt;&lt; number &lt;&lt; endl;    <span class="color-comment">// Value of number also changes (99)</span>
+ 
+   number = 55;               <span class="color-comment">// Re-assign a new value to number</span>
+   cout &lt;&lt; number &lt;&lt; endl;
+   cout &lt;&lt; <span class="color-new">refNumber</span> &lt;&lt; endl; <span class="color-comment">// Value of refNumber also changes (55)</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<img class="image-center" src="images/PointerReferencing.png" alt="PointerReferencing.png" />
+
+
+<h4>How References Work?</h4>
+
+<p>A reference works as a pointer. A reference is declared as an alias of a variable. It stores the address of the variable, as illustrated:</p>
+
+<img class="image-center" src="images/ReferenceIsAPointer.png" alt="ReferenceIsAPointer.png" />
+
+
+<h4>References vs. Pointers</h4>
+<p>Pointers and references are equivalent, except:</p>
+
+<ol>
+<li>A reference is a <em>name constant for an address</em>. You need to initialize the reference during declaration.
+
+<pre class="color-example">
+<span class="color-error">int &amp; iRef;</span>   <span class="color-comment">// Error: 'iRef' declared as reference but not initialized</span></pre>
+
+Once a reference is established to a variable, you cannot change the reference to reference another variable.</li>
+
+<li>To get the value pointed to by a pointer, you need to use the dereferencing operator <code>*</code> (e.g., if <code>pNumber</code> is a <code>int</code> pointer, <code>*pNumber</code> returns the value pointed to by <code>pNumber</code>. It is called <em>dereferencing</em> or <em>indirection</em>). To assign an address of a variable into a pointer, you need to use the address-of operator <code>&amp;</code> (e.g., <code>pNumber = &amp;number</code>).<br />
+
+On the other hand, referencing and dereferencing are done on the references implicitly. For example, if <code>refNumber</code> is a reference (alias) to another <code>int</code> variable, <code>refNumber</code> returns the value of the variable. No explicit dereferencing operator <code>*</code> should be used. Furthermore, to assign an address of a variable to a reference variable, no address-of operator <code>&amp;</code> is needed.</li>
+</ol>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* References vs. Pointers (TestReferenceVsPointer.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   int number1 = 88, number2 = 22;
+ 
+  <span class="color-comment"> // Create a pointer pointing to number1</span>
+   int * pNumber1 = &amp;number1; <span class="color-comment"> // Explicit referencing</span>
+   *pNumber1 = 99;            <span class="color-comment"> // Explicit dereferencing</span>
+   cout &lt;&lt; *pNumber1 &lt;&lt; endl; <span class="color-comment"> // 99</span>
+   cout &lt;&lt; &amp;number1 &lt;&lt; endl;  <span class="color-comment"> // 0x22ff18</span>
+   cout &lt;&lt; pNumber1 &lt;&lt; endl;  <span class="color-comment"> // 0x22ff18 (content of the pointer variable - same as above)</span>
+   cout &lt;&lt; &amp;pNumber1 &lt;&lt; endl; <span class="color-comment"> // 0x22ff10 (address of the pointer variable)</span>
+   pNumber1 = &amp;number2;       <span class="color-comment"> // Pointer can be reassigned to store another address</span>
+ 
+  <span class="color-comment"> // Create a reference (alias) to number1</span>
+   int &amp; refNumber1 = number1; <span class="color-comment"> // Implicit referencing (NOT &amp;number1)</span>
+   refNumber1 = 11;            <span class="color-comment"> // Implicit dereferencing (NOT *refNumber1)</span>
+   cout &lt;&lt; refNumber1 &lt;&lt; endl; <span class="color-comment"> // 11</span>
+   cout &lt;&lt; &amp;number1 &lt;&lt; endl;   <span class="color-comment"> // 0x22ff18</span>
+   cout &lt;&lt; &amp;refNumber1 &lt;&lt; endl;<span class="color-comment"> // 0x22ff18</span>
+  <span class="color-comment"> //refNumber1 = &amp;number2;     // Error! Reference cannot be re-assigned</span>
+                               <span class="color-comment"> // error: invalid conversion from 'int*' to 'int'</span>
+   refNumber1 = number2;        <span class="color-comment">// refNumber1 is still an alias to number1.</span>
+                                <span class="color-comment">// Assign value of number2 (22) to refNumber1 (and number1).</span>
+   number2++;   
+   cout &lt;&lt; refNumber1 &lt;&lt; endl;  <span class="color-comment">// 22</span>
+   cout &lt;&lt; number1 &lt;&lt; endl;     <span class="color-comment">// 22</span>
+   cout &lt;&lt; number2 &lt;&lt; endl;     <span class="color-comment">// 23</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>A reference variable provides a new name to an existing variable. It is <em>dereferenced implicitly</em> and does not need the dereferencing operator <code>*</code> to retrieve the value referenced. On the other hand, a pointer variable stores an address. You can change the address value stored in a pointer. To retrieve the value pointed to by a pointer, you need to use the indirection operator <code>*</code>, which is known as <em>explicit dereferencing</em>. Reference can be treated as a <code>const</code> pointer. It has to be initialized during declaration, and its content cannot be changed.</p>
+
+<p>Reference is closely related to pointer. In many cases, it can be used as an alternative to pointer. A reference allows you to manipulate an object using pointer, but without the pointer syntax of referencing and dereferencing.</p>
+<p>The above example illustrates how reference works, but does not show its typical usage, which is used as the function formal parameter for pass-by-reference.</p>
+
+<h4>Pass-By-Reference into Functions with Reference Arguments vs. Pointer Arguments</h4>
+
+<h5>Pass-by-Value</h5>
+
+<p>In C/C++, by default, arguments are passed into functions <em>by value</em> (except arrays which is treated as pointers). That is, a clone copy of the argument is made and passed into the function. Changes to the clone copy inside the function has no effect to the original argument in the caller. In other words, the called function has no access to the variables in the caller. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Pass-by-value into function (TestPassByValue.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int square(int);
+ 
+int main() {
+   int number = 8;
+   cout &lt;&lt;  &quot;In main(): &quot; &lt;&lt; &amp;number &lt;&lt; endl; <span class="color-comment"> // 0x22ff1c</span>
+   cout &lt;&lt; number &lt;&lt; endl;        <span class="color-comment"> // 8</span>
+   cout &lt;&lt; square(number) &lt;&lt; endl;<span class="color-comment"> // 64</span>
+   cout &lt;&lt; number &lt;&lt; endl;        <span class="color-comment"> // 8 - no change</span>
+}
+ 
+int square(int n) {  <span class="color-comment">// non-const</span>
+   cout &lt;&lt;  &quot;In square(): &quot; &lt;&lt; &amp;n &lt;&lt; endl; <span class="color-comment"> // 0x22ff00</span>
+   n *= n;       <span class="color-comment">    // clone modified inside the function</span>
+   return n;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The output clearly shows that there are two different addresses.</p>
+
+<h5>Pass-by-Reference with Pointer Arguments</h5>
+
+<p>In many situations, we may wish to modify the original copy directly (especially in passing huge object or array) to avoid the overhead of cloning. This can be done by passing a pointer of the object into the function, known as <em>pass-by-reference</em>. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Pass-by-reference using pointer (TestPassByPointer.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+void square(int *);
+ 
+int main() {
+   int number = 8;
+   cout &lt;&lt;  &quot;In main(): &quot; &lt;&lt; &amp;number &lt;&lt; endl; <span class="color-comment"> // 0x22ff1c</span>
+   cout &lt;&lt; number &lt;&lt; endl;  <span class="color-comment"> // 8</span>
+   square(<span class="color-new">&amp;number</span>);         <span class="color-comment"> // Explicit referencing to pass an address</span>
+   cout &lt;&lt; number &lt;&lt; endl;  <span class="color-comment"> // 64</span>
+}
+ 
+void square(<span class="color-new">int * pNumber</span>) { <span class="color-comment"> // Function takes an int pointer (non-const)</span>
+   cout &lt;&lt;  &quot;In square(): &quot; &lt;&lt; pNumber &lt;&lt; endl; <span class="color-comment"> // 0x22ff1c</span>
+   <span class="color-new">*pNumber</span> *= <span class="color-new">*pNumber</span>;     <span class="color-comment"> // Explicit de-referencing to get the value pointed-to</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The called function operates on the same address, and can thus modify the variable in the caller.</p>
+
+<h5>Pass-by-Reference with Reference Arguments</h5>
+
+<p>Instead of passing pointers into function, you could also pass references into function, to avoid the clumsy syntax of referencing and dereferencing. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Pass-by-reference using reference (TestPassByReference.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+void square(int &amp;);
+ 
+int main() {
+   int number = 8;
+   cout &lt;&lt;  &quot;In main(): &quot; &lt;&lt; &amp;number &lt;&lt; endl; <span class="color-comment"> // 0x22ff1c</span>
+   cout &lt;&lt; number &lt;&lt; endl; <span class="color-comment"> // 8</span>
+   square(<span class="color-new">number</span>);         <span class="color-comment"> // Implicit referencing (without '&amp;')</span>
+   cout &lt;&lt; number &lt;&lt; endl; <span class="color-comment"> // 64</span>
+}
+ 
+void square(<span class="color-new">int &amp; rNumber</span>) { <span class="color-comment"> // Function takes an int reference (non-const)</span>
+   cout &lt;&lt;  &quot;In square(): &quot; &lt;&lt; &amp;rNumber &lt;&lt; endl; <span class="color-comment"> // 0x22ff1c</span>
+   <span class="color-new">rNumber</span> *= <span class="color-new">rNumber</span>;       <span class="color-comment"> // Implicit de-referencing (without '*')</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Again, the output shows that the called function operates on the same address, and can thus modify the caller's variable.</p>
+
+<p>Take note  referencing (in the caller) and dereferencing (in the function) are done implicitly. The only coding difference with pass-by-value is in the function's parameter declaration.</p>
+<p>Recall that references are to be initialized during declaration. In the case of function formal parameter, the references are initialized when the function is invoked, to the caller's arguments.</p>
+
+<p>References are primarily used in passing reference in/out of functions to allow the called function accesses variables in the caller directly.</p>
+
+<h5>&quot;<span class="font-code">const</span>&quot; Function Reference/Pointer Parameters</h5>
+
+<p>A <code>const</code> function formal parameter cannot be modified inside the function. Use <code>const</code> whenever possible as it protects you from inadvertently modifying the parameter and protects you against many programming errors.</p>
+
+<p>A <code>const</code> function parameter can receive both <code>const</code> and non-<code>const</code> argument. On the other hand, a non-<code>const</code> function reference/pointer parameter can only receive non-<code>const</code> argument. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Function const and non-const parameter (FuncationConstParameter.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int squareConst(const int);
+int squareNonConst(int);
+int squareConstRef(const int &amp;);
+int squareNonConstRef(int &amp;);
+ 
+int main() {
+   int number = 8;
+   const int constNumber = 9;
+   cout &lt;&lt; squareConst(number) &lt;&lt; endl;
+   cout &lt;&lt; squareConst(constNumber) &lt;&lt; endl;
+   cout &lt;&lt; squareNonConst(number) &lt;&lt; endl;
+   cout &lt;&lt; squareNonConst(constNumber) &lt;&lt; endl;
+ 
+   cout &lt;&lt; squareConstRef(number) &lt;&lt; endl;
+   cout &lt;&lt; squareConstRef(constNumber) &lt;&lt; endl;
+   cout &lt;&lt; squareNonConstRef(number) &lt;&lt; endl;
+   <span class="color-comment">// </span><span class="color-new">cout &lt;&lt; squareNonConstRef(constNumber) &lt;&lt; endl;</span>
+      <span class="color-comment"> // error: invalid initialization of reference of</span>
+      <span class="color-comment"> //  type 'int&amp;' from expression of type 'const int'</span>
+}
+ 
+int squareConst(const int number) {
+   <span class="color-comment">//</span> <span class="color-new">number *= number;</span>  <span class="color-comment">// error: assignment of read-only parameter</span>
+   return number * number;
+}
+ 
+int squareNonConst(int number) { <span class="color-comment"> // non-const parameter</span>
+   number *= number;
+   return number;
+}
+ 
+int squareConstRef(const int &amp; number) { <span class="color-comment"> // const reference</span>
+   return number * number;
+}
+ 
+int squareNonConstRef(int &amp; number) { <span class="color-comment"> // non-const reference</span>
+   return number * number;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h4>Passing the Function's Return Value</h4>
+
+<h5>Passing the Return-value as Reference</h5>
+
+<p>You can also pass the return-value as reference or pointer. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Passing back return value using reference (TestPassByReferenceReturn.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int &amp; squareRef(int &amp;);
+int * squarePtr(int *);
+ 
+int main() {
+   int number1 = 8;
+   cout &lt;&lt;  &quot;In main() &amp;number1: &quot; &lt;&lt; &amp;number1 &lt;&lt; endl; <span class="color-comment"> // 0x22ff14</span>
+   int &amp; result = squareRef(number1);
+   cout &lt;&lt;  &quot;In main() &amp;result: &quot; &lt;&lt; &amp;result &lt;&lt; endl; <span class="color-comment"> // 0x22ff14</span>
+   cout &lt;&lt; result &lt;&lt; endl;  <span class="color-comment"> // 64</span>
+   cout &lt;&lt; number1 &lt;&lt; endl; <span class="color-comment"> // 64</span>
+ 
+   int number2 = 9;
+   cout &lt;&lt;  &quot;In main() &amp;number2: &quot; &lt;&lt; &amp;number2 &lt;&lt; endl; <span class="color-comment"> // 0x22ff10</span>
+   int * pResult = squarePtr(&amp;number2);
+   cout &lt;&lt;  &quot;In main() pResult: &quot; &lt;&lt; pResult &lt;&lt; endl; <span class="color-comment"> // 0x22ff10</span>
+   cout &lt;&lt; *pResult &lt;&lt; endl;  <span class="color-comment"> // 81</span>
+   cout &lt;&lt; number2 &lt;&lt; endl;   <span class="color-comment"> // 81</span>
+}
+ 
+int &amp; squareRef(int &amp; rNumber) {
+   cout &lt;&lt;  &quot;In squareRef(): &quot; &lt;&lt; &amp;rNumber &lt;&lt; endl; <span class="color-comment"> // 0x22ff14</span>
+   rNumber *= rNumber;
+   return rNumber;
+}
+ 
+int * squarePtr(int * pNumber) {
+   cout &lt;&lt;  &quot;In squarePtr(): &quot; &lt;&lt; pNumber &lt;&lt; endl; <span class="color-comment"> // 0x22ff10</span>
+   *pNumber *= *pNumber;
+   return pNumber;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>You should not pass Function's local variable as return value by reference</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test passing the result (TestPassResultLocal.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int * squarePtr(int);
+int &amp; squareRef(int);
+ 
+int main() {
+   int number = 8;
+   cout &lt;&lt; number &lt;&lt; endl; <span class="color-comment"> // 8</span>
+   cout &lt;&lt; *squarePtr(number) &lt;&lt; endl; <span class="color-comment"> // ??</span>
+   cout &lt;&lt; squareRef(number) &lt;&lt; endl;  <span class="color-comment"> // ??</span>
+}
+ 
+int * squarePtr(int number) {
+   int localResult = number * number;
+   return &amp;localResult;
+     <span class="color-comment"> <span class="color-new">// warning: address of local variable 'localResult' returned</span></span>
+}
+ 
+int &amp; squareRef(int number) {
+   int localResult = number * number;
+   return localResult;
+     <span class="color-comment"> <span class="color-new">// warning: reference of local variable 'localResult' returned</span></span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>This program has a serious logical error, as local variable of function is passed back as return value by reference.  Local variable has local scope within the function, and its value is destroyed after the function exits. The GCC compiler is kind enough to issue a warning (but not error).</p>
+<p>It is safe to return a reference that is passed into the function as an argument. See earlier examples.</p>
+
+<h5>Passing Dynamically Allocated Memory as Return Value by Reference</h5>
+
+<p>Instead, you need to dynamically allocate a variable for the return value, and return it by reference.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test passing the result (TestPassResultNew.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int * squarePtr(int);
+int &amp; squareRef(int);
+ 
+int main() {
+   int number = 8;
+   cout &lt;&lt; number &lt;&lt; endl; <span class="color-comment"> // 8</span>
+   cout &lt;&lt; *squarePtr(number) &lt;&lt; endl; <span class="color-comment"> // 64</span>
+   cout &lt;&lt; squareRef(number) &lt;&lt; endl;  <span class="color-comment"> // 64</span>
+}
+ 
+int * squarePtr(int number) {
+   int * dynamicAllocatedResult = new int(number * number);
+   return dynamicAllocatedResult;
+}
+ 
+int &amp; squareRef(int number) {
+   int * dynamicAllocatedResult = new int(number * number);
+   return *dynamicAllocatedResult;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Summary</h4>
+<p>Pointers and references are highly complex and difficult to master. But they can greatly improve the efficiency of the programs.</p>
+
+<p>For novices, avoid using pointers in your program.  Improper usage can lead to serious logical bugs. However, you need to understand the syntaxes of pass-by-reference with pointers and references, because they are used in many library functions.</p>
+<ul>
+<li>In <em>pass-by-value</em>, a clone is made and passed into the function. The caller's copy cannot be modified.</li>
+<li>In <em>pass-by-reference</em>, a pointer is passed into the function. The caller's copy could be modified inside the function.</li>
+<li>In <em>pass-by-reference with reference arguments</em>, you use the variable name as the argument.</li>
+<li>In <em>pass-by-reference with pointer arguments</em>, you need to use <code>&amp;<em>varName</em></code> (an address) as the argument.</li>
+</ul>
+
+<h3>Dynamic Memory Allocation</h3>
+
+<h4><span class="font-code">new</span> and <span class="font-code">delete</span> Operators</h4>
+
+<p>Instead of define an <code>int</code> variable (<code>int number</code>), and assign the address of the variable to the <code>int</code> pointer (<code>int *pNumber  = &amp;number</code>), the storage can be dynamically allocated at runtime, via a <code>new</code> operator. In C++, whenever you allocate a piece of memory dynamically via <code>new</code>, you need to use <code>delete</code> to remove the storage (i.e., to return the storage to the heap).</p>
+<p>The <code>new</code> operation returns a pointer to the memory allocated. The <code>delete</code> operator takes a pointer (pointing to the memory allocated via <code>new</code>) as its sole argument.</p>
+<p>For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Static allocation</span>
+int number = 88;
+int * p1 = &amp;number;  <span class="color-comment">// Assign a &quot;valid&quot; address into pointer</span>
+ 
+<span class="color-comment">// Dynamic Allocation</span>
+<strong>int * p2;</strong>            <span class="color-comment">// Not initialize, points to somewhere which is invalid</span>
+cout &lt;&lt; p2 &lt;&lt; endl; <span class="color-comment">// Print address before allocation</span>
+<strong>p2 = new int</strong>;       <span class="color-comment">// Dynamically allocate an int and assign its address to pointer</span>
+                    <span class="color-comment">// The pointer gets a valid address with memory allocated</span>
+*p2 = 99;
+cout &lt;&lt; p2 &lt;&lt; endl;  <span class="color-comment">// Print address after allocation</span>
+cout &lt;&lt; *p2 &lt;&lt; endl; <span class="color-comment">// Print value point-to</span>
+<strong>delete p2</strong>;           <span class="color-comment">// Remove the dynamically allocated storage</span></pre>
+
+<p>Observe that <code>new</code> and <code>delete</code> operators work on <em>pointer</em>.</p>
+<p>To initialize the allocated memory, you can use an initializer for fundamental types, or invoke a constructor for an object. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// use an initializer to initialize a fundamental type (such as int, double)</span>
+int * p1 = new int(88);
+double * p2 = new double(1.23);
+ 
+<span class="color-comment">// C++11 <em>brace initialization</em> syntax</span>
+int * p1 = new int {88};
+double * p2 = new double {1.23};
+ 
+<span class="color-comment">// invoke a constructor to initialize an object (such as Date, Time)</span>
+Date * date1 = new Date(1999, 1, 1);  
+Time * time1 = new Time(12, 34, 56);</pre>
+
+<p>You can dynamically allocate storage for <em>global</em> pointers inside a function. Dynamically allocated storage inside the function remains even after the function exits. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// Dynamically allocate global pointers (TestDynamicAllocation.cpp)</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int * p1, * p2;  <span class="color-comment">// Global int pointers</span>
+ 
+<span class="color-comment">// This function allocates storage for the int*</span>
+<span class="color-comment">// which is available outside the function</span>
+void allocate() {
+   p1 = new int;     <span class="color-comment">// Allocate memory, initial content unknown</span>
+   *p1 = 88;         <span class="color-comment">// Assign value into location pointed to by pointer</span>
+   p2 = new int(99); <span class="color-comment">// Allocate and initialize</span>
+}
+ 
+int main() {
+   allocate();
+   cout &lt;&lt; *p1 &lt;&lt; endl;  <span class="color-comment">// 88</span>
+   cout &lt;&lt; *p2 &lt;&lt; endl;  <span class="color-comment">// 99</span>
+   delete p1;  <span class="color-comment">// Deallocate</span>
+   delete p2;
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The main differences between static allocation and dynamic allocations are:</p>
+<ol>
+<li>In static allocation, the compiler allocates and deallocates the storage automatically, and handle memory management. Whereas in dynamic allocation, you, as the programmer, handle the memory allocation and deallocation yourself (via <code>new</code> and <code>delete</code> operators). You have full control on the pointer addresses and their contents, as well as memory management.</li>
+
+<li>Static allocated entities are manipulated through named variables. Dynamic allocated entities are handled through pointers.</li>
+</ol>
+
+
+<h4><span class="font-code">new[]</span> and <span class="font-code">delete[]</span> Operators</h4>
+<p>Dynamic array is allocated at runtime rather than compile-time, via the <code>new[]</code> operator. To remove the storage, you need to use the <code>delete[]</code> operator (instead of simply <code>delete</code>). For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test dynamic allocation of array  (TestDynamicArray.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+using namespace std;
+ 
+int main() {
+   const int SIZE = 5;
+   int * pArray;
+ 
+   pArray = new int[SIZE];  <span class="color-comment">// Allocate array via new[] operator</span>
+ 
+   <span class="color-comment">// Assign random numbers between 0 and 99</span>
+   for (int i = 0; i &lt; SIZE; ++i) {
+      *(pArray + i) = rand() % 100;
+   }
+   <span class="color-comment">// Print array</span>
+   for (int i = 0; i &lt; SIZE; ++i) {
+      cout &lt;&lt; *(pArray + i) &lt;&lt; &quot; &quot;;
+   }
+   cout &lt;&lt; endl;
+ 
+   delete[] pArray;  <span class="color-comment">// Deallocate array via delete[] operator</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>C++03 does not allow your to initialize the dynamically-allocated array. C++11 does with the brace initialization, as follows:</p>
+
+<pre class="color-example">
+<span class="color-comment">// C++11</span>
+int * p = new int[5] {1, 2, 3, 4, 5};</pre>
+
+
+<h3>Pointer, Array and Function</h3>
+
+<h4>Array is Treated as Pointer</h4>
+
+<p>In C/C++, an array's name is a pointer, pointing to the first element (index 0) of the array. For example, suppose that <code>numbers</code> is an <code>int</code> array, <code>numbers</code> is a also an <code>int</code> pointer, pointing at the first element of the array. That is, <code>numbers</code> is the same as <code>&amp;numbers[0]</code>. Consequently, <code>*numbers</code> is <code>number[0]</code>; <code>*(numbers+i)</code> is <code>numbers[i]</code>.</p>
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Pointer and Array (TestPointerArray.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   const int SIZE = 5;
+   int numbers[SIZE] = {11, 22, 44, 21, 41};  <span class="color-comment">// An int array</span>
+ 
+   <span class="color-comment">// The array name numbers is an int pointer, pointing at the</span>
+   <span class="color-comment">// first item of the array, i.e., numbers = &amp;numbers[0]</span>
+   cout &lt;&lt; &amp;numbers[0] &lt;&lt; endl; <span class="color-comment">// Print address of first element (0x22fef8)</span>
+   cout &lt;&lt; numbers &lt;&lt; endl;     <span class="color-comment">// Same as above (0x22fef8)</span>
+   cout &lt;&lt; *numbers &lt;&lt; endl;         <span class="color-comment">// Same as numbers[0] (11)</span>
+   cout &lt;&lt; *(numbers + 1) &lt;&lt; endl;   <span class="color-comment">// Same as numbers[1] (22)</span>
+   cout &lt;&lt; *(numbers + 4) &lt;&lt; endl;   <span class="color-comment">// Same as numbers[4] (41)</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Pointer Arithmetic</h4>
+<p>As seen from the previous section, if <code>numbers</code> is an <code>int</code> array, it is treated as an <code>int</code> pointer pointing to the first element of the array. <code>(numbers + 1)</code> points to the next <code>int</code>, instead of having the next sequential address. Take note that an <code>int</code> typically has 4 bytes.  That is <code>(numbers + 1)</code> increases the address by 4, or <code>sizeof(int)</code>. For example,</p>
+
+<pre class="color-example">
+int numbers[] = {11 22, 33};
+int * iPtr = numbers;
+cout &lt;&lt; iPtr &lt;&lt; endl;        <span class="color-comment">// 0x22cd30</span>
+cout &lt;&lt; iPtr + 1 &lt;&lt; endl;    <span class="color-comment">// 0x22cd34 (increase by 4 - sizeof int)</span>
+cout &lt;&lt; *iPtr &lt;&lt; endl;       <span class="color-comment">// 11</span>
+cout &lt;&lt; *(iPtr + 1) &lt;&lt; endl; <span class="color-comment">// 22</span> 
+cout &lt;&lt; *iPtr + 1 &lt;&lt; endl;   <span class="color-comment">// 12</span></pre>
+
+<h4><span class="font-code">sizeof</span> Array</h4>
+
+<p>The operation <code>sizeof(<em>arrayName</em>)</code> returns the <em>total bytes</em> of the array. You can derive the length (size) of the array by dividing it with the size of an element (e.g. element 0). For example,</p>
+
+<pre class="color-example">
+<strong></strong><span class="color-new">int numbers[100];</span>
+cout &lt;&lt; <span class="color-new">sizeof(numbers)</span> &lt;&lt; endl;     <span class="color-comment">// Size of entire array in bytes (400)</span>
+cout &lt;&lt; <span class="color-new">sizeof(numbers[0])</span> &lt;&lt; endl;  <span class="color-comment">// Size of first element of the array in bytes (4)</span>
+cout &lt;&lt; &quot;Array size is &quot; &lt;&lt; sizeof(numbers) / sizeof(numbers[0]) &lt;&lt; endl;  <span class="color-comment">// (100)</span><span class="color-comment"></span></pre>
+
+<h4>Passing Array In/Out of a Function</h4>
+<p>An array is passed into a function as <em>a pointer to the first element</em> of the array. You can use array notation (e.g., <code>int[]</code>) or pointer notation (e.g., <code>int*</code>) in the function declaration. The compiler always treats it as pointer (e.g., <code>int*</code>). For example, the following declarations are equivalent:</p>
+
+<pre class="color-example">
+int max(<span class="color-new">int numbers[]</span>, int size);
+int max(<span class="color-new">int *numbers</span>, int size);
+int max(<span class="color-new">int number[50]</span>, int size);</pre>
+
+<p>They will be treated as <code>int*</code> by the compiler, as follow. The size of the array given in <code>[]</code> is ignored.</p>
+<pre class="color-example">
+int max(<span class="color-new">int*</span>, int);</pre>
+
+
+<p>Array is passed by reference into the function, because a pointer is passed instead of a clone copy. If the array is modified inside the function, the modifications are applied to the caller's copy. You could declare the array parameter as <code>const</code> to prevent the array from being modified inside the function.</p>
+<p>The size of the array is not part of the array parameter, and needs to be passed in another <code>int</code> parameter. Compiler is not able to deduce the array size from the array pointer, and does not perform array bound check.</p>
+
+<p><span class="line-heading">Example:</span> Using the usual array notation.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Passing array in/out function (TestArrayPassing.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-comment">// Function prototypes</span>
+int max(<span class="color-new">const int arr[]</span>, int size);
+void replaceByMax(<span class="color-new">int arr[]</span>, int size);
+void print(<span class="color-new">const int arr[]</span>, int size);
+ 
+int main() {
+   const int SIZE = 4;
+   int numbers[SIZE] = {11, 22, 33, 22};
+   print(numbers, SIZE);
+   cout &lt;&lt; max(numbers, SIZE) &lt;&lt; endl;
+   replaceByMax(numbers, SIZE);
+   print(numbers, SIZE);
+}
+ 
+<span class="color-comment">// Return the maximum value of the given array.</span>
+<span class="color-comment">// The array is declared const, and cannot be modified inside the function.</span>
+int max(const int arr[], int size) {
+   int max = arr[0];
+   for (int i = 1; i &lt; size; ++i) {
+      if (max &lt; arr[i]) max = arr[i];
+   }
+   return max;
+}
+ 
+<span class="color-comment">// Replace all elements of the given array by its maximum value</span>
+<span class="color-comment">// Array is passed by reference. Modify the caller's copy.</span>
+void replaceByMax(int arr[], int size) {
+   int maxValue = max(arr, size);
+   for (int i = 0; i &lt; size; ++i) {
+      arr[i] = maxValue;
+   }
+}
+ 
+<span class="color-comment">// Print the array's content</span>
+void print(const int arr[], int size) {
+   cout &lt;&lt; &quot;{&quot;;
+   for (int i = 0; i &lt; size; ++i) {
+      cout &lt;&lt; arr[i];
+      if (i &lt; size - 1) cout &lt;&lt; &quot;,&quot;;
+   }
+   cout &lt;&lt; &quot;}&quot; &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Take note that you can modify the contents of the caller's array inside the function, as array is passed by reference. To prevent accidental modification, you could apply  <code>const</code> qualifier to the function's parameter. Recall that  <code>const</code> inform the compiler that the value should not be changed. For example, suppose that the function <code>print()</code> prints the contents of the given array and does not modify the array, you could apply <code>const</code> to both the array name and its size, as they are not expected to be changed inside the function.</p>
+
+<pre class="color-example">
+void print(<span class="color-new">const</span> int arr[], <span class="color-new">int</span> size);</pre>
+
+<p>Compiler flags out an error &quot;assignment of read-only location&quot; if it detected a <code>const</code> value would be changed.</p>
+
+<p><span class="line-heading">Example:</span> Using pointer notation.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Passing array in/out function using pointer (TestArrayPassingPointer.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-comment">// Function prototype</span>
+int max(<span class="color-new">const int *arr</span>, int size);
+ 
+int main() {
+   const int SIZE = 5;
+   int numbers[SIZE] = {10, 20, 90, 76, 22};
+   cout &lt;&lt; max(numbers, SIZE) &lt;&lt; endl;
+}
+ 
+<span class="color-comment">// Return the maximum value of the given array</span>
+int max(<span class="color-new">const int *arr</span>, int size) {
+   int max = <span class="color-new">*arr</span>;
+   for (int i = 1; i &lt; size; ++i) {
+      if (max &lt; <span class="color-new">*(arr+i)</span>) max = <span class="color-new">*(arr+i)</span>;
+   }
+   return max;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Pass-by-Reference and <span class="font-code">sizeof</span></h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test sizeof array (TestSizeofArray.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-comment">// Function prototypes</span>
+void fun(const int *arr, int size);
+ 
+<span class="color-comment">// Test Driver</span>
+int main() {
+   const int SIZE = 5;
+   int a[SIZE] = {8, 4, 5, 3, 2};
+   cout &lt;&lt; &quot;sizeof in main() is &quot; &lt;&lt; <span class="color-new">sizeof(a)</span> &lt;&lt; endl;
+   cout &lt;&lt; &quot;address in main() is &quot; &lt;&lt; a &lt;&lt; endl;
+   fun(a, SIZE);
+}
+ 
+<span class="color-comment">// Function definitions</span>
+void fun(const int *arr, int size) {
+   cout &lt;&lt; &quot;sizeof in function is &quot; &lt;&lt; <span class="color-new">sizeof(arr)</span> &lt;&lt; endl;
+   cout &lt;&lt; &quot;address in function is &quot; &lt;&lt; arr &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+sizeof in main() is 20
+address in main() is 0x22fefc
+sizeof in function is 4
+address in function is 0x22fefc</pre>
+
+<p>The address of arrays in <code>main()</code> and the function are the same, as expected, as array is passed by reference.</p>
+<p>In <code>main()</code>, the <code>sizeof</code> array is 20 (4 bytes per <code>int</code>, length of 5). Inside the function, the <code>sizeof</code> is 4, which is the <code>sizeof</code> <code>int</code> pointer (4-byte address). This is why you need to pass the size into the function.</p>
+
+<h4>Operating on a Range of an Array</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Function to compute the sum of a range of an array (SumArrayRange.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-comment">// Function prototype</span>
+int sum(const int *begin, const int *end);
+ 
+<span class="color-comment">// Test Driver</span>
+int main() {
+   int a[] = {8, 4, 5, 3, 2, 1, 4, 8};
+   cout &lt;&lt; sum(a, a+8) &lt;&lt; endl;       <span class="color-comment"> // a[0] to a[7]</span>
+   cout &lt;&lt; sum(a+2, a+5) &lt;&lt; endl;     <span class="color-comment"> // a[2] to a[4]</span>
+   cout &lt;&lt; sum(&amp;a[2], &amp;a[5]) &lt;&lt; endl; <span class="color-comment"> // a[2] to a[4]</span>
+}
+ 
+<span class="color-comment">// Function definition</span>
+<span class="color-comment">// Return the sum of the given array of the range from</span>
+<span class="color-comment">// begin to end, exclude end.</span>
+int sum(const int *begin, const int *end) {
+   int sum = 0;
+   for (const int *p = begin; p != end; ++p) {
+      sum += *p;
+   }
+   return sum;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>To write a function that operates on a range of the given array, you can pass the begin pointer and the end pointer into the function. By convention, the operation shall start at the begin pointer, up to the end pointer, but excluding the end pointer.</li>
+
+<li>In &quot;<code>const int *p</code>&quot;, <code>*p</code> (content pointed-to) is constant, but <code>p</code> is not constant.</li>
+</ul>
+
+<h4>C-String and Pointer</h4>
+
+<p>C-string (of the C language) is a character array, terminated with a null character <code>'\0'</code>. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Testing C-string (TestCString.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;cstring&gt;
+using namespace std;
+ 
+int main() {
+   char msg1[] = &quot;Hello&quot;;
+   char *msg2 = &quot;Hello&quot;;
+     <span class="color-comment"> // warning: deprecated conversion from string constant to 'char*'</span>
+ 
+   cout &lt;&lt; strlen(msg1) &lt;&lt; endl;   <span class="color-comment"> // 5</span>
+   cout &lt;&lt; strlen(msg2) &lt;&lt; endl;
+   cout &lt;&lt; strlen(&quot;Hello&quot;) &lt;&lt; endl;
+ 
+   int size = sizeof(msg1)/sizeof(char);
+   cout &lt;&lt; size &lt;&lt; endl; <span class="color-comment"> // 6 - including the terminating '\0'</span>
+   for (int i = 0; msg1[i] != '\0'; ++i) {
+      cout &lt;&lt; msg1[i];
+   }
+   cout &lt;&lt; endl;
+ 
+   for (char *p = msg1; *p != '\0'; ++p) {
+         <span class="color-comment"> // *p != '\0' is the same as *p != 0, is the same as *p</span>
+      cout &lt;&lt; *p;
+   }
+   cout &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Take note that for C-String function such as <code>strlen()</code> (in header <code>cstring</code>, ported over from C's <code>string.h</code>), there is no need to pass the array length into the function. This is because C-Strings are terminated by <code>'\0'</code>. The function can iterate thru the characters in the array until <code>'\0'</code>. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Function to count the occurrence of a char in a string (CountChar.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;cstring&gt;
+using namespace std;
+ 
+int count(const char *str, const char c);  <span class="color-comment">// No need to pass the array size</span>
+ 
+int main() {
+   char msg1[] = &quot;Hello, world&quot;;
+   char *msg2 = &quot;Hello, world&quot;;
+ 
+   cout &lt;&lt; count(msg1, 'l') &lt;&lt; endl;
+   cout &lt;&lt; count(msg2, 'l') &lt;&lt; endl;
+   cout &lt;&lt; count(&quot;Hello, world&quot;, 'l') &lt;&lt; endl;
+}
+ 
+<span class="color-comment">// Count the occurrence of c in str</span>
+<span class="color-comment">// No need to pass the size of char[] as C-string is terminated with '\0'</span>
+int count(const char *str, const char c) {
+   int count = 0;
+   while (*str) {   <span class="color-comment">// same as (*str != '\0')</span>
+      if (*str == c) ++count;
+      ++str;
+   }
+   return count;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3><span class="color-new">*</span>More On Pointers</h3>
+
+<h4>Function Pointer</h4>
+<p>In C/C++, functions, like all data items, have an address. The name of a function is the starting address where the function resides in the memory, and therefore, can be treated as a pointer. We can pass a function pointer into function as well.  The syntax for declaring a function pointer is:</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Function-pointer declaration</span>
+<em>return-type</em> (* <em>function-ptr-name</em>) (<em>parameter-list</em>)
+ 
+<span class="color-comment">// Examples</span>
+double (*fp)(int, int)  <span class="color-comment">// fp points to a function that takes two ints and returns a double (function-pointer)</span>
+double *dp;             <span class="color-comment">// dp points to a double (double-pointer)</span>
+double *fun(int, int)   <span class="color-comment">// fun is a function that takes two ints and returns a double-pointer</span>
+
+double f(int, int);      <span class="color-comment">// f is a function that takes two ints and returns a double</span>
+fp = f;                 <span class="color-comment">// Assign function f to fp function-pointer</span></pre>
+
+<h5>Example</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Test Function Pointers (TestFunctionPointer.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int arithmetic(int, int, <span class="color-new">int (*)(int, int)</span>);
+    <span class="color-comment">// Take 3 arguments, 2 int's and a function pointer
+    //   int (*)(int, int),</span> <span class="color-comment">which takes two int's and return an int</span>
+int add(int, int);
+int sub(int, int);
+ 
+int add(int n1, int n2) { return n1 + n2; }
+int sub(int n1, int n2) { return n1 - n2; }
+ 
+int arithmetic(int n1, int n2, <span class="color-new">int (*operation) (int, int)</span>) {
+   return <span class="color-new">(*operation)</span>(n1, n2);
+}
+ 
+int main() {
+   int number1 = 5, number2 = 6;
+ 
+   <span class="color-comment">// add</span>
+   cout &lt;&lt; arithmetic(number1, number2, add) &lt;&lt; endl;
+   <span class="color-comment">// subtract</span>
+   cout &lt;&lt; arithmetic(number1, number2, sub) &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Generic Pointer or void Pointer (<span class="font-code">void *</span>)</h4>
+<p>A <code>void</code> pointer can hold address of any data type (except function pointer). We cannot operate on the object pointed to by <code>void</code> pointer, as the type is unknown. We can use a <code>void</code> pointer to compare with another address.</p>
+<p>[TODO] Example</p>
+
+<h4>Constant Pointer vs. Constant Pointed-to Data</h4>
+
+<ol>
+<li>Non-constant pointer to constant data: Data pointed to CANNOT be changed; but pointer CAN be changed to point to another data. For example,
+  <pre class="color-example">
+int i1 = 8, i2 = 9;
+<span class="color-new">const</span> int * iptr = &i1;  <span class="color-comment">// non-constant pointer pointing to constant data</span>
+// *iptr = 9;   <span class="color-error">// error: assignment of read-only location</span>
+iptr = &i2;  <span class="color-comment">// okay</span></pre></li>
+
+<li>Constant pointer to non-constant data: Data pointed to CAN be changed; but pointer CANNOT be changed to point to another data. For example,
+  <pre class="color-example">
+int i1 = 8, i2 = 9;
+int * <span class="color-new">const</span> iptr = &i1;  <span class="color-comment">// constant pointer pointing to non-constant data
+                         // constant pointer must be initialized during declaration</span>
+*iptr = 9;   <span class="color-comment">// okay</span>
+// iptr = &i2;  <span class="color-error">// error: assignment of read-only variable</span></pre></li>
+
+<li>Constant pointer to constant data: Data pointed to CANNOT be changed; and pointer CANNOT be changed to point to another data. For example,
+  <pre class="color-example">
+int i1 = 8, i2 = 9;
+<span class="color-new">const</span> int * <span class="color-new">const</span> iptr = &i1;  <span class="color-comment">// constant pointer pointing to constant data</span>
+// *iptr = 9;   <span class="color-error">// error: assignment of read-only variable</span>
+// iptr = &i2;  <span class="color-error">// error: assignment of read-only variable</span></pre></li>
+
+<li>Non-constant pointer to non-constant data: Data pointed to CAN be changed; and pointer CAN be changed to point to another data. For example,
+  <pre class="color-example">
+int i1 = 8, i2 = 9;
+int * <span class="color-new"></span>iptr = &i1;  <span class="color-comment">// non-constant pointer pointing to non-constant data</span>
+*iptr = 9;   <span class="color-comment">// okay</span>
+iptr = &i2;  <span class="color-comment">// okay</span></pre></li>
+
+</ol>
+
+
+
+<a class="references" href="../howto/References.html#cpp">Link to &quot;C++ References &amp; Resources&quot;</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Cygwin/MinGW GCC 4.6.2<br />
+Last modified: April, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

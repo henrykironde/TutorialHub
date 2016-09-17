@@ -1,0 +1,2577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"> 
+<title>jQuery and Ajax Tutorial</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" >
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+<script src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>jQuery and Ajax</h1>
+<h2>(not for the dummies)</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction</h3>
+
+<p>jQuery (@ <a href="http://jquery.com/">http://jquery.com</a>) is a JavaScript Library. It is a small script (about 96kB minified) written in JavaScript called &quot;<code>jquery.js</code>&quot;, which greatly simplifies JavaScript programming by providing cross-browser supports for DOM element selection and manipulation, event handling, Ajax request/response processing and animation.</p>
+
+<p>jQuery is highly popular. In May 2015, JQuery is used by 64.2% of all the websites. Among the JavaScript libraries/frameworks, jQuery's market share is 95.2% (Ref: <a href="http://w3techs.com/technologies/overview/javascript_library/all">http://w3techs.com/technologies/overview/javascript_library/all</a>). In other words, most of the developers nowadays program in jQuery, rather than raw JavaScript.</p>
+
+<h5>jQuery vs. Raw JavaScript</h5>
+
+<ul>
+<li><strong>Cross-Browser Support</strong>: jQuery provides cross-browser support. That is, the same jQuery code runs on the big-5 browsers (Chrome, Firefox, IE, Safari and Opera). On the other hand, to provide cross-browser support in raw JavaScript, you need to check the browser and issue the appropriate codes, as different browsers (particularly IE) implement certain features differently. This is done implicitly in jQuery.</li>
+
+<li><strong>DOM Elements Selection and Manipulation</strong>: The &quot;query&quot; refers to querying and selecting DOM elements within a web document for subsequent manipulation. jQuery provides a powerful  and supercharged selector function to select elements based on HTML tag-names (e.g., <code>&lt;p&gt;</code>, <code>&lt;button&gt;</code>), HTML ID attribute (e.g., <code>#debug</code>), and CSS class name (e.g., <code>.error</code>). On the other hand, selecting and manipulating DOM elements using raw JavaScript is messy and cumbersome.</li>
+
+<li><strong>Event Handling</strong>: jQuery also simplifies JavaScript event handling.</li>
+
+<li><strong>Special Effects and Animation</strong>: jQuery simplifies the programming for special visual effects (such as show/hide, fade-in/fade-out, slide-in/Slide-out) and custom animation.</li>
+
+<li><strong>AJAX Interface</strong>: jQuery provides a simple Ajax interface to send asynchronous HTTP GET/POST requests and process the response.</li>
+</ul>
+
+<p>With jQuery, you can write a few lines of codes to replace tenths of JavaScript codes; and run on all browsers without the need to test on each of them. The cross-browser support is particularly important for production, as you can't possibly test your JavaScript codes on all browsers. jQuery is well-tried. It is reported that jQuery is used by over 60% of the production websites in the Internet!</p>
+
+<p>&nbsp;</p>
+<p>I shall assume that you are familiar with HTML5, CSS3 and JavaScript, which are the absolutely necessary pre-requisites for using jQuery. Remember that jQuery is written in JavaScript!</p>
+<h3>Using jQuery</h3>
+
+<h5>Installation and Setup</h5>
+
+<ol>
+<li>Download jQuery library from <a href="http://jquery.com/">http://jquery.com</a>.</li>
+
+<li>Copy the JavaScript file (e.g., <code>jquery-1.xx.x.min.js</code>) under your document root directory, typically under a sub-directory &quot;<code>js</code>&quot;.<br />
+Note: The &quot;<code>min.js</code>&quot; is the <em>minified</em> version meant for production, which removes additional spaces and comments to reduce the file size for faster download. For testing and studying the codes, use the &quot;<code>.js</code>&quot; version.</li>
+
+<li>Include in your HTML document:
+<pre class="color-example">
+&lt;script src=&quot;js/jquery-1.xx.x.min.js&quot;&gt;&lt;/script&gt;</pre>
+
+This is typically place in the <code>&lt;head&gt;</code> section. But you can place it anywhere in the document, as long as before any jQuery function (such as <code>$()</code>) is used.<br>
+Note: In HTML4/XHTML1.0, you need to include attribute type=<code>&quot;text/javascript&quot;</code> in the <code>&lt;script&gt;</code> opening tag.</li>
+</ol>
+
+<h5>Using the jQuery CDN</h5>
+
+<p>Alternatively, instead of serving the <code>jquery.js</code> from your server, you can use one of the CDN (Content Distribution Network) to serve it. This could save some of your network traffic and probably provide slightly faster response. Moreover, the download <code>jquery.js</code> would be cached for reuse.</p>
+
+<ul>
+<li>jQuery.com's CDN
+<pre class="color-command">
+&lt;script src=&quot;http://code.jquery.com/jquery-1.11.3.min.js&quot;&gt;&lt;/script&gt;</pre></li>
+
+<li>Google CDN
+<pre class="color-command">
+&lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"&gt;&lt;/script&gt;</pre></li>
+
+<li>Microsoft CDN
+<pre class="color-command">
+&lt;script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.3.min.js"&gt;&lt;/script&gt;</pre></li>
+</ul>
+
+<h5>jQuery Versions</h5>
+<p>jQuery has two versions. jQuery version 2 does not support IE &lt;9 versions. As there are still quite a number of old IEs (v7, v8) around, jQuery version 1 is a lot more popular in production systems.</p>
+
+
+<h5>jQuery Template</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre></td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;YOUR TITLE HERE&lt;/title&gt;
+<span class="color-new">&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+<span class="color-comment">// Run after the Document DOM tree is constructed</span>
+$(document).ready( function() {  <span class="color-comment">// or shorthand of $( function () {</span> 
+  <span class="color-comment">// Your jQuery scripts here!</span>
+});
+&lt;/script&gt;</span>
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Hello, world!&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Notes:</p>
+
+<ol>
+<li>Some people prefers to place the JavaScripts just before the end of body (<code>&lt;/body&gt;</code>), instead of <code>&lt;head&gt;</code> section, for slightly better responsiveness.</li>
+
+<li>Load the CSS before the JavaScripts, as JavaScripts often reference the CSS.</li>
+</ol>
+
+<h3>jQuery By Examples</h3>
+
+<h4 id="jqex1">Example 1: jQuery Selectors and Operations</h4>
+
+<h5>&quot;<span class="font-code">JQEx1.html</span>&quot;</h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre></td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;jQuery Example 1: jQuery Selector and Operations&lt;/title&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+<span class="color-comment">// Run after the ROM tree is constructed.</span>
+<span class="color-new">$(document).ready( function() {
+  <span class="color-comment"> // Select an element that matches the element's unique id</span>
+   $('#hello').html('Hello, world!');  <span class="color-comment"> // Replace innerHTML</span>
+   $('#hello').addClass('green');      <span class="color-comment"> // Add CSS class</span>
+ 
+  <span class="color-comment"> // Select an element that matches the element's &quot;unique id&quot;</span>
+   $('#message').append(&quot;(id matched)&quot;); <span class="color-comment"> // Append at the end</span>
+ 
+  <span class="color-comment"> // Select element(s) that match &quot;HTML tag name&quot; and process via implicit loop</span>
+   $('p').prepend(&quot;(tag-name matched)&quot;);  <span class="color-comment">// Add in front</span>
+ 
+  <span class="color-comment"> // Select element(s) that match the &quot;CSS classname&quot; and process via explicit loop</span>
+   $('.red').each( function() {
+      $(this).append(&quot;(class-name matched)&quot;);
+      $(this).prepend(&quot;(class-name matched)&quot;);
+   });
+ 
+   <span class="color-comment">// Apply many operations via chaining</span>
+   $('.red').before(&quot;&lt;p&gt;Before&lt;/p&gt;&quot;)   <span class="color-comment">// before the current element</span>
+            .after(&quot;&lt;p&gt;After&lt;/p&gt;&quot;);    <span class="color-comment">// after the current element</span>
+});</span>
+&lt;/script&gt;
+&lt;style&gt;
+.red   { color: #FF0000; }
+.green { color: #00FF00; }
+.blue  { color: #0000FF; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1 id=&quot;hello&quot;&gt;Hi!&lt;/h1&gt;
+  &lt;p id=&quot;message&quot; class=&quot;red&quot;&gt;First Line &lt;/p&gt;
+  &lt;p class=&quot;red&quot;&gt;Second Line &lt;/p&gt;
+  &lt;p&gt;Third Line &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How it Works?</h5>
+
+<ol>
+
+<li>The &quot;query&quot; in jQuery refers to <em>querying</em> or <em>selecting</em> element(s) in an HTML document for subsequent manipulations. For examples,
+  <ul>
+<li><code>$(document)</code> selects the current document;</li>
+<li><code>$(p)</code> selects all the <code>&lt;p&gt;</code> elements (Tag-Selector);</li>
+<li><code>$(#hello)</code> and <code>$(#message)</code> select one element having attribute <code>id=&quot;hello&quot;</code> (ID-Selector);</li>
+<li><code>$(.red)</code> selects all the elements having attribute <code>class=&quot;red&quot;</code> (Class-Selector).</li>
+<li>In fact, <code>$()</code> is the shorthand (alias) for the main <code>jQuery()</code>  function.</li>
+  </ul>
+</li>
+
+<li>jQuery selector - the most important jQuery function - has a special syntax of <code>$()</code>. It could take a tag name, an id attribute (with prefix of <code>#</code>) or classname (with prefix of dot). In fact, it supports all the CSS Selectors!</li>
+
+<li>Comparing with JavaScript's many selector functions (such as <code>document.getElementById()</code>, <code>document.getElementsByTagName()</code>, <code>document.getElementsByClassName()</code>, <code>document.getElementsByName()</code>, <code>document.querySelector()</code>, <code>document.querySelectorAll()</code>), jQuery's selector is much simple and  one class above.
+
+<br>The <code>$(document).ready(<em>handler</em>)</code> attaches an event handler, which will be fired once the DOM tree is constructed. The &quot;<code>ready</code>&quot; event (new in jQuery) is slightly different from the JavaScript's &quot;<code>onload</code>&quot; event, which does not wait for the external references (such as images) to be loaded. We wrap our jQuery operations under the <code>ready()</code>, as these codes are placed in the <code>&lt;head&gt;</code> section, before the referenced elements are constructed in the <code>&lt;body&gt;</code>. This is a common jQuery practice.</li>
+
+<li>There are various methods available for manipulating the contents of the selected element(s). For example,
+
+  <ul>
+<li><code>html()</code>: get the innerHTML.</li>
+<li><code>html(<em>value</em>)</code>: set the innerHTML.</li>
+<li><code>append(<em>value</em>)</code>: append at the end of the innerHTML.</li>
+<li><code>prepend(<em>value</em>)</code>: add in front of the innerHTML.</li>
+<li><code>before(<em>element</em>)</code>: add the <code><em>element</em></code> before the current element.</li>
+<li><code>after(<em>element</em>)</code>: add the <code><em>element</em></code> after the current element.</li>
+<li><code>addClass(<em>value</em>), removeClass(<em>value</em>), toggleClass(<em>value</em>)</code>: add, remove or toggle a value of the <code>class</code> attribute.</li>
+</ul></li>
+
+<li>jQuery builds in an <em>automatic looping</em> feature (Line ? to ?). For example, <code>$('p')</code> selects all <code>&lt;p&gt;</code> elements. <code>$('p').append(...)</code> applies the <code>append(...)</code> to each of the selected <code>&lt;p&gt;</code> element, in a implicit loop.</li>
+
+<li>You can also use an <em>explicit loop</em> via <code>.each( function() {...} )</code>  (Line ? to ?), if you need to apply more than one operations to the selected elements. Inside the <code>.each(...)</code>, the <code>$(this)</code> denotes the  element under operation.</li>
+<li>You can also use <em>function chaining</em> to chain the functions  (Line ? to ?), as most of the functions return the element under operation.</li>
+
+<li>In many methods (such as <code>html()</code>), jQuery uses the same method name for both <em>getter</em> and <em>setter</em>, differentiated by its argument.  For example <code>html()</code> (without argument) returns the innerHTML, while <code>html(<em>value</em>)</code> replaces the innerHTML. [It does not use Java's convention of <code>getHtml()</code> and <code>setHtml()</code>.]</li>
+
+<li>The <code>$(document).ready(function() {...})</code> runs the functions after the ROM tree is constructed, but does not wait for all the external resources (such as images) to be loaded (as in the JavaScript <code>load</code> event). Document <code>ready</code> is commonly used in jQuery, which provides a shorthand written as <code>$(function() {...})</code>.</li>
+
+</ol>
+
+<h4 id="jqex2">Example 2: jQuery Event Handling</h4>
+
+<h5>&quot;<span class="font-code">JQEx2.html</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre></td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;jQuery Example 2: Event Handling&lt;/title&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+<span class="color-new"><span class="color-comment">// Run after the ROM tree is constructed.</span>
+$(document).ready( function() {
+  <span class="color-comment"> // Set the content</span>
+   $('#hello').html('Click me!');
+ 
+  <span class="color-comment"> // Bind a onclick handler to a selected element</span>
+   $('#hello').click(function() {
+      $(this).html('Hello, world!');
+      return false;   <span class="color-comment">// Prevent triggering the default handler</span>
+   });
+ 
+  <span class="color-comment"> // Bind onmouseover/onmouseout handlers to all selected elements</span>
+   $('p').mouseover(function() {
+      $(this).addClass('green');
+   });
+   $('p').mouseout(function() {
+      $(this).removeClass('green');
+   });
+});</span>
+&lt;/script&gt;
+&lt;style&gt;
+.red   { color: #FF0000; }
+.green { color: #00FF00; }
+.blue  { color: #0000FF; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1 id=&quot;hello&quot;&gt;&amp;nbsp;&lt;/h1&gt;
+  &lt;p id=&quot;message&quot; class=&quot;red&quot;&gt;First Line &lt;/p&gt;
+  &lt;p class=&quot;red&quot;&gt;Second Line &lt;/p&gt;
+  &lt;p&gt;Third Line &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How it Works?</h5>
+
+<ol>
+<li>Example 1 illustrate the jQuery selector and built-in functions. But Example 1 is a useless as all changes are pre-program, instead of responding to the user's action. This example shows you how to program event handler to handle user's action. Most of the jQuery codes is actually dealing with programming event handlers for a set of selected elements! The steps are:
+<ol>
+<li>Select the source elements via an appropriate jQuery selector.</li>
+<li>Identify the event, such as mouse-click, key-type.</li>
+<li>Write the event handler, and attach to the source.</li>
+</ol>
+</li>
+
+
+<li>You could attach an event handler to a JavaScript event, such as <code>click</code>, <code>mouseover</code> and <code>submit</code>, to the selected element(s) via jQuery methods, such as <code>.click(<em>handler</em>)</code>, <code>.mouseover(<em>handler</em>)</code>, <code>.submit(<em>handler</em>)</code>, as shown. You can prevent the default handler from being triggered by returning <code>false</code> from your event handler.</li>
+
+<li>Inside the function, <code>$(this)</code> refers to the current object. Although <code>$(p)</code> returns more than one elements (in an array), you can use the same syntax to bind an event handler to EACH of the elements.</li>
+
+<li>In the past, we placed the JavaScript event handler inside the HTML tags, e.g., &quot;<code>&lt;h1 onclick='....'&gt;</code>&quot;. The practice nowadays is to leave them outside the HTML tags, and group them under the <code>&lt;script&gt;</code> section, for better MVC design.</li>
+</ol>
+
+<h4 id="jqex3">Example 3:  AJAX  Request/Response</h4>
+
+<p>To test AJAX, you need to run the script under a web server (such as Apache).</p>
+
+<h5>&quot;<span class="font-code">JQEx3.html</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre></td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;jQuery Example 3: Ajax Request/Response&lt;/title&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+<span class="color-new">$(document).ready(function() {
+  <span class="color-comment"> // Bind submit button onclick handler to send an Ajax request and</span>
+  <span class="color-comment"> //  process Ajax response.</span>
+   $(':submit').click(function (event) {
+      event.preventDefault();  <span class="color-comment">// Do not run the default action</span>
+      var submittedMessage = $(':text[name=&quot;message&quot;]').val();
+      $.ajax({
+         type: 'POST',
+         url:  'ProcessMessage.php',
+         data: { message: submittedMessage }
+      })
+         .done( function (responseText) {
+           <span class="color-comment"> // Triggered if response status code is 200 (OK)</span>
+            $('#message').html('Your message is: ' + responseText);
+         })
+         .fail( function (jqXHR, status, error) {
+           <span class="color-comment"> // Triggered if response status code is NOT 200 (OK)</span>
+            alert(jqXHR.responseText);
+         })
+         .always( function() {
+           <span class="color-comment"> // Always run after .done() or .fail()</span>
+            $('p:first').after('&lt;p&gt;Thank you.&lt;/p&gt;');
+         });
+   });
+});</span>
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form method=&quot;POST&quot;&gt;
+  &lt;label&gt;Enter your message: &lt;input type=&quot;text&quot; name=&quot;message&quot;&gt;&lt;/label&gt;&lt;br&gt;
+  &lt;input type=&quot;submit&quot;&gt;
+&lt;/form&gt;
+&lt;p id=&quot;message&quot;&gt;&amp;nbsp;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>&quot;<span class="font-code">ProcessMessage.php</span>&quot;</h5>
+<pre class="color-example">
+&lt;?php 
+<span class="color-comment">// Echo the POST parameter &quot;message&quot;</span>
+echo $_POST['message']; 
+?&gt;</pre>
+
+<h5>How it Works?</h5>
+
+<ol>
+<li>The <code>$(:submit)</code> selector selects all <code>&lt;input type=&quot;submit&quot;&gt;</code> elements.</li>
+
+<li>The <code>$(:text[name=&quot;message&quot;])</code> select <code>&lt;input type=&quot;text&quot; name=&quot;message&quot;&gt;</code> elements. The <code>.val()</code> returns the <code>value</code> of the input text element.</li>
+
+<li>We can use <code>$.ajax()</code> to send an Ajax request:
+
+  <ul>
+  <li>.<code>ajax()</code> takes an associative array (of key-value pairs) as its argument. The key <code>type</code> specifies the request method (such as <code>get</code> or <code>post</code>). The key <code>url</code> specifies the action url, default to current document. The key <code>data</code> provides the query string, in the form of an associative array of <code>{paramName:paramValue}</code> (as in the above example); or a proper query string (e.g., <code>name=peter&amp;message=Hello</code>). Use the qurey string format if your parameter has multiple values (e.g., <code>name=peter&amp;message[]=Hello&amp;message[]=Hi</code>).</li>
+
+<li>The <code>.done()</code> is called back when the response is received with status code of 200 (OK). It take a function with the HTTP response message as argument.</li>
+
+<li>The <code>.fail()</code> is called back when the response is received with status code of NOT 200 (OK). It take a function with 3 arguments: <code>xhr</code> (XMLHttpRequest), <code>status</code> and <code>error</code>. You can get the response text via property <code>xhr.responseText</code>.</li>
+
+<li>The <code>.always()</code> is called back after the <code>.done</code> or <code>.fail</code> completes. It takes a no-arg function as its argument.</li>
+
+<li>Note that <code>.done()</code>, <code>.fail()</code> and <code>.always()</code> are chained together. <em>Function Chaining</em> is used extensively in jQuery.</li>
+
+</ul></li>
+
+<li>The <code>$('p:first')</code> selects the first <code>&lt;p&gt;</code> element in the document. The <code>.after(<em>element</em>)</code> inserts the element after the current element.</li>
+
+<li>The &quot;<code>ProcessingMessage.php</code>&quot; simply returns the value of POST parameter &quot;<code>message</code>&quot;.</li>
+</ol>
+
+<h4 id="jqex4">Example 4:  Animation and Special Visual Effects</h4>
+
+<p>jQuery makes applying special effects and animation simple.</p>
+<h5>&quot;<span class="font-code">JQEx4.html</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- jQuery Example 4: JQEx4.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;jQuery Example 4: Animation and Special Effects&lt;/title&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+<span class="color-comment">// Run after the Document DOM tree is constructed</span>
+<span class="color-comment">// to bind click event handle to all the buttons</span>
+$( function() {
+  <span class="color-comment"> // Show it by popping up</span>
+   $(':button[id=&quot;btnShow&quot;]').click( function() {
+      $('#logo').show();
+   });
+ 
+  <span class="color-comment"> // Hide it by popping out</span>
+   $(':button[id=&quot;btnHide&quot;]').click( function() {
+      $('#logo').hide();
+   });
+ 
+  <span class="color-comment"> // If it is visible, hide it; otherwise, show it</span>
+   $(':button[id=&quot;btnToggle&quot;]').click( function() {
+      $('#logo').toggle();
+   });
+ 
+  <span class="color-comment"> // Show by fading in</span>
+   $(':button[id=&quot;btnFadeIn&quot;]').click( function() {
+      $('#logo').fadeIn(1000); <span class="color-comment"> // Speed: 1 sec</span>
+   });
+ 
+  <span class="color-comment"> // Hide by fading out</span>
+   $(':button[id=&quot;btnFadeOut&quot;]').click( function() {
+      $('#logo').fadeOut(
+         2000,               <span class="color-comment"> // Speed: 2 sec</span>
+         function() {        <span class="color-comment"> // Callback when complete</span>
+            alert('done!');
+         });
+   });
+ 
+  <span class="color-comment"> // If it is visible, fade-out; Otherwise, fade-in</span>
+   $(':button[id=&quot;btnFadeToggle&quot;]').click( function() {
+      $('#logo').fadeToggle(3000); <span class="color-comment"> // Speed: 3 sec</span>
+   });
+ 
+  <span class="color-comment"> // Hide by sliding-up to top-left corner</span>
+   $(':button[id=&quot;btnSlideUp&quot;]').click( function() {
+      $('#logo').slideUp();  <span class="color-comment"> // disappear,</span>
+   });
+ 
+  <span class="color-comment"> // Show by sliding-down from top-left corner</span>
+   $(':button[id=&quot;btnSlideDown&quot;]').click( function() {
+      $('#logo').slideDown();
+   });
+ 
+  <span class="color-comment"> // If it is visible, slide-up; Otherwise, slide-down</span>
+   $(':button[id=&quot;btnSlideToggle&quot;]').click( function() {
+      $('#logo').slideToggle();
+   });
+ 
+ 
+  <span class="color-comment"> // Custom animation, by applying given CSS properties</span>
+   var toggleFlag = true;
+   $(':button[id=&quot;btnAnimate&quot;]').click( function() {
+      if (toggleFlag) {
+         $('#logo')
+            .show()
+            .animate(
+               { 'margin-left': '30px',<span class="color-comment"> // Apply these CSS properties</span>
+                 'margin-top' : '20px',
+                 'opacity': 0.2     <span class="color-comment"> // semi-transparent</span>
+               },
+               2000 <span class="color-comment"> // Speed: 2 sec</span>
+            );
+      } else {
+         $('#logo')
+            .show()
+            .animate(
+               { 'margin-left': '0px',<span class="color-comment"> // Apply these CSS properties</span>
+                 'margin-top' : '0px',
+                 'opacity': 1.0       <span class="color-comment"> // not transparent</span>
+               },
+               3000 <span class="color-comment"> // Speed: 3 sec</span>
+            );
+      }
+      toggleFlag = !toggleFlag;
+   });
+});
+&lt;/script&gt;
+ 
+&lt;/head&gt;
+ 
+&lt;body&gt;
+&lt;p&gt;Hello, world!&lt;/p&gt;
+&lt;input type=&quot;button&quot; id=&quot;btnShow&quot; value=&quot;Show&quot;&gt;
+&lt;input type=&quot;button&quot; id=&quot;btnHide&quot; value=&quot;Hide&quot;&gt;
+&lt;input type=&quot;button&quot; id=&quot;btnToggle&quot; value=&quot;Toggle&quot;&gt;
+&lt;input type=&quot;button&quot; id=&quot;btnFadeIn&quot; value=&quot;Fade-In&quot;&gt;
+&lt;input type=&quot;button&quot; id=&quot;btnFadeOut&quot; value=&quot;Fade-Out&quot;&gt;
+&lt;input type=&quot;button&quot; id=&quot;btnFadeToggle&quot; value=&quot;Fade-Toggle&quot;&gt;
+&lt;input type=&quot;button&quot; id=&quot;btnSlideUp&quot; value=&quot;Slide-Up&quot;&gt;
+&lt;input type=&quot;button&quot; id=&quot;btnSlideDown&quot; value=&quot;Slide-Down&quot;&gt;
+&lt;input type=&quot;button&quot; id=&quot;btnSlideToggle&quot; value=&quot;Slide-Toggle&quot;&gt;
+&lt;input type=&quot;button&quot; id=&quot;btnAnimate&quot; value=&quot;Animate&quot;&gt;
+&lt;br&gt;
+&lt;img id=&quot;logo&quot; src=&quot;TestImage.gif&quot; alt=&quot;Test Image&quot;&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How it Works?</h5>
+
+<ol>
+<li>jQuery provides built-in functions to create special visual effects such as show/hide, fade-in/fade-out and slide-in/slide-out. You can also create your own custom animation.</li>
+<li>[TODO]</li>
+</ol>
+
+<h4>Debugging jQuery (Absolutely Important!!!)</h4>
+
+<p>I cannot stress more that having a proper debugging tool (and mind set) is indispensable in software development!!!</p>
+
+<p>JavaScript/jQuery are interpreted instead of compiled. In other words, there is no compiler to check your syntax errors! Furthermore, during runtime, syntax errors are not reported. The error script simply returns false and stops working with no clue at all! You need a debugger to catch syntax error for interpretive language. Catching logical errors without a debugger is even more challenging!</p>
+
+<p>The popular client-side HTML/CSS/JavaScript debuggers are:</p>
+<ol>
+<li>Chrome browser with Developer Tools.</li>
+<li>Firefox with Firebug or Web Developer Tools.</li>
+</ol>
+
+<p>On most browsers, you can press F12 to activate the Developer Tools. We call them F12 Developer Tool!</p>
+
+<p>I strongly suggest that you trace through the jQuery statements in the above examples, by selecting the &quot;script&quot; panel. You often need to refresh (F5 or Ctrl-F5 to clear the cache) the page to get the correct script. Set breakpoint on the appropriate jQuery statements (take note that in Firebug, you can only set breakpoint on statements with green numbering). &quot;Step Over (F10)&quot; the statement, and watch the variables in the &quot;Watch&quot; panel. Under &quot;Watch&quot; panel, you can &quot;add a new watch expression&quot; to evaluate a jQuery or JavaScript expression, e.g., a jQuery selector.</p>
+
+<p>To check the event handlers bound to an element, select the element (click on the &quot;Select&quot; icon and point at the element), then select the &quot;Events&quot; panel.</p>
+
+<p>To debug the Ajax, watch the network traffic under the &quot;Net&quot; panel. You can select &quot;xhr&quot; for Ajax-specific network traffic.</p>
+
+<p>Spent time to play around with the debugging tools. The more time you spend here, the less you will spend on staring at the screen wondering why it does not work and asking silly questions on problems caused by syntax errors such as a missing quote!</p>
+
+<h5><span class="font-code">console.log()</span></h5>
+
+<p>Use <code>console.log(...)</code> to write message or object to the console for debugging. DON'T use <code>alert()</code> (which is annoying) or <code>document.write()</code> (which messes up your web page).</p>
+
+<h3>jQuery Basics</h3>
+
+<p>jQuery is an <em>extension</em> to JavaScript. In other words, it is JavaScript and follows the JavaScript syntax. Make sure you understand the JavaScript syntaxes and types, in particular, <em>functions</em> and <em>objects</em>. jQuery is quite easy to understand if you are proficient in JavaScript. You just have to trace through some jQuery operations using Firebug (or Web Developer Tools).</p>
+<p>The jQuery API is available @ <a href="http://api.jquery.com/">http://api.jquery.com/</a>.</p>
+
+<h4><span class="font-code">$(document).ready( <em>handler</em> )</span></h4>
+
+<p>Reference: The <a href="https://api.jquery.com/ready/"><code>.ready()</code> API</a>.</p>
+
+<p>In jQuery, we typically place our operations in <code><em>handler</em></code> under <code>$(document).ready( <em>handler </em>)</code>, which fires once the DOM tree is constructed, but before external resources (such as images) are loaded (equivalent to placing the jQuery scripts just before body closing tag <code>&lt;/body&gt;</code>). This is more efficient than the JavaScript's <code>onload</code> handler (via <code>window.onload = <em>handler</em></code> which fires after the document is completed downloaded). Furthermore, you can use multiple <code>.ready()</code>'s to register multiple handlers, which will be run in the order in which they were registered. JavaScript's <code>window.onload = <em>handler</em></code> can be used only once.</p>
+<p>The <code>.ready(<em> handler </em>)</code> takes an argument  <code><em>handler</em></code>, which is most often an anonymous function; or a pre-defined function. The <code><em>handler</em></code> function has no argument. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// 1. On &quot;ready&quot;, callback an anonymous function (with no argument). Most commonly-used</span>
+$(document).ready( function() {
+   console.log('ready');
+});
+ 
+<span class="color-comment">// 2. On &quot;ready&quot;, callback a pre-defined function (with no argument)</span>
+$(document).ready(foo);
+function foo() {   <span class="color-comment">// function can be defined later</span>
+   console.log(&quot;foo&quot;);
+}
+ 
+<span class="color-comment">// 3. Use a function variable - variable must be defined before used.</span>
+var bar = function() {   <span class="color-comment">// function variable</span>
+   console.log(&quot;bar&quot;);
+}
+$(document).ready(bar);  <span class="color-comment">// pass a function variable</span>
+ 
+<span class="color-comment">// 4. This won't work!</span>
+<span class="color-comment">//    .ready() takes a function object, not a statement!</span>
+<span class="color-comment">// $(document).ready(alert(&quot;This won't work!&quot;));</span></pre>
+
+<h5>Shorthand <span class="font-code">$( <em>handler</em> )</span></h5>
+
+<p>The <code>$(document).ready( <em>handler </em>)</code> is so commonly-used, that there is a shorthand <code>$( <em>handler </em>)</code>.</p>
+
+<h4>DOM (Document Object Model)</h4>
+
+<p>[TODO]</p>
+
+<h4 id="selector">jQuery Selector Function <span class="font-code">$()</span> (or <span class="font-code">jQuery()</span>)</h4>
+
+<p>The real power of jQuery comes from its &quot;Query&quot; selector, used to search and retrieve matching DOM element(s). The jQuery selector function is denoted simply as <code>$()</code>, which usually takes a <em>selector</em> as the argument, and return a jQuery object. jQuery supports almost all the CSS 1 to CSS 3 selectors.</p>
+<p>Take note that <code>$()</code>  is an alias of <code>jQuery()</code> function. Recall that JavaScript's identifier must start with an alphabet, <code>'_'</code> or <code>'$'</code>. Hence, <code>$</code> could be used as an valid function variable name (which is one of the shortest possible name not beginning with a letter).</p>
+<p>The <code>$()</code> returns a jQuery <code>object</code>, which is a wrapper over the selected DOM elements, plus more properties (e.g., <code>.length</code>) and methods (e.g., <code>.append()</code>, <code>.addClass()</code>, <code>.html()</code>).</p>
+<p><code>$()</code> could return one element (e.g., ID-Selector), more than one elements (e.g., Class-Selector and Tag-Selector); or zero elements (no matches found). For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- JQSelectorTest.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Testing jQuery Selectors&lt;/title&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+$( function() {   <span class="color-comment">// Shorthand for .ready()</span>
+   console.log($('#header'));  <span class="color-comment">// ID-Selector</span>
+   console.log($('p'));        <span class="color-comment">// Tag-Selector</span>
+   console.log($('.non-existence'));  <span class="color-comment">// Class-Selector</span>
+});
+&lt;/script&gt;
+&lt;/head&gt;
+ 
+&lt;body&gt;
+&lt;div id=&quot;header&quot;&gt;
+&lt;p&gt;Paragraph 1&lt;/p&gt;
+&lt;p&gt;Paragraph 2&lt;/p&gt;
+&lt;p&gt;Paragraph 3&lt;/p&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Study the Console Log:</p>
+
+<ol>
+<li>The <code>$('#header')</code> ID-Selector selected one DOM element, wrap in a jQuery <code>object</code>, identified as <code>Object[div#header]</code>. The <code>.length</code> property is 1; and the DOM element is wrap under index 0 (i.e., <code>[0]</code>).</li>
+<li>The <code>$('p')</code> Tag-Selector selected 3 DOM elements, wrap in a jQuery <code>object</code>, identified as <code>Object[p, p, p]</code>. The <code>.length</code> property is 3; and the DOM elements are wrap under <code>[0]</code>, <code>[1]</code> and <code>[2]</code>.</li>
+<li>The <code>$('.non-existence')</code> Class-Selector selected zero elements, wrap in a jQuery <code>object</code>, identified as <code>Object[]</code>. The <code>.length</code> property is 0.</li>
+<li>You can use the <code>.length</code> property of the resultant jQuery <code>object</code> to check the number of DOM elements matched.</li>
+</ol>
+
+<p>Browse through the <code>object</code> returned by each of the above selectors.</p>
+
+<h4>Types of jQuery Selectors</h4>
+
+<h5>General CSS Selectors</h5>
+
+<pre class="color-example">
+// T: Tag
+// C: Class
+// I: id
+// A: Attribute name
+// V: Attribute Value 
+ 
+*              // All elements
+T              // All elements with tag-name T
+T1,T2          // All elements with tag-names T1 or T2
+T1 T2          // T2 nested under T1
+T1>T2          // T2 is an immediate child of T1
+T1+T2          // T2 immediately preceded by T1 (siblings)
+.C             // Class of C
+#I             // ID of I (id is unique)
+T#I            // Tag-name T with ID of I 
+T#I.C          // Tag-name T with ID of I and class of C
+T[A]           // Tag T with attribute A
+T[A1][A2]      // Tag T with attribute A1 and A2
+T[A=&quot;V&quot;]       // Tag T with attribute A having value of V
+T[A*=&quot;V&quot;]      // Tag T with attribute A having value <em>containing</em> V
+T[A^=&quot;V&quot;]      // Tag T with attribute A having value <em>starting with</em> V
+               // ^ denotes starting position as in regex
+T[A$=&quot;V&quot;]      // Tag T with attribute A having value <em>ending with</em> V
+               // $ denotes ending position as in regex
+T[A!=&quot;V&quot;]      // Tag T with attribute A <em>not</em> having value of V
+               //  or Tag T without attribute A</pre>
+               
+
+<h5>Special Positional Filter Selectors</h5>
+
+<p>jQuery adds many custom selectors on top of CSS selectors (marked with CSS). These selectors begins with a colon <code>':'</code>, similar to CSS's pseudo-class selector. Take note jQuery is zero-based (count from zero); while CSS is one-based (count from 1).</p>
+
+<pre class="color-example">
+:first         // First matching element, e.g., p:first
+:last          // Last matching element, e.g., li:last
+:eq(n)         // nth matching element, e.g., a:eq(3), n begins from 0
+:gt(n)         // greater than nth matching element, n begins from 0
+:lt(n)         // less than nth matching element, n begins from 0
+:even          // even matching element, e.g., tr:even for even rows, the top row is row 0
+:odd           // old matching element
+:first-child     // (CSS) First child
+:last-child      // (CSS) Last child
+:only-child      // (CSS) no siblings
+:nth-child(n)    // (CSS) nth child, n begins from 1
+:nth-child(odd)  // (CSS) nth child, count from 1
+:nth-child(even) // (CSS) nth child, count from 1</pre>
+
+<h5>Filter Selectors</h5>
+<pre class="color-example">
+:not(S)        // (CSS) Not matching selector S
+:has(S)        // containing element in selector S
+:contain(text) // containing text (case sensitive)</pre>
+
+<h5> Form Filter Selectors</h5>
+<pre class="color-example">
+:input         // input, select, textarea, button
+:checkbox      // input[type=checkbox]
+:radio         // input[type=radio]
+:password      // input[type=password]
+:button        // input[type=submit], input[type=reset], input[type=button], button
+:submit        // input[type=submit], button[type=submit]
+:reset         // input[type=reset], button[type=reset]
+:file          // input[type=file]
+:image         // input[type=image]
+
+:checked       // (CSS) checkbox and radio button in checked state
+:selected      // (CSS) Selected &lt;option&gt; in &lt;select&gt;
+:disabled      // (CSS) disable form elements
+:enabled       // (CSS) enable form elements
+
+:hidden        // All hidden elements (having CSS properties visibility:hidden)
+:visible       // All visible elements (having CSS properties visibility:visible)</pre>
+
+
+<h5>Some Examples</h5>
+
+<pre class="color-example">
+p               // all &lt;p&gt; elements
+#msg            // an element with id of msg (id is unique)
+                // ID selector begins with #
+.green          // all elements with class of green
+                // Class selector begins with dot
+p,a             // All &lt;p&gt; and &lt;a&gt; elements                 
+p a             // &lt;a&gt; nested under &lt;p&gt;
+p > a           // &lt;a&gt; which is an immediate child of &lt;p&gt; 
+ul > li > a     // &lt;a&gt; which is an immediate child of &lt;li&gt;
+                //   which is an immediate child of &lt;li&gt;
+input[required]     // &lt;input&gt; tags having the attribute &quot;required&quot;
+input[type=&quot;text&quot;]  // having the attribute and value
+a[href^=&quot;http://&quot;]  // &lt;a&gt; with attribute &quot;href&quot; starting with &quot;http://&quot;
+                    // ^ denotes starting with (as in regex)
+a[href?=&quot;.js&quot;]      // &lt;a&gt; with attribute &quot;href&quot; ending with &quot;.js&quot;
+                    // $ denotes ending with (as in regex)
+a[href*=&quot;jQuery&quot;]   // &lt;a&gt; with attribute &quot;href&quot; containing &quot;jQuery&quot;
+</pre>
+
+<p>Rule of thumb for choosing selectors:</p>
+<ol>
+<li>Use ID-Selectors first, which is the most efficient, e.g., <code>$('#header')</code>, <code>$('#content')</code>.</li>
+<li>Use ID, as ancestor of descendant selectors, e.g., <code>$('#header a')</code>, <code>$('#loginForm :text[name=&quot;foo&quot;]')</code>.</li>
+<li>Use <code>.find()</code> to locate the descendants, which serves the same function as descendant selector but slightly more efficient, e.g., <code>$('#header').find('img')</code>. The <code>.find()</code> is also used if you have already computed the results of the ancestor.</li>
+<li>[TODO] more</li>
+</ol>
+
+<h4>Traversing the DOM Tree</h4>
+
+<ul>
+<li><span class="line-heading-code-new">.find(<em>selector</em>)</span>: Apply <code><em>selector</em></code> to descendants of the matched elements.</li>
+<li><span class="line-heading-code-new">.filter(<em>selector</em>), .filter(<em>function</em>)</span>: Filter descendants based on the selector or applying the function.</li>
+<li><span class="line-heading-code-new">.parent()</span>:</li>
+<li><span class="line-heading-code-new">.closest()</span>: nearest ancestor that matched.</li>
+<li><span class="line-heading-code-new">.siblings()</span>: all siblings</li>
+<li><span class="line-heading-code-new">.next()</span>: next sibling</li>
+<li><span class="line-heading-code-new">.nextAll()</span>: all next siblings</li>
+<li><span class="line-heading-code-new">.previous()</span>: previous sibling</li>
+<li><span class="line-heading-code-new">.previousAll()</span>: all previous sibling</li>
+<li><span class="line-heading-code-new">.children()</span>:</li>
+
+</ul>
+
+
+<h4>Iterating Through All the Selected Elements</h4>
+
+<p>A jQuery selector may select zero or more DOM elements. The selected elements are wrapped inside an object, as <code>[0]</code>, <code>[1]</code>, ... etc. The <code>.length</code> property contains the number of elements selected. See the earlier <a href="#selector">EXAMPLE</a>.</p>
+<p>You can iterate through each of these selected elements via:</p>
+
+<h5>Implicit Iteration</h5>
+<p>For example, <code>$('p').append(...)</code> applies the <code>append()</code> function for each of the selected elements, in an implicit loop.</p>
+
+<h5>Explicit Iteration via <span class="font-code">.each( <em>function</em> )</span> and <span class="font-code">$(this)</span></h5>
+
+<p>Suppose that you want to apply a series of operations to each of the selected elements, you could use <code>.each( <em>function</em> )</code> to iterate through all the selected elements. <code>.each()</code> takes a function as its argument, which can be either an anonymous function, a pre-defined function, or a function variable. Within the function, you can use <code>$(this)</code> to refer to the element under operation.</p>
+
+<p>For Example,</p>
+
+<pre class="color-example">
+$( function() {  <span class="color-comment">// shorthand for .ready()</span>
+   $('p')<span class="color-new">.each( function() {  <span class="color-comment">// Iterate through all selected elements</span>
+      console.log($(this));   <span class="color-comment">// $(this) selects the element under operation</span>
+      $(this).append('&lt;&lt;&lt; ');
+      $(this).prepend(' &gt;&gt;&gt;');
+   })</span>;
+});</pre>
+
+<p>The <code>.each()</code>'s argument <code><em>function</em></code> can take an optional argument, <code><em>index</em></code>, which counts the elements under operation, starts from 0. For example,</p>
+
+<pre class="color-example">
+$('p').each( function(index) {
+   ......
+});</pre>
+
+
+<p>Besides <code>$(this)</code>, which refers to the jQuery object under operation, you can also use <code>this</code>, which refers to the DOM element under operation. That is,</p>
+
+<pre class="color-example">$(this)[0] === this</pre>
+
+<p>You can apply jQuery methods (such as <code>.append()</code>, <code>.html()</code>) to <code>$(this)</code>, but not <code>this</code>. On the other hand, you can apply DOM operation to <code>this</code>, e.g., <code>this.id.substring(0,5)</code> (first five characters of the <code>id</code> attribute of the DOM element under operation).</p>
+
+<h5>Function Chaining</h5>
+<p>You can use <em>chaining</em> to apply a series of operation to each of the selected elements, as most of the jQuery functions return the jQuery object. For example,</p>
+<pre class="color-example">$('p').append('before ').prepend(' after');</pre>
+
+<p>Function chaining is used extensively in jQuery, e.g., in a Ajax call.</p>
+
+<h5>Assign the Results of Selectors to a Variable</h5>
+<p>You can assign the result of selector (which is a set of elements) to a variable, and use the variable to perform subsequent operations. To signal the variable holds a selector result, it is named with a <code>'$'</code> prefix. For example,</p>
+
+<pre class="color-example">
+var $para = $('p');                 <span class="color-comment">// Select a set of elements</span>
+$para.prepend('Hi, ').append('!');  <span class="color-comment">// Operate on EACH of the selected elements</span>
+</pre>
+
+<h4>Manipulating DOM Elements, HTML Attributes, CSS Properties</h4>
+
+<p>Recall that a jQuery selector function <code>$()</code> (or <code>jQuery()</code>) selects a set of DOM elements for manipulation. We shall use the term <code>innerHTML</code> (a term used in JavaScript) to refer to the contents excluding the opening and closing tags.</p>
+
+<h5>Manipulating Contents of the Selected Elements</h5>
+
+<table class="table-zebra">
+<tr>
+<th>Function</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+
+<tr>
+<td><code>.html()</code></td>
+<td>Get the innerHTML, including nested elements.</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.html(<em>newContent</em>)</code></td>
+  <td>Replace the innerHTML with the <code><em>newContent</em></code>, which may include nested element.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.text()</code></td>
+  <td>Get the combined text, including nested elements, but excluding the tags.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.text(<em>newText</em>)</code></td>
+  <td>Replace the content with the <code><em>newText</em></code>, which cannot include tags.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.append(<em>value</em>)</code></td>
+  <td>Append the <code><em>value</em></code> to the end of innerHTML. <code><em>value</em></code> may include nested element.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.prepend(<em>value</em>)</code></td>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.before(<em>value</em>)</code></td>
+  <td>Add the <code><em>value</em></code> before the opening tag of this element. <em><code>value</code></em><code></code> is likely an HTML element</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.after(<em>value</em>)</code></td>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.remove()</code></td>
+  <td>Remove the selected element</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.empty()</code></td>
+  <td>Remove the innerHTML.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.replaceWith(<em>value</em>)</code></td>
+  <td>Replace this element with the <code><em>value</em></code>.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.wrap(<em>tag</em>)</code></td>
+  <td>Wrap the selected elements with the given <code><em>tag</em></code>.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.warpInner(<em>tag</em>)</code></td>
+  <td>Wrap the innerHTML with the given <code><em>tag</em></code>.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.unwrap()</code></td>
+  <td>Unwrap the element, by removing the outermost tag.</td>
+  <td>&nbsp;</td>
+</tr>
+
+</table>
+
+<h5>Reversing the Source and Target</h5>
+
+<p>In the above table, we use <code>$(selector)</code> to select a set of DOM elements, and apply the desired operations. For example,</p>
+
+<ol>
+<li><code>$(<em>selector</em>).before(<em>HtmlElement</em>)</code>: insert before and outside the selected elements.</li>
+<li><code>$(<em>selector</em>).after(<em>HtmlElement</em>)</code>: insert after and outside the selected elements.</li>
+<li><code>$(<em>selector</em>).append(<em>HtmlElement</em>)</code>: insert before and inside the selected elements.</li>
+<li><code>$(<em>selector</em>).perpend(<em>HtmlElement</em>)</code>: insert after and inside the selected elements.</li>
+</ol>
+
+<p>The selector function <code>$()</code> is overloaded, such that <code>$(HtmlElement)</code> creates the given HTML element. We can then place the created element on the DOM tree via the following functions, which reverse the source and target:</p>
+
+<ol>
+  <li><code>$(<em>HtmlElement</em>).insertBefore(<em>selector</em>)</code>: insert before and outside the selected elements.</li>
+<li><code>$(<em>HtmlElement</em>).insertAfter(<em>selector</em>)</code>: insert after and outside the selected elements.</li>
+<li><code>$(<em>HtmlElement</em>).appendTo(<em>selector</em>)</code>: insert after but inside the selected elements.</li>
+<li><code>$(<em>HtmlElement</em>).prependTo(<em>selector</em>)</code>: insert before but inside the selected elements.</li>
+</ol>
+
+<h5>Manipulating CSS Properties for Styling</h5>
+<p>A CSS style contains a list of property <code>name:value</code> pairs, (e.g., <code>color:red</code>; <code>background-color:black</code>). We can achieve various presentation effects by manipulating CSS properties attached to a DOM element. In addition, the <code>class</code> attribute is used extensively for applying CSS styles.</p>
+
+<p>We can:</p>
+<ol>
+<li><em>directly</em> add/remove CSS properties attached to selected DOM elements, via <code>.css()</code>; or</li>
+<li><em>indirectly</em> add/remove values from the <code>class</code> attribute, via <code>.addClass()</code> or <code>.removeClass()</code>.</li>
+</ol>
+
+
+<table class="table-zebra">
+<tr>
+<th>Function</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+
+<tr>
+<td><code>.addClass(<em>value</em>)</code></td>
+<td>Add <em><code>value</code></em> (<em>classname</em>) to the HTML <code>class</code> attribute.</td>
+<td>&nbsp;</td>
+</tr>
+
+<tr>
+  <td><code>.removeClass(<em>value</em>)</code></td>
+  <td>Remove <em><code>value</code></em> (<em>classname</em>) from the HTML <code>class</code> attribute.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.toggleClass(<em>value</em>)</code></td>
+  <td>Add if <code><em>value</em></code> does not exist; otherwise, remove.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.css(<em>property</em>)</code></td>
+  <td>Get the value of one CSS property.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.css([<em>property1</em>, <em>property2</em>])</code></td>
+  <td>Get the value of the multiple CSS properties.<br>
+    Return an associative array of <code><em>property</em>:<em>value</em></code>.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.css(<em>property</em>, <em>value</em>)</code></td>
+  <td>Set the value of one CSS property.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.css({<em>property</em>1:<em>value</em>1, <em>property</em>2:<em>value</em>2, ...})</code></td>
+  <td>Set multiple CSS properties, by passing an associative array of <code><em>property</em>:<em>value</em></code> pairs.</td>
+  <td><code>$('p').css({'color':'red', 'background-color':'blue'})</code></td>
+</tr>
+</table>
+
+
+<h5>Manipulating HTML Attributes</h5>
+
+<p>An HTML element may contain attributes (e.g., <code>id</code>, <code>class</code> and many others). We can add/remove attribute via <code>.attr()</code>, <code>.removeAttr()</code>.</p>
+<p>Beside  attributes, a DOM object has properties such as  <code>defaultChecked</code>, <code>defaultSelected</code>, <code>selectedIndex</code>, <code>tagName</code>, <code>nodeName</code>, <code>nodeType</code> and  <code>ownerDocument</code>. These properties should be manipulated via <code>.prop()</code> and <code>.removeProp()</code>. The <code>.prop()</code> should be used for boolean properties of input elements such as <code>enabled/disabled</code>, <code>checked</code> and  <code>selected</code>.</p>
+
+<table class="table-zebra">
+<tr>
+<th>Function</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+<tr>
+  <td><code>.attr(<em>attribute</em>)</code></td>
+  <td>Get the value of HTML attribute.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.attr(<em>attribute</em>, <em>value</em>)</code></td>
+  <td>Set the <code><em>value</em></code> of the HTML attribue.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.attr({<em>attribute1</em>:<em>value1</em>, <em>attribute2</em>:<em>value2</em>, ...})</code></td>
+  <td>Set the value of multiple HTML attribute by passing an associative array of <code><em>attribute</em>:<em>value</em></code> pairs.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.removeAttr(<em>attritbue</em>)</code></td>
+  <td>Remove the HTML attribute.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.prop(<em>property</em>)</code></td>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.prop(<em>property</em>, <em>value</em>)</code></td>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.prop({<em>property1</em>:<em>value1</em>, <em>property2</em>:<em>value2</em>, ...})</code></td>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.removeProp()</code></td>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+</tr>
+</table>
+
+<h4>Handling Events</h4>
+
+<h5>JavaScript vs. jQuery Event Handling</h5>
+
+<p>In JavaScript, can we bind the event handler in two ways:</p>
+<ol>
+<li>Via the attribute <code>onxxx</code>, for example,
+<pre class="color-example">
+&lt;body onload=&quot;init()&quot; &gt;
+&lt;body onload=&quot;init1();init2()&quot; &gt;
+&lt;form onsubmit=&quot;validateForm(this)&quot; &gt;</pre>
+You can place a series of JavaScript statements (separated by semi-colon).<br>
+This is not recommended nowadays, as it mix the behavior programming code and the contents.</li>
+
+<li>Via the JavaScript, e.g.,
+<pre class="color-example">
+window.onload = init;   <span class="color-comment">// Named function, no parentheses</span>
+function init() { ...... }
+ 
+window.onload = function() { ...... };  <span class="color-comment">// anonymous function</span>
+ 
+document.document.getElementById('#theForm').onsubmit = validateForm;
+function validateForm() { ...... }</pre></li>
+</ol>
+
+<p>jQuery is much simpler, and always separated from the HTML codes. Anonymous functions (instead of named functions) are used extensively. E.g.,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Bind handler to event</span>
+$('#theForm').on('submit', function() { .... });  <span class="color-comment">// Anonymous function</span>
+$('#theForm').submit(function() { .... });        <span class="color-comment">// Shorthand, same as above</span>
+ 
+$('#theForm').on('submit', validateForm);    <span class="color-comment">// Named function, no parentheses</span>
+function validateForm() { ..... };
+
+$('#btn').on('click', function() { .... });
+$('#btn').click(function() { .... });  <span class="color-comment">// same as above</span></pre>
+
+<h5>jQuery Events</h5>
+
+<p>The jQuery events are:</p>
+
+<table class="table-zebra">
+<tr>
+  <td rowspan="4"><code>mouse</code></td>
+<td><code>click</code>, <code>dblClick</code></td>
+<td>Single mouse-click or double mouse-click</td>
+</tr>
+<tr>
+  <td><code>mousedown</code>, <code>mouseup</code></td>
+  <td>Pressing/Releasing the mouse button</td>
+</tr>
+<tr>
+  <td><code>mouseover</code>, <code>mouseout</code></td>
+  <td>Mouse pointer move into or out of the element.</td>
+</tr>
+<tr>
+  <td><code>mousemove</code></td>
+  <td>Mouse pointer moves inside the element. It report the (x, y) of the mouse pointer.</td>
+</tr>
+<tr>
+  <td rowspan="3"><code>document</code></td>
+  <td><code>ready</code></td>
+  <td>DOM tree constructed. The external resources (such as images) may not be loaded.</td>
+</tr>
+<tr>
+  <td><code>load</code></td>
+  <td>Fully loaded the web page including all its referenced resources (such as images).</td>
+</tr>
+<tr>
+  <td><code>unload</code></td>
+  <td>Click a link to another page; close the window/tab. Run before to do housekeeping.</td>
+</tr>
+<tr>
+  <td rowspan="2"><code>window</code></td>
+  <td><code>resize</code></td>
+  <td>Resize the browser's window</td>
+</tr>
+<tr>
+  <td><code>scroll</code></td>
+  <td>Scroll the web page</td>
+</tr>
+<tr>
+  <td rowspan="4"><code>form</code></td>
+  <td><code>submit</code></td>
+  <td>Submitting form (<code>&lt;input type=&quot;submit&quot;&gt;</code>)</td>
+</tr>
+<tr>
+  <td><code>reset</code></td>
+  <td>Reset form (<code>&lt;input type=&quot;reset&quot;&gt;</code>)</td>
+</tr>
+<tr>
+  <td><code>change</code></td>
+  <td>Change selection (checkbox, radio, drop-down menu)</td>
+</tr>
+<tr>
+  <td><code>focus</code>, <code>blur</code></td>
+  <td>The input element gain/loss the field focus.</td>
+</tr>
+<tr>
+  <td rowspan="2"><code>key</code></td>
+  <td><code>keypress</code></td>
+  <td>Typing a key</td>
+</tr>
+<tr>
+  <td><code>keyup</code>, <code>keydown</code></td>
+  <td>Press/Release a key.<br>
+    To get the key character, use:<br>
+    <code>var key = String.fromCharCode(event.which);</code></td>
+</tr>
+
+</table>
+
+<p>Most of the jQuery codes is dealing with programming event handlers for selected elements. The steps are:</p>
+
+<ol>
+<li>Select the <em>source</em> elements, e.g., <code>$(':submit')</code> for the submit button.</li>
+<li>Identify the event, e.g., <code>click</code>.</li>
+<li>Write the event handler using a built-in or pre-defined function (e.g., <code>$(':submit').click(alert(...))</code>; or an anonymous function to program a series of operations, e.g., <code>$(':submit').click(function() {...})</code>.</li>
+</ol>
+
+<h5>The <span class="font-code">.hover()</span> function</h5>
+
+<p>The <code>mouseover</code> and <code>mouseout</code> events are commonly used together. Instead of writing two handlers, jQuery provides a combined <code>.hover(mouseoverFunction, mouseoutFunction)</code>, which takes two function arguments: <code>mouseover</code> handler and <code>mouseout</code> handler. For example,</p>
+
+<pre class="color-example">
+$('#menu').hover(
+   function() {   <span class="color-comment">// mouseover</span>
+      $('#submenu').show();
+   },
+   function() {   <span class="color-comment">// mouseout</span>
+      $('#submenu').hide();
+   }
+);</pre>
+
+<h5>The <span class="font-code">event</span> Object</h5>
+<p>The event handling functions accept an optional argument of an <code>event</code> object. The <code>event</code> object captures information about the event, e.g., mouse (x, y), the key pressed, etc. For example,</p>
+
+<pre class="color-example">
+$('#box').click(function(evt) {
+   var xPos = evt.pageX;
+   var yPos = evt.pageY;
+   alert('X:' + xPos + ' Y:' + yPos);
+});</pre>
+
+<h5><span class="font-code">event</span>'s Properties</h5>
+<p>The <code>event</code> object has these properties:</p>
+
+<table class="table-zebra">
+<tr>
+  <td><code>target</code></td>
+  <td>The source element that triggered the event.</td>
+</tr>
+<tr>
+<td><code>pageX, pageY</code></td>
+<td><code>(x, y)</code> of the browser's window.</td>
+
+</tr>
+<tr>
+  <td><code>screenX, screenY</code></td>
+  <td><code>(x, y)</code> of the monitor.</td>
+</tr>
+<tr>
+  <td><code>which</code></td>
+  <td>The numeric code of the key typed.<br>
+    Use <code>String.fromCharCode(evt.which)</code> to get the character typed.</td>
+</tr>
+<tr>
+  <td><code>shiftkey</code></td>
+  <td>true if shift key is pressed.</td>
+</tr>
+<tr>
+  <td><code>data</code></td>
+  <td>data pass over from <code>.on(<em>events</em>, <em>selector</em>, <em>data</em>, <em>handler</em>)</code>.</td>
+</tr>
+
+</table>
+
+<h5>Preventing Default Action (or Normal Behavior)</h5>
+
+<p>As an example, the default action of click a link is to bring you to a new page. You could prevent the default action by either:</p>
+<ol>
+<li>Invoke <code>event.preventDefault()</code> function in the event handler.</li>
+<li>Return false from the event handler.</li>
+</ol>
+
+<h5>Event Propagation</h5>
+
+<p>In jQuery, an event (e.g., <code>mouseover</code>) is sent to the most specific element, and then <em>bubbles up</em> through its ancestors. You can use <code>event.target</code> to find the element first receiving the event.</p>
+<p>To stop event propagation, use <code>event.stopPropagation()</code>.</p>
+<p>To prevent the default action of an event (e.g., following the hyperlink in <code>&lt;a&gt;</code>; submitting a form when clicking submit button), use <code>event.preventDefault()</code>.</p>
+
+
+
+<h5>Binding Event Handler <span class="font-code">.on(events[, selector] [, data], handler)</span></h5>
+
+<p>The <code>.on()</code> binds a handler to one or more events.</p>
+
+<ul>
+<li><code>events</code>: one or more events, separated by space.</li>
+<li><code>handler</code>: event handling function in the form of <code>Function(Event eventObject)</code>.</li>
+<li><code>selector</code>: a select to filter the descendants of the selected elements that trigger the event. Use for event delegation for dynamically generated descendant elements.</li>
+<li><code>data</code>: data to be passed to <code>event.data</code>, where <code>event</code> is the optional argument of the handler function.</li>
+</ul>
+
+<p>For example,</p>
+<pre class="color-example">
+[TODO]</pre>
+
+<h5>Delegating Event via <span class="font-code">.on()</span></h5>
+
+<p>Suppose that you have a <code>&lt;table&gt;</code> with <code>&lt;tr&gt;</code> dynamically generated, you cannot attach handler directly to <code>&lt;tr&gt;</code>'s, as they have yet to be created. Instead, you can attach the event handler to <code>&lt;table&gt;</code> and then delegate it to <code>&lt;tr&gt;</code>, via <code>.on()</code> optional argument <code>selector</code>. If <code>selector</code> is present and not <code>null</code>, it will be used to filter the descendants of the element operated. Instead of triggering on the element operated, it will trigger on the matched descendants.</p>
+
+<p>For example,</p>
+<pre class="color-example">
+[TODO]</pre>
+
+
+<h5>Unbinding Event Handlers <span class="font-code">.off()</span></h5>
+<p>Counterpart of <code>.on()</code>, used to remove an event handler.</p>
+
+<p>You can use <code>.off(<em>event</em>)</code> to remove the handler for that <em><code>event</code></em><code></code>. You can use no-arg <code>.off()</code> to remove all event handlers for the selected elements.</p>
+
+
+<h5>Shorthand Binding <span class="font-code">.click()</span>, <span class="font-code">.submit()</span>, ...</h5>
+<p>These are shorthand for <code>.on(event, handler)</code>, for the respective events.</p>
+
+<h5>Triggering an Event <span class="font-code">.trigger(<em>event</em>)</span></h5>
+<p>Simulating triggering of an event.</p>
+
+
+<h3>Animation and Special Effects</h3>
+
+<h5>jQuery Built-in Functions for Special Visual Effects</h5>
+
+<table class="table-zebra">
+<tr>
+  <th colspan="2">Function</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+
+<tr>
+  <td rowspan="3">Hide/Show</td>
+<td><code>.hide()</code></td>
+<td>Hide the selected elements.</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.show()</code></td>
+  <td>Show the selected elements.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.toggle()</code></td>
+  <td>If the element is visible, hide it; otherwise, show it.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td rowspan="4">Fade</td>
+  <td><code>.fadeIn()</code></td>
+  <td>Show a hidden element by fading into view.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.fadeOut()</code></td>
+  <td>Hide a visible element by fading out of view.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.fadeToggle()</code></td>
+  <td>If the element is visible, fade-out; Otherwise, fade-in.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.fadeTo()</code></td>
+  <td>Fade an image to a specific opacity - between 0 (totally transparent) and 1 (totally opaque).</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td rowspan="3">Slide</td>
+  <td><code>.slideDown()</code></td>
+  <td>Show a hidden element by sliding down into view.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.slideUp()</code></td>
+  <td>Hide a visible element by sliding up out of view.</td>
+  <td>&nbsp;</td>
+</tr>
+<tr>
+  <td><code>.slideToggle()</code></td>
+  <td>If the element is hidden, slide-down into view; otherwise, slide-up out of view.</td>
+  <td>&nbsp;</td>
+</tr>
+
+</table>
+
+<p>Most of the special effect functions take two optional arguments:</p>
+<ol>
+<li>The first argument specifies the speed, in special literals of <code>'fast'</code> (200 msec), <code>'normal'</code> (400 msec), or '<code>slow'</code> (600 msec); or a time value in milliseconds.</li>
+<li>The second argument is a <em>callback function</em> to be executed after the effect is completed.</li>
+</ol>
+
+
+<h5>Custom Animations via <span class="font-code">.animate()</span></h5>
+
+<p>The <code>.animate()</code> allows you to animate any CSS property that accepts numeric values such as <code>px</code>, <code>em</code>, or <code>percent</code>, e.g., font size, position, margin, padding, border, and opacity. </p>
+
+<p>The <code>.animate()</code> takes up to 4 arguments:</p>
+<ol>
+<li>an associative array of CSS properties.</li>
+<li>optional speed in milliseconds.</li>
+<li>optional easing type.</li>
+<li>optional callback function, after the effect completed.</li>
+</ol>
+
+
+<p>For example, suppose <code>#logo<span class="color-comment"></span></code> selects an image, the image will move to the new margins, with the new opacity.</p>
+
+<pre class="color-example">
+$(#logo).animate(
+   {  'margin-left': '30px',   <span class="color-comment">// CSS properties</span>
+      'margin-top': '20px',
+      'opacity': 0.5
+   },
+   1000   <span class="color-comment">// Speed in milliseconds</span>
+);</pre> 
+
+<h3>Handling HTML (Web) Form</h3>
+
+<h5>Form-related Filter Selectors</h5>
+
+<table class="table-zebra">
+<tr>
+<th>jQuery Filter Selector</th>
+<th>Same as Selector</th>
+<th>HTML Element</th>
+</tr>
+
+<tr>
+  <td><code>:input</code></td>
+  <td><code>input, select, textarea, button</code></td>
+  <td><pre>&lt;input&gt;
+&lt;select&gt;..&lt;/select&gt;
+&lt;textarea&gt;..&lt;/textarea&gt;
+&lt;button&gt;..&lt;/button&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:submit</code></td>
+  <td><code>input[type=submit], button[type=submit] </code></td>
+  <td><pre>&lt;input type=&quot;submit&quot;&gt;
+&lt;button type=&quot;submit&quot;&gt;..&lt;/button&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:text</code></td>
+  <td><code>input[type=text]</code></td>
+  <td><pre>&lt;input type=&quot;text&quot;&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:password</code></td>
+  <td><code>input[type=password]</code></td>
+  <td><pre>&lt;input type=&quot;password&quot;&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:checkbox</code></td>
+  <td><code>input[type=checkbox]</code></td>
+  <td><pre>&lt;input type=&quot;checkbox&quot;&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:radio</code></td>
+  <td><code>input[type=radio]</code></td>
+  <td><pre>&lt;input type=&quot;radio&quot;&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:file</code></td>
+  <td><code>input[type=file]</code></td>
+  <td><pre>&lt;input type=&quot;file&quot;&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:image</code></td>
+  <td><code>input[type=image]</code></td>
+  <td><pre>&lt;input type=&quot;image&quot;&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:button</code></td>
+  <td><code>input[type=submit], input[type=reset], input[type=button], button</code></td>
+  <td><pre>&lt;input type=&quot;submit&quot;&gt;
+&lt;input type=&quot;reset&quot;&gt;
+&lt;input type=&quot;button&quot;&gt;
+&lt;button&gt;..&lt;/button&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:reset</code></td>
+  <td><code>input[type=reset], button[type=reset]</code></td>
+  <td><pre>&lt;input type=&quot;reset&quot;&gt;
+&lt;button type=&quot;reset&quot;&gt;..&lt;/button&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:checked</code></td>
+  <td></td>
+  <td><pre>&lt;input type=&quot;checkbox|radio&quot; checked&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:selected</code></td>
+  <td></td>
+  <td><pre>&lt;select&gt;&lt;option selected&gt;..&lt;/option&gt;...&lt;/select&gt;</pre></td>
+</tr>
+<tr>
+  <td><code>:enabled</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>:disabled</code></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td><code>:hidden</code></td>
+  <td></td>
+  <td>CSS property <code>visibility:hidden</code></td>
+</tr>
+<tr>
+  <td><code>:visible</code></td>
+  <td></td>
+  <td>CSS property <code>visibility:visiable</code></td>
+</tr>
+
+</table>
+
+<h5>Form-Related Event Handler</h5>
+<table class="table-zebra">
+  <tr>
+    <td><code>.submit()</code></td>
+    <td>Submitting form by clicking the <code>&lt;input type=&quot;submit&quot;&gt;</code>, <code>&lt;input type=&quot;image&quot;&gt;</code>, or <code>&lt;button type=&quot;submit&quot;&gt;..&lt;/button&gt;</code></td>
+  </tr>
+  <tr>
+    <td><code>.reset()</code></td>
+    <td>Reset form (<code>&lt;input type=&quot;reset&quot;&gt;</code>, or <code>&lt;button type=&quot;reset&quot;&gt;..&lt;/button&gt;</code>)</td>
+  </tr>
+  <tr>
+    <td><code>.change()</code></td>
+    <td>Value changed. For &lt;select&gt;, &lt;input type=&quot;checkbox&quot;&gt; and &lt;input type=&quot;radio&quot;&gt;, the event is fired immediately when a selection is made. For <code>&lt;input type=&quot;text&quot;&gt;</code>, <code>&lt;textarea&gt;</code>, the event is fired after the input element lose focus.</td>
+  </tr>
+  <tr>
+    <td><code>.click()</code></td>
+    <td>In web form, used for submit/reset buttons <code>&lt;input type=&quot;submit&quot;&gt;</code>, <code>&lt;input type=&quot;reset&quot;&gt;</code>, <code>&lt;button type=&quot;submit&quot;&gt;</code>, <code>&lt;button type=&quot;reset&quot;&gt;</code>.</td>
+  </tr>
+  <tr>
+    <td><code>.focus()</code></td>
+    <td>The input element gains the field focus. Eg. &quot;tab&quot; into the input element.</td>
+  </tr>
+  <tr>
+    <td><code>.blur()</code></td>
+    <td>The input element loses the focus.</td>
+  </tr>
+</table>
+<h5>Get input value: <span class="font-code">.val()</span></h5>
+
+<ul>
+<li><span class="line-heading-code-new">.val()</span>: Getter current value of the first element in the set of matched elements. Used of getting the value of <code>&lt;input&gt;</code>'s types of <code>text</code>, <code>checkbox</code>, <code>radio</code>, <code>&lt;select&gt;</code> and <code>&lt;textarea&gt;</code>. For example,
+<pre class="color-example">
+<span class="color-comment">// Get the value of text</span>
+$('#formID :text[name=&quot;foo&quot;]').val();  // &lt;form id=&quot;formID&quot;&gt;&lt;input type=&quot;text&quot; name=&quot;foo&quot;&gt;
+ 
+<span class="color-comment">// Get the value from &lt;select&gt;</span>
+$('#selectID:selected').val();        // &lt;select id=&quot;selecctID&quot;&gt;'s selected value
+$('select[name=&quot;foo&quot;]').val();        // &lt;select name=&quot;foo&quot;&gt;'s selected value
+$('#formID :selected').val()          // &lt;form id=&quot;formID&quot;&gt;&lt;select ...&gt;
+ 
+<span class="color-comment">// Get the value of checked checkbox</span>
+$('#formID input:checkbox[name=&quot;foo&quot;]:checked').val()   // &lt;form id=&quot;formID&quot;&gt;&lt;input type=&quot;checkbox&quot; name=&quot;foo&quot;&gt;
+$('#formID input[type=&quot;checkbox&quot;][name=&quot;foo&quot;]').val()
+ 
+<span class="color-comment">// Get the value of the checked radio</span>
+$('#formID input:radio[name=&quot;foo&quot;]:checked').val()      // &lt;form id=&quot;formID&quot;&gt;&lt;input type=&quot;radio&quot; name=&quot;foo&quot;&gt;</pre></li>
+
+<li><span class="line-heading-code-new">.val(<em>value</em>)</span>: Set the value of each of the selected elements.</li>
+</ul>
+
+<h5>The <span class="font-code">.submit()</span> Event Handler</h5>
+
+<p>The <code>submit</code> event can be triggered by clicking the <code>&lt;input type=&quot;submit&quot;&gt;</code>, <code>&lt;input type=&quot;image&quot;&gt;</code>, or <code>&lt;button type=&quot;submit&quot;&gt;...&lt;/button&gt;</code>. For example,</p>
+
+<pre class="color-example">
+$('#formID').submit( function(evt) {  <span class="color-comment">// submit event handler</span>
+   ......
+   ......
+   <span class="color-comment">// return false to prevent form submission, or evt.preventDefault()</span>
+});</pre>
+
+<p>You can also use the generic <code>.on('submit', <em>handler</em>)</code> for <code>.submit(<em>handler</em>)</code>.</p>
+
+
+<h3>Ajax</h3>
+
+<h4>What is Ajax?</h4>
+
+<p>The term &quot;Ajax&quot; was first mentioned in 2005, originally stands for &quot;<em>Asynchronous JavaScript and XML</em>&quot;. It has since gone beyond XML, and currently serves as a client-side technology for JavaScript to transfer data between browser and server in the <em>background asynchronously</em>,  so as to provide better responsiveness, without locking down the browser. The classical example of Ajax is google map, which allows you to carry out tasks while loading the maps.</p>
+
+<p>Ajax involves:</p>
+<ol>
+<li>JavaScript as the engine.</li>
+<li>a JavaScript object called <code>XMLHttpRequest</code>, which does all the works. It sends request to the web server, waits for the response, processes the response, and updates  some parts of the page by manipulating the DOM, based on the response received.</li>
+<li>text data in the form of plain text, HTML, XML or JSON (JavaScript Object Notation).</li>
+</ol>
+
+
+<h5>Why Ajax (Instead of an Ordinary HTTP Request)?</h5>
+
+<ol>
+<li>Better responsiveness: Without asynchronous Ajax request, the browser will freeze (and hang) while processing the request. On the other hand, with the asynchronous Ajax request in the background, the browser (and JavaScript engine) do not have to wait for the response and can process other tasks.</li>
+
+<li>No reloading of the entire page: You can update a portion of the page, instead of refreshing the entire page.</li>
+</ol>
+
+<h5>Debugging Ajax with Firebug (or Web Developer Tools) under FireFox</h5>
+
+<p>Under Firefox/Firebug, you could view all the network traffic under the &quot;Net&quot; tab, including the request/response messages. To view only Ajax messages, select &quot;XHR&quot; (XMLHttpRequest).</p>
+
+<h4>Ajax with jQuery</h4>
+
+<p>You can write Ajax using raw JavaScript. However, jQuery makes it much simpler. See &quot;<a href="#jqex3">Example 3: Ajax Request/Response</a>&quot;.</p>
+
+<h5>The <span class="font-code">$.ajax(<em>settings</em>)</span> or <span class="font-code">$.ajax(<em>url</em>, <em>settings</em>)</span></h5>
+
+<p>Used for sending an Ajax request. The <em>settings</em> is an object of key-value pairs. The frequently-used keys are:</p>
+<ul>
+<li><code><em>url</em></code>: The request URL, which can be placed outside the <code><em>settings</em></code> in the latter form.</li>
+<li><code><em>type</em></code>: GET or POST.</li>
+<li><code><em>data</em></code>: Request parameters (name=value pairs). Can be expressed as an object (e.g., <code>{name:&quot;peter&quot;, msg:&quot;hello&quot;}</code>), or query string (e.g., <code>&quot;name=peter&amp;msg=hello&quot;</code>).</li>
+<li><code><em>dataType</em></code>: Expected response data type, such as <code>text</code>, <code>xml</code>, <code>json</code>, <code>script</code> or <code>html</code>.</li>
+<li><code><em>headers</em></code>: an object for request header key-value pairs. The header <code>X-Requested-With:XMLHttpRequest</code> is always added.</li>
+</ul>
+
+
+<p>Ajax request, by default, is asynchronous. In other words, once the <code>.ajax()</code> is issued, the script will not wait for the response, but continue into the next statement, so as not to lock up and freeze the screen.</p>
+<p>NOTE: <code>$</code> is a shorthand (alias) for the <code>jQuery</code> object. <code>$()</code> is an alias for <code>jQuery()</code> function for Selector. <code>$.ajax()</code> is a global function (similar to class method in an OO language).</p>
+
+<h5><span class="font-code">.done()</span>, <span class="font-code">fail()</span>, <span class="font-code">.always()</span></h5>
+
+<p>You can chain <code>.done()</code>, <code>.fail()</code>, <code>.always()</code> after <code>$.ajax()</code> or all the convenience functions (to be discussed later), other than <code>.load()</code>.</p>
+
+<ul>
+<li><code>.done( function(<em>responseText</em>) )</code>: run if the Ajax request succeeds (i.e., response code 200).</li>
+
+<li><code>.fail( function(<em>jqXHR</em>, <em>textStatus</em>, <em>error</em>) )</code>: run if the Ajax request fails (i.e., response code is NOT 200).
+  <ul>
+<li><code><em>jqXHR</em></code> is the jQuery wrapper of XMLHttpRequest object. You can get the response text via <code><em>jqXHR</em>.responseText</code>; the response status error code <code></code> (e.g., 404, 500) via <code><em>jqXHR</em>.status</code>; and the response status text  (e.g., &quot;Not Found&quot;, &quot;Internal Server Error&quot;) via <code><em>jqXHR</em>.statusText</code>.</li>
+<li><code><em>textStatus</em></code> is simply &quot;error&quot; for <code>.fail()</code>.</li>
+<li><code><em>error</em></code> is the HTTP response status text (e.g., &quot;Not Found&quot;, &quot;Internal Server Error&quot;).</li></ul></li>
+
+<li><code>.always( function() )</code>: always run after the <code>.done()</code> or <code>.fail()</code>.</li>
+</ul>
+
+<p>Note: the <code>.done()</code>, <code>.fail()</code>, <code>.always()</code> deprecate the <code>success</code>, <code>error</code> and <code>complete</code> keys in <code>.ajax()</code>'s <code><em>settings</em></code>.</p>
+
+<h5>Examples</h5>
+
+<p>[TODO]</p>
+
+<h5>Serialize Form data <span class="font-code">.serialize()</span></h5>
+
+<p>You can use <code>$('#form').serialize()</code> to extract all the input request parameters and URL-encode into a query string.</p>
+
+<h5>Server Checking for Ajax Request</h5>
+<p>An Ajax request has a request header &quot;<code>X-Requested-With: XMLHttpRequest</code>&quot;. Your server-side program can check if the request is an Ajax via this header. For example, in PHP:</p>
+
+<pre class="color-example">&lt;?php<br>$ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) 
+        &amp;&amp; $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+......
+?&gt;</pre>
+
+
+<h5>Security Considerations</h5>
+
+<ul>
+<li>To prevent XSS (Cross-Site Scripting) attack, the XMLHttpRequest object can only request data from the original server that serve the page.</li>
+<li>Be careful in downloading script and running the script!</li>
+</ul>
+
+<h5>Loading HTML into Element  <span class="font-code">$(<em>selector</em>).load(<em>url</em>[, data][, complete])</span></h5>
+<p>Load data from the server and place the return HTML inside the matched element. The <code>.load()</code> is a shorthand method for <code>.ajax()</code>. It is the simplest Ajax method to load data from server.</p>
+
+<ul>
+<li><code><em>url</em></code>: request URL.</li>
+<li><code><em>data</em></code>: Request parameters (name=value pairs). Take an object (e.g., <code>{name:'peter', message:'hello'}</code>), or string (e.g., <code>&quot;name=peter&amp;message=hello&quot;</code>). By default, <code>.load()</code> uses POST method for object; and GET method for string.</li>
+<li><code><em>complete</em></code>: A function to be called back  when the request completes, in the form of <code>Function(responseText, textStatus, jqXHR)</code>. You can get the response status code (e.g., 404, 500) vai <code>jqXHR.status</code>; and the status text (e.g., &quot;Not Found&quot;, &quot;Internal Server Error&quot;) via <code>jqXHR.statusText</code>.</li>
+</ul>
+
+<p>The <code>.load()</code> allows you to load <em>portion</em> of a document by appending a selector after the <code><em>url</em></code>, seperating by space, e.g.,</p>
+
+<pre class="color-example">
+$('#divResult').load('ajaxTest.html #contentDiv &gt; p');
+</pre>
+
+<p>The jQuery parses the returned HTML document to locate the selector and discards the rest of the document.</p>
+
+<p>To check for error:</p>
+<pre class="color-example">
+$( &quot;#success&quot; ).load( &quot;test.php&quot;, function( response, textStatus, jqXHR ) {
+   if ( textStatus === &quot;error&quot; ) {
+      $( &quot;#error&quot; ).html( &quot;Error: &quot; + jqXHR.status + &quot; &quot; + jqXHR.statusText );
+            <span class="color-comment">// jqXHR.status gives the status code, e.g., 404, 500
+            // jqXHR.statusText gives the text, e.g., &quot;Not Found&quot;, &quot;Internal Server Error&quot;.</span>
+   }
+});</pre>
+
+
+<h5> Loading JSON Data and <span class="font-code">$.getJSON()</span></h5>
+<p>JSON (JavaScript Object Notation) is a lightweight textual data-interchange format. Recall that a JavaScript object is a set of key-value pair, written as <code>{ 'key1':'value1', 'key2':'value2', ...}</code>. On the other hand, a JavaScript array has an implicit numeric key, written as <code>['item1', 123, 'item3', ...]</code>. JSON uses these two formats to provide a concise notation (instead of the bulky XML). For example,</p>
+
+<pre class="color-example">
+{
+   &quot;key1&quot; : &quot;value1&quot;,
+   &quot;key2&quot; : [&quot;stringItem1&quot;, 1234, &quot;stringItem3&quot;],
+   &quot;key3&quot; : &quot;value3&quot;
+}</pre>
+
+<p>In JSON, all object keys and string literals, must be enclosed with <em>double quote</em>.</p>
+
+<p>The <code>$.getJSON(<em>url</em>[, data] [, <em>success</em>])</code> global function fetches JSON data and converts it to an JavaScript object. It is a shorthand method for <code>.ajax()</code> where <code>dataType:json</code>.</p>
+
+<h5>JavaScript's <span class="font-code">JSON.parse()</span> and jQuery's <span class="font-code">$.parseJSON()</span></h5>
+
+<p>You can use JavaScript's function <code>JSON.parse(<em>text</em>)</code> to parse a JSON-formatted text into an object. For example,</p>
+
+<pre class="color-example">
+var jsonText = '{'<br>             + '&quot;key1&quot; : &quot;value1&quot;,'<br>             + '&quot;key2&quot; : [&quot;stringItem1&quot;, 1234, &quot;stringItem3&quot;],'<br>             + '&quot;key3&quot; : &quot;value3&quot;'<br>             + '}';<br>console.log(JSON.parse(jsonText));<br>      <span class="color-comment">// Object { key1=&quot;value1&quot;,  key2=[3],  key3=&quot;value3&quot;}</span>
+</pre>
+
+<p>jQuery's <code>$.parseJSON()</code> is a wrapper for JavaScript's <code>JSON.parse()</code>.</p>
+
+<h5>JavaScript's <span class="font-code">JSON.stringify()</span></h5>
+
+<p>The counterpart of <code>JSON.parse()</code>, which converts a JavaScript value or object to a JSON string. There is no equivalence in jQuery.</p>
+
+<h5>Server Returning JSON Data</h5>
+
+<p>The server should set a response header &quot;<code>Content-Type: application/json</code>&quot;. For example, in PHP:</p>
+<pre class="color-example">
+&lt;?php
+header('Content-Type: application/json');<br>echo json_encode($jsonText);
+?&gt;</pre>
+
+
+<h5>Loading Script and <span class="font-code">$.getScript(<em>url</em>[, <em>success</em>])</span></h5>
+
+<p>We can use global function <code>$.getScript(<em>url</em>)</code> to load and execute a JavaScript. It is a shorthand method for <code>.ajax()</code> where <code>dataType:script</code>.</p>
+
+<h5><span class="font-code">$.get(url[, data][, success][, dataType])</span> and <span class="font-code">$.post(url[, data][, success][, dataType])</span></h5>
+
+<p>Send an HTTP GET or POST request. They are shorthand methods for <code>.ajax()</code>.</p>
+<ul>
+<li><code><em>dataType</em></code>: expected data type from the server, e.g., <code>xml</code>, <code>json</code>, <code>script</code>, or <code>html</code>.</li>
+</ul>
+
+<h5>Providing Feedbacks for Ajax Requests: <span class="font-code">.ajaxStart()</span>, <span class="font-code">.ajaxStop()</span>, <span class="font-code">.ajaxComplete()</span></h5>
+
+<ul>
+<li><code>$(document).ajaxStart( <em>function</em> )</code>: run when the first Ajax request begins.</li>
+<li><code>$(document).ajaxComplete( <em>function</em> )</code>: runs whenever an Ajax request completes.</li>
+<li><code>$(document).ajaxStop( <em>function</em> )</code>: runs after ALL Ajax requests completes.</li>
+
+</ul>
+
+
+<h4>Ajax using Raw JavaScript (Not Recommended)</h4>
+
+<p>I strongly suggest that you use jQuery for Ajax, which is much simpler than the raw JavaScript. However, I keep this old section here for completeness and explanation of the underlying raw JavaScript object.</p>
+<p>All Ajax operations are carried out through a JavaScript object called <code>XMLHttpRequest</code>.</p>
+
+<h5>Constructing an <span class="font-code">XMLHttpRequest</span> Object</h5>
+
+<p>To create a <code>XMLHttpRequest</code> object, invoke the constructor:</p>
+
+<pre class="color-syntax">
+var xhr = new XMLHttpRequest();</pre>
+
+<h5><span class="font-code">XMLHttpRequest</span> Properties and Methods</h5>
+
+<p>The <code>XMLHttpRequest</code> contains a set of properties (or variables) and methods.</p>
+
+<p>The properties are:</p>
+<ul>
+<li><span class="line-heading-code-new">readyState</span>: 0: uninitialized; 1: loading; 2: Loaded; 3: Interactive; and 4: completed.</li>
+
+<li><span class="line-heading-code-new">onreadystatechange</span>: for specifying an event handler for the change in <code>readyState</code>.</li>
+
+<li><span class="line-heading-code-new">responseText</span> and <span class="line-heading-code-new">responseXML</span>: The response returned by the server in text and XML format.</li>
+
+<li><span class="line-heading-code-new">status</span> and <span class="line-heading-code-new">statusText</span>: The status code (e.g., 200, 404) and status message (e.g., OK, Page not found).</li>
+</ul>
+
+<p>The methods are:</p>
+<ul>
+<li><span class="line-heading-code-new">open(<em>method</em>, <em>url</em>, <em>isAsyn</em>)</span>: Open an HTTP connection with the specified <code><em>method</em></code> (GET or POST), <code><em>url</em></code>, and whether the request should be handled asynchronously (<code>true</code> or <code>false</code>). Asynchronous request run in the background and does not freeze the browser. Using async request is always recommended, except short and small request.</li>
+
+<li><span class="line-heading-code-new">setRequestHeader(<em>param</em>, <em>value</em>)</span>: Set the request header for the given param=value pair.</li>
+
+<li><span class="line-heading-code-new">send(<em>param</em>s<em></em>)</span>: send the GET/POST key=value parameters to the server.</li>
+
+<li><span class="line-heading-code-new">abort()</span>: abort the current request.</li>
+
+<li><span class="line-heading-code-new">getAllResponseHeader()</span>: returns all headers as a string.</li>
+
+<li><span class="line-heading-code-new">getResponseHeader(<em>param</em>)</span>: returns the value of given <em><code>param</code></em><code></code> as a string.</li>
+</ul>
+
+<br>
+<h5>EXAMPLE 1: Ajax Request to HTTP Server for Plain Text</h5>
+
+<p>In this example, we use Ajax to send a POST request asynchronously to request for a text file.</p>
+
+<h5>&quot;<span class="font-code">JSAjaxEx1.html</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Hello, Ajax&lt;/title&gt;
+&lt;/head&gt;
+ 
+&lt;body&gt;
+&lt;h2&gt;Hello, Ajax&lt;/h2&gt;
+<span class="color-comment">&lt;!-- Placeholder for Ajax response text --&gt;</span>
+&lt;div id=&quot;ajaxResponse&quot;&gt;&lt;/div&gt;
+&lt;a href=&quot;test&quot; onclick=&quot;loadAjaxText(); return false&quot;&gt;SEND&lt;/a&gt;
+ 
+&lt;script&gt;
+<span class="color-comment">// Load Ajax responseText into element with id=&quot;ajaxResponse&quot;</span>
+function loadAjaxText() {
+  <span class="color-comment"> // Construct a XMLHttpRequest object</span>
+   var xhr = new XMLHttpRequest();
+  <span class="color-comment"> // Set up the readyState change event handler</span>
+   xhr.onreadystatechange = function() {
+      if ((this.readyState === 4) &amp;&amp; (this.status === 200)) {
+         if (this.responseText !== null) {
+           <span class="color-comment"> // Load the responseText into element with id=&quot;ajaxResponse&quot;</span>
+            var outElm = document.getElementById(ajaxResponse);
+            outElm.innerHTML = this.responseText;
+         }
+      }
+   }
+  <span class="color-comment"> // Open an asynchronous POST connection and send request</span>
+   xhr.open(&quot;POST&quot;, &quot;HelloAjax.txt&quot;, true);
+   xhr.send();
+}
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>&quot;<span class="font-code">HelloAjax.txt</span>&quot;</h5>
+<pre class="color-example">
+This is the Response Text of Ajax Request!!!</pre>
+
+<p>You need to run this example under an HTTP server (e.g., Apache) as it sends an HTTP request.</p>
+
+<h5>How it Works?</h5>
+<p>The client-side HTML contains a <code>&lt;div&gt;</code>, to be used as placeholder for the response text. It also contains a hyperlink to trigger the Ajax request (via the function <code>loadAjaxText()</code>).</p>
+<p>The steps in using Ajax, in function <code>loadAjaxText()</code> are:</p>
+<ol>
+<li>Allocate an <code>XMLHttpRequest</code> object, via <code>new XMLHttpRequest()</code>.</li>
+<li>Open a connection to the server, via <code>open(&quot;GET|POST&quot;, <em>url</em>, <em>isAync</em>)</code> method. In this case, we request for a text file called &quot;<code>HelloAjax.txt</code>&quot;.</li>
+<li>Invoke <code>send()</code> to send the request to the server.</li>
+<li>Provide the event handler <code>onreadystatechange</code> to handle the <code>readyState</code> change event. The <code>readyState</code> of 4 indicates Ajax transfer completed; <code>status</code> of 200 (<code>statusCode</code> of OK) indicates successful HTTP request and the response message can be retrieved from the <code>xhr.responseText</code>. In this example, we load the <code>responseText</code> into the element with <code>id=&quot;ajaxResponse&quot;</code>.</li>
+</ol>
+
+<br>
+<h5>EXAMPLE 2: Ajax Request with POST Parameters to PHP HTTP Server</h5>
+
+<p>In this example, we trigger an Ajax POST request to a PHP page to obtain dynamic response.</p>
+
+<h5>&quot;<span class="font-code">JSAjaxEx2.html</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre></td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Hello, Ajax from PHP&lt;/title&gt;
+&lt;/head&gt;
+ 
+&lt;body&gt;
+&lt;h2&gt;Hello, Ajax from PHP&lt;/h2&gt;
+&lt;textarea id=&quot;inText&quot; name=&quot;inText&quot; cols=&quot;40&quot; rows=&quot;5&quot;&gt;Enter your text here...&lt;/textarea&gt;&lt;br&gt;
+&lt;textarea id=&quot;ajaxResponse&quot; name=&quot;ajaxResponse&quot; cols=&quot;40&quot; rows=&quot;5&quot;&gt;&lt;/textarea&gt;&lt;br&gt;
+&lt;a href=&quot;test&quot; onclick=&quot;loadAjaxText(); return false&quot;&gt;SEND&lt;/a&gt;
+ 
+&lt;script&gt;
+<span class="color-comment">// Append Ajax responseText into element with id=&quot;ajaxResponse&quot;</span>
+function loadAjaxText() {
+   <span class="color-comment">// Construct an XMLHttpRequest object</span>
+   var xhr=new XMLHttpRequest();
+  <span class="color-comment"> // Set up the readyState change event handler</span>
+   xhr.onreadystatechange = function() {
+      if ((this.readyState === 4) &amp;&amp; (this.status === 200)) {
+         if (this.responseText !== null) {
+            var ajaxElm = document.getElementById('ajaxResponse');
+            ajaxElm.innerHTML = this.responseText + ajaxElm.innerHTML;<span class="color-comment"> // append in front</span>
+         }
+      }
+   }
+  <span class="color-comment"> // Open an asynchronous POST connection and send request</span>
+   xhr.open(&quot;POST&quot;, &quot;HelloAjax.php&quot;, true);
+   xhr.setRequestHeader(&quot;Content-type&quot;, &quot;application/x-www-form-urlencoded&quot;);
+   var inTextElm = document.getElementById('inText');
+   xhr.send(&quot;inText=&quot; + inTextElm.value);
+}
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The client-side HTML contains two <code>&lt;textarea&gt;</code>s, for the input and output respectively. It also contains a hyperlink to trigger the Ajax request (via the JavaScript function <code>loadText()</code>).</p>
+<p>The steps in using Ajax, in JavaScript function <code>loadText()</code> are:</p>
+<ol>
+<li>Allocate an <code>XMLHttpRequest</code> object, via <code>new XMLHttpRequest()</code>.</li>
+<li>Open a GET or POST connection to the server, via <code>open(&quot;GET|POST&quot;, <em>url</em>, <em>isAync</em>)</code> method.</li>
+<li>Set the HTTP request headers, if needed. For example, you need to set the HTTP request header &quot;<code>Content-type</code>&quot; to &quot;<code>application/x-www-form-urlencoded</code>&quot; if you are sending POST data.</li>
+<li>Invoke <code>send(<em>data</em>)</code> to send the POST request with query parameters to the server.</li>
+<li>Provide the event handler <code>onreadystatechange()</code> for the <code>readyState</code> change event. The <code>readyState</code> of 4 indicates Ajax transfer completed; <code>status</code> of 200 (<code>statusCode</code> of OK) indicates successful request; the response message can be retrieved from the <code>xhr.responseText</code>.</li>
+</ol>
+
+<h5>Server-side Program: <span class="font-code">HelloAjax.php</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6</pre>
+</td>
+<td>
+<pre>
+&lt;?php
+<span class="color-comment">// Echo back the POST parameter inText=xxx</span>
+if (isset($_POST['inText'])) {
+  echo &quot;&gt;&gt; {$_POST['inText']}\n&quot;;
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The server-side program <code>HelloAjax.php</code> handles a POST request with parameter <code>inText=<em>message</em></code>, and echoes back the input message.</p>
+
+
+<br>
+<h5>EXAMPLE 3: Ajax Request for XML Document</h5>
+
+<h5>&quot;<span class="font-code">JSAjaxEx3.html</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre></td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Hello, Ajax for XML&lt;/title&gt;
+&lt;/head&gt;
+ 
+&lt;body&gt;
+&lt;h2&gt;Hello, Ajax for XML&lt;/h2&gt;
+<span class="color-comment">&lt;!-- holder for Ajax response text --&gt;</span>
+&lt;div id=&quot;ajaxResponse&quot;&gt;&lt;/div&gt;
+&lt;a href=&quot;test&quot; onclick=&quot;loadText(); return false&quot;&gt;SEND&lt;/a&gt;
+ 
+&lt;script&gt;
+function loadText() {
+   <span class="color-comment">// Construct a XMLHttpRequest object</span>
+   var xhr=new XMLHttpRequest();
+   xhr.onreadystatechange = function() {
+      if ((this.readyState === 4) &amp;&amp; (this.status === 200)) {
+         <span class="color-new">if (this.responseXML !== null) {
+            var xmlDoc = this.responseXML;
+            var txt = &quot;&quot;;
+           <span class="color-comment"> // Retrieve all the &quot;title&quot; elements from the XML document</span>
+            var titleElms = xmlDoc.getElementsByTagName(&quot;title&quot;);
+            for (i = 0; i &lt; titleElms.length; i++) {
+               txt += titleElms[i].childNodes[0].nodeValue + &quot;&lt;br&gt;&quot;;
+            }
+            document.getElementById(&quot;ajaxResponse&quot;).innerHTML = txt;
+         }</span>
+      }
+   }
+   xhr.open(&quot;POST&quot;, &quot;<span class="color-new">HelloAjax.xml</span>&quot;, true);
+   xhr.send();
+}
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>The XML File: <span class="font-code">HelloAjax.xml</span></h5>
+<pre class="color-example">
+&lt;bookstore&gt;
+  &lt;book&gt;
+    <span class="color-new">&lt;title&gt;Java For Dummies&lt;/title&gt;</span>
+    &lt;author&gt;Tan Ah Teck&lt;/author&gt;
+  &lt;/book&gt;
+  &lt;book&gt;
+    <span class="color-new">&lt;title&gt;Java For More Dummies&lt;/title&gt;</span>
+    &lt;author&gt;Tan Ah Teck&lt;/author&gt;
+  &lt;/book&gt;
+&lt;/bookstore&gt;</pre>
+
+<h3>Testing JavaScript/jQuery with QUnit</h3>
+
+<p>QUnit @ <a href="https://qunitjs.com/">https://qunitjs.com/</a> is a unit testing framework for JavaScript. It is used in unit testing for jQuery, jQuery UI, jQuery Mobile, and others.</p>
+
+<h4>Setting Up</h4>
+
+<p>Down the latest <code>qunit-1.xx.x.js</code> and <code>qunit.1.xx.x.css</code> from <a href="https://qunitjs.com/">https://qunitjs.com/</a> and place them in appropriate folders. Link the <code>js</code> and <code>css</code> in your document. Alternatively, you can link to one of the CDN (Content Distribution Network). QUnit does NOT require jQuery, i.e., there is no need to load the <code>jquery.js</code>, unless you are testing codes with jQuery.</p>
+
+<h5>&quot;<span class="font-code">QUnitSetup.html</span>&quot;</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- QUnitSetup.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;QUnit Setting Up&lt;/title&gt;
+<span class="color-new">&lt;link rel=&quot;stylesheet&quot; href=&quot;css/qunit-1.18.0.css&quot;&gt;
+&lt;script src=&quot;js/qunit-1.18.0.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;test/QunitSetup.js&quot;&gt;&lt;/script&gt;</span>
+&lt;/head&gt;
+&lt;body&gt;
+  <span class="color-new">&lt;div id=&quot;qunit&quot;&gt;&lt;/div&gt;
+  &lt;div id=&quot;qunit-fixture&quot;&gt;&lt;/div&gt;</span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<ol>
+<li>In Line 7, we link to the QUnit's CSS file.</li>
+<li>In Line 8, we link to the QUnit's JavaScript file.</li>
+<li>In Line 9, we link to our test script. It is recommended to place the test script in an external file, rather than embedded; and in a separate folder (say <code>test</code>).</li>
+<li>The <code>&lt;div&gt;</code> in Line 12-13 are used by QUnit to display the test results.</li>
+</ol>
+
+
+<h5>&quot;<span class="font-code">QUnitSetup.js</span>&quot;</h5>
+
+<p>Our first test script is as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre>
+</td>
+<td>
+<pre>
+QUnit.test( &quot;Hello test&quot;, function( assert ) {
+   assert.ok( 1 == &quot;1&quot;, &quot;Expecting true. This test shall PASS!&quot; );
+   assert.ok( 1 === &quot;1&quot;, &quot;Expecting false. This test shall FAIL, for illustration!&quot; );
+   var message = &quot;hello&quot;;
+   assert.equal(message, &quot;hello&quot;, &quot;Expecting message to be hello&quot;);
+         <span class="color-comment">// actual, expected, message. Use == for comparison</span>
+   var number = &quot;88&quot;;
+   assert.deepEqual(number, 88, &quot;Expecting a number type of value 88&quot;);
+         <span class="color-comment">// Use === for comparison, i.e., same type and value</span>
+});</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Try running the tests by loading the HTML file.</p>
+<p>We have a <em>test suite</em> called &quot;Hello test&quot;, consisting of four <em>tests</em>:</p>
+<ol>
+<li>Test 1 asserts the expression <code>1==&quot;1&quot;</code> to be <code>true</code>, which evaluates to <code>true</code>. This test passes.</li>
+<li>Test 2 asserts the expression <code>1===&quot;1&quot;</code> to be <code>true</code>, but it evaluates to <code>false</code>. This test fails. Take note that this is not the correct way of writing test, I do it for illustrating failed test.</li>
+<li>Test 3 asserts that the actual value in first argument is equal (using <code>==</code>) to the expected value in the second argument. This test passes.</li>
+<li>In test 4, strictly equal (<code>===</code>), which compares both the type and value is used. This test fails.</li>
+</ol>
+
+<h5>Read:</h5>
+<ol>
+<li>QUnit's &quot;Introduction to Unit Testing&quot; @ <a href="http://qunitjs.com/intro/">http://qunitjs.com/intro/</a>.</li>
+<li>QUnit Cookbook @ <a href="http://qunitjs.com/cookbook/.">http://qunitjs.com/cookbook/.</a></li>
+</ol>
+
+<h4>QUnit By Examples</h4>
+
+<p>[TODO]</p>
+
+<h4>QUnit Basics</h4>
+
+<p>You need not place the test under JavaScript's <code>onload</code> or jQuery <code>ready()</code>, as by default, QUnit waits until the page is loaded before running its tests.</p>
+
+<h5>Assertions</h5>
+
+<p>The assertions available in QUnit are:</p>
+
+<ul>
+<li><span class="line-heading-code-new">assert.ok(<em>truth</em>[, <em>message</em>]):</span> The test passes if <code><em>truth</em></code> evaluates to <code>true</code>. The optional string <code><em>message</em></code> is for display in the test results.</li>
+<li><span class="line-heading-code-new">assert.equal(<em>actual</em>, <em>expected</em>[, ])</span>: The test passes if <code><em>actual</em></code> is equal (<code>==</code>) to <code><em>expected</em></code>. Compare with <code>assert.ok()</code>, <code>assert.equal()</code> displays the actual and expected values if the test fails.</li>
+<li><span class="line-heading-code-new">assert.deepEqual(<em>actual</em>, <em>expected</em>[, ])</span>: Similar to <code>assert.equal()</code> but uses strictly equal (<code>===</code>), (i.e., same type and value) to compare the actual and expected values.</li>
+<li><span class="line-heading-code-new">assert.expect(numAsserts)</span>: to state the number of assertions in the test suite. [TODO] Example.</li>
+<li><span class="line-heading-code-new">assert.async()</span>: for asynchronous operations such as user actions or Ajax calls, which returns a &quot;done&quot; function that should be called when the test operation has completed. [TODO] Example.</li>
+</ul>
+
+<h5>Module of Tests</h5>
+<p>QUnit provides two levels of structure to organize tests. A <code>QUnit.test()</code> test suite groups a set of tests; while <code>QUnit.module()</code> groups a set of <code>QUnit.test()</code>. For example,</p>
+
+<pre class="color-example">
+QUint.module( &quot;Module A&quot; );
+QUnit.test( &quot;Module A Test 1&quot;, .... );
+QUnit.test( &quot;Module A Test 2&quot;, .... );
+QUnit.test( &quot;Module A Test 3&quot;, .... );
+QUint.module( &quot;Module B&quot; );
+QUnit.test( &quot;Module B Test 1&quot;, .... );
+QUnit.test( &quot;Module B Test 2&quot;, .... );
+</pre>
+
+<p>You can use the module name to selectively run a module.</p>
+
+
+<!-- @@ start change in v1 -->
+<p>&nbsp;</p>
+<a class="references" href="../howto/References.html#javascript">Link To JavaScript/jQuery References &amp; Resources</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: jQuery v1.11.2<br />
+Last modified: May 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

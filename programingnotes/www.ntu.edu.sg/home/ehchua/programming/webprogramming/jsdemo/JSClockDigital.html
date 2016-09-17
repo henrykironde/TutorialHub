@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!-- JSClockDigital.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>A JavaScript Clock</title>
+<script type="text/javascript">
+window.onload = initClock;
+
+function initClock() {
+  var now = new Date();
+  var hr  = now.getHours();
+  var min = now.getMinutes();
+  var sec = now.getSeconds();
+  if (min < 10) min = "0" + min;  // insert a leading zero
+  if (sec < 10) sec = "0" + sec;
+  document.getElementById('clockDisplay').innerHTML
+        = "Time is " + hr + ":" + min + ":" + sec;
+  setTimeout('initClock()', 500);
+}
+</script>
+</head>
+<body>
+<h1 id="clockDisplay"></h1>
+</body>
+</html>

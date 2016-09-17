@@ -1,0 +1,4608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Client-side UI/UX with BootStrap, Font Awesome, Parsley JS and Fuel UX</title>
+
+<!-- @@ start change in v1 -->
+<link rel="stylesheet" href="../css/programming_notes_v1.css">
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+<script src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Client-side UI/UX with Bootstrap, Font Awesome, Parsley JS, Fuel UX and Others</h1>
+<h2>(not for dummies)</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<p>In this article, I shall describe some HTML5/CSS3/JavaScript/jQuery libraries (plug-ins) that could zest up the UI/UX of your web pages.</p>
+
+
+<h3>Bootstrap</h3>
+
+<p>Bootstrap (@ <a href="http://getbootstrap.com/">http://getbootstrap.com</a>) greatly simplifies the coding of UI/UX. You can produce a professional-looking UI/UX in a short time, without writing your own HTML/CSS/JavaScript codes.</p>
+
+<p>&quot;Bootstrap is the most popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web.&quot; ...quoted from Bootstrap mother site.</p>
+<p>The important features are:</p>
+
+<ul>
+<li>Responsive web design with mobile-first approach.</li>
+<li>Cross-browser support with consistency.</li>
+<li>Flexible Grid system for responsive web design.</li>
+<li>Extensive list of components (such as navigation bars, BreadCrumbs, Alerts) and JavaScript plug-ins (such as Modals, Carousels, and PopOvers).</li>
+
+</ul>
+
+<h4>Setting Up</h4>
+
+<ol>
+<li>Download Bootstrap from <a href="http://getbootstrap.com/">http://getbootstrap.com</a>.</li>
+
+<li>Unzip.</li>
+
+<li>Copy &quot;<code>bootstrap.min.css</code>&quot; into your &quot;<code>css</code>&quot; folder; and &quot;<code>bootstrap.min.js</code>&quot; into &quot;<code>js</code>&quot; folder.</li>
+
+<li>To use Bootstrap, include Bootstrap CSS and JS in your web pages (typically in the <code>&lt;head&gt;</code> section). You also need to include jQuery JS (as Bootstrap uses jQuery) and a <code>&lt;meta&gt;</code> tag (for responsive web design) as highlighted.</li>
+</ol>
+
+<h5>Bootstrap HTML File Template</h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+<span class="color-new">&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</span>
+&lt;title&gt;YOUR TITLE HERE&lt;/title&gt;
+<span class="color-new">&lt;link rel=&quot;stylesheet&quot; href=&quot;css/bootstrap.min.css&quot;&gt;
+<span class="color-comment">&lt;!-- Other External CSS files --&gt;</span></span>
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Hello, world!&lt;/h1&gt;
+<span class="color-new">&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/bootstrap.min.js&quot;&gt;&lt;/script&gt;</span>
+<span class="color-comment">&lt;!-- Other External JavaScripts --&gt;</span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How It Works?</h5>
+
+<ul>
+<li>Place the <code>&lt;meta&gt;</code> elements first in <code>&lt;head&gt;</code> section.</li>
+
+<li>You place the JavaScript at the end of the document, before <code>&lt;/body&gt;</code> ending tag, for better responsiveness, provided these scripts are not referenced in the <code>&lt;head&gt;<span class="color-comment"></span></code> and <code>&lt;body&gt;</code>.</li>
+<li>jQuery is needed for Bootstrap. The jQuery JS must be placed before Bootstrap JS.</li>
+<li>Alternatively, you can use the CDN (Content Distribution Network) for the jQuery JS and BootStrap JS and CSS. Check BootStrap mother site.</li>
+</ul>
+
+<h5>Viewport</h5>
+
+<p>Mobile browsers render web pages in a virtual window called viewport, which is usually wider than the screen width, so that they do not need to squeeze the page into the screen. Users can pan or zoom to see the different parts of the web page.</p>
+<p>Modern mobile browsers support a <code>&lt;meta&gt;</code> tag to control the viewport. The property <code>width</code> sets the viewport's width (to the device-width in the above template); <code>initial-scale</code> sets the zoom level when the page is first loaded (to no zoom in the above template).</p>
+
+<h5>JavaScript/CSS Source Map Files (<span class="font-code">css.map</span> and <span class="font-code">js.map</span>)</h5>
+<p>&quot;The .map files are for js and css files that have been minified. They are called SourceMaps. When you minify a file, it takes thousands of lines of pretty code and turns it into only a few lines of ugly code. Hopefully, when you are shipping your code to production, you are using the minified code instead of the full, unminified version. When your app is in production, and has an error, the sourcemap will help take your ugly file, and will allow you to see the original version of the code. If you didn't have the sourcemap, then any error would seem cryptic at best.&quot;</p>
+
+
+<h5>Base CSS, Components and JavaScript</h5>
+<p>Bootstrap is divided into 3 parts:</p>
+
+<ol>
+<li><strong>Base CSS</strong>: includes global CSS settings, fundamental HTML elements (typography, code, tables, forms, buttons, and image) styled and enhanced with extensible classes, and an advanced grid system. Base CSS only requires Bootstrap CSS, and does not require the BootStrap JS (and jQuery JS).</li>
+<li><strong>Components</strong>: include over a dozen reusable components built to provide iconography, drop-downs, input groups, navigation, alerts, and much more.</li>
+<li><strong>JavaScript</strong>: Bring Bootstrap's components to life with over a dozen custom jQuery plugins.</li>
+</ol>
+
+<h5>Getting Started</h5>
+
+<ol>
+<li>Study the &quot;Examples&quot; in <a href="http://getbootstrap.com/getting-started/">http://getbootstrap.com/getting-started</a>.</li>
+<li>Read the &quot;CSS&quot;, &quot;Components&quot;, and &quot;JavaScript&quot; sections, which provide detailed explanation on using Bootstrap.</li>
+</ol>
+
+<h4>Base CSS -  Grid System</h4>
+
+<p>Bootstrap organizes the pages in containers, marked with CSS class &quot;<code>.container</code>&quot; for fixed-width and &quot;<code>.container-fluid</code>&quot; for full-width. A container consists of rows, marked with CSS class &quot;<code>.row</code>&quot;. A row consists of columns. Contents are to be placed under columns.</p>
+
+<p>A row consists of 12 <em>available</em> column-units on which you could span your columns. To markup a column, use CSS classes &quot;<code>.col-<em>device</em>-<em>colspan</em></code>&quot;. For example, &quot;<code>&lt;div class='col-sm-4'&gt;</code>&quot; marks a column which spans 4 out of the 12 available column-units (i.e., one-third of the row) on small  (<code>sm</code>) devices. If more than 12 column-units are placed in a single row, the extra columns will be wrapped onto a new row.</p>
+
+<p>Currently, 4 classes of devices  are supported with the following window-width breakpoints:</p>
+<ol>
+<li><span class="font-code">xs</span>: Extra small devices (Phones) (width &lt; 768px)</li>
+<li><span class="font-code">sm</span>: Small devices (Tablets) (768px &le; width &lt; 992px)</li>
+<li><span class="font-code">md</span>: Medium devices (Desktops) (992px &le; width &lt; 1200px)</li>
+<li><span class="font-code">lg</span>: Large devices (Desktops) (width &ge; 1200px)</li>
+</ol>
+
+<p>For a given column, you can specify different column-width for different devices. For example, &quot;<code>&lt;div class='col-xs-8 col-sm-4'&gt;</code>&quot; marks a column which spans 8 column-units (two-third) for extra small (<code>xs</code>) devices; but 4 column-units (one-third) for small (<code>sm</code>) devices. Bootstrap adopts a <em>mobile-first approach</em>. When you declare a grid size for a particular device, it will propagate to the larger devices. For example, the &quot;<code>xs</code>&quot; setting will propagate upwards (to &quot;<code>sm</code>&quot;, &quot;<code>md</code>&quot; and &quot;<code>lg</code>&quot;) until it is overridden by another setting for the larger devices. However, suppose that you specify only the &quot;<code>md</code>&quot;, the &quot;<code>lg</code>&quot; device will follow the setting, but columns will be <em>stacked</em> on smaller devices (&quot;<code>sm</code>&quot; and &quot;<code>md</code>&quot;) instead of displaying in a horizontal row. We usually use &quot;<code>md</code>&quot; for this effect.</p>
+
+<p>Study the examples provided in the Bootstrap's CSS section, by <em>resizing</em> the browser's screen to emulate different devices, and use firefox/firebug's &quot;Layout&quot; panel to check the width of the container elements.</p>
+
+<h5>Example 1: Bootstrap's Grid System</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- BSGridTest.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Testing the Bootstrap Grid&lt;/title&gt;
+&lt;link href=&quot;css/bootstrap-3.3.4.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;<span class="color-new">container</span>&quot;&gt; <span class="color-comment">&lt;!-- also try container-fluid --&gt;</span>
+  &lt;h1&gt;Testing Bootstrap Grid&lt;/h1&gt;
+  &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+     incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+  &lt;div class=&quot;<span class="color-new">row</span>&quot;&gt;
+    &lt;div class=&quot;<span class="color-new">col-md-6</span>&quot;&gt;
+      &lt;h2&gt;&lt;small&gt;First Column (1/2 Page Width)&lt;/small&gt;&lt;/h2&gt;
+      &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+         tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;<span class="color-new">col-md-3</span>&quot;&gt;
+      &lt;h2&gt;&lt;small&gt;Second Column (1/4 Page Width)&lt;/small&gt;&lt;/h2&gt;
+      &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+         tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;<span class="color-new">col-md-3</span>&quot;&gt;
+      &lt;h2&gt;&lt;small&gt;Third Column (1/4 Page Width)&lt;/small&gt;&lt;/h2&gt;
+      &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+         tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt; <span class="color-comment">&lt;!-- end of .row --&gt;</span>
+&lt;/div&gt; <span class="color-comment">&lt;!-- end of .container --&gt;</span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>This page has a &quot;<code>container</code>&quot; with a &quot;<code>row</code>&quot;.  There are 3 columns in the &quot;<code>row</code>&quot;, with width of &quot;<code>col-md-6</code>&quot;, &quot;<code>col-md-3</code>&quot; and &quot;<code>col-md-3</code>&quot;, respectively.</li>
+
+<li> In the mobile-first approach, the &quot;<code>md</code>&quot; (992px &le; width &lt; 1200px) settings apply to &quot;<code>lg</code>&quot;, but NOT &quot;<code>sm</code>&quot; and &quot;<code>xs</code>&quot;. For large screen, the 3 columns will be displayed in a horizontal row. But if you reduce the window's width to below the breakpoint of 992px, the columns stack on one another and occupy the entire window's width (regardless of the column-unit settings of 6, 3, 3). Try resizing the window to see the effect.</li>
+
+<li>Try &quot;<code>container-fluid</code>&quot;, which stretches the container to cover the window's full-width.</li>
+
+<li>To design you web page for mobile devices as well as desktop, you can set the 3 columns as &quot;<code>col-xs-12 col-md-6</code>&quot;, &quot;<code>col-xs-6 col-md-3</code>&quot; and &quot;<code>col-xs-6 col-md-3</code>&quot;. On &quot;<code>xs</code>&quot; and &quot;<code>sm</code>&quot;, the first column occupies the entire row; the 2nd and 3rd columns stack below on a new row. On &quot;<code>md</code>&quot; and &quot;<code>lg</code>&quot;, the 3 columns are arranged in a row. Try it out.</li>
+
+<li>Take note that grid system (under base CSS) only require the Bootstrap CSS. It does not need Bootstrap JS (and jQuery JS).</li>
+</ul>
+
+<h5>Example 2: Column Offset</h5>
+
+<p>To move a column to the right (skipping some columns), use &quot;<code>.col-<em>device</em>-offset-<em>colspan</em></code>&quot;.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- BSColOffset.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Testing the Bootstrap Grid&lt;/title&gt;
+&lt;link href=&quot;css/bootstrap-3.3.4.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;<span class="color-new">container</span>&quot;&gt;
+  &lt;h1&gt;Testing Bootstrap Grid&lt;/h1&gt;
+  &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+     tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+  &lt;div class=&quot;<span class="color-new">row</span>&quot;&gt;
+    &lt;div class=&quot;<span class="color-new">col-md-4 col-md-offset-8</span>&quot;&gt;
+      &lt;h2&gt;&lt;small&gt;First Column (1/3 Page Width, Offset 2/3)&lt;/small&gt;&lt;/h2&gt;
+      &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
+         eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt; <span class="color-comment">&lt;!-- end of .row --&gt;</span>
+&lt;/div&gt; <span class="color-comment">&lt;!-- end of .container --&gt;</span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>On &quot;<code>md</code>&quot; and &quot;<code>lg</code>&quot;, the column is offset by 2/3 of the window's width. On &quot;<code>xs</code>&quot; and &quot;<code>sm</code>&quot;, the offset is not shown and the column occupies the entire window's width.</li>
+</ul>
+
+<h5>Example 3: Swapping Columns (Push-Right and Pull-Left)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- BSColPushPull.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Testing the Bootstrap Grid&lt;/title&gt;
+&lt;link href=&quot;css/bootstrap-3.3.4.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;<span class="color-new">container</span>&quot;&gt;
+  &lt;h1&gt;Testing Bootstrap Grid&lt;/h1&gt;
+  &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+     eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+  &lt;div class=&quot;<span class="color-new">row</span>&quot;&gt;
+    &lt;div class=&quot;<span class="color-new">col-md-10 col-md-push-2</span>&quot;&gt;
+      &lt;h2&gt;&lt;small&gt;Main Column (Push Right)&lt;/small&gt;&lt;/h2&gt;
+      &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+         eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;<span class="color-new">col-md-2 col-md-pull-10</span>&quot;&gt;
+      &lt;h2&gt;&lt;small&gt;Navigation Column (Pull Left)&lt;/small&gt;&lt;/h2&gt;
+      &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+         eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt; <span class="color-comment">&lt;!-- end of .row --&gt;</span>
+&lt;/div&gt; <span class="color-comment">&lt;!-- end of .container --&gt;</span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>On &quot;<code>md</code>&quot; and &quot;<code>lg</code>&quot;, the main column (appears first in the HTML page) is pushed right, and displayed on the right; while the navigation column is pulled left and displayed on the left. In other words, the column orders are swapped.</li>
+<li>On &quot;<code>xs</code>&quot; and &quot;<code>sm</code>&quot;, these settings do not apply. The main column is stacked on top of the navigation column, in accordance to the sequence of the codes.</li>
+
+</ul>
+
+<h5>How It Works?</h5>
+
+<p>The Bootstrap CSS for <code>.container</code>, <code>.row</code>, <code>.col-device-x</code>, <code>.col-device-pull-x</code>, <code>.col-device-push-x</code>, and <code>.col-device-offset-x</code> are extracted as follows. Bootstrap adopts mobile-first approach (instead of desktop-first), where &quot;<code>xs</code>&quot; receives the default settings, and media queries (via <code>@media</code>) is used for &quot;<code>sm</code>&quot;, &quot;<code>md</code>&quot;, &quot;<code>lg</code>&quot;, in that order, to override the default settings.</p>
+
+<pre class="color-example">
+.container {
+  padding-right: 15px; padding-left: 15px;
+  margin-right: auto; margin-left: auto;  <span class="color-comment">/* center */</span>
+}
+<span class="color-comment">/* Default if width &lt; 768px (xs), unless overridden via media query */</span>
+@media (min-width: 768px) {  <span class="color-comment">/* For width &gt;= 768px (sm), unless overridden via media query */</span>
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {  <span class="color-comment">/* For width &gt;= 992px (md), unless overridden via media query */</span>
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {  <span class="color-comment">/* For width &gt;= 992px (lg) */</span>
+  .container {
+    width: 1170px;
+  }
+}
+.container-fluid {
+  padding-right: 15px; padding-left: 15px;
+  margin-right: auto; margin-left: auto;  <span class="color-comment">/* center */</span>
+}
+.row {
+  margin-right: -15px; margin-left: -15px;
+}
+ 
+<span class="color-comment">/* All column setting */</span>
+.col-xs-1,...,.col-xs-12, .col-sm-1,...,.col-sm-12, 
+.col-md-1,...,.col-md-12, .col-lg-1,...,.col-lg-12 {
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px; padding-left: 15px;
+}
+ 
+<span class="color-comment">/* .col-xs-x, .col-xs-pull-x, .col-xs-push-x, .col-xs-offset-x
+   Default column settings unless overridden via media queries */</span>
+.col-xs-1,...,.col-xs-12 {
+  float: left;
+}
+<span class="color-comment">/* set column width */</span>
+.col-xs-12 { width: 100%; }
+.col-xs-11 { width: 91.66666667%; }
+.col-xs-10 { width: 83.33333333%; }
+......
+.col-xs-2  { width: 16.66666667%; }
+.col-xs-1  { width: 8.33333333%; }
+<span class="color-comment">/* pull left, add right */</span>
+.col-xs-pull-12 { right: 100%; }
+.col-xs-pull-11 { right: 91.66666667%; }
+......
+.col-xs-pull-2  { right: 16.66666667%; }
+.col-xs-pull-1  { right: 8.33333333%; }
+.col-xs-pull-0  { right: auto; }
+<span class="color-comment">/* push right, add left */</span>
+.col-xs-push-12 { left: 100%; }
+.col-xs-push-11 { left: 91.66666667%; }
+......
+.col-xs-push-2  { left: 16.66666667%; }
+.col-xs-push-1  { left: 8.33333333%; }
+.col-xs-push-0  { left: auto; }
+<span class="color-comment">/* column offset, add left margin */</span>
+.col-xs-offset-12 { margin-left: 100%; }
+.col-xs-offset-11 { margin-left: 91.66666667%; }
+......
+.col-xs-offset-2  { margin-left: 16.66666667%; }
+.col-xs-offset-1  { margin-left: 8.33333333%; }
+.col-xs-offset-0  { margin-left: 0; }
+<span class="color-comment"> 
+/* for &quot;sm&quot;, unless overridden via media query */</span>
+@media (min-width: 768px) {  
+  <span class="color-comment">/* .col-sm-x, .col-sm-pull-x, .col-sm-push-x, .col-sm-offset-x, as above &quot;xs&quot; */</span>
+}
+<span class="color-comment"> 
+/* for &quot;md&quot;, unless overridden via media query */</span>
+@media (min-width: 992px) {
+<span class="color-comment">  /* .col-md-x, .col-md-pull-x, .col-md-push-x, .col-md-offset-x, as above &quot;xs&quot; */</span>
+}
+<span class="color-comment"> 
+/* for &quot;lg&quot; */</span>
+@media (min-width: 1200px) {
+  <span class="color-comment">/* .col-lg-x, .col-lg-pull-x, .col-lg-push-x, .col-lg-offset-x, as above &quot;xs&quot; */</span>
+}</pre>
+
+<h4>Base CSS - Typography</h4>
+<p>Bootstrap's global default font-size is 14px, with a line-height of 1.428.</p>
+
+<h5>Headings <span class="font-code">&lt;h1&gt;</span> to <span class="font-code">&lt;h6&gt;</span></h5>
+
+<ul>
+<li><span class="font-code">&lt;h1&gt;</span>: default font size of 38px, 2.70 times the default font size.</li>
+<li><span class="font-code">&lt;h2&gt;</span>: default font size of 32px, 2.25 times the default font size.</li>
+<li><span class="font-code">&lt;h3&gt;</span>: default font size of 24px, 1.70 times the default font size.</li>
+<li><span class="font-code">&lt;h4&gt;</span>: default font size of 18px, 1.25 times the default font size.</li>
+<li><span class="font-code">&lt;h5&gt;</span>: same font size (14px) as the default font size.</li>
+<li><span class="font-code">&lt;h6&gt;</span>: default font size of 12px, 0.85 times the default font size.</li>
+<li>Classes <code>.h1</code> to <code>.h6</code> are also defined. For example, <code>&lt;div class=&quot;h1&quot;&gt;....&lt;/div&gt;</code>.</li>
+<li>You can nest a <code>&lt;small&gt;</code> (or  class &quot;<code>small</code>&quot;) under the headings to reduce the font size to 65% (for <code>&lt;h1&gt;</code> to <code>&lt;h3&gt;</code>) and 75% (for <code>&lt;h4&gt;</code> to <code>&lt;h6&gt;</code>)</li>
+</ul>
+
+<pre class="color-syntax">
+body {
+  font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+}
+h1, h2, h3, .h1, .h2, .h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+h4, h5, h6, .h4, .h5, .h6 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+h1, .h1 { font-size: 36px; }
+h2, .h2 { font-size: 30px; }
+h3, .h3 { font-size: 24px; }
+h4, .h4 { font-size: 18px; }
+h5, .h5 { font-size: 14px; }
+h6, .h6 { font-size: 12px; }
+h1 small, h2 small, h3 small { font-size: 65%; }
+h4 small, h5 small, h6 small { font-size: 75%; }</pre>
+
+<h5>Lead and Small Paragraphs</h5>
+
+<p>You can apply CSS class &quot;<code>lead</code>&quot; for a lead paragraph, with bigger font size and line-height so as to stand out among others. To reduce the font size, apply nested <code>&lt;small&gt;</code> or class &quot;<code>small</code>&quot;.</p>
+<pre class="color-syntax">
+.lead {
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.4;
+}
+@media (min-width: 768px) {  <span class="color-comment">/* &quot;sm&quot;, &quot;md&quot;, &quot;lg&quot; */</span>
+  .lead { font-size: 21px; }
+}
+small, .small { font-size: 85%; }</pre>
+
+<h5>Inline Text Element Markups</h5>
+<ul>
+<li><span class="font-code">&lt;strong&gt;</span>, <span class="font-code">&lt;b&gt;</span>: bold</li>
+<li><span class="font-code">&lt;mark&gt;</span>: highlight text</li>
+<li><span class="font-code">&lt;sup&gt;</span>, <span class="font-code">&lt;sub&gt;</span>: superscript and subscript.</li>
+<li><span class="font-code">&lt;small&gt;</span>: smaller font size. Note that <code>&lt;big&gt;</code> is not supported in HTML5.</li>
+<li><span class="font-code">&lt;em&gt;</span>, <span class="font-code">&lt;i&gt;</span>, <span class="font-code">&lt;u&gt;</span>,  <span class="font-code">&lt;del&gt;</span>,  <span class="font-code">&lt;ins&gt;</span>, <span class="font-code">&lt;s&gt;</span>: No new rules in Bootstrap's CSS, but supported.</li>
+</ul>
+
+<pre class="color-syntax">
+strong, b { font-weight: bold; }
+mark { color: #000; background: #ff0; }  <span class="color-comment">/* black on yellow */</span>
+small { font-size: 80%; }<br />sub, sup {
+  position: relative;
+  font-size: 75%;
+  line-height: 0;
+  vertical-align: baseline;
+}
+sup { top: -.5em; }
+sub { bottom: -.25em; }</pre>
+
+<h5>Text Alignment, Transformation and Color</h5>
+
+<p>Use Bootstrap's CSS classes &quot;<code>text-center</code>&quot;, &quot;<code>text-right</code>&quot;, &quot;<code>text-right</code>&quot;, &quot;<code>text-justify</code>&quot; and &quot;<code>text-nowrap</code>&quot; for text alignment.</p>
+
+<pre class="color-syntax">
+.text-left    { text-align: left; }
+.text-right   { text-align: right; }
+.text-center  { text-align: center; }
+.text-justify { text-align: justify; }
+.text-nowrap  { white-space: nowrap; }</pre>
+
+<p>Use Bootstrap's CSS classes &quot;<code>text-lowercase</code>&quot;, &quot;<code>text-uppercase</code>&quot; and &quot;<code>text-capitalize</code>&quot; for text transformation.</p>
+
+<pre class="color-syntax">
+.text-lowercase  { text-transform: lowercase; }
+.text-uppercase  { text-transform: uppercase; }
+.text-capitalize { text-transform: capitalize; }</pre>
+
+<p>Use Bootstrap's CSS classes &quot;<code>text-primary</code>&quot;, &quot;<code>text-info</code>&quot;, &quot;<code>text-muted</code>&quot;, &quot;<code>text-success</code>&quot;, &quot;<code>text-warning</code>&quot;, &quot;<code>text-danger</code>&quot; for various text colors, as shown:</p>
+
+<pre class="color-plain">
+<span style="color: #337ab7">.text-primary { color: #337ab7; }</span>
+<span style="color: #31708f">.text-info    { color: #31708f; }</span>
+<span style="color: #777">.text-muted   { color: #777;    }</span>
+<span style="color: #3c763d">.text-success { color: #3c763d; }</span>
+<span style="color: #8a6d3b">.text-warning { color: #8a6d3b; }</span>
+<span style="color: #a94442">.text-danger  { color: #a94442; }</span></pre>
+
+<p>Similarly, you can set the various background colors/effects, as follows:</p>
+<pre class="color-plain">
+<span style="color: #fff; background-color: #337ab7">.bg-primary { color: #fff; background-color: #337ab7; }</span>
+<span style="background-color: #d9edf7">.bg-info    { background-color: #d9edf7; }</span>
+<span style="background-color: #dff0d8">.bg-success { background-color: #dff0d8; }</span>
+<span style="background-color: #fcf8e3">.bg-warning { background-color: #fcf8e3; }</span>
+<span style="background-color: #f2dede">.bg-danger  { background-color: #f2dede; }</span></pre>
+
+<h5>Lists</h5>
+<ul>
+<li>Ordered Lists (<code>&lt;ol&gt;</code>, <code>&lt;li&gt;</code>), unordered lists (<code>&lt;ul&gt;</code>, <code>&lt;li&gt;</code>), and definition list (<code>&lt;dl&gt;</code>, <code>&lt;dt&gt;</code>, <code>&lt;dd&gt;</code>) are supported.</li>
+
+<li>To remove the bullets or numbering, apply class &quot;<code>list-unstyled</code>&quot;.</li>
+<li>For inline list, apply class &quot;<code>list-inline</code>&quot;.</li>
+</ul>
+
+<h4>Program Codes</h4>
+
+<ul>
+<li><span class="font-code">&lt;code&gt;</span>: program code in monospace font</li>
+<li><span class="font-code">&lt;kbd&gt;</span>: keyboard (or user) input</li>
+<li><span class="font-code">&lt;pre&gt;</span>:</li>
+<li><span class="font-code">&lt;var&gt;</span>: variable</li>
+<li><span class="font-code">&lt;samp&gt;</span>: sample output</li>
+
+
+</ul>
+
+<h4>Base CSS - Tables</h4>
+
+<ul>
+<li>Mark a table with class &quot;<code>table</code>&quot;. i.e., <code>&lt;table class='table'&gt;</code>.</li>
+
+<li>To add zebra-strips to the rows in <code>&lt;tbody&gt;</code>, use <code>&lt;table class='table table-stripped'&gt;</code>.</li>
+
+<li>To show the borders, use <code>&lt;table class='table table-bordered'&gt;</code>.</li>
+
+<li>To highlight the pointed (hover) row, use <code>&lt;table class='table table-hover'&gt;</code>.</li>
+
+<li>To compact the table, use <code>&lt;table class='table table-condensed'&gt;</code>.</li>
+
+<li>To color a row, use classes &quot;<code>active</code>&quot; (hover state), &quot;<code>info</code>&quot; (blue), &quot;<code>success</code>&quot; (green), &quot;<code>warning</code>&quot; (orange), and &quot;<code>danger</code>&quot; (red), on <code>&lt;tr&gt;</code>, <code>&lt;th&gt;</code> or <code>&lt;td&gt;</code>.</li>
+<li>For responsive table, use  <code>&lt;table class='table table-responsive'&gt;</code>, which makes the table scroll horizontally on small devices (under 768px).</li>
+</ul>
+<p>Refer to the examples in Bootstrap.</p>
+
+<h4>Base CSS - Buttons</h4>
+
+<ul>
+<li>It is preferable to use <code>&lt;button type=button|submit|reset&gt;</code> element for button, instead of <code>&lt;input type=&quot;submit|reset|button&gt;</code> or <code>&lt;a&gt;</code>.</li>
+<li>Add class &quot;btn&quot;, i.e., <code>&lt;button class=&quot;btn&quot;&gt;</code>.</li>
+<li>To style a button, use classes <code>&quot;btn-default&quot;</code>, <code>&quot;btn-primary&quot;</code>, <code>&quot;btn-info&quot;</code>, <code>&quot;btn-success&quot;</code>, <code>&quot;btn-warning&quot;</code>, <code>&quot;btn-danger&quot;</code> or <code>&quot;btn-link&quot;</code>.</li>
+<li>To change the size of button, use classes <code>&quot;btn-lg&quot;</code> (bigger than <code>&quot;btn-default&quot;</code>), <code>&quot;btn-sm&quot;</code>, <code>&quot;btn-xs&quot;</code>  (smaller than <code>&quot;btn-default&quot;</code>)<code></code>.</li>
+<li>To span the full-width (i.e., block button), add &quot;<code>btn-block</code>&quot;.</li>
+<li>To disable a button, add &quot;disabled&quot;.</li>
+<li>To activate a button programmatically, add &quot;active&quot;.</li>
+
+</ul>
+<h4>Base CSS - Form</h4>
+
+<p>Read the CSS's &quot;form&quot; section, which is clearly presented with many examples.</p>
+
+<p>Bootstrap supports 3 kinds of forms: normal (no additional classes), inline (marked with class &quot;form-inline&quot;), and horizontally tabulated (marked with class &quot;form-horizontal&quot;).</p>
+
+<ul>
+<li>Add &quot;<code>form-control</code>&quot; class to input elements such as <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code> and <code>&lt;select&gt;</code>; Use &quot;<code>help-block</code>&quot; class for help text; Use &quot;<code>form-control-static</code>&quot; for plain-text control.</li>
+
+<li>For text input, wrap the <code>&lt;label&gt;</code> and text in &quot;<code>form-group</code>&quot; class, using a <code>&lt;div&gt;</code>.  For checkbox and radio, wrap the label and checkbox/radio under &quot;checkbox&quot;, &quot;checkbox-inline&quot;, &quot;radio&quot;, &quot;radio-inline&quot;.</li>
+</ul>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- BSFormBasic.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Testing the Bootstrap Form Control&lt;/title&gt;
+&lt;link href=&quot;css/bootstrap-3.3.4.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;container&quot;&gt;
+  &lt;h1&gt;Testing Bootstrap Form&lt;/h1&gt;
+  &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+     eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+ 
+  &lt;form&gt;
+    <span class="color-comment">&lt;!-- Wrap the &lt;label&gt; and &lt;input&gt; under &lt;div class=&quot;form-group&quot;&gt; --&gt;</span>
+    &lt;div class=&quot;form-group&quot;&gt;
+      &lt;label for=&quot;email&quot;&gt;Email address&lt;/label&gt;
+      <span class="color-comment">&lt;!-- Add &quot;form-control&quot; to input control --&gt;</span>
+      &lt;input type=&quot;email&quot; class=&quot;form-control&quot; id=&quot;email&quot; placeholder=&quot;Enter your email&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;form-group&quot;&gt;
+      &lt;label for=&quot;password&quot;&gt;Password&lt;/label&gt;
+      &lt;input type=&quot;password&quot; class=&quot;form-control&quot; id=&quot;password&quot; placeholder=&quot;Enter your password&quot;&gt;
+      &lt;p class=&quot;help-block&quot;&gt;Password shall be 6-20 characters&lt;/p&gt;
+    &lt;/div&gt;
+ 
+    &lt;fieldset class=&quot;checkbox&quot;&gt;
+      &lt;legend&gt;Choose your color:&lt;/legend&gt;
+      <span class="color-comment">&lt;!-- Wrap label and checkbox under &quot;checkbox&quot; or &quot;checkbox-inline&quot; --&gt;</span>
+      &lt;label class=&quot;checkbox-inline&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; name=&quot;color&quot; value=&quot;red&quot;&gt; Red
+      &lt;/label&gt;
+      &lt;label class=&quot;checkbox-inline&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; name=&quot;color&quot; value=&quot;green&quot;&gt; Green
+      &lt;/label&gt;
+      &lt;label class=&quot;checkbox-inline&quot;&gt;
+        &lt;input type=&quot;checkbox&quot; name=&quot;color&quot; value=&quot;blue&quot;&gt; Blue
+      &lt;/label&gt;
+    &lt;/fieldset&gt;
+ 
+    &lt;fieldset class=&quot;radio&quot;&gt;
+      &lt;legend&gt;Choose your gender:&lt;/legend&gt;
+      &lt;label class=&quot;radio-inline&quot;&gt;
+        &lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;m&quot;&gt; Male
+      &lt;/label&gt;
+      &lt;label class=&quot;radio-inline&quot;&gt;
+        &lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;f&quot;&gt; Female
+      &lt;/label&gt;
+    &lt;/fieldset&gt;
+ 
+    &lt;button type=&quot;submit&quot; class=&quot;btn btn-default&quot;&gt;Submit&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/div&gt; &lt;!-- end of .container --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Horizontally Tabulated Form</h5>
+
+<p>To tabulate label and control, use <code>&lt;form class='form-horizontal'&gt;</code> (which arrange a &quot;<code>form-group</code>&quot; in a row). Set the column with of label and control via &quot;<code>col-md-<em>n</em></code>&quot; class. Push columns to the right via &quot;<code>col-md-offset-<em>n</em></code>&quot; class.</p>
+
+<h5>Login Form</h5>
+
+<p>Study the &quot;Sign-in Page&quot; example. To control the width of the form, you can set its &quot;<code>max-width</code>&quot; (as used in the &quot;<code>signin.css</code>&quot;):</p>
+
+<pre class="color-example">
+&lt;form <span class="color-new">class=&quot;form-signin&quot;</span>&gt;
+......
+&lt;/form &gt;</pre>
+
+<pre class="color-example">
+<span class="color-comment">/* signin.css */</span>
+<span class="color-new">.form-signin</span> {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+......</pre>
+
+
+<h4>Base CSS - Images</h4>
+<p>Bootstrap provides 3 image formatting classes: &quot;img-rounded&quot;, &quot;img-circle&quot;, &quot;img-thumbnail&quot;.</p>
+
+<h4>Base CSS - Helper Classes</h4>
+
+<ul>
+<li>Carets (for drop-down menu): <code>&lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;</code></li>
+<li>Center block: <code>&lt;div class=&quot;center-block&quot;&gt;...&lt;/div&gt;</code></li>
+<li>Float and Clear: use classes <code>&quot;pull-left&quot;</code>, <code>&quot;pull-right&quot;</code>, <code>&quot;clearfix&quot;</code>.</li>
+<li>Show and Hide: use classes <code>&quot;show&quot;</code> and <code>&quot;hidden&quot;</code>.</li>
+
+</ul>
+
+
+<h4>Component - Navigation Bar</h4>
+<p>Read the &quot;Components&quot;'s &quot;Nav&quot; and &quot;NavBar&quot; sections, which are clearly presented with many examples.</p>
+
+<p>Study all the &quot;Navbars in action&quot; examples.</p>
+
+<h5>Example</h5>
+<p>[TODO]</p>
+
+<h4>Bootstrap JavaScript Plugins</h4>
+
+<h5>Tooltips</h5>
+<p>Tooltips are used to provide hints for icons, links, and buttons, which are displayed when you place your mouse pointer over them.</p>
+
+<p>In HTML5, you can attach a tooltip to an element via the &quot;title&quot; attribute. Bootstrap JavaScript Tooltips plugin allows you to place the tooltips on top, bottom, left or right of the component.</p>
+
+<h5>Popovers</h5>
+
+<p>Popovers are used for housing secondary information for any element by adding small overlays of content.</p>
+
+<h5>Accordion</h5>
+
+<p>Collapsible panels</p>
+
+<h5>ScrollSpy</h5>
+
+<p>The navigation menu gets highlighted based on the scroll position.</p>
+
+<h5>Modals</h5>
+
+<p>A modal is a special dialog box that provides crucial information to the users. It is usually displayed on top of a &quot;faded&quot; and &quot;disabled&quot; background.</p>
+
+<h5>Carousels</h5>
+
+<p>Slide show of images which are displayed in a cyclic manner.</p>
+
+
+<h4>Bootstrap Extensions</h4>
+
+<h5>Open Source Themes and Templates</h5>
+
+<ul>
+<li>Start Bootstrap (@ <a href="http://startbootstrap.com/">http://startbootstrap.com/</a>).</li>
+<li>Bootswatch (@ <a href="https://bootswatch.com/">https://bootswatch.com/</a>).</li>
+<li>Black Tie (@ <a href="http://www.blacktie.co/">http://www.blacktie.co/</a>).</li>
+<li>Bootstrap Zero (@ <a href="http://www.bootstrapzero.com/">http://www.bootstrapzero.com/</a>).</li>
+<li>Bootplus (@ <a href="http://aozora.github.io/bootplus/">http://aozora.github.io/bootplus/</a>).</li>
+<li>Fbootstrapp (@ <a href="http://ckrack.github.io/fbootstrapp/">http://ckrack.github.io/fbootstrapp/</a>).</li>
+<li>Bootmetro (@ <a href="http://aozora.github.io/bootmetro/">http://aozora.github.io/bootmetro/</a>).</li>
+</ul>
+
+<h5>More Plugins</h5>
+
+<ul>
+<li>Font Awesome (@ <a href="http://fortawesome.github.io/Font-Awesome/">http://fortawesome.github.io/Font-Awesome/</a>): The iconic font and CSS toolkit.</li>
+<li>Bootsnipp (@ <a href="http://bootsnipp.com/">http://bootsnipp.com/</a>): Design elements, playground and code snippets for Bootstrap HTML/CSS/JS framework.</li>
+<li>Bootstrap Magic (@ <a href="https://pikock.github.io/bootstrap-magic/">https://pikock.github.io/bootstrap-magic/</a>): Easily create your own Twitter Bootstrap theme.</li>
+<li>Jasny Bootstrap (@ <a href="http://jasny.github.io/bootstrap/">http://jasny.github.io/bootstrap/</a>): The missing components for your favorite front-end framework.</li>
+<li>Fuel UX (@ <a href="http://getfuelux.com/">http://getfuelux.com/</a>): Fuel UX extends Bootstrap with additional lightweight JavaScript controls for your web applications.</li>
+<li>Bootdey (@ <a href="http://bootdey.com/">http://bootdey.com/</a>): share bootstrap code snippets, themes built with bootstrap.</li>
+<li>BootBundle (@ <a href="http://www.bootbundle.com/">http://www.bootbundle.com/</a>): Bootstrap themes, snippets &amp; components bundle.</li>
+<li>Start Bootstrap (@ <a href="http://startbootstrap.com/">http://startbootstrap.com/</a>): Free Bootstrap Themes &amp; Templates.</li>
+<li>Bootstrap Expo (@ <a href="http://expo.getbootstrap.com/">http://expo.getbootstrap.com/</a>): Beautiful and inspiring uses of Bootstrap.</li>
+</ul>
+
+<h5>Editors</h5>
+<ul>
+<li>Bootply (@ <a href="http://www.bootply.com/">http://www.bootply.com/</a>): Bootstrap Editor and Builder.</li>
+<li>LayoutIt (@ <a href="http://www.layoutit.com/">http://www.layoutit.com/</a>): Drag &amp; Drop Interface Builder..</li>
+</ul>
+
+<h5>Utilities</h5>
+<ul>
+<li>Bootlint Online (@ <a href="http://www.bootlint.com/">http://www.bootlint.com/</a>): Checks for several common HTML mistakes in webpages that are using Bootstrap in a fairly &quot;vanilla&quot; way.</li>
+</ul>
+
+
+<h3>Icon Libraries</h3>
+
+<p>Placing some nice icons in your web pages greatly <em>zests</em> up your UI.</p>
+
+<h4>Font Awesome</h4>
+
+<p>Font Awesome (@ <a href="http://fortawesome.github.io/Font-Awesome/">http://fortawesome.github.io/Font-Awesome)</a> provides a nice set of over 400 <em>scalable vector icons</em> that can be easily included into your web pages, and customized for size, color, etc.</p>
+
+<h5>Installation and Setup</h5>
+
+<ol>
+<li>Download from <a href="http://fortawesome.github.io/Font-Awesome/">http://fortawesome.github.io/Font-Awesome</a> and unzip.</li>
+
+<li>Copy the &quot;<code>font-awesome.min.css</code>&quot; into your &quot;<code>css</code>&quot; folder; copy the &quot;<code>fonts</code>&quot; folders too.</li>
+
+<li>To use Font Awesome, simply include the Font Awesome's CSS in your page:
+<pre class="color-example">
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/font-awesome.min.css&quot;&gt;</pre></li>
+</ol>
+
+<h5>Getting Started</h5>
+<p>Read the &quot;Get Started&quot; section @ <a href="http://fortawesome.github.io/Font-Awesome/get-started/">http://fortawesome.github.io/Font-Awesome/get-started</a>, followed by the &quot;Examples&quot; section.</p>
+
+<p>Using Font Awesome is straight-forward:</p>
+<ul>
+<li>To include a particular icon, simply write &quot;<code>&lt;i class='fa fa-<em>icon-name</em>'&gt;&lt;/i&gt;</code>&quot; or more syntactically correct &quot;<code>&lt;span class='fa fa-<em>icon-name</em>'&gt;&lt;/span&gt;</code>&quot;. You can check the <em>icon-name</em> from the &quot;Icons&quot; section.</li>
+
+<li>To size up the icon, add class name &quot;<code>fa-lg</code>&quot; (33% larger), &quot;<code>fa-2x</code>&quot;, &quot;<code>fa-3x</code>&quot;, &quot;<code>fa-3x</code>&quot;, &quot;<code>fa-4x</code>&quot; or <code>fa-5x</code>.</li>
+
+<li>To set the icon to fixed-width for proper alignment (e.g., in tables and list), add class name &quot;<code>fa-fw</code>&quot;.</li>
+
+<li>To set the icon in list, add class name &quot;<code>fa-ul</code>&quot; to <code>&lt;ul&gt;</code> and &quot;<code>fa-li</code>&quot; to <code>&lt;li&gt;</code>.</li>
+
+<li>More: Read the Examples.</li>
+</ul>
+
+<p>You can use Font Awesome together with Bootstrap. Font Awesome has a larger set of icons which  suits many web pages.</p>
+
+<h5>How It Works?</h5>
+
+<p>In the past, web designers are limited to a few web-safe fonts that are available on most computers. CSS3 adds support for web fonts, that can be downloaded together with the style sheets. This is carried out via the <code>@font-face</code> at-rule.</p>
+<p>For example, the &quot;<code>font-awesome.css</code>&quot; begins with:</p>
+
+<pre class="color-example">@font-face {
+  font-family: 'FontAwesome';
+  src: url('../fonts/fontawesome-webfont.eot?v=4.3.0');  <span class="color-comment">/* IE9 */</span>
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&amp;v=4.3.0') format('embedded-opentype'),  <span class="color-comment">/* IE6-IE8 */</span> 
+       url('../fonts/fontawesome-webfont.woff2?v=4.3.0') format('woff2'),  <span class="color-comment">/* Super Modern Browsers */</span>
+       url('../fonts/fontawesome-webfont.woff?v=4.3.0') format('woff'),  <span class="color-comment">/* Pretty Modern Browsers */</span>
+       url('../fonts/fontawesome-webfont.ttf?v=4.3.0') format('truetype'),  <span class="color-comment">/* Safari, Android, iOS */</span>
+       url('../fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular') format('svg');  <span class="color-comment">/* Legacy iOS */</span>
+  font-weight: normal;
+  font-style: normal;
+}</pre>
+
+<p>where:</p>
+<ul>
+<li><code>font-family</code>: define the font-family name, which can be used in the <code>font-family</code> property of your style rule, e.g., <code>body { font-family: <em>name</em> }</code></li>
+<li><code>src</code>: font file location, can be expressed in <code>url()</code> for remote font file, or <code>local()</code> for local font. The <code>url</code>'s will be tried in sequence, until one is found to be suitable for the browser. For Font Awesome, the font files must be kept in the &quot;<code>fonts</code>&quot; directory, at the same level as &quot;<code>css</code>&quot;.</li>
+</ul>
+
+<p>To include a icon, we are required to use <code>&lt;i class='fa fa-<em>icon-name</em>'&gt;&lt;/i&gt;</code>. The style rules for <code>.fa</code> and <code>.fa-send</code> (as an example of an icon) are as follows:</p>
+
+<pre class="color-example">
+.fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 <span class="color-new">FontAwesome</span>;
+        <span class="color-comment">/* font-style font-variant font-weight font-size/line-height font-family */</span>
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translate(0, 0);
+}
+ 
+.fa-send<span class="color-new">:before</span> {
+  <span class="color-new">content: &quot;\f1d8&quot;;</span>
+}</pre>
+
+<ul>
+<li>The <code>font-family</code> refers to the custom web font.</li>
+<li>The <code>:before</code> (or <code>::before</code> in CSS3) pseudo-element selector inserts the <code>content</code> value before the <code>innerHTML</code> of the element (i.e., <code>&lt;i&gt;</code>), which is a Unicode defined for the icon in the font files. (The <code>::before</code> and <code>::after</code> are the only CSS rules that can modify the contents of the HTML document!) Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen readers do not read off random characters that represent icons.</li>
+
+</ul>
+
+<h5>Font file Format</h5>
+
+<ul>
+<li>EOF (Embedded Open Type): A proprietary file standard, created by Microsoft, supported only by IE (&le;9). No other browsers support EOT.</li>
+<li>WOFF/WOFF2 (Web Open Font Format): Load faster because they use a compressed version of OTF and TTF. WOFF2 is the next generation that boasts better compression. This seems to be the winner. Supported by all newer browsers (IE &ge;9, FireFox, Chrome, etc.).</li>
+<li>OTF (OpenType Font) and TTF (TrueType Font): Traditional font formats used in desktops.</li>
+<li>SVG (Scalable Vector Graphics); old mobile version of Safari and Android.</li>
+</ul>
+
+<p>Take note that Font Awesome provides all 6 font formats (WOFF2/WOFF, EOT, OTF, TTF, and SVG), so as to support all browsers and devices. WOFF2 has the smallest file size.</p>
+
+<h5>CSS Pre-processors (less and scss)</h5>
+
+<p>CSS rules can be written with CSS preprocessor, which lets you write styles using programming constructs (such as variables) and then compile into the final CSS.</p>
+<p>Font Awesome uses less and scss. Read &quot;<code>less\font-awesome.less</code>&quot; and &quot;<code>scss\font-awesome.scss</code>&quot;.</p>
+
+
+<h4>Bootstrap's Glyphicons</h4>
+<p>Bootstrap includes 200 glyphs from Glyphicon Halflings set. In Bootstrap 3, these icon are also scalable.</p>
+
+<h5>Installation and Setup</h5>
+
+<ol>
+<li>No additional download as it is included in Bootstrap.</li>
+
+<li>Copy the &quot;<code>fonts</code>&quot; folders to your web app, at the same directory level as &quot;<code>css</code>&quot;.</li>
+
+<li>To use Glyphicon, simply include the Bootstrap CSS in your page:
+<pre class="color-example">
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/bootstrap.min.css&quot;&gt;</pre></li>
+</ol>
+
+<h5>Getting Started</h5>
+
+<p>Using Glyphicons is straight-forward: To include a particular icon, simply write &quot;<code>&lt;span class='glyphicon glyphicon-<em>icon-name</em>'&gt;&lt;/span&gt;</code>&quot;. You can check the <em>icon-name</em> from <a href="http://getbootstrap.com/components/">http://getbootstrap.com/components</a>.</p>
+
+<h5>How It works?</h5>
+
+<p>Refer to &quot;How it works&quot; section for &quot;Font Awesome&quot;.</p>
+
+<p>Bootstrap glyphicon includes 5 font formats: EOT, WOFF/WOFF2, TTF, SVG. The relevant CSS rules are:</p>
+
+<pre class="color-example">
+@font-face {
+  font-family: <span class="color-new">'Glyphicons Halflings'</span>;   <span class="color-comment">/* define the font-family name */</span>
+  src: url('../fonts/glyphicons-halflings-regular.eot');   <span class="color-comment">/* IE9 */</span>
+  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),  <span class="color-comment">/* IE6-8 */</span>
+       url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'),  <span class="color-comment">/* Modern Browsers */</span>
+       url('../fonts/glyphicons-halflings-regular.woff') format('woff'), 
+       url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), 
+       url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+ 
+.glyphicon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  <span class="color-new">font-family: 'Glyphicons Halflings';</span>
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}  
+
+<span class="color-comment">/* An icon example */</span> 
+.glyphicon-asterisk<span class="color-new">:before</span> {
+  <span class="color-new">content: &quot;\2a&quot;;</span>
+}</pre>
+
+
+<h3>Parsley JS for Form/Field Input Validation</h3>
+
+<p>Parsley (@ <a href="http://parsleyjs.org/">http://parsleyjs.org</a>), is an excellent JavaScript/jQuery library for form input validation.</p>
+
+<h4>Setting Up</h4>
+
+<ol>
+<li>Download the &quot;<code>parsley.zip</code>&quot; from <a href="http://parsleyjs.org/doc/download.html">http://parsleyjs.org/doc/download.html</a>. Unzip.</li>
+
+<li>Copy the JavaScript files to your JavaScript folder, e.g., &quot;<code>js</code>&quot;; and CSS file to your CSS folder, e.g., &quot;<code>css</code>&quot; </li>
+
+<li>Include the jQuery JS, Parsley JS, and Parsley CSS and in your web pages. Take note that Parsley uses jQuery.
+  <pre class="color-example">
+&lt;script src="js/jquery-1.11.2.min.js"&gt;&lt;/script&gt;
+&lt;script src="js/parsley.min.js"&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/parsley.css&quot;&gt;</pre>
+</li>
+</ol>
+
+<h4>Getting Started</h4>
+
+<p>You MUST read the &quot;Examples&quot; and &quot;Documentation&quot; at the Parsley mother site.</p>
+
+<p>I shall present some examples instead of repeating the information.</p>
+
+<h4>Example 1: Form Validation using HTML5 (for Comparison)</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- H5FormCompare.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;HTML5 Form Validation&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form&gt;
+  &lt;label&gt;Name:
+    &lt;input type=&quot;text&quot; name=&quot;name&quot; autofocus
+         <span class="color-new">required pattern=&quot;^\w{4,32}$&quot;</span>&gt;&lt;/label&gt;
+  &lt;label&gt;Email:
+    &lt;input <span class="color-new">type=&quot;email&quot;</span> name=&quot;email&quot; <span class="color-new">required</span>&gt;&lt;/label&gt;&lt;br&gt;
+  &lt;input type=&quot;submit&quot;&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How It works?</h5>
+
+<ul>
+<li>For the first <code>&lt;input type=&quot;text&quot;&gt;</code> field, HTML5 inspects attributes &quot;<code>required</code>&quot; and &quot;<code>pattern</code>&quot; to carry out form input validation. In our example, the &quot;<code>pattern</code>&quot; is assigned a regex which matches 4-32 word characters.</li>
+
+<li>For the second <code>&lt;input type=&quot;email&quot;&gt;</code> field, HTML5 inspects attribute &quot;<code>required</code>&quot; to validate this field.</li>
+
+<li>HTML5 validates form input by default. To disable form validation, use <code>&lt;form novalidate&gt;</code>.</li>
+</ul>
+
+<p>Try it out! Observe the bubble error messages &quot;Please fill out this field.&quot;, &quot;Please match the requested format.&quot;, and &quot;Please enter an email address.&quot;. Also observe that validation is first done during the &quot;<code>onchange</code>&quot; (i.e., when you push Enter or click outside the text field).</p>
+
+<h4>Example 2: Form Validation Using Parsley</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- ParsleyFormValidation.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Test Parsley Form Validation&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/parsley-2.0.7.css&quot;&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/parsley-2.0.7.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+ 
+&lt;body&gt;
+&lt;form <span class="color-new">data-parsley-validate</span> &gt;
+  &lt;label&gt;Name:
+  &lt;input type=&quot;text&quot; name=&quot;name&quot; autofocus
+         <span class="color-new">required data-parsley-trigger=&quot;change&quot;
+         pattern=&quot;^\w{4,32}$&quot;
+         data-parsley-pattern-message=&quot;Invalid name (4-32 characters)!&quot;
+         data-parsley-required-message=&quot;Name is required!&quot;</span>&gt;&lt;/label&gt;
+  &lt;label&gt;Email:
+  &lt;input <span class="color-new">type=&quot;email&quot;</span> name=&quot;email&quot;
+         <span class="color-new">required data-parsley-trigger=&quot;keyup&quot;</span>&gt;&lt;/label&gt;&lt;br&gt;
+  &lt;input type=&quot;submit&quot;&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How It works?</h5>
+
+<ul>
+<li>Parsley added custom &quot;<code>data-*</code>&quot; attributes, in the form of &quot;<code>data-parsley-*</code>&quot; to the form elements.</li>
+
+<li>You do NOT need to write any JavaScript codes?!</li>
+
+<li>We include &quot;<code>data-parsley-validate</code>&quot; in the <code>&lt;form&gt;</code> tag to bind Parsley validation to the form.</li>
+
+<li>For the first <code>&lt;input type=&quot;text&quot;&gt;</code> field, Parsley uses HTML5's attributes &quot;<code>required</code>&quot; and &quot;<code>pattern</code>&quot; for validation. In our example, the &quot;<code>pattern</code>&quot; is assigned a regex matching 4-32 word characters. We also override the default error messages for the &quot;<code>required</code>&quot; and &quot;<code>pattern</code>&quot; fields, via the &quot;<code>data-parsley-required-message</code>&quot; and &quot;<code>data-parsley-pattern-message</code>&quot;, respectively. The <code>data-parsley-trigger=&quot;change&quot;</code> specifies that validation is triggered upon an <code>onchange</code> event (i.e., pushing Enter or Tab key, or click outside the field).</li>
+
+<li>For the second <code>&lt;input type=&quot;email&quot;&gt;</code> field, Parsley uses <code>type=&quot;email&quot;</code> to match for a valid email. The <code>data-parsley-trigger=&quot;keyup&quot;</code> specifies that validation is triggered upon an <code>onkeyup</code> event (i.e., whenever you pushes a key).</li>
+</ul>
+
+<p>Try out this form! It works only if you can see the overridden error messages. Otherwise, use FireFox/Firebug to debug your script!</p>
+
+<h5>Notes</h5>
+<ul>
+<li>Even though you specified <code>data-parsley-trigger=&quot;keyup&quot;</code>, Parsley does not carry out validation with less than 4 characters (&quot;Do not assault your users with error messages too soon!&quot;)</li>
+
+<li>When a field is detected as invalid, further checks are done on each keystroke, to quickly remove the error message when the field input is valid. Hence, the &quot;<code>data-parsley-trigger</code>&quot; setting is only applicable for the initial detection.</li>
+
+<li>The &quot;<code>submit</code>&quot; button will not work, unless all the fields are valid.</li>
+</ul>
+
+<h4>Example: Field Validation (without Form) with Parsley Ex. 1</h4>
+
+<p>Suppose that we wish to validate an input field, which is not wrapped inside a &lt;form&gt; element.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre></td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- ParsleyFieldEx1.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Test Parsley Field Validation&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/parsley-2.0.7.css&quot;&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/parsley-2.0.7.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+$(document).ready( function() {
+  <span class="color-comment"> // Bind all &lt;input&gt; elements for Parsley validation</span>
+   <span class="color-new">$('input').parsley();</span>
+});
+&lt;/script&gt;
+&lt;/head&gt;
+ 
+&lt;body&gt;
+  &lt;input type=&quot;text&quot; name=&quot;name&quot; placeholder=&quot;Enter your name&quot;
+      required pattern=&quot;^\w{4,32}$&quot;
+      data-parsley-pattern-message=&quot;Invalid name!&quot;
+      data-parsley-required-message=&quot;Name is required!&quot;
+      <span class="color-new">data-parsley-trigger=&quot;change&quot;</span>&gt;
+  &lt;input type=&quot;email&quot; name=&quot;email&quot; placeholder=&quot;Enter your email&quot;
+      required <span class="color-new">data-parsley-trigger=&quot;change&quot;</span>&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How It works?</h5>
+
+<ul>
+<li>The document contains two <code>&lt;input&gt;</code> elements which is not wrapped inside a <code>&lt;form&gt;</code> (for whatsoever reasons such as tabulating the <code>&lt;input&gt;</code> in rows).</li>
+
+<li>In the first <code>&lt;input type=&quot;text&quot;&gt;</code>, we specify the validation criteria via the &quot;<code>required</code>&quot; and &quot;<code>pattern</code>&quot; attributes; and the error messages via &quot;<code>data-parsley-pattern-message</code>&quot; and &quot;<code>data-parsley-pattern-message</code>&quot;. We also set &quot;<code>data-parsley-trigger='change'</code>&quot;.</li>
+
+<li>In the jQuery script, we bind the <code>&lt;input&gt;</code> elements to Parsley to perform validation at &quot;<code>data-parsley-trigger='change'</code>&quot;.</li>
+</ul>
+
+<h4>Example: Field Validation (without Form) with Parsley Ex. 2</h4>
+
+<p>Further to the above example, suppose that we also wish to carry out processing for the input elements, if it is validated, upon onchange.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- ParsleyFieldEx2.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Test Parsley Field Validation&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/parsley-2.0.7.css&quot;&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/parsley-2.0.7.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+$(document).ready( function() {
+  <span class="color-comment"> // Suppose that you need to process the &lt;input&gt; elements upon onchange</span>
+  <span class="color-comment"> //   instead of purely validation.</span>
+  <span class="color-comment"> // No 'data-parsley-trigger=&quot;change&quot;' in the &lt;input&gt; elements.</span>
+  <span class="color-comment"> // But bind an onchange handler to the &lt;input&gt;'s which triggers</span>
+  <span class="color-comment"> //   Parsley validation before processing.</span>
+   <span class="color-new">$('input').change( function(event) {
+      event.preventDefault();
+      if ($(this).parsley().validate() === true) {
+         alert(&quot;OK and Processed!&quot;);
+      }
+   });</span>
+});
+&lt;/script&gt;
+&lt;/head&gt;
+ 
+&lt;body&gt;
+  &lt;input type=&quot;text&quot; name=&quot;name&quot; placeholder=&quot;Enter your name&quot;
+         required pattern=&quot;^\w{4,32}$&quot;
+         data-parsley-pattern-message=&quot;Invalid name!&quot;
+         data-parsley-required-message=&quot;Name is required!&quot;&gt;
+         <span class="color-comment">&lt;!-- No data-parsley-trigger --&gt;</span>
+  &lt;input type=&quot;email&quot; name=&quot;email&quot; placeholder=&quot;Enter your email&quot; required&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How It Work?</h5>
+
+<ul>
+<li>Instead of binding the <code>&lt;input&gt;</code> elements to Parsley to perform validation at &quot;<code>data-parsley-trigger='change'</code>&quot;, we remove &quot;<code>data-parsley-trigger='change'</code>&quot; from the <code>&lt;input&gt;</code> elements, but bind an onchange handler to the <code>&lt;input&gt;</code>'s.</li>
+
+<li>The onchange handler invokes &quot;<code>.parsley.validate()</code>&quot; to trigger Parsley validation, which returns <code>true</code> if valid, but something else if not valid (hence, we need to compare with <code>true</code>).</li>
+
+<li>The processing operations shall follow once the input is validated.</li>
+</ul>
+
+<h5>Notes</h5>
+<ul>
+<li>Parsley also provides a function called &quot;<code>.parsley.isValid()</code>&quot; which triggers Parsley validation (like &quot;<code>.parsley.validate()</code>&quot;), but does not affect the UI nor show the error messages.</li>
+</ul>
+
+<h4>Example: Field Validation (without Form) with Parsley Ex. 3</h4>
+
+<p>Further to the above examples, suppose that we wish to validate all the input fields, but perform processing via a button if all inputs are valid.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- ParsleyFieldEx3.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Test Parsley Field Validation&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/parsley-2.0.7.css&quot;&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/parsley-2.0.7.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+$(document).ready( function() {
+  <span class="color-comment"> // Bind the &lt;input&gt; elements for Parsley validation</span>
+  <span class="color-comment"> // triggered at data-parsley-trigger=&quot;change&quot;.</span>
+   <span class="color-new">$('input').parsley();</span>
+ 
+  <span class="color-comment"> // Bind an onclick handler to the &lt;button&gt;</span>
+  <span class="color-comment"> // to trigger Parsley validation on all fields upon click.</span>
+   <span class="color-new">$('button').click( function(event) {
+      event.preventDefault();
+     <span class="color-comment"> // Validate all input fields.</span>
+      var isValid = true;
+      $('input').each( function() {
+         if ($(this).parsley().validate() !== true) isValid = false;
+      });
+      if (isValid) {
+         alert(&quot;OK and Processed!&quot;);
+      }
+   });</span>
+});
+&lt;/script&gt;
+&lt;/head&gt;
+ 
+&lt;body&gt;
+  &lt;input type=&quot;text&quot; name=&quot;name&quot; id=&quot;name&quot; placeholder=&quot;Enter your name&quot;
+         required pattern=&quot;^\w{4,32}$&quot;
+         data-parsley-pattern-message=&quot;Invalid name!&quot;
+         data-parsley-required-message=&quot;Name is required!&quot;
+         <span class="color-new">data-parsley-trigger=&quot;change&quot;</span>&gt;
+  &lt;input type=&quot;email&quot; name=&quot;email&quot; id=&quot;email&quot; placeholder=&quot;Enter your email&quot;
+         required <span class="color-new">data-parsley-trigger=&quot;change&quot;</span>&gt;
+  &lt;button type=&quot;button&quot;&gt;Send&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How It Works?</h5>
+
+<ul>
+
+<li>We validate all the input fields by binding the <code>&lt;input&gt;</code> elements  to Parsley to perform validation at &quot;<code>data-parsley-trigger='change'</code>&quot;, as in the first example.</li>
+
+<li>We bind an onclick handler to the <code>&lt;button&gt;</code>, which invokes &quot;<code>.parsley.validate()</code>&quot; on all the <code>&lt;input&gt;</code> fields before processing the button. No special attributes for <code>&lt;button&gt;</code> are needed.</li>
+</ul>
+
+<h3>Fuel UX</h3>
+
+<p>Fuel UX extends Bootstrap with additional lightweight JavaScript controls for your webapps, such as Datepicker, Scheduler, Repeater and Wizard. It also styles controls such as checkbox, radio, combobox, infinite scroll, select. The mother site is <a href="http://getfuelux.com/index.html">http://getfuelux.com/index.html</a>.</p>
+
+<p>Firebug/Web Developer Tools seem unable to debug Fuel UX?! But Chrome is working.</p>
+
+<h4>Datepicker</h4>
+
+<p>Note: Too much codes, try jQuery UI Datepicker (@ <a href="https://jqueryui.com/datepicker/">https://jqueryui.com/datepicker/</a>) instead.</p>
+
+<p>I re-arrange the examples provided by Fuel UX for easier understanding.</p>
+
+<h5>Example 1: Without JavaScript</h5>
+
+<p>Wrap the control under a <code>&lt;div&gt;</code> with <code>class=&quot;datapicker&quot;</code> and custom data attribute <code>data-initialize=&quot;datapicker&quot;</code>, as highlighted.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Fuel UX Datepicker (No JavaScript)&lt;/title&gt;
+&lt;link href=&quot;css/bootstrap-3.3.4.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;link href=&quot;css/fuelux-3.6.3.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/bootstrap-3.3.4.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/fuelux-3.6.3.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+ 
+&lt;body class=&quot;fuelux&quot;&gt;
+&lt;div class=&quot;container&quot;&gt;
+  &lt;h1&gt;Fuel UX Datepicker (No JavaScript)&lt;/h1&gt;
+  &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+     eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+ 
+  <span class="color-new">&lt;div class=&quot;datepicker&quot; data-initialize=&quot;datepicker&quot; id=&quot;myDatepicker&quot;&gt;</span>
+    &lt;div class=&quot;input-group&quot;&gt;
+      &lt;input type=&quot;text&quot; class=&quot;form-control&quot; id=&quot;myDatepickerInput&quot;&gt;
+      &lt;div class=&quot;input-group-btn&quot;&gt;
+        &lt;button type=&quot;button&quot; class=&quot;btn btn-default dropdown-toggle&quot; data-toggle=&quot;dropdown&quot;&gt;
+          &lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;&lt;/span&gt;
+          &lt;span class=&quot;sr-only&quot;&gt;Toggle Calendar&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;div class=&quot;dropdown-menu dropdown-menu-right datepicker-calendar-wrapper&quot; role=&quot;menu&quot;&gt;
+          &lt;div class=&quot;datepicker-calendar&quot;&gt;
+            &lt;div class=&quot;datepicker-calendar-header&quot;&gt;
+              &lt;button type=&quot;button&quot; class=&quot;prev&quot;&gt;
+                &lt;span class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/span&gt;
+                &lt;span class=&quot;sr-only&quot;&gt;Previous Month&lt;/span&gt;&lt;/button&gt;
+              &lt;button type=&quot;button&quot; class=&quot;next&quot;&gt;
+                &lt;span class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;sr-only&quot;&gt;Next Month&lt;/span&gt;&lt;/button&gt;
+              &lt;button type=&quot;button&quot; class=&quot;title&quot;&gt;
+                &lt;span class=&quot;month&quot;&gt;
+                  &lt;span data-month=&quot;0&quot;&gt;January&lt;/span&gt;
+                  &lt;span data-month=&quot;1&quot;&gt;February&lt;/span&gt;
+                  &lt;span data-month=&quot;2&quot;&gt;March&lt;/span&gt;
+                  &lt;span data-month=&quot;3&quot;&gt;April&lt;/span&gt;
+                  &lt;span data-month=&quot;4&quot;&gt;May&lt;/span&gt;
+                  &lt;span data-month=&quot;5&quot;&gt;June&lt;/span&gt;
+                  &lt;span data-month=&quot;6&quot;&gt;July&lt;/span&gt;
+                  &lt;span data-month=&quot;7&quot;&gt;August&lt;/span&gt;
+                  &lt;span data-month=&quot;8&quot;&gt;September&lt;/span&gt;
+                  &lt;span data-month=&quot;9&quot;&gt;October&lt;/span&gt;
+                  &lt;span data-month=&quot;10&quot;&gt;November&lt;/span&gt;
+                  &lt;span data-month=&quot;11&quot;&gt;December&lt;/span&gt;
+                &lt;/span&gt;
+                &lt;span class=&quot;year&quot;&gt;&lt;/span&gt;
+              &lt;/button&gt;
+            &lt;/div&gt;
+            &lt;table class=&quot;datepicker-calendar-days&quot;&gt;
+              &lt;thead&gt;
+                &lt;tr&gt;
+                  &lt;th&gt;Su&lt;/th&gt;
+                  &lt;th&gt;Mo&lt;/th&gt;
+                  &lt;th&gt;Tu&lt;/th&gt;
+                  &lt;th&gt;We&lt;/th&gt;
+                  &lt;th&gt;Th&lt;/th&gt;
+                  &lt;th&gt;Fr&lt;/th&gt;
+                  &lt;th&gt;Sa&lt;/th&gt;
+                &lt;/tr&gt;
+              &lt;/thead&gt;
+              &lt;tbody&gt;&lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;div class=&quot;datepicker-calendar-footer&quot;&gt;
+              &lt;button type=&quot;button&quot; class=&quot;datepicker-today&quot;&gt;Today&lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;datepicker-wheels&quot; aria-hidden=&quot;true&quot;&gt;
+            &lt;div class=&quot;datepicker-wheels-month&quot;&gt;
+              &lt;h2 class=&quot;header&quot;&gt;Month&lt;/h2&gt;
+              &lt;ul&gt;
+                &lt;li data-month=&quot;0&quot;&gt;&lt;button type=&quot;button&quot;&gt;Jan&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;1&quot;&gt;&lt;button type=&quot;button&quot;&gt;Feb&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;2&quot;&gt;&lt;button type=&quot;button&quot;&gt;Mar&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;3&quot;&gt;&lt;button type=&quot;button&quot;&gt;Apr&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;4&quot;&gt;&lt;button type=&quot;button&quot;&gt;May&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;5&quot;&gt;&lt;button type=&quot;button&quot;&gt;Jun&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;6&quot;&gt;&lt;button type=&quot;button&quot;&gt;Jul&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;7&quot;&gt;&lt;button type=&quot;button&quot;&gt;Aug&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;8&quot;&gt;&lt;button type=&quot;button&quot;&gt;Sep&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;9&quot;&gt;&lt;button type=&quot;button&quot;&gt;Oct&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;10&quot;&gt;&lt;button type=&quot;button&quot;&gt;Nov&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;11&quot;&gt;&lt;button type=&quot;button&quot;&gt;Dec&lt;/button&gt;&lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;datepicker-wheels-year&quot;&gt;
+              &lt;h2 class=&quot;header&quot;&gt;Year&lt;/h2&gt;
+              &lt;ul&gt;&lt;/ul&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;datepicker-wheels-footer clearfix&quot;&gt;
+              &lt;button type=&quot;button&quot; class=&quot;btn datepicker-wheels-back&quot;&gt;
+                &lt;span class=&quot;glyphicon glyphicon-arrow-left&quot;&gt;&lt;/span&gt;
+                &lt;span class=&quot;sr-only&quot;&gt;Return to Calendar&lt;/span&gt;&lt;/button&gt;
+              &lt;button type=&quot;button&quot; class=&quot;btn datepicker-wheels-select&quot;&gt;Select
+                &lt;span class=&quot;sr-only&quot;&gt;Month and Year&lt;/span&gt;&lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt; &lt;!-- end of .datepicker --&gt;
+&lt;/div&gt; &lt;!-- end of .container --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Example 2: With JavaScript</h5>
+
+<p>Instead of using the custom data attribute &quot;data-initialize&quot; to initialize Datepicker, we invoke JavaScript method <code>.datepicker({ init-object })</code>, in this example. We also change the date format to MMMM-YY-DD (MySQL Date Format), but this requires Moment JS (@ <a href="http://momentjs.com/">http://momentjs.com/</a>). In addition, we created some buttons to illustrate the various JavaScript methods.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Fuel UX Datepicker (No JavaScript)&lt;/title&gt;
+&lt;link href=&quot;css/bootstrap-3.3.4.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;link href=&quot;css/fuelux-3.6.3.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/bootstrap-3.3.4.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/moment-with-locales-2.10.3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/fuelux-3.6.3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+$(document).ready( function() {
+   <span class="color-comment">/* initialize datepicker */</span>
+   <span class="color-new">$('#myDatepicker').datepicker({
+      allowPastDates: true,
+      momentConfig: {          <span class="color-comment">/* require moment.js */</span>
+         culture: 'en',
+         format: 'YYYY-MM-DD'  <span class="color-comment">/* in MySQL Date format */</span>
+      }
+   });</span>
+ 
+   <span class="color-comment">/* event handlers */</span>
+   $('#myDatepicker').on('changed.fu.datepicker', function (event, data) {
+      console.log('datepicker change event fired');
+   });
+ 
+   $('#myDatepicker').on('inputParsingFailed.fu.datepicker', function () {
+      console.log('datepicker inputParsingFailed event fired');
+   });
+ 
+   <span class="color-comment">/* for the buttons */</span>
+   $('#btnDatepickerEnable').on('click', function () {
+      $('#myDatepicker').datepicker('enable');
+   });
+ 
+   $('#btnDatepickerDisable').on('click', function () {
+      $('#myDatepicker').datepicker('disable');
+   });
+ 
+   jQuery('#btnDatepickerLogFormattedDate').on('click', function () {
+      console.log($('#myDatepicker').datepicker('getFormattedDate'));
+   });
+ 
+   $('#btnDatepickerLogDateObj').on('click', function () {
+      console.log($('#myDatepicker').datepicker('getDate'));
+   });
+ 
+   $('#btnDatepickerSetDate').on('click', function () {
+      var futureDate = new Date(+new Date() + (7 * 24 * 60 * 60 * 1000));
+      $('#myDatepicker').datepicker('setDate', futureDate);
+      console.log($('#datepicker').datepicker('getDate'));
+   });
+ 
+   $('#btnDatepickerDestroy').on('click', function () {
+      var markup = $('#myDatepicker').datepicker('destroy');
+      console.log(markup);
+      $(this).closest('.section').append(markup);
+   });
+});
+&lt;/script&gt;
+ 
+&lt;/head&gt;
+ 
+ 
+&lt;body class=&quot;fuelux&quot;&gt;
+&lt;div class=&quot;container&quot;&gt;
+  &lt;h1&gt;Fuel UX Datepicker (No JavaScript)&lt;/h1&gt;
+  &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+     eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+ 
+  <span class="color-new">&lt;div class=&quot;datepicker&quot; id=&quot;myDatepicker&quot;&gt;</span>
+    &lt;div class=&quot;input-group&quot;&gt;
+      &lt;input type=&quot;text&quot; class=&quot;form-control&quot; id=&quot;myDatepickerInput&quot;&gt;
+      &lt;div class=&quot;input-group-btn&quot;&gt;
+        &lt;button type=&quot;button&quot; class=&quot;btn btn-default dropdown-toggle&quot; data-toggle=&quot;dropdown&quot;&gt;
+          &lt;span class=&quot;glyphicon glyphicon-calendar&quot;&gt;&lt;/span&gt;
+          &lt;span class=&quot;sr-only&quot;&gt;Toggle Calendar&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;div class=&quot;dropdown-menu dropdown-menu-right datepicker-calendar-wrapper&quot; role=&quot;menu&quot;&gt;
+          &lt;div class=&quot;datepicker-calendar&quot;&gt;
+            &lt;div class=&quot;datepicker-calendar-header&quot;&gt;
+              &lt;button type=&quot;button&quot; class=&quot;prev&quot;&gt;
+                &lt;span class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/span&gt;
+                &lt;span class=&quot;sr-only&quot;&gt;Previous Month&lt;/span&gt;&lt;/button&gt;
+              &lt;button type=&quot;button&quot; class=&quot;next&quot;&gt;
+                &lt;span class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;sr-only&quot;&gt;Next Month&lt;/span&gt;&lt;/button&gt;
+              &lt;button type=&quot;button&quot; class=&quot;title&quot;&gt;
+                &lt;span class=&quot;month&quot;&gt;
+                  &lt;span data-month=&quot;0&quot;&gt;January&lt;/span&gt;
+                  &lt;span data-month=&quot;1&quot;&gt;February&lt;/span&gt;
+                  &lt;span data-month=&quot;2&quot;&gt;March&lt;/span&gt;
+                  &lt;span data-month=&quot;3&quot;&gt;April&lt;/span&gt;
+                  &lt;span data-month=&quot;4&quot;&gt;May&lt;/span&gt;
+                  &lt;span data-month=&quot;5&quot;&gt;June&lt;/span&gt;
+                  &lt;span data-month=&quot;6&quot;&gt;July&lt;/span&gt;
+                  &lt;span data-month=&quot;7&quot;&gt;August&lt;/span&gt;
+                  &lt;span data-month=&quot;8&quot;&gt;September&lt;/span&gt;
+                  &lt;span data-month=&quot;9&quot;&gt;October&lt;/span&gt;
+                  &lt;span data-month=&quot;10&quot;&gt;November&lt;/span&gt;
+                  &lt;span data-month=&quot;11&quot;&gt;December&lt;/span&gt;
+                &lt;/span&gt;
+                &lt;span class=&quot;year&quot;&gt;&lt;/span&gt;
+              &lt;/button&gt;
+            &lt;/div&gt;
+            &lt;table class=&quot;datepicker-calendar-days&quot;&gt;
+              &lt;thead&gt;
+                &lt;tr&gt;
+                  &lt;th&gt;Su&lt;/th&gt;
+                  &lt;th&gt;Mo&lt;/th&gt;
+                  &lt;th&gt;Tu&lt;/th&gt;
+                  &lt;th&gt;We&lt;/th&gt;
+                  &lt;th&gt;Th&lt;/th&gt;
+                  &lt;th&gt;Fr&lt;/th&gt;
+                  &lt;th&gt;Sa&lt;/th&gt;
+                &lt;/tr&gt;
+              &lt;/thead&gt;
+              &lt;tbody&gt;&lt;/tbody&gt;
+            &lt;/table&gt;
+            &lt;div class=&quot;datepicker-calendar-footer&quot;&gt;
+              &lt;button type=&quot;button&quot; class=&quot;datepicker-today&quot;&gt;Today&lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;datepicker-wheels&quot; aria-hidden=&quot;true&quot;&gt;
+            &lt;div class=&quot;datepicker-wheels-month&quot;&gt;
+              &lt;h2 class=&quot;header&quot;&gt;Month&lt;/h2&gt;
+              &lt;ul&gt;
+                &lt;li data-month=&quot;0&quot;&gt;&lt;button type=&quot;button&quot;&gt;Jan&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;1&quot;&gt;&lt;button type=&quot;button&quot;&gt;Feb&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;2&quot;&gt;&lt;button type=&quot;button&quot;&gt;Mar&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;3&quot;&gt;&lt;button type=&quot;button&quot;&gt;Apr&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;4&quot;&gt;&lt;button type=&quot;button&quot;&gt;May&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;5&quot;&gt;&lt;button type=&quot;button&quot;&gt;Jun&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;6&quot;&gt;&lt;button type=&quot;button&quot;&gt;Jul&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;7&quot;&gt;&lt;button type=&quot;button&quot;&gt;Aug&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;8&quot;&gt;&lt;button type=&quot;button&quot;&gt;Sep&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;9&quot;&gt;&lt;button type=&quot;button&quot;&gt;Oct&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;10&quot;&gt;&lt;button type=&quot;button&quot;&gt;Nov&lt;/button&gt;&lt;/li&gt;
+                &lt;li data-month=&quot;11&quot;&gt;&lt;button type=&quot;button&quot;&gt;Dec&lt;/button&gt;&lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;datepicker-wheels-year&quot;&gt;
+              &lt;h2 class=&quot;header&quot;&gt;Year&lt;/h2&gt;
+              &lt;ul&gt;&lt;/ul&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;datepicker-wheels-footer clearfix&quot;&gt;
+              &lt;button type=&quot;button&quot; class=&quot;btn datepicker-wheels-back&quot;&gt;
+                &lt;span class=&quot;glyphicon glyphicon-arrow-left&quot;&gt;&lt;/span&gt;
+                &lt;span class=&quot;sr-only&quot;&gt;Return to Calendar&lt;/span&gt;&lt;/button&gt;
+              &lt;button type=&quot;button&quot; class=&quot;btn datepicker-wheels-select&quot;&gt;Select
+                &lt;span class=&quot;sr-only&quot;&gt;Month and Year&lt;/span&gt;&lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt; &lt;!-- end of .datepicker --&gt;
+ 
+  &lt;br&gt;
+  &lt;h5 id=&quot;datepicker-examples-sample-methods&quot;&gt;Sample Methods&lt;/h5&gt;
+  &lt;div class=&quot;btn-group&quot;&gt;
+    &lt;button class=&quot;btn btn-default&quot; id=&quot;btnDatepickerEnable&quot;&gt;enable&lt;/button&gt;
+    &lt;button class=&quot;btn btn-default&quot; id=&quot;btnDatepickerDisable&quot;&gt;disable&lt;/button&gt;
+    &lt;button class=&quot;btn btn-default&quot; id=&quot;btnDatepickerLogFormattedDate&quot;&gt;log formatted date&lt;/button&gt;
+    &lt;button class=&quot;btn btn-default&quot; id=&quot;btnDatepickerLogDateObj&quot;&gt;log date object&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;btn-group&quot;&gt;
+    &lt;button class=&quot;btn btn-default&quot; id=&quot;btnDatepickerSetDate&quot;&gt;set date 7 days ahead (will log new value)&lt;/button&gt;
+    &lt;button class=&quot;btn btn-default&quot; id=&quot;btnDatepickerDestroy&quot;&gt;destroy and append&lt;/button&gt;
+  &lt;/div&gt;
+ 
+&lt;/div&gt; &lt;!-- end of .container --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Repeater</h4>
+
+<p>References:</p>
+<ol>
+<li>Fuel UX Repeater Tutorial @ <a href="http://fuelux-tutorials.herokuapp.com/repeater/">http://fuelux-tutorials.herokuapp.com/repeater/</a>.</li>
+<li>Fuel UX Control &quot;Repeater&quot;  @ <a href="http://getfuelux.com/javascript.html#repeater">http://getfuelux.com/javascript.html#repeater</a>.</li>
+<li>Fuel UX Extension &quot;Repeater List View&quot; and &quot;Repeater Thumbnail View&quot; @ <a href="http://getfuelux.com/extensions.html#bundled-extensions-list">http://getfuelux.com/extensions.html#bundled-extensions-list</a>.</li>
+</ol>
+
+<h5>Example 1: Basic Static DataSource</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;!-- FuelRepeaterBasic.html --&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;Fuel UX Repeater&lt;/title&gt;
+&lt;link href=&quot;css/bootstrap-3.3.4.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;link href=&quot;css/fuelux-3.6.3.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;script src=&quot;js/jquery-1.11.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/bootstrap-3.3.4.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/fuelux-3.6.3.min.js&quot;&gt;&lt;/script&gt;
+ 
+&lt;script&gt;
+$(document).ready( function() {
+  <span class="color-comment"> // initialize the repeater</span>
+   $('#myRepeater').repeater({
+      dataSource: myDataSource   <span class="color-comment">/* bind the dataSource */</span>
+   });
+});
+ 
+<span class="color-comment">// Define the columns (in array of column objects)</span>
+var columns = [
+   { 'label'   : 'Name',  <span class="color-comment"> // Column header label</span>
+     'property': 'name',  <span class="color-comment"> // bind to items' key</span>
+     'sortable': true     <span class="color-comment"> // is the column sortable?</span>
+   },
+   { 'label'   : 'Description',
+     'property': 'desc',
+     'sortable': false
+   },
+   { 'label'   : 'Status',
+     'property': 'status',
+     'sortable': true
+   },
+   { 'label'   : 'Category',
+     'property': 'cat',
+     'sortable': true
+   }
+];
+ 
+<span class="color-comment">// Define the data items (rows) (hardcoded here)</span>
+<span class="color-comment">// The key should match the columns' property defined above</span>
+var items = [
+   { &quot;name&quot;: &quot;Name 1&quot;,  &quot;desc&quot;: &quot;Desc 1&quot;,  &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 2&quot;,  &quot;desc&quot;: &quot;Desc 2&quot;,  &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 3&quot;,  &quot;desc&quot;: &quot;Desc 3&quot;,  &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;B&quot; },
+   { &quot;name&quot;: &quot;Name 4&quot;,  &quot;desc&quot;: &quot;Desc 4&quot;,  &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 5&quot;,  &quot;desc&quot;: &quot;Desc 5&quot;,  &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 6&quot;,  &quot;desc&quot;: &quot;Desc 6&quot;,  &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 7&quot;,  &quot;desc&quot;: &quot;Desc 7&quot;,  &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 8&quot;,  &quot;desc&quot;: &quot;Desc 8&quot;,  &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 9&quot;,  &quot;desc&quot;: &quot;Desc 9&quot;,  &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 10&quot;, &quot;desc&quot;: &quot;Desc 10&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;B&quot; },
+   { &quot;name&quot;: &quot;Name 11&quot;, &quot;desc&quot;: &quot;Desc 11&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 12&quot;, &quot;desc&quot;: &quot;Desc 12&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 13&quot;, &quot;desc&quot;: &quot;Desc 13&quot;, &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 14&quot;, &quot;desc&quot;: &quot;Desc 14&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 15&quot;, &quot;desc&quot;: &quot;Desc 15&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;B&quot; },
+   { &quot;name&quot;: &quot;Name 16&quot;, &quot;desc&quot;: &quot;Desc 16&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 17&quot;, &quot;desc&quot;: &quot;Desc 17&quot;, &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 18&quot;, &quot;desc&quot;: &quot;Desc 18&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 19&quot;, &quot;desc&quot;: &quot;Desc 19&quot;, &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 20&quot;, &quot;desc&quot;: &quot;Desc 20&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 21&quot;, &quot;desc&quot;: &quot;Desc 21&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;B&quot; }
+];
+ 
+<span class="color-comment">/* Call back to render the desired page */</span>
+function myDataSource(options, callback) {
+  <span class="color-comment"> // Prepare displayData for the callback function</span>
+   var pageIndex = options.pageIndex; <span class="color-comment"> // page index, starting from 0</span>
+   var pageSize = options.pageSize;   <span class="color-comment"> // number of items per page</span>
+   var totalItems = items.length;     <span class="color-comment"> // total number of items</span>
+   var totalPages = Math.ceil(totalItems / pageSize); <span class="color-comment"> // number of pages</span>
+   var startIndex = (pageIndex * pageSize) + 1;<span class="color-comment"> // start index (from 0) for desired page</span>
+   var endIndex = (startIndex + pageSize) - 1; <span class="color-comment"> // end index for desired page</span>
+   if (endIndex &gt; totalItems) {
+      endIndex = totalItems; <span class="color-comment"> // adjust for last page</span>
+   }
+   var rows = items.slice(startIndex - 1, endIndex); <span class="color-comment"> // slice items for the desired page</span>
+ 
+  <span class="color-comment"> // Set the displayData object for the callback function</span>
+   var displayData = {
+      'page'    : pageIndex,
+      'pages'   : totalPages,
+      'count'   : totalItems,
+      'start'   : startIndex,
+      'end'     : endIndex,
+      'columns' : columns,
+      'items'   : rows
+   };
+ 
+  <span class="color-comment"> // Pass the displayData back to the repeater to render</span>
+   callback(displayData);
+}
+&lt;/script&gt;
+ 
+&lt;/head&gt;
+&lt;body class=&quot;fuelux&quot;&gt;
+&lt;div class=&quot;container&quot;&gt;
+  &lt;h1&gt;Fuel UX Repeater Basic&lt;/h1&gt;
+  &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+     eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
+ 
+  &lt;!-- Repeater --&gt;
+  &lt;div class=&quot;repeater&quot; id=&quot;myRepeater&quot;&gt;
+    &lt;div class=&quot;repeater-header&quot;&gt;
+      &lt;div class=&quot;repeater-header-left&quot;&gt;
+        &lt;div class=&quot;repeater-search&quot;&gt;
+          &lt;div class=&quot;search disabled input-group&quot;&gt;
+            &lt;input type=&quot;search&quot; class=&quot;form-control&quot; placeholder=&quot;Search&quot;&gt;
+            &lt;span class=&quot;input-group-btn&quot;&gt;
+              &lt;button class=&quot;btn btn-default&quot; type=&quot;button&quot;&gt;
+                &lt;span class=&quot;glyphicon glyphicon-search&quot;&gt;&lt;/span&gt;
+                &lt;span class=&quot;sr-only&quot;&gt;Search&lt;/span&gt;
+              &lt;/button&gt;
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt; &lt;!-- end of .repeater-header-left --&gt;
+      &lt;div class=&quot;repeater-header-right&quot;&gt;
+        &lt;span&gt;Filter Status: &lt;/span&gt;
+        &lt;div class=&quot;btn-group selectlist disabled repeater-filters&quot;&gt;
+          &lt;button type=&quot;button&quot; class=&quot;btn btn-default dropdown-toggle&quot; data-toggle=&quot;dropdown&quot;&gt;
+            &lt;span class=&quot;selected-label&quot;&gt; &lt;/span&gt;
+            &lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;
+            &lt;span class=&quot;sr-only&quot;&gt;Toggle Filters&lt;/span&gt;
+          &lt;/button&gt;
+          &lt;ul class=&quot;dropdown-menu pull-right&quot; role=&quot;menu&quot;&gt;
+            &lt;li data-value=&quot;all&quot; data-property=&quot;all&quot; data-selected=&quot;true&quot;&gt;
+              &lt;a href=&quot;#&quot;&gt;All&lt;/a&gt;&lt;/li&gt;
+            &lt;li class=&quot;divider&quot;&gt;&lt;/li&gt;
+            &lt;li data-value=&quot;draft&quot; data-property=&quot;status&quot;&gt;&lt;a href=&quot;#&quot;&gt;Draft&lt;/a&gt;&lt;/li&gt;
+            &lt;li data-value=&quot;archived&quot; data-property=&quot;status&quot;&gt;&lt;a href=&quot;#&quot;&gt;Archived&lt;/a&gt;&lt;/li&gt;
+            &lt;li data-value=&quot;active&quot; data-property=&quot;status&quot;&gt;&lt;a href=&quot;#&quot;&gt;Active&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+          &lt;input class=&quot;hidden hidden-field&quot; name=&quot;filterSelection&quot;
+            readonly=&quot;readonly&quot; aria-hidden=&quot;true&quot; type=&quot;text&quot;&gt;
+        &lt;/div&gt;
+      &lt;/div&gt; &lt;!-- end of .repeater-header-right --&gt;
+    &lt;/div&gt;  &lt;!-- end of .repeater-header --&gt;
+ 
+    &lt;div class=&quot;repeater-viewport&quot;&gt;
+      &lt;div class=&quot;repeater-canvas&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;loader repeater-loader&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+ 
+    &lt;div class=&quot;repeater-footer&quot;&gt;
+      &lt;div class=&quot;repeater-footer-left&quot;&gt;
+        &lt;div class=&quot;repeater-itemization&quot;&gt;
+          &lt;span&gt;
+            &lt;span class=&quot;repeater-start&quot;&gt;&lt;/span&gt; -
+            &lt;span class=&quot;repeater-end&quot;&gt;&lt;/span&gt; of
+            &lt;span class=&quot;repeater-count&quot;&gt;&lt;/span&gt; items&lt;/span&gt;
+          &lt;div class=&quot;btn-group selectlist dropup&quot; data-resize=&quot;auto&quot;&gt;
+            &lt;button type=&quot;button&quot; class=&quot;btn btn-default dropdown-toggle&quot; data-toggle=&quot;dropdown&quot;&gt;
+              &lt;span class=&quot;selected-label&quot;&gt; &lt;/span&gt;
+              &lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;
+              &lt;span class=&quot;sr-only&quot;&gt;Toggle Dropdown&lt;/span&gt;
+            &lt;/button&gt;
+            &lt;ul class=&quot;dropdown-menu&quot; role=&quot;menu&quot;&gt;
+              &lt;li data-value=&quot;10&quot; data-selected=&quot;true&quot;&gt;&lt;a href=&quot;#&quot;&gt;10&lt;/a&gt;&lt;/li&gt;
+              &lt;li data-value=&quot;25&quot;&gt;&lt;a href=&quot;#&quot;&gt;25&lt;/a&gt;&lt;/li&gt;
+              &lt;li data-value=&quot;50&quot;&gt;&lt;a href=&quot;#&quot;&gt;50&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;input class=&quot;hidden hidden-field&quot; name=&quot;itemsPerPage&quot;
+                   readonly=&quot;readonly&quot; aria-hidden=&quot;true&quot; type=&quot;text&quot;&gt;
+          &lt;/div&gt;
+          &lt;span&gt;Per Page&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt; &lt;!-- end of .repeater-footer-left --&gt;
+      &lt;div class=&quot;repeater-footer-right&quot;&gt;
+        &lt;div class=&quot;repeater-pagination&quot;&gt;
+          &lt;button type=&quot;button&quot; class=&quot;btn btn-default btn-sm repeater-prev&quot;&gt;
+            &lt;span class=&quot;glyphicon glyphicon-chevron-left&quot;&gt;&lt;/span&gt;
+            &lt;span class=&quot;sr-only&quot;&gt;Previous Page&lt;/span&gt;
+          &lt;/button&gt;
+          &lt;label class=&quot;page-label&quot; id=&quot;myPageLabel&quot;&gt;Page&lt;/label&gt;
+          &lt;div class=&quot;repeater-primaryPaging active&quot;&gt;
+            &lt;div class=&quot;input-group input-append dropdown combobox dropup&quot;&gt;
+              &lt;input type=&quot;text&quot; class=&quot;form-control&quot; aria-labelledby=&quot;myPageLabel&quot;&gt;
+              &lt;div class=&quot;input-group-btn&quot;&gt;
+                &lt;button type=&quot;button&quot; class=&quot;btn btn-default dropdown-toggle&quot; data-toggle=&quot;dropdown&quot;&gt;
+                  &lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;
+                  &lt;span class=&quot;sr-only&quot;&gt;Toggle Dropdown&lt;/span&gt;
+                &lt;/button&gt;
+                &lt;ul class=&quot;dropdown-menu dropdown-menu-right&quot;&gt;&lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;input type=&quot;text&quot; class=&quot;form-control repeater-secondaryPaging&quot;
+                 aria-labelledby=&quot;myPageLabel&quot;&gt;
+          &lt;span&gt;of &lt;span class=&quot;repeater-pages&quot;&gt;&lt;/span&gt;&lt;/span&gt;
+          &lt;button type=&quot;button&quot; class=&quot;btn btn-default btn-sm repeater-next&quot;&gt;
+            &lt;span class=&quot;glyphicon glyphicon-chevron-right&quot;&gt;&lt;/span&gt;
+            &lt;span class=&quot;sr-only&quot;&gt;Next Page&lt;/span&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt; &lt;!-- end of .repeater-footer-right --&gt;
+    &lt;/div&gt; &lt;!-- end of .repeater-footer --&gt;
+  &lt;/div&gt; &lt;!-- end of .repeater --&gt;
+ 
+&lt;/div&gt; &lt;!-- end of .container --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How It Works?</h5>
+
+<p>To initialize the Repeater, invoke JavaScript method <code>.repeater(initOptions)</code>. The argument <code>initOptions</code> is an object, which shall contain a key <code>dataSource</code>, with a <code>dataSource</code> function as value.</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Initialize the repeater</span>
+$('#myRepeater').repeater({'dataSource': myDataSource});
+ 
+<span class="color-comment">// Call back to obtain display data for the current page</span>
+function myDataSource(options, callback) {
+   ......
+};</pre>
+
+<p>The <code>dataSource</code> function is called back by the fuel UX engine to obtain the display data,  prior to rendering the current page. It passes back 2 arguments: an <code>options</code> object and a <code>callback</code> function.</p>
+
+<p>In <code>options</code> object, Fuel UX gathers the options selected by the users for the desired page to be displayed (e.g., page number to display, search string, filter value, sort column, etc). They are:</p>
+<ul>
+<li><code>options.pageIndex</code> (number): the desired page index, obtained from <code>.repeater-pagination</code>. The page index begins at 0.</li>
+<li><code>options.pageSize</code> (number): number of items per page, obtained from <code>.repeater-itemization</code>.</li>
+</ul>
+
+<p>From <code>options.pageIndex</code>, <code>options.pageSize</code> and the total number of items, we could setup the <code>displayData</code> of the desired page for the <code>callback</code> function, as follows:</p>
+
+<pre class="color-syntax">
+var pageIndex = options.pageIndex;   <span class="color-comment">// page index, starting from 0</span>
+var pageSize = options.pageSize;     <span class="color-comment">// number of items per page</span>
+var totalItems = items.length;       <span class="color-comment">// Total number of items</span>
+var totalPages = Math.ceil(totalItems / pageSize);  <span class="color-comment">// number of pages</span>
+var startIndex = (pageIndex * pageSize) + 1;  <span class="color-comment">// start index of the desired page, this index starts from 1</span>
+var endIndex = (startIndex + pageSize) - 1;   <span class="color-comment">// end index for the desired page</span>
+if (endIndex > totalItems) {
+   endIndex = totalItems;  <span class="color-comment">// last page?</span> 
+}
+var rows = items.slice(startIndex - 1, endIndex); <span class="color-comment">// items for desired page</span></pre>
+
+<p>The <code>options</code> object also includes these keys for searching, filtering and sorting on column:</p>
+
+<ul>
+<li><code>options.search</code> (string): the search string, obtained from <code>.repeater-search</code>.</li>
+<li><code>options.filter</code> (object): filtering value, obtained from <code>.repeater-filter</code>. The <code>options.filter.property</code> and <code>options.filter.value</code> provides the property (column) and the filter value to be used.</li>
+<li><code>options.sortProperty</code> (string) and <code>options.sortDirection</code> (string): specifies the sorting property (column) and direction ('asc' or 'desc').</li>
+</ul>
+
+<p>Fuel UX supports two types of views: List view and Thumbnail view.</p>
+<ul>
+<li><code>options.view</code> (string): the view option, obtained from <code>.repeater-view</code>.</li>
+</ul>
+
+<p>Searching, filtering and sorting options require custom processing, to be described in latter examples.</p>
+
+<p>At the end of the <code>dataSource</code> function, we invoke the <code>callback</code> function with a <code>displayData</code> object as argument for rendering the desired page. The <code>displayData</code> object has these keys:</p>
+<ul>
+<li><code>count</code> (number): total number of items.</li>
+<li><code>page</code> (number): current page index (starting from 0).</li>
+<li><code>pages</code> (number): total number of pages.</li>
+<li><code>start</code> (number): start index for the current page (starting from 1).</li>
+<li><code>end</code> (number): end index for the current page.</li>
+
+<li><code>columns</code> (array of <code>column</code> objects): to provide the columns definition. Each column object could have these keys:
+<ul>
+<li><code>label</code> (string): column heading label.</li>
+<li><code>property</code> (string): bind to this property of the items (to be described below).</li>
+<li><code>sortable</code> (boolean): sortable on this column (only can sort on one column).</li>
+<li><code>sortDirection</code> (boolean): 'asc' or 'desc'.</li>
+<li><code>className</code> (string): value for the <code>class</code> attribute for CSS styling. Multiple classes are separated by space.</li>
+<li><code>width</code> (string or number): column width (for styling).</li>
+</ul>
+The common column representation is <code>{'label':xxx, 'property':xxx, 'sortable': true|false}</code>.</li>
+
+<li><code>items</code> (array of <code>item</code> objects): rows for the current page. Each <code>item</code> object represents a row of data. The <code>item</code> object's keys are bound to the <code>column</code>'s <code>property</code>; but you are free to provide fewer properties (no display for that column) or more properties (for custom rendering). The <code>items</code> (rows) shall already be processed for search, filter, column sort; and shall be display in the order presented.</li>
+</ul>
+
+<p>In this example, the search, filter, column sort are not functioning, as we did not handle them.</p>
+
+<h5>Example 2: Searching, Data Filtering and Column Sorting</h5>
+
+<p>You can obtain:</p>
+<ul>
+<li>the search string from <code>options.search</code>.</li>
+<li>the filter object from <code>options.filter.property</code> and <code>options.filter.value</code>.  we use a special string of 'all' for all items (coded under <code>repeater-filters</code>).</li>
+<li>the sort column from <code>options.sortProperty</code> and <code>options.sortDirection ('asc'|'desc')</code>.</li>
+</ul>
+
+<p>To implement searching, filtering, and column sorting, we need to write more codes. Replace the JavaScript of the previous example by the followings, and include the Underscore JS (@ <a href="http://underscorejs.org/">http://underscorejs.org/</a>).</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166</pre>
+</td>
+<td>
+<pre>
+......
+&lt;script src=&quot;js/underscore-1.8.3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/fuelux-3.6.3.min.js&quot;&gt;&lt;/script&gt;
+ 
+&lt;script&gt;
+$(document).ready( function() {
+  <span class="color-comment"> // initialize the repeater</span>
+   $('#myRepeater').repeater({
+      dataSource: myDataSource   <span class="color-comment">/* bind the dataSource */</span>
+   });
+});
+ 
+<span class="color-comment">// Define the columns (in array of column objects)</span>
+var columns = [
+   { 'label'   : 'Name',  <span class="color-comment"> // Column header label</span>
+     'property': 'name',  <span class="color-comment"> // bind to items' key</span>
+     'sortable': true     <span class="color-comment"> // is the column sortable?</span>
+   },
+   { 'label'   : 'Description',
+     'property': 'desc',
+     'sortable': false
+   },
+   { 'label'   : 'Status',
+     'property': 'status',
+     'sortable': true
+   },
+   { 'label'   : 'Category',
+     'property': 'cat',
+     'sortable': true
+   }
+];
+ 
+<span class="color-comment">// Define the data items (rows) (hardcoded here)</span>
+<span class="color-comment">// The key should match the columns' property defined above</span>
+var items = [
+   { &quot;name&quot;: &quot;Name 1&quot;,  &quot;desc&quot;: &quot;Desc 1&quot;,  &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 2&quot;,  &quot;desc&quot;: &quot;Desc 2&quot;,  &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 3&quot;,  &quot;desc&quot;: &quot;Desc 3&quot;,  &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;B&quot; },
+   { &quot;name&quot;: &quot;Name 4&quot;,  &quot;desc&quot;: &quot;Desc 4&quot;,  &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 5&quot;,  &quot;desc&quot;: &quot;Desc 5&quot;,  &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 6&quot;,  &quot;desc&quot;: &quot;Desc 6&quot;,  &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 7&quot;,  &quot;desc&quot;: &quot;Desc 7&quot;,  &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 8&quot;,  &quot;desc&quot;: &quot;Desc 8&quot;,  &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 9&quot;,  &quot;desc&quot;: &quot;Desc 9&quot;,  &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 10&quot;, &quot;desc&quot;: &quot;Desc 10&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;B&quot; },
+   { &quot;name&quot;: &quot;Name 11&quot;, &quot;desc&quot;: &quot;Desc 11&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 12&quot;, &quot;desc&quot;: &quot;Desc 12&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 13&quot;, &quot;desc&quot;: &quot;Desc 13&quot;, &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 14&quot;, &quot;desc&quot;: &quot;Desc 14&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 15&quot;, &quot;desc&quot;: &quot;Desc 15&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;B&quot; },
+   { &quot;name&quot;: &quot;Name 16&quot;, &quot;desc&quot;: &quot;Desc 16&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 17&quot;, &quot;desc&quot;: &quot;Desc 17&quot;, &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 18&quot;, &quot;desc&quot;: &quot;Desc 18&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 19&quot;, &quot;desc&quot;: &quot;Desc 19&quot;, &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 20&quot;, &quot;desc&quot;: &quot;Desc 20&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 21&quot;, &quot;desc&quot;: &quot;Desc 21&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;B&quot; }
+];
+ 
+<span class="color-comment">// Maintain the current filter option.</span>
+<span class="color-comment">// No need to invoke dataFilter() if the option is the same.</span>
+var currentFilterOptions = {
+   filterVaue: '',
+   filterProperty: '',
+   sortProperty: '',
+   sortDirection: '',
+   search: ''
+};
+var currentItems = [];
+ 
+<span class="color-comment">/* Call back to render the desired page */</span>
+function myDataSource(options, callback) {
+  <span class="color-comment"> // Run filtering, searching and column sorting on items</span>
+   var filteredItems = dataFilter(options);
+ 
+  <span class="color-comment"> // Prepare displayData for the callback function</span>
+   var pageIndex = options.pageIndex; <span class="color-comment"> // page index, starting from 0</span>
+   var pageSize = options.pageSize;   <span class="color-comment"> // number of items per page</span>
+   var totalItems = filteredItems.length;     <span class="color-comment"> // total number of items</span>
+   var totalPages = Math.ceil(totalItems / pageSize); <span class="color-comment"> // number of pages</span>
+   var startIndex = (pageIndex * pageSize) + 1;<span class="color-comment"> // start index (from 0) for desired page</span>
+   var endIndex = (startIndex + pageSize) - 1; <span class="color-comment"> // end index for desired page</span>
+   if (endIndex &gt; totalItems) {
+      endIndex = totalItems; <span class="color-comment"> // adjust for last page</span>
+   }
+   var rows = filteredItems.slice(startIndex - 1, endIndex); <span class="color-comment"> // slice items for the desired page</span>
+ 
+  <span class="color-comment"> // Set the displayData object for the callback function</span>
+   var displayData = {
+      'page'    : pageIndex,
+      'pages'   : totalPages,
+      'count'   : totalItems,
+      'start'   : startIndex,
+      'end'     : endIndex,
+      'columns' : columns,
+      'items'   : rows
+   };
+ 
+  <span class="color-comment"> // Pass the displayData back to the repeater to render</span>
+   callback(displayData);
+}
+ 
+<span class="color-comment">/*
+ * Helper to handle filter, search and column sort. Operate directly on items.
+ * Need Underscore JS.
+ * Filter value in options.filter.property and options.filter.value
+ * Search string in options.search.
+ * Sort column in options.sortProperty and options.sortDirection.
+ * Use global variables items, currentItems, currentFilterOptions.
+ */</span>
+function dataFilter(options) {
+  <span class="color-comment"> // Do nothing if there is no change in any of the filter options</span>
+   if ((currentFilterOptions.filterVaue === options.filter.value)
+       &amp;&amp; (currentFilterOptions.filterProperty === options.filter.property)
+       &amp;&amp; (currentFilterOptions.sortProperty === options.sortProperty)
+       &amp;&amp; (currentFilterOptions.sortDirection === options.sortDirection)
+       &amp;&amp; (currentFilterOptions.search === options.search)) {
+      return currentItems;
+   }
+ 
+   currentItems = $.extend([], items); <span class="color-comment"> // clone items to filter</span>
+ 
+  <span class="color-comment"> // Handle filter first</span>
+   var filterRegex = new RegExp(options.filter.value, 'i');
+     <span class="color-comment"> // Explicitly make a regex object instead of just using String.search()</span>
+     <span class="color-comment"> // to avoid confusion with FuelUX search() and options.search</span>
+   if (!filterRegex.test('all')) { <span class="color-comment"> // no filtering for the special value 'all'</span>
+      currentItems = _.filter(currentItems, function (item) {
+         var isFilterMatch = filterRegex.test(item[options.filter.property]);
+         return isFilterMatch;
+      });
+   }
+ 
+  <span class="color-comment"> // Handle search next (search within the filtered rows)</span>
+   if (options.search) { <span class="color-comment"> // non-empty</span>
+      var searchRegex = new RegExp(options.search, 'i');
+      currentItems = _.filter(currentItems, function (item) {
+        <span class="color-comment"> // collapse all item property values to a single string to make</span>
+        <span class="color-comment"> //   matching on it easier to manage</span>
+         var itemLine = _.reduce(_.values(_.omit(item)), function (finalText, currentText) {
+            return finalText + &quot; &quot; + currentText;
+         });
+         var isSearchMatch = searchRegex.test(itemLine);
+         return isSearchMatch;
+      });
+   }
+ 
+  <span class="color-comment"> // Hanlde column sort last</span>
+   if (options.sortProperty) {
+      currentItems = _.sortBy(currentItems, function (item) {
+         return item[options.sortProperty];
+      });
+      if (options.sortDirection === 'desc') {
+         currentItems.reverse();
+      }
+   }
+ 
+  <span class="color-comment"> // Update the current filter option</span>
+   currentFilterOptions.filterVaue = options.filter.value;
+   currentFilterOptions.filterProperty = options.filter.property;
+   currentFilterOptions.sortProperty = options.sortProperty;
+   currentFilterOptions.sortDirection = options.sortDirection;
+   currentFilterOptions.search = options.search;
+ 
+   return currentItems;
+};
+&lt;/script&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>We used Underscore JS (@ <a href="http://underscorejs.org/">http://underscorejs.org/</a>) to filter and sort the items, before setting up the <code>displayData</code>.</p>
+
+<p>[TODO] More explanation</p>
+
+<p>A limitation of repeater is it can only filter on one criterion, NOT multiple criteria. Also, you can only sort on one column, NOT nested columns.</p>
+
+
+<h5>Example 3: Retrieving Data Rows from Server via an Ajax JSON response.</h5>
+
+<p>In this example, if the data has not been loaded, we send an Ajax request to do a database query, and return the results in JSON for rendering. Otherwise, we will skip the Ajax request.</p>
+
+<h5>SQL Script</h5>
+
+<p>We use the following SQL script to create our database.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre>
+</td>
+<td>
+<pre>
+use test;
+ 
+drop table if exists RepeaterData;
+create table RepeaterData (
+   name varchar(20),
+   `desc` varchar(40),
+   status varchar(10),
+   cat varchar(10),
+   primary key (name)
+);
+ 
+insert into RepeaterData values
+   ( 'Name 1',  'Desc 1',  'draft',    'A' ),
+   ( 'Name 2',  'Desc 2',  'active',   'C' ),
+   ( 'Name 3',  'Desc 3',  'archived', 'B' ),
+   ( 'Name 4',  'Desc 4',  'active',   'C' ),
+   ( 'Name 5',  'Desc 5',  'archived', 'D' ),
+   ( 'Name 6',  'Desc 6',  'archived', 'C' ),
+   ( 'Name 7',  'Desc 7',  'active',   'D' ),
+   ( 'Name 8',  'Desc 8',  'draft',    'C' ),
+   ( 'Name 9',  'Desc 9',  'draft',    'A' ),
+   ( 'Name 10', 'Desc 10', 'draft',    'B' ),
+   ( 'Name 11', 'Desc 11', 'draft',    'C' ),
+   ( 'Name 12', 'Desc 12', 'archived', 'C' ),
+   ( 'Name 13', 'Desc 13', 'active',   'D' ),
+   ( 'Name 14', 'Desc 14', 'archived', 'A' ),
+   ( 'Name 15', 'Desc 15', 'draft',    'B' ),
+   ( 'Name 16', 'Desc 16', 'archived', 'C' ),
+   ( 'Name 17', 'Desc 17', 'active',   'C' ),
+   ( 'Name 18', 'Desc 18', 'archived', 'A' ),
+   ( 'Name 19', 'Desc 19', 'active',   'C' ),
+   ( 'Name 20', 'Desc 20', 'draft',    'D' ),
+   ( 'Name 21', 'Desc 21', 'draft',    'B' );
+ 
+select * from RepeaterData;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Server-side PHP Script <span class="font-code">FuelRepeaterGetData.php</span></h5>
+<p>This PHP script returns all the row as a JSON object.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+&lt;?php
+<span class="color-comment">/**
+ * Retrieving data for Fuel UX Repeater
+ */</span>
+<span class="color-comment">// Define the MySQL database parameters.</span>
+$DB_HOST = 'localhost';<span class="color-comment"> // MySQL server hostname</span>
+$DB_PORT = '3306';     <span class="color-comment"> // MySQL server port number (default 3306)</span>
+$DB_NAME = 'test';     <span class="color-comment"> // MySQL database name</span>
+$DB_USER = 'xxxx';     <span class="color-comment"> // MySQL username</span>
+$DB_PASS = 'xxxx';     <span class="color-comment"> // password</span>
+ 
+try {
+  <span class="color-comment"> // Create a PDO database connection to MySQL server</span>
+   $pdo = new PDO(&quot;mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_NAME&quot;, $DB_USER, $DB_PASS);
+   $pdo-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);<span class="color-comment"> // Set error mode to exception</span>
+ 
+  <span class="color-comment"> // Get all records.</span>
+   $stmt = $pdo-&gt;prepare('SELECT * FROM RepeaterData');
+   $stmt-&gt;execute();
+   $results = $stmt-&gt;fetchAll(PDO::FETCH_ASSOC);
+   $jsonResult = json_encode($results);
+   echo $jsonResult;
+ 
+  <span class="color-comment"> // Close the database connection (optional).</span>
+   $pdo = NULL;
+ 
+} catch (PDOException $e) {
+   $fileName = basename($e-&gt;getFile(), &quot;.php&quot;);<span class="color-comment"> // Filename that trigger the exception</span>
+   $lineNumber = $e-&gt;getLine();        <span class="color-comment"> // Line number that triggers the exception</span>
+   die(&quot;[$fileName][$lineNumber] Database error: &quot; . $e-&gt;getMessage() . '&lt;br&gt;');
+}
+?&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>HTML File</h5>
+
+<p>Replace the script in the earlier example with the followings, and include the Underscore JS.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168</pre>
+</td>
+<td>
+<pre>
+......
+&lt;script src=&quot;js/underscore-1.8.3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/fuelux-3.6.3.min.js&quot;&gt;&lt;/script&gt;
+ 
+&lt;script&gt;
+$(document).ready( function() {
+  <span class="color-comment"> // initialize the repeater</span>
+   $('#myRepeater').repeater({
+      dataSource: myDataSource   <span class="color-comment">/* bind the dataSource */</span>
+   });
+});
+ 
+<span class="color-comment">// Define the columns (in array of column objects)</span>
+var columns = [
+   { 'label'   : 'Name',  <span class="color-comment"> // Column header label</span>
+     'property': 'name',  <span class="color-comment"> // bind to items' key</span>
+     'sortable': true     <span class="color-comment"> // is the column sortable?</span>
+   },
+   { 'label'   : 'Description',
+     'property': 'desc',
+     'sortable': false
+   },
+   { 'label'   : 'Status',
+     'property': 'status',
+     'sortable': true
+   },
+   { 'label'   : 'Category',
+     'property': 'cat',
+     'sortable': true
+   }
+];
+ 
+<span class="color-comment">// Data rows. Init to null to be loaded from database.</span>
+var items = null;
+ 
+<span class="color-comment">// Maintain the current filter option.</span>
+<span class="color-comment">// No need to invoke dataFilter() if the option is the same.</span>
+var currentFilterOptions = {
+   filterVaue: '',
+   filterProperty: '',
+   sortProperty: '',
+   sortDirection: '',
+   search: ''
+};
+var currentItems = [];
+ 
+<span class="color-comment">/* Call back to render the desired page */</span>
+function myDataSource(options, callback) {
+   if (items === null) {
+      <span class="color-comment">/*
+       * Data rows not populated yet.
+       * Send an Ajax Request to Database Server, which returns a JSON response.
+       * You can also load the items in ready().
+       */</span>
+      $.ajax({
+         'url'     : 'FuelRepeaterGetData.php',
+         'type'    : 'post',
+         'dataType': 'json'  <span class="color-comment"> // Response as JSON</span>
+      })
+         .done( function(responseText) {
+            items = responseText; <span class="color-comment"> // populate global items</span>
+            myDataSourceHelper(options, callback);
+         });
+ 
+   } else {
+      myDataSourceHelper(options, callback);
+   }
+}
+ 
+<span class="color-comment">/*
+ * The items shall already have been populated.
+ * Handle search, filter, sort; and prepare the displayData.
+ */</span>
+function myDataSourceHelper(options, callback) {
+  <span class="color-comment"> // Run filtering, searching and column sorting on items</span>
+   var filteredItems = dataFilter(options);
+ 
+  <span class="color-comment"> // Prepare displayData for the callback function</span>
+   var pageIndex = options.pageIndex; <span class="color-comment"> // page index, starting from 0</span>
+   var pageSize = options.pageSize;   <span class="color-comment"> // number of items per page</span>
+   var totalItems = filteredItems.length;     <span class="color-comment"> // total number of items</span>
+   var totalPages = Math.ceil(totalItems / pageSize); <span class="color-comment"> // number of pages</span>
+   var startIndex = (pageIndex * pageSize) + 1;<span class="color-comment"> // start index (from 0) for desired page</span>
+   var endIndex = (startIndex + pageSize) - 1; <span class="color-comment"> // end index for desired page</span>
+   if (endIndex &gt; totalItems) {
+      endIndex = totalItems; <span class="color-comment"> // adjust for last page</span>
+   }
+   var rows = filteredItems.slice(startIndex - 1, endIndex); <span class="color-comment"> // slice items for the desired page</span>
+ 
+  <span class="color-comment"> // Set the displayData object for the callback function</span>
+   var displayData = {
+      'page'    : pageIndex,
+      'pages'   : totalPages,
+      'count'   : totalItems,
+      'start'   : startIndex,
+      'end'     : endIndex,
+      'columns' : columns,
+      'items'   : rows
+   };
+ 
+  <span class="color-comment"> // Pass the displayData back to the repeater to render</span>
+   callback(displayData);
+}
+ 
+<span class="color-comment">/*
+ * Helper to handle filter, search and column sort. Operate directly on items.
+ * Need Underscore JS.
+ * Filter value in options.filter.property and options.filter.value
+ * Search string in options.search.
+ * Sort column in options.sortProperty and options.sortDirection.
+ */</span>
+function dataFilter(options) {
+  <span class="color-comment"> // Do nothing if there is no change in any of the filter options</span>
+   if ((currentFilterOptions.filterVaue === options.filter.value)
+       &amp;&amp; (currentFilterOptions.filterProperty === options.filter.property)
+       &amp;&amp; (currentFilterOptions.sortProperty === options.sortProperty)
+       &amp;&amp; (currentFilterOptions.sortDirection === options.sortDirection)
+       &amp;&amp; (currentFilterOptions.search === options.search)) {
+      return currentItems;
+   }
+ 
+   currentItems = $.extend([], items); <span class="color-comment"> // clone items to filter</span>
+ 
+  <span class="color-comment"> // Handle filter first</span>
+   var filterRegex = new RegExp(options.filter.value, 'i');
+     <span class="color-comment"> // Explicitly make a regex object instead of just using String.search()</span>
+     <span class="color-comment"> // to avoid confusion with FuelUX search() and options.search</span>
+   if (!filterRegex.test('all')) { <span class="color-comment"> // no filtering for the special value 'all'</span>
+      currentItems = _.filter(currentItems, function (item) {
+         var isFilterMatch = filterRegex.test(item[options.filter.property]);
+         return isFilterMatch;
+      });
+   }
+ 
+  <span class="color-comment"> // Handle search next (search within the filtered rows)</span>
+   if (options.search) { <span class="color-comment"> // non-empty</span>
+      var searchRegex = new RegExp(options.search, 'i');
+      currentItems = _.filter(currentItems, function (item) {
+        <span class="color-comment"> // collapse all item property values to a single string to make</span>
+        <span class="color-comment"> //   matching on it easier to manage</span>
+         var itemLine = _.reduce(_.values(_.omit(item)), function (finalText, currentText) {
+            return finalText + &quot; &quot; + currentText;
+         });
+         var isSearchMatch = searchRegex.test(itemLine);
+         return isSearchMatch;
+      });
+   }
+ 
+  <span class="color-comment"> // Hanlde column sort last</span>
+   if (options.sortProperty) {
+      currentItems = _.sortBy(currentItems, function (item) {
+         return item[options.sortProperty];
+      });
+      if (options.sortDirection === 'desc') {
+         currentItems.reverse();
+      }
+   }
+ 
+  <span class="color-comment"> // Update the current filter option</span>
+   currentFilterOptions.filterVaue = options.filter.value;
+   currentFilterOptions.filterProperty = options.filter.property;
+   currentFilterOptions.sortProperty = options.sortProperty;
+   currentFilterOptions.sortDirection = options.sortDirection;
+   currentFilterOptions.search = options.search;
+ 
+   return currentItems;
+};
+&lt;/script&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>[TODO] Client-side filtering vs. Server-side filtering?</p>
+
+<h5>Example 4: Custom Column Cell Rendering</h5>
+
+<p>To perform custom column cell rendering, such as injecting markup or combining multiple properties, you can write a custom column rendering function and register the function during initialization of repeater:</p>
+
+<pre class="color-example">
+$(document).ready( function() {
+   <span class="color-comment">// initialize the repeater</span>
+   $('#myRepeater').repeater({
+      <span class="color-comment">// register dataSource</span>
+      dataSource: myDataSource,
+      <span class="color-comment">// Setup custom column cell renderer for the list view</span>
+      list_columnRendered: myColumnRenderer
+   });
+});
+          
+<span class="color-comment">// Call back after rendering each table cell</span>
+function myColumnRenderer(helpers, callback) {
+   ......
+   ......
+   callback();  <span class="color-comment">// continue rendering</span>
+}</pre>
+
+<p>The Fuel UX repeater calls this function after rendering each table cell within a row. It passes two arguments: a <code>helpers</code> object and a <code>callback</code> function:</p>
+
+<ul>
+<li><code>helpers.rowData</code>: All key/value data from the current item/row in the dataSource.</li>
+<li><code>helpers.columnAttr</code>: The <code>property</code> specified by <code>dataSource.columns</code> of the current column/cell.</li>
+<li><code>helpers.container</code>: jQuery element of the current <code>tr</code> or table row for manipulating the row.</li>
+<li><code>helpers.item</code>: jQuery element of the current <code>td</code> or table cell for manipulating the current cell.</li>
+<li><code>callback</code>: Call this function to continue rendering the view.</li>
+</ul>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228</pre>
+</td>
+<td>
+<pre>
+......
+&lt;script src=&quot;js/underscore-1.8.3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/fuelux-3.6.3.min.js&quot;&gt;&lt;/script&gt;
+ 
+&lt;script&gt;
+$(document).ready( function() {
+  <span class="color-comment"> // initialize the repeater</span>
+   $('#myRepeater').repeater({
+      dataSource: myDataSource,   <span class="color-comment">/* bind the dataSource */</span>
+      list_columnRendered: myColumnRenderer  <span class="color-comment">/* custom column renderer */</span>
+   });
+});
+ 
+<span class="color-comment">/*
+ * Define the columns
+ * We shall combine the name and desc under one column;
+ *  style the status column; do nothing to category;
+ *  add a new column for controls (checkbox, button)
+ */</span>
+var columns = [
+   { 'label'   : 'Name/Description',<span class="color-comment"> // combine name and desc</span>
+     'property': 'name',
+     'sortable': true
+   },
+   { 'label'   : 'Status',
+     'property': 'status',
+     'sortable': true
+   },
+   { 'label'   : 'Category',
+     'property': 'cat',
+     'sortable': true
+   },
+   { 'label'   : 'Action', <span class="color-comment"> // new column of controls</span>
+     'property': 'action'
+   }
+];
+ 
+<span class="color-comment">// Define the data items (rows) (hardcoded here)</span>
+var items = [
+   { &quot;name&quot;: &quot;Name 1&quot;,  &quot;desc&quot;: &quot;Desc 1&quot;,  &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 2&quot;,  &quot;desc&quot;: &quot;Desc 2&quot;,  &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 3&quot;,  &quot;desc&quot;: &quot;Desc 3&quot;,  &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;B&quot; },
+   { &quot;name&quot;: &quot;Name 4&quot;,  &quot;desc&quot;: &quot;Desc 4&quot;,  &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 5&quot;,  &quot;desc&quot;: &quot;Desc 5&quot;,  &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 6&quot;,  &quot;desc&quot;: &quot;Desc 6&quot;,  &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 7&quot;,  &quot;desc&quot;: &quot;Desc 7&quot;,  &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 8&quot;,  &quot;desc&quot;: &quot;Desc 8&quot;,  &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 9&quot;,  &quot;desc&quot;: &quot;Desc 9&quot;,  &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 10&quot;, &quot;desc&quot;: &quot;Desc 10&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;B&quot; },
+   { &quot;name&quot;: &quot;Name 11&quot;, &quot;desc&quot;: &quot;Desc 11&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 12&quot;, &quot;desc&quot;: &quot;Desc 12&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 13&quot;, &quot;desc&quot;: &quot;Desc 13&quot;, &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 14&quot;, &quot;desc&quot;: &quot;Desc 14&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 15&quot;, &quot;desc&quot;: &quot;Desc 15&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;B&quot; },
+   { &quot;name&quot;: &quot;Name 16&quot;, &quot;desc&quot;: &quot;Desc 16&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 17&quot;, &quot;desc&quot;: &quot;Desc 17&quot;, &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 18&quot;, &quot;desc&quot;: &quot;Desc 18&quot;, &quot;status&quot;: &quot;archived&quot;, &quot;cat&quot;:&quot;A&quot; },
+   { &quot;name&quot;: &quot;Name 19&quot;, &quot;desc&quot;: &quot;Desc 19&quot;, &quot;status&quot;: &quot;active&quot;,   &quot;cat&quot;:&quot;C&quot; },
+   { &quot;name&quot;: &quot;Name 20&quot;, &quot;desc&quot;: &quot;Desc 20&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;D&quot; },
+   { &quot;name&quot;: &quot;Name 21&quot;, &quot;desc&quot;: &quot;Desc 21&quot;, &quot;status&quot;: &quot;draft&quot;,    &quot;cat&quot;:&quot;B&quot; }
+];
+ 
+<span class="color-comment">// Maintain the current filter option.</span>
+<span class="color-comment">// No need to invoke dataFilter() if the option is the same.</span>
+var currentFilterOptions = {
+   filterVaue: '',
+   filterProperty: '',
+   sortProperty: '',
+   sortDirection: '',
+   search: ''
+};
+var currentItems = [];
+ 
+<span class="color-comment">/* Call back to render the desired page */</span>
+function myDataSource(options, callback) {
+  <span class="color-comment"> // Run filtering, searching and column sorting on items</span>
+   var filteredItems = dataFilter(options);
+ 
+  <span class="color-comment"> // Prepare displayData for the callback function</span>
+   var pageIndex = options.pageIndex; <span class="color-comment"> // page index, starting from 0</span>
+   var pageSize = options.pageSize;   <span class="color-comment"> // number of items per page</span>
+   var totalItems = filteredItems.length;     <span class="color-comment"> // total number of items</span>
+   var totalPages = Math.ceil(totalItems / pageSize); <span class="color-comment"> // number of pages</span>
+   var startIndex = (pageIndex * pageSize) + 1;<span class="color-comment"> // start index (from 0) for desired page</span>
+   var endIndex = (startIndex + pageSize) - 1; <span class="color-comment"> // end index for desired page</span>
+   if (endIndex &gt; totalItems) {
+      endIndex = totalItems; <span class="color-comment"> // adjust for last page</span>
+   }
+   var rows = filteredItems.slice(startIndex - 1, endIndex); <span class="color-comment"> // slice items for the desired page</span>
+ 
+  <span class="color-comment"> // Set the displayData object for the callback function</span>
+   var displayData = {
+      'page'    : pageIndex,
+      'pages'   : totalPages,
+      'count'   : totalItems,
+      'start'   : startIndex,
+      'end'     : endIndex,
+      'columns' : columns,
+      'items'   : rows
+   };
+ 
+  <span class="color-comment"> // Pass the displayData back to the repeater to render</span>
+   callback(displayData);
+}
+ 
+<span class="color-comment">/*
+ * Handle filter, search and column sort. Operate directly on items.
+ * Need Underscore JS.
+ * Filter value in options.filter.property and options.filter.value
+ * Search string in options.search.
+ * Sort column in options.sortProperty and options.sortDirection.
+ */</span>
+function dataFilter(options) {
+  <span class="color-comment"> // Do nothing if there is no change in any of the filter options</span>
+   if ((currentFilterOptions.filterVaue === options.filter.value)
+       &amp;&amp; (currentFilterOptions.filterProperty === options.filter.property)
+       &amp;&amp; (currentFilterOptions.sortProperty === options.sortProperty)
+       &amp;&amp; (currentFilterOptions.sortDirection === options.sortDirection)
+       &amp;&amp; (currentFilterOptions.search === options.search)) {
+      return currentItems;
+   }
+ 
+   currentItems = $.extend([], items); <span class="color-comment"> // clone items to filter</span>
+ 
+  <span class="color-comment"> // Handle filter first</span>
+   var filterRegex = new RegExp(options.filter.value, 'i');
+     <span class="color-comment"> // Explicitly make a regex object instead of just using String.search()</span>
+     <span class="color-comment"> // to avoid confusion with FuelUX search() and options.search</span>
+   if (!filterRegex.test('all')) { <span class="color-comment"> // no filtering for the special value 'all'</span>
+      currentItems = _.filter(currentItems, function (item) {
+         var isFilterMatch = filterRegex.test(item[options.filter.property]);
+         return isFilterMatch;
+      });
+   }
+ 
+  <span class="color-comment"> // Handle search next (search within the filtered rows)</span>
+   if (options.search) { <span class="color-comment"> // non-empty</span>
+      var searchRegex = new RegExp(options.search, 'i');
+      currentItems = _.filter(currentItems, function (item) {
+        <span class="color-comment"> // collapse all item property values to a single string to make</span>
+        <span class="color-comment"> //   matching on it easier to manage</span>
+         var itemLine = _.reduce(_.values(_.omit(item)), function (finalText, currentText) {
+            return finalText + &quot; &quot; + currentText;
+         });
+         var isSearchMatch = searchRegex.test(itemLine);
+         return isSearchMatch;
+      });
+   }
+ 
+  <span class="color-comment"> // Hanlde column sort last</span>
+   if (options.sortProperty) {
+      currentItems = _.sortBy(currentItems, function (item) {
+         return item[options.sortProperty];
+      });
+      if (options.sortDirection === 'desc') {
+         currentItems.reverse();
+      }
+   }
+ 
+  <span class="color-comment"> // Update the current filter option</span>
+   currentFilterOptions.filterVaue = options.filter.value;
+   currentFilterOptions.filterProperty = options.filter.property;
+   currentFilterOptions.sortProperty = options.sortProperty;
+   currentFilterOptions.sortDirection = options.sortDirection;
+   currentFilterOptions.search = options.search;
+ 
+   return currentItems;
+};
+ 
+<span class="color-comment">/*
+ * Custom column (cell) renderer.
+ * Call back after rendering each cell.
+ * We combine the name and description properties under one column;
+ *  style the status; and populate Action column with controls.
+ */</span>
+function myColumnRenderer(helpers, callback) {
+   var column = helpers.columnAttr;   <span class="color-comment">/* dataSource.columns.property */</span>
+ 
+  <span class="color-comment"> // get all the data for the entire row</span>
+   var rowData = helpers.rowData;     <span class="color-comment">/* row data in key-value pair */</span>
+   var customMarkup = '';
+ 
+  <span class="color-comment"> // Override the output for specific columns.</span>
+   switch(column) {
+      case 'name':
+        <span class="color-comment"> // let's combine name and description into a single column</span>
+         customMarkup = '&lt;a href=&quot;#&quot;&gt;' + rowData.name
+               + '&lt;/a&gt;&lt;div class=&quot;small text-muted&quot;&gt;' + rowData.desc + '&lt;/div&gt;';
+         break;
+ 
+      case 'status':
+        <span class="color-comment"> // let's change the text color based on status</span>
+         var color = '#000';
+         switch(helpers.item.text()) {
+            case 'draft':
+               color = '#4EB1CB';
+               break
+            case 'active':
+               color = '#4AB471';
+               break;
+            case 'archived':
+               color = '#CF5C60';
+               break;
+         }
+         customMarkup = '&lt;span style=&quot;color:' + color + '&quot;&gt;'
+               + helpers.item.text() + '&lt;/span&gt;';
+         break;
+ 
+      case 'action':
+        <span class="color-comment"> // Add a checkbox with name=xxx</span>
+         customMarkup = '&lt;input type=&quot;checkbox&quot; name=&quot;name&quot; value=&quot;'
+               + rowData.name + '&quot;&gt;';
+        <span class="color-comment"> // Add a trash action button</span>
+         customMarkup += '&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;button class=&quot;btn btn-xs btn-danger&quot; type=&quot;botton&quot;&gt;&lt;span class=&quot;glyphicon  glyphicon-trash&quot; &gt;&lt;/span&gt;&lt;/button&gt;';
+        <span class="color-comment"> // customMarkup += '&lt;/div&gt;';</span>
+         break;
+ 
+      default:
+        <span class="color-comment"> // otherwise, just use the existing text value</span>
+         customMarkup = helpers.item.text();
+         break;
+   }
+ 
+   helpers.item.html(customMarkup);
+ 
+   callback(); <span class="color-comment">/* continue rendering */</span>
+}
+&lt;/script&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Example 5: List View and Thumbnail View</h5>
+<p>[TODO]</p>
+
+
+<h4>Wizard</h4>
+<p>[TODO]</p>
+
+
+<h3>AMD and RequireJS</h3>
+
+<p>RequireJS (@ <a href="http://requirejs.org/">http://requirejs.org/</a>) is a JavaScript file and module loader. It implements the AMD (Asynchronous Module Definition) specification.</p>
+
+<p>The AMD API (@ <a href="https://github.com/amdjs/amdjs-api/blob/master/AMD.md">https://github.com/amdjs/amdjs-api/blob/master/AMD.md</a>) specifies a mechanism for defining modules such that the module and its dependencies can be asynchronously loaded. This is particularly well suited for the browser environment where synchronous loading of modules incurs performance, usability, debugging, and cross-domain access problems. The API has only a function called <code>define()</code>, with the following signature:</p>
+
+<pre class="color-syntax">
+define(id?, dependencies?, factory);</pre>
+
+<p>The <code>define()</code> function is used to define a module, with its dependencies:</p>
+<ul>
+<li><code>id</code>: the ID of the module being defined. Optional and default to the filename. We often leave it to the default. For example, if the JavaScript filename is &quot;<code>foo.js</code>&quot;, the default ID is &quot;<code>foo</code>&quot; (without the &quot;<code>.js</code>&quot;).</li>
+<li><code>dependencies</code>: array of dependencies module IDs, e.g., <code>[&quot;jquery&quot;, &quot;underscore&quot;]</code>. Optional.</li>
+<li><code>factory</code>: a function that should be executed to instantiate the module or an object.</li>
+</ul>
+
+<h4>Defining Modules</h4>
+
+<h5>Example 1: Define a module as an object, without dependencies</h5>
+
+<pre class="color-example">
+<span class="color-comment">/* Filename is &quot;js/amdModObj.js&quot; */</span>
+define(<span class="color-new">{
+   k1: 'v1',
+   k2: 'v2',
+   k3: 'v3'
+}</span>);
+   <span class="color-comment">// id is &quot;amdModObj&quot; by default (without &quot;.js&quot;)</span>
+   <span class="color-comment">// No dependencies</span>
+   <span class="color-comment">// The factory produces an object, which can be referenced in other modules as &quot;amdModObj&quot;
+   // (e.g., the values are &quot;amdModObj.k1&quot;, &quot;amdModObj.k2&quot;)</span></pre>
+
+<h5>Example 2: Define a module as a function, without dependencies</h5>
+
+<pre class="color-example">
+<span class="color-comment">/* Filename is &quot;js/amdModFun.js&quot; */</span>
+define( function() {
+   return <span class="color-new">function(n1, n2) {
+      return n1 + n2;  <span class="color-comment">// Simply add the arguments</span>
+   }</span>;
+});
+   <span class="color-comment">// id is &quot;amdModObj&quot; by default (without &quot;.js&quot;)</span>
+   <span class="color-comment">// No dependencies</span>
+   <span class="color-comment">// The factory produces a function, which can be referenced in other modules as &quot;amdModFun()&quot;
+   // (e.g., &quot;amdModFun(1, 2)&quot;)</span></pre>
+
+<h5>Example 3: Define a module as an object, with dependencies</h5>
+
+<p>In this example, we shall define a module, that depends on jQuery and Underscore. We list the dependencies module IDs in an array. We then invoke the factory function, which takes the dependencies modules as arguments. In this case, we use <code>$</code> and <code>_</code> as the argument names. This module returns an object, with a key <code>sayHello</code> mapping to the <code>sayHello</code> function.</p>
+
+<pre class="color-example">
+<span class="color-comment">/* Filename is &quot;js/amdModDep.js&quot; */</span>
+define(['jquery', 'underscore'], function($, _) {
+  var sayHello = function(message) {
+    var template = _.template(&quot;Hello, &lt;%= message %&gt;&quot;);
+         <span class="color-comment"> // Create an underscore template</span>
+    $(&quot;.message&quot;).html(template({message: message}));
+         <span class="color-comment"> // Use jQuery to select an element and show the message</span>
+  };
+  return {
+    sayHello: sayHello  <span class="color-comment"> // return an object</span>
+  };
+});
+  <span class="color-comment"> // id is &quot;amdModDep&quot; by default (without &quot;.js&quot;).</span>
+  <span class="color-comment"> // Depends on modules with ID of 'jquery' and 'underscore'.</span>
+  <span class="color-comment"> // The factory produces an object, which can be referenced in other modules as &quot;amdModDep&quot;.</span>
+  <span class="color-comment"> //   You can invoke the function via amdModDep.sayHello('testing').</span></pre>
+
+
+<h4>Using the Defined Modules</h4>
+
+<h5>Example 1: Using <code>amdModObj.js</code> and <code>amdModFun.js</code></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!-- amdUseMod1.html --&gt;</span>
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Testing AMD Modules&lt;/title&gt;
+<span class="color-comment">&lt;!-- Only need to load the Require JS --&gt;</span>
+&lt;script src=&quot;js/require-2.1.17.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+<span class="color-comment">// Configure the Module IDs and their path.</span>
+<span class="color-comment">// The baseUrl is at this HTML file.</span>
+require.config({
+   paths: {
+      'amdModObj': 'js/amdModObj',  <span class="color-comment">// Without the &quot;.js&quot;</span>
+      'amdModFun': 'js/amdModFun'
+   },
+});
+ 
+<span class="color-comment">// Using modules 'amdModObj' and 'amdModFun'</span>
+require(['amdModObj', 'amdModFun'], function(amdModObj, amdModFun) {
+   console.log(amdModObj.k3);
+   console.log(amdModFun(1, 2));
+});
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;Hello World&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>In this example, we use <code>amdModObj.js</code> and <code>amdModFun.js</code> created earlier.</p>
+<ol>
+<li>We only need to load the Require JS, not the other scripts.</li>
+<li>We use the <code>require.config()</code> to configure the Module IDs and their paths. Take note that in the script, the baseUrl is at this HTML file. We provide relative path relative to the baseUrl. The file extension &quot;<code>.js</code>&quot; is to be omitted.</li>
+<li>To use the modules, we invoke the <code>require()</code> function, which has similar syntax as <code>define()</code>. We list the modules used as dependencies in an array. We then invoke the factory function, which takes the modules as arguments.</li>
+</ol>
+
+<h5>Example 2: Factoring out the main.js</h5>
+
+<p>Instead of place the script in the HTML, we move the script to &quot;<code>js/amdMain.js</code>&quot; (or typically named &quot;<code>js/app.js</code>&quot; or &quot;<code>js/main.js</code>&quot;). Require JS invokes the main script via attribute <code>data-main=&quot;js/amdMain&quot;</code>. Take note that in the <code>require.config()</code>, the baseUrl is changed to the main script folder.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Filename is &quot;amdMain.js&quot;  */</span>
+<span class="color-comment">// Configure the Module IDs and their path</span>
+require.config({
+   paths: {
+      'amdModObj': 'amdModObj', <span class="color-comment"> // baseUrl is at js/amdMain.js. No &quot;.js&quot;</span>
+      'amdModFun': 'amdModFun'
+   },
+});
+ 
+<span class="color-comment">// Using modules 'amdModObj' and 'amdModFun'</span>
+require(['amdModObj', 'amdModFun'], function(amdModObj, amdModFun) {
+   console.log(amdModObj.k3);
+   console.log(amdModFun(1, 2));
+});</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The HTML file is:</p>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Testing AMD Modules&lt;/title&gt;
+&lt;script <span class="color-new">data-main=&quot;js/amdMain&quot;</span> src=&quot;js/require-2.1.17.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;Hello World&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Example 3: Using the Module with dependencies on jQuery and Underscore</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre>
+</td>
+<td>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Testing AMD Modules&lt;/title&gt;
+&lt;script src=&quot;js/require-2.1.17.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+<span class="color-comment">// Configure the Module IDs and their path</span>
+require.config({
+   paths: {
+      'jquery': 'js/jquery-1.11.2.min',  <span class="color-comment"> // without the &quot;.js&quot;. Can use the remote CDN too.</span>
+      'underscore': 'js/underscore-1.8.3.min',
+      'amdModDep' : 'js/amdModDep'
+   },
+});
+ 
+<span class="color-comment">// Using modules 'amdModDep', which depends on 'jquery' and 'underscore'.</span>
+require(['amdModDep'], function(amdModDep) {
+   amdModDep.sayHello('testing');
+});
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;Testing AMD and RequireJS&lt;/h2&gt;
+&lt;p class=&quot;message&quot;&gt;&amp;nbsp;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Benefits: The module, as well as its dependencies, are loaded only if &quot;require&quot;, asynchronously.</p>
+
+
+<p>You can also use remote CDN for the modules, e.g.,</p>
+<pre class="color-syntax">
+require.config({
+  paths: {
+    &quot;jquery&quot;: &quot;https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min&quot;,   <span class="color-comment">// CDN</span>
+    &quot;underscore&quot;: &quot;js/underscore&quot;  <span class="color-comment">// Local</span>
+  }
+});</pre>
+
+<h4>More Examples</h4>
+
+<h5>Example 1: jQuery</h5>
+<p>If an AMD loader is detected, jQuery registers itself as an AMD module, via the following codes at the end of the <code>jquery.js</code>:</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// Register as a named AMD module, since jQuery can be concatenated with other
+// files that may use define, but not via a proper concatenation script that
+// understands anonymous AMD modules. A named AMD is safest and most robust
+// way to register. Lowercase jquery is used because AMD module names are
+// derived from file names, and jQuery is normally delivered in a lowercase
+// file name. Do this after creating the global so that if an AMD module wants
+// to call noConflict to hide this version of jQuery, it will work.
+
+// Note that for maximum portability, libraries that are not jQuery should
+// declare themselves as anonymous modules, and avoid setting a global if an
+// AMD loader is present. jQuery is a special case. For more information, see
+// https://github.com/jrburke/requirejs/wiki/Updating-existing-libraries#wiki-anon</span>
+
+if ( typeof define === "function" &amp;&amp; define.amd ) {
+   define( "jquery", [], function() {
+      return jQuery;
+   });
+}</pre>
+
+<h5>Example 2: Fuel UX</h5>
+
+<pre class="color-example">
+&lt;script src=&quot;//cdn.jsdelivr.net/requirejs/2.1.11/require.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+  requirejs.config({
+    paths: {
+      'bootstrap': '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min',
+      'fuelux': '//www.fuelcdn.com/fuelux/3.6.3/js/fuelux.min',
+      'jquery': '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery',
+      // Moment.js is optional
+      'moment': '//cdn.jsdelivr.net/momentjs/2.6.0/lang-all.min'
+    },
+    // Bootstrap is a "browser globals" script :-(
+    shim: { 'bootstrap': { deps: ['jquery'] } }
+  });
+  // Require all.js or include individual files as needed
+  require(['jquery', 'bootstrap', 'fuelux'], function($){});
+&lt;/script&gt;</pre>
+
+<p>[TODO] Study Fuel UX examples, which uses require JS extensively.</p>
+
+
+<h3>jQuery UI</h3>
+
+<p>jQuery UI (@ <a href="https://jqueryui.com/">https://jqueryui.com/</a>) is a jQuery add-on library for building User Interface. &quot;jQuery UI is a curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library. Whether you're building highly interactive web applications or you just need to add a date picker to a form control, jQuery UI is the perfect   choice.&quot;</p>
+
+<p>jQuery UI can co-exist with BootStrap.</p>
+
+<h4>Datepicker</h4>
+
+<p>See example and API @ <a href="https://jqueryui.com/datepicker/">https://jqueryui.com/datepicker/</a>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;jQuery UI Datepicker&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css&quot;&gt;
+&lt;script  src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;http://code.jquery.com/ui/1.11.4/jquery-ui.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+$( function() {
+   <span class="color-new">$( &quot;#datepicker&quot; ).datepicker({
+      dateFormat: &quot;yy-mm-dd&quot;  <span class="color-comment"> // MySQL date format</span>
+   });</span>
+});
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;Date: <span class="color-new">&lt;input type=&quot;text&quot; id=&quot;datepicker&quot;&gt;</span>&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>Underscore JS</h3>
+
+<p>&quot;Underscore provides over 100 functions that support both your favorite workaday functional helpers: map, filter, invoke - as well as more specialized goodies: function binding, javascript templating, creating quick indexes, deep equality testing, and so on.&quot;</p>
+
+<p>The mother site is <a href="http://underscorejs.org/">http://underscorejs.org/</a>.</p>
+
+<h3>Moment JS</h3>
+
+<p>&quot;Parse, validate, manipulate, and display dates in JavaScript.&quot;</p>
+<p>The mother site is <a href="http://momentjs.com/">http://momentjs.com/</a>.</p>
+
+<!--
+<h3>Editablegrid</h3>
+
+<p>&quot;EditableGrid is an open source JavaScript library aimed at turning tables into fully editable components. Its API is focused on simplicity : only a few lines of code are necessary to get your first editable grid up and running.&quot;. The mother site is <a href="http://www.editablegrid.net/en">http://www.editablegrid.net/en</a>.</p>
+
+<p>Download from <a href="https://github.com/webismymind/editablegrid">https://github.com/webismymind/editablegrid</a>. Follow the README and study the examples.</p>
+-->
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+
+<h5>Bootstrap</h5>
+<ol>
+<li>Bootstrap mother site @ <a href="http://getbootstrap.com/">http://getbootstrap.com/</a>.</li>
+<li>Aravind Shenoy and Ulrich Sossou, &quot;Learning Bootstrap&quot;, Packt Publishing, 2014.</li>
+</ol>
+
+<h5>Font Awesome</h5>
+<ol>
+<li>Font Awesome mother site @ <a href="http://fortawesome.github.io/Font-Awesome/">http://fortawesome.github.io/Font-Awesome/</a>.</li>
+</ol>
+
+<h5>Parsley JS</h5>
+<ol>
+<li>Parsley mother site @ <a href="http://parsleyjs.org/">http://parsleyjs.org/</a>.</li>
+</ol>
+
+<h5>Fuel UX</h5>
+<ol>
+<li>Fuel UX mother site @ <a href="http://getfuelux.com/index.html">http://getfuelux.com/index.html</a>.</li>
+</ol>
+
+<h5>AMD and Require JS</h5>
+<ol>
+<li><cite>AMD API and Examples</cite> @ <a href="https://github.com/amdjs/amdjs-api/blob/master/AMD.md">https://github.com/amdjs/amdjs-api/blob/master/AMD.md</a>.</li>
+<li><cite>Require JS API</cite> @ <a href="http://requirejs.org/docs/api.html">http://requirejs.org/docs/api.html</a>.</li>
+<li>Rakhitha Nimesh, <cite>Understanding RequireJS for Effective JavaScript Module Loading</cite> @ <a href="http://www.sitepoint.com/understanding-requirejs-for-effective-javascript-module-loading/">http://www.sitepoint.com/understanding-requirejs-for-effective-javascript-module-loading/</a>.</li>
+<li>Introduction to RequireJS @ <a href="http://javascriptplayground.com/blog/2012/07/requirejs-amd-tutorial-introduction/">http://javascriptplayground.com/blog/2012/07/requirejs-amd-tutorial-introduction/</a>.</li>
+</ol>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: jQuery 1.11.2, Bootstrap 3.3.4, Font Awesome 4.3.0, ParsleyJS 2.0.7<br />
+Last modified: May, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

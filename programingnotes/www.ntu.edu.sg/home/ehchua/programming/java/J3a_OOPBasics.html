@@ -1,0 +1,2146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>OOP Basics - Java Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>Object-oriented Programming (OOP) Basics</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Why OOP?</h3>
+<p>Suppose that you want to assemble your own PC, you go to a  hardware store and pick up a motherboard, a processor, some RAMs, a hard disk, a  casing, a power supply, and put them together.   You turn on the power, and the PC runs.   You need not worry whether the CPU is 1-core or 6-core; the motherboard is a 4-layer or 6-layer; the hard disk has 4 plates or 6 plates, 3 inches or 5 inches in diameter;  the RAM is made in Japan  or Korea, and so on. You simply put the hardware <em>components</em> together and expect the machine to run.   Of course, you have to make sure that you have the correct <em>interfaces</em>, i.e., you pick an IDE hard disk rather  than a SCSI hard disk, if your motherboard supports only IDE; you have to select  RAMs with the correct speed rating, and so on.   Nevertheless, it is not difficult to set up a machine from hardware <em>components</em>.</p>
+
+<p>Similarly, a car is assembled from parts and components, such as chassis, doors, engine, wheels, brake and transmission. The components are reusable, e.g., a wheel can be used in many cars (of the same specifications).</p>
+<p>Hardware, such as computers and cars, are assembled from parts, which are <em>reusable hardware components</em>.</p>
+
+<p>How about software?  Can  you &quot;assemble&quot; a software application by picking a routine here, a routine  there, and expect the program to run?   The answer is obviously NO!  Unlike  hardware, it is very difficult to &quot;assemble&quot; an application from <em>software  components</em>.  Since the advent of  computer 70 years ago, we have written tons and tons of programs and routines.  However, for each new application, we have to re-invent the wheels and write the program from scratch!</p>
+
+<p>Why re-invent  the wheels? Why re-writing codes? Can you write better codes than those codes written by the experts?</p>
+
+<h5>Traditional Procedural-Oriented languages</h5>
+
+<img class="image-float-left" src="../java/images/OOP_CFunction.png" alt="OOP_CFunction.png" />
+
+<p>Traditional procedural-oriented programming languages (such as C, Fortran, Cobol and Pascal) suffer some notable drawbacks in creating <em>reusable software components</em>:</p>
+
+<ol class="float-left-ol-ul">
+
+<li class="float-left-li">The procedural-oriented programs are made up of functions. Functions are <em>less reusable</em>. It is very difficult to copy a function from one program and reuse in another program because  the function is likely to reference the global variables and other functions. In other words,  functions are not well-encapsulated as a self-contained <em>reusable unit</em>.</li>
+
+<li class="float-left-li">The procedural languages are not suitable of <em>high-level abstraction</em> for solving real life problems.  For example, C programs uses constructs such as if-else, for-loop, array, method, pointer, which are low-level and hard to abstract real problems such as a Customer Relationship Management (CRM) system or a computer soccer game.</li>
+</ol>
+
+<p>The traditional procedural-languages <em>separate</em> the data structures (variables) and algorithms (functions).</p>
+
+<div class="side-note float-clear">
+<p>In the early 1970s, the US Department of Defense (DoD) commissioned a task force to investigate why its IT budget always went out of control; but without much to show for. The findings are:</p>
+
+<ol>
+<li>80% of the budget went to the software (with the remaining 20% to the hardware).</li>
+<li>More than 80% of the software budget went to maintenance (only the remaining 20% for new software development).</li>
+<li>Hardware components could be applied to various products, and their integrity normally did not affect other products. (Hardware can share and reuse! Hardware faults are isolated!)</li>
+
+<li>Software procedures were often non-sharable and not reusable.  Software faults could affect other programs running in computers.</li>
+</ol>
+
+<p>The task force proposed to make software behave like hardware OBJECT. Subsequently, DoD replaces over 450 computer languages, which were then used to build DoD systems, with an object-oriented language called Ada.</p>
+</div>
+
+<h5 class="float-clear">Object-Oriented Programming Languages</h5>
+
+<img class="image-float-right" src="../java/images/OOP_Objects.png" alt="OOP_Objects.png" />
+
+<p>Object-oriented programming (OOP) languages are designed to overcome these problems.</p>
+
+<ol>
+
+<li>The basic unit of OOP is a <em>class</em>, which encapsulates both the <em>static properties</em> and <em>dynamic operations</em> within a &quot;box&quot;, and specifies the public interface for using these boxes. Since classes are well-encapsulated, it is easier to reuse these classes. In other words, OOP combines the data structures and algorithms of a software entity inside the same box.</li>
+<li>OOP languages permit <em>higher level of abstraction</em> for solving real-life problems.  The traditional procedural language (such as C and Pascal) forces you to think in terms of the structure of the computer (e.g. memory bits and bytes, array, decision, loop) rather than thinking in terms of the problem you are trying to solve.  The OOP languages (such as Java, C++ and C#) let you think in the problem space, and use software objects to represent and abstract entities of the problem space to solve the problem.</li>
+</ol>
+
+<br class="float-clear" />
+<img class="image-float-right" src="images/OOP_SoccerGame.png" alt="OOP_SoccerGame.png" />
+
+<p>As an example, suppose you wish to write a computer soccer games (which I consider as a complex application).  It is quite difficult to model the game in procedural-oriented languages.  But using OOP languages, you can easily model the program accordingly to the &quot;real things&quot; appear in the soccer games.</p>
+
+<ul>
+<li>Player: attributes include name, number, location in the field, and etc;  operations include run, jump, kick-the-ball, and etc.</li>
+<li>Ball:</li>
+<li>Reference:</li>
+<li>Field:</li>
+<li>Audience:</li>
+<li>Weather:</li>
+</ul>
+
+<p>Most importantly, some of these classes (such as <code>Ball</code> and <code>Audience</code>) can be reused in another application, e.g., computer basketball game, with little or no modification.</p>
+
+<h5 class="float-clear">Benefits of OOP</h5>
+
+<p>The procedural-oriented languages focus on procedures, with function as the basic unit. You need to first figure out all the functions and then think about how to represent data.</p>
+
+<p>The object-oriented languages focus on components that the user perceives, with objects as the basic unit. You figure out all the objects by putting all the data and operations that describe the user's interaction with the data.</p>
+
+<p>Object-Oriented technology has many benefits:</p>
+
+<ul>
+<li><em>Ease in software design</em> as you could think in the problem space rather than the machine's bits and bytes.  You are dealing with high-level concepts and abstractions.  Ease in design leads to more productive software development.</li>
+
+<li><em>Ease in software maintenance</em>:  object-oriented software are easier to understand, therefore easier to test, debug, and maintain.</li>
+
+<li><em>Reusable software</em>: you don't need to keep re-inventing the wheels and re-write the same functions for different situations.  The fastest and safest way of developing a new application is to reuse existing codes - fully tested and proven codes.</li>
+</ul>
+
+<h3>OOP in Java</h3>
+
+<h4>Class &amp; Instances</h4>
+<p>In Java, <em>a class is a definition of  objects of the same kind</em>.  In other words, a <em>class</em> is a blueprint, template, or prototype that defines and describes the <em>static attributes</em> and <em>dynamic behaviors</em> common to all objects of the same kind.</p>
+
+<p>An <em>instance</em> is <em>a realization of a particular item of a class</em>.  In other words, an instance is an <em>instantiation</em> of a class.  All the instances of a class have similar properties, as described in the class definition.  For example, you can define a class called &quot;<code>Student</code>&quot; and create three instances of the class &quot;<code>Student</code>&quot; for &quot;<code>Peter</code>&quot;, &quot;<code>Paul</code>&quot; and &quot;<code>Pauline</code>&quot;.</p>
+<p>The term &quot;<em>object</em>&quot; usually refers to <em>instance</em>. But it  is often used loosely, and may refer to a class or an instance.</p>
+
+<h4>A Class is a 3-Compartment Box Encapsulating Data and Operations</h4>
+
+<img class="image-float-left" src="../java/images/OOP_ThreeCompartment.png" alt="OOP_ThreeCompartment.png" />
+
+<p>A class can be visualized as a three-compartment box, as illustrated:</p>
+
+<ol class="float-left-ol-ul">
+<li class="float-left-li"><em>Name</em> (or identity):  identifies the class.</li>
+
+<li class="float-left-li"><em>Variables</em> (or attribute, state, field):  contains the <em>static attributes</em> of the class.</li>
+
+<li class="float-left-li"><em>Methods</em> (or behaviors, function, operation):  contains the <em>dynamic behaviors</em> of the class.</li>
+</ol>
+
+<p>In other words, a class encapsulates the static attributes (data) and dynamic behaviors (operations that operate on the data) in a box.</p>
+
+<p class="float-clear">The followings figure shows a few examples of classes:</p>
+
+<img class="image-center" src="images/OOP_ClassExamples.png" alt="OOP_ClassExamples.png" />
+
+<p>The following figure shows two instances of the class <code>Student</code>, identified as &quot;<code>paul</code>&quot; and &quot;<code>peter</code>&quot;.</p>
+
+<img class="image-center" src="images/OOP_InstanceExamples.png" alt="OOP_InstanceExamples.png" />
+
+<p><span class="line-heading">Unified Modeling Language (UML) Class and Instance Diagrams:</span> The above class diagrams are drawn according to the UML notations. A class is represented as a 3-compartment box, containing name, variables, and methods, respectively. Class name is shown in bold and centralized. An instance is also represented as a 3-compartment box, with instance name shown as <span class="underline"><code><em>instanceName</em>:<em>Classname</em></code></span> and underlined.</p>
+
+<h5>Brief Summary</h5>
+
+<ol>
+<li>A <em>class</em> is a programmer-defined, abstract, self-contained, reusable software entity that mimics a real-world thing.</li>
+
+<li>A class is a 3-compartment box containing the name, variables and the methods.</li>
+
+<li>A class encapsulates the data structures (in variables) and algorithms (in methods). The values of the variables constitute its <em>state</em>. The methods constitute its <em>behaviors</em>.</li>
+
+<li>An <em>instance</em> is an instantiation (or realization) of a particular item of a class.</li>
+</ol>
+
+<h4>Class Definition in Java</h4>
+
+<p>In Java, we use the keyword <code>class</code> to define a class. For examples:</p>
+
+<pre class="color-example">
+public <strong>class</strong> <strong>Circle</strong> {        <span class="color-comment">// class name</span>
+   double radius;            <span class="color-comment">// variables</span>
+   String color;
+   
+   double getRadius() { ...... }  <span class="color-comment">// methods</span>
+   double getArea() { ...... }
+}</pre>
+
+<pre class="color-example" >
+public <strong>class</strong> <strong>SoccerPlayer</strong> {  <span class="color-comment">// class name</span>
+   int number;               <span class="color-comment">// variables</span>
+   String name;
+   int x, y;
+   
+   void run() { ...... }     <span class="color-comment">// methods</span>
+   void kickBall() { ...... } 
+}</pre>
+
+<p>The syntax for class definition in Java is:</p>
+<pre class="color-syntax">
+[<em>AccessControlModifier</em>] <strong>class</strong> <em>ClassName</em> <strong>{</strong>
+   <span class="color-comment">// Class body contains members (variables and methods)</span>
+   ......
+<strong>}</strong></pre>
+
+<p>We shall explain the <em>access control modifier</em>, such as <code>public</code> and <code>private</code>, later.</p>
+
+<p><span class="line-heading">Class Naming Convention:</span> A class name shall be a noun or a noun phrase made up of several words. All the words shall be initial-capitalized (camel-case).  Use a <em>singular</em> noun for class name.  Choose a meaningful and self-descriptive classname.  For examples, <code>SoccerPlayer</code>, <code>HttpProxyServer</code>, <code>FileInputStream</code>, <code>PrintStream</code> and <code>SocketFactory</code>.</p>
+
+<h4>Creating Instances of a Class</h4>
+<p>To create <em>an instance of a class</em>, you have to:</p>
+<ol>
+<li><strong>Declare</strong> an instance identifier (instance name) of a particular class.</li>
+<li><strong>Construct</strong> the instance (i.e., allocate storage for the instance and initialize the instance) using the &quot;<code>new</code>&quot; operator.</li>
+</ol>
+
+<p>For examples, suppose that we have a class called <code>Circle</code>, we can create instances of <code>Circle</code> as follows:</p>
+<pre class="color-example">
+<span class="color-comment">// <strong>Declare</strong> 3 instances of the class Circle, c1, c2, and c3</span>
+Circle c1, c2, c3;  <span class="color-comment">// They hold a special value called null</span>
+<span class="color-comment">// <strong>Construct</strong> the instances via new operator</span>
+c1 = <strong>new</strong> Circle();
+c2 = <strong>new</strong> Circle(2.0);
+c3 = <strong>new</strong> Circle(3.0, &quot;red&quot;);
+ 
+<span class="color-comment">// You can <strong>Declare and Construct</strong> in the same statement</span>
+Circle c4 = <strong>new</strong> Circle();
+</pre>
+
+<p>When an instance is declared but not constructed, it holds a special value called <code>null</code>.</p>
+
+<h4>Dot (<span class="font-code">.</span>) Operator</h4>
+<p>The <em>variables</em> and <em>methods</em> belonging to a class are formally called <em>member variables</em> and <em>member methods</em>.  To reference a member variable or method, you must:</p>
+<ol>
+<li>First identify the instance you are interested in, and then,</li>
+<li>Use the <em>dot operator</em> (<code>.</code>) to reference  the desired member variable or method.</li>
+</ol>
+
+<p>For example, suppose that we have a class called <code>Circle</code>, with two member variables (<code>radius</code> and <code>color</code>) and two member methods (<code>getRadius()</code> and <code>getArea()</code>). We have created three instances of the class <code>Circle</code>, namely, <code>c1</code>, <code>c2</code> and <code>c3</code>. To invoke the method <code>getArea()</code>, you must first identity the instance of interest, says <code>c2</code>, then use the <em>dot operator</em>, in the form of <code>c2.getArea()</code>.</p>
+<p>For example,</p>
+<pre class="color-example">
+<span class="color-comment">// Suppose that the class Circle has variables radius and color,
+//  and methods getArea() and getRadius().
+// Declare and construct instances c1 and c2 of the class Circle</span>
+Circle c1 = new Circle ();
+Circle c2 = new Circle ();
+<span class="color-comment"></span><span class="color-comment">// Invoke member methods for the instance c1 via dot operator</span>
+System.out.println(c1.getArea());
+<span class="color-comment"></span>System.out.println(c1.getRadius());
+<span class="color-comment">// Reference member variables for instance c2 via dot operator</span>
+c2.radius = 5.0;
+c2.color = &quot;blue&quot;;</pre>
+
+<p>Calling <code>getArea()</code> without identifying the instance is meaningless, as the radius is unknown (there could be many instances of <code>Circle</code> - each maintaining its own radius). Furthermore, <code>c1.getArea()</code> and <code>c2.getArea()</code> are likely to produce different results.</p>
+
+<p>In general, suppose there is a class called <em><code>AClass</code></em> with a member variable called <em><code>aVariable</code></em> and a member method called <code><em>aMethod</em>()</code>.  An instance called <em><code>anInstance</code></em> is constructed for <em><code>AClass</code></em>.  You use <em><code>anInstance.aVariable</code></em> and <code><em>anInstance.aMethod</em>()</code>.</p>
+
+<h4>Member Variables</h4>
+<p>A <em>member variable</em> has a <em>name</em> (or <em>identifier</em>) and a <em>type</em>; and holds a <em>value</em> of that particular type (as descried in the earlier chapter).</p>
+
+<p><span class="line-heading">Variable Naming Convention:</span> A variable name shall be a noun or a noun phrase made up of several words.  The first word is in lowercase and the rest of the words are initial-capitalized (camel-case), e.g., <code>fontSize</code>, <code>roomNumber</code>, <code>xMax</code>, <code>yMin</code> and <code>xTopLeft</code>.</p>
+
+<p>The formal syntax for variable definition in Java is:</p>
+<pre class="color-syntax">
+[<em>AccessControlModifier</em>] <em>type variableName</em> [<strong>=</strong> <em>initialValue</em>]<strong>;</strong>
+[<em>AccessControlModifier</em>] <em>type variableName-1</em> [<strong>=</strong> <em>initialValue-1</em>] [<strong>,</strong> <em>type variableName-2</em> [<strong>=</strong> <em>initialValue-2</em>]] ... <strong>;</strong>
+</pre>
+
+<p>For example,</p>
+<pre class="color-example">
+private double radius;
+public int length = 1, width = 1;</pre>
+
+<h4>Member Methods</h4>
+
+<p>A method (as described in the earlier chapter):</p>
+<ol>
+<li>receives arguments from the caller,</li>
+<li>performs the operations defined in the method body, and</li>
+<li>returns a piece of result (or <code>void</code>) to the caller.</li>
+</ol>
+
+<p>The syntax for method declaration in Java is as follows:</p>
+<pre class="color-syntax">
+[<em>AccessControlModifier</em>] <em>returnType methodName</em> <strong>(</strong>[<em>parameterList</em>]<strong>) {</strong>
+   <span class="color-comment">// method body or implementation</span>
+   ......
+<strong>}</strong></pre>
+
+<p>For examples:</p>
+<pre class="color-example">
+<span class="color-comment">// Return the area of this Circle instance</span>
+public double getArea() {
+   return radius * radius * Math.PI;
+}</pre>
+
+<p><span class="line-heading">Method Naming Convention:</span> A method name shall be a verb, or a verb phrase made up of several words. The first word is in lowercase and the rest of the words are initial-capitalized (camel-case).  For example, <code>getArea()</code>, <code>setRadius()</code>, <code>getParameterValues()</code>, <code>hasNext()</code>.</p>
+
+<p><span class="line-heading">Variable name vs. Method name vs. Class name</span>: A variable name is a noun, denoting an attribute; while a method name is a verb, denoting an action. They have the same naming convention (the first word in lowercase and the rest are initial-capitalized).  Nevertheless, you can easily distinguish them from the context. Methods take arguments in parentheses (possibly zero arguments with empty parentheses), but variables do not. In this writing, methods are denoted with a pair of parentheses, e.g., <code>println()</code>, <code>getArea()</code> for clarity.</p>
+<p>On the other hand, class name is a noun beginning with uppercase.</p>
+
+<h4>Putting them Together: An OOP Example</h4>
+
+<img src="../java/images/OOP_Circle.png" alt="OOP_Circle.png" />
+
+<p>A class called <code>Circle</code> is defined as shown in the class diagram. It contains two <code>private</code> member variables: <code>radius</code> (of type <code>double</code>) and <code>color</code> (of type <code>String</code>); and three <code>public</code> member methods: <code>getRadius()</code>, <code>getColor()</code>, and <code>getArea()</code>.</p>
+
+<p>Three instances of <code>Circle</code>s, called <code>c1</code>, <code>c2</code>, and <code>c3</code>, shall be constructed with their respective data members, as shown in the instance diagrams.</p>
+
+<p>The source codes for <code>Circle.java</code> is as follows:</p>
+
+<h5 class="float-clear"><span class="font-code">Circle.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * The Circle class models a circle with a radius and color.
+ */</span>
+public class <strong>Circle</strong> {    <span class="color-comment">// Save as &quot;Circle.java&quot;</span>
+   <span class="color-comment">// Private instance variables</span>
+   private double radius;
+   private String color;
+   
+   <span class="color-comment">// Constructors (overloaded)</span>
+   public Circle() {                   <span class="color-comment">// 1st Constructor</span>
+      radius = 1.0;
+      color = &quot;red&quot;;
+   }
+   public Circle(double r) {           <span class="color-comment">// 2nd Constructor</span>
+      radius = r;
+      color = &quot;red&quot;;
+   }
+   public Circle(double r, String c) { <span class="color-comment">// 3rd Constructor</span>
+      radius = r;
+      color = c;
+   }
+   
+   <span class="color-comment">// Public methods</span>
+   public double getRadius() {
+      return radius;
+   }
+   public String getColor() {
+      return color;
+   }
+   public double getArea() {
+      return radius * radius * Math.PI;
+   }
+}</pre></td>
+</tr>
+</tbody>
+</table>
+
+<p>Compile &quot;<code>Circle.java</code>&quot; into &quot;<code>Circle.class</code>&quot;.</p>
+
+<p>Notice that the <code>Circle</code> class does not have a <code>main()</code> method.  Hence, it is NOT a standalone program and you cannot run the <code>Circle</code> class by itself. The <code>Circle</code> class is meant to be a building block - to be used in other programs.</p>
+
+<h5><span class="font-code">TestCircle.java</span></h5>
+
+<p>We shall now write another class called <code>TestCircle</code>, which uses the <code>Circle</code> class. The <code>TestCircle</code> class has a <code>main()</code> method and can be executed.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * A Test Driver for the &quot;Circle&quot; class
+ */</span>
+public class <strong>TestCircle</strong> {    <span class="color-comment">// Save as &quot;TestCircle.java&quot;</span>
+   public static void main(String[] args) {   <span class="color-comment">// Program entry point</span>
+      <span class="color-comment">// Declare and Construct an instance of the Circle class called c1</span>
+      Circle c1 = new Circle(2.0, &quot;blue&quot;);  <span class="color-comment">// Use 3rd constructor</span>
+      System.out.println(&quot;The radius is: &quot; + c1.getRadius());  <span class="color-comment">// use dot operator to invoke member methods</span>
+      System.out.println(&quot;The color is: &quot; + c1.getColor());
+      System.out.printf(&quot;The area is: %.2f%n&quot;, c1.getArea());
+   
+      <span class="color-comment">// Declare and Construct another instance of the Circle class called c2</span>
+      Circle c2 = new Circle(2.0);  <span class="color-comment">// Use 2nd constructor</span>
+      System.out.println(&quot;The radius is: &quot; + c2.getRadius());
+      System.out.println(&quot;The color is: &quot; + c2.getColor());
+      System.out.printf(&quot;The area is: %.2f%n&quot;, c2.getArea());
+   
+      <span class="color-comment">// Declare and Construct yet another instance of the Circle class called c3</span>
+      Circle c3 = new Circle();  <span class="color-comment">// Use 1st constructor</span>
+      System.out.println(&quot;The radius is: &quot; + c3.getRadius());
+      System.out.println(&quot;The color is: &quot; + c3.getColor());
+      System.out.printf(&quot;The area is: %.2f%n&quot;, c3.getArea());
+   }
+}</pre></td>
+</tr>
+</tbody>
+</table>
+
+<p>Compile <code>TestCircle.java</code> into <code>TestCircle.class</code>.</p>
+
+<p>Run the <code>TestCircle</code> and study the output:</p>
+<pre class="color-command">
+The radius is: 2.0
+The color is: blue
+The area is: 12.57
+The radius is: 2.0
+The color is: red
+The area is: 12.57
+The radius is: 1.0
+The color is: red
+The area is: 3.14</pre>
+
+<h4>Constructors</h4>
+
+<p>A <em>constructor</em> is a special method that has the <em>same method name as the class name</em>. In the above <code>Circle</code> class, we define three overloaded versions of constructor <code>Circle(......)</code>. A constructor is used to <em>construct</em> and <em>initialize</em> all the member variables. To construct a new instance of a class, you need to use a special &quot;<code>new</code>&quot; operator followed by a call to one of the constructors. For example,</p>
+
+<pre class="color-example">
+Circle c1 = new Circle();
+Circle c2 = new Circle(2.0);
+Circle c3 = new Circle(3.0, &quot;red&quot;);</pre>
+
+<p>A constructor is different from an ordinary method in the following aspects:</p>
+
+<ul>
+<li>The name of the constructor method is the same as the class name. By classname's convention, it begins with an uppercase (instead of lowercase for ordinary methods).</li>
+<li>Constructor has no return type. It implicitly returns <code>void</code>.  No <code>return</code> statement is allowed inside the constructor's body.</li>
+<li>Constructor can only be invoked via the &quot;<code>new</code>&quot; operator. It can only be used <em>once</em> to initialize the instance constructed. Once an instance is constructed, you cannot call the constructor anymore.</li>
+<li>Constructors are not inherited (to be explained later).</li>
+</ul>
+
+<p><span class="line-heading">Default Constructor</span>: A constructor with no parameter is called the <em>default constructor</em>. It initializes the member variables to their default value. For example, the <code>Circle()</code> in the above example initialize member variables <code>radius</code> and <code>color</code> to their default value.</p>
+
+<h4>Method Overloading (Revisit)</h4>
+
+<p>Method overloading means that the <em>same method name</em> can have <em>different implementations</em> (versions). However, the different implementations must be distinguishable by their parameter list (either the number of parameters, or the type of parameters, or their order).</p>
+
+<p><span class="line-heading">Example:</span> The method <code>average()</code> has 3 versions, with different parameter lists. The caller can invoke the chosen version by supplying the matching arguments.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Example to illustrate Method Overloading
+ */</span>
+public class <strong>TestMethodOverloading</strong> {
+   public static int <span class="color-new">average(int n1, int n2)</span> {          <span class="color-comment">// version A</span>
+      System.out.println(&quot;Run version A&quot;);
+      return (n1+n2)/2;
+   }
+ 
+   public static double <span class="color-new">average(double n1, double n2)</span> { <span class="color-comment">// version B</span>
+      System.out.println(&quot;Run version B&quot;);
+      return (n1+n2)/2;
+   }
+ 
+   public static int <span class="color-new">average(int n1, int n2, int n3)</span> {  <span class="color-comment">// version C</span>
+      System.out.println(&quot;Run version C&quot;);
+      return (n1+n2+n3)/3;
+   }
+
+   public static void main(String[] args) {
+      System.out.println(<span class="color-new">average(1, 2)</span>);     <span class="color-comment">// Use A</span>
+      System.out.println(<span class="color-new">average(1.0, 2.0)</span>); <span class="color-comment">// Use B</span>
+      System.out.println(<span class="color-new">average(1, 2, 3)</span>);  <span class="color-comment">// Use C</span>
+      System.out.println(<span class="color-new">average(1.0, 2)</span>);   <span class="color-comment">// Use B</span> - <span class="color-comment">int 2 implicitly casted to double 2.0</span>
+      <span class="color-comment">//</span> average(1, 2, 3, 4); <span class="color-comment">// Compilation Error</span> <span class="color-comment">- No matching method</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Overloading <span class="font-code">Circle</span> Class' Constructor</h5>
+
+<p>Constructor, like an ordinary method, can also be overloaded. The above <code>Circle</code> class has three overloaded versions of constructors differentiated by their parameter list, as followed:</p>
+<pre class="color-example">
+Circle()
+Circle(double r)
+Circle(double r, String c)</pre>
+<p>Depending on the actual argument list used when invoking the method, the matching constructor will be invoked.  If your argument list does not match any one of the methods, you will get a compilation error.</p>
+
+<h4><span class="font-code">public</span> vs. <span class="font-code">private</span> - Access Control Modifiers</h4>
+<p>An <em>access control modifier</em> can be used to <em>control the visibility</em> of a class, or a member variable or a member method within a class.  We begin with the following two access control modifiers:</p>
+
+<ol>
+<li><code>public</code>: The class/variable/method is accessible and available to <em>all</em> the other objects in the system.</li>
+<li><code>private</code>: The class/variable/method is accessible and available <em>within this class only</em>.</li>
+</ol>
+
+<p>For example, in the above <code>Circle</code> definition, the member variable <code>radius</code> is declared <code>private</code>. As the result, <code>radius</code> is accessible inside the <code>Circle</code> class, but NOT in the <code>TestCircle</code> class. In other words, you cannot use &quot;<code>c1.radius</code>&quot; to refer to <code>c1</code>'s <code>radius</code> in <code>TestCircle</code>.</p>
+
+<ul>
+<li>Try inserting the statement &quot;<code>System.out.println(c1.radius)</code>&quot; in <code>TestCircle</code> and observe the error message.</li>
+<li>Try changing <code>radius</code> to <code>public</code> in the <code>Circle</code> class, and re-run the above statement.</li>
+</ul>
+
+<p>On the other hand, the method <code>getRadius()</code> is declared <code>public</code> in the <code>Circle</code> class. Hence, it can be invoked in the <code>TestCircle</code> class.</p>
+
+<p><span class="line-heading">UML Notation:</span> In <acronym title="Unified Modeling Language">UML</acronym> class diagram, <code>public</code> members are denoted with a &quot;<code>+</code>&quot;; while <code>private</code> members with a &quot;<code>-</code>&quot;.</p>
+
+<p>More access control modifiers will be discussed later.</p>
+
+<h4>Information Hiding and Encapsulation</h4>
+<p>A class encapsulates the name, static attributes and dynamic behaviors into a &quot;3-compartment box&quot;.  Once a class is defined, you can seal up the &quot;box&quot; and put the &quot;box&quot; on the shelve for others to use and reuse.  Anyone can pick up the &quot;box&quot; and use it in their application.  This cannot be done in the traditional procedural-oriented language like C, as the static attributes (or variables) are scattered over the entire program and header files.  You cannot &quot;cut&quot; out a portion of C program, plug into another program and expect the program to run without extensive changes.</p>
+
+<p>Member variables of a class are typically hidden from the outside word (i.e., the other classes), with  <code>private</code> access control modifier.  Access to the member variables are provided via  <code>public</code> assessor methods, e.g., <code>getRadius()</code> and <code>getColor()</code>.</p>
+
+<p>This follows the principle of <em>information hiding</em>.  That is, objects communicate with each others using well-defined interfaces (public methods).  Objects are not allowed to know the implementation details of others.  The implementation details are hidden or encapsulated within the class.  Information hiding facilitates reuse of the class.</p>
+
+<p><span class="line-heading">Rule of Thumb:</span> Do not make any variable <code>public</code>, unless you have a good reason.</p>
+
+<h4>The <span class="font-code">public</span> Getters and Setters for <span class="font-code">private</span> Variables</h4>
+<p>To allow other classes to <em>read</em> the value of a <code>private</code> variable says <code>xxx</code>, we provide a <em>get method</em> (or <em>getter</em> or <em>accessor method</em>) called <code>getXxx()</code>.  A get method needs not expose the data in raw format.  It can process the data and limit the view of the data others will see.  The getters shall not modify the variable.</p>
+
+<p>To allow other classes to <em>modify</em> the value of a <code>private</code> variable says <code>xxx</code>, we provide a <em>set method</em> (or <em>setter</em> or <em>mutator method</em>) called <code>setXxx()</code>.  A set method could provide data validation (such as range checking), or transform the raw data into the internal representation.</p>
+
+<p>For example, in our <code>Circle</code> class, the variables <code>radius</code> and <code>color</code> are declared <code>private</code>. That is to say, they are only accessible within the <code>Circle</code> class and not visible in any other classes, such as the <code>TestCircle</code> class.  You cannot access the <code>private</code> variables <code>radius</code> and <code>color</code> from the <code>TestCircle</code> class directly - via says <code>c1.radius</code> or <code>c1.color</code>.  The <code>Circle</code> class provides two public accessor methods, namely, <code>getRadius()</code> and <code>getColor()</code>.  These methods are declared <code>public</code>.  The class <code>TestCircle</code> can invoke these public accessor methods to retrieve the <code>radius</code> and <code>color</code> of a <code>Circle</code> object, via says <code>c1.getRadius()</code> and <code>c1.getColor()</code>.</p>
+
+<p>There is no way you can change the <code>radius</code> or <code>color</code> of a <code>Circle</code> object, after it is constructed in the <code>TestCircle</code> class.  You cannot issue statements such as <code>c1.radius = 5.0</code> to change the <code>radius</code> of instance <code>c1</code>, as <code>radius</code> is declared as <code>private</code> in the <code>Circle</code> class and is not visible to other classes including <code>TestCircle</code>.</p>
+
+<p>If the designer of the <code>Circle</code> class permits the change the <code>radius</code> and <code>color</code> after a <code>Circle</code> object is constructed, he has to provide the appropriate set methods (or setters or mutator methods), e.g.,</p>
+<pre class="color-example">
+<span class="color-comment">// Setter for color</span>
+public void setColor(String newColor) {
+   color = newColor;
+}
+   
+<span class="color-comment">// Setter for radius</span>
+public void setRadius(double newRadius) {
+   radius = newRadius;
+}</pre>
+
+<p>With proper implementation of <em>information hiding</em>, the designer of a class has full control of what the user of the class can and cannot do.</p>
+
+<h4>Keyword &quot;<span class="font-code">this</span>&quot;</h4>
+<p>You can use keyword &quot;<code>this</code>&quot; to refer to <em>this </em>instance inside a class definition.</p>
+
+<p>One of the main usage of keyword <code>this</code> is to resolve ambiguity.</p>
+<pre class="color-example">
+public class Circle {
+   double <span class="color-new">radius</span>;   <span class="color-comment">              // Member variable called &quot;radius&quot;</span>
+   public Circle(double <span class="color-new">radius</span>) { <span class="color-comment">// Method's argument also called &quot;radius&quot;</span>
+      <span class="color-new">this.radius = radius</span>;
+         <span class="color-comment">// &quot;radius = radius&quot; does not make sense!
+         // &quot;this.radius&quot; refers to this instance's member variable
+         // &quot;radius&quot; resolved to the method's argument.</span>
+   }
+   ...
+}</pre>
+
+<p>In the above codes, there are two identifiers called <code>radius</code> - a member variable of the class and the method's argument. This  causes naming conflict. To avoid the naming conflict, you could name the method's argument <code>r</code> instead of <code>radius</code>. However, <code>radius</code> is  more approximate and meaningful in this context. Java provides a keyword called <code>this</code> to resolve this naming conflict. &quot;<code>this.radius</code>&quot; refers to the member variable; while &quot;<code>radius</code>&quot; resolves to the method's argument.</p>
+  
+<p>Using the keyword &quot;<code>this</code>&quot;, the constructor, getter and setter methods for a <code>private</code> variable called <code>xxx</code> of type <code>T</code> are as follows:</p>
+
+<pre class="color-syntax">
+public class Aaa {
+<span class="color-comment">   // A private variable named xxx of the type T</span>
+   private T xxx;
+ 
+   <span class="color-comment">// Constructor</span>
+   public Aaa(T xxx) {
+      this.xxx = xxx;
+   }
+ 
+<span class="color-comment">   // A getter for variable xxx of type T receives no argument and return a value of type T</span>
+   public T getXxx() {
+      return xxx;  <span class="color-comment">// or &quot;return this.xxx&quot; for clarity</span>
+   }
+ 
+<span class="color-comment">   // A setter for variable xxx of type T receives a parameter of type T and return void</span>
+   public void setXxx(T xxx) {
+      this.xxx = xxx;
+   }
+}</pre>
+
+<p>For a boolean variable <code>xxx</code>, the getter shall be named <code>isXxx()</code> or <code>hasXxx()</code>, which is more meaningful than <code>getXxx()</code>. The setter remains <code>setXxx()</code>.</p>
+<pre class="color-syntax">
+<span class="color-comment">// Private boolean variable</span>
+private boolean xxx;
+ 
+<span class="color-comment">// Getter</span>
+public boolean isXxx() {
+   return xxx;  <span class="color-comment">// or &quot;return this.xxx&quot; for clarity</span>
+}
+ 
+<span class="color-comment">// Setter</span>
+public void setXxx(boolean xxx) {
+   this.xxx = xxx;
+}</pre>
+
+<h5>More on &quot;<span class="font-code">this</span>&quot;</h5>
+<ul>
+<li><code>this.<em>varName</em></code> refers to <em><code>varName</code></em> of this instance; <code>this.<em>methodName</em>(...)</code> invokes <code><em>methodName</em>(...)</code> of this instance.</li>
+<li>In a constructor, we can use <code>this(...)</code> to call <em>another</em> constructor of this class.</li>
+<li>Inside a method, we can use the statement &quot;<code>return this</code>&quot; to return this instance to the caller.</li>
+</ul>
+
+<h4>Method <span class="font-code">toString()</span></h4>
+<p>Every well-designed Java class should have a <code>public</code> method called <code>toString()</code> that returns a <code>string</code> description of <code>this</code> instance. You can invoke the <code>toString()</code> method explicitly by calling <code><em>anInstanceName</em>.toString()</code>, or implicitly via <code>println()</code> or <code>String</code> concatenation operator <code>'+'</code>.  That is, running <code>println(<em>anInstance</em>)</code>  invokes the <code>toString()</code> method of that instance implicitly.</p>
+
+<p>For example, include the following <code>toString()</code> method in our <code>Circle</code> class:</p>
+<pre class="color-example">
+<span class="color-comment">// Return a String description of this instance</span>
+public String toString() {
+   return &quot;Circle[radius=&quot; + radius + &quot;,color=&quot; + color + &quot;]&quot;;
+}</pre>
+
+<p>In your <code>TestCircle</code> class, you can get a description of a <code>Circle</code> instance via:</p>
+<pre class="color-example">
+Circle c1 = new Circle();
+System.out.println(c1.toString());   <span class="color-comment">// Explicitly calling toString()</span>
+System.out.println(c1);              <span class="color-comment">// Implicit call to c1.toString()</span>
+System.out.println(&quot;c1 is: &quot; + c1);  <span class="color-comment">// '+' invokes toString() to get a String before concatenation</span></pre>
+
+<p>The signature of <code>toString()</code> is:</p>
+<pre class="color-syntax">
+public String toString() { ...... }</pre>
+
+<h4>Constants (<span class="font-code">final</span>)</h4>
+<p>Constants are variables defined with the modifier <code>final</code>.  A <code>final</code> variable can only be assigned once and its value cannot be modified once assigned. For example,</p>
+<pre class="color-example">
+public final double X_REFERENCE = 1.234;
+ 
+private final int MAX_ID = 9999;
+MAX_ID = 10000;  <span class="color-new">// error: cannot assign a value to final variable MAX_ID</span>
+ 
+<span class="color-comment">// You need to initialize a final member variable during declaration</span>
+private final int SIZE;    <span class="color-new">// error: variable SIZE might not have been initialized</span></pre>
+
+<p><span class="line-heading">Constant Naming Convention:</span> A constant name is a noun, or a noun phrase made up of several words.  All words are in uppercase separated by underscores '<code>_</code>', for examples, <code>X_REFERENCE</code>, <code>MAX_INTEGER</code> and <code>MIN_VALUE</code>.</p>
+
+<p>Advanced Notes:</p>
+<ol>
+<li>A <code>final</code> primitive variable cannot be re-assigned a new value.</li>
+<li>A <code>final</code> instance cannot be re-assigned a new object.</li>
+<li>A <code>final</code> class cannot be sub-classed (or extended).</li>
+<li>A <code>final</code> method cannot be overridden.</li>
+</ol>
+
+<h4>Putting Them Together in the Revised <span class="font-code">Circle</span> Class</h4>
+<p>We shall include constructors, getters, setters, <code>toString()</code>, and use the keyword &quot;<code>this</code>&quot;. The class diagram for the final <code>Circle</code> class is as follows:</p>
+
+<img class="image-float-left" src="images/ClassDiagram_Circle.png" alt="ClassDiagram_Circle.png" />
+
+<h5 class="float-clear"><span class="font-code">Circle.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* 
+ * The Circle class models a circle with a radius and color.
+ */</span>
+public class Circle {    <span class="color-comment">// Save as &quot;Circle.java&quot;</span>
+   <span class="color-comment">// The public constants</span>
+   public static final double DEFAULT_RADIUS = 8.8;
+   public static final String DEFAULT_COLOR  = &quot;red&quot;;
+   
+   <span class="color-comment">// The private instance variables</span>
+   private double radius;
+   private String color;
+   
+   <span class="color-comment">// The (overloaded) constructors</span>
+   public Circle() {                   <span class="color-comment">// 1st (default) Constructor</span>
+      this.radius = DEFAULT_RADIUS;
+      this.color  = DEFAULT_COLOR;
+   }
+   public Circle(double radius) {      <span class="color-comment">// 2nd Constructor</span>
+      this.radius = radius;
+      this.color = DEFAULT_COLOR;
+   }
+   public Circle(double radius, String color) { <span class="color-comment">// 3rd Constructor</span>
+      this.radius = radius;
+      this.color = color;
+   }
+   
+   <span class="color-comment">// The public getters and setters for the private variables</span>
+   public double getRadius() {
+      return this.radius;
+   }
+   public void setRadius(double radius) {
+      this.radius = radius;
+   }
+   public String getColor() {
+      return this.color;
+   }
+   public void setColor(String color) {
+      this.color = color;
+   }
+ 
+   <span class="color-comment">// The toString() returns a String description of this instance</span>
+   public String toString() {
+      return &quot;Circle[radius=&quot; + radius + &quot;, color=&quot; + color + &quot;]&quot;;
+   }
+ 
+   <span class="color-comment">// Return the area of this Circle</span>
+   public double getArea() {
+      return radius * radius * Math.PI;
+   }
+ 
+   <span class="color-comment">// Return the circumference of this Circle</span>
+   public double getCircumference() {
+      return 2.0 * radius * Math.PI;
+   }
+}</pre></td>
+</tr>
+</tbody>
+</table>
+
+<h5>A Test Driver for the <span class="font-code">Circle</span> Class</h5>
+
+<pre class="color-example">
+<span class="color-comment">// A Test Driver for the Circle class</span>
+public class <strong>TestCircle</strong> {
+   public static void main(String[] args) {
+      <span class="color-comment">// Test constructors and toString()</span>
+      Circle c1 = new Circle(1.1, "blue");
+      System.out.println(c1);  <span class="color-comment">// toString()</span>
+      Circle c2 = new Circle(2.2);
+      System.out.println(c2);  <span class="color-comment">// toString()</span>
+      Circle c3 = new Circle();
+      System.out.println(c3);  <span class="color-comment">// toString()</span>
+
+<span class="color-comment">      // Test Setters and Getters</span>
+      c1.setRadius(2.2);
+      c1.setColor("green");
+      System.out.println(c1);  <span class="color-comment">// toString() to inspect the modified instance</span>
+      System.out.println(&quot;The radius is: &quot; + c1.getRadius());
+      System.out.println(&quot;The color is: &quot; + c1.getColor());
+
+      <span class="color-comment">// Test getArea() and getCircumference()</span>
+      System.out.printf("The area is: %.2f%n", c1.getArea());
+      System.out.printf("The circumference is: %.2f%n", c1.getCircumference());
+   }
+}</pre>
+
+<p>The expected outputs are:</p>
+<pre class="output">
+Circle[radius=1.1, color=blue]
+Circle[radius=2.2, color=red]
+Circle[radius=8.8, color=red]
+Circle[radius=2.2, color=green]
+Radius is: 2.2
+Color is: green
+Area is: 15.21
+Circumference is: 13.82</pre>
+
+<h3>More Examples on Classes</h3>
+
+<h4 id="accountclass">EG. 1: The <span class="font-code">Account</span> Class</h4>
+
+<img src="images/ClassDiagram_Account.png" alt="class diagram" />
+
+<p>A class called <code>Account</code>, which models a bank account, is designed as shown in the class diagram. It contains the following members:</p>
+
+<ul>
+<li>Two <code>private</code> instance variables: <code>accountNumber</code> (<code>int</code>), and <code>balance</code> (<code>double</code>) which maintains the current account balance.</li>
+
+<li>Constructors (overloaded).</li>
+
+<li>Getters and Setters for the <code>private</code> instance variables. There is no setter for <code>accountNumber</code> as it is not designed to be changed.</li>
+
+<li><code>public</code> methods <code>credit()</code> and <code>debit()</code>, which adds/subtracts the given <code>amount</code> to/from the balance, respectively.</li>
+
+<li>A <code>toString()</code>, which returns &quot;<code>A/C no:xxx, Balance=$xxx.xx</code>&quot;, with <code>balance</code> rounded to two decimal places.</li>
+</ul>
+<p>Write the <code>Account</code> class and a test driver to test all the <code>public</code> methods.</p>
+
+<h5>The <span class="font-code">Account</span> Class (<span class="font-code">Account.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * The Account class models a bank account with a balance.
+ */</span>
+public class <strong>Account</strong> {
+  <span class="color-comment"> // The private instance variables</span>
+   private int accountNumber;
+   private double balance;
+ 
+  <span class="color-comment"> // The constructors (overloaded)</span>
+   public Account(int accountNumber, double balance) {
+      this.accountNumber = accountNumber;
+      this.balance = balance;
+   }
+   public Account(int accountNumber) {  <span class="color-comment">// with default balance</span>
+      this.accountNumber = accountNumber;
+      this.balance = 0.0;  <span class="color-comment">// &quot;this.&quot; optional</span>
+   }
+ 
+  <span class="color-comment"> // The public getters/setters for the private instance variables.
+   // No setter for accountNumber because it is not designed to be changed.</span>
+   public int getAccountNumber() {
+      return this.accountNumber;  <span class="color-comment">// &quot;this.&quot; optional</span>
+   }
+   public double getBalance() {
+      return this.balance;  <span class="color-comment">// &quot;this.&quot; optional</span>
+   }
+   public void setBalance(double balance) {
+      this.balance = balance;
+   }
+ 
+   <span class="color-comment">// Add the given amount to the balance.</span>
+   public void credit(double amount) {
+      balance += amount;
+   }
+
+   <span class="color-comment">// Subtract the given amount from balance, if applicable.</span>
+   public void debit(double amount) {
+      if (balance &lt; amount) {
+         System.out.println(&quot;amount withdrawn exceeds the current balance!&quot;);
+      } else {
+         balance -= amount;
+      }
+   }
+ 
+   <span class="color-comment">// The toString() returns a string description of this instance.</span>
+   public String toString() {
+      <span class="color-comment">// Use built-in function System.format() to form a formatted String</span>
+      return String.format(&quot;A/C no:%d, Balance=%.2f&quot;, accountNumber, balance);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>A Test Driver for the <span class="font-code">Account</span> Class (<span class="font-code">TestAccount.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * A Test Driver for the Account class.
+ */</span>
+public class <strong>TestAccount</strong> {
+   public static void main(String[] args) {
+      <span class="color-comment">// Test Constructors and toString()</span>
+      Account a1 = new Account(1234, 99.99);
+      System.out.println(a1);  <span class="color-comment">// toString()</span>
+      Account a2 = new Account(8888);
+      System.out.println(a2);  <span class="color-comment">// toString()</span>
+
+<span class="color-comment">      // Test Setters and Getters</span>
+      a1.setBalance(88.88);
+      System.out.println(a1);  <span class="color-comment">// run toString() to inspect the modified instance</span>
+      System.out.println(&quot;The account Number is: &quot; + a1.getAccountNumber());
+      System.out.println(&quot;The balance is: &quot; + a1.getBalance());
+
+      <span class="color-comment">// Test credit() and debit()</span>
+      a1.credit(10);
+      System.out.println(a1);  <span class="color-comment">// run toString() to inspect the modified instance</span>
+      a1.debit(5);
+      System.out.println(a1);
+      a1.debit(500);   <span class="color-comment">// Test debit() error</span>
+      System.out.println(a1);
+    }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected outputs are:</p>
+<pre class="output">
+A/C no:1234, Balance=99.99
+A/C no:8888, Balance=0.00
+A/C no:1234, Balance=88.88
+Account Number is: 1234
+Balance is: 88.88
+A/C no:1234, Balance=98.88
+A/C no:1234, Balance=93.88
+amount withdrawn exceeds the current balance!
+A/C no:1234, Balance=93.88</pre>
+
+
+<h4 id="dateclass">EG. 2: The <span class="font-code">Date</span> class</h4>
+
+<img src="images/ClassDiagram_Date.png" alt="class diagram" />
+
+<p>A <code>Date</code> class models a calendar date with day, month and year, is designed as shown in the class diagram. It contains the following members:</p>
+
+<ul>
+<li>3 <code>private</code> instance variables <code>day</code>, <code>month</code>, and <code>year</code>.</li>
+
+<li>Constructors, <code>public</code> getters and setters for the <code>private</code> instance variables.</li>
+
+<li>A method <code>setDate()</code>, which sets the <code>day</code>, <code>month</code> and <code>year</code>.</li>
+
+<li>A <code>toString()</code>, which returns &quot;<code>DD/MM/YYYY</code>&quot;, with leading zero for <code>DD</code> and <code>MM</code> if applicable.</li>
+</ul>
+
+<p>Write the <code>Date</code> class and a test driver to test all the <code>public</code> methods. No Input validations are required for <code>day</code>, <code>month</code>, and <code>year</code>.</p>
+
+<h5>The <span class="font-code">Date</span> Class (<span class="font-code">Date.java</span>)</h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Date class models a calendar date with day, month and year.
+ * This class does not perform input validation for day, month and year.
+ */</span>
+public class Date {
+   <span class="color-comment">// The private instance variables</span>
+   private int year, month, day;
+
+   <span class="color-comment">// The constructors</span>
+   public Date(int year, int month, int day) {
+      <span class="color-comment">// No input validation</span>
+      this.year = year;
+      this.month = month;
+      this.day = day;
+   }
+
+   <span class="color-comment">// The public getters/setters for the private variables</span>
+   public int getYear() {
+      return this.year;
+   }
+   public int getMonth() {
+      return this.month;
+   }
+   public int getDay() {
+      return this.day;
+   }
+   public void setYear(int year) {
+      this.year = year;  <span class="color-comment">// No input validation</span>
+   }
+   public void setMonth(int month) {
+      this.month = month;  <span class="color-comment">// No input validation</span>
+   }
+   public void setDay(int day) {
+      this.day = day;  <span class="color-comment">// No input validation</span>
+   }
+
+   <span class="color-comment">// Return &quot;MM/DD/YYYY&quot; with leading zero for MM and DD.</span>
+   public String toString() {
+        <span class="color-comment">// Use built-in function String.format() to form a formatted String</span>
+        return String.format("%02d/%02d/%4d", month, day, year);
+              <span class="color-comment">// Specifier &quot;0&quot; to print leading zeros, if available.</span>
+   }
+
+   <span class="color-comment">// Set year, month and day - No input validation</span>
+   public void setDate(int year, int month, int day) {
+      this.year = year;
+      this.month = month;
+      this.day = day;
+   }
+}</pre>
+
+<h5>A Test Driver for the <span class="font-code">Date</span> Class (<span class="font-code">TestDate.java</span>)</h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * A Test Driver for the Date class.
+ */</span>
+public class TestDate {
+   public static void main(String[] args) {
+      <span class="color-comment">// Test constructor and toString()</span>
+      Date d1 = new Date(2016, 4, 6);
+      System.out.println(d1);  <span class="color-comment">// toString()</span>
+ 
+      <span class="color-comment">// Test Setters and Getters</span>
+      d1.setYear(2012);
+      d1.setMonth(12);
+      d1.setDay(23);
+      System.out.println(d1);  <span class="color-comment">// run toString() to inspect the modified instance</span>
+      System.out.println(&quot;Year is: &quot; + d1.getYear());
+      System.out.println(&quot;Month is: &quot; + d1.getMonth());
+      System.out.println(&quot;Day is: &quot; + d1.getDay());
+ 
+      <span class="color-comment">// Test setDate()</span>
+      d1.setDate(2988, 1, 2);
+      System.out.println(d1);  <span class="color-comment">// toString()</span>
+   }
+}</pre>
+
+<p>The expected outputs are:</p>
+<pre class="output">
+04/06/2016
+12/23/2012
+Year is: 2012
+Month is: 12
+Day is: 23
+01/02/2988</pre>
+
+<h4>EG. 3: The <span class="font-code">Time</span> class</h4>
+
+<img src="images/ClassDiagram_Time.png" alt="ClassDiagram_Time.png" />
+
+<p>A class called <code>Time</code>, which models a time instance with hour, minute and second, is designed as shown in the class diagram. It contains the following members:</p>
+
+<ul>
+<li>3 <code>private</code> instance variables <code>hour</code>, <code>minute</code>, and <code>second</code>.</li>
+<li>Constructors, getters and setters.</li>
+<li>A method <code>setTime()</code> to set <code>hour</code>, <code>minute</code> and <code>second</code>.</li>
+
+<li>A <code>toString()</code> that returns &quot;<code>hh:mm:ss</code>&quot; with leading zero if applicable.</li>
+
+<li>A method <code>nextSecond()</code> that advances <code>this</code> instance by one second. It returns <code>this</code> instance to support chaining (cascading) operations, e.g., <code>t1.nextSecond().nextSecond()</code>.  Take note that the <code>nextSecond()</code> of <code>23:59:59</code> is <code>00:00:00</code>.</li>
+</ul>
+
+<p>Write the <code>Time</code> class and a test driver to test all the public methods. No input validations are required.</p>
+
+<h5>The <span class="font-code">Time</span> Class (<span class="font-code">Time.java</span>)</h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Time class models a time instance with second, minute and hour.
+ * This class does not perform input validation for second, minute and hour.
+ */</span>
+public class Time {
+   <span class="color-comment">// The private instance variables</span>
+   private int second, minute, hour;
+
+   <span class="color-comment">// The constructors (overloaded)</span>
+   public Time(int second, int minute, int hour) {
+      <span class="color-comment">// No input validation</span>
+      this.second = second;
+      this.minute = minute;
+      this.hour = hour;
+   }
+   public Time() {  <span class="color-comment">// the default constructor</span>
+      this.second = 0;
+      this.minute = 0;
+      this.hour = 0;
+   }
+
+   <span class="color-comment">// The public getters/setters for the private variables.</span>
+   public int getSecond() {
+      return this.second;
+   }
+   public int getMinute() {
+      return this.minute;
+   }
+   public int getHour() {
+      return this.hour;
+   }
+   public void setSecond(int second) {
+      this.second = second;  <span class="color-comment">// No input validation</span>
+   }
+   public void setMinute(int minute) {
+      this.minute = minute;  <span class="color-comment">// No input validation</span>
+   }
+   public void setHour(int hour) {
+      this.hour = hour;  <span class="color-comment">// No input validation</span>
+   }
+
+   <span class="color-comment">// Return &quot;hh:mm:ss&quot; with leading zeros.</span>
+   public String toString() {
+        <span class="color-comment">// Use built-in function String.format() to form a formatted String</span>
+        return String.format("%02d:%02d:%02d", hour, minute, second);
+              <span class="color-comment">// Specifier &quot;0&quot; to print leading zeros, if available.</span>
+   }
+
+   <span class="color-comment">// Set second, minute and hour</span>
+   public void setTime(int second, int minute, int hour) {
+      <span class="color-comment">// No input validation</span>
+      this.second = second;
+      this.minute = minute;
+      this.hour = hour;
+   }
+
+   <span class="color-comment">// Increment this instance by one second, and return this instance.</span>
+   public Time nextSecond() {
+      ++second;
+      if (second &gt;= 60) {
+         second = 0;
+         ++minute;
+         if (minute &gt;= 60) {
+            minute = 0;
+            ++hour;
+            if (hour &gt;= 24) {
+               hour = 0;
+            }
+         }
+      }
+      return this;   <span class="color-comment">// Return &quot;this&quot; instance, to support chaining
+                     // e.g., t1.nextSecond().nextSecond()</span>
+   }
+}</pre>
+
+<h5>A Test Driver (<span class="font-code">TestTime.java</span>)</h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * A Test Driver for the Time class
+ */</span>
+public class TestTime {
+   public static void main(String[] args) {
+      <span class="color-comment">// Test Constructors and toString()</span>
+      Time t1 = new Time(1, 2, 3);
+      System.out.println(t1);  <span class="color-comment">// toString()</span>
+      Time t2 = new Time();  <span class="color-comment">  // The default constructor</span>
+      System.out.println(t2);
+
+      <span class="color-comment">// Test Setters and Getters</span>
+      t1.setHour(4);
+      t1.setMinute(5);
+      t1.setSecond(6);
+      System.out.println(t1);  <span class="color-comment">// run toString() to inspect the modified instance</span>
+      System.out.println(&quot;Hour is: &quot; + t1.getHour());
+      System.out.println(&quot;Minute is: &quot; + t1.getMinute());
+      System.out.println(&quot;Second is: &quot; + t1.getSecond());
+
+      <span class="color-comment">// Test setTime()</span>
+      t1.setTime(58, 59, 23);
+      System.out.println(t1);  <span class="color-comment">// toString()</span>
+<span class="color-comment">
+      // Test nextSecond() and chaining</span>
+      System.out.println(t1.nextSecond()); <span class="color-comment">// Return an instance of Time. Invoke Time's toString()</span>
+      System.out.println(t1.nextSecond().nextSecond().nextSecond());
+   }
+}</pre>
+
+<p>The expected outputs are:</p>
+<pre class="output">
+03:02:01
+00:00:00
+04:05:06
+Hour is: 4
+Minute is: 5
+Second is: 6
+23:59:58
+23:59:59
+00:00:02</pre>
+
+<h4>EG. 4: The <span class="font-code">Time</span> class with Input Validation</h4>
+
+<p>In this example, we shall validate the inputs to ensure that <code>0&le;hour&le;23</code>, <code>0&le;minute&le;59</code>, and <code>0&le;second&le;59</code>. We re-write our <code>Time</code> class as follows.  Take note that all the validations are done in the setters. All other methods (such as constructors and <code>setTime()</code> invoke the setters to perform input validations - so as to avoid duplication of codes.</p>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Time class models a time instance with second, minute and hour.
+ * This class performs input validations.
+ */</span>
+public class Time {
+   <span class="color-comment">// The private instance variables - with input validations.</span>
+   private int second;  <span class="color-comment">// [0, 59]</span>
+   private int minute;  <span class="color-comment">// [0, 59]</span>
+   private int hour;    <span class="color-comment">// [0, 23]</span>
+
+   <span class="color-comment">// Input validations are done in the setters.
+   // All the other methods (such as constructors and setTime()) invoke
+   //   these setters to perform input validations to avoid code duplication.</span>
+   public void setSecond(int second) {
+      if (second &gt;=0 &amp;&amp; second &lt;= 59) {
+         this.second = second;
+      } else {
+         this.second = 0;  <span class="color-comment">// Set to 0 and print error message</span>
+         System.out.println(&quot;error: invalid second&quot;);
+      }
+   }
+   public void setMinute(int minute) {
+      if (minute &gt;=0 &amp;&amp; minute &lt;= 59) {
+         this.minute = minute;
+      } else {
+         this.minute = 0;
+         System.out.println(&quot;error: invalid minute&quot;);
+      }
+   }
+   public void setHour(int hour) {
+      if (hour &gt;=0 &amp;&amp; hour &lt;= 23) {
+         this.hour = hour;
+      } else {
+         this.hour = 0;
+         System.out.println(&quot;error: invalid hour&quot;);
+      }
+   }
+
+   <span class="color-comment">// Set second, minute and hour.</span>
+   public void setTime(int second, int minute, int hour) {
+      <span class="color-comment">// Invoke setters to do input validation</span>
+      this.setSecond(second);
+      this.setMinute(minute);
+      this.setHour(hour);
+   }
+
+   <span class="color-comment">// Constructors</span>
+   public Time(int second, int minute, int hour) {
+      <span class="color-comment">// Invoke setters to do input valiation</span>
+      this.setTime(second, minute, hour);
+   }
+   public Time() {  <span class="color-comment">// The default constructor</span>
+      this.second = 0;
+      this.minute = 0;
+      this.hour = 0;
+   }
+
+   <span class="color-comment">// The public getters</span>
+   public int getSecond() {
+      return this.second;
+   }
+   public int getMinute() {
+      return this.minute;
+   }
+   public int getHour() {
+      return this.hour;
+   }
+
+   <span class="color-comment">// Return &quot;hh:mm:ss&quot; with leading zeros.</span>
+   public String toString() {
+        return String.format("%02d:%02d:%02d", hour, minute, second);
+   }
+   <span class="color-comment">// Increment this instance by one second, return this instance</span>
+   public Time nextSecond() {
+      ++second;
+      if (second == 60) {  <span class="color-comment">// We are sure that second &lt;= 60 here!</span>
+         second = 0;
+         ++minute;
+         if (minute == 60) {
+            minute = 0;
+            ++hour;
+            if (hour == 24) {
+               hour = 0;
+            }
+         }
+      }
+      return this;   <span class="color-comment">// Return this instance, to support chaining</span>
+   }
+}</pre>
+
+<h4>EG. 5 (Advanced): The <span class="font-code">Time</span> Class with Input Validation via Exception Handling</h4>
+
+<p>In the previous example, we print a error message and set the variable to 0, if the input is invalid. This is less than perfect. The proper way to handle invalid inputs is via the so-called <em>exception handling</em> mechanism.</p>
+<p>The revised <code>Time.java</code> that uses exception handling mechanism is as follows:</p>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Time class models a time instance with second, minute and hour.
+ * This class performs input validations using exception handling.
+ */</span>
+public class Time {
+   <span class="color-comment">// The private instance variables - with input validation</span>
+   private int second;  <span class="color-comment">// [0, 59]</span>
+   private int minute;  <span class="color-comment">// [0, 59]</span>
+   private int hour;    <span class="color-comment">// [0, 23]</span>
+
+   <span class="color-comment">// Input validations are done in setters.
+   // All the other methods (such as constructors and setTime()) invoke
+   //   these setters to perform input validation to avoid code duplication.</span>
+   public void setSecond(int second) {
+      if (second &gt;=0 &amp;&amp; second &lt;= 59) {
+         this.second = second;
+      } else {
+         <span class="color-new">throw new IllegalArgumentException(&quot;Invalid second!&quot;);</span>
+      }
+   }
+   public void setMinute(int minute) {
+      if (minute &gt;=0 &amp;&amp; minute &lt;= 59) {
+         this.minute = minute;
+      } else {
+         <span class="color-new">throw new IllegalArgumentException(&quot;Invalid minute!&quot;);</span>
+      }
+   }
+   public void setHour(int hour) {
+      if (hour &gt;=0 &amp;&amp; hour &lt;= 23) {
+         this.hour = hour;
+      } else {
+         <span class="color-new">throw new IllegalArgumentException(&quot;Invalid hour!&quot;);</span>
+      }
+   }
+
+   <span class="color-comment">// Set second, minute and hour</span>
+   public void setTime(int second, int minute, int hour) {
+      <span class="color-comment">// Invoke setters to do input valiation</span>
+      this.setSecond(second);
+      this.setMinute(minute);
+      this.setHour(hour);
+   }
+
+   <span class="color-comment">// The constructors (overloaded)</span>
+   public Time(int second, int minute, int hour) {
+      <span class="color-comment">// Invoke setters to do input valiation</span>
+      this.setTime(second, minute, hour);
+   }
+   public Time() {  <span class="color-comment">// The default constructor</span>
+      this.second = 0;
+      this.minute = 0;
+      this.hour = 0;
+   }
+
+   <span class="color-comment">// Getters</span>
+   public int getSecond() {
+      return this.second;
+   }
+   public int getMinute() {
+      return this.minute;
+   }
+   public int getHour() {
+      return this.hour;
+   }
+ 
+   <span class="color-comment">// Return &quot;hh:mm:ss&quot; with leading zeros.</span>
+   public String toString() {
+        return String.format("%02d:%02d:%02d", hour, minute, second);
+   }
+
+   <span class="color-comment">// Increment this instance by one second, return this instance</span>
+   public Time nextSecond() {
+      ++second;
+      if (second == 60) {
+         second = 0;
+         ++minute;
+         if (minute == 60) {
+            minute = 0;
+            ++hour;
+            if (hour == 24) {
+               hour = 0;
+            }
+         }
+      }
+      return this;   <span class="color-comment">// Return this instance, to support chaining</span>
+   }
+}</pre>
+
+<h5>Exception Handling</h5>
+
+<p>What to do if an invalid <code>hour</code>, <code>minute</code> or <code>second</code> was given as input? Print an error message? Terminate the program Abruptly? Continue operation by setting the parameter to its default? This is a really hard decision and there is no perfect solution that suits all situations.</p>
+
+<p>In Java, instead of printing an error message, you can throw an so-called <code>Exception</code> object (such as <code>IllegalArgumentException</code>) to the caller, and let the caller handles the exception gracefully. For example,</p>
+
+<pre class="color-example">
+<span class="color-comment">// Throw an exception if input is invalid</span>
+public void setHour(int hour) {
+   if (hour &gt;= 0 &amp;&amp; hour &lt;= 23) {
+      this.hour = hour;
+   } else {
+      <span class="color-new">throw new IllegalArgumentException(&quot;Invalid hour!&quot;);</span>
+   }
+}</pre>
+
+<p>The caller can use the <code>try-catch</code> construct to handle the exception <em>gracefully</em>. For example,</p>
+
+<pre class="color-example">
+try {
+   Time t = new Time(60, 59, 12);  <span class="color-comment">// Invalid input, throw exception</span>
+       <span class="color-comment">// Skip the remaining statements in try, goto catch</span>
+   System.out.println(&quot;This and the remaining will be skipped, if exception occurs&quot;);
+} catch (IllegalArgumentException ex) {
+   <span class="color-comment">// You have the opportunity to do something to recover from the error.</span>
+   ex.printStackTrace();
+}
+<span class="color-comment">// Continue the next statement after &quot;try&quot; or &quot;catch&quot;.</span></pre>
+
+<p>The statements in the <code>try</code>-clause will be executed. If all the statements in the <code>try</code>-clause are successful, the <code>catch</code>-clause is ignored, and execution continues to the next statement after <code>try-catch</code>. However, if one of the statement in the <code>try</code>-clause throws an exception (in this case, an <code>IllegalArgumentException</code>), the rest of <code>try</code>-clause will be skipped, and the execution will be transferred to the <code>catch</code>-clause. The program always continues to the next statement after the <code>try-catch</code> (instead of abruptly terminated).</p>
+
+
+<h5>A Test Driver Class for the <span class="font-code">Time</span> Class (<span class="font-code">TestTime.java</span>)</h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * A Test Driver for the Time class
+ */</span>
+public class TestTime {
+   public static void main(String[] args) {
+      <span class="color-comment">// Valid inputs</span>
+      Time t1 = new Time(1, 2, 3);
+      System.out.println(t1);
+
+      <span class="color-comment">// Invalid inputs</span>
+      // Time t2 = new Time(60, 59, 12);
+           <span class="color-comment">// program terminates abruptly
+           // NOT continue to the next statement</span>
+
+      <span class="color-comment">// Invalid inputs Handled gracefully via try-catch</span>
+      try {
+         Time t3 = new Time(60, 59, 12);  <span class="color-comment">// throw IllegalArgumentException</span>
+             <span class="color-comment">// Skip the remaining statements in try, goto catch</span>
+         System.out.println("This line will be skipped, if exception occurs");
+      } catch (IllegalArgumentException ex) {
+         <span class="color-comment">// You have the opportunity to do something to recover from the error.</span>
+         ex.printStackTrace();
+      }
+
+      <span class="color-comment">// Continue the next statement after &quot;try&quot; or &quot;catch&quot;.</span>
+      System.out.println("Continue after exception!");
+   }
+}</pre>
+
+<p>Without the proper <code>try-catch</code>, the &quot;<code>Time t2</code>&quot; will abruptly terminate the program, i.e., the rest of the program will not be run (try it by un-commenting the statement). With proper <code>try-catch</code> handling, the program can continue its operation (i.e., graceful handling of exception).</p>
+
+<h4 id="pointclass">EG. 6: The <span class="font-code">Point</span> class</h4>
+
+<img src="images/ClassDiagram_Point.png" alt="class diagram" />
+
+<p>A <code>Point</code> class models a 2D point at <code>(x,y)</code>, as shown in the class diagram. It contains the following members:</p>
+
+<ul>
+<li>2 <code>private</code> instance variables <code>x</code> and <code>y</code>, which maintain the location of the point.</li>
+
+<li>Constructors, getters and setters.</li>
+
+<li>A method <code>setXY()</code>, which sets the <code>x</code> and <code>y</code> of the point; and a method <code>getXY()</code>, which returns the <code>x</code> and <code>y</code> in a 2-element <code>int</code> array.</li>
+
+<li>A <code>toString()</code>, which returns &quot;<code>(x,y)</code>&quot;.</li>
+<li>3 versions of overloaded <code>distance()</code>:
+  <ul>
+<li><code>distance(int x, int y)</code> returns the distance from <code>this</code> instance to the given point at <code>(x,y)</code>.</li>
+<li><code>distance(Point another)</code> returns the distance from <code>this</code> instance to the given <code>Point</code> instance (called <code>another</code>).</li>
+<li><code>distance()</code> returns the distance from <code>this</code> instance to <code>(0,0)</code>.</li>
+</ul>
+
+</li>
+</ul>
+
+
+<h5>The <span class="font-code">Point</span> Class (<span class="font-code">Point.java</span>)</h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Point class models a 2D point at (x, y).
+ */</span>
+public class Point {
+   <span class="color-comment">// The private instance variables</span>
+   private int x, y;
+
+   <span class="color-comment">// The constructors (overloaded)</span>
+   public Point() {  <span class="color-comment">// The default constructor</span>
+      this.x = 0;
+      this.y = 0;
+   }
+   public Point(int x, int y) {
+      this.x = x;
+      this.y = y;
+   }
+
+   <span class="color-comment">// The public getters and setters</span>
+   public int getX() {
+      return this.x;
+   }
+   public void setX(int x) {
+      this.x = x;
+   }
+   public int getY() {
+      return this.y;
+   }
+   public void setY(int y) {
+      this.y = y;
+   }
+
+   <span class="color-comment">// Return &quot;(x,y)&quot;</span>
+   public String toString() {
+      return "(" + this.x + "," + this.y + ")";
+   }
+
+   <span class="color-comment">// Return a 2-element int array containing x and y.</span>
+   public int[] getXY() {
+      int[] results = new int[2];
+      results[0] = this.x;
+      results[1] = this.y;
+      return results;
+   }
+
+   <span class="color-comment">// Set both x and y.</span>
+   public void setXY(int x, int y) {
+      this.x = x;
+      this.y = y;
+   }
+
+   <span class="color-comment">// Return the distance from this instance to the given point at (x,y).</span>
+   public double distance(int x, int y) {
+      int xDiff = this.x - x;
+      int yDiff = this.y - y;
+      return Math.sqrt(xDiff*xDiff + yDiff*yDiff);
+   }
+   <span class="color-comment">// Return the distance from this instance to the given Point instance (called another).</span>
+   public double distance(Point another) {
+      int xDiff = this.x - another.x;
+      int yDiff = this.y - another.y;
+      return Math.sqrt(xDiff*xDiff + yDiff*yDiff);
+   }
+   <span class="color-comment">// Return the distance from this instance to (0,0).</span>
+   public double distance() {
+      return Math.sqrt(this.x*this.x + this.y*this.y);
+   }
+}</pre>
+
+<h5>A Test Driver (<span class="font-code">TestPoint.java</span>)</h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * A Test Driver for the Point class.
+ */</span>
+public class TestPoint {
+   public static void main(String[] args) {
+      <span class="color-comment">// Test constructors and toString()</span>
+      Point p1 = new Point(1, 2);
+      System.out.println(p1);  <span class="color-comment">// toString()</span>
+      Point p2 = new Point();  <span class="color-comment">// default constructor</span>
+      System.out.println(p2);
+
+      <span class="color-comment">// Test Setters and Getters</span>
+      p1.setX(3);
+      p1.setY(4);
+      System.out.println(p1);  <span class="color-comment">// run toString() to inspect the modified instance</span>
+      System.out.println(&quot;X is: &quot; + p1.getX());
+      System.out.println(&quot;Y is: &quot; + p1.getY());
+ 
+      <span class="color-comment">// Test setXY() and getXY()</span>
+      p1.setXY(5, 6);
+      System.out.println(p1);  <span class="color-comment">// toString()</span>
+      System.out.println(&quot;X is: &quot; + p1.getXY()[0]);
+      System.out.println(&quot;Y is: &quot; + p1.getXY()[1]);
+
+      <span class="color-comment">// Test the 3 overloaded versions of distance()</span>
+      p2.setXY(10, 11);
+      System.out.printf("Distance is: %.2f%n", p1.distance(10, 11));
+      System.out.printf("Distance is: %.2f%n", p1.distance(p2));
+      System.out.printf("Distance is: %.2f%n", p2.distance(p1));
+      System.out.printf("Distance is: %.2f%n", p1.distance());
+   }
+}</pre>
+
+<h4 id="ballclass">EG. 7: The <span class="font-code">Ball</span> class</h4>
+
+<img src="images/ClassDiagram_Ball.png" alt="class diagram" />
+
+<p>A <code>Ball</code> class models a moving ball, is designed as shown in the class diagram. It contains the following members:</p>
+
+<ul>
+<li>4 <code>private</code> variables <code>x</code>, <code>y</code>, <code>xStep</code>, <code>yStep</code>, which maintain the position of the ball and the displacement per move step.</li>
+
+<li>Constructors, getters and setters.</li>
+
+<li>Method <code>setXY()</code> and <code>setXYStep()</code>, which sets the position and  step size of the ball; and <code>getXY()</code> and <code>getXYSpeed()</code>.</li>
+
+<li>A <code>toString()</code>, which returns &quot;<code>Ball@(x,y),speed=(xStep,yStep)</code>&quot;.</li>
+
+<li>A method <code>move()</code>, which increases <code>x</code> and <code>y</code> by <code>xStep</code> and <code>yStep</code> respectively; and returns <code>this</code> instance to support chaining operation.</li>
+</ul>
+
+<h5>The <span class="font-code">Ball</span> Class (<span class="font-code">Ball.java</span>)</h5>
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * The Ball class models a moving ball at (x, y) with displacement
+ *   per move-step of (xStep, yStep).
+ */</span>
+public class Ball {
+   <span class="color-comment">// The private instance variables</span>
+   private double x, y, xStep, yStep;
+
+   <span class="color-comment">// Constructor</span>
+   public Ball(double x, double y, double xStep, double yStep) {
+      this.x = x;
+      this.y = y;
+      this.xStep = xStep;
+      this.yStep = yStep;
+   }
+
+   <span class="color-comment">// The public getters and setters</span>
+   public double getX() {
+      return this.x;
+   }
+   public void setX(double x) {
+      this.x = x;
+   }
+   public double getY() {
+      return this.y;
+   }
+   public void setY(double y) {
+      this.y = y;
+   }
+   public double getXStep() {
+      return this.xStep;
+   }
+   public void setXStep(double xStep) {
+      this.xStep = xStep;
+   }
+   public double getYStep() {
+      return this.yStep;
+   }
+   public void setYStep(double yStep) {
+      this.yStep = yStep;
+   }
+
+   <span class="color-comment">// Return a String to describe this instance</span>
+   public String toString() {
+      return "Ball@(" + x + "," + y + "),speed=(" + xStep + "," + yStep + ")";
+   }
+
+   public double[] getXY() {
+      double[] results = new double[2];
+      results[0] = this.x;
+      results[1] = this.y;
+      return results;
+   }
+   public void setXY(double x, double y) {
+      this.x = x;
+      this.y = y;
+   }
+   public double[] getXYStep() {
+      double[] results = new double[2];
+      results[0] = this.xStep;
+      results[1] = this.yStep;
+      return results;
+   }
+   public void setXYStep(double xStep, double yStep) {
+      this.xStep = xStep;
+      this.yStep = yStep;
+   }
+
+   <span class="color-comment">// Move a step by increment x and y by xStep and yStep, respectively.
+   // Return &quot;this&quot; instance to support chaining operation.</span>
+   public Ball move() {
+      x += xStep;
+      y += yStep;
+      return this;
+   }
+}</pre>
+
+<h5>A Test Driver (<span class="font-code">TestBall.java</span>)</h5>
+<pre class="color-example">
+<span class="color-comment">/*
+ * A Test Driver for the Ball class.
+ */</span>
+public class TestBall {
+   public static void main(String[] args) {
+      <span class="color-comment">// Test constructor and toString()</span>
+      Ball b1 = new Ball(1, 2, 11, 12);
+      System.out.println(b1);  <span class="color-comment">// toString()</span>
+
+      <span class="color-comment">// Test Setters and Getters</span>
+      b1.setX(3);
+      b1.setY(4);
+      b1.setXStep(13);
+      b1.setYStep(14);
+      System.out.println(b1);  <span class="color-comment">// run toString() to inspect the modified instance</span>
+      System.out.println(&quot;x is: &quot; + b1.getX());
+      System.out.println(&quot;y is: &quot; + b1.getY());
+      System.out.println(&quot;xStep is: &quot; + b1.getXStep());
+      System.out.println(&quot;yStep is: &quot; + b1.getYStep());
+ 
+      <span class="color-comment">// Test setXY(), getXY(), setXYStep(), getXYStep()</span>
+      b1.setXY(5, 6);
+      b1.setXYStep(15, 16);
+      System.out.println(b1);  <span class="color-comment">// toString()</span>
+      System.out.println(&quot;x is: &quot; + b1.getXY()[0]);
+      System.out.println(&quot;y is: &quot; + b1.getXY()[1]);
+      System.out.println(&quot;xStep is: &quot; + b1.getXYStep()[0]);
+      System.out.println(&quot;yStep is: &quot; + b1.getXYStep()[1]);
+
+      <span class="color-comment">// Test move() and chaining</span>
+      System.out.println(b1.move());  <span class="color-comment">// toString()</span>
+      System.out.println(b1.move().move().move());
+   }
+}</pre>
+
+<p><strong>Try</strong>: To support bouncing ball within a rectangular boundary, add a variable called <code>radius</code>, and methods <code>reflectHorizontal()</code> and <code>reflectVertical()</code>.</p>
+
+<h4>EG. 8: The <span class="font-code">Student</span> Class</h4>
+
+<img src="images/ClassDiagram_Student.png" alt="ClassDiagram_Student.png" />
+
+<p>Suppose that our application requires us to model students. A student has a name and an address. We are required to keep track of the courses taken by each student, together with the grades (between 0 and 100) for each of the courses. A student shall not take more than 30 courses for the entire program.  We are required to print all course grades, and also the overall average grade.</p>
+
+<p>We can design the <code>Student</code> class as shown in the class diagram. It contains the following members:</p>
+
+<ul>
+
+<li><code>private</code> instance variables <code>name</code> (<code>String</code>), <code>address</code> (<code>String</code>), <code>numCourses</code> (<code>int</code>), <code>course</code> (<code>String[30]</code>) and <code>grades</code> (<code>int[30]</code>). The <code>numCourses</code> keeps track of the number of courses taken by this student so far. The <code>courses</code> and <code>grades</code> are two parallel arrays, storing the courses taken (e.g., <code>{&quot;IM101&quot;, &quot;IM102&quot;, &quot;IM103&quot;}</code>) and their respective grades (e.g. <code>{89, 56, 98}</code>).</li>
+
+<li>A constructor that constructs an instance with the given <code>name</code> and <code>Address</code>. It also constructs the <code>courses</code> and <code>grades</code> arrays and set the <code>numCourses</code> to 0.</li>
+
+<li>Getters for <code>name</code> and <code>address</code>; setter for <code>address</code>. No setter is defined for <code>name</code> as it is not designed to be changed.</li>
+
+<li>A <code>toString()</code>, which prints &quot;<code>name(address)</code>&quot;.</li>
+
+<li>A method <code>addCourseGrade(course, grade)</code>, which appends the given <code>course</code> and <code>grade</code> into the <code>courses</code> and <code>grades</code> arrays, respectively; and increments <code>numCourses</code>.</li>
+
+<li>A method <code>printGrades()</code>, which prints &quot;<code>name course1:grade1, course2:grade2,...</code>&quot;.</li>
+
+<li>A method <code>getAverageGrade()</code>, which returns the average grade of all the courses taken.</li>
+</ul>
+
+<h5>The <span class="font-code">Student</span> Class (<span class="font-code">Student.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * The student class models a student having courses and grades.
+ */</span>
+public class Student {
+   <span class="color-comment">// The private instance variables</span>
+   private String name;
+   private String address;
+   <span class="color-comment">// The courses taken and grades for the courses are kept in 2 parallel arrays</span>
+   private String[] courses;
+   private int[] grades;     <span class="color-comment">// [0, 100]</span>
+   private int numCourses;   <span class="color-comment">// Number of courses taken so far</span>
+   private static final int MAX_COURSES = 30;  <span class="color-comment">// Maximum number of courses taken by student</span>
+ 
+   <span class="color-comment">// Constructor</span>
+   public Student(String name, String address) {
+      this.name = name;
+      this.address = address;
+      courses = new String[MAX_COURSES];  <span class="color-comment">// allocate arrays</span>
+      grades = new int[MAX_COURSES];
+      numCourses = 0;                     <span class="color-comment">// no courses so far</span>
+   }
+ 
+   <span class="color-comment">// The public getters and setters.
+   // No setter for name as it is not designed to be changed.</span>
+   public String getName() {
+      return this.name;
+   }
+   public String getAddress() {
+      return this.address;
+   }
+   public void setAddress(String address) {
+      this.address = address;
+   }
+ 
+   <span class="color-comment">// Describe this instance</span>
+   public String toString() {
+      return name + &quot;(&quot; + address + &quot;)&quot;;
+   }
+ 
+   <span class="color-comment">// Add a course and grade</span>
+   public void addCourseGrade(String course, int grade) {
+      courses[numCourses] = course;
+      grades[numCourses] = grade;
+      ++numCourses;
+   }
+ 
+   <span class="color-comment">// Print all courses taken and their grades</span>
+   public void printGrades() {
+      System.out.print(name);
+      for (int i = 0; i &lt; numCourses; ++i) {
+         System.out.print(&quot; &quot; + courses[i] + &quot;:&quot; + grades[i]);
+      }
+      System.out.println();
+   }
+ 
+   <span class="color-comment">// Compute the average grade</span>
+   public double getAverageGrade() {
+      int sum = 0;
+      for (int i = 0; i &lt; numCourses; ++i) {
+         sum += grades[i];
+      }
+      return (double)sum/numCourses;
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>A Test Driver for the <span class="font-code">Student</span> Class (<span class="font-code">TestStudent.java</span>)</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * A test driver program for the Student class.
+ */</span>
+public class TestStudent {
+   public static void main(String[] args) {
+      <span class="color-comment">// Test constructor and toString()</span>
+      Student ahTeck = new Student(&quot;Tan Ah Teck&quot;, &quot;1 Happy Ave&quot;);
+      System.out.println(ahTeck);  <span class="color-comment">// toString()</span>
+
+      <span class="color-comment">// Test Setters and Getters</span>
+      ahTeck.setAddress(&quot;8 Kg Java&quot;);
+      System.out.println(ahTeck);  <span class="color-comment">// run toString() to inspect the modified instance</span>
+      System.out.println(ahTeck.getName());
+      System.out.println(ahTeck.getAddress());
+
+      <span class="color-comment">// Test addCourseGrade(), printGrades() and getAverageGrade()</span>
+      ahTeck.addCourseGrade(&quot;IM101&quot;, 89);
+      ahTeck.addCourseGrade(&quot;IM102&quot;, 57);
+      ahTeck.addCourseGrade(&quot;IM103&quot;, 96);
+      ahTeck.printGrades();
+      System.out.printf(&quot;The average grade is %.2f%n&quot;, ahTeck.getAverageGrade());
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The expected outputs are:</p>
+<pre class="output">
+Tan Ah Teck(1 Happy Ave)
+Tan Ah Teck(8 Kg Java)
+Tan Ah Teck
+8 Kg Java
+Tan Ah Teck IM101:89 IM102:57 IM103:96
+The average grade is 80.67</pre>
+
+<p><span class="line-heading">Notes</span>: We used arrays In this example, which has several limitations. Arrays need to be pre-allocated with a fixed-length. Furthermore, we need two parallel arrays to keep track of two entities. There are advanced data structures that could represent these data better and more efficiently.</p>
+
+
+<h4>Exercises</h4>
+<p><a href="J3f_OOPExercises.html#ExerciseClass">LINK TO EXERCISES</a></p>
+  
+<a class="references" href="../howto/References.html#java">LINK TO JAVA REFERENCES &amp; RESOURCES</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.8.0_66<br />
+Last modified: April, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

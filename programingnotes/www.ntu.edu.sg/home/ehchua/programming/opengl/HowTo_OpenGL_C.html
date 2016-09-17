@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Setup and Get Started with OpenGL in C++</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Programming OpenGL in C/C++</h1>
+<h2>How To Setup and Get Started</h2>
+</div>
+
+<div id="content-main">
+
+<p>We need a C/C++ compiler, either GCC (GNU Compiler Collection) from MinGW or Cygwin (for Windows), or Visual C/C++ Compiler, or others.</p>
+
+<p>We need the following sets of libraries in programming OpenGL:</p>
+<ol>
+<li><span class="line-heading">Core OpenGL (GL)</span>: consists of hundreds of functions, which begin with a prefix &quot;<code>gl</code>&quot; (e.g., <code>glColor</code>, <code>glVertex</code>, <code>glTranslate</code>, <code>glRotate</code>).  The Core OpenGL models an object via a set of geometric primitives, such as point, line, and polygon.</li>
+
+<li><span class="line-heading">OpenGL Utility Library (GLU)</span>: built on-top of the   core OpenGL to provide important utilities and more building models   (such as qradric surfaces). GLU functions start with a prefix &quot;<code>glu</code>&quot;   (e.g., <code>gluLookAt</code>, <code>gluPerspective</code>)</li>
+
+<li><span class="line-heading">OpenGL Utilities Toolkit (GLUT)</span>: provides support   to interact with the Operating System (such as creating a window,   handling key and mouse inputs); and more building models (such as sphere   and torus). GLUT functions start with a prefix of &quot;<code>glut</code>&quot; (e.g., <code>glutCreatewindow</code>, <code>glutMouseFunc</code>). <br />
+  Quoting from the <a href="http://www.opengl.org/resources/libraries/glut/">opengl.org</a>: &quot;GLUT is designed for constructing small to medium sized OpenGL programs. While GLUT is well-suited to learning OpenGL and developing simple OpenGL applications, GLUT is not a full-featured toolkit so large applications requiring sophisticated user interfaces are better off using native window system toolkits. GLUT is simple, easy, and small.&quot;<br />
+  Alternative of GLUT includes SDL, ....</li>
+  
+<li><span class="line-heading">OpenGL Extension Wrangler Library (GLEW)</span>: &quot;GLEW is a cross-platform open-source C/C++ extension loading library. GLEW provides efficient run-time mechanisms for determining which OpenGL extensions are supported on the target platform.&quot; Source and pre-build binary available at <a href="http://glew.sourceforge.net/">http://glew.sourceforge.net/</a>.</li>
+</ol>
+
+<p>Each of the software package consists of:</p>
+<ol>
+<li>A <em>header</em> file: &quot;<code>gl.h</code>&quot; for core OpenGL, &quot;<code>glu.h</code>&quot; for GLU, and &quot;<code>glut.h</code>&quot; (or &quot;<code>freeglut.h</code>&quot;) for GLUT, typically kept under &quot;<code>include\GL</code>&quot; directory.</li>
+<li>A <em>static library</em>: for example, in Win32, &quot;<code>libopengl32.a</code>&quot; for core OpenGL, &quot;<code>libglu32.a</code>&quot; for GLU, &quot;<code>libglut32.a</code>&quot; (or &quot;<code>libfreeglut.a</code>&quot; or &quot;<code>glut32.lib</code>&quot;) for GLUT, typically kept under &quot;<code>lib</code>&quot; directory.</li>
+<li>An optional <em>shared library</em>: for example, &quot;<code>glut32.dll</code>&quot; (for &quot;<code>freeglut.dll</code>&quot;) for GLUT under Win32, typically kept under &quot;<code>bin<span class="color-comment"></span></code>&quot; or &quot;<code>c:\windows\system32</code>&quot;.</li>
+</ol>
+
+<p>It is important to locate the <em>directory path</em> and the <em>actual filename</em> of these header files and libraries in your operating platform in order to properly setup the OpenGL programming environment.</p>
+
+<h3>Eclipse CDT with Cygwin or MinGW</h3>
+
+<h4>Installing Eclipse CDT / Cygwin or MinGW, OpenGL, GLU and GLUT</h4>
+
+<h5>Step 1: Setup the Eclipse CDT (C Development Toolkit)</h5>
+
+<p>Read &quot;<a href="../howto/EclipseCpp_HowTo.html">How to install Eclipse CDT</a>&quot;.</p>
+
+<h5>Step 2: Setup  a GCC Compiler</h5>
+<p>We could use either MinGW or Cygwin.</p>
+
+<ul>
+
+<li id="mingw_glut"><span class="line-heading"> MinGW:</span> For MinGW, we need to install GLUT separately. Download freeglut (@ <a href="http://freeglut.sourceforge.net/index.php">http://freeglut.sourceforge.net/index.php</a>). I recommend using the pre-package version for MinGW (freeglut 2.8.0 MinGW Package) available at <a href="http://www.transmissionzero.co.uk/software/freeglut-devel/">http://www.transmissionzero.co.uk/software/freeglut-devel/</a>.<br />
+  Download, unzip and copy header files from &quot;<code>include\GL</code>&quot; to &quot;<code>&lt;MINGW_HOME&gt;\include\GL</code>&quot;; the libraries from &quot;<code>lib</code>&quot; to &quot;<code>&lt;MINGW_HOME&gt;\lib</code>&quot;, and shared library from &quot;<code>bin</code>&quot; to &quot;<code>&lt;MINGW_HOME&gt;\bin</code>&quot; (which should be included in the PATH environment variable), where <code>&lt;MINGW_HOME&gt;</code> is the MinGW installed directory.<br />
+
+Take note of the headers and libraries:
+<ol>
+<li>Headers: the OpenGL header &quot;<code>gl.h</code>&quot;, GLU header &quot;<code>glu.h</code>&quot; and GLUT header &quot;<code>glut.h</code>&quot; (or &quot;<code>freeglut.h</code>&quot;) are kept in  &quot;<code>&lt;MINGW_HOME&gt;\include\GL</code>&quot; directory. Since &quot;<code>&lt;MINGW_HOME&gt;\include</code>&quot; is in the implicit <em>include-path</em>. We can include the headers as <code>&lt;GL/glut.h&gt;</code>, <code>&lt;GL/glt.h&gt;</code>, and <code>&lt;GL/gl.h&gt;</code>.</li>
+  <li>Libraries: the OpenGL library &quot;<code>libopengl32.a</code>&quot;, GLU library &quot;<code>libglu32.a</code>&quot; and GLUT library &quot;<code>libfreeglut.a</code>&quot; are kept in  &quot;<code>&lt;MINGW_HOME&gt;\lib</code>&quot; directory. This directory is in the implicit <em>library-path</em>.<br />
+    Nonetheless, we need to include these libraries in linking. They shall be referred to as &quot;<code>opengl32</code>&quot;, &quot;<code>glu32</code>&quot;, &quot;<code>freeglut</code>&quot; without the prefix &quot;<code>lib</code>&quot; and suffix &quot;<code>.a</code>&quot;.</li>
+</ol>
+
+(Alternatively, you could download Nate Robin's original Win32 port of GLUT from @ <a href="http://www.xmission.com/~nate/glut.html">http://www.xmission.com/~nate/glut.html</a>, which has not been updated since 2001. Download, unzip and copy &quot;<code>glut.h</code>&quot; to &quot;<code>&lt;MINGW_HOME&gt;\include\GL</code>&quot;, &quot;<code>glut32.lib</code>&quot; to &quot;<code>&lt;MINGW_HOME&gt;\lib</code>&quot;, and &quot;<code>glut32.dll</code>&quot; to &quot;<code>&lt;MINGW_HOME&gt;\bin</code>&quot; (which should be included in the PATH))</li>
+
+<li><span class="line-heading"> Cygwin:</span> We need to install &quot;<code>gcc</code>&quot;, &quot;<code>g++</code>&quot;, &quot;<code>gdb</code>&quot;, &quot;<code>make</code>&quot; (under the &quot;<code>Devel</code>&quot; category) and &quot;<code>opengl</code>&quot;,  &quot;<code>freeglut</code>&quot; (under the &quot;<code>Graphics</code>&quot; category).
+
+<ol>
+<li>Headers: the OpenGL header &quot;<code>gl.h</code>&quot;, GLU header &quot;<code>glu.h</code>&quot;, and GLUT header &quot;<code>glut.h</code>&quot; are provided in the &quot;<code>&lt;CYGWIN_HOME&gt;\usr\include\w32api\GL</code>&quot; directory. As &quot;<code>&lt;CYGWIN_HOME&gt;\usr\include\w32api</code>&quot; is in the implicit <em>include-path</em>. We can include the headers as <code>&lt;GL/glut.h&gt;</code><code></code>, <code>&lt;GL/glt.h&gt;</code>, and <code>&lt;GL/gl.h&gt;</code>.</li>
+<li>Libraries: the OpenGL library &quot;<code>libopengl32.a</code>&quot;, GLU library &quot;<code>libglu32.a</code>&quot; and GLUT library &quot;<code>libglut32.a</code>&quot; are provided in the &quot;<code>&lt;CYGWIN_HOME&gt;\lib\w32api</code>&quot; directory. This directory is in the implicit <em>library-path</em>.<br />
+  Nonetheless, we need to include these libraries in linking. They shall be referred to as &quot;<code>opengl32</code>&quot;, &quot;<code>glu32</code>&quot;, &quot;<code>glut32</code>&quot; without the prefix &quot;<code>lib</code>&quot; and suffix &quot;<code>.a</code>&quot;.</li>
+  </ol>
+  </li>
+
+</ul>
+
+<p><span class="line-heading">Step 3: Configuring the Include-Path, Lib-Path and Library:</span> We can configure on per-project basis by right-click on the project &rArr; Properties &rArr;  C/C++ general &rArr; Paths and Symbols &rArr; Use &quot;Includes&quot; panel to configure the Include-Path; &quot;Library Paths&quot; panel for the Lib-Path; and &quot;Libraries&quot; panel for individual libraries. We will do this later.</p>
+<p>On command-line (for GCC), we could use option <code>-I&lt;dir&gt;</code> for include-path, <code>-L&lt;dir&gt;</code> for lib-path, and <code>-l&lt;lib&gt;</code> for library.</p>
+
+<h4>Writing Your First OpenGL Program</h4>
+
+<ol>
+<li>Launch Eclipse.</li>
+
+<li>Create a new C++ project: Select &quot;File&quot; menu &rArr; New &rArr; Project... &rArr; C/C++ &rArr; C++ Project &rArr; Next.<br />
+
+In &quot;Project name&quot;, enter &quot;<code>Hello</code>&quot; &rArr; In &quot;Project type&quot;, select &quot;Executable&quot;, &quot;Empty Project&quot; &rArr; In &quot;Toolchain&quot;, select &quot;Cygwin GCC&quot; or &quot;MinGW GCC&quot; (depending on your setup) &rArr; Next &rArr; Finish.</li>
+
+<li>Create a new Source file: Right-click on the project node &rArr; New &rArr; Other... &rArr; C/C++ &rArr; Source file &rArr; Next.<br />
+  In &quot;Source file&quot;, enter 
+&quot;<code>GL01Hello.cpp</code>&quot; &rArr; Finish.</li>
+
+<li>In the editor panel for &quot;<code>GL01Hello.cpp</code>&quot;, type the following source codes:<br />
+  
+NOTE: For Windows, you should include &quot;<code>windows.h</code>&quot; header before the OpenGL headers.
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * GL01Hello.cpp: Test OpenGL C/C++ Setup
+ */</span>
+#include &lt;windows.h&gt;  <span class="color-comment">// For MS Windows</span>
+#include &lt;GL/glut.h&gt;  <span class="color-comment">// GLUT, includes glu.h and gl.h</span>
+ 
+<span class="color-comment">/* Handler for window-repaint event. Call back when the window first appears and
+   whenever the window needs to be re-painted. */</span>
+void display() {
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); <span class="color-comment">// Set background color to black and opaque</span><br />   glClear(GL_COLOR_BUFFER_BIT);         <span class="color-comment">// Clear the color buffer</span>
+ 
+   <span class="color-comment">// Draw a Red 1x1 Square centered at origin</span>
+   glBegin(GL_QUADS);              <span class="color-comment">// Each set of 4 vertices form a quad</span>
+      glColor3f(1.0f, 0.0f, 0.0f); <span class="color-comment">// Red</span>
+      glVertex2f(-0.5f, -0.5f);    <span class="color-comment">// x, y</span>
+      glVertex2f( 0.5f, -0.5f);
+      glVertex2f( 0.5f,  0.5f);
+      glVertex2f(-0.5f,  0.5f);
+   glEnd();
+ 
+   glFlush();  <span class="color-comment">// Render now</span>
+}
+ 
+<span class="color-comment">/* Main function: GLUT runs as a console application starting at main()  */</span>
+int main(int argc, char** argv) {
+   glutInit(&amp;argc, argv);                 <span class="color-comment">// Initialize GLUT</span>
+   glutCreateWindow(&quot;OpenGL Setup Test&quot;); <span class="color-comment">// Create a window with the given title</span>
+   glutInitWindowSize(320, 320);   <span class="color-comment">// Set the window's initial width &amp; height</span>
+   glutInitWindowPosition(50, 50); <span class="color-comment">// Position the window's initial top-left corner</span>
+   glutDisplayFunc(display); <span class="color-comment">// Register display callback handler for window re-paint</span>
+   glutMainLoop();           <span class="color-comment">// Enter the infinitely event-processing loop</span>
+   return 0;
+}</pre>
+<img class="image-float-right" src="images/Output_SetupTest.png" />
+</li>
+
+
+<li>Configuring the &quot;include-paths&quot;, &quot;library-paths&quot; and &quot;libraries&quot;:<br />
+  Right-click on the project &rArr; Property &rArr; C/C++ general &rArr; Paths and Symbols.<br />
+
+Open the &quot;Libraries&quot; tab &rArr; Add &rArr; Enter &quot;<code>glut32</code>&quot; (Cygwin) or &quot;<code>freeglut</code>&quot; (MinGW with freeglut) &rArr; Add &rArr; Enter &quot;<code>glu32</code>&quot; &rArr; Add &rArr; Enter &quot;<code>opengl32</code>&quot;.<br />
+
+There is no need to configure the &quot;include-paths&quot; and &quot;library-paths&quot;, as they are implicitly defined.</li>
+<li>Build (right-click on the project node &rArr; &quot;Build Project&quot;) and Run (right-click on the project node &rArr; Run As &rArr; Local C/C++ Application).</li>
+</ol>
+
+<h4 id="gcc_command_line">GCC Compilation in Command-line</h4>
+
+<p>Observe the Eclipse's console. It uses the following commands to build the project:</p>
+
+<pre class="color-command">
+&gt; <strong>g++ -O0 -g3 -Wall -c -fmessage-length=0 -o GL01Hello.o &quot;..\\GL01Hello.cpp&quot;</strong> 
+   <span class="color-comment">// -c indicates compile-only
+   // -o &lt;<em>filename</em>&gt;: specifies the output filename
+   // -Wall shows all warning messages
+   // -O0 specifies the optimization level
+   // -g3 specifies the debugging information level, level 3 with extra information
+   // -fmessage-length=0 specifies the formatted error message length, 0 for no line wrapping</span>
+
+&gt; <strong>g++ -o GL01Hello.exe GL01Hello.o -lglu32 -lopengl32 -lfreeglut</strong>
+   <span class="color-comment">// -o &lt;<em>filename</em>&gt;: specifies the output filename
+   // -l&lt;<em>lib</em>&gt; specifies the library to be linked, which should be in the lib-path</span></pre>
+
+
+<p>The most important option is <code>-l&lt;lib&gt;</code>, which specifies the &quot;library&quot; to be linked. You might also need <code>-I&lt;dir&gt;</code> to specify the &quot;include-path&quot; and <code>-L&lt;dir&gt;</code> to specify the &quot;lib-path&quot;, if the header files and libraries are not kept in  implicit directories used by the compiler.</p>
+<p>You can find the commands used in Eclipse CDT for build the project at &quot;<code>.metadata\.plugins\org.eclipse.cdt.ui\global-build.log</code>&quot;.</p>
+
+<h3> CodeBlocks / MinGW</h3>
+
+<h4>Installing CodeBlocks, MinGW and GLUT</h4>
+<ol>
+<li>Install CodeBlocks and MinGW: Read &quot;<a href="../howto/CodeBlocks_HowTo.html">How to install CodeBlocks</a>&quot;.</li>
+<li>Install GLUT: Refer to the above <a href="#mingw_glut">&quot;step</a>&quot; in Eclipse/MinGW setup.</li>
+</ol>
+
+<h4>Writing Your First OpenGL Program</h4>
+<ol>
+<li>Create a new project: File &rArr; New &rArr; Project... &rArr; Console Application &rArr; GO &rArr; C++ &rArr; In &quot;Project title&quot;, enter &quot;hello&quot; &rArr; Next &rArr; Finish.</li>
+<li>Open &quot;<code>main.cpp</code>&quot;, and replace with the code, as shown in the previous section.</li>
+<li>Configure the libraries: Right-click on the project &rArr; Build Option... &rArr; Linker Settings &rArr; In &quot;Link Libraries&quot; &rArr; Add &rArr; enter &quot;<code>freeglut</code>&quot; &rArr; Add &rArr; enter &quot;<code>glu32</code>&quot; &rArr; Add &rArr; enter &quot;<code>opengl32</code>&quot;.<br />
+  There is no need to configure the &quot;include-paths&quot; and the &quot;library-paths&quot;, as they are implicitly defined.</li>
+<li>Build (right-click on the project &rArr; Build) and Run (Select &quot;Build&quot; menu &rArr; Run).</li>
+</ol>
+
+<h4>GCC Compilation in Command-line</h4>
+<p>Refer to the above &quot;<a href="#gcc_command_line">section</a>&quot; on &quot;Eclipse with GCC&quot;.</p>
+
+
+<h3> Visual C++ 2010 Express</h3>
+
+<h4>Installing VC++, OpenGL, GLU and GLUT</h4>
+<p>You need to install:</p>
+<ol>
+<li><span class="line-heading">Visual C++ Express 2010</span>: Read &quot;<a href="../howto/Vcpp_HowTo.html#vcpp-install">How to install Visual C++ Express</a>&quot;. VC++ would be installed in &quot;<code>C:\Program Files\Microsoft Visual Studio 10.0\VC</code>&quot;, with headers in  sub-directory &quot;<code>include</code>&quot; and libraries in &quot;<code>lib</code>&quot;.</li>
+
+<li><span class="line-heading">Windows SDK which includes OpenGL and GLU (OpenGL Utility)</span>. The Visual C++ 2010 Express  bundles the Microsoft Windows SDK, which would be installed in &quot;<code>C:\Program Files\Microsoft SDKs\Windows\v7.0A</code>&quot;. (Otherwise, you need to download and install the Windows SDK separately).<br />
+The followings are used from Windows SDK:
+
+<ul>
+<li><code>gl.h</code>, <code>glu.h</code>: header for OpenGL and GLU in directory &quot;<code>C:\Program Files\Microsoft SDKs\Windows\v7.0A\include\gl</code>&quot;.</li>
+<li><code>opengl32.lib</code>, <code>glu32.lib</code>: libraries for OpenGL and GLU in directory &quot;<code>C:\Program Files\Microsoft SDKs\Windows\v7.0A\lib</code>&quot;.</li>
+<li><code>opengl32.dll</code>, <code>glu32.dll</code>: dynamic link libraries for OpenGL and GLU in directory &quot;<code>C:\Windows\System32</code>&quot;. This directory is  to be included in PATH environment variable.</li>
+</ul>
+
+<p>If you use the VC++ IDE, the include-path and lib-path would have been set correctly. If you use the CMD shell, you need to run the batch file &quot;<code>vcvarsall.bat</code>&quot; (in &quot;<code>C:\Program Files\Microsoft Visual Studio 10.0\VC\bin</code>&quot;), or &quot;<code>vcvars32.bat</code>&quot; in the earlier version, to set the environment variables.</p>
+</li>
+
+<li><span class="line-heading">GLUT (OpenGL Utility Toolkit)</span>: Download Nate Robin's original Win32 port of GLUT from  @ <a href="http://www.xmission.com/~nate/glut.html">http://www.xmission.com/~nate/glut.html</a> (or freeglut @ <a href="http://freeglut.sourceforge.net">http://freeglut.sourceforge.net</a>). Unzip and copy &quot;<code>glut.h</code>&quot; to &quot;<code>C:\Program Files\Microsoft SDKs\Windows\v7.0A\include\gl</code>&quot;, <code>&quot;glut32.lib</code>&quot; to &quot;<code>C:\Program Files\Microsoft SDKs\Windows\v7.0A\lib</code>&quot;, and &quot;<code>glut32.dll</code>&quot; to &quot;<code>C:\Windows\System32</code>&quot; (that is, the same locations as OpenGL and GLU).</li>
+</ol>
+
+<h4>Writing Your First OpenGL Program</h4>
+
+<p>To Write your first OpenGL program with GLUT:</p>
+
+<ol>
+
+<li>Launch Visual C++ 2010 Express.</li>
+
+<li>Create a new &quot;Win32 Console Application&quot; project: Select &quot;File&quot; menu &rArr; New &rArr; Project... &rArr; In &quot;Project Types&quot;, select &quot;Visual C++&quot;, &quot;Win32&quot;. In &quot;Templates&quot;, select &quot;Win32 Console Application&quot;. In &quot;Location&quot;, set your working directory. In &quot;Name&quot;, enter &quot;<code>hello</code>&quot; &rArr; Next &rArr; Check &quot;Empty Project&quot; &rArr; Finish.</li>
+
+<li>Create a new Source file: Right-click on the &quot;Source Files&quot; of the project name &rArr; Add &rArr; New Item... &rArr; In &quot;Categories&quot;, select &quot;Visual C++&quot;, &quot;Code&quot;. In &quot;Templates&quot;, select &quot;C++ File (.cpp)&quot;. In &quot;Name&quot;, type &quot;<code>GL01Hello.cpp</code>&quot; &rArr; Add.</li>
+
+<li>In the editor panel for &quot;<code>GL01Hello.cpp</code>&quot;, replace with the above code (in the previous section).</li>
+
+<li>Build the solution (&quot;Build&quot; menu &rArr; Build Solution) and run the program (&quot;Debug&quot; menu &rArr; &quot;Start Without Debugging&quot;).</li>
+
+</ol>
+
+<h4>Common OpenGL Programming Errors (for VC++)</h4>
+<ul>
+<li>Linkage Error: Right-click on the project name &rArr; In &quot;Configuration&quot; drop-down menu, select &quot;All Configurations&quot; (i.e., release and debug) &rArr; Expand the &quot;Configuration Properties&quot; node. Expand the &quot;Linker&quot; sub-node &rArr; Select &quot;Input&quot; &rArr; In &quot;Additional Dependencies&quot;, type &quot;<code>opengl32.lib glu32.lib glut32.lib</code>&quot;.<br />
+Alternatively, you could also use pre-processor directives to instruct compiler about the libraries used (I prefer this approach, which avoids manual configuration for every project):
+<pre class="color-example">#ifdef _MSC_VER                         <span class="color-comment">// Check if MS Visual C compiler
+</span>#  pragma comment(lib, &quot;opengl32.lib&quot;)  <span class="color-comment">// Compiler-specific directive to avoid manually configuration</span>
+#  pragma comment(lib, &quot;glu32.lib&quot;)     <span class="color-comment">// Link libraries</span>
+#endif</pre>
+</li>
+<li>&quot;error  C2664: 'xxxx' : cannot convert parameter 2 from 'const char [xx]' to 'LPCWSTR'&quot;: Right-click on the project name &rArr; In &quot;Configuration&quot; drop-down menu, select &quot;All Configurations&quot; (i.e., release and debug) &rArr; Expand the &quot;Configuration Properties&quot; node &rArr; General &rArr; Character Set &rArr; Set to &quot;Use Multi-Byte Character Set&quot;.<br />
+Alternative, you can use preprocessor directives:
+<pre class="color-example">#ifdef _MSC_VER        <span class="color-comment">// Check if MS Visual C compiler
+</span>#   ifndef _MBCS
+#      define _MBCS    <span class="color-comment">// Uses Multi-byte character set</span>
+#   endif
+#   ifdef _UNICODE     <span class="color-comment">// Not using Unicode character set</span>
+#      undef _UNICODE 
+#   endif
+#   ifdef UNICODE
+#      undef UNICODE 
+#   endif
+#endif</pre>
+</li>
+
+<li>Cannot find &quot;<code>glaux.h</code>&quot;: Try remove &quot;<code>#include &lt;gl/glaux.h&gt;</code>&quot; from the source code. (Nehe's tutorial codes included a header &quot;<code>gl\glaux.h</code>&quot; for reading BMP file from Lesson #6 onwards. Lesson #1 to #5 do not require this header. GLUAX is obsolete and excluded from Windows SDK v6.0a.) If that does not work, you may have to download and install GLUAX package.</li>
+</ul>
+
+<h4>VC Compilation in Command-line</h4>
+<p>You can use the following command-line options to compile and link an OpenGL program. (You should study the command-line options produced by VC++. Right-click on the project name &rArr; Properties &rArr; Expand &quot;Configuration Properties&quot; node &rArr; Expand &quot;C/C++&quot; or &quot;Linker&quot; sub-node &rArr; Command-line.) Assume that the headers (<code>gl.h</code>, <code>glu.h</code>, <code>glut.h</code>) path is set in the <code>INCLUDE</code> environment variable, and the link libraries (<code>opengl32.lib</code>, <code>glu32.lib</code>, <code>glut32.lib</code>) path is set in the <code>LIB</code> environment variable:</p>
+
+<pre class="color-example">
+&gt; <strong>cl /D &quot;_MBCS&quot; /c FirstOpenGLProgram.cpp</strong>
+      <span class="color-comment">/c option for compile only without linking,
+      /D &quot;_MBCS&quot; for multi-byte character set, 
+      /D &quot;_UNICODE&quot; for Unicode character set.</span>
+&gt; <strong>link /link opengl32.lib glu32.lib glut32.lib kernel32.lib user32.lib gdi32.lib FirstOpenGLProgram.obj</strong>
+      <span class="color-comment">/link option specifies the link libraries</span></pre>
+
+<h3>Nehe's OpenGL Tutorial</h3>
+
+<p>Nehe's production maintains an excellent OpenGL tutorial @ <a href="http://nehe.gamedev.net">http://nehe.gamedev.net</a>.</p>
+<p>OpenGL is language neutral, i.e., you can write your OpenGL programs in Windows, Java, Linux, Mac, etc. Under Windows, there are again many ways to write a OpenGL program. e.g., Win32 API directly, GLUT or FreeGLUT, SDL (Single DirectMedia Layer), Allegro, etc.</p>
+<p>Nehe's lessons are explained in Win32 API, which is complex, cumbersome and hard and to understand. Nonetheless, the solutions are also ported to all the other platforms. I strongly suggest that you follow the solution using GLUT (which greatly simplifies interaction to Windows).</p>
+
+<a class="references" href="References_OpenGL.html">Link to OpenGL/Computer Graphics References and Resources</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Eclipse 4.2 with CDT 8.1, CodeBlocks 10.05 with MinGW, VC++ 2008 Express<br />
+Last modified: July, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

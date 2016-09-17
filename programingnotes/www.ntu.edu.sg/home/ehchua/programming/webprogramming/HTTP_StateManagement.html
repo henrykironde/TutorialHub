@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HTTP State Management</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>HTTP</h1>
+<h2>State &amp; Session Management</h2>
+
+<h3>Introduction</h3>
+
+<p>HTTP is a <em>stateless</em> (or <em>non-persistent</em>) protocol. Each request is treated by its own. A request will not know what was done in the previous requests. The protocol is designed to be stateless for simplicity.  However, some Internet applications, such as e-commerce shopping cart, require the state information to be passed one request to the next. Since the protocol is stateless, it is the responsibility of the  application to maintain state information within their application.</p>
+
+<p>A few techniques can be used to maintain state information across multiple HTTP requests, namely,</p>
+
+<ol>
+<li>Cookie</li>
+<li>Hidden fields of the HTML form.</li>
+<li>URL rewriting.</li>
+</ol>
+
+<h3>Cookies</h3>
+
+<p>HTTP is a <em>stateless</em> protocol. That is, the server does not hold any information on previous requests sent by the client. Client-side cookies were introduced by Netscape to maintain state, by storing client-specific information on the client's machine and later retrieved to obtain the state information. Montulli, the creator of cookie from Netscape, chose the term &quot;cookie&quot; as &quot;a cookie is a well-known computer science term that is used when describing an opaque piece of data held by an  intermediary&quot;.  The term opaque here implies that the content is of interest and relevance only to the server and not the client.</p>
+
+<p>A cookie is a small piece of information that a server  sends to a browser and stored inside the browser.  The browser will automatically include the  cookie in all its subsequent requests to the <em>originating host</em> of the  cookie.  Take note that cookies are only sent back by the browser to their originating host and not any other hosts. In this way, the server can  uniquely identify a client (or a browser).</p>
+
+<p>A cookie has a name and a value, and other attribute such as  domain and path, expiration date, version number, and comments.  Domain and path specifies which server (and path) to  return the cookie.  Cookie could be  persistent (with a future expiration date) or last only for that particular  browser’s session (i.e., removed when you close the browser).  A web browser is only required to accept up  to 20 cookies per server and 300 cookies in total.  Each cookie is limited to 4 KB.</p>
+
+<p>A server can set the cookie's value to  uniquely identify a client. Hence, cookies are commonly used for session and user management. Cookie can be used to hold personalized information, or to help in on-line sales/service (e.g. shopping cart), or tracking popular links, or for demographics purpose.</p>
+
+<p>The main limitation of using cookie for tracking is <em>users  may disable cookie in their browser</em>.</p>
+
+<p>There are 2 versions of cookie specifications. Version 0 is specified by Netscape, while version 1 is specified in &quot;RFC2965 and RFC 2109: HTTP State Management Mechanism&quot;.</p>
+
+<h4>&quot;<code>Set-Cookie</code>&quot; Response Header</h4>
+
+<p>A cookie is created when a client visits a site for the first time. A server-side program sends a response message containing a &quot;<code>Set-Cookie</code>&quot; response header. The header contains a name/value pair of the cookie plus some additional information.</p>
+
+<h5>Cookie Version 0 &quot;<code>Set-Cookie</code>&quot; Header (Netscape)</h5>
+
+<pre class="code-syntax">Set-Cookie: <em>cookie-name</em>=<em>cookie-value</em>; expires=<em>date</em>; path=<em>path-name</em>; domain=<em>domain-name</em>; secure
+</pre>
+
+<ul>
+<li><em><code>cookie-name</code></em><code>=<em>cookie-value</em></code>:  Required,  the name and value of the cookie to be set.</li>
+
+<li><code>expires=<em>date</em></code>:  Specifies the expired date of that cookie in the form &quot;<code>Day, DD-Mon-YYYY HH:MM:SS GMT</code>&quot;.  If not specified, the cookie will expire when the current user's session ends (i.e., non-persistent cookie).</li>
+
+<li><code>domain=<em>domain-name</em></code>:  Specifies the domain that this cookie is valid. &quot;Tail matching&quot; is performed, e.g. &quot;<code>test.com</code>&quot; matches hostnames &quot;<code>my.test.com</code>&quot; and &quot;<code>a.b.test.com</code>&quot;.  The default value is the hostname of the server which generates the cookie.</li>
+
+<li><code>path=<em>path-name</em></code>:  Specifies the subset of URLs in the domain for which the cookie is valid.  The cookie must first pass the domain matching, before performing the path matching.  If the path is not specified, it is default to current page.</li>
+
+<li><code>Secure</code>:  If a cookie is marked secure, it will only be transmitted over secure link, e.g., SSL.</li>
+
+<li>Multiple <code>Set-Cookie</code> headers can be used in the same message.</li>
+
+<li>You can delete a cookie by setting the &quot;<code>expires</code>&quot; to a value in the past, with the same domain and path.</li>
+</ul>
+
+<p>For Example:</p>
+<pre class="code-example">Set-Cookie: cookie1=111; Expires=Sat, 21-Feb-2004 05:04:54 GMT</pre>
+
+<h5>Cookie Version 1 &quot;<code>Set-Cookie</code>&quot; Header (RFC2109/RFC2965)</h5>
+
+<pre class="code-syntax">Set-Cookie: <em>cookie-name</em>=<em>cookie-value</em>; Comment=<em>text</em>; Domain=<em>domain-name</em>; Path=<em>path-name</em>; Max-Age=<em>seconds</em>; Version=1; Secure</pre>
+
+<ul>
+<li><code>Max-Age</code>:  maximum age of the cookie in seconds.  A positive value indicates that the cookie will expire after that many seconds have passed. Note that the value is the maximum age when the cookie will expire, not the cookie's current age.  A negative value means that the cookie is not stored persistently and will be deleted when the web browser exits. A zero value causes the cookie to be deleted.  <code>Max-Age</code> is used in version 1 in place of <code>Expires</code>.</li>
+<li><code>Version</code>:  set the version of the cookie protocol this cookie complies with.  Value of 0 complies with the original Netscape cookie specification.  Value of 1 complies with RFC2965/RFC2109.</li>
+</ul>
+
+<p>RFC2965 define a new header &quot;<code>Set-Cookie2</code>&quot;, which might not be widely supported by browsers, as follows:</p>
+<pre class="code-syntax">Set-Cookie2: <em>cookie-name</em>=<em>cookie-value</em>; Comment=<em>text</em>; CommentURL=<em>url</em>; 
+  Domain=<em>domain-name</em>; Path=<em>path-name</em>; Max-Age=<em>seconds</em>; Port=<em>port-list</em>; Version=1; Secure
+</pre>
+
+<h4>&quot;<code>Cookie</code>&quot; Request Header</h4>
+<p>The client returns the cookie(s) to the matching domain and path in the subsequent requests, using a &quot;Cookie&quot; request header.</p>
+<pre class="code-syntax">Cookie: <em>cookie-name-1</em>=<em>cookie-value-1</em>; <em>cookie-name-2</em>=<em>cookie-value-2</em>; ...</pre>
+
+<h4>Trace of Non-persistent Cookies</h4>
+
+<table class="table-program">
+  <tr>
+    <td><strong>Client</strong></td>
+    <td>
+<pre class="code-command">GET <strong>/test/servlet/CookieTest</strong> HTTP/1.1
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+Host: 127.0.0.1:8000
+Connection: Keep-Alive</pre>
+    </td>
+  </tr>
+  
+  <tr>
+    <td><strong>Server</strong></td>
+    <td>
+<pre class="code-output">HTTP/1.1 200 OK
+<strong>Set-Cookie: cookie1=11111111</strong>
+Content-Type: text/html;charset=ISO-8859-1
+Content-Length: 156
+Date: Sun, 08 Feb 2004 16:23:13 GMT
+Server: Apache-Coyote/1.1
+   
+(response message body omitted)</pre>
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Client</strong></td>
+    <td>
+<pre class="code-command">GET <strong>/test/servlet/CookieTest</strong> HTTP/1.1
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+Host: 127.0.0.1:8000
+Connection:    Keep-Alive
+<strong>Cookie: cookie1=11111111</strong></pre>
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Server</strong></td>
+    <td>
+<pre class="code-output">HTTP/1.1 200 OK
+<strong>Set-Cookie: cookie2=22222222</strong> 
+Content-Type: text/html;charset=ISO-8859-1
+Content-Length: 156
+Date: Sun, 08 Feb 2004 16:23:13 GMT
+Server: Apache-Coyote/1.1
+   
+(response message body omitted)</pre>
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Client</strong></td>
+    <td>
+<pre class="code-command">GET <strong>/test/servlet/CookieTest</strong> HTTP/1.1
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+Host: 127.0.0.1:8000
+Connection: Keep-Alive
+<strong>Cookie: cookie1=11111111; cookie2=22222222</strong></pre>
+    </td>
+  </tr>
+</table>
+
+<h4>Trace of Persistent Cookies</h4>
+
+
+<table class="table-program">
+  <tr>
+    <td><strong>Client</strong></td>
+    <td><pre class="code-command">GET /cookie/servlet/TestCookieClass HTTP/1.1
+Accept: image/gif, image/jpeg, */*
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)
+Host: 127.0.0.1:8000
+Connection: Keep-Alive</pre>
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Server</strong></td>
+    <td>
+<pre class="code-output">HTTP/1.1 200 OK
+Set-Cookie: cc4=4444; Expires=Tue, 10-Feb-2004 18:32:03 GMT
+Content-Type: text/html; charset=ISO-8859-1
+Content-Length: 550
+Date: Tue, 10 Feb 2004 04:38:43 GMT
+Server: Apache-Coyote/1.1 
+   
+(response message body omitted)</pre>
+    </td>
+  </tr>
+</table>
+
+<p>The cookie file contains the following:</p>
+
+<table class="table-program">
+
+<tr>
+<td width="28%">
+<pre class="code-listing">cc4
+4444
+127.0.0.1/cookie/servlet/
+1024
+762958720
+29618180
+3279392352
+29618063
+*</pre>
+</td>
+
+<td width="72%">
+<pre class="code-explanation">Name
+Value
+Matching domain and path
+??
+??
+??
+??
+??
+Cookie separator</pre>
+</td>
+</tr>
+</table>
+
+<h4>Security and Privacy Issues</h4>
+
+<ul>
+<li>Cookie is not a program: A cookie is just a simple piece of text. It is not a program (like JavaScript or Java Applets), macro, or plug-in. It cannot be used a virus. It cannot access your hard disk, read/write your files or format your hard disk.</li>
+
+<li>Cookie cannot fill up your hard disk:  The number of cookie a particular host can send to you is 20. The cookie size is limited to 4KB.  The total number of cookie (from all hosts) is 300.  Hence, cookie cannot fill up your hard disk.</li>
+
+<li>Cookie can only be sent back to its originated host and not to a third party host.</li>
+
+<li>Cookie is sent and stored in clear text and not encrypted. This is susceptible to eavesdropping and malicious tampering during transit. Cookie SHOULD NOT hold confidential information such as password or credit card number as they are sent in clear text.</li>
+
+<li>Cookie could pose some privacy concern: A cookie cannot snoop the hard disk and find out who you are or what your income is. The only way such information could end up in a cookie is if you provide them (e.g., filling up a form) to a site that creates the cookie. Furthermore, it is important to note that you will only get the cookie if you have visited the originated host. Many users wonder why they have a cookie from &quot;ad.doubleclick.net&quot; but they have never explicitly visited the host. This is because many sites on the Internet do not keep their advertisements locally, but they subscribe to a media service that places the ads for them thru a hyperlink. That hyperlink returns a ads image together with a cookie, also check the previous cookie saved, for demographic purpose.</li>
+</ul>
+
+<h3>HTTP Session Management</h3>
+<p>The following techniques can be used for HTTP session management:</p>
+<ol>
+<li>Cookies</li>
+<li>URL rewriting</li>
+<li>Hidden fields in HTML form.</li>
+</ol>
+
+<h4>Cookie</h4>
+<p>Most often cookie is used to store a session ID.  The session management is done at the server side, instead of client side.</p>
+
+<p>For example, the following Java servlet uses cookie for managing session ID:</p>
+
+<pre class="code-example">HashTable allSessions = new HashTable();
+...
+String sessionID = getUniqueSessionID();
+HashTable sessionData = new HashTable();
+allSessions.put(sessionID, sessionData);
+Cookie sessionCookie = new Cookie(&quot;sessionID&quot;, sessionID);
+sessionCookie.setPath(&quot;/&quot;);
+response.addCookie(sessionCookie);</pre>
+
+<p>The problem on using cookie is some users disable cookie due to the real and perceived privacy concerns over cookies.</p>
+
+<h4>Hidden Field in the HTML Form</h4>
+<p>The principle is to include an HTML form with a hidden field  containing a session ID in all the HTML pages sent to the client.  This hidden field will be returned back to  the server in the request.   No cookie needed.  The disadvantage of this approach is it requires careful and tedious  programming effort, as all the pages have to be dynamically generated to include this hidden field.  The advantage is all  browser supports HTML form.</p>
+<pre class="code-listing">&lt;form method=&quot;post&quot; action=&quot;url&quot;&gt;
+  &lt;input type=&quot;hidden&quot; name=&quot;sessionid&quot; value=&quot;1111&quot;&gt;
+  ...
+  &lt;input type=&quot;submit&quot;&gt;
+&lt;/form&gt;</pre>
+
+<h4>URL rewriting</h4>
+<p>The principle is to include a unique session ID in all  the URLs issued by the client, which identifies the session. For example,</p>
+<pre class="code-example">http://host:port/shopping.html<strong>;sessionid=<em>value</em></strong></pre>
+
+<p>To accomplish this objective, you must <em>rewrite</em> all the URLs in all the HTML files that is send to the client with this unique  session ID (such as <code>&lt;a href='url'&gt;</code>, <code>&lt;form  action='url'&gt;</code> etc.).   Again, careful and tedious programming efforts are required.  The advantage is all browser supports URL  rewriting. URL rewriting works even if the browsers do not support cookies or the user disables cookies.</p>
+
+<h3>Examples</h3>
+
+<p>Java Servlet: Read ....</p>
+
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>RFC 2964: &quot;Use of HTTP State Management&quot;, 2000.</li>
+<li>RFC 2109: &quot;HTTP State  Management Mechanism&quot;, 1997, (obsolete by RFC2965).</li>
+<li>RFC2965: &quot;HTTP State Management Mechanism&quot;, 2000.</li>
+<li>RFC 2965 and RFC 2109: &quot;HTTP State Management Mechanism&quot;.</li>
+<li>&quot;Persistent  Client State: HTTP Cookie (Cookie Version 0 Specification)&quot;, Netscape</li>
+<li>RFC 1945: &quot;Hypertext Transfer Protocol HTTP/1.0&quot;, 1996.</li>
+<li>RFC 2616: &quot;Hypertext Transfer Protocol HTTP/1.1&quot;, 1999.</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: Apache HTTP Server 2.2.14<br />
+Last modified: October 20, 2009</p>
+
+</div> 
+<!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div> <!-- End the container division -->
+</body>
+</html>

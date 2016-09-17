@@ -1,0 +1,1133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Graphics Programming Exercises - Java Programming Tutorial</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>Graphics Programming Exercises</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>AWT GUI Applications/Applets</h3>
+
+<h4>Ex: <span class="font-code">AWTCounter</span></h4>
+
+<img src="images/AWT_Counter.png" />
+
+<p>Write an AWT GUI application (called <code>AWTCounter</code>) as shown in the Figure.  Each time the &quot;Count&quot; button is clicked, the counter value shall increase by 1.</p>
+<p>The program has three components:</p>
+<ol>
+<li>a <code>java.awt.Label</code> &quot;<code>Counter</code>&quot;;</li>
+<li>a non-editable <code>java.awt.TextField</code> to display the counter value; and</li>
+<li>a <code>java.awt.Button</code> &quot;<code>Count</code>&quot;.</li>
+</ol>
+<p>The components are placed inside the top-level AWT container <code>java.awt.Frame</code>, arranged in <code>FlowLayout</code>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;         <span class="color-comment">// Using AWT's containers and components</span>
+import java.awt.event.*;   <span class="color-comment">// Using AWT's event classes and listener interfaces</span>
+ 
+<span class="color-comment">// An AWT GUI program inherits the top-level container java.awt.Frame</span>
+public class AWTCounter extends Frame implements ActionListener {
+   private Label lblCount;     <span class="color-comment">// Declare component Label</span>
+   private TextField tfCount;  <span class="color-comment">// Declare component TextField</span>
+   private Button btnCount;    <span class="color-comment">// Declare component Button</span>
+   private int count = 0;      <span class="color-comment">// counter's value</span>
+ 
+   <span class="color-comment">// Constructor to setup UI components and event handlers</span>
+   public AWTCounter () {
+      setLayout(new FlowLayout());
+         <span class="color-comment">// &quot;super&quot; Frame sets layout to FlowLayout, which arranges</span>
+         <span class="color-comment">//  Components from left-to-right, then top-to-bottom.</span>
+ 
+      lblCount = new Label(&quot;Counter&quot;); <span class="color-comment">// Construct component Label</span>
+      add(lblCount);                   <span class="color-comment">// &quot;super&quot; Frame adds Label</span>
+ 
+      tfCount = new TextField(count + &quot;&quot;, 10); <span class="color-comment">// Construct component TextField</span>
+      tfCount.setEditable(false);       <span class="color-comment">// read-only</span>
+      add(tfCount);                     <span class="color-comment">// &quot;super&quot; Frame adds TextField</span>
+ 
+      btnCount = new Button(&quot;Count&quot;);   <span class="color-comment">// Construct component Button</span>
+      add(btnCount);                    <span class="color-comment">// &quot;super&quot; Frame adds Button</span>
+      btnCount.addActionListener(this);
+         <span class="color-comment">// btnCount is the source object that fires ActionEvent when clicked.</span>
+         <span class="color-comment">// The source add &quot;this&quot; instance as an ActionEvent listener, which provides</span>
+         <span class="color-comment">//  an ActionEvent handler called actionPerformed().</span>
+         <span class="color-comment">// Clicking btnCount invokes actionPerformed().</span>
+ 
+      setSize(250, 100);       <span class="color-comment">// &quot;super&quot; Frame sets initial size</span>
+      setTitle(&quot;AWT Counter&quot;); <span class="color-comment">// &quot;super&quot; Frame sets title</span>
+      setVisible(true);        <span class="color-comment">// show &quot;super&quot; Frame</span>
+   }
+ 
+   <span class="color-comment">// ActionEvent handler - Called back when the button is clicked.</span>
+   @Override
+   public void actionPerformed(ActionEvent evt) {
+      ++count;                     <span class="color-comment">// Incrase the counter value</span>
+      tfCount.setText(count + &quot;&quot;); <span class="color-comment">// Display on the TextField</span>
+                                   <span class="color-comment">// setText() takes a String</span>
+   }
+ 
+   <span class="color-comment">// The entry main() method</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Invoke the constructor by allocating an anonymous instance</span>
+      new AWTCounter();
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>You have to use control-c, or &quot;close&quot; the CMD shell, or hit the &quot;terminate&quot; button on Eclipse's Console to terminate the program.  This is because the program does not process the <code>WindowEvent</code> fired by the &quot;window-close&quot; button.</p>
+
+<p class="line-heading">TRY:</p>
+
+<img src="images/AWT_CountDown.png" />
+<img src="images/AWT_Factorial.png" />
+<ol>
+<li>Modify the program (called <code>AWTCounterDown</code>) to count down, with an initial value of 88, as shown.
+</li>
+
+<li>Modify the program (called <code>AWTFactorial</code>) to display n and factorial of n, as shown. Clicking the &quot;Next&quot; button shall increase n by 1. n shall begin at 1.</li>
+</ol>
+
+<h4>Ex: <span class="font-code">AWTAccumulator</span></h4>
+
+<img src="images/AWT_Accumulator.png" />
+
+<p>Write an AWT GUI application called <code>AWTAccumulator</code>, which has four components:</p>
+<ol>
+<li>a <code>java.awt.Label</code> &quot;Enter an integer and press enter&quot;;</li>
+<li>an input <code>java.awt.TextField</code>;</li>
+<li>a <code>java.awt.Label</code> &quot;The accumulated sum is&quot;, and</li>
+<li>a protected (read-only) <code>java.awt.TextField</code> for displaying the accumulated sum.</li>
+</ol>
+<p>The four GUI components are placed inside a container <code>java.awt.Frame</code>, arranged in <code>FlowLayout</code>. The program shall accumulate the numbers entered into the input <code>TextField</code>, and display the accumulated sum on the display <code>TextField</code>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</pre></td>
+<td>
+<pre>
+import java.awt.*;       <span class="color-comment">// Using AWT's containers and components</span>
+import java.awt.event.*; <span class="color-comment">// Using AWT's event classes and listener interfaces</span>
+ 
+<span class="color-comment">// A GUI program inherits the top-level Container java.awt.Frame</span>
+public class AWTAccumulator extends Frame implements ActionListener {
+   private Label lblInput;     <span class="color-comment">// Declare input Label</span>
+   private Label lblOutput;    <span class="color-comment">// Declare output Label</span>
+   private TextField tfInput;  <span class="color-comment">// Declare input TextField</span>
+   private TextField tfOutput; <span class="color-comment">// Declare output display TextField</span>
+   private int sum = 0;        <span class="color-comment">// The accumulated sum, init to 0</span>
+ 
+   <span class="color-comment">// Constructor to setup the UI components and event handlers</span>
+   public AWTAccumulator() {
+      setLayout(new FlowLayout()); <span class="color-comment">// &quot;super&quot; Frame sets to FlowLayout</span>
+ 
+      lblInput = new Label(&quot;Enter an integer&quot;); <span class="color-comment">// Construct component Label</span>
+      add(lblInput);  <span class="color-comment">// &quot;super&quot; Frame adds the Label</span>
+ 
+      tfInput = new TextField(10);  <span class="color-comment">// Construct component TextField</span>
+      add(tfInput);   <span class="color-comment">// &quot;super&quot; Frame adds the TextField</span>
+ 
+      tfInput.addActionListener(this);
+         <span class="color-comment">// tfInput is a source that fires ActionEvent when entered.</span>
+         <span class="color-comment">// The source add &quot;this&quot; instance as a ActionEvent listener, which provides</span>
+         <span class="color-comment">//  an ActionEvent handler called actionPerformed().</span>
+         <span class="color-comment">// Hitting enter on tfInput invokes actionPerformed().</span>
+ 
+      lblOutput = new Label(&quot;Accumulated sum is&quot;);  <span class="color-comment">// Construct component Label</span>
+      add(lblOutput);  <span class="color-comment">// &quot;super&quot; Frame adds Label</span>
+ 
+      tfOutput = new TextField(10); <span class="color-comment">// Construct component TextField</span>
+      tfOutput.setEditable(false);  <span class="color-comment">// read-only</span>
+      add(tfOutput);   <span class="color-comment">// &quot;super&quot; Frame adds TextField</span>
+ 
+      setTitle(&quot;AWT Accumulator&quot;); <span class="color-comment">// &quot;super&quot; Frame sets title</span>
+      setSize(350, 120);    <span class="color-comment">// &quot;super&quot; Frame sets initial size</span>
+      setVisible(true);     <span class="color-comment">// &quot;super&quot; Frame shows</span>
+   }
+ 
+   <span class="color-comment">// The entry main() method</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Invoke the constructor by allocating an anonymous instance</span>
+      new AWTAccumulator();
+   }
+ 
+   <span class="color-comment">// ActionEvent handler - Called back when enter key was hit on TextField.</span>
+   @Override
+   public void actionPerformed(ActionEvent evt) {
+      int numberIn = Integer.parseInt(tfInput.getText());
+               <span class="color-comment">// Get the String entered, convert to int</span>
+      sum += numberIn;      <span class="color-comment">// Accumulate numbers entered into sum</span>
+      tfInput.setText(&quot;&quot;);  <span class="color-comment">// Clear input TextField</span>
+      tfOutput.setText(&quot;&quot; + sum); <span class="color-comment">// Display sum on the output TextField, convert int to String</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p class="line-heading">TRY:</p>
+<img src="images/AWT_AccumulatorLabel.png" />
+<img src="images/AWT_FactorialTextField.png" />
+<ol>
+<li>Modify the program (called <code>AWTAccumulatorLabel</code>) to display the sum using a <code>Label</code> instead of a protected <code>TextField</code>, as shown.</li>
+
+<li>Modify the program (called <code>AWTFactorialTextField</code>) to display the factorial of the input number, as shown.</li>
+</ol>
+
+<h4>Ex: <span class="font-code">AWTAccumulatorApplet</span></h4>
+<img class="image-float-right" src="images/AWT_AccumulatorApplet.png" />
+
+<p>An Java <em>applet</em> is a graphics program run inside a browser.  Write a Java applet (called <code>AWTAccumulatorApplet</code>) which contains:</p>
+<ol>
+<li>a <code>label</code> &quot;Enter an integer:&quot;,</li>
+<li>a <code>TextField</code> for user to enter a number.</li>
+<li>The applet shall accumulate all the integers entered and show it on the status bar of the browser's window.</li>
+</ol>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></td>
+<td>
+<pre>
+import java.applet.Applet;
+import java.awt.*;        <span class="color-comment">// Using AWT's containers and components</span>
+import java.awt.event.*;  <span class="color-comment">// Using AWT's event classes and listener interfaces</span>
+ 
+<span class="color-comment">// An applet extends java.applet.Applet</span>
+public class AWTAccumulatorApplet extends Applet implements ActionListener {
+   private TextField tfInput;   <span class="color-comment">// The input TextField</span>
+   private int sum = 0;         <span class="color-comment">// The accumulated sum, init to 0</span>
+ 
+   <span class="color-comment">// init() runs when the applet is loaded. Setup the UI components and event handlers.</span>
+   public void init() {
+      add(new Label(&quot;Enter an integer&quot;));  <span class="color-comment">// anonymous Label</span>
+ 
+      tfInput = new TextField(10);
+      add(tfInput);
+      tfInput.addActionListener(this);
+         <span class="color-comment">// Hitting enter key on tfInput invokes actionPerformed()</span>
+   }
+ 
+   <span class="color-comment">// ActionEvent handler - Called back when enter key was hit on TextField.</span>
+   public void actionPerformed( ActionEvent evt) {
+      int numberIn = Integer.parseInt(evt.getActionCommand());
+         <span class="color-comment">// getActionCommand() returns the String entered.</span>
+      sum += numberIn;
+      tfInput.setText(&quot;&quot;);  <span class="color-comment">// Clear input TextField</span>
+      showStatus(&quot;The accumulated sum is: &quot; + sum);
+         <span class="color-comment">// show the sum on the status bar of the browser's window</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Note that:</p>
+<ul>
+<li>An applet extends from <code>java.applet.Applet</code>, whereas a standalone GUI application extends from <code>java.awt.Frame</code>. You cannot <code>setTitle()</code> and <code>setSize()</code> on Applet.</li>
+<li>Applet uses <code>init()</code> to create the GUI, while standalone GUI application uses the constructor (invoked in <code>main()</code>).</li>
+</ul>
+
+<h5>HTML codes: <span class="font-code">AWTAccumulatorApplet.html</span></h5>
+<p>Applet runs inside a web browser.  A separate HTML script (says <code>AWTAccumulatorApplet.html</code>) is required, which uses an &lt;applet&gt; tag to embed the applet as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre>
+</td>
+<td>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;An AWT Applet&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;p&gt;A simple applet which accumulates the number entered into
+  a TextField and displays the accumulated sum on the status bar&lt;/p&gt;
+  <span class="color-new">&lt;applet code=&quot;AWTAccumulatorApplet.class&quot; width=&quot;300&quot; height=&quot;60&quot;&gt;
+  &lt;/applet&gt;</span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p class="line-heading">TRY:</p>
+<ol>
+<li>Modify the applet to run the &quot;Counter&quot; application (as in <code>AWTCounter</code>).</li>
+<li>Modify the applet to run the &quot;Factorial&quot; application (as in <code>AWTFactorial</code>).</li>
+</ol>
+
+<h3>Event-Handling</h3>
+
+<h4>Ex: <span class="font-code">WindowEvent</span> and <span class="font-code">WindowListener</span></h4>
+<p>Modify the <code>AWTCounter</code> program (called <code>AWTCounterWithClose</code>) to process the &quot;Window-Close&quot; button.</p>
+
+<pre class="color-example">
+public class AWTCounterWithClose extends Frame
+      implements ActionListener, WindowListener {
+   ......
+ 
+   <span class="color-comment">// Constructor</span>
+   public AWTCounterWithClose () {
+      ......
+      addWindowListener(this);
+        <span class="color-comment">// &quot;super&quot; Frame fires WindowEvent.
+        // &quot;super&quot; Frame add &quot;this&quot; instance as the WindowEvent listener</span>
+      ......
+   }
+   ......
+ 
+   <span class="color-comment">// WindowEvent handlers</span>
+   @Override
+   public void windowClosing(WindowEvent evt) {
+      System.exit(0);  <span class="color-comment">// Terminate the program</span>
+   }
+ 
+   <span class="color-comment">// Not used, but need to provide an empty body to compile</span>
+   @Override public void windowOpened(WindowEvent evt) { }
+   @Override public void windowClosed(WindowEvent evt) { }
+   @Override public void windowIconified(WindowEvent evt) { }
+   @Override public void windowDeiconified(WindowEvent evt) { }
+   @Override public void windowActivated(WindowEvent evt) { }
+   @Override public void windowDeactivated(WindowEvent evt) { }
+}</pre>
+
+<h3>Inner Class - Named and Anonymous</h3>
+<p>Compared with the <code>AWTCounter</code>, the following programs <code>AWTCounterNamedInnerClass</code> and <code>AWTCounterAnonymousInnerClass</code> use &quot;named inner classes&quot; and &quot;anonymous inner classes&quot;, respectively, as the <code>ActionEvent</code> listener instead of &quot;<code>this</code>&quot; object.</p>
+
+<h5>A named inner class as the event listener: <span class="font-code">AWTCounterNamedInnerClass.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;        <span class="color-comment">// Using AWT's components and containers</span>
+import java.awt.event.*;  <span class="color-comment">// Using AWT's event classes and listener interfaces</span>
+ 
+public class AWTCounterNamedInnerClass extends Frame {
+   <span class="color-comment">// This class is NOT the listener, hence, it does not implement ActionListener</span>
+ 
+   private TextField tfCount;
+   privete Button btnCount;
+   private int count = 0;
+ 
+   <span class="color-comment">// Constructor to setup the UI components and event handlers</span>
+   public AWTCounterNamedInnerClass () {
+      setLayout(new FlowLayout());  <span class="color-comment">// &quot;super&quot; Frame sets to FlowLayout</span>
+      add(new Label(&quot;Counter&quot;));    <span class="color-comment">// anonymous Label</span>
+      tfCount = new TextField(count + &quot;&quot;, 10);
+      tfCount.setEditable(false);   <span class="color-comment">// read-only</span>
+      add(tfCount);                 <span class="color-comment">// &quot;super&quot; Frame adds tfCount</span>
+ 
+      btnCount = new Button(&quot;Count&quot;);
+      add(btnCount);                <span class="color-comment">// &quot;super&quot; Frame adds btnCount</span>
+ 
+      <span class="color-comment">// Construct an anonymous instance of inner class BtnListener as</span>
+      <span class="color-comment">//  listener to the source btnCount.</span>
+      btnCount.addActionListener(new BtnListener());
+ 
+      setSize(250, 100);
+      setTitle(&quot;AWT Counter&quot;);
+      setVisible(true);    <span class="color-comment">// show it</span>
+   }
+ 
+   public static void main(String[] args) {
+      new AWTCounterNamedInnerClass();
+   }
+ 
+   <span class="color-comment">// A named inner class to be used as listener of ActionEvent</span>
+   <span class="color-comment">// This inner class can access private variables of the outer class, such as count and tfCount.</span>
+   private class BtnListener implements ActionListener {
+      @Override
+      public void actionPerformed(ActionEvent evt) {
+         ++count;
+         tfCount.setText(count + &quot;&quot;);
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Explanation</h5>
+<ul>
+<li>An inner class called <code>BtnListener</code> is defined, to be used as listener for the <code>ActionEvent</code> fired by the <code>Button</code> <code>btnCount</code>.  Since <code>BtnListener</code> is an <code>ActionEvent</code> listener, it has to implement <code>ActionListener</code> interface and provide implementation to the <code>actionPerformed()</code> method declared in the interface.</li>
+<li>Although instance variables <code>tfCount</code>, <code>count</code> are <code>private</code>, the inner class <code>BtnListener</code> has access to them.  This is the sole reason why an inner class is used instead of an ordinary outer class.</li>
+<li>An anonymous instance of <code>BtnListener</code> is constructed via statement &quot;<code>new BtnListener()</code>&quot;.  The <code>Button</code> <code>btnCount</code> registers this anonymous instance as a listener to its <code>ActionEvent</code> via <code>btnCount.addActionListener(new BtnListener())</code>.</li>
+</ul>
+
+<h5>An anonymous Inner class as the event listener: <span class="font-code">AWTCounterAnonymousInnerClass.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;       <span class="color-comment">// Using AWT's components and containers</span>
+import java.awt.event.*; <span class="color-comment">// Using AWT's event classes and listener interfaces</span>
+ 
+public class AWTCounterAnonymousInnerClass extends Frame {
+   <span class="color-comment">// This class is NOT the listener, hence, it does not implement ActionListener</span>
+ 
+   private TextField tfCount;
+   private Button btnCount;
+   private int count = 0;
+ 
+   <span class="color-comment">// Constructor to setup the UI components and event handlers</span>
+   public AWTCounterAnonymousInnerClass () {
+      setLayout(new FlowLayout());  <span class="color-comment">// &quot;super&quot; Frame sets to FlowLayout</span>
+      add(new Label(&quot;Counter&quot;));    <span class="color-comment">// anonymous Label</span>
+      tfCount = new TextField(count + &quot;&quot;, 10);
+      tfCount.setEditable(false);   <span class="color-comment">// read-only</span>
+      add(tfCount);                 <span class="color-comment">// &quot;super&quot; Frame adds tfCount</span>
+ 
+      Button btnCount = new Button(&quot;Count&quot;);
+      add(btnCount);                <span class="color-comment">// &quot;super&quot; Frame adds btnCount</span>
+ 
+      <span class="color-comment">// Construct an anonymous instance of an anonymous class as</span>
+      <span class="color-comment">//  listener to the source btnCount</span>
+      btnCount.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent evt) {
+            ++count;
+            tfCount.setText(count + &quot;&quot;);
+         }
+      });
+ 
+      setSize(250, 100);
+      setTitle(&quot;AWT Counter&quot;);
+      setVisible(true);   <span class="color-comment">// show it</span>
+   }
+ 
+   public static void main(String[] args) {
+      new AWTCounterAnonymousInnerClass();
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Explanation</h5>
+<ul>
+<li>An anonymous instance of an anonymous inner class is defined via
+<pre class="color-example">
+new ActionListener() { ... }</pre></li>
+
+<li>The compiler creates an anonymous inner class called <code>$<em>n</em></code> (where <code><em>n</em></code> is a running number of inner classes) as follows:
+<pre class="color-example">class $n implements ActionListener() { .... }
+new $n()</pre></li></ul>
+
+<p>Notes: Observe the output files produced by the Java compiler.  Named inner class is named &quot;<code>OuterClassName$InnerClassName.class</code>&quot; and anonymous inner class is named &quot;<code>OuterClassName$n.class</code>&quot;.</p>
+
+<p class="line-heading">TRY:</p>
+
+<img class="image-float-right" src="images/AWT_Counter3Buttons.png" />
+
+<ol>
+<li>Modify all the earlier programs to use (i) a named inner class; (ii) an anonymous inner class as the <code>ActionEvent</code> listener.</li>
+
+<li>Modify <code>AWTCount</code> (called <code>AWTCounter3Buttons</code>) to include two additional buttons for counting down and reset the count value. Use (i) &quot;<code>this</code>&quot; class as listener for all the 3 buttons; (ii) use one named inner class as listener for all the 3 buttons; (iii) use an anonymous inner class as listener for each button.<br />
+
+Hints for (i) and (ii): <code>You can use event.getActionCommend()</code> to retrieve the label of the button that has fired the event.
+<pre class="color-example">
+@Override
+public void actionPerformed(ActionEvent evt) {
+   String btnLabel = evt.getActionCommand();
+       <span class="color-comment">// event.getActionCommand() returns the button's label</span>
+   if (btnLabel.equals(&quot;Count Up&quot;)) {
+      ......
+   } else if (btnLabel.equals(&quot;Count Down&quot;)) {
+      ......
+   } else {
+      ......
+   }
+   ......
+}</pre>
+</li>
+</ol>
+
+<h3>Swing GUI Applications</h3>
+<h4>Ex: Converting from AWT to Swing</h4>
+<p>Convert all the previous AWT exercises (<code>AWTCounter</code>, <code>AWTAccumulator</code>, <code>AWTFactorial</code>, etc.) to Swing applications (called <code>SwingCounter</code>, <code>SwingAccumulator</code>, <code>SwingFactorial</code>, etc.).</p>
+
+<p>Notes:</p>
+<ul>
+<li>Swing Components are kept in package <code>javax.swing</code>.  They begin with a prefix &quot;<code>J</code>&quot;, e.g., <code>JButton</code>, <code>JLabel</code>, <code>JFrame</code>.</li>
+<li>Swing Components are to be added onto the <code>ContentPane</code> of the top-level container <code>JFrame</code>.  You can retrieve the <code>ContentPane</code> via method <code>getContentPane()</code> from a <code>JFrame</code>.
+
+<pre class="color-example">
+Container cp = getContentPane();  <span class="color-comment">// of JFrame</span>
+cp.setLayout(......);
+cp.add(......);</pre></li></ul>
+
+<img src="images/Swing_Counter.gif" />
+
+<p>For example, <code>SwingCounter.java</code>:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;       <span class="color-comment">// Using AWT's layouts</span>
+import java.awt.event.*; <span class="color-comment">// Using AWT's event classes and listener interfaces</span>
+import javax.swing.*;    <span class="color-comment">// Using Swing components and containers</span>
+ 
+<span class="color-comment">// A Swing application extends javax.swing.JFrame (instead of java.awt.Frame)</span>
+public class SwingCounter extends JFrame {
+   private JTextField tfCount;
+         <span class="color-comment">// Use Swing's JTextField instead of AWT's TextField</span>
+   private JButton btnCount;
+         <span class="color-comment">// Using Swing's JButton instead of AWT's Button</span>
+   private int count = 0;
+ 
+   public SwingCounter () {
+      <span class="color-comment">// Get the content-pane of top-level container Jframe</span>
+      <span class="color-comment">// Components are added onto content pane</span>
+      Container cp = getContentPane();
+      cp.setLayout(new FlowLayout());
+ 
+      cp.add(new JLabel(&quot;Counter&quot;));
+      tfCount = new JTextField(count + &quot;&quot;, 10);
+      tfCount.setEditable(false);
+      tfCount.setHorizontalAlignment(JTextField.RIGHT);
+      cp.add(tfCount);
+ 
+      btnCount = new JButton(&quot;Count&quot;);
+      cp.add(btnCount);
+      btnCount.addActionListener(new ActionListener() {
+        @Override
+         public void actionPerformed(ActionEvent evt) {
+            ++count;
+            tfCount.setText(count + &quot;&quot;);
+         }
+      });
+ 
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+         <span class="color-comment">// Exit program if Jframe's close-window button clicked</span>
+      setSize(300, 100);
+      setTitle(&quot;Swing Counter&quot;);
+      setVisible(true);    <span class="color-comment">// show it</span>
+   }
+ 
+   public static void main(String[] args) {
+      <span class="color-comment">// Recommended to run the GUI construction in</span>
+      <span class="color-comment">//  Event Dispatching thread for thread-safet operations</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            new SwingCounter(); <span class="color-comment">// Let the constructor does the job</span>
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Ex: <span class="font-code">SWingAdder</span></h4>
+<p>Write a Swing application called <code>SwingAdder</code> as shown.  The &quot;ADD&quot; button adds the two integers and display the result.  The &quot;CLEAR&quot; button shall clear all the text fields.</p>
+
+<p>Hints: Set the content-pane to 4x2 GridLayout. The components are added from left-to-right, top-to-bottom.</p>
+
+<pre class="color-example">
+import java.awt.*;        <span class="color-comment">// Using AWT's layouts</span>
+import java.awt.event.*;  <span class="color-comment">// Using AWT's event classes and listener interfaces</span>
+import javax.swing.*;     <span class="color-comment">// Using Swing's components and container</span>
+ 
+<span class="color-comment">// A Swing application extends from javax.swing.JFrame</span>
+public class SwingAdder extends JFrame {
+   private JTextField tfNumber1, tfNumber2, tfResult;
+   private JButton btnAdd, btnClear;
+   private int number1, number2, result;
+
+   <span class="color-comment">// Constructor to set up UI components and event handlers</span>
+   public SwingAdder() {
+      <span class="color-comment">// Swing components should be added to the content-pane of the JFrame.</span>
+      Container cp = getContentPane();
+      <span class="color-comment">// Set this Container to grid layout of 4 rows and 2 columns</span>
+      cp.setLayout(new GridLayout(4, 2, 10, 3));
+ 
+      <span class="color-comment">// Components are added from left-to-right, top-to-bottom</span>
+      cp.add(new JLabel(&quot;First Number &quot;));     <span class="color-comment">// at (1, 1)</span>
+      tfNumber1 = new JTextField(10);
+      tfNumber1.setHorizontalAlignment(JTextField.RIGHT);
+      cp.add(tfNumber1);                       <span class="color-comment">// at (1, 2)</span>
+      .......
+      .......
+ 
+      btnAdd = new JButton(&quot;ADD&quot;);
+      cp.add(btnAdd);                         <span class="color-comment">// at (4, 1)</span>
+      btnAdd.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent evt) {
+            number1 = Integer.parseInt(tfNumber1.getText());
+            ......
+         }
+      });
+ 
+      btnClear = new JButton(&quot;CLEAR&quot;);
+      cp.add();                                <span class="color-comment">// at (4, 2)</span>
+      btnClear.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent evt) {
+            ......
+         }
+      });
+ 
+      setDefaultCloseOperation(EXIT_ON_CLOSE); <span class="color-comment">// for the &quot;window-close&quot; button</span>
+      setTitle(&quot;Swing Adder&quot;);
+      setSize(300, 170);
+      setVisible(true);
+   }
+ 
+   <span class="color-comment">// The entry main() method</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// For thread safety, use the event-dispatching thread to construct UI</span>
+      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            new SwingAdder(); <span class="color-comment">// Let the constructor does the job</span>
+         }
+      });
+   }
+}</pre>
+
+<p class="line-heading">TRY:</p>
+
+<img class="image-float-right" src="images/Swing_Arithmetics.png" />
+<ol>
+<li>Modify the above exercise (called <code>SwingArithmetics</code>) to include buttons &quot;<code>+</code>&quot;, &quot;<code>-</code>&quot;, &quot;<code>*</code>&quot;, &quot;<code>/</code>&quot;,  &quot;<code>%</code>&quot; (remainder) and &quot;<code>CLEAR</code>&quot; as shown.</li>
+</ol>
+
+<h4 class="float-clear">Ex: <span class="font-code">SwingTemperatureConverter</span></h4>
+<img src="images/Swing_TemperaturConverter.png" />
+<p>Write a GUI program called <code>SwingTemperatureConverter</code> to convert temperature values between Celsius and Fahrenheit.  User can enter either the Celsius or the Fahrenheit value, in floating-point number.</p>
+
+<p>Hints: To display a floating-point number in a specific format (e.g., 1 decimal place), use the <code>static</code> method <code>String.format()</code>, which has the same form as <code>printf()</code>. For example, <code>String.format(&quot;%.1f&quot;, 1.234)</code> returns String &quot;<code>1.2</code>&quot;.</p>
+
+<h4>Ex: <span class="font-code">SwingCurrencyConverter</span></h4>
+
+<img src="images/Swing_CurrencyConverter.png" />
+
+<p>Write a simple currency converter, as shown in the figure.  User can enter the amount of &quot;Singapore Dollars&quot;, &quot;US Dollars&quot;, or &quot;Euros&quot;, in floating-point number.  The converted values shall be displayed to 2 decimal places.  Assume that 1 USD = 1.41 SGD, 1 USD = 0.92 Euro, 1 SGD = 0.65 Euro.</p>
+
+<h4>Ex: <span class="font-code">SwingCalculator</span></h4>
+
+<img src="images/Swing_Calculator.png" />
+<p>Implement a simple calculator (called <code>SwingCalculator</code>) as shown.</p>
+
+<p>Hints:</p>
+<ul>
+<li>Set the <code>ContentPane</code> to <code>BorderLayout</code>. Add a <code>JTextField</code> (<code>tfDisplay</code>) to the <code>NORHT</code>. Add a <code>JPanel</code> (<code>panelButtons</code>) to the <code>CENTER</code>. Set the <code>JPanel</code> to <code>GridLayout</code> of 4x4, and add the 16 buttons.</li>
+<li>All the number buttons can share the same listener as they can be processed with the same codes. Use <code>event.getActionCommand()</code> to get the label of the button that fires the event.</li>
+
+<li>The operator buttons &quot;<code>+</code>&quot;, &quot;<code>-</code>&quot;, &quot;<code>*</code>&quot;, &quot;<code>/</code>&quot;, &quot;<code>%</code>&quot; and &quot;<code>=</code>&quot; can share a common listener.</li>
+
+<li>Use an anonymous inner class for &quot;<code>C</code>&quot; button.</li>
+
+<li>You need to keep track of the <em>previous</em> operator. For example  in &quot;1 + 2 =&quot;, the current operator is &quot;=&quot;, while the <em>previous</em> operator is &quot;+&quot;. Perform the operation specified by the previous operator.
+<pre class="color-example">
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;   <span class="color-comment">// Using Swing's components and containers</span>
+ 
+<span class="color-comment">// A Swing application extends from javax.swing.JFrame</span>
+public class SwingCalculator extends JFrame {
+   private JTextField tfDisplay;
+   private int result = 0;          <span class="color-comment">// the result so far</span>
+   private String numberInStr = &quot;&quot;; <span class="color-comment">// the number entered as String</span>
+   private char previousOpr = ' ';  <span class="color-comment">// the previous operator</span>
+   private char currentOpr = ' ';   <span class="color-comment">// the current operator</span>
+ 
+   <span class="color-comment">// Constructor to setup the UI components and event handlers</span>
+   public SwingCalculator() {
+      <span class="color-comment">// TODO: Setup the UI</span>
+      <span class="color-comment">// ......</span>
+   }
+ 
+   <span class="color-comment">// Number buttons listener (inner class)</span>
+   class NumberBtnListener implements ActionListener {
+      @Override
+      public void actionPerformed(ActionEvent evt) {
+         numberInStr += evt.getActionCommand();
+         tfDisplay.setText(numberInStr);
+      }
+   }
+ 
+   <span class="color-comment">// Operator buttons listener (inner class)</span>
+   class OprBtnListener implements ActionListener {
+      @Override
+      public void actionPerformed(ActionEvent evt) {
+         previousOpr = currentOpr;  <span class="color-comment">// save</span>
+         currentOpr = evt.getActionCommand().charAt(0);
+         <span class="color-comment">// TODO: Processing logic</span>
+         <span class="color-comment">// ......</span>
+      }
+   }
+}</pre></li>
+</ul>
+
+
+<h4>Ex: <span class="font-code">SwingNumberGuess</span></h4>
+
+<img src="images/ExerciseGUI_SwingNumberGuess.png" alt="ExerciseGUI_SwingNumberGuess.png">
+<p>Write a number guessing game in Swing (as shown in the Figure). The program shall generate a random number between 1 to 100. It shall mask out the random number generated and output &quot;Yot Got it&quot;, &quot;Try Higher&quot; or &quot;Try Lower&quot; depending on the user’s input.</p>
+
+<p>Hints:</p>
+<ul>
+<li>You can use <code>Math.random()</code> to generate a random number in <code>double</code> in the range of <code>[0.0, 1.0)</code>.</li>
+</ul>
+
+
+<h4>Ex: <span class="font-code">SwingPhoneApp</span></h4>
+<img src="images/ExerciseGUI_SwingPhone.png" alt="ExerciseGUI_SwingPhone.png" />
+
+<p>Write a Software Phone App using Java Swing as illustrated in the figure.  The user enters the phone number and pushes the &quot;CALL&quot; button to start a phone call.  Once the call is started, the label of the &quot;CALL&quot; button changes to &quot;HANG UP&quot;.  When the user hangs up, the display is cleared.</p>
+
+<p>Assume that the following 2 methods are available for handling phone call:</p>
+<pre class="color-example">
+public void call(String phoneNumber);  <span class="color-comment">// to make a phone call with the phoneNumber</span>
+public void hangup();  <span class="color-comment">// to terminate the existing call</span></pre>
+
+<p>Hints:</p>
+<ul>
+<li>Use a 10-element <code>JButton</code> array to hold the 10 numeric buttons.  Construct a common instance of a named inner class as the <code>ActionListener</code> for the 10 numeric buttons.</li>
+<li>Use a <code>boolean</code> flag (says <code>isCalling</code>) to keep track of the status.</li>
+</ul>
+
+
+<h4>Ex: <span class="font-code">SwingLoginPanel</span></h4>
+
+<img src="images/ExerciseGUI_SwingPasscode.png" alt="ExerciseGUI_SwingPasscode.png" />
+
+<p>A Java Swing application has a login page as shown in the Figure.  Users are required to enter the correct passcode to start the application.  The system uses a scramble keypad with a randomly allocated set of numbers from 0 to 9.  The display shall show &quot;Enter passcode&quot; initially, and show an asterisk (<code>*</code>) for each number entered.  Upon pushing the &quot;Enter&quot; button, the system verifies the passcode.  If the passcode is correct, the system invokes a method called <code>startApp()</code> to start the application.  Otherwise, it displays &quot;Wrong passcode&quot;.  The &quot;Clear&quot; button shall clear the display.</p>
+
+<p>Assume that the following methods are available:</p>
+<pre class="color-example">
+public String getPasscode(); <span class="color-comment">// return the passcode</span>
+public void startApp();      <span class="color-comment">// Start the application</span>
+public void shuffleArray(int[] array)
+   <span class="color-comment">// Shuffle (Randomize) the given int array, e.g.,
+   // int[] numbers = {1, 2, 3, 4, 5};
+   // shuffleArray(numbers); // randomize the elements</span></pre>
+
+<h4>Ex: <span class="font-code">SwingLock</span></h4>
+<img src="images/ExerciseGUI_SwingLock.png" alt="ExerciseGUI_SwingLock.png" />
+
+<p>Write a Java Swing application for an electronic lock as shown in the figure.  The display shall show the state of either &quot;CLOSE&quot; or &quot;OPEN&quot;.  In the &quot;CLOSE&quot; state, the user types his PIN followed by the &quot;Enter&quot; key to unlock the system.  The display shall show an asterisk (<code>*</code>) for each number entered.  The display shall show &quot;WRONG PIN&quot; if the PIN is incorrect.  The &quot;Clear&quot; button clears the number entered (if any), locks the system and sets the display to &quot;CLOSE&quot;.</p>
+
+<p>Assume that the following methods are available:</p>
+<pre class="color-example">
+public boolean checkPIN(String PIN);  <span class="color-comment">// return true for correct PIN</span>
+public void unlock();   <span class="color-comment">// Unlock the system</span>
+public void lock();     <span class="color-comment">// Lock the system</span></pre>
+
+<p>Hints:</p>
+<ul>
+<li>Use a 10-element <code>JButton</code> array to hold the 10 numberic buttons.  Construct a common instance of a named inner class as their <code>ActionListener</code>.</li>
+<li>Use a <code>boolean</code> flag (says <code>isLocked</code>) to keep track of the status.</li>
+</ul>
+
+<h4>Ex: Using Eclipse/NetBeans GUI Builder</h4>
+
+<img class="image-float-right" src="images/Swing_Counter.gif" />
+<p>Write the <code>SwingCounter</code> using Eclipse/NetBeans' GUI builder. Read the respecctive section in &quot;Eclipse How-To&quot; or &quot;NetBeans Hot-To&quot;.</p>
+
+<p>Study the code generated by Eclispse/NetBeans.</p>
+
+<h4>Ex: Sudoku</h4>
+
+<img src="images/Swing_Sudoku.png" />
+<p>See the Sudoku Article.</p>
+
+<h4>Ex: Mine Sweeper</h4>
+
+<img src="images/Game_MineSweeper.png" />
+<p>See the Mine Sweeper Article.</p>
+
+
+<h3>Custom Graphics</h3>
+
+<h4>Ex: <span class="font-code">MoveABall</span></h4>
+
+<img src="images/Swing_MoveALine4Buttons.png" />
+<p>Study the &quot;<a href="J4b_CustomGraphics.html#moveALine">Move-a-line</a>&quot; program.  Modifying the program to move a ball in response to up/down/left/right buttons, as well as the 4 arrow keys, as shown.</p>
+
+<h4>Ex: <span class="font-code">TicTacToe</span></h4>
+<p>See the Mine Sweeper Article.</p>
+
+
+
+<!-- @@ start change in v1 -->
+<p class="references float-clear">REFERENCES &amp; RESOURCES</p>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.8.0<br />
+Last modified: April, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

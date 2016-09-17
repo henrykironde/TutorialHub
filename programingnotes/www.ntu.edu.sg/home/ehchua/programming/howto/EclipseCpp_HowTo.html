@@ -1,0 +1,375 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to install and use Eclipse CDT for C/C++ programming</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Eclipse 4.3 (Kepler) for C/C++ Programming</h1>
+<h2>How To Install Eclipse CDT 8.2 and Get Started</h2>
+</div>
+
+<div id="content-main">
+
+
+<p>Eclipse is an <em>open-source</em> Integrated Development Environment (IDE) supported by IBM. The mother site is @ <a href="http://www.eclipse.org/">www.eclipse.org</a>. Eclipse is popular for Java project development. It also supports C/C++, PHP, Python, Perl, and other web project developments via extensible plug-ins. Eclipse is cross-platform and runs under Windows, Linux and Mac OS.</p>
+
+<h3 id="eclipse-cpp-install">How to Install Eclipse C/C++ Development Tool (CDT) 8.1.2 for Eclipse 4.2.2 (Juno)</h3>
+
+<h5>Step 0: Install MinGW GCC or Cygwin GCC</h5>
+
+<p>To use Eclipse for C/C++ programming, you need a C/C++ compiler. On Windows, you could install either MinGW GCC or Cygwin GCC. Choose MinGW if you are not sure, because MinGW is lighter and easier to install, but having less features.</p>
+<ol>
+<li>MinGW GCC: Read &quot;<a href="Cygwin_HowTo.html#mingw">How to Install MinGW</a>&quot;.</li>
+
+<li>Cygwin GCC: Read &quot;<a href="Cygwin_HowTo.html#cygwin">How to Install Cygwin</a>&quot;. Make sure that you select &quot;<code>gcc</code>&quot;, &quot;<code>g++</code>&quot;, &quot;<code>gdb</code>&quot;, and &quot;<code>make</code>&quot; packages under the &quot;<code>Devel</code>&quot; (Development) category - these packages are not part of the default installation.</li>
+</ol>
+
+<h5>Step 1: Install Eclipse C/C++ Development Tool (CDT)</h5>
+<p>Two ways to install CDT, depending on whether you have previously installed an Eclipse:</p>
+<ol>
+<li>If you have already installed &quot;Eclipse for Java Developers&quot; or other Eclipse packages, you could install the CDT <em>plug-in</em> as follows:<br />
+Launch Eclipse &rArr; Help &rArr; Install New Software &rArr; In &quot;Work with&quot; field, pull down the drop-down menu and select &quot;Kepler - http://download.eclipse.org/releases/kepler&quot; (or juno for Eclipse 4.2; or helios for Eclipse 3.7).<br />
+In &quot;Name&quot; box, expand &quot;Programming Language&quot; node  &rArr; Check &quot;C/C++ Development Tools&quot;  &rArr; &quot;Next&quot; &rArr; ... &rArr; &quot;Finish&quot;.</li>
+
+<li>If you have not install any Eclipse package, you could download &quot;Eclipse IDE for C/C++ Developers&quot; from <a href="http://www.eclipse.org/downloads/">http://www.eclipse.org/downloads</a>, and unzip the downloaded file into a directory of your choice.</li>
+</ol>
+
+<h5>Step 2: Configuration</h5>
+<p>You do NOT need to do any configuration, as long as the Cygwin or MinGW binaries are included in the <code>PATH</code> environment variable. CDT searches the <code>PATH</code> to discover the C/C++ compilers.</p>
+
+
+<h3 id="eclipse-cpp-first">Writing your First C/C++ Program in Eclipse</h3>
+
+<h4>C++ Program</h4>
+
+<h5>Step 0: Launch Eclipse</h5>
+<ol>
+<li>Start Eclipse by running &quot;<code>eclipse.exe</code>&quot; in the Eclipse installed directory.</li>
+<li>Choose an appropriate directory for your <em>workspace</em> (i.e., where you would like to save your works).</li>
+<li>If the &quot;welcome&quot; screen shows up, close it by clicking the &quot;close&quot; button.</li>
+</ol>
+
+<h5>Step 1: Create a new C++ Project</h5>
+<p>For <em>each</em> C++ application, you need to create a <em>project</em> to keep all the  source codes, object files, executable files, and relevant resources.</p>
+<p>To create a new C++ project:</p>
+<ol>
+<li> Choose &quot;File&quot; menu &rArr; &quot;New&quot; &rArr; Project... &rArr; C/C++ &rArr; C++ project.</li>
+
+<li>The &quot;C++ Project&quot; dialog pops up.
+<ol>
+<li>In &quot;Project name&quot; field, enter &quot;<code>FirstProject</code>&quot;.</li>
+<li>In &quot;Project Types&quot; box, select &quot;Executable&quot; &rArr; &quot;Empty Project&quot;.</li>
+<li> In &quot;Toolchains&quot; box, choose your compiler, e.g., &quot;Cygwin GCC&quot; or &quot;MinGW GCC&quot; &rArr; Next.</li>
+</ol>
+</li>
+<li>The &quot;Select Configurations&quot; dialog appears. Select both &quot;Debug&quot; and &quot;Release&quot; &rArr; Finish.</li>
+
+
+</ol>
+ 
+<h5>Step 2: Write a Hello-world C++ Program</h5>
+<ol>
+<li>In the &quot;Project Explorer&quot; (leftmost panel) ⇒  Right-click on &quot;<code>FirstProject</code>&quot; (or use the &quot;File&quot; menu) ⇒  New &rArr; Source File.</li>
+
+<li>The &quot;New Source File&quot; dialog pops up.
+  <ol>
+<li>In &quot;Source file&quot; field, enter &quot;<code>Hello.cpp</code>&quot;.</li>
+<li>Click &quot;Finish&quot;.</li>
+</ol>
+</li>
+
+<li>The source file &quot;<code>Hello.cpp</code>&quot; opens on the editor panel (double-click on &quot;<code>test.cpp</code>&quot; to open if necessary). Enter the following codes: 
+
+<pre class="color-example">
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   cout &lt;&lt; &quot;Hello, world!&quot; &lt;&lt; endl;
+   return 0;
+}</pre>
+</li></ol>
+
+<h5>If &quot;<span class="color-new">Unresolved Inclusion Error</span>&quot;</h5>
+
+<p>If error &quot;unresolved inclusion&quot; appears next to <code>#include</code> statement, the &quot;include paths for headers&quot; are not set properly. Select &quot;Project&quot; menu &rArr; Properties &rArr; C/C++ General &rArr; Paths and Symbols &rArr; In &quot;Includes&quot; tab:</p>
+
+<p>For Cygwin GCC:</p>
+
+<ol>
+
+<li>&quot;Add&quot; the following directories to &quot;GNU C&quot;, where <code>$CYGWIN_HOME</code> is your Cygwin installed directory:
+  <ul>
+  <li><code>$CYGWIN_HOME\lib\gcc\i686-pc-cygwin\4.5.x\include</code></li>
+<li><code>$CYGWIN_HOME\lib\gcc\i686-pc-cygwin\4.5.x\include-fixed</code></li>
+<li><code>$CYGWIN_HOME\usr\include</code></li>
+<li><code>$CYGWIN_HOME\usr\include\w32api</code></li>
+</ul></li>
+
+<li>&quot;Add&quot; the following directories to &quot;GNU C++&quot;, where <code>$CYGWIN_HOME</code> is your Cygwin installed directory:
+  <ul>
+<li><code>$CYGWIN_HOME\lib\gcc\i686-pc-cygwin\4.5.x\include\c++</code></li>
+<li><code>$CYGWIN_HOME\lib\gcc\i686-pc-cygwin\4.5.x\include\c++\i686-pc-cygwin</code></li>
+<li><code>$CYGWIN_HOME\lib\gcc\i686-pc-cygwin\4.5.x\include\c++\backward</code></li>
+<li><code>$CYGWIN_HOME\lib\gcc\i686-pc-cygwin\4.5.x\include</code></li>
+<li><code>$CYGWIN_HOME\lib\gcc\i686-pc-cygwin\4.5.x\include-fixed</code></li>
+<li><code>$CYGWIN_HOME\usr\include</code></li>
+<li><code>$CYGWIN_HOME\usr\include\w32api</code></li>
+</ul></li>
+
+</ol>
+
+<p>For MinGW GCC:</p>
+
+<ol>
+
+<li>&quot;Add&quot; the following directories to &quot;GNU C&quot;, where <code>$MINGW_HOME</code> is your MinGW installed directory:
+<ul>
+<li><code>$MINGW_HOME\lib\gcc\mingw32\4.6.x\include</code></li>
+<li><code>$MINGW_HOME\include</code></li>
+<li><code>$MINGW_HOME\lib\gcc\mingw32\4.6.x\include-fixed</code></li>
+</ul></li>
+
+<li>&quot;Add&quot; the following directories to &quot;GNU C++&quot;, where <code>$MINGW_HOME</code> is your Cygwin installed directory:
+<ul>
+<li><code>$MINGW_HOME\lib\gcc\mingw32\4.6.x\include\c++</code></li>
+<li><code>$MINGW_HOME\lib\gcc\mingw32\4.6.x\include\c++\mingw32</code></li>
+<li><code>$MINGW_HOME\lib\gcc\mingw32\4.6.x\include\c++\backward</code></li>
+<li><code>$MINGW_HOME\lib\gcc\mingw32\4.6.x\include</code></li>
+<li><code>$MINGW_HOME\include</code></li>
+<li><code>$MINGW_HOME\lib\gcc\mingw32\4.6.x\include-fixed</code></li>
+</ul></li>
+
+</ol>
+
+<p><strong>NOTE</strong>: To find the header paths, you can do a search on headers such as &quot;<code>stdio.h</code>&quot; (for C) and &quot;<code>iostream</code>&quot; (for C++) under the Cygwin or MinGW installed directory.</p>
+
+<div class="side-note">
+<span class="line-heading">Note</span>: If you encounter &quot;<span class="color-new">error while loading shared libraries</span>&quot; during link. Install &quot;<code>libmpfr4</code>&quot; in cygwin.</div>
+
+
+<h5>Step 3: Compile/Build</h5>
+<p>Right-click on the &quot;<code>FirstProject</code>&quot; (or use the &quot;Project&quot; menu)  ⇒  choose &quot;Build Project&quot; to compile and link the program.</p>
+
+<h5>Step 4: Run</h5>
+<p>To run the program, right-click on the &quot;<code>FirstProject</code>&quot; (or anywhere on the source &quot;<code>test.cpp</code>&quot;, or select the &quot;Run&quot; menu) &rArr; Run As &rArr; Local C/C++ Application &rArr; (If ask, choose Cygwin's gdb debugger) &rArr; The output &quot;Hello, world!&quot; appears on the &quot;Console&quot; panel.</p>
+<p><strong>NOTE</strong>: You need to create a <em>new</em> C++ project for EACH of your programming problems. This is messy for writing toy programs!</p>
+
+<h4>C Program</h4>
+<p>Follow the same steps as above. Create a &quot;C Project&quot; (instead of &quot;C++ Project&quot;). Try the following Hello-world program (called &quot;<code>Hello.c</code>&quot;).</p>
+
+<pre class="color-example">
+#include &lt;stdio.h&gt;
+ 
+int main() {
+   printf(&quot;Hello, world!\n&quot;);
+   return 0;
+}</pre>
+
+<h4>C++ Program with Makefile</h4>
+
+<p>In the previous examples, we use so-called <em>managed-make</em> where Eclipse automatically generated a <em>makefile</em> to build the program. We can also choose to write our own makefile for complete control of the building process.</p>
+
+<h5>Step 1: Create a C++ Makefile Project</h5>
+<p>From &quot;File&quot; menu &rArr; New &rArr; Project... &rArr; C/C++ &rArr; C++ project  ⇒ In &quot;Project name&quot;, enter &quot;<code>HelloCppMakefile</code>&quot; ⇒ In &quot;Project type&quot;, choose &quot;Makefile Project &quot;, &quot;Empty Project&quot; ⇒ In &quot;Toolchains&quot;, choose &quot;Cygwin GCC&quot; or &quot;MinGW GCC&quot;. Ignore the warning message.</p>
+
+<h5>Step 2: Write a C++ Program</h5>
+
+<p>Right-click on the project &rArr; New &rArr; Source File &rArr; In &quot;Source file&quot;, enter &quot;<code>Hello.cpp</code>&quot; &rArr; Enter the following source codes:</p>
+
+<pre class="color-example">
+#include &lt;iostream&gt;
+using namespace std;
+  
+int main() {
+	cout &lt;&lt; &quot;Hello, world!&quot; &lt;&lt; endl;
+	return 0;
+}</pre>
+
+<h5>Step 3: Write a Makefile</h5>
+
+<p>Right-click on the project &rArr; New &rArr; File &rArr; In &quot;File name&quot;, enter &quot;<code>makefile</code>&quot; ⇒ Enter the following codes. Take note that you need to use a Tab (NOT Spaces) for the indent.</p>
+
+<pre class="color-example">
+all: Hello.exe
+  
+clean:
+	rm Hello.o Hello.exe
+  
+Hello.exe: Hello.o
+	g++ -g -o Hello.exe Hello.o
+  
+Hello.o: Hello.cpp
+	g++ -c -g Hello.cpp</pre>
+
+<h5>Step 4: Build the Project</h5>
+
+<p>Right-click on the project &rArr; Build Project.</p>
+
+<h5>Step 5: Run the Program</h5>
+<p>Right-click on the project &rArr; Run As &rArr; Local C/C++ Application.</p>
+
+<br />
+<p>[TODO] Write a makefile to compile toy-programs under one project.</p>
+
+
+<h3>Read the Documentation</h3>
+<p>At a minimum, you SHOULD browse through Eclipse's &quot;<strong>Workbench User Guide</strong>&quot; and &quot;<strong>C/C++ Development User Guide</strong>&quot; - accessible via the Eclipse's &quot;Welcome&quot; page or &quot;Help&quot; menu. This will save you many agonizing hours trying to figure out how to do some things later.</p>
+
+<h3 id="eclipse-cpp-debug">Debugging C/C++ Programs in Eclipse CDT</h3>
+
+<p>Able to use a graphics debugger to debug program is crucial in programming. It could save you countless of hours guessing on what went wrong.</p>
+
+<p><span class="line-heading">Step 0: Write a C++ Program - </span>
+The following program computes and prints the factorial of <code><em>n</em></code> (<code>=1*2*3*...*<em>n</em></code>).  The program, however, has a logical error and produce a wrong answer for <em><code>n</code></em><code>=20</code> (&quot;<code>The Factorial of 20 is -2102132736</code>&quot; - a negative number?!).</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   int n = 20;
+   int factorial = 1;
+ 
+   <span class="color-comment">// n! = 1*2*3...*n</span>
+   for (int i = 1; i &lt;= n; i++) {
+      factorial *= i;
+   }
+   cout &lt;&lt; &quot;The Factorial of &quot; &lt;&lt; n &lt;&lt; &quot; is &quot; &lt;&lt; factorial &lt;&lt; endl;
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="color-output">
+The Factorial of 20 is -2102132736</pre>
+
+<p>Let us use the graphic debugger to debug the program.</p>
+
+<p><img class="image-float-right" src="images/EclipseCppDebugSetBreakpoint.png" alt="EclipseCppDebugSetBreakpoint.png" /></p>
+
+<p><span class="line-heading">Step 1: Set an Initial Breakpoint - </span>A <em>breakpoint</em> suspends program execution for you to examine the internal states (e.g., value of variables) of the program. Before starting the debugger, you need to set at least one breakpoint to suspend the execution inside the program. Set a breakpoint at <code>main()</code> function by double-clicking on the <em>left-margin</em> of the line containing <code>main()</code>.  A <em>blue circle</em> appears in the left-margin indicating a breakpoint is set at that line.</p>
+
+
+<p><img class="image-float-right float-clear" src="images/EclipseCppDebugStart.png" alt="EclipseCppDebugStart.png" /></p>
+
+<p><span class="line-heading">Step 2: Start Debugger - </span>Right click on the project (or use the &quot;Run&quot; menu) &rArr; &quot;Debug As&quot; &rArr; &quot;Local C/C++ Application&quot; &rArr; choose &quot;Yes&quot; to switch into &quot;Debug&quot; perspective (A <em>perspective</em> is a particular arrangement of panels to suits a certain development task such as editing or debugging). The program begins execution but suspends its operation at the breakpoint, i.e., the <code>main()</code> function.</p>
+<p>As illustrated in the following diagram, the highlighted line (also pointed to by a blue arrow) indicates the statement to be executed in the <em>next</em> step.</p>
+
+<img class="image-float-right float-clear" src="images/EclipseJavaDebugToolbar.png" alt="EclipseJavaDebugToolbar.png" />
+<img class="image-float-right float-clear" src="images/EclipseCppDebugVariables.png" alt="EclipseCppDebugVariables.png" />
+
+<p><span class="line-heading">Step 3: Step-Over and Watch the Variables and Outputs - </span> Click the &quot;Step Over&quot; button (or select &quot;Step Over&quot; from &quot;Run&quot; menu) to <em>single-step</em> thru your program. At each of the step, examine the value of the  variables (in the &quot;Variable&quot; panel) and the outputs produced by your program (in the &quot;Console&quot; Panel), if any. You can also place your cursor at any variable to inspect the content of the variable.</p>
+
+<p>Single-stepping thru the program and watching the values of internal variables and the outputs produced is the <em>ultimate</em> mean in debugging programs - because it is exactly how the computer runs your program!</p>
+
+<p><span class="line-heading">Step 4: Breakpoint, Run-To-Line, Resume and Terminate - </span> As mentioned, a breakpoint <em>suspends</em> program execution and let you examine the internal states of the program. To set a breakpoint on a particular statement, double-click the left-margin of that line (or select &quot;Toggle Breakpoint&quot; from &quot;Run&quot; menu).</p>
+<p>&quot;Resume&quot; continues the program execution, up to the next breakpoint, or till the end of the program.</p>
+<p>&quot;Single-step&quot; thru a loop with a large count is time-consuming. You could set a breakpoint at the statement immediately outside the loop (e.g., Line 12 of the above program), and issue &quot;Resume&quot; to complete the loop.</p>
+<p>Alternatively, you can place the cursor on a particular statement, and issue &quot;Run-To-Line&quot; from the &quot;Run&quot; menu to continue execution up to the line.</p>
+<p> &quot;Terminate&quot; ends the debugging session. Always terminate your current debugging session using &quot;Terminate&quot; or &quot;Resume&quot; till the end of the program.</p>
+<p><span class="line-heading">Step 5: Switching Back to C/C++ perspective - </span> Click the &quot;C/C++&quot; perspective icon on the upper-right corner to switch back to the &quot;C/C++&quot; perspective for further programming (or &quot;Window&quot; menu &rArr; Open Perspective &rArr; C/C++).</p>
+<p>I can's stress more that mastering the use of debugger is crucial in programming. Explore the features provided by the debuggers.</p>
+
+<h5>Other Debugger's Features</h5>
+
+<p><span class="line-heading">Modify the Value of a Variable:</span> You can modify the value of a variable by entering a new value in the &quot;Variable&quot; panel. This is handy for temporarily modifying the behavior of a program, without changing the source code.</p>
+
+<p><span class="line-heading">Step-Into and Step-Return:</span> To debug a <em>function</em>, you need to use &quot;Step-Into&quot; to step into the <em>first</em> statement of the method.  You could use &quot;Step-Return&quot; to return back to the caller, anywhere within the method.  Alternatively, you could set a breakpoint inside a method.</p>
+<p><strong>NOTE</strong>: If you receive error message &quot;Can't find a source file at <code>/cygdrive/c</code>...&quot; during debugging, you need to configure a mapping between &quot;<code>/cygdrive/c</code>&quot; and &quot;<code>c:/</code>&quot; (assuming that your program in kept in drive c. From &quot;Window&quot; &rArr; &quot;Preferences&quot; 
+  &rArr; &quot;C/C++&quot; &rArr; &quot;Debug&quot; &rArr; &quot;Common Source Lookup Path&quot;, select &quot;Add&quot; &rArr; &quot;Path Mapping&quot;.</p>
+
+<h3 id="tips">Tips &amp; Tricks</h3>
+<p>Read Eclipse for Java's <a href="EclipseJava_HowTo.html#tips">Tips &amp; Tricks</a> for general tips in using Eclipse.</p>
+
+<h4>C/C++ Software Development Using GCC</h4>
+
+<ol>
+<li>You can find the commands used in Eclipse CDT for build the project at &quot;<code>&lt;workspace&gt;\.metadata\.plugins\org.eclipse.cdt.ui\global-build.log</code>&quot;.</li>
+<li><span class="line-heading">Setting include-paths, library-paths, and libraries:</span> When building the program, the <em>compiler</em> needs the <em>header files</em> to compile the source codes; the <em>linker</em> needs the <em>libraries</em> to resolve external references. The compiler searches the &quot;include-paths&quot; for the headers specified in <code>#include</code> directives. The linker searches the &quot;library-paths&quot; for &quot;libraries&quot; needed to link the program. In GCC, include-path is specified via <code>-I<em>dir</em></code> option or environment variable <code>CPATH</code>. The library-path is specified via <code>-L<em>dir</em></code> option, or environment variable <code>LIBRARY_PATH</code>. The library <code>lib<em>xxx</em>.a</code> is specified via <code>-l<em>xxx</em></code> option (lowercase letter <code>'l'</code>, without the prefix <code>lib</code> and <code>.a</code> extension).<br  />
+  In Eclipse CDT, you can set the include paths, library paths and libraries by right-click on the project  ⇒ Properties ⇒ C/C++ General  ⇒ Paths and Symbols ⇒ Under tabs &quot;Includes&quot;, &quot;Library Paths&quot; and &quot;Libraries&quot;. The settings are applicable to the selected project only.<br  />
+  To set the include paths and library paths for all the projects, set the environment variables <code>CPATH</code> and <code>LIBRARY_PATH</code>. In Eclipse, choose &quot;Window&quot; ⇒ Preferences ⇒ C/C++ ⇒ Build ⇒ Environment.<br />
+  Alternatively, copy the headers and libraries into system directories, and you can omit the include-paths and library-paths.</li>
+<li><span class="line-heading">OpenGL with GLUT:</span> For Cygwin, you need to install gcc, g++, gdb, make (under Devel category) and opengl, freeglut (under graphics category). The headers <code>gl.h</code>, <code>glu.h</code>, <code>glut.h</code> are kept in <code>$cygwin\usr\include\w32api\GL</code>. Use <code>#include &lt;GL/gl<em>__</em>.h&gt;</code> to include the headers. The libraries <code>libopengl32.a</code> <code>libglu32.a</code> and <code>libglut32.a</code> are kept in <code>$cygwin\lib\w32api</code>. To specify these libraries in linking, use <code>-lopengl32</code> <code>-lglu32</code> <code>-lglut32</code> options (without the <code>lib</code> prefix and <code>.a</code> extension).</li>
+
+<li><span class="line-heading">OpenGL with SDL:</span> Download SDL from <a href="http://www.libsdl.org/">http://www.libsdl.org</a>. Choose Development Libraries ⇒ win32 ⇒  mingw32 ⇒ Unzip. Copy the headers directory <code>SDL </code>(under <code>include</code>) to <code>$cygwin\usr\include\w32api</code>; copy all the library files in <code>lib</code> into <code>$cygwin\lib\w32api</code>; copy the run-time library <code>SDL.dll</code> (under <code>bin</code>) into <code>Windows/System32</code>. In your program, include these two headers: <code>#include &lt;SDL/sdl.h&gt;</code> and <code>#include &lt;SDL/sdl_opengl.h&gt;</code>. For linking, add these libraries: <code>-lSDL</code> <code>-lSDLmain</code>.</li>
+
+<li><span class="line-heading"><span class="font-code">#pragma</span> Comment Directive:</span> pragma comment directive, e.g., <code>#pragma comment(lib, &quot;opengl32.lib&quot;)</code>, is often used to include a particular library (same as <code>-l</code> option). This system-dependent directive works on Windows's compiler, but NOT in GCC.</li>
+<li><span class="line-heading">Error &quot;multiple target patterns&quot;:</span> There is a problem with GNU make (at <code>$Cygwin\bin\make.exe</code>). Replaced by this copy @ <a href="http://www.cmake.org/files/cygwin/make.exe">http://www.cmake.org/files/cygwin/make.exe</a>.</li>
+<li><span class="line-heading"><span class="font-code">fflush(stdout)</span>:</span> The gcc library uses buffered I/O (in accordance with the C Specification). Output is only written out to the output stream after a newline character. You can flush the output with a <code>fflush()</code>.</li>
+
+<li><span class="line-heading">Project name shall not include the word &quot;setup&quot;:</span> If you name your C/C++ project with a name including the word &quot;<code>setup</code>&quot;, then the resultant &quot;<code>*setup*.exe</code>&quot; will trigger UAC (User Authorization Control) and require administrator right to run. (This took me a few hours to figure out! Try renaming a &quot;<code>hello.exe</code>&quot; to &quot;<code>mysetup.exe</code>&quot;.)</li>
+</ol>
+
+
+
+<h3 id="io"> File I/O in Eclipse</h3>
+<p>Refer to Eclipse for Java's <a href="EclipseJava_HowTo.html#io">File IO</a>.</p>
+
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+  <li>Eclipse's &quot;C/C++ Development Tool User Guide&quot;, accessible via Eclipse's Help menu.</li>
+  <li>GCC (GNU compilers) mother site @ <a href="http://gcc.gnu.org">http://gcc.gnu.org</a>; GCC manual @ <a href="http://gcc.gnu.org/onlinedocs/">http://gcc.gnu.org/onlinedocs</a>.</li>
+  <li>An Introduction to GCC @ <a href="http://www.network-theory.co.uk/docs/gccintro/index.html">http://www.network-theory.co.uk/docs/gccintro/index.html</a>.</li>
+</ol>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Eclipse 4.2.2 (Juno), Eclipse CDT 8.1.2<br />
+Last modified: April, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

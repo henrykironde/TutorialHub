@@ -1,0 +1,619 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Install and Get Started with Visual C++ 2010 Express</title>
+
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Visual C++ 2010 Express</h1>
+<h2>How to Install and Get Started</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Introduction</h3>
+
+<p>Visual C++ is part of the <em>Visual Studio Programming Suite</em>.  A light <em>express </em>version is freely available.</p>
+
+<p>Visual Studio is an Integrated Development Environment (IDE) for developing web applications, client applications, and Windows Phone mobile applications. It supports C/C++, C#, Visual Basic. The versions are:</p>
+<ul>
+<li>Visual Studio 97: First version bundling many programming tools.</li>
+<li>Visual Studio Version 6 (1998): Compiled into native executable machine codes (Win32) only.</li>
+<li>Visual Studio .net 2002/2003 (Version 7): Introduced the so-called <em>managed</em> codes on <em>Common Language Runtime</em> (CLR), and C#. Managed codes run over a virtual machine known as <em>.NET Framework</em>. It uses a portable virtual machine code called <em>Common Intermediate Language</em> (CIL). CLR, .NET Framework, CIL and C# are similar to Java Runtime, Java Virtual Machine, Java portable byte codes, and Java language.</li>
+<li>Visual Studio 2005 (Version 8): .NET Framework 2.0, ASP.NET 2.0, ADO.NET 2.0 (for database support), etc.</li>
+<li>Visual Studio 2008 (Version 9): .NET Framework 3.5.</li>
+<li>Visual Studio 2010 (Version 10): .NET Framework 4.0.</li>
+<li>Visual Studio 11 (Version 11): upcoming.</li>
+</ul>
+
+<h3 id="vcpp-install">How to Install Visual C++ 2010/2008 Express</h3>
+
+<p>Simply download and run the VC++ Express online installer @ <a href="http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express">http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express</a>. Choose the &quot;Express&quot; instead of &quot;Professional Trial&quot; version.</p>
+
+<h3 id="vcpp-first">Write Your First C++ Program in VC++ 2010/2008</h3>
+
+<h5>Step 0: Launch Visual C++</h5>
+<p>The &quot;Start Page&quot; appears. Take a good look at the &quot;Start Page&quot; before you proceed.</p>
+
+<h5>(For Visual C++ 2010 Express) Switch to &quot;Expert Settings&quot;</h5>
+<p>From &quot;Tools&quot; menu &rArr; &quot;Settings&quot;  &rArr; Check &quot;Expert Settings&quot;.</p>
+
+<h5>Step 1: Create a New C++ Project and Solution</h5>
+<p>Visual studio applications are organized in solutions and projects. A solution consists of one or more related projects (e.g., an exeutable program and its related DLL). A C++ project consists of program codes, headers, and relevant resources.</p>
+
+<ol>
+<li>Select &quot;File&quot; menu &rArr; &quot;New&quot; &rArr; &quot;Project...&quot;.</li>
+
+<li>The &quot;New Project&quot; dialog appears:
+
+  <ol>
+<li>In the &quot;Installed Templates&quot; (or &quot;Project Types&quot; in VC2008) pane, expand &quot;Visual C++&quot; node and select &quot;Win32&quot;.</li>
+<li> In the middle pane (or &quot;Templates&quot; in VC2008), select &quot;Win32 Console Application&quot;.</li>
+
+<li>In the &quot;Name&quot; field, enter &quot;<code>Hello</code>&quot; as the project name.</li>
+<li>In the &quot;Location&quot; field, choose your working directory, for example, &quot;<code>d:\myproject</code>&quot;.</li>
+<li>In &quot;Solution&quot; (if there is one), select &quot;Create New Solution&quot;.<br />
+As mentioned, a solution consists of many related projects. By default, the solution name is the same as the <em>first</em> project in the solution. Accept the default. You can add more projects into this solution later.</li>
+<li>Check &quot;Create directory for solution&quot;.</li>
+<li>Click &quot;OK&quot;.</li>
+
+</ol></li>
+
+<li>The &quot;Win32 Application Wizard&quot; appears:
+  <ol>
+<li>Click &quot;Next&quot;.</li>
+<li>In &quot;Application type&quot;, select &quot;Console application&quot; (the default).</li>
+<li> In &quot;Additional options&quot;, select &quot;Empty project&quot;.</li>
+<li>Click &quot;Finish&quot;.</li>
+</ol>
+</li>
+
+</ol>
+
+<h5>Step 2: Write a C++ Program</h5>
+<ol>
+<li>In the &quot;Solution Explorer&quot; pane (the leftmost pane), expand the &quot;<code>hello</code>&quot; project node    &rArr; Right-click on &quot;Sources Files&quot;   &rArr; &quot;Add&quot; &rArr; &quot;New Item...&quot;.</li>
+<li>The &quot;Add New Item&quot; dialog appears.
+
+<ol>
+<li>In the &quot;Installed Templates&quot; pane, expand the &quot;Visual C++&quot; node and select &quot;Code&quot;.</li>
+<li>Select &quot;C++ File(.cpp)&quot;.</li>
+<li>In the &quot;Name&quot; field, enter &quot;<code>hello</code>&quot; as the filename</li>
+<li>Click &quot;Add&quot;.</li>
+</ol></li>
+
+<li>In the editor pane for &quot;<code>hello.cpp</code>&quot;, enter  the following C++ codes:
+
+  <pre class="color-example">
+#include &lt;iostream&gt;
+using namespace std;
+   
+int main() {
+    cout &lt;&lt; &quot;Hello, world!&quot; &lt;&lt; endl;
+}</pre>
+</li>
+</ol>
+
+<h5>Step 3: Build (Compile and Link) the Project</h5>
+<p>From the &quot;Build&quot; menu, choose &quot;Build Solution&quot; (or press F7) to compile and link the program.</p>
+
+<h5>Step 4: Run the Project</h5>
+<p>From the &quot;Debug&quot; menu, select &quot;Start Without Debugging&quot; (or press Ctrl-F5) to run your project. You should see the  &quot;Hello, world!&quot; message displayed on the console.</p>
+
+<h5>Next:</h5>
+<ul>
+<li>Each C++ program has to be kept in a separate project. For toy programs, you could put the new project under an existing solution. For production, a solution shall only contain  related projects.</li>
+<li>To add another project under this solution &quot;Hello&quot;, right click on the solution (on the Solution Explorer) &rArr; Add &rArr; New Project. Follow the above steps to create the project.</li>
+
+<li>To build and run the new project:
+  <ol>
+<li>right-click on the project &rArr; Set as StartUp Project.</li>
+<li>Right-click on the project &rArr; Build.</li>
+<li>To run the project: from the &quot;Build&quot; menu, select &quot;Start Without Debugging&quot;.</li>
+</ol></li>
+
+</ul>
+
+<h3>Read the Documentation</h3>
+
+<ul>
+<li>At a minimum, you should spend sometimes to browse through the &quot;Getting Started&quot; section on the &quot;START PAGE&quot; (the initial page when the Visual Studio is launched). There are video links as well as tutorials. This will  save you many hours of  struggling later.</li>
+
+<li>&quot;Visual C++ Guided Tour&quot; @ <a href="http://msdn.microsoft.com/en-us/library/ms235630.aspx">http://msdn.microsoft.com/en-us/library/ms235630.aspx</a>.</li>
+</ul>
+
+<h3 id="vcpp-debug">Debugging C++ Program in VC++ 2010/2008</h3>
+
+<p>Able to use a graphics debugger to debug program is crucial in programming. It could save you countless of hours guessing on what went wrong.</p>
+
+<h5>Step 0: Write a C++ Program</h5>
+<p>Follow the steps in &quot;<a href="#vcpp-first">Writing C++ Program</a>&quot; to write the following C++ program, to be used for the debugging practice. This program computes and prints the factorial of <code><em>n</em></code> (<code>=1*2*3*...*<em>n</em></code>). The program, however, has a logical error and produce a wrong answer for <code><em>n</em>=20</code>. (It outputs &quot;The Factorial of 20 is -2102132736&quot; - a negative number?!).</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre>
+</td>
+<td>
+<pre>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   int n = 20;
+   int factorial = 1;
+ 
+   <span class="color-comment">// n! = 1*2*3...*n</span>
+   for (int i = 1; i &lt;= n; i++) {
+      factorial *= i;
+   }
+   cout &lt;&lt; &quot;The Factorial of &quot; &lt;&lt; n &lt;&lt; &quot; is &quot; &lt;&lt; factorial &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Run the program and observe the output produced:</p>
+
+<pre class="output">
+The Factorial of 20 is -2102132736</pre>
+
+<p>Let's use the graphic debugger to debug the program.</p>
+
+<h5>Step 1: Set an Initial Breakpoint</h5>
+
+<img class="image-float-left" src="images/Vcpp2010DebugSetBreakpoint.png" />
+
+<p>Set an initial <em>breakpoint</em> at <code>main()</code> function by clicking on the &quot;left-margin&quot; of the line containing <code>main()</code>. (Alternatively, you can place the cursor on the line containing <code>main()</code>, and select the &quot;Toggle Breakpoint (F9)&quot; from the &quot;Debug&quot; menu).  A red circle appears indicating a breakpoint has been set at that line. A <em>breakpoint</em> suspends program execution for you to examine the internal states.</p>
+
+<h5 class="float-clear">Step 2: Start Debugging</h5>
+
+<img class="image-float-left" src="images/Vcpp2010DebugStart.png" />
+
+<p>From &quot;Debug&quot; menu, select &quot;Start Debugging&quot;. The program begins execution but suspends its execution at the breakpoint, i.e., <code>main()</code>. An <em>yellow arrow</em> (as shown in the diagram) appears and points at the <code>main()</code>, indicating this is the next statement to be executed.</p>
+
+<h5 class="float-clear">Step 3: Single-Step and Watch the Variables and Outputs</h5>
+
+<img class="image-float-right" src="images/Vcpp2010DebugToolbar.png" />
+<img class="image-float-right" src="images/Vcpp2010DebugVariables.png" />
+
+<p> Click the &quot;Step Over&quot; button on the &quot;Debug&quot; toolbar (or select &quot;Step Over (F10)&quot; in &quot;Debug&quot; menu) to <em>single-step</em> thru your program. At each of the step, you could examine the internal state of your program, such as the value of the variables (in the &quot;Auto&quot; or &quot;Locals&quot; pane), the outputs produced by your program (in the console), etc.</p>
+
+<p>Single-stepping thru the program and watching the values of internal variables and the outputs produced is the ultimate mean in debugging programs - because it is exactly how the computer runs your program!</p>
+
+<h5>Step 4: Breakpoint, Run-To-Cursor, Continue and Stop</h5>
+
+<p>As mentioned, a breakpoint <em>suspends</em> program execution and   let you examine the internal states of the program. To set a breakpoint   on a particular statement, click the left-margin of that line (or   select &quot;Toggle Breakpoint (F9)&quot; from &quot;Debug&quot; menu).</p>
+<p>The &quot;Continue (F5)&quot; resumes the program execution, up to the next breakpoint, or till the end of the program.</p>
+<p>Single-stepping thru a loop with a large count is time-consuming. You   could set a breakpoint at the statement immediately outside the loop   (e.g., Line 12 of the above program), and issue &quot;Continue&quot; to complete the   loop.</p>
+<p>Alternatively, you can place the cursor on a particular statement,   right-click and select &quot;Run-To-Cursor (Ctrl-F10)&quot; to resume execution up to   this line.</p>
+<p> The &quot;Stop Debugging&quot; ends the debugging session. Always terminate your   current debugging session using &quot;Stop&quot; or &quot;Continue&quot; till the end of   the program.</p>
+
+<p><strong>Important:</strong> I can's stress more that mastering the use of debugger is crucial in programming. Explore the features provided by the debuggers.</p>
+
+<h5>Other Debugging Features</h5>
+
+<p><strong>Modifying the Value of a Variable:</strong> You can modify the value of an internal variable by entering a new value in the &quot;Locals&quot; or &quot;Autos&quot; panes. This technique is handy for modifying the behavior of a program, without changing the source code and rebuild.</p>
+
+<p><strong></strong><strong>Step-Into and Step-Out</strong>: To debug a <em>function</em>, you need to use &quot;Step-Into (F11)&quot; to step into the <em>first</em> statement of the function.  (&quot;Step-Over&quot; runs the function in a single step without stepping through the statements within the function.) You could use &quot;Step-Out (Shift-F11)&quot; to return  to the caller, anywhere within the function. Alternatively, you can set a breakpoint inside a function. </p>
+
+<h3>Notes on Visual Studio IDE</h3>
+<ol>
+<li>Visual Studio organized your work in <em>solution</em> and <em>project</em>.
+
+<ol>
+<li>A project is a single built-target, e.g., a executable program, a DLL (Dynamic Link Library), a static library, etc.  A project contains 3 folders: source files, header files, resource files (icons, cursors, bitmaps, etc).</li>
+<li>A solution can contain many related projects, that are meant to run together to provide a complete solution (e.g., a client-server based application).  By keeping the related projects in a solution, the IDE can help to keep track of the dependencies between projects, and re-build the entire solution if certain part of a project changes.</li>
+</ol>
+
+In Visual studio, you do not have to create a solution explicitly (there is no way to create a solution anywhere?!). A solution will be <em>automatically</em> created when you create a <em>new </em>project, i.e., the <em>first project</em> under the solution.</li>
+
+<li>To create a new project (and implicitly create a new solution): select &quot;File&quot; menu &rArr; &quot;New&quot; &rArr; &quot;Project&quot;, select &quot;Create New Solution&quot; and check &quot;Create directory for solution&quot;. By default, the name of the solution folder is the same as the first project created under the solution. You may choose a different name for the solution instead. You can add more projects into a solution later (by right-clicking on solution's name  &rArr; &quot;Add&quot;  &rArr; &quot;New Project...&quot;). You can choose to build only a particular project instead of the entire solution (right-click on the project  &rArr; Project Only &rArr; Build project). If there are more than one project in a solution, you need to set a &quot;Startup&quot; project (right-click the project &rArr; &quot;Set as startup project&quot; - the start-up project will be shown in bold). Running the solution begins at the startup project.</li>
+
+</ol>
+
+<h3>Tips and Tweaks</h3>
+<ol>
+<li>&quot;Auto-hide&quot; all the panels (Solution Explorer, Output, etc), while you are editing your program (so that you have a bigger screen to work on.) (Visual Studio does not allow you to switch the editor panel to full screen like Eclipse or NetBeans?!)</li>
+
+<li>It is very complicated to rename a project directory and the project name. The steps are:
+  <ol>
+	<li>Close the Visual Studio.</li>
+	<li>Rename the project directory (using Windows Explorer).</li>
+	<li>Start the Visual Studio, and ignore all the warning messages.</li>
+	<li>In the Solution Explorer, select a &quot;unavailable project&quot;. Click the &quot;Property Manager&quot; icon (on the top-left corner of the Solution Explorer) to display the &quot;Property&quot; panel.</li>
+	<li>Set the &quot;File Path&quot; to the new directory location.</li>
+	<li>Select the &quot;unavailable project&quot; again, choose &quot;Reload&quot;.</li>
+	<li>Go back to the &quot;Property&quot; panel, rename the &quot;project name&quot; and &quot;namespace&quot;.</li>
+  </ol>
+<p>Alternatively, you can remove the project from Visual Studio, rename the project, and add the project into the Visual Studio again.</p>
+<p>Another alternatively, you can rename the project directory, and edit the &quot;<code>.sol</code>&quot; configuration file.</p>
+<p>Read <a href="http://www.platinumbay.com/blogs/dotneticated/archive/2008/01/01/renaming-and-copying-projects-and-solutions.aspx">http://www.platinumbay.com/blogs/dotneticated/archive/2008/01/01/renaming-and-copying-projects-and-solutions.aspx</a> on many other tasks such as renaming and copy project/solution. (  I am still wondering why is it so difficult to rename a project directory in Visual Studio, compared to Eclipse or NetBeans refactoring).</p></li>
+
+<li>You can choose the compile the code without linking via &quot;Build&quot; menu &rArr; Compile (Ctrl-F7). You can choose to compile/link a project (instead of the entire solution) via &quot;Build&quot; menu &rArr; &quot;Build <em>project-name</em>&quot;.</li>
+<li>Figure out the various options in &quot;find/replace&quot; will save you many hours of typing. (Is there a refactoring facility in Visual Studio for renaming entities?!)</li>
+</ol>
+
+<h3 id="vcpp-io">File IO in VC++</h3>
+
+<p>Suppose that your program receives input from a text file called &quot;<code>xxxx.in</code>&quot;, and writes its output to a text file called &quot;<code>xxxx.out</code>&quot; (e.g., the  USACO training site, where &quot;<code>xxxx</code>&quot; is the name of the problem).</p>
+<p>File Input is a little tricky under VC++ due to:</p>
+<ol>
+<li>When you create a text file in Notepad and saved it as &quot;<code>xxxx.in</code>&quot;, Notepad will append the &quot;<code>.txt</code>&quot; to your file and it becomes &quot;<code>xxxx.in.txt</code>&quot;.  Worse still, the Windows' Explorer, by default, will not show the &quot;<code>.txt</code>&quot; extension (instead it shows a txt file <em>icon</em>). (The first thing I always do to an alien Windows is to change this setting. From &quot;Tools&quot; menu &rArr; Folder Options... &rArr; View &rArr; Uncheck &quot;Hide extensions for known file types&quot;.) You need to put a pair of double quotes around <code>xxxx.in</code> to override the default &quot;<code>.txt</code>&quot; extension. This is one good reason not to use Notepad for programming at all. You should use VC++ to create the input text files directly.</li>
+
+<li>Which directory to keep the input file &quot;<code>xxxx.in</code>&quot; in VC++?
+<br />
+When you create a new project, VC++ creates a few sub-folders, such as &quot;debug&quot;, &quot;release&quot;, under the <em>base</em> directory. BUT you need to put your input file &quot;<code>xxxx.in</code>&quot; in the <em>base</em> directory of the project.</li>
+</ol>
+
+<p>NOTES:</p>
+<ul>
+<li>You can create you input file from VC++ directly via &rArr; Add &rArr; New Item... &rArr; Visual C++ &rArr;  Utility &rArr; Text File (.txt).</li>
+<li>Remember to add a newline to the end of your input file to avoid unexpected behavior.</li>
+<li>You can include existing input files into the project via: File &rArr; Existing item... &rArr; Select the file.</li>
+</ul>
+<p>This is a sample C++ program for File input/output. Try it out.</p> 
+<pre class="color-example">
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+using namespace std;
+   
+int main() {
+   ifstream in (&quot;test.in&quot;);    <span class="color-comment">// input file</span>
+   ofstream out (&quot;test.out&quot;);  <span class="color-comment">// output file</span>
+   
+   int a, b;
+   in &gt;&gt; a &gt;&gt; b;         <span class="color-comment">// read from file</span>
+   out &lt;&lt; a+b &lt;&lt; endl;   <span class="color-comment">// write to file</span>
+   return 0;
+}</pre>
+
+<p>Create a text file called &quot;<code>test.in</code>&quot; with the following contents and terminated with a newline:</p>
+<pre class="output">
+55 66&nbsp;
+</pre>
+
+<h3>Sample C++ Programs</h3>
+
+<p>The following samples are extracted from &quot;Visual C++ Tour&quot;.</p>
+<h4>Win32 Application</h4>
+<pre class="color-example"><span class="color-comment">/*
+ * A Sample Win32 Hello-world Application (Extracted from &quot;Visual C++ Tour&quot;).
+ * Compile: cl /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /D &quot;WIN32&quot; /D &quot;_WINDOWS&quot; /c HelloWin32.cpp
+ * Link: link /SUBSYSTEM:WINDOWS /link kernel32.lib user32.lib gdi32.lib HelloWin32.obj 
+ */
+</span>#include &lt;windows.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;tchar.h&gt;
+   
+<span class="color-comment">// Global variables
+// TCHAR can be used to describe ANSI, double-byte character set, or Unicode strings.</span>
+static TCHAR szWindowClass[] = _T(&quot;win32app&quot;);           <span class="color-comment">// The main window class name</span>
+static TCHAR szTitle[] = _T(&quot;Sample Win32 Application&quot;); <span class="color-comment">// The window's title</span>
+HINSTANCE hInst;
+   
+<span class="color-comment">// Function prototype</span>
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+   
+<span class="color-comment">/*
+ * A Win32 application starts at WinMain().
+ * HINSTANCE hInstance: Handle to the current instance of the application.
+ * HINSTANCE hPrevInstance: Handle to the previous instance of the application.
+ * LPSTR lpCmdLine: Pointer to a null-terminated string specifying the command line 
+ *    for the application, excluding the program name.
+ * int nCmdShow: Specifies how the window is to be shown.
+ */</span>
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
+				   LPSTR lpCmdLine, int nCmdShow) {
+   
+    <span class="color-comment">// Allocate a WNDCLASSEX (Window Class Ex) structure, which maintains
+    //  information about the window.</span>
+    WNDCLASSEX wcex;
+    wcex.cbSize = sizeof(WNDCLASSEX);                <span class="color-comment">// Size in bytes</span>
+    wcex.style          = CS_HREDRAW | CS_VREDRAW;   <span class="color-comment">// Class style(s)</span>
+    wcex.lpfnWndProc    = WndProc;                   <span class="color-comment">// Pointer to the window procedure</span>
+    wcex.cbClsExtra     = 0;         <span class="color-comment">// number of extra bytes to allocate following the window-class structure</span>
+    wcex.cbWndExtra     = 0;         <span class="color-comment">// number of extra bytes to allocate following the window instance</span>
+    wcex.hInstance      = hInstance; <span class="color-comment">// Handle to the instance that contains the window procedure for the class</span>
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APPLICATION));  <span class="color-comment">// Handle to the class icon</span>
+    wcex.hCursor        = LoadCursor(NULL, IDC_ARROW);  <span class="color-comment">// Handle to the class cursor</span>
+    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);     <span class="color-comment">// Handle to the class background brush</span>
+    wcex.lpszMenuName   = NULL;           <span class="color-comment">// Pointer to a null-terminated string that specifies the resource name of the class menu</span>
+    wcex.lpszClassName  = szWindowClass;  <span class="color-comment">// Pointer to a null-terminated string that specifies the class name</span>
+    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_APPLICATION));  <span class="color-comment">// Handle to a small icon</span>
+   
+	// Reigster the window class structure
+	if (!RegisterClassEx(&amp;wcex)) {
+        MessageBox(NULL,                           <span class="color-comment">// Handle to the owner window</span>
+            _T(&quot;Call to RegisterClassEx failed!&quot;), <span class="color-comment">// Pointer to a null-terminated string that contains the message to be displayed</span>
+            _T(&quot;Sample Win32 Application&quot;),        <span class="color-comment">// Pointer to a null-terminated string that contains the dialog box title</span>
+            NULL);                                 <span class="color-comment">// Specifies the contents and behavior of the dialog box</span>
+        return 1;
+    }
+   
+	hInst = hInstance;         <span class="color-comment">// Store instance handle in global variable</span>
+   
+	<span class="color-comment">// Create the window</span>
+    HWND hWnd = CreateWindow(  <span class="color-comment">// returns a handle to window</span>
+		szWindowClass,         <span class="color-comment">// window class name</span>
+		szTitle,               <span class="color-comment">// window title</span>
+		WS_OVERLAPPEDWINDOW,   <span class="color-comment">// the type of window to create</span>
+		CW_USEDEFAULT, CW_USEDEFAULT,  <span class="color-comment">// initial position (x, y)</span>
+		500, 100,  <span class="color-comment">// initial size (width, length)</span>
+		NULL,      <span class="color-comment">// the parent of this window</span>
+		NULL,      <span class="color-comment">// this application does not have a menu bar</span>
+		hInstance, <span class="color-comment">// the first parameter from WinMain</span>
+		NULL       <span class="color-comment">// not used in this application</span>
+	);
+   
+	if (!hWnd) {
+		MessageBox(NULL,
+	        _T(&quot;Call to CreateWindow failed!&quot;),
+		    _T(&quot;Sample Win32 Application&quot;),
+            NULL);
+	    return 1;
+	}
+   
+	<span class="color-comment">// Show the window on the screen</span>
+	ShowWindow(
+		hWnd,     <span class="color-comment">// window handle returned from CreateWindow</span>
+		nCmdShow  <span class="color-comment">// the fourth parameter from WinMain</span>
+	);
+   
+	UpdateWindow(hWnd);
+   
+	<span class="color-comment">// Main message loop</span>
+	MSG msg;
+    while (GetMessage(&amp;msg, NULL, 0, 0)) {
+        TranslateMessage(&amp;msg);
+        DispatchMessage(&amp;msg);
+    }
+   
+    return (int) msg.wParam;
+}
+   
+<span class="color-comment">/*
+ * A Win32 application also has a WndProc() (Window Procedure) to handle 
+ *    messages/events received from the Operating System.
+ * HWND hWnd: Handle to the window
+ * UINT message: Specifies the message
+ * WPARAM wParam: Specifies additional message information
+ * LPARAM lParam: Specifies additional message information
+ */</span>
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	PAINTSTRUCT ps;
+	HDC hdc;
+	TCHAR greeting[] = _T(&quot;Hello, World!&quot;);
+   
+	switch (message) {
+		case WM_PAINT:
+			hdc = BeginPaint(hWnd, &amp;ps);  <span class="color-comment">// begin repaint</span>
+   
+			<span class="color-comment">// Your display codes begin here.
+			// we print &quot;Hello, World!&quot; in the top left corner.</span>
+			TextOut(hdc,
+				5, 5,
+				greeting,
+				_tcslen(greeting));
+			<span class="color-comment">// Your display codes end.</span>
+   
+			EndPaint(hWnd, &amp;ps); <span class="color-comment">// end repaint</span>
+			break;
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			break;
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+			break;
+	}
+	return 0;
+}</pre>
+
+<h4>A C++ Class</h4>
+<p>Header File:</p>
+<pre class="color-example"><span class="color-comment">/*
+ * header for Cardgame (Extracted from &quot;Visual C++ Tour&quot;)
+ */</span>
+#pragma once
+   
+class Cardgame {
+private:
+	int numPlayers;
+	static int totalParticipants;
+   
+public:
+	Cardgame(int numPlayer);
+	~Cardgame(void);
+};</pre>
+
+<p>Source File:</p>
+<pre class="color-example">
+<span class="color-comment">/*
+ * Source for Cardgame (Extracted from &quot;Visual C++ Tour&quot;)
+ */</span>
+#include &quot;Cardgame.h&quot;
+#include &lt;iostream&gt;
+using namespace std;
+   
+<span class="color-comment">// Constructor</span>
+Cardgame::Cardgame(int p) {
+    numPlayers = p;
+    totalParticipants += p;
+    cout &lt;&lt; p &lt;&lt; &quot; players have started a new game.  There are now &quot;
+         &lt;&lt; totalParticipants &lt;&lt; &quot; players in total.&quot; &lt;&lt; endl;
+}
+   
+<span class="color-comment">// Destructor</span>
+Cardgame::~Cardgame(void) {
+	totalParticipants -= numPlayers;
+	cout &lt;&lt; numPlayers &lt;&lt; &quot; players have finished their game.  There are now &quot;
+		 &lt;&lt; totalParticipants &lt;&lt; &quot; players in total.&quot; &lt;&lt; endl;
+}</pre>
+
+<p>Test Program:</p>
+<pre class="color-example">
+<span class="color-comment">/*
+ * Test Program for Cardgame (Extracted from &quot;Visual C++ Tour&quot;)
+ */</span>
+#include &quot;Cardgame.h&quot;
+   
+int Cardgame::totalParticipants = 0;
+   
+int main() {
+    Cardgame *bridge = 0;
+    Cardgame *blackjack = 0;
+    Cardgame *solitaire = 0;
+    Cardgame *poker = 0;
+   
+    bridge = new Cardgame(4);    <span class="color-comment">// invoke constructor</span>
+    blackjack = new Cardgame(8);
+    solitaire = new Cardgame(1);
+    delete blackjack;            <span class="color-comment">// invoke destructor</span>
+    delete bridge;
+    poker = new Cardgame(5);
+    delete solitaire;
+    delete poker;
+   
+    return 0;
+}</pre>
+
+<h3 id="vcpp-command-line">Compiling C++ Programs from Command-Line with VC++</h3>
+
+<p>To use VC++ compiler to compile a C++ program in the Command Shell (<code>CMD</code>), you need to set the <em>environment variables</em> properly by first running the batch file &quot;vcvars32.bat&quot; in &quot;C:\Program Files\Microsoft Visual Studio 10.0\VC\bin&quot;.</p>
+
+<table class="table-program">
+<tr>
+<td>
+<pre class="color-example">
+&gt; <strong>&quot;c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\vcvars32&quot;</strong>
+&nbsp;
+&gt; [set current directory pointing to the source file]
+&gt; <strong>cl /EHsc Hello.cpp</strong>
+&nbsp;
+&gt; <strong>Hello</strong></pre>
+</td>
+<td>
+<pre class="color-explanation">Set environment variables for VC++,
+such as PATH, INCLUDE, LIB.
+&nbsp;
+Compile: generate Hello.obj and Hello.exe,
+/EHsc to enable Exception Handling for C++
+Run Hello.exe</pre>
+</td>
+</tr>
+</table>
+
+<p>Alternatively, you could use a special <em>Visual Studio 200X Command Prompt</em>, which pre-sets all the environment variables, to compile and execute C++ program.  To start the &quot;Visual Studio 200X Command Prompt&quot;: From the &quot;Start&quot; button &rArr; Choose &quot;Microsoft Visual Studio 200X&quot; &rArr; Visual Studio Tools &rArr; Visual Studio 200X Command Prompt.</p>
+
+<table class="table-program">
+<tr>
+<td>
+<pre class="color-example">
+&gt; [set the current working]
+&gt; <strong>cl /EHsc Hello.cpp</strong>
+&gt; <strong>Hello</strong>
+&nbsp;
+&gt; <strong>cl /EHsc /c Hello.cpp</strong>
+&gt; <strong>link Hello.obj</strong>
+&gt; <strong>Hello</strong></pre>
+</td>
+<td>
+<pre class="color-explanation">
+&nbsp;
+Compile and Link Hello.cpp into Hello.exe (/EHsc to enable Exception Handling for C++)
+Run Hello.exe
+&nbsp;
+Compile Hello.cpp into Hello.obj (/c means compile only)
+Link Hello.obj into Hello.exe
+Run Hello.exe</pre>
+</td>
+</tr>
+</table>
+
+<h4>Environment Variables</h4>
+
+<p>&quot;<code>cl.exe</code>&quot; invokes the <em>preprocessor</em> and <em>compiler</em>, and <em>linker</em>. &quot;<code>link.exe</code>&quot; invokes the <em>linker</em>. The path for &quot;<code>cl.exe</code>&quot; and &quot;<code>link.exe</code>&quot; must be included the the <code>PATH</code> environment variable.</p>
+<p>&quot;<code>cl.exe</code>&quot; uses the following environment variables:</p>
+<ul>
+  <li><code>INCLUDE</code>: contains the search paths for include header such as &quot;<code>iostream</code>&quot;, &quot;<code>stdio.h</code>&quot;.</li>
+  <li><code>CL</code>: if defined, contains the command-line arguments for the &quot;<code>cl.exe</code>&quot;.</li>
+</ul>
+<p>&quot;<code>link.exe</code>&quot; uses the following environment variables:</p>
+<ul>
+<li><code>LIB</code>: contains the search paths for link library. <code>LIB</code> provides only the paths, you need to specify the desired libraries (e.g., <code>user32.lib</code>) as part of the source input.</li>
+<li><code>LIBPATH</code>: contains search paths used for <code>#using</code> directive.</li>
+<li><code>TMP</code>: temporary file location.</li>
+</ul>
+
+<h4>Commonly-used Command-line Options</h4>
+<ul>
+<li><code>/c</code>: Compile only (int &quot;<code>.obj</code>&quot;), without linking.</li>
+<li><code>/Fe &lt;file&gt;</code>: Specifies the executable filename, default is &quot;<em><code>input-filename</code></em><code>.exe</code>&quot;. (gcc uses &quot;<code>-o &lt;file&gt;</code>&quot;).</li>
+<li><code>/Fo &lt;file&gt;</code>: Specifies the object filename, default is &quot;<em><code>input-filename</code></em><code>.obj</code>&quot;.</li>
+<li><code>/I &lt;dir&gt;</code>: Specifies the Include directories for header files.</li>
+<li><code>/L &lt;dir&gt;</code>: Specifies the LIB directories.</li>
+<li><code>/link &lt;name&gt;</code>: Link with these <code>lib</code>'s.</li>
+<li><code>/D &lt;macro&gt;</code>: Define macro</li>
+<li><code>/Wall</code>: Show all the warning messages.</li>
+</ul>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+  <li>Microsoft Visual Studio Express @ <a href="http://www.microsoft.com/express/download/">http://www.microsoft.com/express/download</a>.</li>
+  <li>Visual C++ Developer Center (with Learning Tutorials and Videos) @ <a href="http://msdn.microsoft.com/en-us/visualc/default.aspx">http://msdn.microsoft.com/en-us/visualc/default.aspx</a>.</li>
+  <li>&quot;MSDN Library - Visual C++&quot;, accessed via the &quot;Help&quot; menu.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Visual C++ 2010 Express<br />
+Last modified: December, 2010</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+
+
+</body>
+</html>

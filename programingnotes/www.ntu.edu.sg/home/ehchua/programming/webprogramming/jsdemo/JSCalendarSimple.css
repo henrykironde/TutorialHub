@@ -1,0 +1,28 @@
+/* JSCalendarSimple.css */
+.today {
+  background: gray;
+  color: white;
+  font-weight: bold
+}
+ 
+.sunday {
+  color: red
+}
+ 
+input, select {
+  font-family: Consolas, monospace;
+  font-weight: bold;
+  color: blue
+}
+ 
+table {
+  font-family: Consolas, monospace;
+  text-align: right;
+  border-collapse:collapse;
+  border: 1px solid black
+}
+ 
+td, th {
+  padding: 3px 5px;
+  border: 1px solid black
+}

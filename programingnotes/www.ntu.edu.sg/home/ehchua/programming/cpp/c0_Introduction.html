@@ -1,0 +1,1370 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>An Introduction to C Programming for First-time Programmers - C Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>C programming Tutorial</h1>
+<h2>Introduction to C Programming<br />
+(for Novices &amp; First-Time Programmers)</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Getting Started - Write your First Hello-world C Program</h3>
+
+<p>Let's begin by writing our first C program that prints the message &quot;Hello, world!&quot; on the display console:</p>
+
+<pre class="output">Hello, world!</pre>
+
+<p><span class="line-heading">Step 1: Write the Source Code:</span> Enter the following source codes using a programming text editor (such as NotePad++ for Windows or gEdit for UNIX/Linux/Mac) or an Interactive Development Environment (IDE) (such as CodeBlocks, Eclipse, NetBeans or MS Visual Studio - Read the respective &quot;How-To&quot; article on how to install and get started with these IDEs).</p>
+
+<p>Do not enter the line numbers (on the left panel), which were added to help in the explanation. Save the source file as &quot;<code>Hello.c</code>&quot;. A C source file should be saved with a file extension of &quot;<code>.c</code>&quot;. You should choose a <em>filename</em> which reflects the purpose of the program.</p>
+
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * First C program that says Hello (Hello.c)
+ */</span>
+#include &lt;stdio.h&gt;  <span class="color-comment">// Needed to perform IO operations</span>
+ 
+int main() {                    <span class="color-comment">// Program entry point</span>
+    printf(&quot;Hello, world!\n&quot;);  <span class="color-comment">// Says Hello</span>
+    return 0;                   <span class="color-comment">// Terminate main()</span>
+}                               <span class="color-comment">// End of main()</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p><span class="line-heading">Step 2: Build the Executable Code:</span> Compile and Link (aka Build) the source code &quot;<code>Hello.c</code>&quot; into executable code (&quot;<code>Hello.exe</code>&quot; in Windows or &quot;<code>Hello</code>&quot; in UNIX/Linux/Mac).</p>
+
+<ul>
+<li>On IDE (such as CodeBlocks), push the &quot;Build&quot; button.</li>
+
+<li>On Text editor with the GNU GCC compiler, start a CMD Shell (Windows) or Terminal (Mac, Linux) and issue these commands:
+
+<pre class="color-command">
+<span class="color-comment">// Windows (CMD shell) - Build &quot;Hello.c&quot; into &quot;Hello.exe&quot;</span>
+&gt; gcc -o Hello.exe Hello.c
+ 
+<span class="color-comment">// UNIX/Linux/Mac (Bash shell) - Build &quot;Hello.c&quot; into &quot;Hello&quot;</span>
+$ gcc -o Hello Hello.c</pre>
+where <code>gcc</code> is the name of GCC C compiler; <code>-o</code> option specifies the output filename (&quot;<code>Hello.exe</code>&quot; for Windows or &quot;<code>Hello</code>&quot; for UNIX/Linux/Mac); &quot;<code>Hello.c</code>&quot; is the input source file.</li></ul>
+
+<p><span class="line-heading">Step 3: Run the Executable Code:</span> Execute (Run) the program.</p>
+
+<ul>
+<li>On IDE (such as CodeBlocks), push the &quot;Run&quot; button.</li>
+
+<li>On Text Editor with GNU GCC compiler, issue these command from CMD Shell (Windows) or Terminal (UNIX/Linux/Mac):
+  <pre class="color-command">
+<span class="color-comment">// Windows (CMD shell) - Run &quot;Hello.exe&quot; (.exe is optional)</span>
+&gt; Hello
+Hello, world!
+ 
+<span class="color-comment">// UNIX/Linux/Mac (Bash shell) - Run &quot;Hello&quot; (./ denotes the current directory)</span>
+$ ./Hello
+Hello, world!</pre></li></ul>
+
+<h5>Brief Explanation of the Program</h5>
+
+<p><span class="line-heading-code-new">/* ...... */<br />
+// ... until the end of the line</span><br />
+These are called <em>comments</em>. Comments are NOT executable and are ignored by the compiler. But they provide useful explanation and documentation to your readers (and to yourself three days later). There are two kinds of comments:</p>
+
+<ol>
+<li><em>Multi-line Comment</em>: begins with <code>/*</code> and ends with <code>*/</code>. It may span more than one lines (as in Lines 1-3).</li>
+<li><em>End-of-line Comment</em>: begins with <code>//</code> and lasts until the end of the current line (as in Lines 4, 6, 7, 8, and 9).</li>
+</ol>
+
+<p><span class="line-heading-code-new">#include &lt;stdio.h&gt;<br />
+</span>
+The &quot;<code>#include</code>&quot; is called a <em>preprocessor directive</em>.  A preprocessor directive begins with a <code>#</code> sign, and is processed before compilation. The directive &quot;<code>#include &lt;stdio.h&gt;</code>&quot; tells the preprocessor to include the &quot;<code>stdio.h</code>&quot; header file to support input/output operations. This line shall be present in all our programs. I will explain its meaning later.</p>
+  
+<p><span class="line-heading-code-new">int main() { ...... }</span><br />
+  defines the so-called <code>main()</code> <em>function</em>. The <code>main()</code> function is the <em>entry point</em> of program  execution.<code> main()</code> is required to return an <code>int</code> (integer).</p>
+  
+<p><span class="line-heading-code-new">printf(&quot;Hello, world!\n&quot;);</span><br />
+  We invoke the function <code>printf()</code> to print the string  &quot;Hello, world!&quot; followed by a newline (<code>\n</code>) to the console. The newline (<code>\n</code>) brings the  cursor to the beginning of the next line.</p>
+
+<p><span class="line-heading-code-new">return 0;</span><br />
+terminates the <code>main()</code> function and returns a value of 0 to the operating system. Typically, return value of 0 signals normal termination; whereas value of non-zero (usually 1) signals abnormal termination. This line is optional. C compiler will implicitly insert a &quot;<code>return 0;</code>&quot; to the end of the <code>main()</code> function.</p>
+
+<h3>C Terminology and Syntax</h3>
+
+<p><span class="line-heading">Statement</span>: A programming <em>statement</em> performs a piece of programming action. It must be terminated by a semi-colon (<code>;</code>) (just like an English sentence is ended with a period) as in Lines 7 and 8.</p>
+
+<p><span class="line-heading">Preprocessor Directive</span>: The <code>#include</code> (Line 4) is a <em>preprocessor directive</em> and NOT a programming statement. A preprocessor directive begins with hash sign (<code>#</code>). It is processed before compiling the program.  A preprocessor directive is NOT terminated by a semicolon - Take note of this rule.</p>
+
+<p><span class="line-heading">Block</span>: A <em>block</em> is a group of programming statements enclosed by braces <code>{ }</code>. This group of statements is treated as one single unit. There is one block in this program, which contains the <em>body</em> of the <code>main()</code> function. There is no need to put a semi-colon after the closing brace.</p>
+
+<p><span class="line-heading">Comments</span>: A multi-line comment begins with <code>/*</code> and ends with <code>*/</code>. An end-of-line comment begins with <code>//</code> and lasts till the end of the line. Comments are NOT executable statements and are ignored by the compiler. But they provide useful explanation and documentation. <em>Use comments liberally</em>.</p>
+
+<p><span class="line-heading">Whitespaces</span>: Blank, tab, and newline are collectively called whitespaces. Extra whitespaces are ignored, i.e., only one whitespace is needed to separate the tokens. But they could help you and your readers better understand your program. <em>Use extra whitespaces liberally</em>.</p>
+
+<p><span class="line-heading">Case Sensitivity</span>: C is <em>case sensitive</em> - a <em>ROSE</em> is NOT a <em>Rose</em>, and is NOT a <em>rose</em>.</p>
+
+<h3>The Process of Writing a C Program</h3>
+<img class="image-float-right" src="images/C_DevelopmentProcesses.png" alt="CompilationProcess.png" />
+
+<p><span class="line-heading">Step 1:</span> Write the source codes (<code>.c</code>) and header files (<code>.h</code>).</p>
+
+<p><span class="line-heading">Step 2:</span> Pre-process the source codes according to the <em>preprocessor directives</em>. The preprocessor directives begin with a hash sign (<code>#</code>), such as <code>#include</code> and <code>#define</code>. They indicate that certain manipulations (such as including another file or replacement of symbols) are to be performed BEFORE compilation.</p>
+
+<p><span class="line-heading">Step 3:</span> Compile the pre-processed source codes into object codes (<code>.obj</code>, <code>.o</code>).</p>
+
+<p><span class="line-heading">Step 4:</span> Link the compiled object codes with other object codes and the library object codes (<code>.lib</code>, <code>.a</code>)to produce the executable code (<code>.exe</code>).</p>
+
+<p><span class="line-heading">Step 5:</span> Load the executable code into computer memory.</p>
+
+<p><span class="line-heading">Step 6:</span> Run the executable code.</p>
+
+
+<h3 class="float-clear">C Program Template</h3>
+<p>You can use the following <em>template</em> to write your C programs. Choose a <em>meaningful</em> filename for you source file that reflects the purpose of your program with file extension of &quot;<code>.c</code>&quot;. Write your programming statements inside the body of the <code>main()</code> function. Don't worry about the other terms for the time being. I will explain them later.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Comment to state the purpose of this program (<em>filename</em>.c)
+ */</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+   <span class="color-comment"></span><span class="color-new">// Your Programming statements HERE!</span>
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Let's Write a Program to Add a Few Numbers</h3>
+
+<h4>Example: Adding Two Integers</h4>
+
+<p>Let's write a C program called &quot;<code>Add2Integers.c</code>&quot; to add two integers as follows:</p>
+
+<h5><span class="font-code">Add2Integers.c</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Add two integers and print their sum (Add2Integers.c)
+ */</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+   int integer1;<span class="color-comment"> // Declare a variable named integer1 of the type integer</span>
+   int integer2;<span class="color-comment"> // Declare a variable named integer2 of the type integer</span>
+   int sum;     <span class="color-comment"> // Declare a variable named sum of the type integer</span>
+ 
+   integer1 = 55;  <span class="color-comment"> // Assign value to variable integer1</span>
+   integer2 = 66;  <span class="color-comment"> // Assign value to variable integer1</span>
+   sum = integer1 + integer2;  <span class="color-comment"> // Compute the sum</span>
+ 
+  <span class="color-comment"> // Print the result</span>
+   printf(&quot;The sum of %d and %d is %d.\n&quot;, integer1, integer2, sum);
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+The sum of 55 and 66 is 121.</pre>
+
+<h5>Dissecting the Program</h5>
+
+<p><span class="line-heading-code-new">int integer1;<br />
+int integer2;<br />
+int sum;<br />
+</span>
+We first declare three <code>int</code> (integer) variables: <code>integer1</code>, <code>integer2</code>, and <code>sum</code>. A <em>variable</em> is a named storage location that can store a value of a particular <em>data type</em>, in this case, <code>int</code> (integer). You can declare one variable in one statement. You could also declare many variables in one statement, separating with commas, e.g.,</p>
+
+<pre class="color-plain">
+int integer1, integer2, sum;</pre>
+
+<p><span class="line-heading-code-new">integer1 = 55;<br />
+integer2 = 66;<br />
+sum = integer1 + integer2;<br />
+</span>We assign values to variables <code>integer1</code> and <code>integer2</code>; compute their sum and store in variable <code>sum</code>.</p>
+
+<p><span class="line-heading-code-new">printf("The sum of %d and %d is %d.\n", integer1, integer2, sum);<br />
+</span>
+We use the <code>printf()</code> function to print the result. The first argument in <code>printf()</code> is known as the <em>formatting string</em>, which consists of normal texts and so-called <em>conversion specifiers</em>. Normal texts will be printed as they are. A <em>conversion specifier</em> begins with a percent sign (<code>%</code>), followed by a code to indicate the data type, such as <code>d</code> for decimal integer. You can treat the <code>%d</code> as <em>placeholders</em>, which will be replaced by the value of variables given after the formatting string in sequential order. That is, the first <code>%d</code> will be replaced by the value of <code>integer1</code>, second <code>%d</code> by <code>integer2</code>, and third <code>%d</code> by <code>sum</code>. The <code>\n</code> denotes a newline character. Printing a <code>\n</code> bring the cursor to the beginning of the next line.</p>
+
+<h4>Example: Prompting User for Inputs</h4>
+
+<p>In the previous example, we assigned fixed values into variables <code>integer1</code> and <code>integer2</code>. Instead of using fixed values, we shall prompt the user to enter two integers.</p>
+
+<h5><span class="font-code">PromptAdd2Integers.c</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Prompt user for two integers and print their sum (PromptAdd2Integers.c)
+ */</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+   int integer1, integer2, sum;<span class="color-comment">  // Declare 3 integer variables</span>
+ 
+   <span class="color-new">printf(&quot;Enter first integer: &quot;);</span>  <span class="color-comment"> // Display a prompting message</span>
+   <span class="color-new">scanf(&quot;%d&quot;, &amp;integer1);</span>           <span class="color-comment"> // Read input from keyboard into integer1</span>
+   <span class="color-new">printf(&quot;Enter second integer: &quot;);</span> <span class="color-comment"> // Display a prompting message</span>
+   <span class="color-new">scanf(&quot;%d&quot;, &amp;integer2);</span>           <span class="color-comment"> // Read input into integer2</span>
+ 
+   sum = integer1 + integer2;        <span class="color-comment"> // Compute the sum</span>
+ 
+  <span class="color-comment"> // Print the result</span>
+   printf(&quot;The sum of %d and %d is %d.\n&quot;, integer1, integer2, sum);
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Enter first integer: 55
+Enter second integer: 66
+The sum of 55 and 66 is 121.</pre>
+
+<h5>Disecting the Program</h5>
+
+<p><span class="line-heading-code-new">int integer1, integer2, sum;<br />
+</span>
+We first declare three <code>int</code> (integer) variables: <code>integer1</code>, <code>integer2</code>, and <code>sum</code> in one statement.</p>
+
+<p><span class="line-heading-code-new">printf(&quot;Enter first integer: &quot;);<br />
+</span>We use the <code>printf()</code> function to put out a prompting message.</p>
+
+<p><span class="line-heading-code-new">scanf(&quot;%d&quot;, &amp;integer1);<br />
+</span>
+We then use the <code>scanf()</code> function to read the user input from the keyboard and store the value into variable <code>integer1</code>.<code> </code>The first argument of <code>scanf()</code> is the <em>formatting string</em> (similar to <code>printf()</code>).<code> </code>The <code>%d</code> <em>conversion specifier</em> provides a <em>placeholder</em> for an integer, which will be substituted by variable <code>integer1</code>. Take note that we have to place an ampersand sign (<code>&amp;</code>), which stands for address-of operator, before the variable, I shall explain its significance later. It is important to stress that <strong>missing ampersand (<code>&amp;</code>) in <code>scanf()</code> is a common error</strong>, which leads to abnormal termination of the program.</p>
+
+<h5>Reading Multiple Integers</h5>
+
+<p>You can read multiple items in one <code>scanf()</code> statement as follows:</p>
+
+<pre class="color-example">
+printf(&quot;Enter two integers: &quot;);      <span class="color-comment">// Display a prompting message</span>
+scanf(&quot;%d%d&quot;, &amp;integer1, &amp;integer2); <span class="color-comment">// Read two integers</span></pre>
+
+<p>In the <code>scanf()</code>, the first <code>%d</code> puts the first integer entered into variable <code>integer1</code>, and the second <code>%d</code> puts into <code>integer2</code>. Again, remember to place an ampersand (<code>&amp;</code>) before the variables in <code>scanf()</code>.</p>
+
+<h5>Exercises</h5>
+<ol>
+<li>Print each of the following patterns. Use one <code>printf()</code> statement for each line of outputs. End each line by printing a newline (<code>\n</code>).
+<pre class="output">
+* * * * *      * * * * *    * * * * *
+ * * * * *     *       *     *     *
+* * * * *      *       *      *   * 
+ * * * * *     *       *       * *
+* * * * *      * * * * *        *
+   (a)            (b)          (c)</pre></li>
+
+<li>Print the above patterns using ONE <code>printf()</code> statement.</li>
+
+<li>Write a program to prompt user for 5 integers and print their sum. Use five <code>int</code> variables <code>integer1</code> to <code>integer</code><code>5</code> to store the five integers.</li>
+
+<li>Write a program to prompt user for 5 integers and print their product. Use an <code>int</code> variable <code>product</code> to store the product and operator <code>*</code> for multiplication.</li>
+</ol>
+
+
+<h3>What is a Program?</h3>
+<img class="image-float-right" src="../java/images/Construct_Sequential.png" alt="sequential flow" />
+
+<p>A <em>program</em> is <em>a sequence of instructions</em> (called <em></em> <em>programming statements</em>), executing one after another - usually in a <em>sequential</em> manner, as illustrated in the previous example and the following flow chart.</p>
+
+<br />
+
+<p><span class="line-heading">Example (Sequential):</span> The following program (<code>CircleComputation.c</code>) prompts user for the radius of a circle, and prints its area and circumference. Take note that the programming statements are executed sequentially - one after another in the order that they are written.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Prompt user for the radius of a circle and compute its area and circumference
+ * (CircleComputation.c)
+ */</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+   double radius, circumference, area;<span class="color-comment"> // Declare 3 floating-point variables</span>
+   double pi = 3.14159265;             <span class="color-comment">// Declare and define PI</span>
+ 
+   printf(&quot;Enter the radius: &quot;); <span class="color-comment"> // Prompting message</span>
+   scanf(&quot;%lf&quot;, &amp;radius);        <span class="color-comment"> // Read input into variable radius</span>
+ 
+  <span class="color-comment"> // Compute area and circumference</span>
+   area = radius * radius * pi;
+   circumference = 2.0 * radius * pi;
+ 
+  <span class="color-comment"> // Print the results</span>
+   printf(&quot;The radius is %lf.\n&quot;, radius);
+   printf(&quot;The area is %lf.\n&quot;, area);
+   printf(&quot;The circumference is %lf.\n&quot;, circumference);
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<pre class="output">
+Enter the radius: <strong>1.2</strong>
+The radius is 1.200000.
+The area is 4.523893.
+The circumference is 7.539822.</pre>
+
+<h5>Dissecting the Program</h5>
+
+<p><span class="line-heading-code-new">double radius, circumference, area;<br />
+double pi = 3.14159265;<br />
+</span>
+We declare three <code>double</code> variables called <code>radius</code>, <code>circumference</code> and <code>area</code>. A <code>double</code> variable, unlike <code>int</code>, can hold real number (or floating-point number) such as 1.23 or 4.5e6. We also declare a <code>double</code> variable called <code>pi</code> and initialize its value to 3.1416.</p>
+
+<p><span class="line-heading-code-new">printf(&quot;Enter the radius: &quot;);<br />
+scanf(&quot;%lf&quot;, &amp;radius);<br />
+</span>
+We use <code>print()</code> to put up a prompt message, and <code>scanf()</code> to read the user input into variable <code>radius</code>. Take note that the <code>%lf</code> conversion specifier for <code>double</code> (<code>lf</code> stands for long float). Also remember to place an ampersand (<code>&amp;</code>) before <code>radius</code>.</p>
+
+<p><span class="line-heading-code-new">area = radius * radius * pi;<br />
+circumference = 2.0 * radius * pi;<br />
+</span> perform the computation.</p>
+
+<p><span class="line-heading-code-new">printf(&quot;The radius is %lf.\n&quot;, radius);<br />
+printf(&quot;The area is %lf.\n&quot;, area);<br />
+printf(&quot;The circumference is %lf.\n&quot;, circumference);<br />
+</span>
+Again, we use <code>%lf</code> conversion specifier to print a <code>double</code>.</p>
+
+<br />
+<p>Take note that the programming statements inside the <code>main()</code> are executed one after another, sequentially.</p>
+
+<h5>Exercises</h5>
+
+<ol>
+<li>Follow the above example, write a program to print the area and perimeter of a rectangle. Your program shall prompt the user for the length and width of the rectangle, in <code>double</code>s.</li>
+<li>Follow the above example, write a program to print the surface area and volume of a cylinder. Your program shall prompt the user for the radius and height of the cylinder, in <code>double</code>s.</li>
+</ol>
+
+
+<h3>What is a Variable?</h3>
+
+<img class="image-float-right" src="images/BasicsVariable.png" alt="variable" /> 
+
+<p>Computer programs <em>manipulate</em> (or <em>process</em>) data. A <em>variable</em> is used to store a piece of data for processing. It is called <em>variable</em> because you can change the value stored.</p>
+<p>More precisely, a <em>variable</em> is a <em>named</em> storage location, that stores a <em>value</em> of a particular data <em>type</em>. In other words, a <em>variable</em> has a <span class="underline"><em>name</em></span>, a <span class="underline"><em>type</em></span> and stores a <span class="underline"><em>value</em></span> of that type.</p>
+
+<ul>
+  <li>A variable has a <em>name</em> (or <em>identifier</em>), e.g., <code>radius</code>, <code>area</code>, <code>age</code>, <code>height</code>. The name is needed to uniquely identify and reference a variable, so as to assign a value to the variable (e.g., <code>radius=1.2</code>), and retrieve the value stored (e.g., <code>area = radius*radius*pi</code>).</li>
+<li>A variable has a <em>type</em>. Examples of <em>type</em> are:
+  <ul>
+    <li><code>int</code>: for integers (whole numbers) such as <code>123</code> and <code>-456</code>;</li>
+    <li><code>double</code>: for floating-point or real numbers, such as <code>3.1416</code>, <code>-55.66</code>, <code>7.8e9</code>, <code>1.2e3</code>, <code>-4.5e-6</code> having a decimal point and fractional part,  in fixed or scientific notations.</li>
+  </ul>
+  </li>
+  
+<li>A variable can store a <em>value</em> of the declared <em>type</em>. It is important to take note that a variable is associated with a type, and can only store value of that particular type. For example, a <code>int</code> variable can store an integer value such as <code>123</code>, but NOT real number such as <code>12.34</code>, nor texts such as <code>&quot;Hello&quot;</code>. The concept of <em>type</em> was introduced into the early programming languages to simplify interpretation of data.</li>
+</ul>
+
+<p>The above diagram illustrates 2 types of variables: <code>int</code> and <code>double</code>. An <code>int</code> variable stores an integer  (whole number). A <code>double</code> variable stores a real number.</p>
+
+<p>To use a variable, you need to first <em>declare</em> its <em>name</em> and <em>type</em>, in one of the following syntaxes:</p>
+<pre class="color-syntax">
+<em>var-type</em> <em>var-name</em>;                    <span class="color-comment">// Declare a variable of a type</span>
+<em>var-type</em> <em>var-name-1</em>, <em>var-name-2</em>,...;  <span class="color-comment">// Declare multiple variables of the same type</span>
+<em>var-type</em> <em>var-name </em>= <em>initial-value</em>;    <span class="color-comment">// Declare a variable of a type, and assign an initial value</span>
+<em>var-type</em> <em>var-name-1 </em>= <em>initial-value-1</em>, <em>var-name-2 </em>= <em>initial-value-2</em>,... ;  <span class="color-comment">// Declare variables with initial values</span></pre>
+
+<p>Take note that:</p>
+<ul>
+<li>Each <em>declaration statement</em> is terminated with a semi-colon (<code>;</code>).</li>
+<li>In multiple-variable declaration, the names are separated by commas (<code>,</code>).</li>
+<li>The symbol <code>=</code>, known as the <em>assignment operator</em>, can be used to assign an initial value (of the declared type) to the variable.</li>
+</ul>
+
+<p>For example,</p>
+<pre class="color-example">
+int sum;              <span class="color-comment">// Declare a variable named &quot;sum&quot; of the type &quot;int&quot; for storing an integer.
+                      // Terminate the statement with a semi-colon.</span>
+int number1, number2; <span class="color-comment">// Declare two &quot;int&quot; variables named &quot;number1&quot; and &quot;number2&quot;,
+                      // separated by a comma.</span>
+double average;       <span class="color-comment">// Declare a variable named &quot;average&quot; of the type &quot;double&quot; for storing a real number.</span>
+int height = 20;      <span class="color-comment">// Declare an int variable, and assign an initial value.</span> </pre>
+
+<p>Once a variable is declared, you can <em>assign</em> and <em>re-assign</em> a value to a variable, via the <em>assignment operator</em> &quot;<code>=</code>&quot;. For example,</p>
+
+<pre class="color-example">
+int number;   <span class="color-comment">        // Declare a variable named &quot;number&quot; of the type &quot;int&quot; (integer)</span>
+number = 99;  <span class="color-comment">        // Assign an integer value of 99 to the variable &quot;number&quot;</span>
+number = 88;  <span class="color-comment">        // Re-assign a value of 88 to &quot;number&quot;</span>
+number = number + 1;  <span class="color-comment">// Evaluate &quot;number + 1&quot;, and assign the result back to &quot;number&quot;</span>
+int sum = 0;  <span class="color-comment">        // Declare an int variable named sum and assign an initial value of 0</span>
+sum = sum + number;  <span class="color-comment"> // Evaluate &quot;sum + number&quot;, and assign the result back to &quot;sum&quot;, i.e. add number into sum</span>
+int num1 = 5, num2 = 6;  <span class="color-comment">// Declare and initialize two int variables in one statement, separated by a comma</span>
+double radius = 1.5;  <span class="color-comment">// Declare a variable name radius, and initialize to 1.5</span>
+<span class="color-error">int number;</span>           <span class="color-comment">// ERROR: A variable named &quot;number&quot; has already been declared</span>
+<span class="color-error">sum = 55.66;</span>          <span class="color-comment">// WARNING: The variable &quot;sum&quot; is an int. It shall not be assigned a floating-point number</span>
+<span class="color-error">sum = &quot;Hello&quot;;</span>        <span class="color-comment">// ERROR: The variable &quot;sum&quot; is an int. It cannot be assigned a text string</span></pre>
+
+<p>Take note that:</p>
+<ul>
+<li>Each variable can only be declared once.</li>
+<li>You can declare a variable anywhere inside the program, as long as it is declared before it is being used.</li>
+<li>Once the <em>type</em> of a variable is declared, it can only store a value belonging to this particular type. For example, an <code>int</code> variable can hold only integer such as <code>123</code>, and NOT floating-point number such as <code>-2.17</code> or text string such as <code>&quot;Hello&quot;</code>.</li>
+<li> The type of a variable cannot be changed inside the program.</li>
+</ul>
+
+<h5><span class="font-code">x=x+1</span>?</h5>
+
+<p>Assignment (<code>=</code>) in programming is different from <em>equality</em> in Mathematics. e.g., &quot;<code>x=x+1</code>&quot; is invalid in Mathematics. However, in programming, it means compute the value of <code>x</code> plus 1, and assign the result back to variable <code>x</code>.</p>
+<p>&quot;x+y=1&quot; is valid in Mathematics, but is invalid in programming. In programming, the RHS of &quot;<code>=</code>&quot; has to be evaluated to a value; while the LHS shall be a variable. 
+  That is, evaluate the RHS first, then assign to LHS.</p>
+<p>Some languages uses <code>:=</code> as the assignment operator to avoid confusion with equality.</p>
+
+<h3>Basic Arithmetic Operations</h3>
+<p>The basic <em>arithmetic operators</em> are:</p>
+
+<table class="table-zebra" style="width:60%">
+<tr>
+<th>Operator</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+
+<tr>
+<td><code>+</code></td>
+<td>Addition</td>
+<td><code>x + y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>-</code></td>
+<td>Subtraction</td>
+<td><code>x - y</code></td>
+</tr>
+
+<tr>
+<td><code>*</code></td>
+<td>Multiplication</td>
+<td><code>x * y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>/</code></td>
+<td>Division</td>
+<td><code>x / y</code></td>
+</tr>
+
+<tr>
+<td><code>%</code></td>
+<td>Modulus (Remainder)</td>
+<td><code>x % y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>++</code></td>
+<td>Increment by 1 (Unary)</td>
+<td><code>++x</code> or <code>x++</code></td>
+</tr>
+
+<tr>
+<td><code>--</code></td>
+<td>Decrement by 1 (Unary)</td>
+<td><code>--x</code> or <code>x--</code></td>
+</tr>
+</table>
+
+
+<p>Addition, subtraction, multiplication, division and remainder are <em>binary operators</em> that take two operands (e.g., <code>x + y</code>); while negation (e.g., <code>-x</code>), increment and decrement (e.g., <code>x++</code>, <code>--x</code>) are <em>unary operators</em> that take only one operand.</p>
+
+<h5>Example</h5>
+
+<p> The following program (<code>TestArithmetics.c</code>) illustrates these arithmetic operations.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Test arithmetic operations (TestArithmetics.c)
+ */</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+ 
+   int number1, number2; <span class="color-comment"> // Declare 2 integer variable number1 and number2</span>
+   int sum, difference, product, quotient, remainder; <span class="color-comment"> // declare 5 int variables</span>
+ 
+  <span class="color-comment"> // Prompt user for the two numbers</span>
+   printf(&quot;Enter two integers (separated by space): &quot;);
+   scanf(&quot;%d%d&quot;, &amp;number1, &amp;number2);  <span class="color-comment">// Use 2 %d to read 2 integers</span>
+ 
+  <span class="color-comment"> // Do arithmetic Operations</span>
+   sum = number1 + number2;
+   difference = number1 - number2;
+   product = number1 * number2;
+   quotient = number1 / number2;
+   remainder = number1 % number2;
+ 
+   printf(&quot;The sum, difference, product, quotient and remainder of %d and %d are %d, %d, %d, %d, %d.\n&quot;,
+        number1, number2, sum, difference, product, quotient, remainder);
+ 
+  <span class="color-comment"> // Increment and Decrement</span>
+   ++number1;   <span class="color-comment"> // Increment the value stored in variable number1 by 1</span>
+                <span class="color-comment"> // same as &quot;number1 = number1 + 1&quot;</span>
+   --number2;   <span class="color-comment"> // Decrement the value stored in variable number2 by 1</span>
+                <span class="color-comment"> // same as &quot;number2 = number2 - 1&quot;</span>
+   printf(&quot;number1 after increment is %d.\n&quot;, number1);
+   printf(&quot;number2 after decrement is %d.\n&quot;, number2);
+ 
+   quotient = number1 / number2;
+   printf(&quot;The new quotient of %d and %d is %d.\n&quot;, number1, number2, quotient);
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Enter two integers (separated by space): <strong>98 5</strong>
+The sum, difference, product, quotient and remainder of 98 and 5 are 103, 93, 49
+0, 19, 3.
+number1 after increment is 99.
+number2 after decrement is 4.
+The new quotient of 99 and 4 is 24.</pre>
+
+<h5>Dissecting the Program</h5>
+
+<p><span class="line-heading-code-new">int number1, number2;<br />
+int sum, difference, product, quotient, remainder;<br /></span>
+  declare all the <code>int</code> (integer) variables <code>number1</code>, <code>number2</code>, <code>sum</code>, <code>difference</code>, <code>product</code>, <code>quotient</code>, and <code>remainder</code>, needed in this program.</p>
+  
+<p><span class="line-heading-code-new">printf(&quot;Enter two integers (separated by space): &quot;);<br />
+scanf(&quot;%d%d&quot;, &amp;number1, &amp;number2);<br /></span>
+prompt user for two integers and store into <code>number1</code> and <code>number2</code>, respectively.</p>
+  
+<p><span class="line-heading-code-new">sum = number1 + number2;<br />
+difference = number1 - number2;<br />
+product = number1 * number2;<br />
+quotient = number1 / number2;<br />
+remainder = number1 % number2;<br /></span>
+  carry out the arithmetic operations on <code>number1</code> and <code>number2</code>. Take note that division of two integers produces a <em>truncated</em> integer, e.g., <code>98/5 &rarr; 19</code>, <code>99/4 &rarr; 24</code>, and <code>1/2 &rarr; 0</code>.</p>
+
+<p><span class="line-heading-code-new">printf(&quot;The sum, difference, product, quotient and remainder of %d and %d are %d, %d, %d, %d, %d.\n&quot;,<br />
+&nbsp;&nbsp;&nbsp;number1, number2, sum, difference, product, quotient, remainder);<br />
+</span>
+  prints the results of the arithmetic operations, with the appropriate string descriptions in between.</p>
+
+<p><span class="line-heading-code-new">++number1;<br />
+--number2;<br />
+</span>
+  illustrate the increment and decrement operations. Unlike <code>'+'</code>, <code>'-'</code>, <code>'*'</code>, <code>'/'</code> and <code>'%'</code>, which work on two operands (<em>binary operators</em>), <code>'++'</code> and <code>'--'</code> operate on only one operand (<em>unary operators</em>). <code>++x</code> is equivalent to <code>x = x + 1</code>, i.e., increment x by 1. You may place the increment operator before or after the operand, i.e., <code>++x</code> (pre-increment) or <code>x++</code> (post-increment). In this example, the effects of pre-increment and post-increment are the same. I shall point out the differences in later section.</p>
+
+<h5>Exercises</h5>
+
+<ol>
+<li>Introduce one more <code>int</code> variable called <code>number3</code>, and prompt user for its value. Print the <em>sum</em> and <em>product</em> of all the three integers.</li>
+
+<li>In Mathematics, we could omit the multiplication sign in an arithmetic expression, e.g., <code>x = 5a + 4b</code>. In programming, you need to explicitly provide all the operators, i.e., <code>x = 5*a + 4*b</code>. Try printing the sum of <code>31</code> times of <code>number1</code> and <code>17</code> times of <code>number2</code> and <code>87</code> time of <code>number3</code>.</li>
+</ol> 
+ 
+<h3>What If Your Need To Add a Thousand  Numbers? Use a Loop!</h3>
+<p>Suppose that you want to add all the integers from 1 to 1000. If you follow the previous examples, you would require a thousand-line program! Instead, you could use a <em>loop</em> in your program to perform a <em>repetitive</em> task, that is what the dumb computers are good at.</p> 
+
+<h5>Example</h5>
+
+<p>Try  the following program <code>SumNumbers.c</code>, which sums all the integers from 1 to an upperbound provided by the user, using a so-called <em>while-loop</em>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Sum from 1 to an upperbound using a while-loop (SumNumbers.c).
+ */</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+   int sum = 0;   <span class="color-comment"> // Declare an int variable sum to accumulate the numbers</span>
+                  <span class="color-comment"> // Set the initial sum to 0</span>
+   int upperbound;<span class="color-comment"> // Sum from 1 to this upperbound</span>
+ 
+  <span class="color-comment"> // Prompt user for an upperbound</span>
+   printf(&quot;Enter the upperbound: &quot;);
+   scanf(&quot;%d&quot;, &amp;upperbound); <span class="color-comment"> // Use %d to read an int</span>
+ 
+  <span class="color-comment"> // Use a loop to repeatedly add 1, 2, 3,..., up to upperbound</span>
+   int number = 1;
+   while (number &lt;= upperbound) {
+      sum = sum + number;  <span class="color-comment"> // accumulate number into sum</span>
+      ++number;            <span class="color-comment"> // increment number by 1</span>
+   }
+  <span class="color-comment"> // Print the result</span>
+   printf(&quot;The sum from 1 to %d is %d.\n&quot;, upperbound, sum);
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Enter the upperbound: <strong>1000</strong>
+The sum from 1 to 1000 is 500500.</pre>
+
+<h5>Dissecting the Program</h5>
+
+<p><span class="line-heading-code-new">int sum = 0;<br /></span>
+  declares an <code>int</code> variable named <code>sum</code> and initializes it to 0. This variable will be used to <em>accumulate</em> numbers over the steps in the repetitive loop.</p>
+  
+<p><span class="line-heading-code-new">printf(&quot;Enter the upperbound: &quot;);<br />
+   scanf(&quot;%d&quot;, &amp;upperbound);<br /></span>
+prompt user for an upperbound to sum.</p>
+
+<p><span class="line-heading-code-new">int number = 1;<br />
+while (number &lt;= upperbound) {<br />
+&nbsp;&nbsp;&nbsp;sum = sum + number;<br />
+&nbsp;&nbsp;&nbsp;++number;<br />
+}<br />
+</span>
+This is the so-called <em>while-loop</em>. A <em>while-loop</em> takes the following syntax:</p>
+
+<img class="image-float-right" src="images/Construct_WhileLoop.png" alt="for-loop" />
+
+<pre class="color-syntax">
+<em>initialization-statement</em>;
+<strong>while (</strong><em>test</em><strong>) {</strong>
+   <em>loop-body</em><strong>;</strong>
+<strong>}</strong>
+<em>next-statement</em>;</pre>
+
+<p>As illustrated in the  flow chart, the <em>initialization</em> statement is first executed. The <em>test</em> is then checked.  If the <em>test</em> is true, the <em>body</em> is executed. The <em>test</em> is checked again and the process repeats until the <em>test</em> is false.  When the <em>test</em> is false, the loop completes and program execution continues to the <em>next statement</em> after the loop.</p>
+
+<p>In our program, the <em>initialization</em> statement declares an <code>int</code> variable named <code>number</code> and initializes it to 1.  The <em>test</em> checks if <code>number</code> is equal to or less than the <code>upperbound</code>. If it is true, the current value of <code>number</code> is added into the <code>sum</code>, and the statement <code>++number</code> increases the value of <code>number</code> by 1. The <em>test</em> is then checked again and the process repeats until the <em>test</em> is false (i.e., <code>number</code> increases to <code>upperbound+1</code>), which causes the loop to terminate. Execution then continues to the next statement (in Line 22).</p>
+<p> In this example, the loop repeats <code>upperbound</code> times. After the loop is completed, Line 22 prints the result with a proper description.</p>
+
+<h5>Exercises</h5>
+
+<ol>
+<li>Modify the above program to sum all the number between a <em>lowerbound</em> and an <em>upperbound</em> provided by the user.</li>
+
+<li>Modify the above program to sum all the <em>odd</em> numbers between <code>1</code> to an <em>upperbound</em>. (<em>Hint</em>: Use &quot;<code>number = number + 2</code>&quot;.)</li>
+
+<li>Modify the above program to sum all the numbers between <code>1</code> to an <em>upperbound</em> that are divisible by <code>7</code>. (<em>Hint</em>: Use &quot;<code>number = number + 7</code>&quot;)</li>
+
+<li>Modify the above program to find the sum of the <em>square</em> of all the numbers from <code>1</code> to an <em>upperbound</em>, i.e. <code>1*1 + 2*2 + 3*3 +...</code></li>
+  <li>Modify the above program to compute the <em>product</em> of all the numbers from <code>1</code> to <code>10</code>. (<em>Hint</em>: Use a variable called <code>product</code> instead of <code>sum</code> and initialize <code>product</code> to 1. <em>Ans</em>: <code>3628800</code>.) Based on this code, write a program to display the <em>factorial</em> of <em>n</em>, where <em>n</em> is an integer between <code>1</code> to <code>12</code>.</li>
+</ol>
+ 
+<h3>Conditional (or Decision)</h3>
+
+<p>What if you want to sum all the odd numbers and also all the even numbers between 1 and 1000? There are many way to do this. You could declare two variables: <code>sumOdd</code> and <code>sumEven</code>. You can then use a <em>conditional statement</em> to check whether the number is odd or even, and accumulate the number into the respective sum. The program <code>SumOddEven.c</code> is as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Sum the odd and even numbers from 1 to an upperbound (SumOddEven.c)
+ */</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+   int sumOdd  = 0;<span class="color-comment"> // For accumulating odd numbers, init to 0</span>
+   int sumEven = 0;<span class="color-comment"> // For accumulating even numbers, init to 0</span>
+   int upperbound; <span class="color-comment"> // Sum from 1 to this upperbound</span>
+ 
+  <span class="color-comment"> // Prompt user for an upperbound</span>
+   printf(&quot;Enter the upperbound: &quot;);
+   scanf(&quot;%d&quot;, &amp;upperbound);  <span class="color-comment"> // Use %d to read an int</span>
+ 
+  <span class="color-comment"> // Use a loop to repeatedly add 1, 2, 3,..., up to upperbound</span>
+   int number = 1;
+   while (number &lt;= upperbound) {
+      if (number % 2 == 0) { <span class="color-comment"> // even number</span>
+         sumEven = sumEven + number;
+      } else {               <span class="color-comment"> // odd number</span>
+         sumOdd = sumOdd + number;
+      }
+      ++number;<span class="color-comment"> // increment number by 1</span>
+   }
+ 
+  <span class="color-comment"> // Print the results</span>
+   printf(&quot;The sum of odd numbers is %d.\n&quot;, sumOdd);
+   printf(&quot;The sum of even numbers is %d.\n&quot;, sumEven);
+   printf(&quot;The difference is %d.\n&quot;, (sumOdd - sumEven));
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">Enter the upperbound: <strong>10000</strong>
+The sum of odd numbers is 25000000.
+The sum of even numbers is 25005000.
+The difference is -5000.</pre>
+
+<h5>Dissecting the Program</h5>
+
+<p><span class="line-heading-code-new">int sumOdd  = 0;<br />
+int sumEven = 0;<br /></span>
+  declare two <code>int</code> variables named <code>sumOdd</code> and <code>sumEven</code> and initialize them to 0, for accumulating the odd and even numbers, respectively.</p>
+
+<p><span class="line-heading-code-new">if (number % 2 == 0) {<br />
+&nbsp;&nbsp;&nbsp;sumEven = sumEven + number;<br />
+} else {<br />
+&nbsp;&nbsp;&nbsp;sumOdd = sumOdd + number;<br />
+}<br />
+</span>
+This is a <em>conditional statement</em>.  The conditional statement can take one these forms: <em>if-then</em> or  <em>if-then-else</em>.</p>
+
+<img class="image-float-right" src="../java/images/Construct_IfElse.png" alt="if-then-else" />
+<img class="image-float-right" src="../java/images/Construct_IfThen.png" alt="if-then" />
+
+<pre class="color-syntax">
+<span class="color-comment">// if-then</span>
+<strong>if (</strong> <em>test</em><em></em> <strong>) {</strong>
+   <em>true-body</em><strong>;</strong>
+<strong>}</strong>
+<span class="color-comment">// if-then-else</span>
+<strong>if (</strong> <em>test</em><em></em> <strong>) {</strong>
+   <em>true-body</em><strong>;</strong>
+<strong>} else {</strong>
+   <em>false-body</em><strong>;</strong>
+<strong>}</strong></pre>
+
+<p>For a <em>if-then</em> statement, the <em>true-body</em> is executed if the <em>test </em> is true.  Otherwise, nothing is done and the execution continues to the next statement. For a <em>if-then-else</em> statement, the <em>true-body</em> is executed if the <em>test</em> is true;  otherwise, the <em>false-body</em> is executed.  Execution is then continued to the next statement.</p>
+
+<p>In our program, we use the <em>remainder operator </em><code>(%)</code> to compute the remainder of <code>number</code> divides by <code>2</code>. We then compare the remainder with <code>0</code> to test for even number.</p>
+
+<h5>Comparison Operators</h5>
+
+<p>There are six comparison (or relational) operators:</p>
+
+<table class="table-zebra" style="width:60%">
+<tr>
+<th>Operator</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+
+<tr>
+<td><code>==</code></td>
+<td>Equal to</td>
+<td><code>x == y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>!=</code></td>
+<td>Not equal to</td>
+<td><code>x != y</code></td>
+</tr>
+
+<tr>
+<td><code>&gt;</code></td>
+<td>Greater than</td>
+<td><code>x &gt; y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>&gt;=</code></td>
+<td>Greater than or equal to</td>
+<td><code>x &gt;= y</code></td>
+</tr>
+
+<tr>
+<td><code>&lt;</code></td>
+<td>Less than</td>
+<td><code>x &lt; y</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>&lt;=</code></td>
+<td>Less than or equal to</td>
+<td><code>x &lt;= y</code></td>
+</tr>
+</table>
+
+<p>Take note that the comparison operator for equality is a double-equal sign <code>(==)</code>; whereas a single-equal sign <code>(=)</code> is the assignment operator.</p>
+
+<h5>Combining Simple Conditions</h5>
+
+<p>Suppose that you want to check whether a number <code>x</code> is between <code>1</code> and <code>100</code> (inclusive), i.e., <code>1 &lt;= x &lt;= 100</code>.  There are two <em>simple conditions</em> here, <code>(x &gt;= 1) AND (x &lt;= 100)</code>.  In programming, you cannot write <code>1 &lt;= x &lt;= 100</code>, but need to write <code>(x &gt;= 1) &amp;&amp; (x &lt;= 100)</code>, where &quot;<code>&amp;&amp;</code>&quot; denotes the &quot;<code>AND</code>&quot; operator.  Similarly, suppose that you want to check whether a number <code>x</code> is divisible by 2 <span class="underline">OR</span> by 3, you have to write <code>(x % 2 == 0) || (x % 3 == 0)</code> where &quot;<code>||</code>&quot; denotes the &quot;<code>OR</code>&quot; operator.</p>
+<p>There are three so-called <em>logical operators</em> that operate on the <em>boolean</em> conditions:</p>
+
+<table class="table-zebra" style="width:60%">
+<tr>
+<th>Operator</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+
+<tr>
+<td><code>&amp;&amp;</code></td>
+<td>Logical AND</td>
+<td><code>(x &gt;= 1) &amp;&amp; (x &lt;= 100)</code></td>
+</tr>
+
+<tr class="tr-alt">
+<td><code>||</code></td>
+<td>Logical OR</td>
+<td><code>(x &lt; 1) || (x &gt; 100)</code></td>
+</tr>
+
+<tr>
+<td><code>!</code></td>
+<td>Logical NOT</td>
+<td><code>!(x == 8)</code></td>
+</tr>
+</table>
+
+<p>For examples:</p>
+<pre class="color-example">
+<span class="color-comment">// Return true if x is between 0 and 100 (inclusive)</span>
+(x &gt;= 0) &amp;&amp; (x &lt;= 100)  <span class="color-comment">// AND (&amp;&amp;)</span>
+<span class="color-comment">// Incorrect to use 0 &lt;= x &lt;= 100</span>
+&nbsp; 
+<span class="color-comment">// Return true if x is outside 0 and 100 (inclusive)</span>
+(x &lt; 0) || (x &gt; 100)       <span class="color-comment">// OR (||)</span>
+!((x &gt;= 0) &amp;&amp; (x &lt;= 100))  <span class="color-comment">// NOT (!), AND (&amp;&amp;)</span>
+&nbsp;
+<span class="color-comment">// Return true if &quot;year&quot; is a leap year</span>
+<span class="color-comment">// A year is a leap year if it is divisible by 4 but not by 100, or it is divisible by 400.</span>
+((year % 4 == 0) &amp;&amp; (year % 100 != 0)) || (year % 400 == 0)
+</pre>
+
+<h5>Exercises</h5>
+
+<ol>
+<li>Write a program to sum all the integers between 1 and 1000, that are divisible by 13, 15 or 17, but not by 30.</li>
+
+<li>Write a program to print all the leap years between AD1 and AD2010, and also print the number of leap years. (Hints: use a variable called <code>count</code>, which is initialized to zero. Increment the <code>count</code> whenever a leap year is found.)</li>
+</ol>
+
+<h3>Type <span class="font-code">double</span> &amp; Floating-Point Numbers</h3>
+<p>Recall that a <em>variable</em> in C has a <em>name</em> and a <em>type</em>, and can hold a <em>value</em> of only that particular <em>type</em>. We have so far used a type called <code>int</code>. A <code>int</code> variable holds only integers (whole numbers), such as <code>123</code> and <code>-456</code>.</p>
+
+<p>In programming, real numbers such as <code>3.1416</code> and  <code>-55.66</code> are called <em>floating-point numbers</em>, and belong to a type called <code>double</code>. You can express floating-point numbers in <em>fixed notation</em> (e.g., <code>1.23</code>, <code>-4.5</code>) or <em>scientific notation</em> (e.g., <code>1.2e3</code>, <code>-4E5.6</code>) where <code>e</code> or <code>E</code> denote the exponent of base 10.</p>
+
+<h5>Example</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Convert temperature between Celsius and Fahrenheit
+ * (ConvertTemperature.c)
+ */</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+   double celsius, fahrenheit;
+ 
+   printf(&quot;Enter the temperature in celsius: &quot;);
+   scanf(&quot;%lf&quot;, &amp;celsius); <span class="color-comment"> // Use %lf to read an double</span>
+   fahrenheit = celsius * 9.0 / 5.0 + 32.0;
+   printf(&quot;%.2lf degree C is %.2lf degree F.\n\n&quot;, celsius, fahrenheit);
+     <span class="color-comment"> // %.2lf prints a double with 2 decimal places</span>
+ 
+   printf(&quot;Enter the temperature in fahrenheit: &quot;);
+   scanf(&quot;%lf&quot;, &amp;fahrenheit);
+   celsius =  (fahrenheit - 32.0) * 5.0 / 9.0;
+   printf(&quot;%.2lf degree F is %.2lf degree C.\n\n&quot;, fahrenheit, celsius);
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Enter the temperature in celsius: <strong>37.2</strong>
+37.20 degree C is 98.96 degree F.
+
+Enter the temperature in fahrenheit: <strong>100</strong>
+100.00 degree F is 37.78 degree C.</pre>
+
+<h3>Mixing <span class="font-code">int</span> and <span class="font-code">double</span>, and Type Casting</h3>
+<p>Although you can use a <code>double</code> to keep an integer value (e.g., <code>double count = 5</code>), you should use an <code>int</code> for integer. This is because <code>int</code> is far more efficient than <code>double</code>, in terms of running times and memory requirement.</p>
+<p>At times, you may need both <code>int</code> and <code>double</code> in your program. For example, keeping the <em>sum</em> from <code>1</code> to <code>100</code> (<code>=5050</code>) as an <code>int</code>, and their <em>average</em> <code>50.5</code> as a <code>double</code>.  You need to be <em>extremely careful</em> when different types are mixed.</p>
+<p>It is important to note that:</p>
+<ul>
+<li>Arithmetic operations (<code>'+'</code>, <code>'-'</code>, <code>'*'</code>, <code>'/'</code>) of two <code>int</code>'s produce an <code>int</code>; while arithmetic operations of two <code>double</code>'s produce a <code>double</code>. Hence, <code>1/2 &rarr; 0</code> (take note!) and <code>1.0/2.0 &rarr; 0.5</code>.</li>
+<li>Arithmetic operations of an <code>int</code> and a <code>double</code> produce a <code>double</code>. Hence, <code>1.0/2 &rarr; 0.5</code> and <code>1/2.0 &rarr; 0.5</code>.</li>
+</ul>
+<p>You can assign an integer value to a <code>double</code> variable. The integer value will be converted to a double value automatically, e.g., <code>3 &rarr; 3.0</code>. For example,</p>
+<pre class="color-example">
+int i = 3;
+double d;
+d = i;              <span class="color-comment">// 3 &rarr; 3.0, d = 3.0</span>
+d = 88;             <span class="color-comment">// 88 &rarr; 88.0, d = 88.0</span>
+double nought = 0;  <span class="color-comment">// 0 → 0.0; there is a subtle difference between int of 0 and double of 0.0</span></pre>
+
+<p>However, if you assign a <code>double</code> value to an <code>int</code> variable, the <em>fractional</em> part will be lost. For example,</p>
+
+<pre class="color-example">
+double d = 55.66;
+int i;
+i = d;   <span class="color-comment">// i = 55 (truncated)</span></pre>
+
+<p>Some C compilers signal a warning for truncation, while others do not. You should study the &quot;warning messages&quot; (if any) carefully - which signals a potential problem in your program, and rewrite the program if necessary. C allows you to ignore the warning and run the program. But, the fractional part will be lost during the execution.</p>
+
+<h5>Type Casting Operators</h5>
+
+<p>If you are certain that you wish to carry out the type conversion, you could use the so-called <em>type cast</em> operator. The type cast operation returns an equivalent value in the <em>new-type</em> specified.</p>
+
+<pre class="color-syntax"><em></em>(<em>new-type</em>)<em>expression</em>;</pre>
+
+<p>For example,</p>
+<pre class="color-example">
+double d = 5.5;
+int i;
+i = (int)d;        <span class="color-comment">// (int)d -&gt; (int)5.5 -&gt; 5
+</span>i = (int)3.1416;   <span class="color-comment">// 3</span></pre>
+
+<p>Similarly, you can <em>explicitly</em> convert an <code>int</code> value to <code>double</code> by invoking type-casting operation too.</p>
+
+<h5>Example</h5>
+<p>Try the following program and explain the outputs produced:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Testing type cast (TestCastingAverage.c)
+ */</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+   int sum = 0;     <span class="color-comment"> // Sum in &quot;int&quot;</span>
+   double average;  <span class="color-comment"> // average in &quot;double&quot;</span>
+ 
+  <span class="color-comment"> // Compute the sum from 1 to 100 (in &quot;int&quot;)</span>
+   int number = 1;
+   while (number &lt;= 100) {
+      sum = sum + number;
+      ++number;
+   }
+   printf(&quot;The sum is %d.\n&quot;, sum);
+ 
+   <span class="color-comment">// Compute the average (in &quot;double&quot;)</span>
+   <span class="color-new">average = sum / 100;</span>
+   printf(&quot;Average 1 is %lf.\n&quot;, average);
+   <span class="color-new">average = (double)sum / 100;</span>
+   printf(&quot;Average 2 is %lf.\n&quot;, average);
+   <span class="color-new">average = sum / 100.0;</span>
+   printf(&quot;Average 3 is %lf.\n&quot;, average);
+   <span class="color-new">average = (double)(sum / 100);</span>
+   printf(&quot;Average 4 is %lf.\n&quot;, average);
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+The sum is 5050.
+Average 1 is 50.000000.  <span class="color-comment">&lt;== incorrect</span>
+Average 2 is 50.500000.
+Average 3 is 50.500000.
+Average 4 is 50.000000.  <span class="color-comment">&lt;== incorrect</span></pre>
+
+<p>The first average is incorrect, as <code>int/int</code> produces an <code>int</code> (of <code>50</code>).</p>
+
+<p>For the second average, the value of <code>sum</code> (of <code>int</code>) is first converted to <code>double</code>. Subsequently, <code>double/int</code> produces <code>double</code>.</p>
+
+<p>For the third average, <code>int/double</code> produces <code>double</code>.</p>
+
+<p>For the fourth average, <code>int/int</code> produces an <code>int</code> (of <code>50</code>), which is then casted to <code>double</code> (of <code>50.0</code>) and assigned to <code>average</code> (of <code>double</code>).</p>
+
+<h5>Exercises</h5>
+
+<ol>
+<li>Write a program called <code>HarmonicSeriesSum</code> to compute the sum of a harmonic series <code>1 + 1/2 + 1/3 + 1/4 + .... + 1/<em>n</em></code>, where <code><em>n</em> = 1000</code>. Your program shall prompt user for the value of <code><em>n</em></code>. Keep the sum in a <code>double</code> variable, and take note that <code>1/2</code> gives <code>0</code> but <code>1.0/2</code> gives <code>0.5</code>.<br  />
+  Try computing the sum for <em><code>n</code></em><code>=1000</code>, <code>5000</code>, <code>10000</code>, <code>50000</code>, <code>100000</code>.<br  />
+Hints:
+
+<pre class="color-example">
+<span class="color-comment">/*
+ * Sum harmonics Series (HarmonicSeriesSum.c)
+ */</span>
+#include &lt;stdio.h&gt;
+ 
+int main() {
+   int maxDenominator;   <span class="color-comment">// max denominator to sum to</span>
+   double sum = 0.0;  <span class="color-comment">// For accumulating sum in double</span>
+
+   <span class="color-comment">// Prompt user for the maxDenominator
+</span>   ......
+ 
+   int denominator = 1;
+   while (denominator &lt;= maxDenominator) {
+      <span class="color-comment">// Beware that int/int gives int</span>
+      ......
+      ++denominator;  <span class="color-comment">// next</span>
+   }
+   <span class="color-comment">// Print the sum</span>
+   ......
+}</pre></li>
+
+<li>Write a program called <code>GeometricSeriesSum</code> to compute the sum of a geometric series <code>1 + 1/2 + 1/4 + 1/8 + .... + 1/<em>n</em></code>. You program shall prompt for the value of <code><em>n</em></code>. (Hints: Use post-processing statement of <code>denominator = denominator * 2</code>.)</li>
+
+</ol>
+
+<h3>Summary</h3>
+<p>I have presented the basics for you to get start in programming. To learn programming, you need to understand the syntaxes and features involved in the programming language that you chosen, and you have to practice, practice and practice, on as many problems as you could.</p>
+
+<br />
+
+<a class="references" href="../howto/References.html#cpp">Link to &quot;C Language References &amp; Resources&quot;</a>
+
+
+</div> 
+<!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: GCC 4.6.2<br />
+Last modified: June, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

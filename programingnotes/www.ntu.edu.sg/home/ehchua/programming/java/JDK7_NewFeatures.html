@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>JDK 7 New Features</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>JDK 7</h1>
+<h2>New Features</h2>
+
+<h3>Language Enhancement</h3>
+
+<h4><code>switch</code> on String</h4>
+<p>Before JDK 7, only integral types can be used as selector for switch-case statement. In JDK 7, you can use a <code>String</code> object as the selector. For example,</p>
+
+<pre class="code-listing">
+String day = &quot;SAT&quot;;
+switch (day) {
+   case &quot;MON&quot;: System.out.println(&quot;Monday&quot;); break;
+   case &quot;TUE&quot;: System.out.println(&quot;Tuesday&quot;); break;
+   case &quot;WED&quot;: System.out.println(&quot;Wednesday&quot;); break;
+   case &quot;THU&quot;: System.out.println(&quot;Thursday&quot;); break;
+   case &quot;FRI&quot;: System.out.println(&quot;Friday&quot;); break;
+   case &quot;SAT&quot;: System.out.println(&quot;Saturday&quot;); break;
+   case &quot;SUN&quot;: System.out.println(&quot;Sunday&quot;); break;
+   default: System.out.println(&quot;Invalid&quot;);
+}</pre>
+
+<p><code>String.equals()</code> method is used in comparison, which is case-sensitive. Java compiler can generate more efficient code than using nested if-then-else statement.</p>
+
+<p>This feature is handy in handling options specified in command-line arguments, which are <code>String</code>s. For example (slightly neater code than using nested if-then-else statement),</p>
+<pre class="code-listing">
+<span class="code-comment">// This program accepts three command-line options</span>
+<span class="code-comment">//   -c : create</span>
+<span class="code-comment">//   -v : verbose</span>
+<span class="code-comment">//   -d : debug</span>
+<span class="code-comment">// More than one options can be specified in any order.</span>
+public class SwitchOnString {
+   public static void main(String[] args) {
+      boolean create = false;
+      boolean verbose = false;
+      boolean debug = false;
+ 
+      for (String arg: args) {
+         switch (arg) {
+            case &quot;-c&quot;: create = true; break;
+            case &quot;-v&quot;: verbose = true; break;
+            case &quot;-d&quot;: debug = true; break;
+            default:
+               System.out.println(&quot;invalid option&quot;);
+               System.exit(1);
+         }
+      }
+ 
+      System.out.println(&quot;create: &quot; + create);
+      System.out.println(&quot;verbose: &quot; + verbose);
+      System.out.println(&quot;debug: &quot; + debug);
+   }
+}</pre>
+
+
+<h4>Binary Literals with prefix &quot;<code>0b</code>&quot;</h4>
+
+<p>In JDK 7, you can express literal values in binary with prefix '<code>0b</code>' (or '<code>0B</code>') for integral types (<code>byte</code>, <code>short</code>, <code>int</code> and <code>long</code>), similar to C/C++ language. Before JDK 7, you can only use octal values (with prefix '<code>0</code>') or hexadecimal values (with prefix '<code>0x</code>' or '<code>0X</code>').</p>
+
+<p>You are also permitted to use underscore (<code>_</code>) to break the digits to improve the readability but you must start and end with a digit, e.g.,</p>
+<pre class="code-example">
+int number1 = 0b01010000101000101101000010100010;
+int number2 = 0b0101_0000_1010_0010_1101_0000_1010_0010;
+int number3 = 2_123_456;  <span class="code-comment">// break the digits with underscore</span></pre>
+
+<p>For example,</p>
+
+<pre class="code-listing">
+public class BinaryLiteralTest {
+   public static void main(String[] args) {
+      <span class="code-comment">// Some 32-bit 'int' literal values</span>
+      int anInt1 = 0b0101_0000_1010_0010_1101_0000_1010_0010;
+      int anInt2 = 0b0011_1000;
+ 
+      <span class="code-comment">// An 8-bit 'byte' literal value. By default, literal values are 'int'.</span>
+      <span class="code-comment">// Need to cast to 'byte'</span>
+      byte aByte = (byte)0b0110_1101;
+ 
+      <span class="code-comment">// A 16-bit 'short' literal value</span>
+      short aShort = (short)0b0111_0101_0000_0101;
+ 
+      <span class="code-comment">// A 64-bit 'long' literal value. Long literals requires suffix &quot;L&quot;.</span>
+      long aLong = 0b1000_0101_0001_0110_1000_0101_0000_1010_0010_1101_0100_0101_1010_0001_0100_0101L;
+ 
+      <span class="code-comment">// Formatted output: &quot;%d&quot; for integer in decimal, &quot;%x&quot; in hexadecimal, &quot;%o&quot; in octal.</span>
+      <span class="code-comment">// Take note that &quot;%b&quot; prints true or false (for null), NOT binary.</span>
+      System.out.printf(&quot;%d(%x)(%o)(%b)\n&quot;, anInt1, anInt1, anInt1, anInt1);
+      System.out.printf(&quot;%d(%x)(%o)(%b)\n&quot;, aByte, aByte, aByte, aByte);
+   }
+}</pre>
+
+<pre class="code-output">
+1352847522(50a2d0a2)(12050550242)(true)
+109(6d)(155)(true)</pre>
+
+<h4>Underscore for Numeric Literals</h4>
+<p>In JDK 7, you could insert underscore(s) '_' in between the digits in an numeric literals (integral and floating-point literals) to improve <em>readability</em>.  For example,</p>
+
+<pre class="code-listing">
+int anInt = 0b10101000_01010001_01101000_01010001;
+double aDouble = 3.1415_9265;
+float  aFloat = 3.14_15_92_65f;</pre>
+
+<h4>Catching Multiple Exception Types</h4>
+<p>In JDK 7, a single <code>catch</code> block can handle more than one exception types.</p>
+<p>For example, before JDK 7, you need two <code>catch</code> blocks to catch two exception types although both perform identical task:</p>
+
+<pre class="code-listing">
+try {
+   ......
+} catch(ClassNotFoundException ex) {
+   ex.printStackTrace();
+} catch(SQLException ex) {
+   ex.printStackTrace();
+}</pre>
+
+<p>In JDK 7, you could use one single <code>catch</code> block, with exception types separated by '<code>|</code>'.</p>
+<pre class="code-listing">
+try {
+   ......
+} catch(ClassNotFoundException|SQLException ex) {
+   ex.printStackTrace();
+}</pre>
+
+<p>[TODO] A complete example on file IO.</p>
+
+<h4>The <code>try</code>-with-resources Statement</h4>
+<p>For example, before JDK 7, we need to use a <code>finally</code> block, to ensure that a resource is closed regardless of whether the try statement completes normally or abruptly. The code is messy!</p>
+<pre class="code-listing">
+import java.io.*;
+<span class="code-comment">// Copy from one file to another file character by character.</span>
+<span class="code-comment">// Pre-JDK 7 requires you to close the resources using a finally block.</span>
+public class FileCopyPreJDK7 {
+   public static void main(String[] args) {
+      BufferedReader in = null;
+      BufferedWriter out = null;
+      try {
+         in  = new BufferedReader(new FileReader(&quot;in.txt&quot;));
+         out = new BufferedWriter(new FileWriter(&quot;out.txt&quot;));
+         int charRead;
+         while ((charRead = in.read()) != -1) {
+            System.out.printf(&quot;%c &quot;, (char)charRead);
+            out.write(charRead);
+         }
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      } finally {            <span class="code-comment">// always close the streams</span>
+         try {
+            if (in != null) in.close();
+            if (out != null) out.close();
+         } catch (IOException ex) {
+            ex.printStackTrace();
+         }
+      }
+ 
+      try {
+         in.read();   <span class="code-comment">// Trigger IOException: Stream closed</span>
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+   }
+}</pre>
+
+<p>JDK 7 introduces a <code>try</code>-with-resources statement, which ensures that each of the resources in <code>try(resources)</code> is closed at the end of the statement. This results in cleaner codes.</p>
+<pre class="code-listing">
+import java.io.*;
+<span class="code-comment">// Copy from one file to another file character by character.</span>
+<span class="code-comment">// JDK 7 has a try-with-resources statement, which ensures that</span>
+<span class="code-comment">// each resource opened in try() is closed at the end of the statement.</span>
+public class FileCopyJDK7 {
+   public static void main(String[] args) {
+      <strong>try (BufferedReader in  = new BufferedReader(new FileReader(&quot;in.txt&quot;));
+           BufferedWriter out = new BufferedWriter(new FileWriter(&quot;out.txt&quot;)))</strong> {
+         int charRead;
+         while ((charRead = in.read()) != -1) {
+            System.out.printf(&quot;%c &quot;, (char)charRead);
+            out.write(charRead);
+         }
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+   }
+}</pre>
+
+
+<h4>Type Inference for Generic Instance Creation</h4>
+
+<pre class="code-listing">
+import java.util.*;
+public class JDK7GenericTest {
+   public static void main(String[] args) {
+      <span class="code-comment">// Pre-JDK 7</span>
+      List&lt;String&gt; lst1 = new ArrayList&lt;String&gt;();
+      <span class="code-comment">// JDK 7 supports limited type inference for generic instance creation</span>
+      List&lt;String&gt; lst2 = new ArrayList&lt;&gt;();
+ 
+      lst1.add(&quot;Mon&quot;);
+      lst1.add(&quot;Tue&quot;);
+      lst2.add(&quot;Wed&quot;);
+      lst2.add(&quot;Thu&quot;);
+ 
+      for (String item: lst1) {
+         System.out.println(item);
+      }
+ 
+      for (String item: lst2) {
+         System.out.println(item);
+      }
+   }
+}</pre>
+
+<h4>Others</h4>
+<p>[TODO]</p>
+
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>JDK 7 Documentation @ <a href="http://download.oracle.com/javase/7/docs/">http://download.oracle.com/javase/7/docs/</a>.</li>
+<li>Jeff Friesen, &quot;Exploring JDK 7, Part 1: New Language Features&quot; @ <a href="http://www.informit.com/articles/article.aspx?p=1592962&seqNum=3">http://www.informit.com/articles/article.aspx?p=1592962&amp;seqNum=3</a>.</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: JDK 1.7.0<br />
+Last modified: August, 2011</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

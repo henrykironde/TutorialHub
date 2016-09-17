@@ -1,0 +1,446 @@
+/*
+ *  HTML Tag selectors
+ */
+/*  Universal selector - clear all the margin and padding to get consistent layout for Firefox and IE */
+* { 
+	margin: 0;
+	padding: 0;
+}
+body {
+	color: #000000;   /* Text in black */
+	font-family: "Segoe UI", Segoe, Calibri, Tahoma, Arial, Helvetica, Verdana, sans-serif;
+	font-size: 14px;
+}
+p {
+	margin-top: 0.7em;
+	margin-bottom: 0.3em;
+}
+pre {
+	margin: 5px 0 6px 0;        /* top right bottom left */
+	border: 1px dashed;
+	padding: 3px 10px 3px 10px; /* top right bottom left */
+	font-family: Consolas, "Lucida Console", "Courier New", Courier, monospace;
+	font-size: 13px;
+	color: #000000;             /* Text in black */
+	line-height: 130%;
+	text-align: left;
+}
+code {
+	font-family: Consolas, "Lucida Console", "Courier New", Courier, monospace;
+}
+
+/*
+ * The outermost master container division
+ * margin -> border -> padding in pixels(px)
+ * Not setting the width to enable zoom
+ */
+#container {
+	margin: 8px 20px 10px 18px;    /* top right bottom left */
+    border-left: solid 2px #0075a2;
+	padding: 10px 0 10px 0;
+}
+
+/*
+ *  Main Content Division 
+ */
+#content {
+	margin: 5px 20px 5px 15px;    /* top right bottom left */
+	padding: 0;
+	text-align: justify;
+	line-height: 140%;
+	font-size: 14px;
+}
+h1, h2, h3, h4, h5 {
+	font-family: "Trebuchet MS", "Segoe UI", Segoe, Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	margin: 0;
+	padding: 0.6em 0 0.1em 0; /* top right bottom left */
+	line-height: 140%;
+	letter-spacing: 1px;
+}
+h1 {   /* Main title */
+	color: #004e6c;  /* turquoise accent 2 darker 50% */
+	font-size: 26px;
+	margin-top: 0.5em;
+/*	text-transform: uppercase; */
+}
+h2 {   /* Sub title */
+	color: #004e6c;  /* turquoise accent 2 darker 50% */
+	font-size: 22px;
+	border-bottom: 4px solid #0075a2;  /* draw bottom border - width style color */
+	padding-bottom: 0.5em;
+	margin-bottom: 2em;
+/*	text-transform: uppercase; */
+}
+h3 {   /* Section title (uppercase with bottom border) */
+	color: #0075a2;        /* turquoise accent 2 darker 25% */
+	border-bottom: 1px solid #0075a2;
+	padding: 1.2em 0 0 0;  /* top right bottom left */
+	font-size: 19px;
+	text-transform: none;
+}
+h4 {   /* sub-section title */
+	color: #0075a2;        /* turquoise accent 2 darker 25% */
+	padding: 1.5em 0 0 0;  /* top right bottom left */
+	font-family: "Segoe UI", Segoe, Verdana, "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 17px;
+	text-transform: none;
+}
+h5 {   /* sub-section title */
+	color: #000000;        /* turquoise accent 2 darker 25% */
+	padding: 1.5em 0 0 0;  /* top right bottom left */
+	font-family: "Segoe UI", Segoe, Verdana, "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	text-transform: none;
+}
+
+#content ul {
+	margin: 0.3em 0 0.2em 1.8em;  /* top right bottom left */
+	padding: 0;
+	list-style-type: square;
+	list-style-image: url(images/BulletSquare.png);
+    list-style-position: outside;
+}
+#content ul ul, ol ul {   /* 2nd level ul */
+	list-style-type: circle;
+}
+#content ol {
+	margin: 0.3em 0 0.2em 2.5em;  /* top right bottom left */
+	padding: 0;
+    list-style-type: decimal;
+    list-style-position: outside;
+}
+#content ol ol, ul ol {   /* 2nd level ol */
+	list-style-type: lower-alpha;
+}
+#content li {
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+}
+
+p.p-last-modified {
+	text-align: right;
+	color: #0075a2;     /* turquoise accent 2 darker 25% */
+	margin: 4em 0 0 0;  /* top right bottom left */
+}
+
+#content a {
+	color: #0075a2;    /* turquoise accent 2 darker 25% */
+	text-decoration: none;
+}
+#content a:hover {
+	color: #984806;    /* orange, accent 6, darker 50% */
+	text-decoration: underline;
+}
+
+/*
+ * Programming codes (in monospace font, usually used inside <pre>)
+ */
+
+/* block-level control for <pre> */
+.code-syntax {
+	background-color: #c7e2fa;   /* Dark blue */
+    border: solid 2px #f8f8f8;   /* slight 3D shape */
+}
+.code-example {
+    background-color: #ecf2da;   /* lime */
+	border: solid 2px #f8f8f8;   /* slight 3D shape */
+}
+.code-explanation {
+	background-color: #eeeeee;   /* grey */
+	border: solid 2px #f8f8f8;   /* slight 3D shape */
+}
+.code-command {   /* DOS command and interactive session */
+	background-color: #c4eeff;   /* Dark blue */
+    border:solid 2px #f8ffff;    /* slight 3D shape */
+}
+.code-output {    /* Output of program or DOS session */
+	background-color: #e2f6ff;   /* light blue */
+    border: solid 2px #f8f8f8;   /* slight 3D shape */
+    white-space: pre;
+}
+
+/* Character level control for code listing */
+.code-comment {
+	color: #009900;  /* green */
+}
+.code-new {
+	color: #E31B23;  /* dark red to highlight new terms */
+}
+.code-error {
+	color: #ff0099;  /* bright red */
+}
+
+/* for complete code listing with line numbers */
+.code-listing {
+    background-color: #ecf2da;   /* lime */
+    border: solid 2px #f8f8f8;   /* slight 3D shape */
+}
+.code-line-number {
+	background-color: #dae6b6;   /* lime accent 6 lighter 60% */
+    border: solid 2px #f8f8f8;   /* slight 3D shape */
+	text-align: right;
+}
+.code-line-number-width {
+	width: 40px;
+}
+
+/* Others */
+.output-web {  /* meant to be used for <div>, not using monospace font */
+	margin: 6px 0;
+    border:solid 2px #f8f8f8;  /* slight 3D shape */
+	padding: 6px 10px;
+	background-color: #eeffff;
+	text-align: left;
+}
+.highlight {
+	background-color: #FF0;
+}
+.underline {
+	text-decoration: underline;
+}
+.line-heading {
+	font-family: "Segoe UI", Segoe, Verdana, "Trebuchet MS", Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+	letter-spacing: 0.5px;
+}
+
+/* Others - to remove if not needed */
+.code-fragment {
+    background-color: #ffffff;   /* white */
+	margin-left: 15pt;
+	border:none;
+}
+.code-plain {
+	color: #000;
+	border: none;
+	padding: 0;
+}
+.code-font {
+	font-family: Consolas, "Lucida Console", "Courier New", Courier, monospace;
+}
+
+
+/* for positioning images */
+.image-center {      /* center horizontally an image */
+	display: block;  /* auto left and right  */
+	margin-top: 10px;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+}
+.image-left {        /* left-align an image */
+	display: block;
+	margin-top: 10px;
+	margin-left: 30px;
+	margin-bottom: 0;
+}
+.image-left-border {  /* left-align an image with border */
+    border: thin solid;
+	margin-top: 10px;
+	margin-left: 30px;
+	margin-bottom: 0;
+}
+
+/*
+ *  Table - for tablulating data
+ */
+table.table-data {
+	margin: 12px auto;  /* auto (browser decides) on margin left & right, and text-aling center centralize the table */
+	text-align: center;
+	vertical-align: top;
+	border: 0;
+}
+table.table-data tr {           /* default for all rows */
+	background-color: #c4eeff;  /* light blue */
+}
+table.table-data tr.table-row-alt {  /* different color on alternate row */
+	background-color: #e2f6ff;       /* lighter blue */
+}
+table.table-data td {
+	padding: 2px 10px;
+	text-align: left;
+	vertical-align:top;
+}
+table.table-data td.td-center {
+	padding: 2px 10px;
+	text-align:center;
+	vertical-align:top;
+}
+table.table-data th {
+/*	font-family: "Trebuchet MS", "Segoe UI", Segoe, Verdana, Helvetica, Tahoma, Arial, sans-serif; */
+/*	text-transform: uppercase; */
+	color: #ffffff;          /* white text on dark background */
+	background-color: #007dad;
+	padding: 4px 10px;       /* more top & bottom padding for header cell */
+	text-align:center;
+}
+
+/*
+ *  Tables for tablulating program codes - line number, code and explanation
+ */
+table.table-program {
+    width: 100%;
+	margin: 0 auto;
+	border: 0;
+	padding: 0;
+}
+table.table-program tr {
+	padding: 0;
+    margin: 0;
+}
+table.table-program tr td {
+	padding: 0;
+    margin: 0;
+	vertical-align:top;
+}
+
+table.table-program th {
+	font-family: "Trebuchet MS", "Segoe UI", Segoe, Verdana, Helvetica, Tahoma, Arial, sans-serif;
+	color: #ffffff;          /* white text on dark background */
+	background-color: #007dad;
+	padding: 4px 10px;       /* more top & bottom padding for header cell */
+	text-align:center;
+}
+
+/* Table for tabulating code and description */
+table.table-code-desc {
+	border: 0;
+	padding: 5;
+}
+
+table.table-code-desc th {
+	font-family: "Trebuchet MS", "Segoe UI", Segoe, Verdana, Helvetica, Tahoma, Arial, sans-serif;
+	font-size: 15px;
+	color: #ffffff;          /* white text on dark background */
+	background-color: #007dad;
+	padding: 6px 12px 6px 12px;       /* more top & bottom padding for header cell */
+	text-align: center;
+}
+table.table-code-desc tr {
+/*	padding: 0;
+    margin: 0; */
+}
+table.table-code-desc td.td-code {
+	background-color: #e2f6ff;
+	font-family: Consolas, "Lucida Console", "Courier New", Courier, monospace;
+	font-size: 13px;
+	padding: 2px 10px 2px 10px;
+    margin: 0;
+	vertical-align:top;
+	white-space: nowrap;
+}
+table.table-code-desc td.td-desc {
+    background-color: #eeeeee;
+	padding: 2px 15px 2px 15px;
+    margin: 0;
+	vertical-align:top;
+}
+table.table-code-desc td.td-example {
+	white-space: pre;
+    background-color: #c4eeff;
+	padding: 2px 10px 2px 10px;
+    margin: 0;
+	vertical-align:top;
+	font-family: Consolas, "Lucida Console", "Courier New", Courier, monospace;
+    font-size: 13px;
+}
+
+
+/*
+ *  Table - for tablulating data with alternate row color
+ */
+table.table-zebra {
+	vertical-align: top;
+	border-collapse: collapse;
+	text-align: left;     /* default align is left, use td.center to override */
+    background-color: #e2f6ff;  /* lighter */
+}
+table.table-zebra th {
+	color: #ffffff;          /* white text on dark background */
+	background-color: #007dad;
+	padding: 4px 10px;       /* more top & bottom padding for header cell */
+	border: 2px solid white;
+	font-size: 15px;
+	letter-spacing: 1px;
+	text-align: center;
+}
+table.table-zebra td {
+	padding: 2px 10px;
+	border: 2px solid white;
+	vertical-align: top;
+}
+
+/* Center the table */
+.table-center {
+	margin: 12px auto;  /* auto margin-left and margin-right to center the table */
+}
+/* Setting individual cell - font and text-align */
+.td-center, .tr-center {	
+    text-align: center; 
+}
+.td-code, .tr-code, .table-code {
+	font-family: Consolas, "Lucida Console", "Courier New", Courier, monospace;
+}
+.td-code-smaller, .tr-code-smaller, .table-code-smaller {
+	font-family: Consolas, "Lucida Console", "Courier New", Courier, monospace;
+	font-size: 13px;
+}
+.td-default {
+	font-family: "Segoe UI", Segoe, Calibri, Tahoma, Arial, Helvetica, Verdana, sans-serif;
+}
+.td-pre, .tr-pre, .table-pre {
+	white-space: pre;
+}
+
+
+/* Setting the color for row (2 colors) or column (3 colors) */
+.col-code, .tr-alt {
+	background-color: #c4eeff;  /* darker */
+}
+.col-example {
+    background-color: #eeeeee;  /* grey */
+}
+.col-desc, .col-default {  /* same as default color */
+    background-color: #e2f6ff;  /* lighter */
+}
+
+/*
+ *  Footer Division
+ */
+#footer {
+	margin: 5px 20px 20px 20px;     /* top right bottom left */
+	border-top: 4px solid #0075a2;  /* draw top border - width style color */
+	padding: 0;                     /* top right bottom left */
+	text-align: right;
+	color: #0075a2;                 /* turquoise accent 2 darker 25% */
+	font-size: 12px;
+}
+#footer a {                         /* default <a> */
+	text-decoration: underline;
+	color: #0075a2;                 /* turquoise accent 2 darker 25% */
+}
+#footer a:hover {                   /* change color and remove underline */
+	text-decoration: none;
+	color: #984806;                 /* orange, accent 6, darker 50% */
+}
+
+/*
+ *  Header Division
+ */
+#header {
+	margin: 0px 20px 20px 0px;     /* top right bottom left */
+/*	border-bottom: 4px solid #0075a2; */ /* draw bottom border - width style color */
+	padding: 0;                     /* top right bottom left */
+	text-align: right;
+	color: #0075a2;                 /* turquoise accent 2 darker 25% */
+	font-size: 12px;
+}
+#header a {                         /* default <a> */
+	text-decoration: underline;
+	color: #0075a2;                 /* turquoise accent 2 darker 25% */
+}
+#header a:hover {                   /* change color and remove underline */
+	text-decoration: none;
+	color: #984806;                 /* orange, accent 6, darker 50% */
+}

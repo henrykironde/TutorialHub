@@ -1,0 +1,450 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Install JDK 8 (on Windows, Mac, Ubuntu) and Get Started with Java Programming</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>How to Install JDK 8 (on Windows, Mac &amp; Ubuntu) and Get Started with Java Programming</h1>
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+<p>Java Development Kit (JDK), officially named &quot;Java Platform Standard Edition (<acronym title="Java Standard Edition">Java SE</acronym>)&quot;, which is freely available from Sun Microsystems (now part of Oracle), is needed for writing Java programs. The mother site for JDK (Java SE) is <a href="http://www.oracle.com/technetwork/java/index.html">http://www.oracle.com/technetwork/java/index.html</a>.</p>
+
+<h5>&quot;JDK&quot; or &quot;JRE&quot;?</h5>
+<p>JRE (Java Runtime) is needed for <em>running</em> Java programs. JDK (Java Development Kit), which includes JRE plus the development tools (such as compiler and debugger), is need for <em>writing</em> as well as <em>running</em> Java programs. Since you are supposed to write Java Programs, you should install JDK, which includes JRE.</p>
+
+<h5>JDK Versions</h5>
+<p>The various JDK versions are:</p>
+
+<ol>
+<li><span class="line-heading">JDK Alpha and Beta</span> (1995): Sun announced Java in September 23, 1995.</li>
+<li><span class="line-heading">JDK 1.0</span> (January 23, 1996): Originally called <em>Oak</em> (named after the oak tree outside James Gosling's office). Renamed to Java 1 in JDK 1.0.2.</li>
+<li><span class="line-heading">JDK 1.1</span> (February 19, 1997): Introduced AWT event model, inner class, JavaBean, JDBC, and RMI.</li>
+<li><span class="line-heading">J2SE 1.2</span> (JDK 1.2) (December 8, 1998): Re-branded as &quot;Java 2&quot; and renamed JDK to J2SE (Java 2 Standard Edition). Also released J2EE (Java 2 Enterprise Edition) and J2ME (Java 2 Micro Edition). Included JFC (Java Foundation Classes - Swing, Accessibility API, Java 2D, Pluggable Look and Feel and Drag and Drop). Introduced Collection Framework and JIT compiler.</li>
+<li><span class="line-heading">J2SE 1.3</span> (JDK 1.3) (May 8, 2000): Introduced Hotspot JVM.</li>
+<li><span class="line-heading">J2SE 1.4</span> (JDK 1.4) (February 6, 2002): Introduced assert, non-blocking IO (nio), logging API, image IO, Java webstart, regular expression support.</li>
+<li><span class="line-heading">J2SE 5.0</span> (JDK 1.5) (September 30, 2004): Officially called 5.0 instead of 1.5. Introduced generics, autoboxing/unboxing, annotation, enum, varargs, for-each loop, static import.</li>
+<li><span class="line-heading">Java SE 6</span> (JDK 1.6) (December 11, 2006): Renamed J2SE to Java SE (Java Standard Edition).</li>
+<li><span class="line-heading">Java SE 7</span> (JDK 1.7) (July 28, 2011): First version after Oracle purchased Sun (called Oracle JDK).</li>
+<li><span class="line-heading">Java SE 8</span> (JDK 1.8) (March 18, 2014): included support for Lambda expressions, default methods, and JavaScript runtime.</li>
+<li><span class="line-heading">Java SE 9</span>: Expected in March 2017.</li>
+</ol>
+
+<h3 id="jdk-install">How To Install JDK on Windows</h3>
+
+<h5>Step 0: Un-Install Older Version(s) of JDK/JRE</h5>
+<p>I recommend that you install only the <em>latest</em> JDK. Although you can install multiple versions of JDK concurrently, it is messy.</p>
+<p>If you have previously installed older version(s) of JDK/JRE, un-install ALL of them. Goto &quot;Control Panel&quot; &rArr; &quot;Program and Features&quot;  &rArr; Un-install ALL programs begin with &quot;Java&quot;, such as &quot;Java SE Development Kit ...&quot;, &quot;Java SE Runtime ...&quot;, and etc.</p>
+
+<h5>Step 1: Download JDK</h5>
+
+<ol>
+  <li>Goto Java SE download site @ <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a>.</li>
+<li>Under &quot;Java Platform, Standard Edition&quot; &rArr; &quot;Java SE 8u{xx}&quot;, where {xx} is the latest update number &rArr; Click the &quot;JDK Download&quot; button.</li>
+<li>Check &quot;Accept License Agreement&quot;.</li>
+<li>Choose your operating platform, e.g., &quot;Windows x64&quot; (for 64-bit Windows OS) or &quot;Windows x86&quot; (for 32-bit Windows OS). You can check whether your Windows OS is 32-bit or 64-bit via &quot;Control Panel&quot; &rArr; &quot;System&quot; &rArr; Under &quot;System Type&quot;.</li>
+</ol>
+
+<h5>Step 2: Install JDK and JRE</h5>
+
+<p>Run the downloaded installer (e.g., &quot;<code>jdk-8u{xx}-windows-x64.exe</code>&quot;), which installs both the JDK  and JRE.  By default, the JDK will be installed in directory &quot;<code>C:\Program Files\Java\jdk1.8.0_<span class="color-highlight-new">xx</span></code>&quot;, where <span class="color-highlight-new"><code>xx</code></span> denotes the latest upgrade number; and JRE in &quot;<code>C:\Program Files\Java\jre1.8.0_<em>xx</em></code>&quot;.</p>
+<p>For novices, accept  the defaults. Follow the screen instructions to install JDK and JRE.</p>
+<p> <span class="color-highlight-new">Check the JDK installed directory by inspecting these folders using File Explorer. Take note of your JDK installed directory, which you will need in the next step.</span></p>
+
+<img class="image-center" src="images/JDK_Path.png" alt="JDK_Path.png" />
+<p> I shall refer to the JDK installed directory as <code>&lt;JAVA_HOME&gt;</code>, hereafter, in this article.</p>
+
+<h5 id="jdk-install-step3">Step 3: Include JDK's &quot;<span class="font-code">bin</span>&quot; Directory in the <span class="font-code">PATH</span></h5>
+
+<p>Windows OS searches the current  directory and the directories listed in the <code>PATH</code> <em>environment variable</em> for executable programs. JDK's programs (such as Java compiler <code>javac.exe</code> and Java runtime <code>java.exe</code>) reside in directory &quot;<code>&lt;JAVA_HOME&gt;\bin</code>&quot; (where   <code>&lt;JAVA_HOME&gt;</code> denotes the JDK installed directory). You need to include &quot;<code>&lt;JAVA_HOME&gt;\bin</code>&quot;  in the <code>PATH</code> to run the JDK programs.</p>
+
+<p>To edit the <code>PATH</code> environment variable in Windows XP/Vista/7/8/10:</p>
+
+<ol>
+<li>Launch &quot;Control Panel&quot; &rArr; &quot;System&quot; &rArr; Click &quot;Advanced system settings&quot;.</li>
+
+<li>Switch to &quot;Advanced&quot; tab &rArr; &quot;Environment Variables&quot;.</li>
+
+<li>Under &quot;System Variables&quot;, scroll down to select &quot;Path&quot; &rArr; &quot;Edit...&quot;.</li>
+
+<li><span class="color-new"><strong>(CAUTION: Read this paragraph 3 times before doing this step! There is no UNDO)</strong></span><br />
+<strong>For Windows 10</strong>: You see a table listing the existing PATH entries. Click &quot;New&quot; &rArr; Enter the JDK's binary directory &quot;<code>c:\Program Files\Java\jdk1.8.0_<span class="color-highlight-new">xx</span>\bin</code>&quot; <span class="color-new">(Replace <span class="color-highlight-new"><code>xx</code></span> with your installation's upgrade number!!!)</span> &rArr; Select &quot;Move Up&quot; to move it all the way to the top.<br />
+
+<strong>Prior to Windows 10</strong>: In &quot;Variable value&quot; field, <span class="underline">INSERT</span> &quot;<code>c:\Program Files\Java\jdk1.8.0_<span class="color-highlight-new">xx</span>\bin</code>&quot; <span class="color-new">(Replace <span class="color-highlight-new"><code>xx</code></span> with your installation upgrade number!!!)</span> <span class="underline">IN FRONT</span> of all the existing directories, <span class="underline">followed by a semi-colon (<code>;</code>)</span> which separates the JDK's binary directory from the rest of the existing directories. <span class="underline">DO NOT DELETE</span> any existing entries; otherwise, some existing applications may not run.
+
+<pre class="color-example">Variable name  : <span class="color-new"><strong>PATH</strong></span>
+Variable value : <span class="color-new"><strong>c:\Program Files\Java\jdk1.8.0_xx\bin;</strong></span><strong>[<em>exiting entries...</em>]</strong></pre>
+</li>
+</ol>
+
+<h5>Step 4: Verify the JDK Installation</h5>
+
+<p>Launch a CMD shell (Click &quot;Start&quot; button &rArr; run... &rArr; enter &quot;cmd&quot;; OR from &quot;Start&quot; button &rArr; All Programs &rArr; Accessories &rArr; Command Prompt).</p>
+
+<ol>
+<li>Issue &quot;<code>path</code>&quot; command to list the contents of the <code>PATH</code> environment variable. Check to make sure that your <code>&lt;JAVA_HOME&gt;\bin</code> is listed in the <code>PATH</code>.
+
+<pre class="color-command">
+<span class="color-comment">// Display the PATH entries</span>
+prompt&gt; <strong>path</strong>
+PATH=<span class="color-new"><strong>c:\Program Files\Java\jdk1.8.0_xx\bin</strong></span>;[<em>other entries...</em>]</pre>
+Don't type <code>prompt&gt;</code>, which denotes the command prompt!!! Key in the command (highlighted) only.</li>
+
+<li>Issue the following commands to verify that JDK/JRE are properly installed and display their version:
+
+<pre class="color-command">
+<span class="color-comment">// Display the JRE version</span>
+prompt&gt; <strong>java -version</strong>
+java version &quot;1.8.0_xx&quot;
+Java(TM) SE Runtime Environment (build 1.8.0_xx-b13)
+Java HotSpot(TM) 64-Bit Server VM (build 25.5-b02, mixed mode)
+ 
+<span class="color-comment">// Display the JDK version</span>
+prompt&gt; <strong>javac -version</strong>
+javac 1.8.0_xx</pre></li></ol>
+
+<h5>Step 5: Write a  Hello-World Java Program</h5>
+
+<ol>
+<li>Create a directory to keep your works, e.g., &quot;<code>d:\myProject</code>&quot;, or &quot;<code>c:\myProject</code>&quot;, or any directory of your choice. Do NOT save your works in &quot;Desktop&quot; or &quot;Documents&quot; as their paths are hard to locate. The directory name shall not contain <em>blank</em> or special characters. Use meaningful but short name as it is easier to type.</li>
+
+<li>Launch a programming text editor (such as <a href="CMD_Survival.html#textpad">TextPad</a> or <a href="CMD_Survival.html#NotePadPP">NotePad++</a> or Sublime Text). Begin with a <em>new file</em> and enter the following source code. Save the file as &quot;<code>Hello.java</code>&quot;, under your work directory (e.g., <code>d:\myProject</code>).
+
+  <pre class="color-example">
+<span class="color-comment">/*
+ * First Java program to say Hello
+ */</span>
+public class Hello {  <span class="color-comment"> // Save as &quot;Hello.java&quot; under &quot;d:\myProject&quot;</span>
+   public static void main(String[] args) {
+      System.out.println(&quot;Hello, world!&quot;);
+   }
+}</pre></li>
+</ol>
+
+<h5>Step 6: Compile and Run the Hello-World Java Program</h5>
+
+<img class="image-float-right" src="../java/images/JavaBasics_GettingStarted.png" alt="JavaBasics_GettingStarted.png" />
+
+<p>To compile the source code &quot;<code>Hello.java</code>&quot;:</p>
+
+<ol>
+<li>Start a CMD Shell (Click the &quot;Start&quot; button &rArr; &quot;run...&quot; &rArr; Enter &quot;cmd&quot;).</li>
+
+<li>Set the <em>Current Drive</em> to the drive where you saved your source file &quot;<code>Hello.java</code>&quot;. For example, suppose that your source file is saved in drive &quot;<code>d</code>&quot;, enter &quot;<code><strong>d:</strong></code>&quot; as follow:
+  
+<pre class="color-command">prompt&gt; <strong>d:</strong>
+D:\xxx&gt;</pre>
+Don't enter  <code>prompt></code>, which denotes the command prompt.
+</li>
+
+<li>Set the <em>Current Working Directory</em> to the directory that you saved your source file via the <strong><code>cd</code></strong> (<em>Change Directory</em>) command. For example, suppose that your source file is saved in directory &quot;<code>d:\myProject</code>&quot;.<br />
+  
+<pre class="color-command">
+D:\xxx&gt; <strong>cd \myProject</strong>
+D:\myProject&gt;</pre>
+</li>
+
+<li>Issue a <strong><code>dir</code></strong> (<em>List Directory</em>) command to confirm that your source file is present in the <em>current directory</em>.
+  
+  <pre class="color-command">
+D:\myProject&gt; <strong>dir</strong>
+......
+xx-xxx-xx  06:25 PM               277 <strong>Hello.java</strong>
+......</pre></li>
+  
+<li>Invoke the JDK compiler &quot;<strong><code>javac</code></strong>&quot; to compile the source code &quot;<code>Hello.java</code>&quot;.
+  
+<pre class="color-command">
+D:\myProject&gt; <strong>javac Hello.java</strong></pre>
+  
+The compilation is successful if the command prompt returns.  Otherwise, error messages would be shown.  Correct the errors in your source file and re-compile. Check &quot;<a href="../howto/ErrorMessages.html#JDKErrors" >Common JDK Installation Errors</a>&quot;, if you encounter problem compiling your program.</li>
+
+<li>The output of the compilation is a Java class called &quot;<code>Hello.class</code>&quot;. Issue a <strong><code>dir</code></strong> (<em>List Directory</em>) command again to check for the output. 
+  
+<pre class="color-command">
+D:\myProject&gt; <strong>dir</strong>
+......
+xx-xxx-xx  01:53 PM               416 <strong>Hello.class</strong>
+xx-xxx-xx  06:25 PM               277 Hello.java
+......</pre></li>
+</ol>
+
+<p>To run the program, invoke the Java Runtime &quot;<code><strong>java</strong></code>&quot;:</p>
+<pre class="color-command">
+D:\myProject&gt; <strong>java Hello</strong>
+<span class="color-new">Hello, world!</span></pre>
+
+<br />
+
+<p><span class="line-heading">Everything that can possibly go wrong will go wrong</span>: Read &quot;<a href="ErrorMessages.html#JDKErrors">JDK Installation Common Errors</a>&quot;.</p>
+
+<h5>Step 7: (Optional) Download JDK API Documentation, Samples and Demos</h5>
+
+<p>The JDK download does not include the documentation, which needs to be downloaded separately. In the past, I always insist that my students should have a local copy of JDK API Documentation. But, today, you can easily access the online copy by googling &quot;JDK 8 Documentation&quot;.</p>
+
+<p>To install JDK API documentation:</p>
+<ol>
+<li>From the Java SE download page (@ <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a>), under &quot;Additional Resources&quot;, look for &quot;<span class="underline">Java SE 8 Documentation</span>&quot; &rArr; Download &rArr; Accept the license agreement &rArr; Download the zip-file (e.g., &quot;<code>jdk-8u{xx}-apidocs.zip</code>&quot; - about 85MB).</li>
+
+<li>Unzip into the JDK installed directory <code>&lt;JAVA_HOME&gt;</code>.  The documentation will be unzipped into &quot;<code>&lt;JAVA_HOME&gt;\docs</code>&quot;. Browse the JDK documentation by opening &quot;<code>&lt;JAVA_HOME&gt;\docs\index.html</code>&quot;.</li>
+</ol>
+
+<p>You should also download the &quot;JDK 8 Samples and Demos&quot; from the Java SE download site.</p>
+
+<h5>Step 8: (For Advanced Users Only) JDK's Source Code</h5>
+
+<p>Source code for JDK is provided and kept in &quot;<code>&lt;JAVA_HOME&gt;\src.zip</code>&quot;. I strongly recommend that you to go through some of the source files such as &quot;<code>String.java</code>&quot;, &quot;<code>Math.java</code>&quot;, and &quot;<code>Integer.java</code>&quot;, under &quot;<code>java\lang</code>&quot;.</p>
+
+<h4>Using TextPad for Java Programming (for Windows)</h4>
+
+<img class="image-float-right" src="../howto/images/TextpadJava.png" alt="TextpadJava.png" />
+
+<p>TextPad (@ <a href="http://www.textpad.com">www.textpad.com</a>) is a lightweight programming text editor for writing <em>toy</em> Java programs. It can be configured to couple with the JDK, hence, bypassing the CMD shell.</p>
+
+<p>From the TextPad editor, you can invoke the JDK compiler/runtime directly via &quot;Tools&quot; menu &rArr; External Tools &rArr; &quot;Compile Java&quot; or &quot;Run Java Application&quot;. Take note of the keyboard shortcuts - Ctrl+1 for compile and Ctrl+2 for run.</p>
+
+<p>If you cannot find these commands in the &quot;Tools&quot; menu, goto &quot;Configure&quot; &rArr; Preferences... &rArr; Tools &rArr; Add &rArr; JDK Commands.</p>
+
+<h5>TextPad Tips and Configuration</h5>
+<p>Check <a href="CMD_Survival.html#textpad">HERE</a>!</p>
+
+<h4>Using NotePad++ for Java Programming (on Windows)</h4>
+<p>Notepad++ (@ <a href="http://notepad-plus-plus.org">http://notepad-plus-plus.org</a>) is a free and open-source programming editor.</p>
+<p>You can use NotePad++ to write your Java source code. But you need to use CMD shell to compile and run the Java program.</p>
+
+<h5>NotePad++ Customization and Tips</h5>
+
+<p>You can customize Notepad++ to compile and run Java programs with hot-keys. Read &quot;<a href="CMD_Survival.html#NotePadPP">NotePad++</a>&quot;.</p>
+
+<h3 id="jdk_mac">How to Install JDK on Mac</h3>
+
+<h5>Step 1: Check if JDK has  been Pre-Installed</h5>
+
+<p>In some Mac systems (earlier than Mac OS X 10.7 Lion), JDK has been pre-installed. To check if JDK has been installed, open a &quot;Terminal&quot; (Finder &rArr; Go &rArr; Utilities &rArr; Terminal) and issue this command:</p>
+
+<pre class="color-command">
+<strong>javac -version</strong></pre>
+
+<ul>
+<li>If a JDK version number is returned (e.g., <code>JDK 1.x.x</code>), then JDK has already been installed. If the JDK version is prior to 1.7, proceed to Step 2 to install the latest JDK; otherwise, proceed to &quot;Step 3: Write a Hello-world Java program&quot;.</li>
+<li> If message &quot;command not found&quot; appears, JDK is NOT installed. Proceed to the &quot;Step 2: Install JDK&quot;.</li>
+<li>If message &quot;To open javac, you need a Java runtime&quot; appears, select &quot;Install&quot; and follow the instructions to install JDK. Then, proceed to &quot;Step 3: Write a Hello-world Java program&quot;.</li>
+</ul>
+
+<h5>Step 2: Download JDK</h5>
+<ol>
+<li>Goto Java SE download site @ <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a>. Under &quot;Java Platform, Standard Edition&quot; &rArr; &quot;Java SE 8u{xx}&quot; &rArr; Click the &quot;JDK Download&quot; button</li>
+<li>Check &quot;Accept License Agreement&quot;</li>
+<li>Choose your operating platform, e.g., &quot;Mac OS X&quot; (<code>jdk-8u{xx}-macosx-x64.dmg</code>). Download the installer.</li>
+</ol>
+
+<h5>Step 3: Install JDK/JRE</h5>
+<ol>
+<li>Double-click the downloaded Disk Image (DMG) file. Follow the screen instructions to install JDK/JRE.</li>
+<li>Eject the DMG file.</li>
+
+<li>To verify your installation, open a &quot;Terminal&quot; and issue these commands.
+  <pre class="color-command">
+<span class="color-comment">// Display the JDK version</span>
+<strong>javac -version</strong>
+javac 1.x.x_xx
+ 
+<span class="color-comment">// Display the JRE version</span>
+<strong>java -version</strong>
+java version &quot;1.x.x_xx&quot;
+Java(TM) SE Runtime Environment (build 1.x.x_xx-xxx)
+Java HotSpot(TM) Client VM (build 22.1-b02, mixed mode, sharing)
+ 
+<span class="color-comment">// Display the location of Java Compiler</span>
+<strong>which javac</strong>
+/usr/bin/javac
+ 
+<span class="color-comment">// Display the location of Java Runtime</span>
+<strong>which java</strong>
+/usr/bin/java</pre>
+</li></ol>
+
+<h5>Step 3: Write a Hello-World Java Program</h5>
+
+<ol>
+
+<li>Create a directory called &quot;<code>myProject</code>&quot; under your <em>home</em> directory (Launch &quot;Finder&quot; &rArr; &quot;Go&quot; &rArr; &quot;Home&quot;; Select &quot;File&quot; &rArr; &quot;New Folder&quot; &rArr; &quot;<code>myProject</code>&quot;).<br />
+  In Mac OS, the home directory of the current login user is denoted as &quot;<code>~</code>&quot;. Hence, this new directory is represented as &quot;<code>~/myProject</code>&quot;.</li>
+
+<li>Use a programming text editor (such as <a href="MacUsers_HowTo.html#jedit">jEdit</a>, <a href="MacUsers_HowTo.html#gedit">gedit</a>, Sublime Text) to input the following source code and save as &quot;<code>Hello.java</code>&quot;
+under the directory &quot;<code>~/myProject</code>&quot;.<br />
+[If you use Mac OS's default text editor &quot;TextEdit&quot; (NOT recommended), you need to open a new file &rArr; choose &quot;Format&quot; &rArr; &quot;Make Plain Text&quot;
+ &rArr; Enter the source code &rArr; Save as &quot;<code>Hello.java</code>&quot;.]
+ <pre class="color-example">
+<span class="color-comment">/*
+ * My First Java program to say Hello
+ */</span>
+public class Hello {   <span class="color-comment">// Save as &quot;Hello.java&quot; under &quot;~/myProject&quot;</span>
+   public static void main(String[] args) {
+      System.out.println(&quot;Hello, world from Mac!&quot;);
+   }
+}</pre></li>
+</ol>
+
+<h5>Step 4: Compile and Run the Hello-World Java Program</h5>
+
+<img class="image-float-right" src="../java/images/MacJavaCompile.png" alt="MacJavaCompile.png" />
+
+<ol>
+<li>To compile the source code &quot;<code>Hello.java</code>&quot;, open a new &quot;Terminal&quot; (&quot;Go&quot; &rArr; &quot;Utilities&quot; &rArr; &quot;Terminal&quot;) and issue these commands (as illustrated):
+  <pre class="color-command">
+<span class="color-comment">// Change Directory (cd) to where &quot;Hello.java&quot; resides</span>
+<strong>cd ~/myProject</strong>
+ 
+<span class="color-comment">// Check if &quot;Hello.java&quot; exists using list (ls) command</span>
+<strong>ls</strong>
+Hello.java   ......
+ 
+<span class="color-comment">// Compile &quot;Hello.java&quot; using JDK compiler &quot;javac&quot;</span>
+<strong>javac Hello.java</strong>
+<span class="color-comment">// If error message appears, correct your source code and re-compile</span>
+ 
+<span class="color-comment">// Check for the compiled output &quot;Hello.class&quot;</span>
+<strong>ls</strong>
+Hello.class   Hello.java   ......</pre></li>
+
+<li>To run the Hello-world, invoke the Java Runtime &quot;<code>java</code>&quot; as follows:
+<pre class="color-command">
+<span class="color-comment"></span><span class="color-comment">// Run &quot;Hello.class&quot;</span>
+<strong>java Hello</strong>
+Hello, world from Mac!</pre></li>
+</ol>
+
+
+
+<h3 id="jdk_ubuntu">How to Install JDK on Ubuntu</h3>
+
+<p>Read &quot;<a href="Ubuntu_HowTo.html#jdk">How to Install JDK on Ubuntu</a>&quot;.</p>
+
+
+
+<h3 id="First_program_Eclipse">First Java Program with Eclipse</h3>
+
+<ol>
+<li>You need to first install Eclipse. Read &quot;<a href="../howto/EclipseJava_HowTo.html#eclipse-java-install">How to Install Eclipse</a>&quot;.</li>
+
+<li>You can then proceed to write your first Java program. Read &quot;<a href="../howto/EclipseJava_HowTo.html#eclipse-java-first">Writing your first Java Program with Eclipse</a>&quot;.</li>
+
+<li>Eclipse allow you to debug program graphically. Read &quot;<a href="../howto/EclipseJava_HowTo.html#eclipse-java-debug">Debugging program in Eclipse</a>&quot;.</li>
+</ol>
+
+
+
+<h3 id="First_program_NetBeans">First Java Program with NetBeans</h3>
+
+<ol>
+<li>You need to first install NetBeans. Read &quot;<a href="../howto/NetBeans_HowTo.html#NetBeans-install">How to Install NetBeans</a>&quot;.</li>
+
+<li>You can then proceed to write your first Java program. Read &quot;<a href="../howto/NetBeans_HowTo.html#NetBeans-first">Writing your first Java program with NetBeans</a>&quot;.</li>
+
+<li>NetBeans allow you to debug program graphically. Read &quot;<a href="../howto/NetBeans_HowTo.html#NetBeans-debug">Debugging program in NetBeans</a>&quot;.</li>
+</ol>
+
+<h3 id="external_jar">(Advanced) External JAR Files and Native Libraries</h3>
+
+<p>External Java packages (such as Servlet, MySQL Connector/J, JOGL, JUnit) are often distributed in JAR files (Java Archive - a single-file package of many Java classes),   with possibly Native Libraries (&quot;<code>.lib</code>&quot; and  &quot;<code>.dll</code>&quot; in Windows, or &quot;<code>.a</code>&quot; and  &quot;<code>.so</code>&quot; in Linux/Mac).</p>
+
+<h5>External JAR Files (&quot;<span class="font-code">.jar</span>&quot;)</h5>
+
+<p>If external JAR files are not properly included:</p>
+<ul>
+<li>During the compilation, you will receive compilation error  &quot;cannot find symbol&quot; on classes belonging to the external packages.</li>
+<li>During execution, you will get a runtime error &quot;Could not find or load main class <em>xxx</em>&quot; or &quot;<code>NoClassDefFoundError</code>&quot;.</li>
+</ul>
+
+<p>To include external JAR files, you can <span class="underline">either</span>:</p>
+<ol>
+<li>Copy all the JAR files of the external packages to the <em>Java's Extension Directories</em>.
+
+<ul>
+<li>For Windows, the JDK extension directory is located at &quot;<code>&lt;JAVA_HOME&gt;\jre\lib\ext</code>&quot; (e.g., &quot;<code>c:\Program Files\Java\jdk1.8.0_xx\jre\lib\ext</code>&quot;).</li>
+<li>For Mac, the JDK extension directories are &quot;<code>/Library/Java/Extensions</code>&quot; and &quot;<code>/System/Library/Java/Extensions</code>&quot;.</li>
+<li>For Ubuntu, the JDK extension directories are &quot;<code>&lt;JAVA_HOME&gt;/jre/lib/ext</code>&quot; (e.g., &quot;<code>/usr/user/java/jdk1.8.0_xx/jre/lib/ext</code>&quot;) and &quot;<code>/usr/java/packages/lib/ext</code>&quot;.</li>
+</ul>
+
+The location of JDK's extension directories is kept in Java's System Property &quot;<code>java.ext.dirs</code>&quot;. You can print its contents via <code>System.out.println(System.getProperty(&quot;java.ext.dirs&quot;))</code>.</li>
+
+<li>You can also include all the JAR files in the <code>CLASSPATH</code> environment variable. <code>CLASSPATH</code>
+  may contain directories (of Java classes) or JAR files (single-file archive of Java classes). If you set the <code>CLASSPATH</code>, you must also include the <em>current directory</em> (denoted as &quot;<code>.</code>&quot;).
+  <ul>
+  <li>For Windows, set the <code>CLASSPATH</code> in Control Panel &rArr; System &rArr; Advanced system settings &rArr; Advanced &rArr; Environment Variables &rArr; System Variables &rArr; New &rArr; In &quot;Variable name&quot;, enter &quot;<code>CLASSPATH</code>&quot; &rArr; In &quot;Variable value&quot;, enter &quot;<code>.;<em>path1</em>\<em>xxx</em>.jar;<em>path2</em>\<em>yyy</em>.jar</code>&quot;, where the entries are separated by a semi-colon (<code>;</code>).</li>
+  <li>For Linux and Mac OS: Edit <code>~/.profile</code> or <code>~/.bash_profile</code> (or <code>/etc/profile</code> for system-wide setting) to include the following line at the end of the file:
+    <pre class="color-example">
+export CLASSPATH=.:<em>path1</em>/<em>xxx</em>.jar:<em>path2</em>/<em>yyy</em>.jar</pre>
+    The entries are separated by colon (<code>:</code>).</li>
+</ul>
+</li>
+
+<li>You can also set the <code>CLASSPATH</code> in the <code>javac</code>/<code>java</code> command-line via the option <code>-cp &lt;<em>paths</em>&gt;</code> (or <code>-classpath &lt;<em>paths</em>&gt;</code>), for example,
+  <pre class="color-command">
+<span class="color-comment">// Compile Java source code</span>
+&gt; javac <span class="color-new">-cp .:<em>path1</em>/<em>xxx</em>.jar:<em>path2</em>/<em>yyy</em>.jar</span> <em>ClassName</em>.java
+<span class="color-comment">// Run Java class</span>
+&gt; java <span class="color-new">-cp .:<em>path1</em>/<em>xxx</em>.jar:<em>path2</em>/<em>yyy</em>.jar</span> <em>ClassName</em></pre></li>
+
+</ol>
+
+<h5>External Native Libraries (&quot;<span class="font-code">.lib</span>&quot;, &quot;<span class="font-code">.dll</span>&quot;, &quot;<span class="font-code">.a</span>&quot;, &quot;<span class="font-code">.so</span>&quot;)</h5>
+
+<p>Some external package may provide static or shared native libraries in the form of &quot;<code>.lib</code>&quot; (Windows' static library), &quot;<code>.dll</code>&quot; (Windows' dynamically link library), &quot;<code>.a</code>&quot; (Unix's static library), or &quot;<code>.so</code>&quot; (Unix's shared library).</p>
+<p>Native Libraries are to be kept in a directory accessible via JRE's  Property &quot;<code>java.library.path</code>&quot;, which <em>normally but not necessarily</em> includes all the directories in the <code>PATH</code> environment variable.</p>
+
+<p>Native libraries are not involved in the compilation. But if they are not properly included during runtime time, you will  get a runtime error &quot;<code>java.lang.UnsatisfiedLinkError: no <em>xxx</em> in java.library.path</code>&quot;.</p>
+<p>To include external native libraries:</p>
+
+<ol>
+<li>Copy the native libraries into a system library directory, e.g.,<code> c:\windows\system32</code> (Windows), <code>/usr/lib</code> or  <code>/usr/local/lib</code> (Linux or Mac OS). You can verify that the directory is included in Java's System Property  &quot;<code>java.library.path</code>&quot;, via <code>System.out.println(System.getProperty(&quot;java.library.path&quot;))</code>.</li>
+
+<li>You can also set the native library path via the <code>java</code>'s command-line option <code>-Djava.library.path=<em>xxx</em></code>, for example,
+
+<pre class="color-command">
+&gt; java <span class="color-new">-Djava.library.path=<em>xxx</em></span> <em>ClassName</em></pre></li>
+
+</ol>
+
+<h5>Eclipse/NetBeans</h5>
+<p>Using an IDE can greatly simplifies inclusion of external packages. Read &quot;<a href="EclipseJava_HowTo.html">Eclipse How-To</a>&quot; or &quot;<a href="NetBeans_HowTo.html">NetBeans How-To</a>&quot;.</p>
+
+
+
+<a class="references" href="../howto/References.html#java">Link to References &amp; Resources</a></div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.8.0_66<br />
+Last modified: March, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+
+</body>
+</html>

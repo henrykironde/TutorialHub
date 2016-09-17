@@ -1,0 +1,652 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Enum - Java Programming Tutorial</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>Enum (Enumeration)</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction to Enumeration (<span class="font-code">enum</span>) (JDK 1.5)</h3>
+
+<h4>Example: Scissor-Paper-Stone</h4>
+<p>Suppose that we are writing a Scissor-Paper-Stone game. We could use three arbitrary integers (e.g., 0, 1, 2; or 88, 128, 168), three inefficient strings (&quot;Scissor&quot;, &quot;Paper&quot;, &quot;Stone&quot;), or three characters ('s', 'p', 't') to represent the three hand-signs. The main drawback is we need to check the other infeasible values (e.g. 4, &quot;Rock&quot;, 'q', etc.) in our program to ensure correctness.</p>
+<p>A better approach is to define our own list of permissible items in a construct called enumeration (or <code>enum</code>), introduced in JDK 1.5. The syntax is as follows:</p>
+
+<pre class="color-syntax">
+<strong>enum</strong> {
+   <em>ITEM1</em>, <em>ITEM2</em>, ...
+}</pre>
+
+<p>For example,</p>
+<pre class="color-example">
+enum HandSign {
+   SCISSOR, PAPER, STONE
+}</pre>
+
+<p>An enumeration is a <em>special class</em>, which provides a <em>type-safe</em> implementation of constant data in your program.  In other words, we can declare a variable of the type <code>HandSign</code>, which takes values of either <code>HandSign.SCISSOR</code>, <code>HandSign.PAPER</code>, or <code>HandSign.STONE</code>, but NOTHING ELSE. For example,</p>
+
+<pre class="color-example">
+HandSign playerMove;             <span class="color-comment">// Declare variables of the enum type HandSign</span>
+HandSign computerMove;
+playerMove = HandSign.SCISSOR;   <span class="color-comment">// Assign values into enum variables</span>
+computerMove = HandSign.PAPER;
+<span class="color-comment">//</span> playerMove = 0;               <span class="color-comment">// Compilation error</span></pre>
+
+<p><span class="line-heading">Example:</span> Below is a Scissor-Paper-Stone game using an enumeration.</p>
+<pre class="color-example">
+import java.util.Random;
+import java.util.Scanner;
+
+<span class="color-comment">/*
+ * Define an enumeration called Sign, with 3 elements, referred to as:
+ * HandSign.SCISSOR, HandSign.PAPER, HandSign.STONE.
+ */</span>
+<span class="color-new">enum HandSign {
+   SCISSOR, PAPER, STONE
+}</span>
+
+<span class="color-comment">/*
+ * A game of scissor-paper-stone.
+ */</span>
+public class <strong>ScissorPaperStone</strong> {
+   public static void main(String[] args) {
+      Random random = new Random();   <span class="color-comment">// Create a random number generator</span>
+      boolean gameOver = false;
+      HandSign playerMove = HandSign.SCISSOR;
+      HandSign computerMove;
+      int numTrials = 0;
+      int numComputerWon = 0;
+      int numPlayerWon = 0;
+      int numTie = 0;
+
+      Scanner in = new Scanner(System.in);
+      System.out.println(&quot;Let us begin...&quot;);
+
+      while (!gameOver) {
+         System.out.printf(&quot;%nScissor-Paper-Stone&quot;);
+
+         <span class="color-comment">// Player move
+         // Use a do-while loop to handle invalid input</span>
+         boolean validInput;
+         do {
+            System.out.print(&quot;   Your turn (Enter s for scissor, p for paper, t for stone, q to quit): &quot;);
+            char inChar = in.next().toLowerCase().charAt(0); <span class="color-comment">// Convert to lowercase and extract first char</span>
+            validInput = true;
+            if (inChar == 'q') {
+               gameOver = true;
+            } else if (inChar == 's') {
+               playerMove = HandSign.SCISSOR;
+            } else if (inChar == 'p') {
+               playerMove = HandSign.PAPER;
+            } else if (inChar == 't') {
+               playerMove = HandSign.STONE;
+            } else {
+               System.out.println(&quot;   Invalid input, try again...&quot;);
+               validInput = false;
+            }
+         } while (!validInput);
+
+         if (!gameOver) {
+            <span class="color-comment">// Computer Move</span>
+            int aRandomNumber = random.nextInt(3); <span class="color-comment">// random int between 0 (inclusive) and 3 (exclusive)</span>
+            if (aRandomNumber == 0) {
+               computerMove = HandSign.SCISSOR;
+               System.out.println(&quot;   My turn: SCISSOR&quot;);
+            } else if (aRandomNumber == 0) {
+               computerMove = HandSign.PAPER;
+               System.out.println(&quot;   My turn: PAPER&quot;);
+            } else {
+               computerMove = HandSign.STONE;
+               System.out.println(&quot;   My turn: STONE&quot;);
+            }
+
+            <span class="color-comment">// Check result</span>
+            if (computerMove == playerMove) {
+               System.out.println(&quot;   Tie!&quot;);
+               ++numTie;
+            } else if (computerMove == HandSign.SCISSOR &amp;&amp; playerMove == HandSign.PAPER) {
+               System.out.println(&quot;   Scissor cuts paper, I won!&quot;);
+               ++numComputerWon;
+            } else if (computerMove == HandSign.PAPER &amp;&amp; playerMove == HandSign.STONE) {
+               System.out.println(&quot;   Paper wraps stone, I won!&quot;);
+               ++numComputerWon;
+            } else if (computerMove == HandSign.STONE &amp;&amp; playerMove == HandSign.SCISSOR) {
+               System.out.println(&quot;   Stone breaks scissor, I won!&quot;);
+               ++numComputerWon;
+            } else {
+               System.out.println(&quot;   You won!&quot;);
+               ++numPlayerWon;
+            }
+            ++numTrials;
+         }
+      }
+   
+      <span class="color-comment">// Print statistics</span>
+      System.out.printf(&quot;%nNumber of trials: &quot; + numTrials);
+      System.out.printf(&quot;I won %d(%.2f%%). You won %d(%.2f%%).%n&quot;, numComputerWon, 
+            100.0*numComputerWon/numTrials, numPlayerWon, 100.0*numPlayerWon/numTrials);
+      System.out.println(&quot;Bye! &quot;);
+   }
+}</pre>
+<pre class="output">
+Let us begin...
+Scissor-Paper-Stone
+   Your turn (Enter s for scissor, p for paper, t for stone, q to quit): <strong>s</strong>
+   My turn: SCISSOR
+   Tie!
+
+Scissor-Paper-Stone
+   Your turn (Enter s for scissor, p for paper, t for stone, q to quit): <strong>s</strong>
+   My turn: STONE
+   Stone breaks scissor, I won!
+
+Scissor-Paper-Stone
+   Your turn (Enter s for scissor, p for paper, t for stone, q to quit): <strong>p</strong>
+   My turn: STONE
+   You won!
+
+Scissor-Paper-Stone
+   Your turn (Enter s for scissor, p for paper, t for stone, q to quit): <strong>t</strong>
+   My turn: SCISSOR
+   Scissor cuts paper, I won!
+
+Scissor-Paper-Stone
+   Your turn (Enter s for scissor, p for paper, t for stone, q to quit): <strong>a</strong>
+   Invalid input, try again...
+   Your turn (Enter s for scissor, p for paper, t for stone, q to quit): <strong>p</strong>
+   My turn: STONE
+   You won!
+
+Scissor-Paper-Stone
+   Your turn (Enter s for scissor, p for paper, t for stone, q to quit): <strong>q</strong>
+
+Number of trials: 5
+I won 2(40.00%). You won 2(40.00%).
+Bye!</pre>
+
+<p>Note that I used the utility <code>Random</code> to generate a random integer between 0 and 2, as follows:</p>
+<pre class="color-example">
+import java.util.Random;      <span class="color-comment">// Needed to use Random
+   </span>
+<span class="color-comment">// In main()</span>
+Random random = new Random(); <span class="color-comment">// Create a random number generator</span>
+rand.nextInt(3);              <span class="color-comment">// Each call returns a random int between 0 (inclusive) and 3 (exclusive)</span></pre>
+
+<h4>Examples: Card Suit</h4>
+<p>A card's suit can only be spade, diamond, club or heart.  In other words, it has a limited set of values.  Before the introduction of <code>enum</code> type in JDK 1.5, we usually have to use an <code>int</code> variable to hold these values.  For example,</p>
+
+<pre class="color-example">
+class CardSuit {
+   public static final int SPADE   0;
+   public static final int DIAMOND 1;
+   public static final int CLUB    2;
+   public static final int HEART   3;
+   ......
+}
+class Card {
+   int suit;   <span class="color-comment">// CardSuit.SPADE, CardSuit.DIAMOND, CardSuit.CLUB, CardSuit.HEART</span>
+}</pre>
+
+<p>The drawbacks are:</p>
+<ul>
+<li>It is not <em>type-safe</em>.  You can assign any <code>int</code> value (e.g., 88) into the <code>int</code> variable <code>suit</code>.</li>
+<li>No namespace:  You must prefix the constants by the class name <code>CardSuit</code>.</li>
+<li>Brittleness:  new constants will break the existing codes.</li>
+<li>Printed values are uninformative: printed value of 0, 1, 2 and 3 are not very meaningful.</li>
+</ul>
+
+<p>JDK 1.5 introduces a new <code>enum</code> type (in addition to the existing top-level constructs <code>class</code> and  <code>interface</code>) along with a new keyword <code>enum</code>.  For example, we could define:</p>
+<pre class="color-example">
+enum Suit { SPADE, DIAMOND, CLUB, HEART }
+</pre>
+
+<p>An <code>enum</code> can be used to define a set of <code>enum</code> constants. The constants are implicitly <code>static final</code>, which cannot be modified.  You could refer to these constants just like any <code>static</code> constants, e.g., <code>Suit.SPADE</code>, <code>Suit.HEART</code>, etc.  <code>enum</code> is <em>type-safe</em>. It has its own <em>namespace</em>.  <code>enum</code> works with switch-case statement (just like the exisitng <code>int</code> and <code>char</code>).</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45</pre>
+</td>
+<td>
+<pre>
+import java.util.*;
+   
+enum Suit { SPADE, DIAMOND, CLUB, HEART }
+enum Rank { ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING }
+   
+class Card {  <span class="color-comment">// A card</span>
+   private Suit suit;
+   private Rank rank;
+   
+   Card(Suit suit, Rank rank) {   <span class="color-comment">// constructor</span>
+      this.suit = suit;
+      this.rank = rank;
+   }
+   
+   Rank getRank() { return rank; }
+   Suit getSuit() { return suit; }
+   public String toString() { return &quot;This card is &quot; + rank + &quot; of &quot; + suit; }
+}
+   
+class CardDeck {  <span class="color-comment">// A deck of card</span>
+   List&lt;Card&gt; deck;
+   CardDeck() {   <span class="color-comment">// constructor</span>
+      deck = new ArrayList&lt;Card&gt;();
+      for (Suit suit : Suit.values()) {
+         for (Rank rank : Rank.values()) {
+            deck.add(new Card(suit, rank));
+         }
+      }
+   }
+   public void print() {
+      for (Card card : deck) System.out.println(card);   <span class="color-comment">// print all cards</span>
+   }
+   public void shuffle() {
+      Collections.shuffle(deck);  <span class="color-comment">// use java.util.Collections' static method to shuffle the List</span>
+   }
+}
+   
+public class CardTest {
+   public static void main(String[] args) {
+      CardDeck deck = new CardDeck();
+      deck.print();
+      deck.shuffle();
+      deck.print();
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>For each <code>enum</code>, the Java compiler automatically generates a <code>static</code> method called <code>values()</code> that returns an array of all the <code>enum</code> constants, in the order they were defined.</p>
+
+<h3>More on Enumeration</h3>
+
+<h4>Constructor, Member Variables and Methods</h4>
+<p>An <code>enum</code> is a <em>reference type </em>(just like a class, interface and array), which holds a reference to memory in the heap. It is implicitly <code>final</code>, because the constants should not be changed.  It can include other component of a traditional class, such as constructors, member variables and methods.  (This is where Java's <code>enum</code> is more powerful than C/C++'s counterpart).  Each <code>enum</code> constant can be declared with parameters to be passed to the constructor when it is created.  For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+enum TrafficLight {
+   RED(30), AMBER(10), GREEN(30);  <span class="color-comment">// Named constants</span>
+   
+   private final int seconds;      <span class="color-comment">// Private variable</span>
+   
+   TrafficLight(int seconds) {     <span class="color-comment">// Constructor</span>
+      this.seconds = seconds;
+   }
+   
+   int getSeconds() {              <span class="color-comment">// Getter</span>
+      return seconds;
+   }
+}
+ 
+public class TrafficLightTest {
+   public static void main(String[] args) {
+      for (TrafficLight light : TrafficLight.values()) {
+         System.out.printf(&quot;%s: %d seconds\n&quot;, light, light.getSeconds());
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Three instances of <code>enum</code> type <code>TrafficLight</code> were generated via <code>values()</code>.  The instances are created by calling the constructor with the actual argument, when they are first referenced.  You are not allowed to construct a new instance of <code>enum</code> using <code>new</code> operator, because <code>enum</code> keeps a fixed list of constants.  <code>enum</code>'s instances could have its own instance variable (<code>int seconds</code>) and method (<code>getSeconds()</code>).</p>
+
+<h4>Enum with <span class="font-code">abstract</span> method</h4>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39</pre>
+</td>
+<td>
+<pre>
+enum TLight {
+   <span class="color-comment">// Each instance provides its implementation to abstract method</span>
+   RED(30) {
+      public TLight next() {  
+         return GREEN;
+      }
+   },
+   AMBER(10) {
+      public TLight next() {
+         return RED;
+      }
+   },
+   GREEN(30) {
+      public TLight next() {
+         return AMBER;
+      }
+   };
+ 
+   public abstract TLight next(); <span class="color-comment">// An abstract method</span>
+   
+   private final int seconds;     <span class="color-comment">// Private variable</span>
+ 
+   TLight(int seconds) {          <span class="color-comment">// Constructor</span>
+      this.seconds = seconds;
+   }
+ 
+   int getSeconds() {             <span class="color-comment">// Getter</span>
+      return seconds;
+   }  
+}
+   
+public class TLightTest {
+   public static void main(String[] args) {
+      for (TLight light : TLight.values()) {
+         System.out.printf(&quot;%s: %d seconds, next is %s\n&quot;, light,
+               light.getSeconds(), light.next());
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Each of the instances of <code>enum</code> could have its own behaviors.  To do this, you can define an <code>abstract</code> method in the <code>enum</code>, where each of its instances provides its own implementation.</p>
+
+<h5>Another Example</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre>
+</td>
+<td>
+<pre>
+enum Day {
+   MONDAY(1) {
+      public Day next() { return TUESDAY; }   <span class="color-comment">// each instance provides its implementation to abstract method</span>
+   },
+   TUESDAY(2) {
+      public Day next() { return WEDNESDAY; }
+   },
+   WEDNESDAY(3) {
+      public Day next() { return THURSDAY; }
+   },
+   THURSDAY(4) {
+      public Day next() { return FRIDAY; }
+   },
+   FRIDAY(5) {
+      public Day next() { return SATURDAY; }
+   },
+   SATURDAY(6) {
+      public Day next() { return SUNDAY; }
+   },
+   SUNDAY(7) {
+      public Day next() { return MONDAY; }
+   };
+ 
+   public abstract Day next();
+   
+   private final int dayNumber;
+ 
+   Day(int dayNumber) {   <span class="color-comment">// constructor</span>
+      this.dayNumber = dayNumber;
+   }
+ 
+   int getDayNumber() {
+      return dayNumber;
+   }
+}
+   
+public class DayTest {
+   public static void main(String[] args) {
+      for (Day day : Day.values()) {
+         System.out.printf(&quot;%s (%d), next is %s\n&quot;, day, day.getDayNumber(), day.next());
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4><span class="font-code">java.util.EnumSet</span> &amp; <span class="font-code">java.util.EnumMap</span></h4>
+
+<p>Two classes have been added to <code>java.util</code> to support <code>enum</code>:  <code>EnumSet</code> and <code>EnumMap</code>.  They are high performance implementation of the <code>Set</code> and <code>Map</code> interfaces respectively.</p>
+
+<p>[TODO]</p>
+
+<h3>Summary</h3>
+
+<p>So when should you use <code>enum</code>s?  Any time you need a fixed set of constants, whose values are known at compile-time.  That includes natural enumerated types (like the days of the week and suits in a card deck) as well as other sets where you know all possible values at compile time, such as choices on a menu, command line flags, and so on.  It is not necessary that the set of constants in an enum type stays fixed for all time.  In most of the situations, you can add new constants to an enum without breaking the existing codes.</p>
+
+<p>Properties:</p>
+<ol>
+<li>Enums are type-safe!</li>
+<li>Enums provide their namespace.</li>
+
+<li>Whenever an <code>enum</code> is defined, a class that extends <code>java.lang.Enum</code> is created. Hence, enum cannot extend another <code>class</code> or <code>enum</code>. The compiler also create an instance of the class for each constants defined inside the <code>enum</code>. The <code>java.lang.Enum</code> has these methods:
+
+<pre class="color-syntax">
+public final String name();  <span class="color-comment">// Returns the name of this enum constant, exactly as declared in its enum declaration.
+                             // You could also override the toString() to provide a more user-friendly description.</span>
+public String toString();    <span class="color-comment">// Returns the name of this enum constant, as contained in the declaration.
+                             // This method may be overridden.</span>
+public final int ordinal();  <span class="color-comment">// Returns the ordinal of this enumeration constant.</span></pre>
+
+</li>
+<li>All constants defined in an enum are <code>public static final</code>. Since they are <code>static</code>, they can be accessed via <code><em>EnumName.instanceName</em></code>.</li>
+<li>You do not instantiate an <code>enum</code>, but rely the constants defined.</li>
+<li>Enums can be used in a switch-case statement, just like an <code>int</code>.</li>
+</ol>
+
+<!-- @@ start change in v1 -->
+<a class="references" href="../howto/References.html#java">LINK TO JAVA REFERENCES &amp; RESOURCES</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7.0_03<br />
+Last modified: May, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

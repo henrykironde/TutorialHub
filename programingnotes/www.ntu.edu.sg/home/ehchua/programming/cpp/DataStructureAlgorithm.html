@@ -1,0 +1,3002 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Data Structure and Algorithm</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Data Structure and Algorithm</h1>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Searching</h3>
+
+<p>Searching involves deciding whether a <em>search key</em> is present in the data. For example, looking up a phone book or address book. The searching algorithm includes:</p>
+<ul>
+<li>Linear Search: See &quot;<a href="cp1_Basics.html#LinearSearch">Linear Search</a>&quot;.</li>
+<li>Recursive Binary Search for sorted list</li>
+<li>Binary Tree Search</li>
+</ul>
+
+<h4>Linear Search</h4>
+
+<p>See &quot;<a href="cp1_Basics.html#LinearSearch">Linear Search</a>&quot;.</p>
+
+<h5>Complexity</h5>
+
+<p>The worst-case and average-case time complexity is O(n). The best-case is O(1).</p>
+
+<h4>Binary Search</h4>
+
+<p>A binary search (or half-interval search) is applicable only to a sorted array. It compares the search key with the middle element. If there is a match, it returns the element's index. If the search key is less then the middle element, repeat searching on the left half; otherwise, search the right half. If the remaining element to be searched is zero, return &quot;no found&quot;.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Search an array for a key using Binary Search (BinarySearch.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int binarySearch(const int a[], int size, int key);
+int binarySearch(const int a[], int iLeft, int iRight, int key);
+void print(const int a[], int iLeft, int iRight);
+ 
+int main() {
+   const int SIZE = 10;
+   int a1[SIZE] = {1, 4, 5, 8, 12, 19, 24, 31, 43, 55};<span class="color-comment"> // sorted</span>
+ 
+   cout &lt;&lt; binarySearch(a1, SIZE, 8) &lt;&lt; endl;
+   cout &lt;&lt; binarySearch(a1, SIZE, 12) &lt;&lt; endl;
+   cout &lt;&lt; binarySearch(a1, SIZE, 24) &lt;&lt; endl;
+   cout &lt;&lt; binarySearch(a1, SIZE, 21) &lt;&lt; endl;
+}
+ 
+<span class="color-comment">// Search the array for the given key</span>
+<span class="color-comment">// If found, return array index; otherwise, return -1</span>
+int binarySearch(const int a[], int size, int key) {
+  <span class="color-comment"> // Call recursive helper function</span>
+   return binarySearch(a, 0, size-1, key);
+}
+ 
+<span class="color-comment">// Recursive helper function for binarySearch</span>
+int binarySearch(const int a[], int iLeft, int iRight, int key) {
+  <span class="color-comment"> // For tracing the algorithm</span>
+   print(a, iLeft, iRight);
+ 
+  <span class="color-comment"> // Test for empty list</span>
+   if (iLeft &gt; iRight) return -1;
+ 
+  <span class="color-comment"> // Compare with middle element</span>
+   int mid = (iRight + iLeft) / 2; <span class="color-comment"> // truncate</span>
+   if (key == a[mid]) {
+      return mid;
+   } else if (key &lt; a[mid]) {
+     <span class="color-comment"> // Recursively search the lower half</span>
+      binarySearch(a, iLeft, mid - 1, key);
+   } else {
+     <span class="color-comment"> // Recursively search the upper half</span>
+      binarySearch(a, mid + 1, iRight, key);
+   }
+}
+ 
+<span class="color-comment">// Print the contents of the given array from iLeft to iRight (inclusive)</span>
+void print(const int a[], int iLeft, int iRight) {
+   cout &lt;&lt; &quot;{&quot;;
+   for (int i = iLeft; i &lt;= iRight; ++i) {
+      cout &lt;&lt; a[i];
+      if (i &lt; iRight) cout &lt;&lt; &quot;,&quot;;
+   }
+   cout &lt;&lt; &quot;}&quot; &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Complexity</h5>
+<p>The worst-case and average-case time complexity for binary search is O(log n). The best-case is O(1).</p>
+
+<h3>Sorting</h3>
+
+<p>Sorting involves arranging data in ascending or descending order, according to a certain collating sequence (or sorting sequence). The sorting algorithm includes:</p>
+<ul>
+<li>Insertion Sort: See &quot;<a href="cp1_Basics.html#InsertionSort">Insertion Sort</a>&quot;.</li>
+<li>Selection Sort: See &quot;<a href="cp1_Basics.html#SelectionSort">Selection Sort</a>&quot;.</li>
+<li>Bubble Sort: See &quot;<a href="cp1_Basics.html#BubbleSort">Bubble Sort</a>&quot;</li>
+<li> Merge Sort (Recursive Top-Down or Interactive Bottom-up)</li>
+<li>Quick Sort (Recursive)</li>
+<li>Bucket Sort</li>
+<li>Heap Sort</li>
+<li>Binary Tree Sort</li>
+</ul>
+
+<h4>Bubble Sort</h4>
+
+<p>See &quot;<a href="cp1_Basics.html#BubbleSort">Bubble Sort</a>&quot;</p>
+
+<h5>Complexity</h5>
+<p>The average-case and worst-case time complexity is O(n<sup>2</sup>).</p>
+
+<h4>Insertion Sort</h4>
+<p>See &quot;<a href="cp1_Basics.html#InsertionSort">Insertion Sort</a>&quot;.</p>
+
+<h5>Complexity</h5>
+
+<p>The average-case and worst-case time complexity is O(n<sup>2</sup>).</p>
+
+<h4>Selection Sort</h4>
+
+<p>See &quot;<a href="cp1_Basics.html#SelectionSort">Selection Sort</a>&quot;.</p>
+
+<h5>Complexity</h5>
+
+<p>The average-case and worst-case time complexity is O(n<sup>2</sup>).</p>
+
+<h4>Merge Sort</h4>
+
+<h5>Recursive Top-Down Merge Sort</h5>
+
+<p>The algorithm is as follows:</p>
+
+<ol>
+<li>Recursively divide the list into 2 sublists.</li>
+
+<li>When  the sublists contain 1 element (a list of 1 element is sorted), merge two sublists in the right order. Unwind the merging recursively.</li>
+</ol>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Sorting an array using Merge Sort (MergeSort.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+void mergeSort(int a[], int size);
+void mergeSort(int a[], int iLeft, int iRight, int work[]);
+void merge(int a[], int iLeftHalfLeft, int iLeftHalfRight,
+           int iRightHalfLeft, int iRightHalfRight, int work[]);
+void print(const int a[], int iLeft, int iRight);
+ 
+int main() {
+  <span class="color-comment"> // Test 1</span>
+   const int SIZE_1 = 8;
+   int a1[SIZE_1] = {8, 4, 5, 3, 2, 9, 4, 1};
+ 
+   print(a1, 0, SIZE_1 - 1);
+   cout &lt;&lt; endl;
+   mergeSort(a1, SIZE_1);
+   print(a1, 0, SIZE_1 - 1);
+   cout &lt;&lt; endl &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Test 2</span>
+   const int SIZE_2 = 13;
+   int a2[SIZE_2] = {8, 4, 5, 3, 2, 9, 4, 1, 9, 1, 2, 4, 5};
+ 
+   print(a2, 0, SIZE_2 - 1);
+   cout &lt;&lt; endl;
+   mergeSort(a2, SIZE_2);
+   print(a2, 0, SIZE_2 - 1);
+   cout &lt;&lt; endl;
+}
+ 
+<span class="color-comment">// Sort the given array of size</span>
+void mergeSort(int a[], int size) {
+   int work[size]; <span class="color-comment"> // work space</span>
+   mergeSort(a, 0, size - 1, work);
+}
+ 
+<span class="color-comment">// Sort the given array in [iLeft, iRight]</span>
+void mergeSort(int a[], int iLeft, int iRight, int work[]) {
+   if ((iRight - iLeft) &gt;= 1) {  <span class="color-comment"> // more than 1 elements, divide and sort</span>
+     <span class="color-comment"> // Divide into left and right half</span>
+      int iLeftHalfLeft = iLeft;
+      int iLeftHalfRight = (iRight + iLeft) / 2;  <span class="color-comment"> // truncate</span>
+      int iRightHalfLeft = iLeftHalfRight + 1;
+      int iRightHalfRight = iRight;
+ 
+     <span class="color-comment"> // Recursively sort each half</span>
+      mergeSort(a, iLeftHalfLeft, iLeftHalfRight, work);
+      mergeSort(a, iRightHalfLeft, iRightHalfRight, work);
+ 
+     <span class="color-comment"> // Merge two halves</span>
+      merge(a, iLeftHalfLeft, iLeftHalfRight, iRightHalfLeft, iRightHalfRight, work);
+   }
+}
+ 
+<span class="color-comment">// Merge two halves in [iLeftHalfLeft, iLeftHalfRight] and [iRightHalfLeft, iRightHalfRight]</span>
+<span class="color-comment">// Assume that iLeftHalfRight + 1 = iRightHalfLeft</span>
+void merge(int a[], int iLeftHalfLeft, int iLeftHalfRight,
+           int iRightHalfLeft, int iRightHalfRight, int work[]) {
+   int size = iRightHalfRight - iLeftHalfLeft + 1;
+   int iResult = 0;
+   int iLeft = iLeftHalfLeft;
+   int iRight = iRightHalfLeft;
+   while (iLeft &lt;= iLeftHalfRight &amp;&amp; iRight &lt;= iRightHalfRight) {
+      if (a[iLeft] &lt;= a[iRight]) {
+         work[iResult++] = a[iLeft++];
+      } else {
+         work[iResult++] = a[iRight++];
+      }
+   }
+  <span class="color-comment"> // Copy the remaining left or right into work</span>
+   while (iLeft &lt;= iLeftHalfRight) work[iResult++] = a[iLeft++];
+   while (iRight &lt;= iRightHalfRight) work[iResult++] = a[iRight++];
+ 
+  <span class="color-comment"> // for tracing</span>
+   print(a, iLeftHalfLeft, iLeftHalfRight);
+   print(a, iRightHalfLeft, iRightHalfRight);
+   cout &lt;&lt; &quot;=&gt; &quot;;
+   print(work, 0, size - 1);
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Copy the work back to the original array</span>
+   for (iResult = 0, iLeft = iLeftHalfLeft; iResult &lt; size; ++iResult, ++iLeft) {
+      a[iLeft] = work[iResult];
+   }
+}
+ 
+<span class="color-comment">// Print the contents of the given array from iLeft to iRight (inclusive)</span>
+void print(const int a[], int iLeft, int iRight) {
+   cout &lt;&lt; &quot;{&quot;;
+   for (int i = iLeft; i &lt;= iRight; ++i) {
+      cout &lt;&lt; a[i];
+      if (i &lt; iRight) cout &lt;&lt; &quot;,&quot;;
+   }
+   cout &lt;&lt; &quot;} &quot;;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+{8,4,5,3,2,9,4,1}
+{8} {4} =&gt; {4,8}
+{5} {3} =&gt; {3,5}
+{4,8} {3,5} =&gt; {3,4,5,8}
+{2} {9} =&gt; {2,9}
+{4} {1} =&gt; {1,4}
+{2,9} {1,4} =&gt; {1,2,4,9}
+{3,4,5,8} {1,2,4,9} =&gt; {1,2,3,4,4,5,8,9}
+{1,2,3,4,4,5,8,9}
+
+{8,4,5,3,2,9,4,1,9,1,2,4,5}
+{8} {4} =&gt; {4,8}
+{5} {3} =&gt; {3,5}
+{4,8} {3,5} =&gt; {3,4,5,8}
+{2} {9} =&gt; {2,9}
+{2,9} {4} =&gt; {2,4,9}
+{3,4,5,8} {2,4,9} =&gt; {2,3,4,4,5,8,9}
+{1} {9} =&gt; {1,9}
+{1,9} {1} =&gt; {1,1,9}
+{2} {4} =&gt; {2,4}
+{2,4} {5} =&gt; {2,4,5}
+{1,1,9} {2,4,5} =&gt; {1,1,2,4,5,9}
+{2,3,4,4,5,8,9} {1,1,2,4,5,9} =&gt; {1,1,2,2,3,4,4,4,5,5,8,9,9}
+{1,1,2,2,3,4,4,4,5,5,8,9,9}</pre>
+
+<h5>Interactive Bottom-up Merge Sort</h5>
+
+<p>Treat the list as sublists of length 1, and interactively merge a pair of sublists bottom-up, until there is only one sublist.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Sorting an array using Merge Sort with bottom-up interactive algorithm
+   (MergeSortInteractive.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+void mergeSort(int a[], int size);
+void merge(int a[], int iLeftHalfLeft, int iLeftHalfRight,
+           int iRightHalfLeft, int iRightHalfRight, int work[]);
+void print(const int a[], int iLeft, int iRight);
+ 
+int main() {
+  <span class="color-comment"> // Test 1</span>
+   const int SIZE_1 = 8;
+   int a1[SIZE_1] = {8, 4, 5, 3, 2, 9, 4, 1};
+ 
+   print(a1, 0, SIZE_1 - 1);
+   cout &lt;&lt; endl;
+   mergeSort(a1, SIZE_1);
+   print(a1, 0, SIZE_1 - 1);
+   cout &lt;&lt; endl &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Test 2</span>
+   const int SIZE_2 = 13;
+   int a2[SIZE_2] = {8, 4, 5, 3, 2, 9, 4, 1, 9, 1, 2, 4, 5};
+ 
+   print(a2, 0, SIZE_2 - 1);
+   cout &lt;&lt; endl;
+   mergeSort(a2, SIZE_2);
+   print(a2, 0, SIZE_2 - 1);
+   cout &lt;&lt; endl;
+}
+ 
+<span class="color-comment">// Sort the given array of size</span>
+void mergeSort(int a[], int size) {
+   int work[size]; <span class="color-comment"> // work space</span>
+   int width = 1;  <span class="color-comment"> // width of sublists to merge</span>
+ 
+   while (width &lt; size) {
+     <span class="color-comment"> // Merge 2 sublists of width</span>
+      for (int i = 0; i &lt; size - width; i += 2*width) {
+        <span class="color-comment"> // Get the bounds of left and right sublists</span>
+         int iLeftHalfLeft = i;
+         int iLeftHalfRight = i + width - 1;
+         int iRightHalfLeft = i + width;
+         int iRightHalfRight = i + 2*width - 1;
+         if (iRightHalfRight &gt;= size - 1) iRightHalfRight = size - 1;
+ 
+        <span class="color-comment"> // Merge left and right sublists</span>
+         merge(a, iLeftHalfLeft, iLeftHalfRight, iRightHalfLeft, iRightHalfRight, work);
+      }
+      width *= 2;
+   }
+}
+ 
+<span class="color-comment">// Merge two halves in [iLeftHalfLeft, iLeftHalfRight] and [iRightHalfLeft, iRightHalfRight]</span>
+<span class="color-comment">// Assume that iLeftHalfRight + 1 = iRightHalfLeft</span>
+void merge(int a[], int iLeftHalfLeft, int iLeftHalfRight,
+           int iRightHalfLeft, int iRightHalfRight, int work[]) {
+   int size = iRightHalfRight - iLeftHalfLeft + 1;
+   int iResult = 0;
+   int iLeft = iLeftHalfLeft;
+   int iRight = iRightHalfLeft;
+   while (iLeft &lt;= iLeftHalfRight &amp;&amp; iRight &lt;= iRightHalfRight) {
+      if (a[iLeft] &lt;= a[iRight]) {
+         work[iResult++] = a[iLeft++];
+      } else {
+         work[iResult++] = a[iRight++];
+      }
+   }
+  <span class="color-comment"> // Copy the remaining left or right into work</span>
+   while (iLeft &lt;= iLeftHalfRight) work[iResult++] = a[iLeft++];
+   while (iRight &lt;= iRightHalfRight) work[iResult++] = a[iRight++];
+ 
+  <span class="color-comment"> // for tracing</span>
+   print(a, iLeftHalfLeft, iLeftHalfRight);
+   print(a, iRightHalfLeft, iRightHalfRight);
+   cout &lt;&lt; &quot;=&gt; &quot;;
+   print(work, 0, size - 1);
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Copy the work back to the original array</span>
+   for (iResult = 0, iLeft = iLeftHalfLeft; iResult &lt; size; ++iResult, ++iLeft) {
+      a[iLeft] = work[iResult];
+   }
+}
+ 
+<span class="color-comment">// Print the contents of the given array from iLeft to iRight (inclusive)</span>
+void print(const int a[], int iLeft, int iRight) {
+   cout &lt;&lt; &quot;{&quot;;
+   for (int i = iLeft; i &lt;= iRight; ++i) {
+      cout &lt;&lt; a[i];
+      if (i &lt; iRight) cout &lt;&lt; &quot;,&quot;;
+   }
+   cout &lt;&lt; &quot;} &quot;;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+{8,4,5,3,2,9,4,1}
+{8} {4} =&gt; {4,8}
+{5} {3} =&gt; {3,5}
+{2} {9} =&gt; {2,9}
+{4} {1} =&gt; {1,4}
+{4,8} {3,5} =&gt; {3,4,5,8}
+{2,9} {1,4} =&gt; {1,2,4,9}
+{3,4,5,8} {1,2,4,9} =&gt; {1,2,3,4,4,5,8,9}
+{1,2,3,4,4,5,8,9}
+
+{8,4,5,3,2,9,4,1,9,1,2,4,5}
+{8} {4} =&gt; {4,8}
+{5} {3} =&gt; {3,5}
+{2} {9} =&gt; {2,9}
+{4} {1} =&gt; {1,4}
+{9} {1} =&gt; {1,9}
+{2} {4} =&gt; {2,4}
+{4,8} {3,5} =&gt; {3,4,5,8}
+{2,9} {1,4} =&gt; {1,2,4,9}
+{1,9} {2,4} =&gt; {1,2,4,9}
+{3,4,5,8} {1,2,4,9} =&gt; {1,2,3,4,4,5,8,9}
+{1,2,4,9} {5} =&gt; {1,2,4,5,9}
+{1,2,3,4,4,5,8,9} {1,2,4,5,9} =&gt; {1,1,2,2,3,4,4,4,5,5,8,9,9}
+{1,1,2,2,3,4,4,4,5,5,8,9,9}</pre>
+
+<h5>Complexity</h5>
+
+<p>The worst-case and average-case time complexity is O(n log n). The best-case is typically O(n log n). However, merge sort requires a space complexity of O(n) for carrying out the merge-sorting.</p>
+
+<h4>Quick Sort</h4>
+
+<p>Quick sort is a divide and conquer algorithm. It picks a pivot and divides the list into two sub-lists: the low elements and the high elements, and recursively sorts the sub-lists.</p>
+<ol>
+<li>Pick a element, called pivot, from the list.</li>
+<li>Partition the list so that the smaller elements are before the pivot, and the larger elements after the pivot.</li>
+<li>Recursively sort the sub-lists.</li>
+</ol>
+
+<p><span class="line-heading">Partition:</span> The partition procedure are:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Assume that the pivot element is already on the right</span>
+partition(array, left, right)
+   storeIndex := left
+   for i from left to right - 1  <span class="color-comment">// left &lt;= i &lt; right</span>
+      if array[i] &lt;= pivotValue
+         if i != storeIndex
+            swap array[i] and array[storeIndex]
+         storeIndex := storeIndex + 1
+   swap array[storeIndex] and array[right]  <span class="color-comment">// Move pivot to its final place</span>
+   return storeIndex</pre>
+
+<p><span class="line-heading">Choosing the pivot:</span> If the list is already sorted, choosing the first or last element as pivot results in worst performance of O(n<sup>2</sup>). We choose the middle element, and swap the the element at the right end, so as not to interfere with the partition process.</p>
+
+<h5 class="font-code">QuickSort.cpp</h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Sorting an array using Quick Sort (QuickSort.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+void quickSort(int a[], int size);
+void quickSort(int a[], int left, int right);
+void choosePivot(int a[], int left, int right);
+int partition(int a[], int left, int right);
+void print(const int a[], int left, int right);
+ 
+int main() {
+  <span class="color-comment"> // Test 1</span>
+   const int SIZE_1 = 8;
+   int a1[SIZE_1] = {8, 4, 5, 3, 2, 9, 4, 1};
+ 
+   print(a1, 0, SIZE_1 - 1);
+   cout &lt;&lt; endl;
+   quickSort(a1, SIZE_1);
+   print(a1, 0, SIZE_1 - 1);
+   cout &lt;&lt; endl &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Test 2</span>
+   const int SIZE_2 = 13;
+   int a2[SIZE_2] = {8, 4, 5, 3, 2, 9, 4, 1, 9, 1, 2, 4, 5};
+ 
+   print(a2, 0, SIZE_2 - 1);
+   cout &lt;&lt; endl;
+   quickSort(a2, SIZE_2);
+   print(a2, 0, SIZE_2 - 1);
+   cout &lt;&lt; endl;
+}
+ 
+<span class="color-comment">// Sort the given array of size</span>
+void quickSort(int a[], int size) {
+   quickSort(a, 0, size - 1);
+}
+ 
+<span class="color-comment">// Sort the given array in [left, right]</span>
+void quickSort(int a[], int left, int right) {
+   if ((right - left) &gt;= 1) {  <span class="color-comment"> // more than 1 elements, need to sort</span>
+      choosePivot(a, left, right);
+      int pivotIndex = partition(a, left, right);
+      quickSort(a, left, pivotIndex -  1);
+      quickSort(a, pivotIndex + 1, right);
+   }
+}
+ 
+<span class="color-comment">// Choose a pivot element and swap with the right</span>
+void choosePivot(int a[], int left, int right) {
+   int pivotIndex = (right + left) / 2;
+   int temp;
+   temp = a[pivotIndex];
+   a[pivotIndex] = a[right];
+   a[right] = temp;
+}
+ 
+<span class="color-comment">// Partition the array [left, right] with pivot initially on the right.</span>
+<span class="color-comment">// Return the index of the pivot after partition, all elements to the</span>
+<span class="color-comment">// left of pivot are smaller; while to the right are larger.</span>
+int partition(int a[], int left, int right) {
+   int pivot = a[right];
+   int temp; <span class="color-comment"> // for swapping</span>
+   int storeIndex = left;
+     <span class="color-comment"> // Start the storeIndex from left, swap elements smaller than</span>
+     <span class="color-comment"> //  pivot into storeIndex and increase the storeIndex.</span>
+     <span class="color-comment"> // At the end of the pass, all elements up to storeIndex are</span>
+     <span class="color-comment"> //  smaller than pivot.</span>
+   for (int i = left; i &lt; right; ++i) { <span class="color-comment"> // exclude pivot</span>
+      if (a[i] &lt; pivot) {
+        <span class="color-comment"> // for tracing</span>
+         print(a, left, right);
+ 
+         if (i != storeIndex) {
+            temp = a[i];
+            a[i] = a[storeIndex];
+            a[storeIndex] = temp;
+         }
+         ++storeIndex;
+ 
+        <span class="color-comment"> // for tracing</span>
+         cout &lt;&lt; &quot;=&gt; &quot;;
+         print(a, left, right);
+         cout &lt;&lt; endl;
+      }
+   }
+  <span class="color-comment"> // Swap pivot and storeIndex</span>
+   a[right] = a[storeIndex];
+   a[storeIndex] = pivot;
+ 
+  <span class="color-comment"> // for tracing</span>
+   print(a, left, storeIndex - 1);
+   cout &lt;&lt; &quot;{&quot; &lt;&lt; a[storeIndex] &lt;&lt; &quot;} &quot;;
+   print(a, storeIndex + 1, right);
+   cout &lt;&lt; endl;
+ 
+   return storeIndex;
+}
+ 
+<span class="color-comment">// Print the contents of the given array from left to right (inclusive)</span>
+void print(const int a[], int left, int right) {
+   cout &lt;&lt; &quot;{&quot;;
+   for (int i = left; i &lt;= right; ++i) {
+      cout &lt;&lt; a[i];
+      if (i &lt; right) cout &lt;&lt; &quot;,&quot;;
+   }
+   cout &lt;&lt; &quot;} &quot;;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+{8,4,5,3,2,9,4,1}
+{8,4,5,1,2,9,4,3} =&gt; {1,4,5,8,2,9,4,3}
+{1,4,5,8,2,9,4,3} =&gt; {1,2,5,8,4,9,4,3}
+{1,2} {3} {8,4,9,4,5}
+{} {1} {2}
+{8,4,5,4,9} =&gt; {8,4,5,4,9}
+{8,4,5,4,9} =&gt; {8,4,5,4,9}
+{8,4,5,4,9} =&gt; {8,4,5,4,9}
+{8,4,5,4,9} =&gt; {8,4,5,4,9}
+{8,4,5,4} {9} {}
+{} {4} {4,5,8}
+{4,8,5} =&gt; {4,8,5}
+{4} {5} {8}
+{1,2,3,4,4,5,8,9}
+
+{8,4,5,3,2,9,4,1,9,1,2,4,5}
+{8,4,5,3,2,9,5,1,9,1,2,4,4} =&gt; {3,4,5,8,2,9,5,1,9,1,2,4,4}
+{3,4,5,8,2,9,5,1,9,1,2,4,4} =&gt; {3,2,5,8,4,9,5,1,9,1,2,4,4}
+{3,2,5,8,4,9,5,1,9,1,2,4,4} =&gt; {3,2,1,8,4,9,5,5,9,1,2,4,4}
+{3,2,1,8,4,9,5,5,9,1,2,4,4} =&gt; {3,2,1,1,4,9,5,5,9,8,2,4,4}
+{3,2,1,1,4,9,5,5,9,8,2,4,4} =&gt; {3,2,1,1,2,9,5,5,9,8,4,4,4}
+{3,2,1,1,2} {4} {5,5,9,8,4,4,9}
+{} {1} {2,2,1,3}
+{2,3,1,2} =&gt; {1,3,2,2}
+{1} {2} {2,3}
+{} {2} {3}
+{5,5,9,9,4,4,8} =&gt; {5,5,9,9,4,4,8}
+{5,5,9,9,4,4,8} =&gt; {5,5,9,9,4,4,8}
+{5,5,9,9,4,4,8} =&gt; {5,5,4,9,9,4,8}
+{5,5,4,9,9,4,8} =&gt; {5,5,4,4,9,9,8}
+{5,5,4,4} {8} {9,9}
+{5,4,4,5} =&gt; {4,5,4,5}
+{4,5,4,5} =&gt; {4,4,5,5}
+{4,4} {5} {5}
+{} {4} {4}
+{} {9} {9}
+{1,1,2,2,3,4,4,4,5,5,8,9,9}</pre>
+
+<h5>Complexity</h5>
+
+<p>The worst-case time complexity is O(n<sup>2</sup>). The average-case (typical) and best-case is O(n log n). In-place sorting can be achieved without additional space requirement.</p>
+
+<h4>Bucket Sort</h4>
+
+<p>Bucket sort (or bin sort) works by distributing the elements into a number of buckets, and each bucket is then sorted individually.  Bucket sort is a distribution sort, and is a cousin of radix sort, in which the sorting begins at the most significant digit and goes down to the less significant ones.  Bucket sort is not a comparison sort like bubble sort, insertion sort or selection sort.</p>
+
+<p>The algorithm is as follows:</p>
+<ol>
+<li>Set up buckets, initially empty.</li>
+<li>Scatter: place each element into an appropriate bucket.</li>
+<li>Sort each non-empty bucket.</li>
+<li>Gather: Gather elements from buckets and put back to the original array.</li>
+</ol>
+
+
+<h5>Radix Sort (Recursive)</h5>
+
+<p>Use 10 buckets to sort from the most-significant down to the least-significant digit.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Bucket Sort (Radix Sort)  (BucketSort.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+ 
+void bucketSort(int a[], int size);
+void bucketSort(vector&lt;int&gt; &amp; list, int radix);
+void printBuckets(const vector&lt;int&gt; buckets[], int size);
+void print(const vector&lt;int&gt; list);
+ 
+const int NUM_BUCKETS = 10;
+ 
+int main() {
+   const int SIZE = 13;
+   int a[] = {28, 104, 25, 593, 22, 129, 4, 11, 129, 4, 111, 20, 9};
+   bucketSort(a, SIZE);
+}
+ 
+void bucketSort(int a[], int size) {
+  <span class="color-comment"> // find maximum to decide on the number of significant digits</span>
+   int max = a[0];
+   for (int i = 1; i &lt; size; ++i) {
+      if (a[i] &gt; max) max = a[i];
+   }
+ 
+  <span class="color-comment"> // Decide on the max radix (1000, 100, 10, 1, etc)</span>
+   int radix = 1;
+   while (max &gt; 10) {
+      radix *= 10;
+      max /= 10;
+   }
+ 
+  <span class="color-comment"> // copy the array into a vector</span>
+   vector&lt;int&gt; list(size);
+   for (int i = 0; i &lt; size; ++i) {
+      list[i] = a[i];
+   }
+   bucketSort(list, radix);
+}
+ 
+<span class="color-comment">// Sort the given array of size on the particular radix (1, 10, 100, etc)</span>
+<span class="color-comment">// Assume elements are non-negative integers</span>
+<span class="color-comment">// radix shall be more than 0</span>
+void bucketSort(vector&lt;int&gt; &amp; list, int radix) {
+   if (list.size() &gt; 1 &amp;&amp; radix &gt; 0) { <span class="color-comment"> // Sort if more than 1 elements</span>
+     <span class="color-comment"> // For tracing</span>
+      cout &lt;&lt; &quot;To sort: &quot;;
+      print(list);
+ 
+      vector&lt;int&gt; buckets[NUM_BUCKETS]; <span class="color-comment"> // 10 buckets</span>
+ 
+     <span class="color-comment"> // Distribute elements into buckets</span>
+      for (int i = 0; i &lt; list.size(); ++i) {
+         int bucketIndex = list[i] / radix % 10;
+         buckets[bucketIndex].push_back(list[i]);
+      }
+ 
+     <span class="color-comment"> // For tracing</span>
+      cout &lt;&lt; &quot;radix=&quot; &lt;&lt; radix &lt;&lt; &quot;: &quot;;
+      printBuckets(buckets, NUM_BUCKETS);
+ 
+     <span class="color-comment"> // Recursively sort the non-empty bucket</span>
+      for (int bi = 0; bi &lt; NUM_BUCKETS; ++bi) {
+         if (buckets[bi].size() &gt; 0) {
+            bucketSort(buckets[bi], radix / 10);
+         }
+      }
+ 
+     <span class="color-comment"> // Gather all the buckets into list and return</span>
+      list.resize(0); <span class="color-comment"> // remove all elements</span>
+      for (int bi = 0; bi &lt; NUM_BUCKETS; ++bi) {
+         for (int j = 0; j &lt; buckets[bi].size(); ++j) {
+            list.push_back((buckets[bi])[j]);
+         }
+      }
+ 
+     <span class="color-comment"> // For tracing</span>
+      cout &lt;&lt; &quot;Sorted: &quot;;
+      print(list);
+   }
+}
+ 
+<span class="color-comment">// Print the contents of all buckets</span>
+void printBuckets(const vector&lt;int&gt; buckets[], int size) {
+   for (int i = 0; i &lt; size; ++i) {
+     <span class="color-comment"> // print each bucket</span>
+      cout &lt;&lt; &quot;{&quot;;
+      for (int bi = 0; bi &lt; buckets[i].size(); ++bi) {
+         cout &lt;&lt; (buckets[i])[bi];
+         if (bi &lt; buckets[i].size() - 1) cout &lt;&lt; &quot;,&quot;;
+      }
+      cout &lt;&lt; &quot;} &quot;;
+   }
+   cout &lt;&lt; endl;
+}
+ 
+<span class="color-comment">// Print the contents of vector&lt;int&gt;</span>
+void print(const vector&lt;int&gt; list) {
+   cout &lt;&lt; &quot;{&quot;;
+   for (int i = 0; i &lt; list.size(); ++i) {
+      cout &lt;&lt; list[i];
+      if (i &lt; list.size() - 1) cout &lt;&lt; &quot;,&quot;;
+   }
+   cout &lt;&lt; &quot;}&quot; &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+To sort: {28,104,25,593,22,129,4,11,129,4,111,20,9}
+radix=100: {28,25,22,4,11,4,20,9} {104,129,129,111} {} {} {} {593} {} {} {} {}
+To sort: {28,25,22,4,11,4,20,9}
+radix=10: {4,4,9} {11} {28,25,22,20} {} {} {} {} {} {} {}
+To sort: {4,4,9}
+radix=1: {} {} {} {} {4,4} {} {} {} {} {9}
+Sorted: {4,4,9}
+To sort: {28,25,22,20}
+radix=1: {20} {} {22} {} {} {25} {} {} {28} {}
+Sorted: {20,22,25,28}
+Sorted: {4,4,9,11,20,22,25,28}
+To sort: {104,129,129,111}
+radix=10: {104} {111} {129,129} {} {} {} {} {} {} {}
+To sort: {129,129}
+radix=1: {} {} {} {} {} {} {} {} {} {129,129}
+Sorted: {129,129}
+Sorted: {104,111,129,129}
+Sorted: {4,4,9,11,20,22,25,28,104,111,129,129,593}</pre>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>Need to implement the buckets using dynamic array (such as <code>vector</code>) as their sizes are unknown; and to expensive to set to the maximum.</li>
+</ul>
+
+<h3>Data Structures</h3>
+
+<p>The built-in array has many limitations. It is fixed in size and cannot grow and shrink during execution. The size has to be decided during the declaration.</p>
+
+<p>Many applications require dynamic data structures, that can grow and shrink during execution. The commonly used data structures include:</p>
+
+<ul>
+<li>List: Single linked list, double linked list, etc.</li>
+<li>Queue: FIFO queue, priority queue, etc.</li>
+<li>Stack: LIFO queue</li>
+<li>Tree:</li>
+<li>Map or Associative Array:</li>
+</ul>
+
+<h4>Single Linked List</h4>
+
+<img class="image-center" src="images/DS_SingleLinkedList.png" alt="DS_SingleLinkedList.png" />
+
+<h5 class="font-code">Node.h</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre>
+</td>
+<td>
+<pre>
+#ifndef NODE_H
+#define NODE_H
+ 
+template &lt;typename T&gt; class List; <span class="color-comment"> // Forward reference</span>
+ 
+template &lt;typename T&gt;
+class Node {
+private:
+   T data;
+   Node * nextPtr;
+public:
+   Node (T d) : data(d), nextPtr(0) { };<span class="color-comment"> // Constructor</span>
+   T getData() const { return data; };  <span class="color-comment"> // Public getter for data</span>
+   Node * getNextPtr() const { return nextPtr; }<span class="color-comment"> // Public getter for nextPtr</span>
+ 
+friend class List&lt;T&gt;; <span class="color-comment"> // Make List class a friend to access private data</span>
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h5 class="font-code">List.h</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128</pre>
+</td>
+<td>
+<pre>
+#ifndef LIST_H
+#define LIST_H
+ 
+#include &lt;iostream&gt;
+#include &quot;Node.h&quot;
+ 
+<span class="color-comment">// Forward Reference</span>
+template &lt;typename T&gt;
+std::ostream &amp; operator&lt;&lt;(std::ostream &amp; os, const List&lt;T&gt; &amp; lst);
+ 
+template &lt;typename T&gt;
+class List {
+private:
+   Node&lt;T&gt; * frontPtr; <span class="color-comment"> // First node</span>
+   Node&lt;T&gt; * backPtr;  <span class="color-comment"> // Last node</span>
+public:
+   List();  <span class="color-comment"> // Constructor</span>
+   ~List(); <span class="color-comment"> // Destructor</span>
+   void pushFront(const T &amp; value);
+   void pushBack(const T &amp; value);
+   bool popFront(T &amp; value);
+   bool popBack(T &amp; value);
+   bool isEmpty() const;
+ 
+friend std::ostream &amp; operator&lt;&lt; &lt;&gt;(std::ostream &amp; os, const List&lt;T&gt; &amp; lst);
+     <span class="color-comment"> // Overload the stream insertion operator to print the list</span>
+};
+ 
+<span class="color-comment">// Constructor - Create an empty list without any node</span>
+template &lt;typename T&gt;
+List&lt;T&gt;::List() : frontPtr(0), backPtr(0) { }
+ 
+<span class="color-comment">// Destructor - Remove all the dynamically allocated nodes</span>
+template &lt;typename T&gt;
+List&lt;T&gt;::~List() {
+   while (frontPtr) {
+      Node&lt;T&gt; * tempPtr = frontPtr;
+      frontPtr = frontPtr-&gt;nextPtr;
+      delete tempPtr;
+   }
+  <span class="color-comment"> // std::cout &lt;&lt; &quot;Destructor completed...&quot; &lt;&lt; std::endl;</span>
+}
+ 
+<span class="color-comment">// Is list empty? Check if frontPtr is null</span>
+template &lt;typename T&gt;
+bool List&lt;T&gt;::isEmpty() const { return frontPtr == 0; }
+ 
+<span class="color-comment">// Push the data in front by dynamically allocate a new node</span>
+template &lt;typename T&gt;
+void List&lt;T&gt;::pushFront(const T &amp; value) {
+   Node&lt;T&gt; * newNodePtr = new Node&lt;T&gt;(value);
+   if (isEmpty()) {
+      frontPtr = backPtr = newNodePtr;
+   } else {
+      newNodePtr-&gt;nextPtr = frontPtr;
+      frontPtr = newNodePtr;
+   }
+}
+ 
+<span class="color-comment">// Push the data at the end by dynamically allocate a new node</span>
+template &lt;typename T&gt;
+void List&lt;T&gt;::pushBack(const T &amp; value) {
+   Node&lt;T&gt; * newNodePtr = new Node&lt;T&gt;(value);
+   if (isEmpty()) {
+      frontPtr = backPtr = newNodePtr;
+   } else {
+      backPtr-&gt;nextPtr = newNodePtr;
+      backPtr = newNodePtr;
+   }
+}
+ 
+<span class="color-comment">// Pop and the data in front to value and remove the node</span>
+template &lt;typename T&gt;
+bool List&lt;T&gt;::popFront(T &amp; value) {
+   if (isEmpty()) {
+      return false;
+   } else if (frontPtr == backPtr) { <span class="color-comment"> // only one node</span>
+      value = frontPtr-&gt;data;
+      delete frontPtr;        <span class="color-comment"> // remove node</span>
+      frontPtr = backPtr = 0; <span class="color-comment"> // empty</span>
+   } else {
+      value = frontPtr-&gt;data;
+      Node&lt;T&gt; * tempPtr = frontPtr;
+      frontPtr = frontPtr-&gt;nextPtr;
+      delete tempPtr;
+   }
+   return true;
+}
+ 
+<span class="color-comment">// Pop and the data at the end to value and remove the node</span>
+template &lt;typename T&gt;
+bool List&lt;T&gt;::popBack(T &amp; value) {
+   if (isEmpty()) {
+      return false;
+   } else if (frontPtr == backPtr) { <span class="color-comment"> // only one node</span>
+      value = backPtr-&gt;data;
+      delete backPtr;         <span class="color-comment"> // remove node</span>
+      frontPtr = backPtr = 0; <span class="color-comment"> // empty</span>
+   } else {
+     <span class="color-comment"> // Locate second to last node</span>
+      Node&lt;T&gt; * currentPtr = frontPtr;
+      while (currentPtr-&gt;nextPtr != backPtr) {
+         currentPtr = currentPtr-&gt;nextPtr;
+      }
+      value = backPtr-&gt;data;
+      delete backPtr;         <span class="color-comment"> // remove last node</span>
+      backPtr = currentPtr;
+      currentPtr-&gt;nextPtr = 0;
+   }
+   return true;
+}
+ 
+<span class="color-comment">// Overload the stream insertion operator to print the list</span>
+template &lt;typename T&gt;
+std::ostream &amp; operator&lt;&lt; (std::ostream &amp; os, const List&lt;T&gt; &amp; lst) {
+   os &lt;&lt; '{';
+   if (!lst.isEmpty()) {
+      Node&lt;T&gt; * currentPtr = lst.frontPtr;
+      while (currentPtr) {
+         os &lt;&lt; currentPtr-&gt;getData();
+         if (currentPtr != lst.backPtr) os &lt;&lt; ',';
+         currentPtr = currentPtr-&gt;getNextPtr();
+      }
+   }
+   os &lt;&lt; '}';
+}
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h5 class="font-code">TestList.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver for List class (TestList.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;List.h&quot;
+using namespace std;
+ 
+int main() {
+ 
+   List&lt;int&gt; lst1;
+   cout &lt;&lt; lst1 &lt;&lt; endl;
+   lst1.pushFront(8);
+   lst1.pushBack(88);
+   lst1.pushFront(9);
+   lst1.pushBack(99);
+   cout &lt;&lt; lst1 &lt;&lt; endl;
+ 
+   int result;
+   lst1.popBack(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, list is &quot; &lt;&lt; lst1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty list&quot; &lt;&lt; endl;
+   lst1.popBack(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, list is &quot; &lt;&lt; lst1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty list&quot; &lt;&lt; endl;
+   lst1.popFront(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, list is &quot; &lt;&lt; lst1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty list&quot; &lt;&lt; endl;
+   lst1.popFront(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, list is &quot; &lt;&lt; lst1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty list&quot; &lt;&lt; endl;
+   lst1.popBack(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, list is &quot; &lt;&lt; lst1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty list&quot; &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+{}
+{9,8,88,99}
+value is 99, list is {9,8,88}
+value is 88, list is {9,8}
+value is 9, list is {8}
+value is 8, list is {}
+empty list</pre>
+
+<p>Program Notes:</p>
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h4>Double Linked List</h4>
+
+<img class="image-center" src="images/DS_DoubleLinkedList.png" alt="DS_DoubleLinkedList.png" />
+
+<h5 class="font-code">DoubleLinkedNode.h</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* DoubleLinkedNode template class for double linked list (DoubleLinkedNode.h) */</span>
+#ifndef DOUBLE_LINKED_NODE_H
+#define DOUBLE_LINKED_NODE_H
+ 
+template &lt;typename T&gt; class DoubleLinkedList;<span class="color-comment"> // Forward reference</span>
+ 
+template &lt;typename T&gt;
+class DoubleLinkedNode {
+private:
+   T data;
+   DoubleLinkedNode * nextPtr;
+   DoubleLinkedNode * prevPtr;
+public:
+   DoubleLinkedNode (T d) : data(d), nextPtr(0), prevPtr(0) { };
+   T getData() const { return data; };
+   DoubleLinkedNode * getNextPtr() const { return nextPtr; }
+   DoubleLinkedNode * getPrevPtr() const { return prevPtr; }
+ 
+friend class DoubleLinkedList&lt;T&gt;;
+  <span class="color-comment"> // Make DoubleLinkedList class a friend to access private data</span>
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h5 class="font-code">DoubleLinkedList.h</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* DoubleLinkedList template class for double linked list
+   (DoubleLinkedList.h) */</span>
+#ifndef DOUBLE_LINKED_LIST_H
+#define DOUBLE_LINKED_LIST_H
+ 
+#include &lt;iostream&gt;
+#include &quot;DoubleLinkedNode.h&quot;
+ 
+<span class="color-comment">// Forward Reference</span>
+template &lt;typename T&gt;
+std::ostream &amp; operator&lt;&lt;(std::ostream &amp; os,
+      const DoubleLinkedList&lt;T&gt; &amp; lst);
+ 
+template &lt;typename T&gt;
+class DoubleLinkedList {
+private:
+   DoubleLinkedNode&lt;T&gt; * frontPtr;
+   DoubleLinkedNode&lt;T&gt; * backPtr;
+public:
+   DoubleLinkedList();  <span class="color-comment"> // Constructor</span>
+   ~DoubleLinkedList(); <span class="color-comment"> // Destructor</span>
+   void pushFront(const T &amp; value);
+   void pushBack(const T &amp; value);
+   bool popFront(T &amp; value);
+   bool popBack(T &amp; value);
+   bool isEmpty() const;
+ 
+friend std::ostream &amp; operator&lt;&lt; &lt;&gt;(std::ostream &amp; os,
+      const DoubleLinkedList&lt;T&gt; &amp; lst);
+     <span class="color-comment"> // Overload the stream insertion operator to print the list</span>
+};
+ 
+<span class="color-comment">// Constructor - Create an empty list with no node</span>
+template &lt;typename T&gt;
+DoubleLinkedList&lt;T&gt;::DoubleLinkedList() : frontPtr(0), backPtr(0) { }
+ 
+<span class="color-comment">// Destructor - Remove all the dynamically allocated nodes</span>
+template &lt;typename T&gt;
+DoubleLinkedList&lt;T&gt;::~DoubleLinkedList() {
+   while (frontPtr) {
+      DoubleLinkedNode&lt;T&gt; * tempPtr = frontPtr;
+      frontPtr = frontPtr-&gt;nextPtr;
+      delete tempPtr;
+   }
+  <span class="color-comment"> // std::cout &lt;&lt; &quot;Destructor completed...&quot; &lt;&lt; std::endl;</span>
+}
+ 
+<span class="color-comment">// Is list empty? Check if frontPtr is null</span>
+template &lt;typename T&gt;
+bool DoubleLinkedList&lt;T&gt;::isEmpty() const { return frontPtr == 0; }
+ 
+<span class="color-comment">// Push the data in front by dynamically allocate a new node</span>
+template &lt;typename T&gt;
+void DoubleLinkedList&lt;T&gt;::pushFront(const T &amp; value) {
+   DoubleLinkedNode&lt;T&gt; * newPtr = new DoubleLinkedNode&lt;T&gt;(value);
+   if (isEmpty()) {
+      frontPtr = backPtr = newPtr;
+   } else {
+      frontPtr-&gt;prevPtr = newPtr;
+      newPtr-&gt;nextPtr = frontPtr;
+      frontPtr = newPtr;
+   }
+}
+ 
+<span class="color-comment">// Push the data at the end by dynamically allocate a new node</span>
+template &lt;typename T&gt;
+void DoubleLinkedList&lt;T&gt;::pushBack(const T &amp; value) {
+   DoubleLinkedNode&lt;T&gt; * newPtr = new DoubleLinkedNode&lt;T&gt;(value);
+   if (isEmpty()) {
+      frontPtr = backPtr = newPtr;
+   } else {
+      backPtr-&gt;nextPtr = newPtr;
+      newPtr-&gt;prevPtr = backPtr;
+      backPtr = newPtr;
+   }
+}
+ 
+<span class="color-comment">// Pop and the data in front to value and remove the node</span>
+template &lt;typename T&gt;
+bool DoubleLinkedList&lt;T&gt;::popFront(T &amp; value) {
+   if (isEmpty()) {
+      return false;
+   } else if (frontPtr == backPtr) { <span class="color-comment"> // only one node</span>
+      value = frontPtr-&gt;data;
+      delete frontPtr;        <span class="color-comment"> // remove node</span>
+      frontPtr = backPtr = 0; <span class="color-comment"> // empty</span>
+   } else {
+      value = frontPtr-&gt;data;
+      DoubleLinkedNode&lt;T&gt; * tempPtr = frontPtr;
+      frontPtr = frontPtr-&gt;nextPtr;
+      frontPtr-&gt;prevPtr = 0;
+      delete tempPtr;
+   }
+   return true;
+}
+ 
+<span class="color-comment">// Pop and the data at the end to value and remove the node</span>
+template &lt;typename T&gt;
+bool DoubleLinkedList&lt;T&gt;::popBack(T &amp; value) {
+   if (isEmpty()) {
+      return false;
+   } else if (frontPtr == backPtr) { <span class="color-comment"> // only one node</span>
+      value = backPtr-&gt;data;
+      delete backPtr;         <span class="color-comment"> // remove node</span>
+      frontPtr = backPtr = 0; <span class="color-comment"> // empty</span>
+   } else {
+      value = backPtr-&gt;data;
+      DoubleLinkedNode&lt;T&gt; * tempPtr = backPtr;
+      backPtr = backPtr-&gt;prevPtr; <span class="color-comment"> // 2nd last node</span>
+      backPtr-&gt;nextPtr = 0;
+      delete tempPtr;
+   }
+   return true;
+}
+ 
+<span class="color-comment">// Overload the stream insertion operator to print the list</span>
+template &lt;typename T&gt;
+std::ostream &amp; operator&lt;&lt; (std::ostream &amp; os, const DoubleLinkedList&lt;T&gt; &amp; lst) {
+   os &lt;&lt; '{';
+   if (!lst.isEmpty()) {
+      DoubleLinkedNode&lt;T&gt; * currentPtr = lst.frontPtr;
+      while (currentPtr) {
+         os &lt;&lt; currentPtr-&gt;getData();
+         if (currentPtr != lst.backPtr) os &lt;&lt; ',';
+         currentPtr = currentPtr-&gt;getNextPtr();
+      }
+   }
+   os &lt;&lt; '}';
+}
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h5 class="font-code">TestDoubleLinkedList.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver for List class (TestList.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;DoubleLinkedList.h&quot;
+using namespace std;
+ 
+int main() {
+ 
+   DoubleLinkedList&lt;int&gt; lst1;
+   cout &lt;&lt; lst1 &lt;&lt; endl;
+   lst1.pushFront(8);
+   lst1.pushBack(88);
+   lst1.pushFront(9);
+   lst1.pushBack(99);
+   cout &lt;&lt; lst1 &lt;&lt; endl;
+ 
+   int result;
+   lst1.popBack(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, list is &quot; &lt;&lt; lst1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty list&quot; &lt;&lt; endl;
+   lst1.popBack(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, list is &quot; &lt;&lt; lst1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty list&quot; &lt;&lt; endl;
+   lst1.popFront(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, list is &quot; &lt;&lt; lst1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty list&quot; &lt;&lt; endl;
+   lst1.popFront(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, list is &quot; &lt;&lt; lst1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty list&quot; &lt;&lt; endl;
+   lst1.popBack(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, list is &quot; &lt;&lt; lst1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty list&quot; &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+{}
+{9,8,88,99}
+value is 99, list is {9,8,88}
+value is 88, list is {9,8}
+value is 9, list is {8}
+value is 8, list is {}
+empty list</pre>
+
+<p>Program Notes:</p>
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h4>Stack (LIFO Queue)</h4>
+
+<img class="image-center" src="images/DS_Stack.png" alt="DS_Stack.png" />
+
+<h5 class="font-code">Stack.h</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87</pre>
+</td>
+<td>
+<pre>
+#ifndef STACK_H
+#define STACK_H
+ 
+#include &lt;iostream&gt;
+ 
+<span class="color-comment">// Forward Reference</span>
+template &lt;typename T&gt;
+class Stack;
+template &lt;typename T&gt;
+std::ostream &amp; operator&lt;&lt;(std::ostream &amp; os, const Stack&lt;T&gt; &amp; s);
+ 
+template &lt;typename T&gt;
+class Stack {
+private:
+   T * data;     <span class="color-comment"> // Array</span>
+   int tos;      <span class="color-comment"> // Top of stack, start at index -1</span>
+   int capacity; <span class="color-comment"> // capacity of the array</span>
+   int increment;<span class="color-comment"> // each subsequent increment size</span>
+public:
+   explicit Stack(int capacity = 10, int increment = 10);
+   ~Stack(); <span class="color-comment"> // Destructor</span>
+   void push(const T &amp; value);
+   bool pop(T &amp; value);
+   bool isEmpty() const;
+ 
+friend std::ostream &amp; operator&lt;&lt; &lt;&gt;(std::ostream &amp; os, const Stack&lt;T&gt; &amp; s);
+     <span class="color-comment"> // Overload the stream insertion operator to print the list</span>
+};
+ 
+<span class="color-comment">// Constructor - Create an empty list without any node</span>
+template &lt;typename T&gt;
+Stack&lt;T&gt;::Stack(int cap, int inc) : capacity(cap), increment(inc) {
+   data = new T[capacity];
+   tos = -1;
+}
+ 
+<span class="color-comment">// Destructor - Remove all the dynamically allocated nodes</span>
+template &lt;typename T&gt;
+Stack&lt;T&gt;::~Stack() {
+   delete[] data; <span class="color-comment"> // remove the dynamically allocate storage</span>
+  <span class="color-comment"> // std::cout &lt;&lt; &quot;Destructor completed...&quot; &lt;&lt; std::endl;</span>
+}
+ 
+<span class="color-comment">// Is list empty? Check if frontPtr is null</span>
+template &lt;typename T&gt;
+bool Stack&lt;T&gt;::isEmpty() const { return tos &lt; 0; }
+ 
+<span class="color-comment">// Push the data on top of the stack</span>
+template &lt;typename T&gt;
+void Stack&lt;T&gt;::push(const T &amp; value) {
+   if (tos &lt; capacity - 1) {
+     <span class="color-comment"> // Have space, simply add in the value</span>
+      data[++tos] = value;
+   } else {
+     <span class="color-comment"> // No more space. Allocate a bigger array</span>
+      T * newDataPtr = new T[capacity + increment];
+      for (int i = 0; i &lt;= tos; ++i) {
+         newDataPtr[i] = data[i];  <span class="color-comment"> // copy over</span>
+      }
+      delete[] data;
+      data = newDataPtr;
+   }
+}
+ 
+<span class="color-comment">// Pop the data from the TOS</span>
+template &lt;typename T&gt;
+bool Stack&lt;T&gt;::pop(T &amp; value) {
+   if (isEmpty()) {
+      return false;
+   } else {
+      value = data[tos--];
+   }
+   return true;
+}
+ 
+<span class="color-comment">// Overload the stream insertion operator to print the list</span>
+template &lt;typename T&gt;
+std::ostream &amp; operator&lt;&lt; (std::ostream &amp; os, const Stack&lt;T&gt; &amp; stack) {
+   os &lt;&lt; '{';
+   for (int i = stack.tos; i &gt;= 0; --i) {
+      os &lt;&lt; stack.data[i];
+      if (i &gt; 0) os &lt;&lt; ',';
+   }
+   os &lt;&lt; '}';
+}
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h5 class="font-code">TestStack.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver for Stack class (TestStack.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;Stack.h&quot;
+using namespace std;
+ 
+int main() {
+ 
+   Stack&lt;int&gt; s1;
+   cout &lt;&lt; s1 &lt;&lt; endl;
+   s1.push(8);
+   s1.push(88);
+   cout &lt;&lt; s1 &lt;&lt; endl;
+ 
+   int result;
+   s1.pop(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, stack is &quot; &lt;&lt; s1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty stack&quot; &lt;&lt; endl;
+ 
+   s1.push(9);
+   s1.push(99);
+   cout &lt;&lt; s1 &lt;&lt; endl;
+ 
+   s1.pop(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, stack is &quot; &lt;&lt; s1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty stack&quot; &lt;&lt; endl;
+ 
+   s1.pop(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, stack is &quot; &lt;&lt; s1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty stack&quot; &lt;&lt; endl;
+   s1.pop(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, stack is &quot; &lt;&lt; s1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty stack&quot; &lt;&lt; endl;
+   s1.pop(result)
+      ? cout &lt;&lt; &quot;value is &quot; &lt;&lt; result &lt;&lt; &quot;, stack is &quot; &lt;&lt; s1 &lt;&lt; endl
+      : cout &lt;&lt; &quot;empty stack&quot; &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+{}
+{88,8}
+value is 88, stack is {8}
+{99,9,8}
+value is 99, stack is {9,8}
+value is 9, stack is {8}
+value is 8, stack is {}
+empty stack</pre>
+
+<h4>Tree</h4>
+
+<p>A <em>tree</em> has a root node. Each parent node could have child nodes. A node without child is called a leaf node. A tree with only the root node is called a null tree. The depth of a tree is the length of the path from the root to the deepest node in the tree. A null tree has depth of zero.</p>
+<p>In a <em>binary tree</em>, a parent node could have up to two child nodes: left child and right child (called siblings with the same parent). They are root of the left subtree and right subtree respectively.</p>
+
+<img class="image-center" src="images/DS_BinaryTree.png" alt="DS_BinaryTree.png" />
+
+<h5>Depth-First Search (DFS)</h5>
+
+<p>Start at the root and explore as far as possible along each branch before backtracking. They are 3 types of depth-first search:</p>
+
+<ol>
+<li>Pre-order: visit the root, traverse the left subtree, then the right subtree. E.g., 6 -&gt; 5 -&gt; 4 -&gt; 10 -&gt; 7 -&gt; 9 -&gt;15.</li>
+<li>In-order: traverse the left subtree, visit the root, then the right subtree. E.g., 4 -&gt; 5 -&gt; 6 -&gt; 7 -&gt; 9 -&gt;10 -&gt; 15.</li>
+<li>Post-order: traverse the left subtree, the right subtree, then visit the root. E.g, 4 -&gt; 5 -&gt; 9 -&gt; 7 -&gt; 15 -&gt; 10 -&gt; 6.</li>
+</ol>
+
+<p>Pre-, in- and post- refer to the order of visiting the root.</p>
+
+<h5>Breadth-First Search (BFS)</h5>
+<p>Begin at the root, visit all its child nodes. Then for each of the child nodes visited, visit their child nodes in turn. E.g., 6 -&gt; 5 -&gt; 10 -&gt; 4 -&gt; 7 -&gt; 15 -&gt; 9.</p>
+
+<h5>Binary Search Tree</h5>
+
+<p>A binary search tree, without duplicate elements, has these properties:</p>
+
+<ol>
+<li>All values in the left subtree are smaller than the parent node.</li>
+<li>All values in the right subtree are larger than the parent node.</li>
+</ol>
+
+<p>The above diagram illustrates a binary search tree. You can retrieve the sorted list or perform searching via in-order depth-first traversal. Take note that the actual shape of the tree depends on the order of insertion.</p>
+
+<h5 class="font-code">Node.h</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Node template class for binary tree (Node.h) */</span>
+#ifndef NODE_H
+#define NODE_H
+ 
+template &lt;typename T&gt; class BinaryTree;<span class="color-comment"> // Forward reference</span>
+ 
+template &lt;typename T&gt;
+class Node {
+private:
+   T data;
+   Node * rightPtr;
+   Node * leftPtr;
+public:
+   Node (T d) : data(d), rightPtr(0), leftPtr(0) { };
+   T getData() const { return data; };
+   Node * getRightPtr() const { return rightPtr; }
+   Node * getLeftPtr() const  { return leftPtr;  }
+ 
+friend class BinaryTree&lt;T&gt;;
+  <span class="color-comment"> // Make BinaryTree class a friend to access private data</span>
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h5 class="font-code">BinaryTree.h</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* BinaryTree template class for binary tree (BinaryTree.h) */</span>
+#ifndef BINARY_TREE_H
+#define BINARY_TREE_H
+ 
+#include &lt;iostream&gt;
+#include &lt;queue&gt;
+#include &quot;Node.h&quot;
+ 
+<span class="color-comment">// Forward Reference</span>
+template &lt;typename T&gt;
+std::ostream &amp; operator&lt;&lt;(std::ostream &amp; os, const BinaryTree&lt;T&gt; &amp; lst);
+ 
+template &lt;typename T&gt;
+class BinaryTree {
+private:
+   Node&lt;T&gt; * rootPtr;
+ 
+  <span class="color-comment"> // private helper functions</span>
+   void insertNode(Node&lt;T&gt; * &amp; ptr, const T &amp; value);
+   void preOrderSubTree(const Node&lt;T&gt; * ptr, std::ostream &amp; os = std::cout) const;
+   void inOrderSubTree(const Node&lt;T&gt; * ptr, std::ostream &amp; os = std::cout) const;
+   void postOrderSubTree(const Node&lt;T&gt; * ptr, std::ostream &amp; os = std::cout) const;
+   void removeSubTree(Node&lt;T&gt; * &amp; ptr);
+public:
+   BinaryTree();  <span class="color-comment"> // Constructor</span>
+   ~BinaryTree(); <span class="color-comment"> // Destructor</span>
+   void insert(const T &amp; value);
+   bool isEmpty() const;
+   void preOrderTraversal(std::ostream &amp; os = std::cout) const;
+   void inOrderTraversal(std::ostream &amp; os = std::cout) const;
+   void postOrderTraversal(std::ostream &amp; os = std::cout) const;
+   void breadthFirstTraversal(std::ostream &amp; os = std::cout) const;
+ 
+friend std::ostream &amp; operator&lt;&lt; &lt;&gt;(std::ostream &amp; os, const BinaryTree&lt;T&gt; &amp; lst);
+     <span class="color-comment"> // Overload the stream insertion operator to print the list</span>
+};
+ 
+<span class="color-comment">// Constructor - Create an empty list with no node</span>
+template &lt;typename T&gt;
+BinaryTree&lt;T&gt;::BinaryTree() : rootPtr(0) { }
+ 
+<span class="color-comment">// Destructor - Remove all the dynamically allocated nodes</span>
+template &lt;typename T&gt;
+BinaryTree&lt;T&gt;::~BinaryTree() {
+   removeSubTree(rootPtr);
+  <span class="color-comment"> // std::cout &lt;&lt; &quot;Destructor completed...&quot; &lt;&lt; std::endl;</span>
+}
+ 
+template &lt;typename T&gt;
+void BinaryTree&lt;T&gt;::removeSubTree(Node&lt;T&gt; * &amp; ptr) {
+   if (ptr) {
+      removeSubTree(ptr-&gt;leftPtr);  <span class="color-comment"> // remove left subtree</span>
+      removeSubTree(ptr-&gt;rightPtr); <span class="color-comment"> // remove right subtree</span>
+      delete ptr;
+   }
+}
+ 
+<span class="color-comment">// Is list empty? Check if rootPtr is null</span>
+template &lt;typename T&gt;
+bool BinaryTree&lt;T&gt;::isEmpty() const { return rootPtr == 0; }
+ 
+<span class="color-comment">// Push the data in front by dynamically allocate a new node</span>
+template &lt;typename T&gt;
+void BinaryTree&lt;T&gt;::insert(const T &amp; value) {
+   insertNode(rootPtr, value);
+}
+ 
+<span class="color-comment">// Need to pass the pointer by reference so as to modify the caller's copy</span>
+template &lt;typename T&gt;
+void BinaryTree&lt;T&gt;::insertNode(Node&lt;T&gt; * &amp; ptr, const T &amp; value) {
+   if (ptr == 0) {
+      ptr = new Node&lt;T&gt;(value);
+   } else {
+      if (value &lt; ptr-&gt;data)
+         insertNode(ptr-&gt;leftPtr, value);
+      else if (value &gt; ptr-&gt;data)
+         insertNode(ptr-&gt;rightPtr, value);
+      else
+         std::cout &lt;&lt; &quot;duplicate value&quot; &lt;&lt; std::endl;
+   }
+}
+ 
+template &lt;typename T&gt;
+void BinaryTree&lt;T&gt;::preOrderTraversal(std::ostream &amp; os) const {
+   os &lt;&lt; &quot;{ &quot;;
+   preOrderSubTree(rootPtr);
+   os &lt;&lt; '}' &lt;&lt; std::endl;
+}
+ 
+template &lt;typename T&gt;
+void BinaryTree&lt;T&gt;::preOrderSubTree(const Node&lt;T&gt; * ptr, std::ostream &amp; os) const {
+   if (ptr) {
+      os &lt;&lt; ptr-&gt;data &lt;&lt; ' ';
+      preOrderSubTree(ptr-&gt;leftPtr);
+      preOrderSubTree(ptr-&gt;rightPtr);
+   }
+}
+ 
+template &lt;typename T&gt;
+void BinaryTree&lt;T&gt;::inOrderTraversal(std::ostream &amp; os) const {
+   os &lt;&lt; &quot;{ &quot;;
+   inOrderSubTree(rootPtr);
+   os &lt;&lt; '}' &lt;&lt; std::endl;
+}
+ 
+template &lt;typename T&gt;
+void BinaryTree&lt;T&gt;::inOrderSubTree(const Node&lt;T&gt; * ptr, std::ostream &amp; os) const {
+   if (ptr) {
+      inOrderSubTree(ptr-&gt;leftPtr);
+      os &lt;&lt; ptr-&gt;data &lt;&lt; ' ';
+      inOrderSubTree(ptr-&gt;rightPtr);
+   }
+}
+ 
+template &lt;typename T&gt;
+void BinaryTree&lt;T&gt;::postOrderTraversal(std::ostream &amp; os) const {
+   os &lt;&lt; &quot;{ &quot;;
+   postOrderSubTree(rootPtr);
+   os &lt;&lt; '}' &lt;&lt; std::endl;
+}
+ 
+template &lt;typename T&gt;
+void BinaryTree&lt;T&gt;::postOrderSubTree(const Node&lt;T&gt; * ptr, std::ostream &amp; os) const {
+   if (ptr) {
+      postOrderSubTree(ptr-&gt;leftPtr);
+      postOrderSubTree(ptr-&gt;rightPtr);
+      os &lt;&lt; ptr-&gt;data &lt;&lt; ' ';
+   }
+}
+ 
+<span class="color-comment">// Breadth First Search (BFS)</span>
+template &lt;typename T&gt;
+void BinaryTree&lt;T&gt;::breadthFirstTraversal(std::ostream &amp; os) const {
+   std::queue&lt;Node&lt;T&gt; * &gt; q;
+   if (!isEmpty()) q.push(rootPtr);
+ 
+   os &lt;&lt; &quot;{ &quot;;
+   Node&lt;T&gt; * currentPtr;
+   while (currentPtr = q.front()) {
+      std::cout &lt;&lt; currentPtr-&gt;data &lt;&lt; ' ';
+      if (currentPtr-&gt;leftPtr) q.push(currentPtr-&gt;leftPtr);
+      if (currentPtr-&gt;rightPtr) q.push(currentPtr-&gt;rightPtr);
+      q.pop(); <span class="color-comment"> // remove this node</span>
+   }
+   os &lt;&lt; '}' &lt;&lt; std::endl;
+}
+ 
+<span class="color-comment">// Overload the stream insertion operator to print the list in in-order traversal</span>
+template &lt;typename T&gt;
+std::ostream &amp; operator&lt;&lt; (std::ostream &amp; os, const BinaryTree&lt;T&gt; &amp; lst) {
+   lst.inOrderTraversal(os);
+   return os;
+}
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<h5 class="font-code">TestBinaryTree.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver for BinaryTree class (TestBinaryTree.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;BinaryTree.h&quot;
+using namespace std;
+ 
+int main() {
+   BinaryTree&lt;int&gt; t1;
+   t1.insert(6);
+   t1.insert(10);
+   t1.insert(5);
+   t1.insert(15);
+   t1.insert(7);
+   t1.insert(4);
+   t1.insert(9);
+ 
+   t1.preOrderTraversal();
+   t1.inOrderTraversal();
+   t1.postOrderTraversal();
+   cout &lt;&lt; t1;
+   t1.breadthFirstTraversal();
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+{ 6 5 4 10 7 9 15 }  <span class="color-comment">// pre-order depth-first search</span>
+{ 4 5 6 7 9 10 15 }  <span class="color-comment">// in-order depth-first search (ascending order)</span>
+{ 4 5 9 7 15 10 6 }  <span class="color-comment">// post-order depth-first search</span>
+{ 4 5 6 7 9 10 15 }  <span class="color-comment">// in-order depth-first search</span>
+{ 6 5 10 4 7 15 9 }  <span class="color-comment">// breadth-first search</span></pre>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>[TODO]</li>
+</ul>
+
+<p>[TODO] Breadth-First Search: need a FIFO queue to keep the child nodes.</p>
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<a class="references" href="../howto/References.html#">REFERENCES &amp; RESOURCES</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Cygwin/MinGW GNU GCC 4.62<br />
+Last modified: May, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

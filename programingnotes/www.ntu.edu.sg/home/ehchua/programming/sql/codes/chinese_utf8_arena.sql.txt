@@ -1,0 +1,101 @@
+/*
+ * Playing with UTF8 Chinese characters
+ */
+
+/*
+ * Set up database
+*/
+-- SHOW DATABASES;
+-- DROP DATABASE IF EXISTS `the_arena`;
+CREATE DATABASE IF NOT EXISTS `the_arena`;
+USE `the_arena`;
+-- SHOW TABLES;
+
+/*
+ * Set the charset for client-server communication
+ */
+ 
+/*
+ * For batch mode and source command, saved the file as "Encode in UTF8 without BOM"
+ *   Batch mode:
+ *     Shell> mysql -u username -p -t -vvv < d:\path\utf8_arena.sql
+ *   Source Command:
+ *     mysql> source d:\path\utf8_arena.sql
+ */
+-- SET NAMES 'utf8';
+
+/*
+ * For Interactive mode, CMD uses codepage 936 (Chinese Simplified)
+ * Prompt> chcp 936
+ */
+SET NAMES 'gb2312';
+
+/*
+ * Create table `chinese_utf8_arena` with utf8 column
+ */
+DROP TABLE IF EXISTS `chinese_utf8_arena`;
+CREATE TABLE IF NOT EXISTS `chinese_utf8_arena` (
+   `id`     INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+   `desc`   VARCHAR(50)   NULL,  -- Use Table's default charset of utf8
+   PRIMARY KEY(`id`)
+) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+                           -- ci for case-insensitive
+DESCRIBE `chinese_utf8_arena`;
+
+/*
+ * Test inserting chinese characters in UTF8 column
+ */
+INSERT INTO `chinese_utf8_arena` VALUES
+  (NULL, 'utf8 一'),
+  (NULL, 'utf8 二'),
+  (NULL, 'utf8 三'),
+  (NULL, 'utf8 四'),
+  (NULL, 'utf8 五'),
+  (NULL, 'utf8 六'),
+  (NULL, 'utf8 七'),
+  (NULL, 'utf8 八'),
+  (NULL, 'utf8 九'),
+  (NULL, 'utf8 十'),
+  (NULL, 'utf8 a'),
+  (NULL, 'utf8 A'),
+  (NULL, 'utf8 1'),
+  (NULL, 'utf8 9'),
+  (NULL, 'utf8 0'),
+  (NULL, 'utf8 B'),
+  (NULL, 'utf8 b'),
+  (NULL, 'utf8  sp');
+-- You should view the record and check the chinese character under "MySQLWorkBench".
+
+/*
+ * Test the default collation "utf8_unicode_ci"
+ */
+SELECT `id`, `description`, HEX(`description`) FROM `chinese_utf8_arena` ORDER BY `description`, `id`;
+/*
++------+-------------+--------------------+
+| id   | description | HEX(`description`) |
++------+-------------+--------------------+
+| 0018 | utf8  sp    | 7574663820207370   |
+| 0015 | utf8 0      | 757466382030       |
+| 0013 | utf8 1      | 757466382031       |
+| 0014 | utf8 9      | 757466382039       |
+| 0011 | utf8 a      | 757466382061       |
+| 0012 | utf8 A      | 757466382041       |
+| 0016 | utf8 B      | 757466382042       |
+| 0017 | utf8 b      | 757466382062       |
+| 0001 | utf8 一     | 7574663820E4B880   |
+| 0007 | utf8 七     | 7574663820E4B883   |
+| 0003 | utf8 三     | 7574663820E4B889   |
+| 0009 | utf8 九     | 7574663820E4B99D   |
+| 0002 | utf8 二     | 7574663820E4BA8C   |
+| 0005 | utf8 五     | 7574663820E4BA94   |
+| 0008 | utf8 八     | 7574663820E585AB   |
+| 0006 | utf8 六     | 7574663820E585AD   |
+| 0010 | utf8 十     | 7574663820E58D81   |
+| 0004 | utf8 四     | 7574663820E59B9B   |
++------+-------------+--------------------+
+*/
+
+-- case-insensitive (ci) collation: 'A' and 'a' have the same rank.
+-- sp -> numbers '0' to '9' -> letters (case insensitive) -> Chinese characters, but ranking of 一 to 十 is incorrect
+-- ordered according to utf8 code number?!
+-- Need to find a better collating sequence for chinese in utf8.

@@ -1,0 +1,11 @@
+/* JSXYPlot.css */
+/* id-selector for the container */
+#box {
+   position: absolute;
+   border: thick solid red;
+}
+ 
+/* class-selector for the items and item descriptions */
+.item, .itemDesc {
+   position: absolute;
+}

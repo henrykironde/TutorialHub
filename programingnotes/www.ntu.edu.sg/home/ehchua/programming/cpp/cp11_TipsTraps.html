@@ -1,0 +1,965 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Examples on Classes and Objects</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>C++ Programming Language</h1>
+<h2>Miscellaneous, Tips and Traps</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+
+<h3>Exception Handling</h3>
+
+<p>C++ build the exception handling into the language via keyword <code>throw</code>, <code>try</code> and <code>catch</code> and headers <code>&lt;exception&gt;</code>, <code>&lt;stdexcept&gt;</code>.</p>
+
+<p>In building your classes, you often need to validate the inputs in member functions such as constructors and setters. In the case of invalid inputs, instead of abnormally terminate the program (via <code>abort()</code> or <code>exit()</code>); or setting them to some default values, it is better to <em>throw an exception</em> to the caller and let the caller decides what to do with the exception.</p>
+
+<h4><span class="font-code">throw</span>, <span class="font-code">try</span> and <span class="font-code">catch</span></h4>
+
+<p>Suppose that we have a class called <code>PositiveInteger</code>, which maintains a data member <code>value</code> containing a positive integer.</p>
+
+<h5 class="font-code">PositiveInteger.h</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Header for the PositiveInteger class (PositiveInteger.h) */</span>
+#ifndef POSITIVE_INTEGER_H
+#define POSITIVE_INTEGER_H
+ 
+class PositiveInteger {
+private:
+   int value; <span class="color-comment"> // positive integer (&gt;0) only</span>
+ 
+public:
+   PositiveInteger(int value = 1);
+   void setValue(int value);
+   int getValue() const;
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5 class="font-code">PositiveInteger.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Implementation for the PositiveInteger Class (PositiveInteger.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;   <span class="color-comment"> // Needed for exception handling</span>
+#include &quot;PositiveInteger.h&quot;
+using namespace std;
+ 
+<span class="color-comment">// Constructor with input validation</span>
+PositiveInteger::PositiveInteger(int value) {
+  <span class="color-comment"> // Call setter to perform input validation</span>
+   setValue(value);
+}
+ 
+<span class="color-comment">// Setter with input validation</span>
+void PositiveInteger::setValue(int v) {
+   if (v &gt; 0) {
+      value = v;
+   } else {
+      <span class="color-new">throw invalid_argument(&quot;value shall be more than 0.&quot;);</span>
+           <span class="color-comment"> // need &lt;stdexcept&gt;</span>
+   }
+}
+ 
+<span class="color-comment">// Getter</span>
+int PositiveInteger::getValue() const {
+   return value;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>The constructor calls the setter <code>setValue()</code>, which validates the input value.</li>
+<li>In <code>setValue()</code>, if the input is invalid, instead of print an error message or terminate the program (via <code>abort()</code> or <code>exit()</code>), we <code>throw</code> an <code>invalid_argument</code> exception with an appropriate message. The <code>invalid_argument</code> is one of the system-defined exception classes in header <code>&lt;stdexcept&gt;</code>.</li>
+
+</ul>
+
+<h5 class="font-code">TestPositiveInteger.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver for the PositiveInteger class (TestPositiveInteger.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt; <span class="color-comment"> // Needed for exception handling</span>
+#include &quot;PositiveInteger.h&quot;
+using namespace std;
+ 
+int main() {
+  <span class="color-comment"> // Valid input</span>
+   PositiveInteger i1(8);
+   cout &lt;&lt; i1.getValue() &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Invalid input without try-catch</span>
+<span class="color-error">//</span> PositiveInteger i2(-8); <span class="color-error"> // Program terminate abruptly</span>
+ 
+  <span class="color-comment"> // Graceful handling of exception with try-catch</span>
+   <span class="color-new">try</span> {
+      cout &lt;&lt; &quot;begin try 1...&quot; &lt;&lt; endl;
+      PositiveInteger i3(-8);
+        <span class="color-comment"> // Exception thrown.</span>
+        <span class="color-comment"> // Skip the remaining statements in try and jump to catch.</span>
+      cout &lt;&lt; i3.getValue() &lt;&lt; endl;
+      cout &lt;&lt; &quot;end try 1...&quot; &lt;&lt; endl;
+        <span class="color-comment"> // Continue to the next statement after try-catch, if there is no exception</span>
+   } <span class="color-new">catch</span> (<span class="color-new">invalid_argument &amp; ex</span>) { <span class="color-comment"> // need &lt;stdexcept&gt;</span>
+      cout &lt;&lt; &quot;Exception: &quot; &lt;&lt; <span class="color-new">ex.what()</span> &lt;&lt; endl;
+        <span class="color-comment"> // Continue to the next statement after try-catch</span>
+   }
+   cout &lt;&lt; &quot;after try-catch 1...&quot; &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Graceful handling of exception with try-catch</span>
+   <span class="color-new">try</span> {
+      cout &lt;&lt; &quot;begin try 2...&quot; &lt;&lt; endl;
+      PositiveInteger i4(8);<span class="color-comment"> // no exception thrown</span>
+      cout &lt;&lt; i4.getValue() &lt;&lt; endl;
+      cout &lt;&lt; &quot;end try 2...&quot; &lt;&lt; endl;
+        <span class="color-comment"> // Continue to the next statement after try-catch, if there is no exception</span>
+   } <span class="color-new">catch</span> (invalid_argument &amp; ex) { <span class="color-comment"> // need &lt;stdexcept&gt;</span>
+      cout &lt;&lt; &quot;Exception: &quot; &lt;&lt; ex.what() &lt;&lt; endl;
+        <span class="color-comment"> // Continue to the next statement after try-catch</span>
+   }
+   cout &lt;&lt; &quot;after try-catch 2...&quot; &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>Without the <code>try-catch</code> statement, the program abnormally terminated, when a <code>throw</code> statement is encountered.</li>
+<li>With <code>try-catch</code>, the execution skips the rest of the <code>try</code>-clause, when a <code>throw</code> statement is encountered. It jumps into the <code>catch</code>-clause; and continues to the next statement after the <code>try-catch</code>. Take note that the program is not abnormally terminated.</li>
+<li>If no exception is encountered, the execution completes the <code>try</code> clause, skip the <code>catch</code>-clause, and continues to the next statement after the <code>try-catch</code>.</li>
+<li>The <code>catch</code> takes a parameter of a reference to <code>exception</code> class (in header <code>&lt;exception&gt;</code>) or its subclass (such as <code>invalid_argument</code> in header <code>&lt;stdexcept&gt;</code>).</li>
+<li>The <code>exception</code> class has a member function <code>what()</code>, which prints the exception message.</li>
+<li>You can have multiple <code>catch</code>-clauses, each catching a exception type. If an exception is thrown, the catch-clauses are matched in sequential manner. The <code>catch</code> clause catches an exception also catches its subclass.</li>
+<li>If an exception is thrown, but no catch-clause matches the exception type. The program returns to its caller (unwinding the function stack), and repeat the exception handling process in the caller.</li>
+</ul>
+
+<h4>Example: The <span class="font-code">Time</span> Class</h4>
+<p><a href="cp5_OOPExamples.html#time_exception">HERE</a>.</p>
+
+<h4>Class <span class="font-code">exception</span> and its subclasses</h4>
+
+<img class="image-center" src="images/ExceptionClasses.png" alt="ExceptionClasses.png" />
+
+<p>The root class is called <code>exception</code> (in header <code>&lt;exception&gt;</code>). It contains a member function <code>what()</code> which returns the what-message:</p>
+
+<pre class="color-syntax">
+virtual const char* <strong>what()</strong> const throw();
+   <span class="color-comment">// what() is a virtual function, can be overridden by subclasses
+   // It returns a C-string.</span></pre>
+
+<p>Some commonly-used subclasses are pre-defined in header <code>&lt;stdexcept&gt;</code>:</p>
+
+<ol>
+<li><code>logic_error</code>: indicating programming logic errors, such as <code>invalid_argument</code> (invalid argument passed into function), <code>out_of_range</code> (value, such as indexing subscript, out of range), <code>length_error</code> (length larger than the maximum allowable length), etc.
+  <pre class="color-syntax">
+class <strong>logic_error</strong> <span class="color-new">: public exception</span> {
+public:
+  explicit logic_error (const string &amp; what_message);
+};</pre>
+</li>
+
+<li><code>runtime_error</code>: indicating execution-time error, such as <code>range_error</code> (range error in internal computation), <code>overflow_error</code> (result larger than the largest possible number), <code>under_flow_error</code> (result smaller than the smallest possible number).</li>
+<li><code>bad_exception</code>: unexpected exception.</li>
+
+</ol>
+
+<h4>Creating Your Own <span class="font-code">exception</span> subclass</h4>
+
+<p>You can create your own exception by subclassing <code>exception</code> or its subclasses (such as <code>logic_error</code> or <code>runtime_error</code>). For example,</p>
+
+<h5 class="font-code">MyException.h</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Header for the MyException class (MyException.h) */</span>
+#ifndef MY_EXCEPTION_H
+#define MY_EXCEPTION_H
+ 
+#include &lt;stdexcept&gt;
+ 
+class MyException <span class="color-new">: public std::logic_error</span> {
+public:
+   <span class="color-comment">// Constructor</span>
+   <span class="color-new">MyException() : std::logic_error(&quot;my custom error&quot;) { };</span>
+};
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>Your custom exception shall subclass <code>exception</code> or its subclass, in this case, <code>logic_error</code>.</li>
+<li>Provide a constructor with a custom what-message.</li>
+</ul>
+
+<h5 class="font-code">TestMyException.cpp</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver for the MyException class (TestMyException.cpp) */</span>
+#include &lt;iostream&gt;
+#include &quot;MyException.h&quot;
+using namespace std;
+ 
+void fun() {
+   <span class="color-new">throw MyException();</span>
+}
+ 
+int main() {
+   <span class="color-new">try</span> {
+      fun();
+   } <span class="color-new">catch (MyException &amp; ex)</span> {
+      cout &lt;&lt; <span class="color-new">ex.what()</span> &lt;&lt; endl;
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>Storage Duration, Scopes and Linkages</h3>
+
+<p>Recall that a variable has a name, a type and stores a value of the particular type. It also have other attributes such as <em>storage duration</em>, <em>scope</em> and <em>linkage</em>, which is either set implicitly, or via so-called <em>storage class specifiers </em>such as <code><strong>auto</strong></code> (automatic storage allocation/deallocation. C++11 reassigns this keyword to mean automatic derived type), <code><strong>register</strong></code>, <code><strong>static</strong></code>, <code><strong>extern</strong></code>,  <code><strong>mutable</strong></code> and <code><strong>thread_local</strong></code> (added in C++11); or <em>CV-qualifiers</em>: <code><strong>const</strong></code> and <code><strong>volatile</strong></code> (CV stands for constant-volatile).</p>
+
+<h5>Storage Duration - Automatic, Static and Dynamic</h5>
+
+<p>The <em>storage duration</em> (or <em>storage class</em>) determines the duration of a variable, i.e., when it is created and when it is destroyed. They are 3 types of storage durations:</p>
+
+<ol>
+<li>Automatic storage duration: Variables declared inside a function (including function parameters) or block have automatic storage duration. They are created when the program enters the function (or the block) in which they are defined, and destroyed (memory is deallocated and freed) when the program leaves the function (or the block). They are called automatic as they are managed (created/destroyed) automatically without programmer's explicit actions. They will be created/destroyed repeatably as the program enters and leaves the function (or block).</li>
+
+<li>Static storage duration: Variables declared outside all functions, or inside a function with <code>static</code> specifier have static storage duration. The term <code>static</code> means that (a) the variable is created when the program begins and destroyed when the program exits, i.e., it exists for the entire duration of the program; (b) the variable retains its memory and contents throughout the entire execution.</li>
+
+<li>Dynamic storage duration: Dynamic storage are managed by programmer explicitly (instead of automatically). Storage (on the heap) is allocated via <code>new</code> operator and persists until they are freed via the <code>delete</code> operator.</li>
+</ol>
+
+<p>Compiler typically allocates 3 chunks of storage for static variables, automatic variables, and dynamically allocated variables, respectively.</p>
+
+<h5>Scope - Local or Global</h5>
+
+<p>The <em>scope</em> of a variable determines which parts of the program can reference the variable, i.e., the visibility. Some variables can be referenced throughout the program (file-scope or global-scope); while others can only be referenced in a limited part of the program (block-scope or local-scope). For example, a local automatic variable defined inside a function (or a block) is visible by that function (or block), and not outside the function (or block).</p>
+
+<p>There are two scopes:</p>
+
+<ol>
+<li>A variable having <em>local scope</em> (or <em>block scope</em>) is visible only inside the block.</li>
+<li>A variable having <em>global scope</em>  (or <em>file scope</em>) is visible throughout the file.</li>
+</ol>
+
+<h5>Linkage - Internal or External</h5>
+
+<p>A C/C++ application may consist of many source files (or translational units).  The <em>linkage</em> of a variable determines how a variable is shared by different files. A variable with <em>external linkage</em> can be shared by other source files; while a variable with <em>internal linkage</em> can only be used in the file that it is defined. That is, <em>external linkage</em> extends the file-scope to other source files.</p>
+
+<p>In summary, with linkage, there are 3 combinations of scopes/linkages:</p>
+
+<ol>
+<li>block-scope (or local-scope) with no linkage,</li>
+<li>file-scope (or global scope) with internal linkage,</li>
+<li>file-scope (or global scope) with external linkage.</li>
+</ol>
+<p>Take note that a variable might exist in memory (determined by its storage duration) but not visible by a certain part of the program (determined by its scope and linkage). For examples, a local variable created within a function still exists when the function calls another function, but it is not visible by the second function. A <code>static</code> variable declared inside a function exists throughout the program duration, but visible only by that function. A <code>static</code> variable with internal linkage exists throughout the program duration, but visible only to the file in which it is defined.</p>
+
+<h4>Automatic Local Variables (&quot;<span class="font-code">auto</span>&quot; Specifier)</h4>
+
+<p>Variables defined inside a function (block) and function parameters are &quot;<code>auto</code>&quot;, by default. They have automatic storage duration, i.e., they are created when the program enters the function (block) and destroyed when the program leaves the function (block). They have local scope (i.e., can be used within the function or block immediately after they are declared) and no linkage (i.e., either internal or external linkage).</p>
+<p>Automatic storage is used to converse memory, as these variables does not exist throughout the entire program, but created when needed (and destroyed).</p>
+
+<p>You can use the <code>auto</code> specifier to explicitly specify <em>automatic storage class</em> for a variable. However, it is rarely used as <code>auto</code> is the default for local variables. In C++11, the keyword &quot;<code>auto</code>&quot; is assigned a new meaning to indicates <em>automatic type deduction</em>. The old meaning of <em>automatic storage class</em> is no longer valid in C++11.</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Test Local Variable Duration and Scope (LocalVariableScope.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main()
+{                    <span class="color-comment"> // localVar allocated when execution enters the block</span>
+   cout &lt;&lt; &quot;Hello&quot; &lt;&lt; endl;
+   <span class="color-new">int localVar</span>;     <span class="color-comment"> // localVar's scope begins after declaration</span>
+   localVar = 8;
+ 
+   {                 <span class="color-comment"> // blockVar allocated</span>
+      localVar = 88;
+      <span class="color-new">int blockVar</span>;  <span class="color-comment"> // blockVar's scope begins</span>
+      blockVar = 99;
+      cout &lt;&lt; blockVar &lt;&lt; endl;
+   }                 <span class="color-comment"> // blockVar's scope ends and deallocated</span>
+                     <span class="color-comment"> //   when execution leaves the block</span>
+ 
+   cout &lt;&lt; localVar &lt;&lt; endl;
+}                    <span class="color-comment"> // lcoalVar's scope ends and deallocated</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Take that that C++ allocates local variable when the execution enters the block, but the local variable is only visible (i.e., scope begins) after its declaration statement. The variable's scope ends and is deallocated when the execution leaves the block. You can verify that local variables are allocated when execution enters the block using a graphic debugger (on CodeBlock or Eclipse) - Try it out!</p>
+<p>Automatic variables are not initialized. You MUST assign an initial value. Compiler may not issue a warning/error if you use uninitialized local variable.</p>
+<p>Automatic variables are typically allocated in a function stack (a Last-in-First-out LIFO queue), where the new data is stacked on top of the existing data. When a function is called, the caller pushes the arguments onto the stack. The function's local variables are also pushed (allocated) onto the stack. When the function exits, the top-of-stack pointer is reset and all variables are freed.</p>
+
+
+<p>If the inner block has a variable with the same name of the outer block (e.g., rename <code>blockVar</code> to <code>localVar</code> in the above example), we say that the inner block's variable <em>hides</em> the outer block's variable. The outer block's variable is temporarily out of scope, until the inner block exits.</p>
+
+<h5>Register Automatic Variables (&quot;<span class="font-code">register</span>&quot; Specifier)</h5>
+
+<p>You can use  the &quot;<code>register</code>&quot; specifier to <em>suggest</em> to the compiler to put an <em>automatic</em> variable in a register for faster access. This is often unnecessary, as an optimizing compiler can do this automatically.</p>
+
+<h4>Static Variables (&quot;<span class="font-code">static</span>&quot; Specifier)</h4>
+
+<p>As mentioned, a static variable:</p>
+
+<ol>
+<li>is allocated when the execution begins and lasts for the entire duration of the program;</li>
+
+<li>retains its memory and contents throughout the program execution. An static variable declared inside a function retains its value even when the function exits.</li>
+</ol>
+
+<p>Static variables are initialized to zero (all its bits set to 0), if no initial values are provided. All elements of static array and structures are initialized to zero too. On the other hand, automatic local variables are not initialized.</p>
+
+<p>Static variables are allocated at fixed memory locations (instead of function stack) as they last for the entire program duration.</p>
+
+<p>Static variables has three types of linkage:</p>
+
+<ol>
+<li>external: global static variables visible in other source files - defined outside all functions.</li>
+
+<li>internal: global static file-scope variables visible in the file that it is defined - defined outside all functions with keyword <code>static</code>.</li>
+
+<li>no linkage: local static variable visible within a function or block for which it is defined - defined inside a function with keyword <code>static</code>.</li>
+</ol>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Test static variables of various linkage (TestStatic.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-comment">// All static variables are allocated when the program starts and</span>
+<span class="color-comment">//   last for the entire program duration</span>
+<span class="color-comment">// Uninitialized static variables are initialized to zero (all bits set to zero)</span>
+<span class="color-new">int allFileVar;</span>         <span class="color-comment"> // static variable, external linkage</span>
+                        <span class="color-comment"> // accessible (scope) by other files with &quot;extern&quot; specifier</span>
+<span class="color-new">static int thisFileVar;</span> <span class="color-comment"> // static variable, internal linkage</span>
+                        <span class="color-comment"> // accessible (scope) by all functions in this file</span>
+void fun();
+ 
+int main() {
+   cout &lt;&lt; allFileVar &lt;&lt; endl;  <span class="color-comment"> // 0</span>
+   fun();
+   fun();
+   fun();
+   cout &lt;&lt; thisFileVar &lt;&lt; endl; <span class="color-comment"> // 0</span>
+}
+ 
+void fun() {
+   cout &lt;&lt; thisFileVar &lt;&lt; endl; <span class="color-comment"> // 0</span>
+   {
+      <span class="color-new">static int blockVar;</span> <span class="color-comment"> // static variable, no linkage</span>
+                           <span class="color-comment"> // scope is this block</span>
+                           <span class="color-comment"> // It retains its value across function calls</span>
+      ++blockVar;
+      cout &lt;&lt; &quot;blockVar is &quot; &lt;&lt; blockVar &lt;&lt; endl; <span class="color-comment"> // 1, 2, 3</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Try using a graphic debugger (CodeBlocks or Eclipse) to check the duration (created/destroyed) and scope (visible) of the variables.</p>
+
+<p>The <code>static</code> variable <code>blockVar</code>, which is declared inside the function <code>fun()</code>, has <em>local scope</em> and <em>no linkage</em>. It can only visible (scope) inside the block in which it is defined, just like an automatic variable. But unlike automatic variable, <code>static</code> variable retains its memory (and value) across multiple function calls. Both the <code>static</code> variables <code>allFileVar</code> and <code>thisFileVar</code> are visible (scope) immediately after their declarations. <code>thisFileVar</code>, with &quot;<code>static</code>&quot; specifier, has <em>internal linkage</em> and can be used by all functions in this file. On the other hand, <code>allFileVar</code>, without the &quot;<code>static</code>&quot; specifier, has <em>external linkage</em> and can be used in other files with &quot;<code>extern</code>&quot; specifier (which will be described later).</p>
+
+<h5><span class="font-code">static</span> class members</h5>
+
+<p>A <code>static</code> class member (data or function) belongs to the class, instead of instances. It can be referenced directly from the class, without creating instances, via <code><em>Classname</em>::<em>staticMemberName</em></code>. A <code>static</code> data member retains its value throughout the program execution.</p>
+
+
+<h4>External Variables (&quot;<span class="font-code">extern</span>&quot; Specifier)</h4>
+
+<p>The <code>extern</code> specifies linkage to another source file. It tells the compiler that the identifier is defined in another (external) source file.</p>
+
+<pre class="color-example">
+<span class="color-comment">// File1.cpp</span>
+extern int globalVar;  <span class="color-comment">// Declare that this variable is defined in another file (external variable).
+                       // Cannot assign an value.
+                       // Need to link to the other file.</span></pre>
+
+<pre class="color-example">
+<span class="color-comment">// File2.cpp</span>
+int globalVar = 88;    <span class="color-comment">     // Definition here</span>
+<span class="color-comment">// or</span>
+extern int globalVar = 88;  <span class="color-comment">// The &quot;extern&quot; specifier is optional.
+                            // The initialization indicates definition</span></pre>
+
+<p>C/C++ has the so-called &quot;one definition rule&quot;, which states that a variable can only be defined once. In the above example, the statement &quot;<code>int globalVar</code>&quot; in <code>File2.cpp</code> is called the <em>defining declaration</em> (or simply <em>definition</em>), which causes memory to be allocated; the statement &quot;<code>extern int globalVar</code>&quot; in <code>File1.cpp</code> is called <em>referencing declaration</em> (or simply <em>declaration</em>), which does not allocate memory but links to an existing memory.</p>
+
+<h4>Summary</h4>
+
+<p>Recap that the <em>duration</em> determines when the variable is created and destroyed; <em>scope</em> determines which part of the program can access the variable; and <em>linkage</em> determines whether the variable is available in other source files.</p>
+
+<table class="table-zebra">
+<tr>
+<th></th>
+<th>Description</th>
+<th>Duration</th>
+<th>Scope</th>
+<th>Linkage</th>
+</tr>
+
+<tr>
+<td>Variables declared inside a function (or block)</td>
+<td>Automatic local variables</td>
+<td>Block</td>
+<td>Block (or Local)</td>
+<td>None</td>
+</tr>
+
+<tr class="tr-alt">
+  <td>Variables declared inside a function (or block) with  <code>static</code> specifier</td>
+  <td>Static variables with no linkage</td>
+  <td>Static (Entire program)</td>
+  <td>Block (or Local)</td>
+  <td>None</td>
+</tr>
+
+<tr>
+  <td>Variables declared outside all functions</td>
+  <td>Static variables with external linkage</td>
+  <td>Static (Entire program)</td>
+  <td>File (or Global)</td>
+  <td>External</td>
+</tr>
+
+<tr class="tr-alt">
+  <td>Variables declared outside all functions with <code>static</code> specifier</td>
+  <td>Static variables with internal linkage</td>
+  <td>Static (Entire program)</td>
+  <td>File (or Global)</td>
+  <td>Internal</td>
+</tr>
+</table>
+
+<h4>CV-Qualifiers (<span class="font-code">const</span> and <span class="font-code">volatile</span>) and <span class="font-code">mutable</span></h4>
+
+<p>The  &quot;<code>const</code>&quot; qualifier indicates that the content of the storage location shall not be changed after initialized.</p>
+<p>The  &quot;volatile&quot; qualifier indicates that the content of the storage location could be altered outside your program, e.g., by an external hardware. This qualifier is needed to tell compiler not to optimize this particular location (e.g., not to store in register, not to re-order the statement, or collapse multiple statements).</p>
+<p>The  <code>mutable</code> specifier can be used in <code>struct</code> or <code>class</code> to indicate that a particular data member is modifiable even though the instance is declared <code>const</code>.</p>
+
+<h5>&quot;<span class="font-code">const</span>&quot; Global Variables</h5>
+
+<p>By default, a global variable (defined outside all functions) has external linkage. However, <code>const</code> global variable has internal linkage (as if <code>static</code> specifier is used). As the result, you can place all <code>const</code> global variables in a header file, and include the header in all the source files. To set a <code>const</code> global variable to external linkage, include  &quot;<code>extern</code>&quot; specifier.</p>
+
+<h4>Function and Linkage</h4>
+
+<p>So far, we were discussing about variables. By default, functions have duration of the entire program, and external linkage (can be shared across file).</p>
+<p>You use use the &quot;<code>static</code>&quot; specifier to confine the function to internal linkage (accessible in this file only). The &quot;one definition only&quot; rule applies to all non-inline functions. That is, there is only one function definition. Each file shall have the function prototype (declaration). Since inline functions are often placed in the header, which will be included in all file, the &quot;one definition rule&quot; makes an exception. However, all copies of inline function shall be identical.</p>
+<p>If a function is declared <code>static</code> in its prototype, the C++ compiler/linker search the current file only for the function definition<code></code>. Otherwise, C++ compiler/linker searches all the program files. It issues an error if it finds more than one definitions. If the function is not found in all the program files, it then searches the libraries.</p>
+
+<h5><span class="font-code">extern &quot;C&quot;</span> vs. <span class="font-code">extern &quot;C++&quot;</span></h5>
+
+<p>Many C++ compilers use a so-called &quot;<a href="cp1_Basics.html#name_mangling">name mangling scheme</a>&quot; to support function overloading (i.e., many versions for the same function name differentiated by their parameter list). You can use keyword <code>extern</code> to indicate the naming protocol of the function, for example,</p>
+
+<pre class="color-example">
+<span class="color-new">extern &quot;C&quot;</span> void function1 (int, int);          <span class="color-comment">// Use C function naming protocol
+                                               //  without name manglind</span>
+<span class="color-new">extern &quot;C++&quot;</span> void function2 (double, double);  <span class="color-comment">// Use C++ naming mangling</span>
+<span class="color-new">extern</span> void function (double, double);         <span class="color-comment">// Same as above</span></pre>
+
+<h4>Other Scopes</h4>
+
+<p>Besides the block-scope (local-scope), file-scope (global-scope) with internal or external linkage, there are:</p>
+
+<ul>
+<li>Function Scope: A label (identified by an identifier followed by a colon, e.g., <code>loop:</code>) can be referenced within the entire function in which it is defined.</li>
+<li>Function Prototype Scope: The optional identifiers defined in the function prototype is confined to the function prototype only. There are not bind to the function definition.</li>
+<li>Class Scope: Class members (data and function) have class scope and are visible inside the class definition. You can use the same identifier in two different classes. You cannot access a class member directly outside the class definition, even for public members (which is accessed via the dot operator in the form of <code><em>objectName</em>.<em>memberName</em></code>).</li>
+<li>Namespace Scope: Name defined under a namespace are visible within the namespace definition only. You need to use the scope resolution operator to reference the name outside the namespace definition in the form of <code><em>namespace</em>::<em>memberName</em></code>. With the introduction of namespace in C++, the global scope is changed to global namespace scope, identified by a nameless namespace or <code>::<em>memberName</em></code>.</li>
+</ul>
+
+<h3>Summary of <span class="font-code">static</span> Keyword</h3>
+
+<ul>
+<li>A <code>static</code> variable defined inside a block has block-scope, but having duration for the entire program. It retains its memory and value across multiple invocations.</li>
+<li>A <code>static</code> global variable defined outside all functions has file-scope with internal linkage (i.e., visible only to the file in which it is defined, but not other source files). It has duration for the entire program, and retains its memory and value throughout the program execution. On the other hand, a global variable without the static keyword has file-scope with external linkage. It can be referenced by other file via the <code>extern</code> keyword.</li>
+<li>A <code>static</code> class member belongs to the class, instead of the instances. There is one copy shared by all the instances. It has class scope. To reference it outside the class, use the scope resolution operator <code><em>classname</em>::<em>static_membername</em></code>.</li>
+
+</ul>
+
+<h3>Type Casting Operators</h3>
+
+<p>C++ supports C's explicit type casting operations <code>(<em>new-type</em>)<em>value</em></code> (C-style cast), or <code><em>new-type</em>(<em>value</em>)</code> (Function-style cast), called <em>regular cast</em>. Regular cast is too lax, and often produces expected result.</p>
+
+<p>C++ introduces 4 new type casting operators: <code>const_cast&lt;<em>new-type</em>&gt;(<em>value</em>)</code>, <code>static_cast&lt;<em>new-type</em>&gt;(<em>value</em>)</code>, <code>dynamic_cast&lt;<em>new-type</em>&gt;(<em>value</em>)</code>, <code>reinterpret_cast&lt;<em>new-type</em>&gt;(<em>value</em>)</code> to regulate type casting. Although the old styles is still acceptable in C++, new styles are preferable.</p>
+
+<h5><span class="font-code">static_cast</span></h5>
+
+<p><code>static_cast</code> is used for force implicit conversion. It throws a type-cast error if the conversion fails.</p>
+
+<p>You can use <code>static_cast</code> to convert values of various fundamental types, e.g., from <code>double</code> to <code>int</code>, from <code>float</code> to <code>long</code>.</p>
+
+<p>[TODO] Example</p>
+
+<h5><span class="font-code">dynamic_cast</span></h5>
+
+<p><code>dynamic_cast</code> can be used to verify the type of an object at runtime, before performing the type conversion. It is primarily used to perform &quot;safe downcasting&quot;</p>
+
+<p>The syntax is:</p>
+
+<pre class="color-syntax">
+dynamic_cast&lt;<em>Type</em> *&gt;(<em>ptr</em>)</pre>
+
+<p>It converts the pointer <code><em>ptr</em></code> to a pointer of the type <em><code>Type</code></em>, in runtime, if <em><code>ptr</code></em> is pointing to an object of <code><em>Type</em></code>, or its direct or indirect subclass. Otherwise, it returns 0, or null pointer.</p>
+
+<p>You can use <code>dynamic_cast</code> in a condition to ascertain the type of the object, before performing certain operations.</p>
+
+<p>[TODO] Example</p>
+
+<h5><span class="font-code">const_cast</span></h5>
+
+<p>The <code>const_cast</code> can be used to drop the <code>const</code> label, so as to alter its contents (i.e., cast away the <code>const</code>-ness or <code>volatile</code>-ness). This is useful if you have a variable which is constant most of the time, but need to be changed in some circumstances. You can declare the variable as <code>const</code>, and use <code>const_cast</code> to alter its value. The syntax is:</p>
+
+<pre class="color-syntax">
+const_cast&lt;<em>Type</em>&gt;(<em>expression</em>)</pre>
+
+<p><code>const_cast</code> cannot change the type of an object.</p>
+
+<p>[TODO] Example</p>
+
+<h5 class="font-code">reinterpret_cast</h5>
+
+<p>Used for low-level casts that yield implementation-dependent result, e.g., casting a pointer to an <code>int</code>.</p>
+
+<h3>Summary of <span class="font-code">const</span> Keyword</h3>
+
+<p>A <code>const</code> variable (local or global) cannot be modified, and must be initialized during declaration. By convention, these <code>const</code> variable are named in uppercase.</p>
+
+<pre class="color-example">
+<span class="color-new">const</span> int SIZE = 5;
+
+int main() {
+   <span class="color-new">const</span> int ROWS = 8;
+   ......
+}</pre>
+
+<h5>Function's Parameters</h5>
+
+<p>In C++, objects are pass-by-value into function by default, which has no side effect but involves calling the copy constructor to make a clone copy (an expensive operation for huge objects). Objects should be passed into function by reference as far as possible for performance. However, in pass-by-reference, changes made inside the function have side effect of modifying the caller's object. We could use keyword <code>const</code> to enforce immutability, if we do not wish to change the object inside the function. Instead of using pass-by-value to prevent side-effect, it is better to use pass-by-reference-to-<code>const</code>.</p>
+
+<pre class="color-example">
+void fun (MyClass obj);  <span class="color-comment">// pass-by-value (default)
+                         // Invoke copy constructor to make a clone copy
+                         // No side-effect</span>
+void fun (MyClass &amp; obj);       <span class="color-comment">// pass-by-reference, have side-effect</span>
+void fun (const MyClass &amp; obj)  <span class="color-comment">// pass-by-reference-to-const
+                                // No side-effect. Cannot modify caller's copy</span></pre>
+
+<p>You can also use <code>const</code> for array to prevent it from being modified inside the function (as array is an pointer).</p>
+
+<p>It is recommended to leave out the <code>const</code> for fundamental types (<code>int</code>, <code>double</code>), as they are passed by value. Although you can use <code>const</code> keyword to prevent modification of these local parameters (which is rarely necessary), the keyword can be confusing. If needed, you may include it in the implementation, but leave them out from the header.</p>
+
+<p><code>const</code> function parameters = not modifying the caller's copy (in pass-by-reference).</p>
+
+
+<h5>Function's Return Value</h5>
+
+<p>For object return type, we can use <code>const</code> to prevent it to be used as the <em>lvalue</em>, e.g., <code>f() = x</code>. A <code>const</code> return object cannot be a lvalue (e.g., for assignment); while a non-<code>const</code> return object can.</p>
+
+<p>For example, if we overload the <code>+</code> operator for the <code>MyComplex</code> class:</p>
+
+<pre class="color-example">
+MyComplex operator+ (const MyComplex &amp; lhs, const MyComplex &amp; rhs);
+    <span class="color-comment">// non-const return type can be used as lvalue</span>
+
+MyComplex c1, c2, c3;
+c1 + c2 = c3;   <span class="color-comment">// Valid if the return type is non-const
+                // Not meaningful and possibly a misspelling of
+                // c1 + c2 == c3 </span></pre>
+
+<p>Function return value of fundamental types can never be the lvalue, and trigger compilation error.</p>
+
+<h5>Class</h5>
+
+<p>A <code>const</code> data member cannot be modified (as usual).</p>
+
+<p>A <code>const</code> member function (with <code>const</code> keyword at the end of the function) cannot modify data members.</p>
+
+<h5>Object</h5>
+
+<p>A <code>const</code> object can only invoke <code>const</code> member function. It cannot invoke non-<code>const</code> member function. A non-<code>const</code> object can invoke both <code>const</code> and non-<code>const</code> member function.</p>
+<p>If a function is overloaded with a <code>const</code> and a non-<code>const</code> version, a <code>const</code> object will match with a <code>const</code> member function. A non-<code>const</code> object will match with a non-<code>const</code> function. For example, the <code>at()</code> function of <code>string</code> class has two versions:</p>
+
+<pre class="color-example">      char &amp; at (size_t pos);        <span class="color-comment">// non-const member function</span>
+const char &amp; at (size_t pos) const;  <span class="color-comment">// const member function</span></pre>
+
+<p>A <code>const</code> <code>string</code> object will invoke the <code>const</code> version, which returns a <code>const char &amp;</code> that cannot be used a lvalue.</p>
+
+<pre class="color-example">
+const string str1(&quot;hello&quot;); <span class="color-comment">// const string object</span>
+cout &lt;&lt; str1.at(1);         <span class="color-comment">// okay</span>
+str1.at(1) = 'x';           <span class="color-comment">// error - returned const char &amp; cannot be lvalue</span>
+ 
+string str2(&quot;again&quot;); <span class="color-comment">// non-const string object</span>
+str2.at(1) = 'x';     <span class="color-comment">// okay</span></pre>
+
+<h5>Pointer</h5>
+
+<ol>
+<li>Non-constant pointer to constant data: Data pointed to CANNOT be changed; but pointer CAN be changed to point to another data. For example,
+  <pre class="color-example">
+int i1 = 8, i2 = 9;
+<span class="color-new">const</span> int * iptr = &amp;i1;  <span class="color-comment">// non-constant pointer pointing to constant data</span>
+// *iptr = 9;   <span class="color-error">// error: assignment of read-only location</span>
+iptr = &amp;i2;  <span class="color-comment">// okay</span></pre></li>
+
+<li>Constant pointer to non-constant data: Data pointed to CAN be changed; but pointer CANNOT be changed to point to another data. For example,
+  <pre class="color-example">
+int i1 = 8, i2 = 9;
+int * <span class="color-new">const</span> iptr = &amp;i1;  <span class="color-comment">// constant pointer pointing to non-constant data</span>
+*iptr = 9;   <span class="color-comment">// okay</span>
+// iptr = &amp;i2;  <span class="color-error">// error: assignment of read-only variable</span></pre></li>
+
+<li>Constant pointer to constant data: Data pointed to CANNOT be changed; and pointer CANNOT be changed to point to another data. For example,
+  <pre class="color-example">
+int i1 = 8, i2 = 9;
+<span class="color-new">const</span> int * <span class="color-new">const</span> iptr = &amp;i1;  <span class="color-comment">// constant pointer pointing to constant data</span>
+// *iptr = 9;   <span class="color-error">// error: assignment of read-only variable</span>
+// iptr = &amp;i2;  <span class="color-error">// error: assignment of read-only variable</span></pre></li>
+
+<li>Non-constant pointer to non-constant data: Data pointed to CAN be changed; and pointer CAN be changed to point to another data. For example,
+  <pre class="color-example">
+int i1 = 8, i2 = 9;
+int * <span class="color-new"></span>iptr = &amp;i1;  <span class="color-comment">// non-constant pointer pointing to non-constant data</span>
+*iptr = 9;   <span class="color-comment">// okay</span>
+iptr = &amp;i2;  <span class="color-comment">// okay</span></pre></li>
+
+</ol>
+
+<p>If the keyword <code>const</code> appears before (to the left) of the <code>*</code>, what is pointed-to is a constant. If it appears after (to the right) of <code>*</code>, the pointer itself is a constant.</p>
+
+<h3>C++ Keywords</h3>
+
+<h5>Keywords Ported from C Language (32)</h5>
+
+<ul>
+<li>Types: <code>int</code>, <code>short</code>, <code>long</code>, <code>char</code>, <code>float</code>, <code>double</code>, <code>void</code>, <code>signed</code>, <code>unsigned</code>, <code>typedef</code>.</li>
+
+<li>Flow Control: <code>if</code>, <code>else</code>, <code>switch</code>, <code>case</code>, <code>default</code>, <code>while</code>, <code>do</code>, <code>for</code>, <code>break</code>, <code>continue</code>, <code>goto</code>, <code>return</code>.</li>
+
+<li>Storage Qualifiers: <code>const</code><code></code>, <code>volatile</code>, <code>auto</code>, <code>extern</code>, <code>register</code>, <code>static</code>.</li>
+
+<li>Operators: <code>sizeof</code>.</li>
+
+<li>Compound Types: <code>enum</code>, <code>struct</code>, <code>union</code>.</li>
+
+</ul>
+
+<h5>C++98/03 Keywords (42)</h5>
+
+<ul>
+<li>Class: <code>class</code>, <code>public</code>, <code>private</code>, <code>protected</code>, <code>friend</code>, <code>explicit</code> (constructor), <code>inline</code> (function), <code>virtual</code> (polymorphism), <code>operator</code> (overloading).</li>
+<li>Template: <code>template</code>, <code>export</code>, <code></code><code>typename</code>.</li>
+<li>Namespace: <code>this</code>,<code>namespace</code>, <code>using</code>.</li>
+<li>Types: <code>bool</code>, <code>true</code>, <code>false</code>, <code>wchar_t</code>.</li>
+<li>Memory Allocation: <code>new</code>, <code>delete</code>,</li>
+<li>Exception Handling: <code>try</code>, <code>catch</code>, <code>throw</code>.</li>
+
+<li>Operators: <code>and</code> (<code>&amp;&amp;</code>), <code>or</code> (<code>||</code>), <code>not</code> (<code>!</code>), <code>xor</code> (<code>^</code>), <code>compl</code> (<code>~</code>), <code>bitand</code> (<code>&amp;</code>), <code>bitor</code> (<code>|</code>), <code>and_eq</code> (<code>&amp;=</code>), <code>or_eq</code> (<code>|=</code>), <code>not_eq</code> (<code>!=</code>), <code>xor_eq</code> (<code>^=</code>).</li>
+<li>Type and Casting Operators:<code></code> <code></code><code>typeid</code>, <code>static_cast</code>, <code>const_cast</code>, <code>dynamic_cast</code>, <code>reinterpret_cast</code>.</li>
+<li>Storage Qualifier: <code>mutable</code>.</li>
+<li>Others: <code>asm</code> (inline assembly block).</li>
+</ul>
+
+<h5>C++11 Keywords (10)</h5>
+
+<ul>
+<li>Types: <code>char16_t</code>, <code>char_32_t</code>, <code>nullptr</code>.</li>
+<li>Storage Qualifiers:  <code>thread_local</code>.</li>
+<li>Others: <code>alignas</code>, <code>alignof</code>, <code>constexpr</code>, <code>decltype</code>, <code>noexcept</code>, <code>static_asert</code>.</li>
+</ul>
+
+
+
+<a class="references" href="../howto/References.html#cpp">Link to &quot;C++ Language References &amp; Resources&quot;</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: GCC g++ 4.6.2<br />
+Last modified: May, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

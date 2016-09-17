@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Access NTU VPN</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>How to Setup and Access NTU VPN</h1>
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Setting up NTU VPN Client for Windows 8 and Windows 10</h3>
+<ol>
+<li>Search &rArr; vpn</li>
+<li>Choose "Manage Virtual Private Networks (VPN)" or &quot;Change VPN Settings&quot;.</li>
+<li>Add a VPN:
+<ul>
+<li>Provider: Microsoft (for Windows 10: Windows (Built-in))</li>
+<li>Connection Name: NTU VPN (or your perferred name)</li>
+<li>Server Name or Address: vpngate.ntu.edu.sg</li>
+<li>VPN Type: Automatic</li>
+<li>Username: student\<em>yourUsername</em> (NOTE: use backslash)</li>
+<li>password: xxxxxxxx</li>
+<li>Save</li>
+</ul>
+</li>
+<li>To connect to the network via VPN: On the taskbar, click &quot;Network&quot; icon &rArr; Connect to the VPN created.</li>
+</ol>
+
+<h3>Setting up NTU VPN Client for Windows 7</h3>
+
+<ol>
+<li>Control Panel &rArr; Network and Sharing Center</li>
+<li>Set up a new connection or network &rArr; Connect to a workplace &rArr; No, Create a new connection &rArr; next</li>
+<li>Use my Internet connection (VPN)
+<ul>
+<li>Internet address: vpngate.ntu.edu.sg &rArr; next</li>
+<li>User name: student\<em>yourUsername</em> (NOTE: use backslash) &rArr; connect</li>
+</ul></li>
+<li>To connect to the network via VPN: On the taskbar, click &quot;Network&quot; icon &rArr; Connect to the VPN created.</li>
+</ol>
+
+<h3>Setting up NTU VPN Client for Ubuntu</h3>
+<ol>
+<li>System Settings &rArr; Network &rArr; VPN Connections &rArr; Configure VPN &rArr; Add &rArr; VPN PPTP &rArr; Create</li>
+
+<li>Enter:
+<ul>
+<li>Connection name: NTU VPN</li>
+<li>Gateway: vpngate.ntu.edu.sg</li>
+<li>Username: student/<em>yourUsername</em></li>
+<li>Advanced: select Point-to-point encryption (MPPE)</li>
+</ul></li>
+</ol>
+
+<h3>Setting up NTU VPN Client for Mac OS X 10.7 to 10.9</h3>
+<ol>
+<li>Click &quot;Apple&quot; icon &rArr; System Preferences &rArr; Network &rArr; &quot;+&quot;</li>
+
+<li>Enter:
+<ul>
+<li>Interface: Select &quot;VPN&quot;</li>
+<li>VPN Type: PPTP</li>
+<li>Service Name: NTU VPN &rArr; Create</li></ul></li>
+
+<li>Configure:
+<ul>
+<li>Server Address: vpngate.ntu.edu.sg</li>
+<li>Account Name: student\<em>yourUsername</em> (NOTE: Use back-slash)</li>
+</ul>
+
+</li>
+
+</ol>
+
+<p>If you encounter &quot;DNS error&quot;, &quot;DNS loopup failed&quot;, or &quot;Can't find the server&quot;, check the &quot;Proxy&quot; (under &quot;Advanced Settings&quot;) and select &quot;Automatic Discovery&quot;. You need to refresh you page, or even disconnect and re-connect the VPN, after changing these settings.</p>
+
+<p>See <a href="http://www.ntu.edu.sg/cits/gettinghelp/getmeconnected/Pages/configuringMacOS.aspx#vpn">http://www.ntu.edu.sg/cits/gettinghelp/getmeconnected/Pages/configuringMacOS.aspx</a> for screen shots.</p>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Last modified: October, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

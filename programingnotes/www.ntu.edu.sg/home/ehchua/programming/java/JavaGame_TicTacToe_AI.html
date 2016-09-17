@@ -1,0 +1,770 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tic-tac-toe AI - Java Game Programming Case Study</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Graphics Tutorial</h1>
+<h2>Case Study on Tic-Tac-Toe Part 2: With AI</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Playing Against Computer with AI (Advanced)</h3>
+
+<p>Click the image to run the demo for the various AI strategies (under the &quot;Options&quot; menu):</p>
+<a href="Applet_TicTacToe.html" target="_blank"><img src="images/GameTTT_Applet.png" alt="GameTTT_Applet.png" /></a>
+
+<p>Tic-tac-toe seems dumb, but it actually requires you to <em>lookahead</em> one opponent's move to ensure that you will not loss. That is, you need to consider your opponent's move after your next move.</p>
+<p>For example, suppose that the computer uses 'O'. At (D), the computer did not consider the opponent's next move and place at the corner (which is preferred over the side). At (E), the opponent was able to block the computer's winning move and create a fork.</p>
+
+<pre class="color-example">
+ X |   |       X |   |       X |   |       X |   |       X |   | X
+-----------   -----------   -----------   -----------   -----------
+   |   |         | O |         | O |         | O |         | O |
+-----------   -----------   -----------   -----------   -----------
+   |   |         |   |         |   | X     O |   | X     O |   | X
+    (A)           (B)           (C)           (D)           (E)</pre>
+
+<h4>Implementing the AI Player</h4>
+
+<p>To test the various AI strategies, an <code>abstract</code> superclass called <code>AIPlayer</code> is defined, which takes the <code>Board</code> as an argument in its constructor (because you need the board position to compute the next move).  An <code>abstract</code> method called <code>move()</code> is defined, which shall be implemented in subclasses with the chosen strategy.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/**
+ * Abstract superclass for all AI players with different strategies.
+ * To construct an AI player:
+ * 1. Construct an instance (of its subclass) with the game Board
+ * 2. Call setSeed() to set the computer's seed
+ * 3. Call move() which returns the next move in an int[2] array of {row, col}.
+ *
+ * The implementation subclasses need to override abstract method move().
+ * They shall not modify Cell[][], i.e., no side effect expected.
+ * Assume that next move is available, i.e., not game-over yet.
+ */</span>
+public abstract class AIPlayer {
+   protected int ROWS = GameMain.ROWS;  <span class="color-comment">// number of rows</span>
+   protected int COLS = GameMain.COLS;  <span class="color-comment">// number of columns</span>
+ 
+   protected Cell[][] cells; <span class="color-comment">// the board's ROWS-by-COLS array of Cells</span>
+   protected Seed mySeed;    <span class="color-comment">// computer's seed</span>
+   protected Seed oppSeed;   <span class="color-comment">// opponent's seed</span>
+ 
+   <span class="color-comment">/** Constructor with reference to game board */</span>
+   public AIPlayer(Board board) {
+      cells = board.cells;
+   }
+ 
+   <span class="color-comment">/** Set/change the seed used by computer and opponent */</span>
+   public void setSeed(Seed seed) {
+      this.mySeed = seed;
+      oppSeed = (mySeed == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
+   }
+ 
+   <span class="color-comment">/** Abstract method to get next move. Return int[2] of {row, col} */</span>
+   abstract int[] move();  <span class="color-comment">// to be implemented by subclasses</span>
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Simplest Strategy – Heuristic Preferences via Table Lookup</h4>
+
+<p>The simplest computer strategy is to place the seed on the first empty cell in this order: the center, one of the four corners, one of the four sides.  This dumb strategy, of course, does not work. It merely gets you started programming the computer play.</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/**
+ * Computer move based on simple table lookup of preferences
+ */</span>
+public class AIPlayerTableLookup extends AIPlayer {
+ 
+   <span class="color-comment">// Moves {row, col} in order of preferences. {0, 0} at top-left corner</span>
+   private int[][] preferredMoves = {
+         {1, 1}, {0, 0}, {0, 2}, {2, 0}, {2, 2},
+         {0, 1}, {1, 0}, {1, 2}, {2, 1}};
+ 
+   <span class="color-comment">/** constructor */</span>
+   public AIPlayerTableLookup(Board board) {
+      super(board);
+   }
+ 
+   <span class="color-comment">/** Search for the first empty cell, according to the preferences
+    *  Assume that next move is available, i.e., not gameover
+    *  @return int[2] of {row, col}
+    */</span>
+   @Override
+   public int[] move() {
+      for (int[] move : preferredMoves) {
+         if (cells[move[0]][move[1]].content == Seed.EMPTY) {
+            return move;
+         }
+      }
+      assert false : &quot;No empty cell?!&quot;;
+      return null;
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Heuristic Board Evaluation Function</h4>
+
+<p>In this strategy, we need to formula a <em>heuristic evaluation function</em>, which returns a relative score, e.g., +&infin; for computer-win, -&infin; for opponent-win, 0 for neutral, and a number in between to indicate the relative advantage of the computer vs. the opponent.</p>
+
+<p>In Tic-Tac-Toe, a possible heuristic evaluation function for the current board position is:</p>
+<ul>
+<li>+100 for EACH 3-in-a-line for computer.</li>
+<li>+10 for EACH two-in-a-line (with a empty cell) for computer.</li>
+<li>+1 for EACH one-in-a-line (with two empty cells) for computer.</li>
+<li>Negative scores for opponent, i.e., -100, -10, -1 for EACH opponent's 3-in-a-line, 2-in-a-line and 1-in-a-line.</li>
+<li>0 otherwise (empty lines or lines with both computer's and opponent's seeds).</li>
+</ul>
+
+<p>For Tic-Tac-Toe, compute the scores for each of the 8 lines (3 rows, 3 columns and 2 diagonals) and obtain the sum.</p>
+
+<p>For an Othello (Reversi), the heuristic evaluation function could be the difference of computer's seeds over opponent's seeds.</p>
+
+<p>To implement this strategy, you need to compute the score for all the valid moves, and place the seed at the position with the highest score.  This strategy does not work in Tic-Tac-Toe (and in most of the board game) because it does not <em>lookahead</em> opponent's next move.</p>
+
+<h4>Rule-based Strategy</h4>
+<p>For Tic-tac-toe, the rules, in the order of importance, are:</p>
+
+<ul>
+<li>Rule 1: If I have a winning move, take it.</li>
+<li>Rule 2: If the opponent has a winning move, block it.</li>
+<li>Rule 3: If I can create a fork (two winning ways) after this move, do it.</li>
+<li>Rule 4: Do not let the opponent creating a fork after my move. (Opponent may block your winning move and create a fork.)</li>
+<li>Rule 5: Place in the position such as I may win in the most number of possible ways.</li>
+</ul>
+
+<p>Rule 1 and 2 can be programmed easily.  Rule 3 is harder.  Rule 4 is even harder because you need to lookahead one opponent move, after your move.  For rule 5, you need to count the number of possible winning ways.</p>
+
+<p>Rule-based strategy is only applicable for simple game such as Tic-tac-toe and Othello.</p>
+
+<h4>Minimax Search Algorithm</h4>
+
+<p><span class="line-heading">Reference:</span> Wiki &quot;Minimax&quot;.</p>
+<p>First, decide on a <em>heuristic board evaluation function</em> (see above section).</p>
+<p>For Tic-Tac-Toe, the function could be as simple as returning +1 if the computer wins, -1 if the player wins, or 0 otherwise. However, simple evaluation function may require deeper search.</p>
+<p>A better evaluation function for Tic-Tac-Toe is:</p>
+<ul>
+<li>+100 for EACH 3-in-a-line for computer.</li>
+<li>+10 for EACH 2-in-a-line (with a empty cell) for computer.</li>
+<li>+1 for EACH 1-in-a-line (with two empty cells) for computer.</li>
+<li>Negative scores for opponent, i.e., -100, -10, -1 for EACH opponent's 3-in-a-line, 2-in-a-line and 1-in-a-line.</li>
+<li>0 otherwise (empty lines or lines with both computer's and opponent's seed).</li>
+</ul>
+
+<p>Compute the scores for each of the 8 lines (3 rows, 3 columns and 2 diagonals) and obtain the sum.</p>
+
+<p>The principle of minimax is to <em>minimize the maximum possible loss</em>.</p>
+
+<p>As an illustration, suppose that there are only one or two possible moves per player in each turn. Furthermore, an evaluation function has been defined, which returns +&infin; if the computer wins, -&infin; if the computer loses, and a score in between to reflect the relative advantage of the computer. Computer (or the maximizing player) is represented by circle. The opponent (or the minimizing player) is represented by square.  We limit the lookahead to four moves.
+</p>
+<p>The  algorithm evaluates the <em>leaf nodes</em> (terminating &quot;gameover&quot; nodes or at maximum depth of 4) using the heuristic evaluation function, obtaining the values shown. At level 3, the minimizing player will choose, for each node, the minimum of its children. In level 2, the maximizing player chooses the maximum of the children. The algorithm continues evaluating the maximum and minimum values of the child nodes alternately until it reaches the root node, where it chooses the move with the maximum value. This is the move that the player should make in order to minimize the maximum possible loss.</p>
+
+<img class="image-center" src="images/GameTTT_minimax.png" alt="GameTTT_minimax.png" />
+
+<p>Minimax is <em>recursive</em>. The algorithm is as follows:</p>
+<pre class="color-example">
+minimax(level, player)  <span class="color-comment">// player may be &quot;computer&quot; or &quot;opponent&quot;</span>
+if (gameover || level == 0)
+   return score
+children = all legal moves for this player
+if (player is computer, i.e., maximizing player)
+   <span class="color-comment">// find max</span>
+   bestScore = -inf
+   for each child
+      score = minimax(level - 1, opponent)
+      if (score &gt; bestScore) bestScore = score
+   return bestScore
+else (player is opponent, i.e., minimizing player)
+   <span class="color-comment">// find min</span>
+   bestScore = +inf
+   for each child
+      score = minimax(level - 1, computer)
+      if (score &lt; bestScore) bestScore = score
+   return bestScore
+ 
+<span class="color-comment">// Initial Call</span>
+minimax(2, computer)</pre>
+   
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172</pre></td>
+<td>
+<pre>
+import java.util.*;
+<span class="color-comment">/** AIPlayer using Minimax algorithm */</span>
+public class AIPlayerMinimax extends AIPlayer {
+ 
+   <span class="color-comment">/** Constructor with the given game board */</span>
+   public AIPlayerMinimax(Board board) {
+      super(board);
+   }
+ 
+   <span class="color-comment">/** Get next best move for computer. Return int[2] of {row, col} */</span>
+   @Override
+   int[] move() {
+      int[] result = minimax(2, mySeed); <span class="color-comment">// depth, max turn</span>
+      return new int[] {result[1], result[2]};   <span class="color-comment">// row, col</span>
+   }
+ 
+   <span class="color-comment">/** Recursive minimax at level of depth for either maximizing or minimizing player.
+       Return int[3] of {score, row, col}  */</span>
+   private int[] minimax(int depth, Seed player) {
+      <span class="color-comment">// Generate possible next moves in a List of int[2] of {row, col}.</span>
+      List&lt;int[]&gt; nextMoves = generateMoves();
+ 
+      <span class="color-comment">// mySeed is maximizing; while oppSeed is minimizing</span>
+      int bestScore = (player == mySeed) ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+      int currentScore;
+      int bestRow = -1;
+      int bestCol = -1;
+ 
+      if (nextMoves.isEmpty() || depth == 0) {
+         <span class="color-comment">// Gameover or depth reached, evaluate score</span>
+         bestScore = evaluate();
+      } else {
+         for (int[] move : nextMoves) {
+            <span class="color-comment">// Try this move for the current &quot;player&quot;</span>
+            cells[move[0]][move[1]].content = player;
+            if (player == mySeed) {  <span class="color-comment">// mySeed (computer) is maximizing player</span>
+               currentScore = minimax(depth - 1, oppSeed)[0];
+               if (currentScore &gt; bestScore) {
+                  bestScore = currentScore;
+                  bestRow = move[0];
+                  bestCol = move[1];
+               }
+            } else {  <span class="color-comment">// oppSeed is minimizing player</span>
+               currentScore = minimax(depth - 1, mySeed)[0];
+               if (currentScore &lt; bestScore) {
+                  bestScore = currentScore;
+                  bestRow = move[0];
+                  bestCol = move[1];
+               }
+            }
+            <span class="color-comment">// Undo move</span>
+            cells[move[0]][move[1]].content = Seed.EMPTY;
+         }
+      }
+      return new int[] {bestScore, bestRow, bestCol};
+   }
+ 
+   <span class="color-comment">/** Find all valid next moves.
+       Return List of moves in int[2] of {row, col} or empty list if gameover */</span>
+   private List&lt;int[]&gt; generateMoves() {
+      List&lt;int[]&gt; nextMoves = new ArrayList&lt;int[]&gt;(); <span class="color-comment">// allocate List</span>
+ 
+      <span class="color-comment">// If gameover, i.e., no next move</span>
+      if (hasWon(mySeed) || hasWon(oppSeed)) {
+         return nextMoves;   <span class="color-comment">// return empty list</span>
+      }
+ 
+      <span class="color-comment">// Search for empty cells and add to the List</span>
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            if (cells[row][col].content == Seed.EMPTY) {
+               nextMoves.add(new int[] {row, col});
+            }
+         }
+      }
+      return nextMoves;
+   }
+ 
+   <span class="color-comment">/** The heuristic evaluation function for the current board
+       @Return +100, +10, +1 for EACH 3-, 2-, 1-in-a-line for computer.
+               -100, -10, -1 for EACH 3-, 2-, 1-in-a-line for opponent.
+               0 otherwise   */
+</span>   private int evaluate() {
+      int score = 0;
+      <span class="color-comment">// Evaluate score for each of the 8 lines (3 rows, 3 columns, 2 diagonals)</span>
+      score += evaluateLine(0, 0, 0, 1, 0, 2);  <span class="color-comment">// row 0</span>
+      score += evaluateLine(1, 0, 1, 1, 1, 2);  <span class="color-comment">// row 1</span>
+      score += evaluateLine(2, 0, 2, 1, 2, 2);  <span class="color-comment">// row 2</span>
+      score += evaluateLine(0, 0, 1, 0, 2, 0);  <span class="color-comment">// col 0</span>
+      score += evaluateLine(0, 1, 1, 1, 2, 1);  <span class="color-comment">// col 1</span>
+      score += evaluateLine(0, 2, 1, 2, 2, 2);  <span class="color-comment">// col 2</span>
+      score += evaluateLine(0, 0, 1, 1, 2, 2);  <span class="color-comment">// diagonal</span>
+      score += evaluateLine(0, 2, 1, 1, 2, 0);  <span class="color-comment">// alternate diagonal</span>
+      return score;
+   }
+ 
+   <span class="color-comment">/** The heuristic evaluation function for the given line of 3 cells
+       @Return +100, +10, +1 for 3-, 2-, 1-in-a-line for computer.
+               -100, -10, -1 for 3-, 2-, 1-in-a-line for opponent.
+               0 otherwise */</span>
+   private int evaluateLine(int row1, int col1, int row2, int col2, int row3, int col3) {
+      int score = 0;
+ 
+      <span class="color-comment">// First cell</span>
+      if (cells[row1][col1].content == mySeed) {
+         score = 1;
+      } else if (cells[row1][col1].content == oppSeed) {
+         score = -1;
+      }
+ 
+      <span class="color-comment">// Second cell</span>
+      if (cells[row2][col2].content == mySeed) {
+         if (score == 1) {   <span class="color-comment">// cell1 is mySeed</span>
+            score = 10;
+         } else if (score == -1) {  <span class="color-comment">// cell1 is oppSeed</span>
+            return 0;
+         } else {  <span class="color-comment">// cell1 is empty</span>
+            score = 1;
+         }
+      } else if (cells[row2][col2].content == oppSeed) {
+         if (score == -1) { <span class="color-comment">// cell1 is oppSeed</span>
+            score = -10;
+         } else if (score == 1) { <span class="color-comment">// cell1 is mySeed</span>
+            return 0;
+         } else {  <span class="color-comment">// cell1 is empty</span>
+            score = -1;
+         }
+      }
+ 
+      <span class="color-comment">// Third cell</span>
+      if (cells[row3][col3].content == mySeed) {
+         if (score &gt; 0) {  <span class="color-comment">// cell1 and/or cell2 is mySeed</span>
+            score *= 10;
+         } else if (score &lt; 0) {  <span class="color-comment">// cell1 and/or cell2 is oppSeed</span>
+            return 0;
+         } else {  <span class="color-comment">// cell1 and cell2 are empty</span>
+            score = 1;
+         }
+      } else if (cells[row3][col3].content == oppSeed) {
+         if (score &lt; 0) {  <span class="color-comment">// cell1 and/or cell2 is oppSeed</span>
+            score *= 10;
+         } else if (score &gt; 1) {  <span class="color-comment">// cell1 and/or cell2 is mySeed</span>
+            return 0;
+         } else {  <span class="color-comment">// cell1 and cell2 are empty</span>
+            score = -1;
+         }
+      }
+      return score;
+   }
+ 
+   private int[] winningPatterns = {
+         0b111000000, 0b000111000, 0b000000111, <span class="color-comment">// rows</span>
+         0b100100100, 0b010010010, 0b001001001, <span class="color-comment">// cols</span>
+         0b100010001, 0b001010100               <span class="color-comment">// diagonals</span>
+   };
+ 
+   <span class="color-comment">/** Returns true if thePlayer wins */</span>
+   private boolean hasWon(Seed thePlayer) {
+      int pattern = 0b000000000;  <span class="color-comment">// 9-bit pattern for the 9 cells</span>
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            if (cells[row][col].content == thePlayer) {
+               pattern |= (1 &lt;&lt; (row * COLS + col));
+            }
+         }
+      }
+      for (int winningPattern : winningPatterns) {
+         if ((pattern &amp; winningPattern) == winningPattern) return true;
+      }
+      return false;
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Note: The pseudocode presented in Wiki &quot;minimax&quot; is known as &quot;negamax&quot;, which is very hard to understand, and even harder to program and debug.</p>
+
+<h4>Minimax with Alpha-beta Pruning</h4>
+<p><strong>Reference</strong>: Wiki &quot;Alpha-beta pruning&quot;.</p>
+<p>Alpha-beta pruning seeks to reduce the number of nodes that needs to be evaluated in the search tree by the minimax algorithm. For example in the alpha cut-off, since node D returns 1, node C (MIN) cannot be more than 1. But node B is 4. There is no need to search the other children of node C, as node A will certainly pick node B over node C.</p>
+
+<img class="image-center" src="images/GameTTT_alphabeta.png" alt="GameTTT_alphabeta.png" />
+
+<p>In the algorithm, two parameters are needed: an alpha value which holds the best MAX value found for MAX node; and a beta value which holds the best MIN value found for MIN node. As illustrated, the remaining children can be aborted if alpha &ge; beta, for both the alpha cut-off and beta cut-off. Alpha and beta are initialized to -&infin; and +&infin; respectively.</p>
+
+<p>The recursive algorithm for &quot;minimax with alpha-beta pruning&quot; is as follows:</p>
+
+<pre class="color-example">
+minimax(level, player, alpha, beta)  <span class="color-comment">// player may be &quot;computer&quot; or &quot;opponent&quot;</span>
+if (gameover || level == 0)
+   return score
+children = all valid moves for this &quot;player&quot;
+if (player is computer, i.e., max's turn)
+   <span class="color-comment">// Find max and store in alpha</span>
+   for each child
+      score = minimax(level - 1, opponent, alpha, beta)
+      if (score &gt; alpha) alpha = score
+      if (alpha &gt;= beta) break;  <span class="color-comment">// beta cut-off</span>
+   return alpha
+else (player is opponent, i.e., min's turn)
+   <span class="color-comment">// Find min and store in beta</span>
+   for each child
+      score = minimax(level - 1, computer, alpha, beta)
+      if (score &lt; beta) beta = score
+      if (alpha &gt;= beta) break;  <span class="color-comment">// alpha cut-off</span>
+   return beta
+
+<span class="color-comment">// Initial call with alpha=-inf and beta=inf</span>
+minimax(2, computer, -inf, +inf)</pre>
+
+<p>The relevant changes (over the <code>AIPlayerMinimax.java</code>) are:</p>
+
+<pre class="color-example">
+   <span class="color-comment">/** Get next best move for computer. Return int[2] of {row, col} */</span>
+   @Override
+   int[] move() {
+      int[] result = minimax(2, mySeed, Integer.MIN_VALUE, Integer.MAX_VALUE);
+         <span class="color-comment">// depth, max-turn, alpha, beta</span>
+      return new int[] {result[1], result[2]};   <span class="color-comment">// row, col</span>
+   }
+ 
+   <span class="color-comment">/** Minimax (recursive) at level of depth for maximizing or minimizing player
+       with alpha-beta cut-off. Return int[3] of {score, row, col}  */</span>
+   private int[] minimax(int depth, Seed player, int alpha, int beta) {
+      <span class="color-comment">// Generate possible next moves in a list of int[2] of {row, col}.</span>
+      List&lt;int[]&gt; nextMoves = generateMoves();
+ 
+      <span class="color-comment">// mySeed is maximizing; while oppSeed is minimizing</span>
+      int score;
+      int bestRow = -1;
+      int bestCol = -1;
+ 
+      if (nextMoves.isEmpty() || depth == 0) {
+         <span class="color-comment">// Gameover or depth reached, evaluate score</span>
+         score = evaluate();
+         return new int[] {score, bestRow, bestCol};
+      } else {
+         for (int[] move : nextMoves) {
+            <span class="color-comment">// try this move for the current &quot;player&quot;</span>
+            cells[move[0]][move[1]].content = player;
+            if (player == mySeed) {  <span class="color-comment">// mySeed (computer) is maximizing player</span>
+               score = minimax(depth - 1, oppSeed, alpha, beta)[0];
+               if (score &gt; alpha) {
+                  alpha = score;
+                  bestRow = move[0];
+                  bestCol = move[1];
+               }
+            } else {  <span class="color-comment">// oppSeed is minimizing player</span>
+               score = minimax(depth - 1, mySeed, alpha, beta)[0];
+               if (score &lt; beta) {
+                  beta = score;
+                  bestRow = move[0];
+                  bestCol = move[1];
+               }
+            }
+            <span class="color-comment">// undo move</span>
+            cells[move[0]][move[1]].content = Seed.EMPTY;
+            <span class="color-comment">// cut-off</span>
+            if (alpha &gt;= beta) break;
+         }
+         return new int[] {(player == mySeed) ? alpha : beta, bestRow, bestCol};
+      }
+   }</pre>
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+
+<ol>
+<li>Wiki &quot;Minimax&quot; and &quot;Alpha-beta pruning&quot;</li>
+<li>Dong Xiang, &quot;Solve Tic Tac Toe with the MiniMax algorithm&quot; @ <a href="http://www.codeproject.com/Articles/43622/Solve-Tic-Tac-Toe-with-the-MiniMax-algorithm">http://www.codeproject.com/Articles/43622/Solve-Tic-Tac-Toe-with-the-MiniMax-algorithm</a>.</li>
+<li>&quot;Minimax Explained&quot; @ <a href="http://ai-depot.com/articles/minimax-explained">http://ai-depot.com/articles/minimax-explained</a>.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7.2<br />
+Last modified: May, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to configure Apache 2 with Tomcat 6</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container div -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content div -->
+<div id="content">
+
+<h1>Apache 2 with Tomcat 6</h1>
+<h2>How To Configure Tomcat to work with Apache</h2>
+
+<h3>How to Connect Tomcat 6 to Apache HTTP Server 2</h3>
+
+<p>Tomcat can be run as a <em>standalone</em> server.  Tomcat can also be run as an <em>add-on</em> to the Apache HTTP Server (or Microsoft IIS) - as the Java servlet/JSP container.  In this combination, Tomcat executes the Java servlets and JSPs, the Apache serves the static HTML pages and performs other server-side functions such as CGI, PHP, SSI, etc. Read &quot;Why should I integrate Apache with Tomcat? (or not)&quot; at Tomcat FAQ (<a href="http://wiki.apache.org/tomcat/FAQ/Connectors#Q3">http://wiki.apache.org/tomcat/FAQ/Connectors#Q3</a>).</p>
+<p> To configure Tomcat to work with Apache HTTP Server, you should first read the documentation provided in Tomcat <em>thoroughly</em>, and read the &quot;Tomcat Connector&quot; documents @ <a href="http://tomcat.apache.org/connectors-doc/">http://tomcat.apache.org/connectors-doc</a>.</p>
+<p>To run Tomcat together with Apache:</p>
+<ul>
+  <li>Apache needs to load a &quot;adapter&quot; module, which uses a certain protocol, such as Apache JServ Protocol (AJP), to communicate with the Tomcat, via another TCP port (port 8009 in the default configuration).</li>
+  <li>When Apache receives an HTTP request, it checks if the request belongs to Tomcat.  If so, it lets the adapter takes the request and forwards it to Tomcat, as illustrated below.</li>
+</ul>
+
+<img class="image-center" src="images/ApachePlusTomcat.png" />
+
+<p>There are a few adapter modules available, such as Apache JServ Protocol (AJP) v1.2 &quot;JServ&quot; module (outdated), AJP v1.3 &quot;JK 1.2&quot; module (in use) and &quot;JK 2&quot; module (deprecated).  I will only describe the JK1.2 module with Apache 2 here.</p>
+
+<p>The step-by-step procedure is as follow:</p>
+
+<p><span class="line-heading">Step 0.1:  Install Apache HTTP Server - </span>
+Refer to &quot;<a href="Apache_HowToInstall.html">Apache HTTP Server - How To</a>&quot;. I shall assume that Apache is installed in directory &quot;<code>d:\myproject\apache</code>&quot;, and runs on port 7000. I shall denote the apache installed directory as <code>$APACHE_HOME</code>.</p>
+
+<p><span class="line-heading">Step 0.2: Install Tomcat - </span>
+Refer to &quot;<a href="Tomcat6_HowTo.html">Tomcat - How To</a>&quot;. I shall assume that Tomcat is installed in directory &quot;<code>d:\myproject\tomcat</code>&quot;, runs on port 8080. Tomcat's shall contains two web contexts: &quot;<code>/examples</code>&quot; (Tomcat's servlets and JSP examples) and &quot;<code>/ws</code>&quot; (to be created by you). I shall denote Tomcat's installed directory as <code>$CATALINA_HOME</code> (Catalina is the code name for Tomcat 5 and above).</p>
+
+<p><span class="line-heading">Step 1:  Download the Apache-Tomcat Connector Module - </span>
+An Apache-Tomcat connector - JK1.2 module - which is an adapter module used by Apache to communicate with Tomcat (using AJP v1.3 protocol through TCP port 8009), can be downloaded from Tomcat mother site @ <a href="http://tomcat.apache.org/">tomcat.apache.org</a> (&rArr; Download &rArr; Tomcat Connectors &rArr; JK 1.2 &rArr; JK 1.2 Binary Releases &rArr; win32 &rArr; jk-1.2.xx &rArr; &quot;<code>mod_jk-1.2.xx-httpd-2.2.x.so</code>&quot;).</p>
+
+<p>Rename the downloaded module to &quot;<code>mod_jk.so</code>&quot; and move into directory &quot;<code>d:\myproject\apache\modules</code>&quot;.</p>
+
+<p><span class="line-heading">Step 2:  Configure Apache - </span>We need to configure the Apache HTTP Server to load and initialize the JK module.</p>
+<p>Create a configuration file called &quot;<code>mod_jk.conf</code>&quot; as follows and place it in &quot;<code>d:\myproject\tomcat\conf</code>&quot;:</p>
+
+<pre class="code-listing">
+# Load mod_jk module
+# Update this path to match your modules location
+<span class="code-comment">LoadModule jk_module modules/mod_jk.so</span>
+
+# Where to find workers.properties
+# Update this path to match your conf directory location
+<span class="code-comment">JkWorkersFile d:/myproject/tomcat/conf/workers.properties</span>
+
+# Where to put jk logs
+# Update this path to match your logs directory location
+JkLogFile d:/myproject/tomcat/logs/mod_jk.log
+
+# Set the jk log level [debug/error/info]
+JkLogLevel info
+
+# Select the log format
+JkLogStampFormat &quot;[%a %b %d %H:%M:%S %Y]&quot;
+
+# JkOptions indicate to send SSL KEY SIZE,
+JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories
+
+# JkRequestLogFormat set the request format
+JkRequestLogFormat &quot;%w %V %T&quot;
+
+# Send everything for context /ws to worker ajp13
+<span class="code-comment">JkMount /ws ajp13
+JkMount /ws/* ajp13 </span>
+
+# Send everything for context /examples to worker ajp13
+<span class="code-comment">JkMount /examples ajp13
+JkMount /examples/* ajp13</span></pre>
+
+<p>For each web context that is to be forwarded from Apache to Tomcat, include two <code>JKMount</code> statements as shown.  In the above configuration, Apache forwards all requests to web contexts &quot;<code>/examples</code>&quot; and &quot;<code>/ws</code>&quot; to Tomcat, via a &quot;worker&quot; called &quot;<code>ajp13</code>&quot;. (Check the URL of the Tomcat's servlet and JSP examples from the Tomcat's welcome page! It may move!)</p>
+
+<p>Include the above configuration directives into the Apache's configuration by adding the following <code>include</code> statement at the end of &quot;<code>d:\myproject\apache\conf\httpd.conf</code>&quot;:</p>
+<pre class="code-listing">
+include d:/myproject/tomcat/conf/mod_jk.conf</pre>
+
+<p>Note: Unix's forward slash is used as the directory separator instead of backward slash (because Apache was originally built for Unix).   The <code>include</code> statement simply appends all the statements from the file &quot;<code>d:\myproject\tomcat\conf\mod_jk.conf</code>&quot; into &quot;<code>httpd.conf</code>&quot;.  (You can of course add those statements into &quot;<code>httpd.conf</code>&quot; directly.)</p>
+
+<p>Next, observe that the configuration refers to a <em>worker file</em> called &quot;<code>workers.properties</code>&quot;, and forward certain requests to a <em>JK worker</em> called &quot;<code>ajp13</code>&quot;.  Create the &quot;<code>workers.properties</code>&quot; file and place it in &quot;<code>d:\myproject\tomcat\conf</code>&quot; as follows:</p>
+
+<pre class="code-listing">
+# Define 1 real worker named ajp13
+worker.list=ajp13
+
+# Set properties for worker named ajp13 to use ajp13 protocol,
+# and run on port 8009
+worker.ajp13.type=<span class="code-comment">ajp13</span>
+worker.ajp13.host=<span class="code-comment">localhost</span>
+worker.ajp13.port=<span class="code-comment">8009</span>
+worker.ajp13.lbfactor=50
+worker.ajp13.cachesize=10
+worker.ajp13.cache_timeout=600
+worker.ajp13.socket_keepalive=1
+worker.ajp13.socket_timeout=300</pre>
+
+<p>Note: The <code>JKMount</code> statements forward the requests to a worker called &quot;<code>ajp13</code>&quot;, which is defined in this &quot;<code>workers.properties</code>&quot;.</p>
+
+<p><span class="line-heading">Step 3:  Configure Tomcat - </span>
+The default configuration in Tomcat's &quot;<code>conf\server.xml</code>&quot; starts the AJP1.3 service  via the following configuration, on TCP port 8009 (remove the comments if these lines are commented out).</p>
+<pre class="code-listing">
+&lt;!-- Define an AJP 1.3 Connector on port 8009 --&gt;
+&lt;Connector port=&quot;<span class="code-comment">8009</span>&quot; enableLookups=&quot;false&quot; redirectPort=&quot;8443&quot; protocol=&quot;<span class="code-comment">AJP/1.3</span>&quot; /&gt;</pre>
+
+<p><span class="line-heading">Step 4:  Start the Apache with the JK module</span></p>
+<pre class="code-listing">
+D:\myproject\apache\bin&gt; <strong>httpd -k install</strong>
+D:\myproject\apache\bin&gt; <strong>httpd -k start</strong></pre>
+
+<p>Check the Apache's log &quot;<code>logs\errors.log</code>&quot; to confirm that JK module was started:</p>
+<pre class="code-output">
+Starting the Apache2.2 service
+The Apache2.2 service is running.
+<strong>Apache/2.2.xx (Win32) mod_jk/1.2.xx</strong> configured -- resuming normal operations</pre>
+
+
+<p><span class="line-heading">Step 5:  Start the Tomcat server</span></p>
+<pre class="code-listing">
+D:\myproject\tomcat\bin&gt; <strong>startup</strong></pre>
+
+<p>Observe that AJP1.3 service is initiated and the <code>ajp13</code> worker is listening at port 8009.</p>
+
+<pre class="code-listing">
+....
+Oct 1, xxxx 9:44:05 PM org.apache.jk.common.ChannelSocket init
+INFO: JK: <strong>ajp13 listening on /0.0.0.0:8009</strong>
+Oct 1, xxxx 9:44:05 PM org.apache.jk.server.JkMain start
+INFO: Jk running ID=0 time=0/18  config=null
+....</pre>
+
+<p>The order of starting up Tomcat and Apache is NOT important. Either apache or tomcat can be restarted at any time.</p>
+
+<p><span class="line-heading">Step 6: Verify the Installation - </span>
+Issue the following URLs to access the web contexts &quot;<code>/examples</code>&quot; and &quot;<code>/ws</code>&quot;, that are defined in Tomcat (running in port 8080), but accessed via the Apache (running in port 7000).</p>
+
+<table class="table-program">
+<tr>
+<td width="40%">
+<pre class="code-listing">
+http://<em>hostname</em>:7000/examples/servlets
+http://<em>hostname</em>:7000/examples/jsp
+http://<em>hostname</em>:7000/examples
+http://<em>hostname</em>:8080/ws
+http://<em>hostname</em>:7000/ws</pre>
+</td>
+<td>
+<pre class="code-explanation">
+Try Tomcat's servlet examples via Apache
+Try Tomcat's JSP examples via Apache
+Try Tomcat's examples via Apache
+Access ws from Tomcat directly
+Access ws via Apache</pre></td>
+</tr>
+</table>
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+  <li>Apache-Tomcat Connectors @ <a href="http://tomcat.apache.org/download-connectors.cgi">http://tomcat.apache.org/download-connectors.cgi</a></li>
+  <li>Apache-Tomcat Connectors Documentation</li>
+  <li>Apache mother site @ <a href="http://www.apache.org/">www.apache.org</a></li>
+  <li>Tomcat mother site @ <a href="http://tomcat.apache.org">tomcat.apache.org</a></li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: Apache 2.2.16 / Tomcat 7.0.2 / JK 1.2.30<br />
+Last modified: October, 2010</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+
+</div>  <!-- End the container division -->
+
+</body>
+</html>

@@ -1,0 +1,647 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Install NetBeans for Java Programming on Windows, Mac and Linux</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>NetBeans  For Java</h1>
+<h2>How To Install and Get Started with Java Programming<br />
+(on Windows, Mac and Linux)</h2>
+</div>
+
+<div id="content-main">
+
+
+<p>NetBeans (@ <a href="http://netbeans.org/">http://netbeans.org</a>) is an open-source Integrated Development Environment (IDE). NetBeans began in 1996 as a Java IDE student project at Charles University in Prague. Sun Microsystems acquired NetBeans in 1999. In 2010, Oracle acquired Sun (and thus NetBeans).</p>
+<p>Compared with its <em>rival</em> Eclipse (<a href="http://www.elicpse.org">http://www.elicpse.org</a>) (both are open-source, so I don't know what are they competing for?), NetBeans provides <em>seamless support</em> for Java AWT/Swing, Java ME mobility pack, Java EE, and bundled with an excellent profiler for performance tuning.</p>
+
+<h3 id="netbeans-install">How to Install NetBeans 8.1</h3>
+
+<h4>For Windows</h4>
+<h5>Step 0: Install JDK</h5>
+<p>To use NetBeans for Java programming, you need to first install Java Development Kit (JDK).  See &quot;<a href="JDK_Howto.html">JDK - How to Install</a>&quot;.</p>
+
+<h5>Step 1: Download</h5>
+<p>Download &quot;NetBeans IDE&quot; installer from <a href="http://netbeans.org/downloads/index.html">http://netbeans.org/downloads/index.html</a>. There are many &quot;bundles&quot; available. For beginners, choose the<em> </em>&quot;Java SE&quot; (e.g., &quot;<code>netbeans-8.1-javase-windows.exe</code>&quot;).</p>
+
+<h5>Step 2: Run the Installer</h5>
+<p>Run the downloaded installer.</p>
+
+<h4>For Mac</h4>
+<p>Read &quot;<a href="MacUsers_HowTo.html#netbeans">How to Install NetBeans on Mac</a>&quot;.</p>
+
+<h4>For Ubuntu Linux</h4>
+<p>Read &quot;<a href="Ubuntu_HowTo.html#netbeans">How to Install NetBeans on Ubuntu</a>&quot;.</p>
+
+
+<h3 id="netbeans-first">Writing a Hello-world Java Program in NetBeans</h3>
+
+<h5>Step 0: Launch NetBeans</h5>
+<p>Launch NetBeans. If the &quot;Start Page&quot; appears, close it by clicking the &quot;close&quot; button.</p>
+
+<h5>Step 1: Create a New Project</h5>
+<p>For each Java application, you need to create a &quot;<em>project</em>&quot; to keep all the source files, classes and relevant resources.</p>
+<ol>
+<li>From &quot;File&quot; menu &rArr; Choose &quot;New Project...&quot;.</li>
+<li>In &quot;Choose Project&quot; diglog &rArr; Under &quot;Categories&quot;, choose &quot;Java&quot; &rArr; Under &quot;Projects&quot;, choose &quot;Java Application&quot; &rArr; &quot;Next&quot;.</li>
+
+<li>In &quot;Name and Location&quot; &rArr; Under &quot;Project Name&quot;, enter &quot;<code>FirstProject</code>&quot; &rArr;  In &quot;Project Location&quot;, select a suitable directory to save your works &rArr; <strong>Uncheck &quot;Create Main class&quot;</strong> &rArr; Finish.</li>
+</ol>
+
+<h5>Step 2: Write a Hello-world Java Program</h5>
+<ol>
+<li>Right-click on &quot;<code>FirstProject</code>&quot; &rArr; &quot;New&quot; &rArr; &quot;Java Class...&quot; (<span class="underline">OR</span> from the &quot;File&quot; menu &rArr; &quot;New File...&quot; &rArr; Categories: &quot;Java&quot;, File Types: &quot;Java Class&quot; &rArr; &quot;Next&quot;).</li>
+<li>In &quot;Name and Location&quot; &rArr; Under &quot;Class Name&quot;, enter &quot;<code>Hello</code>&quot; &rArr; Delete the content in &quot;Package&quot; if it is not empty &rArr; &quot;Finish&quot;.</li>
+<li>The source file &quot;<code>Hello.java</code>&quot; appears in the editor panel. Enter the following codes:
+
+<pre class="color-example">
+<span class="color-comment">/** First Java Program to say Hello wrold */</span>
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println(&quot;Hello, world&quot;);
+    }
+}</pre>
+</li>
+</ol>
+
+<h5>Step 3: Compile &amp; Execute</h5>
+
+<p>There is no need to &quot;compile&quot; the source code explicitly, as NetBeans performs the so-called <em>incremental compilation</em> (i.e., the source statement is compiled while it is entered).</p>
+<p> To run the program, right-click anywhere in the source (or from the &quot;Run&quot; menu), select &quot;Run File&quot; (or &quot;Run <code>Hello.java</code>&quot;). Observe the output on the output console.</p>
+
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>You should  create a <em>new</em> Java project for each of your Java application.</li>
+<li>Nonetheless, NetBeans allows you to keep more than one programs in a project, which is handy for writing toy programs (such as your tutorial exercises). If you have more than one files with <code>main()</code> method in one project, you need to right-click the source and choose &quot;Run File&quot;.</li>
+</ul>
+
+<h5>Step 4: Read the NetBeans Documentation</h5>
+<ul>
+<li>At a minimum, you SHOULD READ the &quot;IDE Basics, Getting Started, Java Application&quot;, which is  accessible via NetBeans's &quot;HELP&quot; menu &rArr; &quot;Help Contents&quot;.</li>
+<li>The &quot;Help&quot;  &rArr; &quot;Online Doc and Support&quot; (@ <a href="http://netbeans.org/kb/index.html">http://netbeans.org/kb/index.html</a>) contains many articles and tutorial on using NetBeans.</li>
+<li>The NetBeans &quot;Start Page&quot; also provides many useful links to get you started.</li>
+</ul>
+
+<h3 id="netbeans-debug">Debugging  Program in NetBeans</h3>
+
+<h5>Step 0: Write a Java Program</h5>
+
+<p>The following program computes and prints the factorial of <code><em>n</em></code> (<code>=1*2*3*...*<em>n</em></code>).  The program, however, has a logical error and produce a wrong answer for <em><code>n</code></em><code>=20</code> (&quot;<code>The Factorial of 20 is -2102132736</code>&quot; - a negative number?!).</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/** Compute the factorial of n */</span>
+public class Factorial {
+   <span class="color-comment">// Print factorial of n</span>
+   public static void main(String[] args) {
+      int n = 20;
+      int factorial = 1;
+ 
+      <span class="color-comment">// n! = 1*2*3...*n</span>
+      for (int i = 1; i &lt;= n; i++) {
+         factorial *= i;
+      }
+      System.out.println(&quot;The Factorial of &quot; + n + &quot; is &quot; + factorial);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Let us use the graphic debugger to debug the program.</p>
+
+<h5>Step 1: Set an initial Breakpoint</h5>
+
+<p>A <em>breakpoint</em> suspends program execution for you to examine the internal states of the program. Before starting the debugger, you need to set at least one breakpoint to suspend the execution inside the program. Set a breakpoint at <code>main()</code> method by clicking on the <em>left-margin</em> of the line containing <code>main()</code>.  A <em>red circle</em> or an inverted Triangle appears in the left-margin indicating a breakpoint is set at that line.</p>
+
+<img class="image-center" src="images/NetBeansDebugSetBreakpoint.png" alt="image" />
+
+<h5>Step 2: Start Debugging</h5>
+
+<p>Right click anywhere on the source code  &rArr; &quot;Debug File&quot;. The program begins execution but suspends its operation at the breakpoint, i.e., the <code>main()</code> method.</p>
+
+<p>As illustrated in the following diagram, the highlighted line (also pointed to by a green arrow) indicates the statement to be executed in the <em>next</em> step.</p>
+
+<img class="image-center" src="images/NetBeansDebugStart.png" alt="image" />
+
+<h5>Step 3: Step-Over and Watch the Variables and Outputs</h5>
+
+<p>Click the &quot;Step Over&quot; button (or select &quot;Step Over&quot; in &quot;Debug&quot; menu) to <em>single-step</em> thru your program. At each of the step, examine the value of the  variables (in the &quot;Variable&quot; panel) and the outputs produced by your program (in the &quot;Output&quot; Panel), if any. You can also place your cursor at any variable to inspect the content of the variable.</p>
+
+<img class="image-center" src="images/NetBeansDebugToolbar.png" alt="image" />
+<img class="image-center" src="images/NetBeansDebugVariables.png" alt="image" />
+<p>Single-stepping thru the program and watching the values of internal variables and the outputs produced is the <em>ultimate</em> mean in debugging programs  - because it is exactly how the computer runs your program!</p>
+
+<h5>Step 4: Breakpoint, Run-To-Cursor, Continue and Finish</h5>
+
+<p>As mentioned, a breakpoint <em>suspends</em> program execution and let you examine the internal states of the program. To set a breakpoint on a particular statement, click on the left-margin of that line (or select &quot;Toggle Breakpoint&quot; from &quot;Run&quot; menu).</p>
+<p>&quot;Continue&quot; resumes the program execution, up to the next breakpoint, or till the end of the program.</p>
+<p>&quot;Single-step&quot; thru a loop with a large count is time-consuming. You could set a breakpoint at the statement immediately outside the loop (e.g., Line 11 of the above program), and issue &quot;Continue&quot; to complete the loop.</p>
+<p>Alternatively, you can place the cursor on a particular statement, and issue &quot;Run-To-Cursor&quot; to resume execution up to the line.</p>
+<p> &quot;Finish&quot; ends the debugging session. Always terminate your current debugging session using &quot;Finish&quot; or &quot;Continue&quot; till the end of the program.</p>
+
+<h4>Other Debugger's Features:</h4>
+
+<h5>Modify the Value of a Variable</h5>
+<p>You can modify the value of a variable by entering a new value in the &quot;Variable&quot; panel. This is handy for temporarily modifying the behaviour of a program, without changing the source code.</p>
+
+<h5>Step-Into and Step-Out</h5>
+<p>To debug a <em>method</em>, you need to use &quot;Step-Into&quot; to step into the <em>first</em> statement of the method.  You could use &quot;Step-Out&quot; to return back to the caller, anywhere within the method.  Alternatively, you could set a breakpoint inside a method.</p>
+
+<h3 id="netbeans-tips">NetBeans - Tips &amp; Tricks</h3>
+
+<h4>General Usage</h4>
+<p>These are the features that I find to be most useful in NetBeans:</p>
+
+<ol>
+<li><span class="line-heading">Maximizing Window (double-click): </span>You can double-click on the &quot;header&quot; of any panel to <em>maximize</em> that particular panel, and double-click again to <em>restore</em> it back. This is particularly useful for editing source code in full panel.</li>
+
+<li><span class="line-heading">Code Auto-Complete (or Intelli-Sense) (ctrl-space): </span> Enter a partial statement (e.g., Sys) and press control-space to activate the auto-complete, which displays all the available choices.</li>
+<li><span class="line-heading">Javadoc (ctrl-space, alt-F1):</span> Place the cursor on a method or class, and press ctrl-space to view the javadoc; or right-click  &rArr; Show Javadoc (alt-F1) to open it on a browser.</li>
+
+<li><span class="line-heading">Code Shorthand (tab): </span> For example, you can enter &quot;<code><span class="underline">sout</span></code>&quot; and press TAB for &quot;<code>System.out.println</code>&quot;; &quot;<code><span class="underline">psvm</span></code>&quot; for &quot;<code>public static void main(String[] args) { }</code>&quot; or &quot;<code>for</code>i&quot; + tab for a for-loop. To view and configure code template, choose &quot;Tools&quot; menu &rArr; &quot;Options&quot; &rArr; &quot;Editor&quot; &rArr; &quot;Code Templates&quot;.</li>
+
+<li><span class="line-heading">Formatting Source Code (alt-shift-f): </span> Right-click on the source (or from the &quot;Source&quot; menu) &rArr; Choose &quot;Format&quot;. NetBeans will layout your source codes with the proper indents and format. To configure the formatting, choose &quot;Tools&quot; menu &rArr; &quot;Options&quot; &rArr; &quot;Editor&quot; &rArr; &quot;Formatting&quot;.<br />
+You can also select the section of codes to be formatted, instead of the entire file.</li>
+
+<li><span class="line-heading">Hints for Correcting Syntax Error: </span> If there is a syntax error on a statement, a red mark will show up on the left-margin on that statement. You could click on the &quot;light bulb&quot; to display the error message, and also select from the available hints for correcting that syntax error.</li>
+
+<li><span class="line-heading">Rename (Refactor) (ctrl-r): </span> To rename a variable, place the cursor on that variable, right-click &rArr; &quot;Refactor&quot; &rArr; &quot;Rename&quot; &rArr; Enter the new name. All the appearances of that variables in the project will be renamed.</li>
+
+<li><span class="line-heading">Small Programs: </span> You can keep many small toy programs (with <code>main()</code>) in one Java project instead of create a new project for each small program. To run the desired program, on the &quot;editor&quot; panel &rArr; right-click &rArr; &quot;Run File&quot;.</li>
+
+<li><span class="line-heading">Source Toggle Comment: </span> To temporarily comment-off a block of codes, choose &quot;Source&quot; &rArr; &quot;Toggle Comment&quot;.</li>
+
+<li><span class="line-heading">Error Message Hyperlink: </span> Click on an error message will hyperlink to the corresponding source statement.</li>
+
+<li><span class="line-heading">Command-Line Arguments: </span> To provide command-line arguments to your Java program in NetBeans, right-click on the &quot;project&quot; &rArr; &quot;Set as Main Project&quot; &rArr; &quot;Set Configurations&quot; &rArr; &quot;Customize...&quot; &rArr; &quot;Run&quot; &rArr; select the &quot;Main&quot; class &rArr; type your command-line arguments inside the &quot;Arguments&quot; field &rArr; choose &quot;Run&quot; menu &rArr; &quot;Run Main Project&quot;.</li>
+
+<li><span class="line-heading">Line Numbers: </span> To show the line numbers, right-click on the left-margin &rArr; &quot;Show Line Numbers&quot;.</li>
+<li><span class="line-heading">Changing Font Face and Size:</span> Tools &rArr; Options &rArr; Fonts &amp; Colors &rArr; In &quot;Category&quot;, select &quot;Default&quot; &rArr; In &quot;Font&quot;, choose the font face and size.</li>
+<li><span class="line-heading">Resetting Window View:</span> If you mess up the window view (e.g., you accidentally close a window and cannot find it anymore), you can reset the view via &quot;Window&quot; menu  ⇒ &quot;Reset Windows&quot;.</li>
+<li><span class="line-heading">Code Templates:</span> For example, when you create a <em>new</em> Java class, NetBeans retrieves the initial contents from the &quot;Java Class&quot; code template. To configure code templates, select &quot;Tools&quot; menu   ⇒ &quot;Templates&quot;  ⇒ Choose the desired template ⇒ &quot;Open in Editor&quot;. To set a value of a variable used in the all the code templates (e.g., <code>$User</code>), select &quot;Tools&quot; menu   ⇒ &quot;Templates&quot;  ⇒ &quot;Settings&quot;.</li>
+<li><span class="line-heading">Displaying Chinese Character:</span> Need to choose a font that support chinese character display, such as &quot;Monospace&quot;, in Tools &rArr; Options &rArr; Fonts &amp; Colors ⇒ Syntax ⇒ default.</li>
+<li><span class="line-heading">Changing the JDK Location:</span> The Netbeans configuration file is located at &quot;<code>etc\netbeans.conf</code>&quot;. Edit the directive &quot;<code>netbeans_jdkhome</code>&quot;.</li>
+
+<li>Let me know if you have more tips to be included here.</li>
+</ol>
+
+<h4>Java Application Development</h4>
+<ol>
+<li><span class="line-heading">Choosing the JDK version for your program:</span> Right-click on your project  ⇒ &quot;Properties&quot;  ⇒ &quot;Source&quot; node ⇒ You can select the JDK level of your project in pull-donw menu &quot;Source/Binary Format&quot;.</li>
+<li><span class="line-heading">Enabling JDK 7 support:</span> If JDK 7 is already installed in your system, right-click on your Project  ⇒ &quot;Properties&quot;  ⇒ &quot;Source&quot; node ⇒ &quot;Source/Binary Format&quot;  ⇒ Select &quot;JDK 7&quot;. Also check &quot;Libraries&quot;  ⇒ Java Platform  ⇒ JDK 7. <br />
+  If JDK 7 is not installed/configured, install JDK 7. Add JDK 7 support to NetBeans via &quot;Tool&quot; menu ⇒ &quot;Java Platforms&quot;  ⇒ &quot;Add Platform...&quot;.</li>
+<li><span class="line-heading">Choosing Default Charset:</span> Right-click on your project ⇒ &quot;Properties&quot;  ⇒ &quot;Source&quot; node ⇒ &quot;Encoding&quot;  ⇒ choose your desired charset for the text-file I/O from the pull-down menu.</li>
+<li><span class="line-heading">Enabling Unicode Support for File Encoding:</span> Right-click on your project ⇒ &quot;Properties&quot;  ⇒ &quot;Source&quot; node ⇒ &quot;Encoding&quot;  ⇒ choose your Unicode encoding (e.g., UTF-8, UTF-16, UTF-16LE, UTF-16GE) for the text-file I/O.</li>
+<li><span class="line-heading">To include Javadoc/Source:</span> Use &quot;Library Manager&quot; (select the &quot;Tools&quot; menu ⇒ &quot;Libraries&quot;); or &quot;Java Platform Manager&quot; (select &quot;Tools&quot; menu ⇒ &quot;Java Platforms&quot;)</li>
+
+<li><span class="line-heading">Adding External JAR files &amp; Native Libraries (&quot;<span class="font-code">.dll</span>&quot;, &quot;<span class="font-code">.lib</span>&quot;, &quot;<span class="font-code">.a</span>&quot;, &quot;<span class="font-code">.so</span>&quot;):</span> Many external Java packages (such as JOGL, Java3D, JAMA, etc) are available to extend the functions of JDK. These packages typically provide a &quot;<code>lib</code>&quot; directory containing JAR files (&quot;<code>.jar</code>&quot;) (Java Archive - a single-file package of Java classes) and native libraries (&quot;<code>.dll</code>&quot;, &quot;<code>.lib</code>&quot; for windows, &quot;<code>.a</code>&quot;, &quot;<code>.so</code>&quot; for Linux and Mac).<br />
+  To include an external JAR file (&quot;<code>.jar</code>&quot;) into a project: Expand the project node &rArr; Right-click on &quot;Libraries&quot; &rArr; &quot;Add JAR/Folder...&quot;  ⇒ Select the desired JAR file or the folder containing the classes.<br />
+  If the external package contains many JAR files, you could create a user library to contain all the JAR files, and add the library to all the projects that required these JAR files. From &quot;Tools&quot; menu &rArr;  &quot;Libraries&quot; &rArr; &quot;New Library...&quot;  &rArr; Enter a library name &rArr; Use &quot;Add JAR/Folder...&quot; to add JAR files into this library.<br />
+  Many JAR files come with native libraries in the form of &quot;<code>.dll</code>&quot;, &quot;<code>.lib</code>&quot; (for Windows) and &quot;<code>.a</code>&quot;, &quot;<code>.so</code>&quot; for Linux/Mac. The directory <em>path</em> of these libraries must be included in JRE's property &quot;<code>java.library.path</code>&quot;. This can be done via right-click the project &rArr; Set Configuration &rArr; Customize... &rArr; Run &rArr; In &quot;VM options&quot;, enter &quot;<code>-Djava.library.path=<em>xxx</em></code>&quot;, where <em><code>xxx</code></em> is path of the native libraries.<br />
+  
+  <strong>Notes:</strong> The JAR files must be included in the <code>CLASSPATH</code>. The native library directories must be included in JRE's property &quot;<code>java.library.path</code>&quot;, which normally but not necessarily includes all the paths from the <code>PATH</code> environment variable. Read &quot;<a href="JDK_HowTo.html#external_jar">External JAR files and Native Libraries</a>&quot;.</li>
+</ol>
+
+
+<h3 id="netbeans-swing">Writing Java GUI (AWT/Swing) Application in NetBeans</h3>
+
+<h5>Step 0: Read</h5>
+
+<ol>
+<li>Java GUI Application Learning Trail
+ @ <a href="http://www.netbeans.org/kb/trails/matisse.html">http://www.netbeans.org/kb/trails/matisse.html</a>.</li>
+<li>Swing Tutorial's &quot;Learning Swing with the NetBeans IDE&quot; @ <a href="http://docs.oracle.com/javase/tutorial/uiswing/learn/index.html">http://docs.oracle.com/javase/tutorial/uiswing/learn/index.html</a>.</li>
+</ol>
+ 
+<h5>Step 1: Create a New &quot;Java Application&quot; Project</h5>
+<ol>
+<li>Launch NetBeans &rArr; File &rArr; New Project... </li>
+
+<li>Under &quot;Categories&quot;, choose &quot;Java&quot; &rArr; Under &quot;Projects&quot;, choose &quot;Java Application&quot; &rArr; Next.</li> 
+
+<li>In &quot;Project Name&quot;, enter &quot;<code>FirstNetBeansGUI</code>&quot; &rArr; Choose a suitable directory for your &quot;Project Location&quot; &rArr; <em>Uncheck</em> the &quot;Create Main class&quot; box &rArr; Finish.</li>
+</ol>
+
+<h5>Step 2: Write a Java File &quot;JFrame Form&quot;</h5><ol>
+<li>Right-click on the project &quot;<code>FirstNetBeansGUI</code>&quot; &rArr; &quot;New&quot; &rArr; &quot;JFrame Form...&quot; (or &quot;Others&quot; &rArr; &quot;Swing GUI Forms&quot; &rArr; &quot;JFrame Form&quot;).</li>
+<li>In &quot;Class Name&quot;, enter &quot;<code>NetBeansSwingCounter</code>&quot; &rArr; Finish.</li>
+
+<li>Create the GUI Components visually:
+
+<ol>
+<li>From the &quot;Platte&quot; panel &rArr; &quot;Swing Controls&quot; &rArr; Drag and drop a &quot;<code>Label</code>&quot;, &quot;<code>TextField</code>&quot;, and &quot;<code>Button</code>&quot; into the <em>design</em> panel.</li>
+
+<li>Click on the &quot;<code>jLabel1</code>&quot; &rArr; In the &quot;Properties&quot; panel, enter &quot;Count&quot; in &quot;text&quot; (You can also single-click on the <code>jLabel1</code> to change the text).  Right-click on the <code>jLable1</code> &rArr; Change Variable Name &rArr; In &quot;New Name&quot;, enter &quot;<code>lblCount</code>&quot;.</li>
+
+<li>Similarly, for &quot;<code>jTextField1</code>&quot; &rArr; Change the &quot;text&quot; to 0, and change the &quot;Variable Name&quot; to &quot;<code>tfCount</code>&quot; &rArr; Resize the text field if necessary.</li>
+
+<li>For &quot;<code>jButton1</code>&quot; &rArr; Change the &quot;text&quot; to &quot;Count&quot;, and change the &quot;Variable Name&quot; to &quot;<code>btnCount</code>&quot;.</li>
+</ol></li>
+
+<li>Write the event handler for the button by double-clicking the button and enter the following codes:
+<pre class="color-example">
+private void btnCountActionPerformed(java.awt.event.ActionEvent evt) {
+   count++;
+   tfCount.setText(count + &quot;&quot;);
+}</pre></li>
+
+<li>Create an instance variable <code>count</code> (just below the class declaration) as follows:
+  <pre class="color-example">
+public class Counter extends javax.swing.JFrame {
+   int count = 0;</pre></li>
+</ol>
+
+<h5>Step 3: Compile &amp; Execute</h5>
+<p>Right-click the source and select &quot;Run File<code></code>&quot;.</p>
+
+<h5>Step 4: Study the Generated Source Code</h5>
+
+<p>Expand the &quot;Generated Code&quot; and study how the GUI builder declare, allocate and initialize the GUI <code>Component</code>s in the <code>initComponents()</code>. Note how the <code>JButton</code> registers an <code>ActionEvent</code> listener and how an inner class is used as the listener and provide the event handler <code>actionPerformed()</code>. Also  notice that the <code>main()</code> method uses a Swing's worker to run the GUI on the Event-Dispatcher thread, instead of the <code>main</code> thread, for thread-safe operations.</p>
+
+<pre class="color-example">
+public class <strong>NetBeansSwingCounter</strong> extends javax.swing.JFrame {
+   <strong>int count = 0;</strong>
+ 
+   <span class="color-comment">// Constructor to setup the UI via initComponents()</span>
+   public NetBeansSwingCounter() {
+      <strong>initComponents()</strong>;
+   }
+ 
+   private void <strong>initComponents()</strong> {
+      lblCount = new javax.swing.JLabel();
+      tfCount = new javax.swing.JTextField();
+      btnCount = new javax.swing.JButton();
+ 
+      setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+ 
+      lblCount.setText(&quot;Counter&quot;);
+      tfCount.setText(&quot;0&quot;);
+ 
+      btnCount.setText(&quot;Count&quot;);
+      <span class="color-comment">// Create an anonymous inner as the listener for the ActionEvent fired by btnCount</span>
+      btnCount.addActionListener(new java.awt.event.ActionListener() {
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+            <strong>btnCountActionPerformed(evt)</strong>;
+         }
+      });
+ 
+      <span class="color-comment">// Laying out the components</span>
+      <span class="color-comment">// ......</span>
+  
+      pack();
+   }
+ 
+   <span class="color-comment">// ActionEvent handler for btnCount</span>
+   private void <strong>btnCountActionPerformed</strong>(java.awt.event.ActionEvent evt) {
+      count++;
+      tfCount.setText(count + &quot;&quot;);
+   }
+ 
+   public static void main(String args[]) {
+      <span class="color-comment">// Setup the Look and Feel</span>
+      <span class="color-comment">// .....</span>
+ 
+      <span class="color-comment">// Run the constructor on the Event-Dispatcher Thread for thread-safe</span>
+      java.awt.EventQueue.invokeLater(new Runnable() {
+         public void run() {
+            <strong>new NetBeansSwingCounter().setVisible(true);</strong>
+         }
+      });
+   }
+ 
+   <span class="color-comment">// private variables</span>
+   private javax.swing.JButton <strong>btnCount</strong>;
+   private javax.swing.JLabel <strong>lblCount</strong>;
+   private javax.swing.JTextField <strong>tfCount</strong>;
+}</pre>
+
+<h3 id="NetBeansMySQL">NetBeans and MySQL</h3>
+<p><span class="line-heading">Reference</span>: &quot;Connecting to a MySQL Database&quot; @ <a href="http://netbeans.org/kb/docs/ide/mysql.html">http://netbeans.org/kb/docs/ide/mysql.html</a>.</p>
+
+<p>NetBeans (JavaEE) provides direct support to MySQL server. You can use NetBeans as a GUI client to access a MySQL server, as well as an administrative tool (e.g., starting and stopping the server). </p>
+
+<h5>Configuring NetBeans to Support MySQL</h5>
+
+<p>From NetBeans &quot;Window&quot; menu &rArr; Select &quot;Services&quot;. The &quot;Services&quot; tab shall appear on the <em>left</em> pane</p>
+
+  <ol>
+  <li>Right-click on the &quot;Databases&quot; node &rArr; &quot;Register MySQL Server&quot;. (If you have already registered a MySQL server, you can right-click on Server node &quot;<code>MySQL Server at <em>hostname</em>:<em>port</em></code>&quot; &rArr; Properties, to modify its properties.)</li>
+  <li>Select the &quot;Basic Properties&quot; tab, enter the hostname, port number, root user and password.</li>
+
+<li>Select the &quot;Admin Properties&quot; tab:
+<ol>
+<li>Leave the &quot;Path/URL to admin tool&quot; empty.</li>
+<li>In &quot;Path to start command&quot;, enter &quot;<code>&lt;MYSQL_HOME&gt;\bin\mysqld.exe</code>&quot;; in the &quot;Arguments&quot;, enter &quot;<code>--console</code>&quot;</li>
+<li>In &quot;Path to stop command&quot;, enter &quot;<code>&lt;MYSQL_HOME&gt;\bin\mysqladmin.exe</code>&quot;, in the &quot;Arguments&quot;, enter &quot;<code>-u root -p<em>password</em> shutdown</code>&quot;.</li>
+</ol></li>
+
+<li>A <em>server node</em> &quot;<code>MySQL Server at <em>hostname</em>:<em>port</em></code>&quot; appears.</li>
+</ol>
+
+<h5>Database Administration - Start/Stop the Server and Create Databases</h5>
+
+<ol>  
+<li>You can start the MySQL server by right-clicking on the server node &rArr; select &quot;start&quot;. [There seems to be a problem here. If a &quot;connection refused: connect&quot; error occurs, enter the password again.]</li>
+
+<li>Once the MySQL server is started and connected, you can see the list of databases by expanding the MySQL server node. You can create a new database by right-clicking on it and choose &quot;Create Database...&quot;.</li>
+</ol>
+
+<h5>Create a new Connection</h5>
+
+<p>You need a connection to manipulate data. You can create multiple connections with different users and default databases.</p>
+  <ol>
+
+  <li>Right-click on the &quot;Databases&quot; &rArr; &quot;New Connection...&quot;  &rArr; Select the driver &quot;MySQL Connector/J&quot; &rArr; Next &rArr; Enter hostname, port number, default database, a general username and password &rArr; &quot;Test Connection&quot;  (make sure that MySQL is started) &rArr; Finish.</li>
+  <li>A <em>connection node</em> &quot;<code>jdbc:mysql://<em>hostname</em>:<em>port</em>/<em>defaultDatabase</em></code>&quot; appears.</li>
+</ol>
+
+<h5>Manipulating Data via a Connection</h5>
+
+<ol>  
+<li>Right-click on a  connection node (e.g., &quot;<code>jdbc:mysql://<em>hostname</em>:<em>port</em>/<em>defaultDatabase</em></code>&quot;) &rArr;  Choose &quot;Connect&quot; (if not connected, provided that the MySQL server has been started).</li>
+
+  <li>You can expand the connection node to view all the databases.</li>
+  <li>Expand an existing database. There are three sub-nodes &quot;Tables&quot;, &quot;View&quot; and &quot;Procedures&quot;. Right-click on the &quot;Tables&quot; to create table or execute command. Similarly, right-click on the &quot;View&quot; and &quot;Procedures&quot;.</li>
+  <li> To view/manipulate the records in a table, right-click on the selected table &rArr; You can choose to &quot;View Data...&quot;, &quot;Execute Command...&quot;, etc.</li>
+  <li> You can right-click on the connection to &quot;connect&quot; or &quot;disconnect&quot; from the server.</li>
+</ol>
+
+<h5>Create a SQL Script and Run the Script</h5>
+<p>You can create a SQL script by right-clicking on a project &rArr; New &rArr; &quot;SQL File&quot;. You can run the script by right-clicking on the SQL script &rArr; &quot;Run File&quot; &rArr; Select an existing connection (or create a new connection) to run the script. You could also run a single statement (right-click on the statement &rArr; Run Statement) or a selected group of statements (highlight the statements &rArr; Right-click &rArr; Run Selection).</p>
+
+<h3 id="NetBeans_WebApp">Developing and Deploying Web Application in NetBeans</h3>
+
+<h5>Read:</h5>
+<ul>
+<li>&quot;Introduction to Developing Web Applications&quot; @ <a href="http://netbeans.org/kb/docs/web/quickstart-webapps.html">http://netbeans.org/kb/docs/web/quickstart-webapps.html</a>.</li>
+<li>More articles in &quot;Java EE &amp; Java Web Learning Trail&quot; @ <a href="http://netbeans.org/kb/trails/java-ee.html">http://netbeans.org/kb/trails/java-ee.html</a>.</li>
+</ul>
+
+<h4>Web (HTTP) Servers</h4>
+
+<h5>Configuring Web Server</h5>
+<p>You could configure the web server via &quot;Tools&quot; menu  &rArr; &quot;Servers&quot;.</p>
+
+<h5>Tomcat Server</h5>
+<p>To configure Tomcat Server, select &quot;Tools&quot; menu  &rArr; &quot;Servers&quot;  &rArr; click &quot;Add Servers&quot;:</p>
+<ol>
+<li>Choose Server: Select the desired Tomcat version  &rArr; Next.</li>
+
+<li>Installation and Login Details: In &quot;Server Location&quot;, fill in the Tomcat installation directory ($CATALINA_HOME)  &rArr; Enter the username/password of a tomcat user with &quot;manager&quot; role. You could either check the &quot;create user if it does not exist&quot; or define the tomcat user in &quot;<code>$CATALINA_HOME\conf\tomcat-users.xml</code>&quot; as follows:
+  <pre class="color-example">&lt;tomcat-users&gt;
+   &lt;role rolename=&quot;manager&quot;/&gt;
+   &lt;user username=&quot;tomcatmanager&quot; password=&quot;xxxx&quot; roles=&quot;manager,manager-script,admin&quot; /&gt;
+&lt;/tomcat-users&gt;</pre>
+</li>
+</ol>
+<h5>Running the Web Server</h5>
+
+<p>Choose &quot;Services&quot; &rArr; Expand &quot;Servers&quot; node &rArr; Right-click on the desired server &rArr; Start/Stop/Restart.</p>
+<h4>MySQL Database Server</h4>
+<p>You can also manage the MySQL database server directly from Tomcat. Read &quot;<a href="#NetBeansMySQL">NetBeans and MySQL</a>&quot; Section.</p>
+
+
+<h4>Writing a Hello-World Servlet/JSP Web Application</h4>
+
+<h5>Create a New Servlet/JSP Project</h5>
+<ol>
+<li>From &quot;File&quot; menu &rArr; choose &quot;New Project...&quot;.</li>
+<li>&quot;Choose Project&quot; &rArr; Under &quot;Categories&quot;, choose &quot;Java Web&quot; &rArr; Under &quot;Projects&quot;, choose &quot;Web Application&quot; &rArr; &quot;Next&quot;.</li>
+<li>&quot;Name and Location&quot; &rArr; In &quot;Project Name&quot;, enter &quot;<code>HelloServletJSP</code>&quot; &rArr;  In &quot;Project Location&quot;, select a suitable directory to save your works &rArr; Check &quot;Set as Main Project&quot;  &rArr; Next.</li>
+<li>&quot;Server and settings&quot; &rArr; Choose your server, or &quot;add&quot; a new server &rArr; Next.</li>
+<li>&quot;Frameworks&quot;  &rArr; Select none for pure servlet/JSP application &rArr; Finish.</li>
+</ol>
+
+<h5>Writing a Hello-World JSP</h5>
+<p>A JSP page called &quot;<code>index.jsp</code>&quot; is automatically created, which says &quot;Hello world!&quot;. To execute this JSP, right-click on the project &rArr; &quot;Run&quot;. The URL is <code>http://localhost:8080/HelloServletJSP/index.jsp</code>.</p>
+
+<h5>Writing a Hello-World Servlet</h5>
+<ol>
+<li>Right-click on the project &quot;<code>HelloServletJSP</code>&quot;  &rArr; New   &rArr; Servlet.</li>
+<li>&quot;Name and Location&quot;   &rArr; In &quot;Class Name&quot;, enter &quot;<code>HelloServlet</code>&quot;  &rArr; In &quot;Package&quot;, enter &quot;<code>hello</code>&quot;  &rArr; Next.</li>
+<li>&quot;Configure Servlet Deployment&quot;  &rArr; In &quot;Servlet Name&quot;, enter &quot;<code>HelloServletExample</code>&quot;  &rArr; In &quot;URL Pattern&quot;, enter &quot;<code>sayhello</code>&quot;  &rArr; Finish.</li>
+
+<li>Enter the following codes for &quot;<code>HelloServlet.java</code>&quot;:
+<pre class="color-example">
+package hello;
+ 
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+ 
+public class <strong>HelloServlet</strong> extends HttpServlet {
+ 
+   @Override
+   public void <strong>doGet</strong>(HttpServletRequest request, HttpServletResponse response)
+           throws IOException, ServletException {
+      <span class="color-comment">// Set the response message's MIME type (in Content-Type response header)</span>
+      response.setContentType(&quot;text/html;charset=UTF-8&quot;);
+      <span class="color-comment">// Get an output Writer to write the response message over the network</span>
+      PrintWriter out = response.getWriter();
+      <span class="color-comment">// Write the response message (in an HTML page) to display &quot;Hello, world!&quot;</span>
+      try {
+         out.println(&quot;&lt;!DOCTYPE html&gt;&quot;);
+         out.println(&quot;&lt;html&gt;&quot;);
+         out.println(&quot;&lt;head&gt;&lt;title&gt;Hello Servlet&lt;/title&gt;&lt;/head&gt;&quot;);
+         out.println(&quot;&lt;body&gt;&lt;h1&gt;Hello, World (from Java Servlet)!&lt;/h1&gt;&lt;/body&gt;&quot;);
+         out.println(&quot;&lt;/html&gt;&quot;);
+      } finally {
+         out.close();  <span class="color-comment">// Always close the output writer</span>
+      }
+   }
+}</pre>
+</li>
+
+<li>To execute the servlet: Right-click on the project  &rArr; run &rArr; Change the URL to <code>http://localhost:8080/HelloServletJSP/sayhello</code>.</li>
+</ol>
+
+<h5>Generating a WAR-file for a Web Application</h5>
+
+<p>A WAR (Web Archive) file is basically a zip file for distributing web application in single file. You can use WinZip or WinRAR to inspect or unzip the war file. </p>
+<p>To distribute the project as a war-file, right-click project ⇒ &quot;Clean and Build&quot;. The war file is created in the &quot;<code>dist</code>&quot; directory. You can deploy the web application by dropping the war-file into Tomcat's &quot;<code>webapps</code>&quot; directory. Tomcat will automatically unzip the war-file and deploy the application upon startup.</p>
+
+<h5>Debugging Web Application</h5>
+<p>The most important reason for using IDE is to use the graphic debugger for debugging the program. You can set a breakpoint in your server-side Java codes, and &quot;Debug&quot; a web application, similar to a standalone application.</p>
+
+<h4>Writing a Hello-world JSF 2.0 Web Application</h4>
+
+<h5>Create a New JSF 2.0 Project</h5>
+<ol>
+<li>From &quot;File&quot; menu &rArr; choose &quot;New Project...&quot;.</li>
+<li>&quot;Choose Project&quot; &rArr; Under &quot;Categories&quot;, choose &quot;Java Web&quot; &rArr; Under &quot;Projects&quot;, choose &quot;Web Application&quot; &rArr; &quot;Next&quot;.</li>
+<li>&quot;Name and Location&quot; &rArr; In &quot;Project Name&quot;, enter &quot;<code>HelloJSF20</code>&quot; &rArr;  In &quot;Project Location&quot;, select a suitable directory to save your works &rArr; Check &quot;Set as Main Project&quot;  &rArr; Next.</li>
+<li>&quot;Server and settings&quot; &rArr; Choose your server, or &quot;add&quot; a new server &rArr; Next.</li>
+<li>&quot;Frameworks&quot;  &rArr; Check &quot;JavaServer Faces&quot; &rArr; In &quot;Libraries&quot;, &quot;Registered Libraries&quot;, select &quot;JSF 2.0&quot; &rArr; Finish.</li>
+<li>An &quot;<code>index.xhtml</code>&quot; JSF page is generated, as follows:
+
+<pre class="color-example">
+&lt;?xml version='1.0' encoding='UTF-8' ?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;
+      xmlns:h=&quot;http://java.sun.com/jsf/html&quot;&gt;
+    &lt;h:head&gt;
+        &lt;title&gt;Facelet Title&lt;/title&gt;
+    &lt;/h:head&gt;
+    &lt;h:body&gt;
+        Hello from Facelets
+    &lt;/h:body&gt;
+&lt;/html&gt;</pre>
+
+To run this facelet, right-click on the project  &rArr; Run.
+</li>
+</ol>
+
+<h5>Create a new JSF 2.0 Facelet</h5>
+<ol>
+  <li>Right-click on the project &rArr; New &rArr; &quot;Other...&quot;</li>
+  <li>&quot;Choose File Type&quot;  &rArr; Under &quot;Category&quot;, select &quot;JavaServer Faces&quot; &rArr; Under &quot;File Type&quot;, select &quot;JSF Page&quot; &rArr; Next.</li>
+<li>&quot;Name and Location&quot; &rArr; In &quot;File Name&quot;, enter &quot;<code>HelloJSF20</code>&quot; &rArr; In &quot;Options&quot;, check &quot;Facelets&quot; &rArr; Finish.</li>
+
+<li>In &quot;<code>HelloJSF20.xhtml</code>&quot;, enter the following codes:
+<pre class="color-example">
+&lt;?xml version='1.0' encoding='UTF-8' ?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;
+      xmlns:h=&quot;http://java.sun.com/jsf/html&quot;&gt;
+    &lt;h:head&gt;
+        &lt;title&gt;Hello JSF 2.0&lt;/title&gt;
+    &lt;/h:head&gt;
+    &lt;h:body&gt;
+       &lt;h1&gt;Hello from Facelets&lt;/h1&gt;
+    &lt;/h:body&gt;
+&lt;/html&gt;</pre>
+</li>
+
+<li>To execute the JSF page, right-click on the project &rArr; Run &rArr; Change the URL to <code>http://localhost:8080/HelloJSF20/HelloJSF20.xhtml</code>.</li>
+</ol>
+
+<h4>Writing a Hello-world JSF 1.2 Web Application</h4>
+
+<h5>Create a New JSF 1.2 Project</h5>
+<ol>
+<li>From &quot;File&quot; menu &rArr; choose &quot;New Project...&quot;.</li>
+<li>&quot;Choose Project&quot; &rArr; In &quot;Categories&quot;, choose &quot;Java Web&quot; &rArr; In &quot;Projects&quot;, choose &quot;Web Application&quot; &rArr; &quot;Next&quot;.</li>
+<li>&quot;Name and Location&quot; &rArr; In &quot;Project Name&quot;, enter &quot;<code>HelloJSF12</code>&quot; &rArr;  In &quot;Project Location&quot;, select a suitable directory to save your works &rArr; Check &quot;Set as Main Project&quot;  &rArr; Next.</li>
+<li>&quot;Server and settings&quot; &rArr; choose your server, or &quot;add&quot; a new server &rArr; Next.</li>
+<li>&quot;Frameworks&quot;  &rArr; Check &quot;JavaServer Faces&quot; &rArr; In &quot;Libraries&quot;, &quot;Registered Libraries&quot;, select &quot;JSF 1.2&quot; &rArr; Finish.</li>
+<li>A &quot;<code>WelcomeJSF.jsp</code>&quot; page is generated, as follows:
+<pre class="color-example">
+&lt;%@page contentType=&quot;text/html&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@taglib prefix=&quot;f&quot; uri=&quot;http://java.sun.com/jsf/core&quot;%&gt;
+&lt;%@taglib prefix=&quot;h&quot; uri=&quot;http://java.sun.com/jsf/html&quot;%&gt;
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;%--
+    This file is an entry point for JavaServer Faces application.
+--%&gt;</span>
+&lt;f:view&gt;
+  &lt;html&gt;
+    &lt;head&gt;
+      &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;
+      &lt;title&gt;JSP Page&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;h1&gt;&lt;h:outputText value=&quot;JavaServer Faces&quot;/&gt;&lt;/h1&gt;
+    &lt;/body&gt;
+  &lt;/html&gt;
+&lt;/f:view&gt;</pre>
+
+To run this page, right-click on the project  &rArr; Run.</li>
+</ol>
+
+<h5>Create a new JSF 1.2 Page</h5>
+<ol>
+<li>Right-click on the project &rArr; New &rArr; &quot;Other...&quot;</li>
+<li>&quot;Choose File Type&quot;  &rArr; In &quot;Category&quot;, select &quot;JavaServer Faces&quot; &rArr; In &quot;File Type&quot;, select &quot;JSF Page&quot; &rArr; Next.</li>
+<li>&quot;Name and Location&quot; &rArr; In &quot;File Name&quot;, enter &quot;<code>HelloJSF12</code>&quot; &rArr; In &quot;Options&quot;, check &quot;JSP File (Standard Syntax)&quot; &rArr; Finish.</li>
+
+<li>In &quot;<code>HelloJSF12.jsp</code>&quot;, enter the following codes:
+<pre class="color-example">
+&lt;%@page contentType=&quot;text/html&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@taglib prefix=&quot;f&quot; uri=&quot;http://java.sun.com/jsf/core&quot;%&gt;
+&lt;%@taglib prefix=&quot;h&quot; uri=&quot;http://java.sun.com/jsf/html&quot;%&gt;
+&lt;!DOCTYPE html&gt;
+ 
+&lt;f:view&gt;
+  &lt;html&gt;
+    &lt;head&gt;
+      &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;
+      &lt;title&gt;Hello JSF 1.2&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;h1&gt;&lt;h:outputText value=&quot;Hello World!&quot;/&gt;&lt;/h1&gt;
+    &lt;/body&gt;
+  &lt;/html&gt;
+&lt;/f:view&gt;</pre>
+</li>
+
+<li>To execute the JSF page, right-click on the project &rArr; Run &rArr; Change the URL to <code>http://localhost:8080/HelloJSF12/faces/HelloJSF12.jsp</code>.</li>
+</ol>
+
+<h4>Debugging Web Applications in NetBeans</h4>
+<p>You can debug a webapp just like standalone application. For example, you can set breakpoints, single-step through the programs, etc.</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ul>
+  <li>NetBeans mother site @ <a href="http://netbeans.org">http://netbeans.org</a>.</li>
+  <li>NetBeans &quot;Help&quot; menu.</li>
+</ul>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: NetBeans 8.1<br />
+Last modified: January, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division --></body>
+</html>

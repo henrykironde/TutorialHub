@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Webapp Terminologies</title>
+
+<!-- @@ start change in v1 -->
+<link rel="stylesheet" href="../css/programming_notes_v1.css">
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+<script src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Webapp Terminologies</h1>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Server-Side</h3>
+
+<h4>Node.js</h4>
+<p>JavaScripts typically run under a web browser (such as Chrome, Firefox). Node.js is a JavaScript engine that allows you to run JavaScript in standalone manner, without using a browser.</p>
+
+<p>Node.js can also be used as a web server. This is popular because you can use the same JavaScript language to program the client as well as the server.</p>
+
+
+<h3>Databases</h3>
+<p>[TODO]</p>
+
+<h3>Client-Side</h3>
+
+<h4>HTML/CSS/JavaScript</h4>
+
+<p>HTML (Hypertext Markup Language), CSS (Cascading Style Sheet) and JavaScript form the back bone of  client-side programming - HTML for the contents, CSS for the layout, and JavaScript for the behavior and Logic.</p>
+
+<h4>Ajax</h4>
+<p>[TODO]</p>
+
+<h4>jQuery</h4>
+
+<p>jQuery (@ <a href="http://jquery.com/">http://jquery.com</a>) is a JavaScript Library. It is a small script (about 96kB minified) written in JavaScript called &quot;<code>jquery.js</code>&quot;, which greatly simplifies JavaScript programming by providing cross-browser supports for DOM elements selection and manipulation, event handling, Ajax request/response processing and animation.</p>
+
+<p>jQuery is highly popular. In May 2015, JQuery is used by 64.2% of all the websites. Among the JavaScript libraries/frameworks, jQuery's market share is 95.2% (Ref: <a href="http://w3techs.com/technologies/overview/javascript_library/all">http://w3techs.com/technologies/overview/javascript_library/all</a>). In other words, most of the developers nowadays program in jQuery, rather than raw JavaScript.</p>
+
+<h4>AngularJS</h4>
+<p>AngularJS is a client-side JavaScript MVC (Model-View-Controller) Framework (like backbone.js and ember.js), which helps you to organize your JavaScripts in MVC manner.</p>
+
+<p>AngularJS is meant to replace jQuery, which is simply a JavaScript library.</p>
+
+<h3>Architectures and Design Patterns</h3>
+
+<h4>RESTful Web Services</h4>
+
+<p>REST (Representational State Transfer) is a <em>Web Service</em> architecture (like SOAP). In term of implementation, it uses Ajax to send an asynchronous HTTP GET or POST request to the server, and receives the response as an object typically represented in JSON.</p>
+
+<h4>MVC (Model-View-Controller)</h4>
+
+<p>MVC is an <em>architectural design pattern</em> that clearly separates the Model (Data), View (UI or Presentation), and Controller (Business Logic).</p>
+
+<p>The model is the backbone of the application, which is generally the data behind the application, usually fetched from the server. The view is the UI that the users see and interacts with.  The controller is the business logic, such as fetching and processing data (model), and send the data to the UI (view).</p>
+
+<h4>SPA (Single Page Application)</h4>
+
+<p>SPA is an <em>architectural design pattern</em> specifying the user experience to be achieved in which the web page should never be refreshed but only data is queried and returned throughout the interaction sequence of the user with the application. In practice, we use Ajax to send an asynchronous HTTP GET or POST request to the server, and update the appropriate portion of the web page based on the response received.</p>
+
+<p>SPAs are applications that have one entry HTML page (e.g., index.html); all the application content is dynamically added to and removed from that one page.</p>
+
+<h3>Data-Exchange Format</h3>
+
+<h4>JSON (JavaScript Object Notation)</h4>
+
+<p>JSON (@ <a href="http://json.org/">http://json.org/</a>) is a data format. JSON is similar to XML but smaller and lighter than XML. JSON is a lightweight, text-based, human-readable format for data-interchange. JSON format is based on JavaScript Object (and Array) syntaxes, hence, called JavaScript Object Notation. For example,</p>
+
+<pre class="color-example">
+{ "students": [
+    {"firstName":"Paul",  "lastName":"Lee"},
+    {"firstName":"John",  "lastName":"Smith"},
+    {"firstName":"Mary", "lastName":"Jones"}
+]}</pre>
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Last modified: May, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

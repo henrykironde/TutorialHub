@@ -1,0 +1,924 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Generics - Java Programming Tutorial</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Programming Tutorial</h1>
+<h2>Generics</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Introduction to Generics (JDK 1.5)</h3>
+
+<p>You are certainly familiar with passing arguments into methods. You place the arguments inside the round bracket <code>()</code> and pass them to the method. In generics, instead of pass arguments, we pass <em>type information</em> (inside the angle brackets <code>&lt;&gt;</code>).</p>
+
+<p>JDK 1.5 introduces <em>generics</em>, which allows us to <em>abstract over types</em> (or <em>parameterized types</em>).  The class designers can be <em>generic about types in the definition</em>, while the users can be <em>specific in the types during the  object instantiation or method invocation</em>.</p>
+<p> The primary usage of generics is to abstract over types when working with <em>collections</em> (Read &quot;<a href="J5c_Collection.html">The Collection Framework</a>&quot; if necessary).</p>
+<p>For example, the class <code>ArrayList</code> is designed (by the class designer) to take a generics type <code>&lt;E&gt;</code> as follows:</p>
+
+<pre class="color-example">
+public class ArrayList<span class="color-new">&lt;E&gt;</span> implements List<span class="color-new">&lt;E&gt;</span> .... {
+   <span class="color-comment">// Constructor</span>
+   public ArraList() { ...... }
+
+   <span class="color-comment">// Public methods</span>
+   public boolean add(<span class="color-new">E</span> e) { ...... }
+   public void add(int index, <span class="color-new">E</span> element) { ...... }
+   public boolean addAll(int index, Collection<span class="color-new">&lt;? extends E&gt;</span> c)
+   public abstract <span class="color-new">E</span> get(int index) { ...... }
+   public <span class="color-new">E</span> remove(int index)
+   .......
+}</pre>
+
+<p>To instantiate an <code>ArrayList</code>, the users need to provide the actual type for <code>&lt;E&gt;</code> for this particular instance. The actual type provided will then substitute all references to <code>E</code> inside the class. For example,</p>
+
+<pre class="color-example">
+ArrayList<span class="color-new">&lt;Integer&gt;</span> lst1 = new ArrayList<span class="color-new">&lt;Integer&gt;</span>(); <span class="color-comment">// E substituted with Integer</span>
+lst1.add(0, new Integer(88));
+lst1.get(0);
+ 
+ArrayList<span class="color-new">&lt;String&gt;</span> lst2 = new ArrayList<span class="color-new">&lt;String&gt;</span>();   <span class="color-comment">// E substituted with String</span>
+lst2.add(0, &quot;Hello&quot;);
+lst2.get(0);</pre>
+
+<p>The above example showed that the class designers could be <em>generic</em> about type; while the class users provide the <em>specific</em> actual type information during instantiation. The type information is passed inside the angle bracket <code>&lt;&gt;</code>, just like method arguments are passed inside the round bracket <code>()</code>.</p>
+
+<h5>Pre-Generic Collections are not Type-Safe</h5>
+<p>If you are familiar with the pre-JDK 1.5's collections such as <code>ArrayList</code>, they are designed to hold <code>java.lang.Object</code>.  Via polymorphism, any subclass of <code>Object</code> can be substituted for <code>Object</code>.  Since <code>Object</code> is the common root class of all the Java's classes, a collection designed to hold <code>Object</code> can hold any Java classes. There is, however, one problem. Suppose, for example, you wish to define an <code>ArrayList</code> of <code>String</code>.  In the <code>add(Object)</code> operation, the <code>String</code> will be upcasted implicitly into <code>Object</code> by the compiler.  During retrieval, however, it is the programmer's responsibility to downcast the <code>Object</code> back to an <code>String</code> explicitly. If you inadvertently added in a non-<code>String</code> object. the compiler cannot detect the error, but the downcasting will fail at runtime (<code>ClassCastException</code> thrown). Below is an example:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// Pre-JDK 1.5</span>
+import java.util.*;
+public class ArrayListWithoutGenericsTest {
+   public static void main(String[] args) {
+      List strLst = new ArrayList();  <span class="color-comment">// List and ArrayList holds Objects</span>
+      strLst.add(&quot;alpha&quot;);            <span class="color-comment">// String upcast to Object implicitly</span>
+      strLst.add(&quot;beta&quot;);
+      strLst.add(&quot;charlie&quot;);
+      Iterator iter = strLst.iterator();
+      while (iter.hasNext()) {
+         String str = (String)iter.next(); <span class="color-comment">// need to explicitly downcast Object back to String</span>
+         System.out.println(str);
+      }
+      strLst.add(<span class="color-error">new Integer(1234)</span>);       <span class="color-comment">// Compiler/runtime cannot detect this error</span>
+      String str = <span class="color-error">(String)</span>strLst.get(3);  <span class="color-comment">// compile ok, but runtime ClassCastException</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>We could use an <code>instanceof</code> operator to check for proper type before downcasting. But again, <code>instanceof</code> detects the problem at runtime. How about compile-time type-checking?</p>
+
+<h3>Generics</h3>
+
+<h5>Let's write our own &quot;type-safe&quot; <span class="font-code">ArrayList</span></h5>
+<p>We shall illustrate the use of generics by writing our own <em>type-safe</em> resizable array for holding a particular type of objects (similar to an <code>ArrayList</code>).</p>
+<p>Let's begin with a version without generics called <code>MyArrayList</code>:</p>
+
+<table class="table-program">
+  <col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// A dynamically allocated array which holds a collection of java.lang.Object - without generics</span>
+public class MyArrayList {
+   private int size;     <span class="color-comment">// number of elements</span>
+   private Object[] elements;
+   
+   public MyArrayList() {         <span class="color-comment">// constructor</span>
+      elements = new Object[10];  <span class="color-comment">// allocate initial capacity of 10</span>
+      size = 0;
+   }
+   
+   public void add(Object o) {
+      if (size &lt; elements.length) {
+         elements[size] = o;
+      } else {
+         <span class="color-comment">// allocate a larger array and add the element, omitted</span>
+      }
+      ++size;
+   }
+   
+   public Object get(int index) {
+      if (index &gt;= size)
+         throw new IndexOutOfBoundsException(&quot;Index: &quot; + index + &quot;, Size: &quot; + size);
+      return elements[index];
+   }
+   
+   public int size() { return size; }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The <code>MyArrayList</code> is not <em>type-safe</em>. For example, if we create a <code>MyArrayList</code> which is meant to hold <code>String</code>, but added in an <code>Integer</code>. The compiler cannot detect the error. This is because <code>MyArrayList</code> is designed to hold <code>Object</code>s and any Java classes can be upcast to <code>Object</code>.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre>
+</td>
+<td>
+<pre>
+public class MyArrayListTest {
+   public static void main(String[] args) {
+      <span class="color-comment">// Intends to hold a list of Strings, but not type-safe</span>
+      MyArrayList strLst = new MyArrayList();
+      <span class="color-comment">// adding String elements - implicitly upcast to Object</span>
+      strLst.add(&quot;alpha&quot;);
+      strLst.add(&quot;beta&quot;);
+      <span class="color-comment">// retrieving - need to explicitly downcast back to String</span>
+      for (int i = 0; i &lt; strLst.size(); ++i) {
+         String str = (String)strLst.get(i);
+         System.out.println(str);
+      }
+   
+      <span class="color-comment">// Inadvertently added a non-String object will cause a runtime
+      // ClassCastException. Compiler unable to catch the error.</span>
+      strLst.add(<span class="color-error">new Integer(1234)</span>);   <span class="color-comment">// compiler/runtime cannot detect this error</span>
+      for (int i = 0; i &lt; strLst.size(); ++i) {
+         String str = <span class="color-error">(String)</span>strLst.get(i);   <span class="color-comment">// compile ok, runtime ClassCastException</span>
+         System.out.println(str);
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>If you intend to create a list of <code>String</code>, but inadvertently added in an non-<code>String</code> object, the non-<code>String</code> will be upcasted to <code>Object</code> implicitly.  The compiler is not able to check whether the downcasting is valid at compile-time (this is known as late binding or dynamic binding).  Incorrect downcasting will show up only at runtime, in the form of <code>ClassCastException</code>, which could be too late.  The compiler is not able to catch this error at compiled time.  Can we make the compiler to catch this error and ensure <em>type safety</em> at runtime?</p>
+
+<h4>Generics Classes</h4>
+
+<p>JDK 1.5 introduces the so-called <em>generics</em> to resolve this problem.  <em>Generics</em> allow you to <em>abstract over types</em>.  You can design a class with  a <em>generic type</em>, and provide the <em>specific type information</em> during the instantiation.  The compiler is able to perform the necessary type checking during compile time and ensure that no type-casting error occurs at runtime.  This is known as <em>type-safety</em>.</p>
+
+<p>Take a look at the declaration of interface <code>java.util.List&lt;E&gt;</code>:</p>
+<pre class="color-syntax">
+public interface List<span class="color-new">&lt;E&gt;</span> extends Collection<span class="color-new">&lt;E&gt;</span> {
+   boolean add(<span class="color-new">E</span> o);
+   void add(int index, <span class="color-new">E</span> element);
+   boolean addAll(Collection<span class="color-new">&lt;? extends E&gt;</span> c);
+   boolean containsAll(Collection<span class="color-new">&lt;?&gt;</span> c);
+   ......
+}</pre>
+
+<p><code>&lt;E&gt;</code> is called the <em>formal &quot;type&quot; parameter</em>, which can be used for passing &quot;type&quot; parameters during the actual instantiation.</p>
+<p>The mechanism is similar to method invocation. Recall that in a method's definition, we declare the <em>formal parameters</em> for passing data into the method.  For example,</p>
+<pre class="color-example">
+<span class="color-comment">// A method's definition</span>
+public static int max(int a, int b) {  <span class="color-comment">// int a, int b are <em>formal parameters</em></span>
+   return (a &gt; b) ? a : b;
+}</pre>
+
+<p>During the invocation, the formal parameters are substituted by the <em>actual parameters</em>.  For example,</p>
+<pre class="color-example">
+<span class="color-comment">// Invocation: formal parameters substituted by actual parameters</span>
+int maximum = max(55, 66);   <span class="color-comment">// 55 and 66 are actual parameters</span>
+int a = 77, b = 88;
+maximum = max(a, b);         <span class="color-comment">// a and b are actual parameters</span></pre>
+
+<p>Formal type parameters used in the class declaration have the same purpose as the formal parameters used in the method declaration.  A class can use <em>formal type parameters</em> to receive type information when an instance is created for that class.  The actual types used during instantiation are called <em>actual type parameters</em>.</p>
+
+<p>Let's return to the <code>java.util.List&lt;E&gt;</code>, in an actual invocation, such as <code>List&lt;Integer&gt;</code>, all occurrences of the formal type parameter <code>&lt;E&gt;</code> are replaced by the actual type parameter <code>&lt;Integer&gt;</code>.  With this additional type information, compiler is able to perform type check during compile-time and ensure that there won't have type-casting error at runtime.</p>
+
+<h5>Formal Type Parameter Naming Convention</h5>
+<p>Use an uppercase single-character for formal type parameter.  For example,</p>
+<ul>
+<li><code>&lt;E&gt;</code> for an element of a collection;</li>
+<li><code>&lt;T&gt;</code> for type;</li>
+<li><code>&lt;K, V&gt;</code> for key and value.</li>
+<li><code>&lt;N&gt;</code> for number</li>
+<li><code>S</code>,<code>U</code>,<code>V</code>, etc. for 2nd, 3rd, 4th type parameters</li>
+</ul>
+
+<h5>Example of Generic Class</h5>
+
+<p>In this example, a class called <code>GenericBox</code>, which takes a generic type parameter <code>E</code>, holds a <code>content</code> of type <code>E</code>. The constructor, getter and setter work on the parameterized type <code>E</code>. The <code>toString()</code> reveals the actual type of the <code>content</code>.</p>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+public class GenericBox&lt;E&gt; {
+   <span class="color-comment">// Private variable</span>
+   private E content;
+ 
+   <span class="color-comment">// Constructor</span>
+   public GenericBox(E content) {
+      this.content = content;
+   }
+ 
+   public E getContent() {
+      return content;
+   }
+ 
+   public void setContent(E content) {
+      this.content = content;
+   }
+ 
+   public String toString() {
+      return content + &quot; (&quot; + content.getClass() + &quot;)&quot;;
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The following test program creates <code>GenericBox</code>es with various types (<code>String</code>, <code>Integer</code> and <code>Double</code>). Take note that JDK 1.5 also introduces auto-boxing and unboxing to convert between primitives and wrapper objects.</p>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre>
+</td>
+<td>
+<pre>
+public class TestGenericBox {
+   public static void main(String[] args) {
+      GenericBox&lt;String&gt; box1 = new GenericBox&lt;String&gt;(&quot;Hello&quot;);
+      String str = box1.getContent();  <span class="color-comment">// no explicit downcasting needed</span>
+      System.out.println(box1);
+      GenericBox&lt;Integer&gt; box2 = new GenericBox&lt;Integer&gt;(123);  <span class="color-comment">// autobox int to Integer</span>
+      int i = box2.getContent();       <span class="color-comment">// downcast to Integer, auto-unbox to int</span>
+      System.out.println(box2);
+      GenericBox&lt;Double&gt; box3 = new GenericBox&lt;Double&gt;(55.66);  <span class="color-comment">// autobox double to Double</span>
+      double d = box3.getContent();     <span class="color-comment">// downcast to Double, auto-unbox to double</span>
+      System.out.println(box3);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+Hello (class java.lang.String)
+123 (class java.lang.Integer)
+55.66 (class java.lang.Double)</pre>
+
+<h5>Type Erasure</h5>
+
+<p>From the previous example, it seems that compiler substituted the parameterized type <code>E</code> with the actual type (such as <code>String</code>, <code>Integer</code>) during instantiation. If this is the case, the compiler would need to create a new class for each actual type (similar to C++'s template).</p>
+
+<p>In fact, the compiler replaces all reference to parameterized type E with Object, performs the type check, and insert the required downcast operators. For example, the <code>GenericBox</code> is compiled as follows (which is compatible with codes without generics):</p>
+
+
+<pre class="color-example">
+public class GenericBox {
+   <span class="color-comment">// Private variable</span>
+   private <span class="color-new">Object</span> content;
+ 
+   <span class="color-comment">// Constructor</span>
+   public GenericBox(<span class="color-new">Object</span> content) {
+      this.content = content;
+   }
+ 
+   public <span class="color-new">Object</span> getContent() {
+      return content;
+   }
+ 
+   public void setContent(<span class="color-new">Object</span> content) {
+      this.content = content;
+   }
+ 
+   public String toString() {
+      return content + &quot; (&quot; + content.getClass() + &quot;)&quot;;
+   }
+}</pre>
+
+<p>The compiler also inserts the required downcast operator in the test codes:</p>
+<pre class="color-example">
+GenericBox box1 = new GenericBox(&quot;Hello&quot;);  <span class="color-comment">// upcast is type-safe</span>
+String str = <span class="color-new">(String)</span>box1.getContent();     <span class="color-comment">// compiler inserts downcast operation</span>
+System.out.println(box1);</pre>
+
+<p>In this way, the same class definition is used for all the types. Most importantly, the bytecode are compatible with those without generics. This process is called <em>type erasure</em>.</p>
+
+<h5>Continue with our &quot;type-safe&quot; <span class="font-code">ArrayList</span>...</h5>
+<p>Let's return to the <code>MyArrayList</code> example.  With the use of generics, we can rewrite our program as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// A dynamically allocated array with generics</span>
+public class MyGenericArrayList&lt;E&gt; {
+   private int size;     <span class="color-comment">// number of elements</span>
+   private Object[] elements;
+   
+   public MyGenericArrayList() {  <span class="color-comment">// constructor</span>
+      elements = new Object[10];  <span class="color-comment">// allocate initial capacity of 10</span>
+      size = 0;
+   }
+   
+   public void add(E e) {
+      if (size &lt; elements.length) {
+         elements[size] = e;
+      } else {
+         <span class="color-comment">// allocate a larger array and add the element, omitted</span>
+      }
+      ++size;
+   }
+   
+   public E get(int index) {
+      if (index &gt;= size)
+         throw new IndexOutOfBoundsException(&quot;Index: &quot; + index + &quot;, Size: &quot; + size);
+      return (E)elements[index];
+   }
+   
+   public int size() { return size; }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Dissecting the Program</h5>
+
+<p><code>MyGenericArrayList&lt;E&gt;</code> declare a generics class with a <em>formal type parameter</em>  <code>&lt;E&gt;</code>.  During an actual invocation, e.g., <code>MyGenericArrayList&lt;String&gt;</code>, a specific type <code>&lt;String&gt;</code>, or <em>actual type parameter</em>, replaced the formal type parameter <code>&lt;E&gt;</code>.</p>
+
+<p>Behind the scene, generics are implemented by the Java compiler as a front-end conversion called <em>erasure</em>, which translates or rewrites code that uses generics into non-generic code (to ensure backward compatibility). This conversion erases all generic type information. For example, <code>ArrayList
+&lt;Integer&gt;</code> will become <code>ArrayList</code>. The formal type parameter, such as <code>&lt;E&gt;</code>, are replaced by <code>Object</code> by default (or by the upper bound of the type). When the resulting code is not type correct, the compiler insert a type casting operator.</p>
+
+<p>Hence, the translated code is as follows:</p>
+<pre class="color-example">
+<span class="color-comment">// The translated code</span>
+public class  MyGenericArrayList {
+   private int size;     <span class="color-comment">// number of elements</span>
+   private Object[] elements;
+   
+   public MyGenericArrayList() {  <span class="color-comment">// constructor</span>
+      elements = new Object[10];  <span class="color-comment">// allocate initial capacity of 10</span>
+      size = 0;
+   }
+   
+   <span class="color-comment">// Compiler replaces E with Object, but check e is of type E, when invoked to ensure type-safety</span>
+   public void add(Object e) {
+      if (size &lt; elements.length) {
+         elements[size] = e;
+      } else {
+         <span class="color-comment">// allocate a larger array and add the element, omitted</span>
+      }
+      ++size;
+   }
+   
+   <span class="color-comment">// Compiler replaces E with Object, and insert downcast operator (E&lt;E&gt;) for the return type when invoked</span>
+   public Object get(int index) {
+      if (index &gt;= size)
+         throw new IndexOutOfBoundsException(&quot;Index: &quot; + index + &quot;, Size: &quot; + size);
+      return (Object)elements[index];
+   }
+   
+   public int size() { 
+      return size; 
+   }
+}</pre>
+
+<p>When the class is instantiated with an actual type parameter, e.g. <code>MyGenericArrayList&lt;String&gt;</code>, the compiler ensures <code>add(E e)</code> operates on only <code>String</code> type. It also inserts the proper downcasting operator to match the return type <code>E</code> of <code>get()</code>. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+</td>
+<td>
+<pre>
+public class MyGenericArrayListTest {
+   public static void main(String[] args) {
+      <span class="color-comment">// type safe to hold a list of Strings</span>
+      MyGenericArrayList&lt;String&gt; strLst = new MyGenericArrayList&lt;String&gt;();
+   
+      strLst.add(&quot;alpha&quot;);   <span class="color-comment">// compiler checks if argument is of type String</span>
+      strLst.add(&quot;beta&quot;);
+   
+      for (int i = 0; i &lt; strLst.size(); ++i) {
+         String str = strLst.get(i);   <span class="color-comment">// compiler inserts the downcasting operator (String)</span>
+         System.out.println(str);
+      }
+   
+      strLst.add(<span class="color-error">new Integer(1234)</span>);  <span class="color-comment">// compiler detected argument is NOT String, issues compilation error</span>
+   }
+}</pre> 
+</td>
+</tr>
+</tbody>
+</table>
+
+
+
+<p>With generics, the compiler is able to perform type checking during compilation and ensure type safety at runtime.</p>
+
+<p>Unlike &quot;template&quot; in C++, which creates a new type for each specific parameterized type, in Java, a generics class is only compiled once, and there is only one single class file which is used to create instances for all the specific types.</p>
+
+<h4>Generic Methods</h4>
+<p>Methods can be defined with generic types as well (similar to generic class).  For example,</p>
+<pre class="color-example">public static &lt;E&gt; void ArrayToArrayList(E[] a, ArrayList&lt;E&gt; lst) {
+   for (E e : a) lst.add(e);
+}</pre>
+
+<p>A generic method can declare formal type parameters (e.g. <code>&lt;E&gt;</code>, <code>&lt;K,V&gt;</code>) <em>preceding the return type</em>. The formal type parameters can then be used as <em>placeholders</em> for return type, method's parameters and local variables within a generic method, for proper type-checking by compiler.</p>
+
+<p>Similar to generics class, when the compiler translates a generic method, it replaces the formal type parameters using <em>erasure</em>.  All the generic types are replaced with type <code>Object</code> by default (or the upper bound of type).  The translated version is as follows:</p>
+
+<pre class="color-example">public static void ArrayToArrayList(Object[] a, ArrayList lst) {  <span class="color-comment">// compiler checks if a is of type E[],</span>
+                                                                  <span class="color-comment">//   lst is of type ArrayList&lt;E&gt;</span>
+   for (Object e : a) lst.add(e);  <span class="color-comment">                               // compiler checks if e is of type E</span>
+}</pre>
+<p>However, compiler checks that <code>a</code> is of the type <code>E[]</code>, <code>lst</code> is of type <code>ArrayList&lt;E&gt;</code>, and <code>e</code> is of type <code>E</code>, during invocation to ensure type-safety. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre>
+</td>
+<td>
+<pre>
+import java.util.*;
+public class TestGenericMethod {
+   
+   public static &lt;E&gt; void ArrayToArrayList(E[] a, ArrayList&lt;E&gt; lst) {
+      for (E e : a) lst.add(e);
+   }
+   
+   public static void main(String[] args) {
+      ArrayList&lt;Integer&gt; lst = new ArrayList&lt;Integer&gt;();
+   
+      Integer[] intArray = {55, 66};  <span class="color-comment">// autobox</span>
+      ArrayToArrayList(intArray, lst);
+      for (Integer i : lst) System.out.println(i);
+   
+      String[] strArray = {&quot;one&quot;, &quot;two&quot;, &quot;three&quot;};
+      //ArrayToArrayList(strArray, lst);   <span class="color-comment">// Compilation Error below</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<pre class="output">
+TestGenericMethod.java:16: &lt;E&gt;ArrayToArrayList(E[],java.util.ArrayList&lt;E&gt;) in TestGenericMethod
+cannot be applied to (java.lang.String[],java.util.ArrayList&lt;java.lang.Integer&gt;)
+      ArrayToArrayList(strArray, lst);
+      ^</pre>
+
+<p>Generics have an optional syntax for specifying the type for a generic method. You can place the actual type in angle brackets <code>&lt;&gt;</code>, between the dot operator and method name. For example,</p>
+<pre class="color-example">
+TestGenericMethod.&lt;Integer&gt;ArrayToArrayList(intArray, lst);</pre>
+
+<p>The syntax makes the code more readable and also gives you control over the generic type in situations where the type might not be obvious.</p>
+
+
+<h4>Wildcard<span class="font-code"></span>s</h4>
+
+<p>Consider the following lines of codes:</p>
+<pre class="color-example">
+ArrayList&lt;Object&gt; lst = new ArrayList&lt;String&gt;();</pre>
+
+<p>It causes a compilation error &quot;incompatible types&quot;, as <code>ArrayList&lt;String&gt;</code> is not an <code>ArrayList&lt;Object&gt;</code>.</p>
+
+<p>This error is against our intuition on polymorphism, as we often assign a subclass instance to a superclass reference.</p>
+
+<p>Consider these two statements:</p>
+<pre class="color-example">
+List&lt;String&gt; strLst = new ArrayList&lt;String&gt;();   <span class="color-comment">// 1</span>
+List&lt;Object&gt; objLst = strList;                   <span class="color-comment">// 2 - Compilation Error</span></pre>
+
+<p>Line 2 generates a compilation error. But if line 2 succeeds and some arbitrary objects are added into <code>objLst</code>, <code>strLst</code> will get &quot;corrupted&quot; and no longer contains only <code>String</code>s.  (<code>objLst</code> and <code>strLst</code> have the same reference.)</p>
+
+<p>Because of the above, suppose we want to write a  method called <code>printList(List&lt;.&gt;)</code> to print the elements of a List. If we define the method as <code>printList(List&lt;Object&gt; lst)</code>, then it can only accept an argument of <code>List&lt;object&gt;</code>, but not <code>List&lt;String&gt;</code> or <code>List&lt;Integer&gt;</code>.  For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre>
+</td>
+<td>
+<pre>
+import java.util.*;
+public class TestGenericWildcard {
+   
+   public static void printList(List&lt;Object&gt; lst) {  <span class="color-comment">// accept List of Objects only, 
+                                                     // not List of subclasses of object</span>
+      for (Object o : lst) System.out.println(o);
+   }
+   
+   public static void main(String[] args) {
+      List&lt;Object&gt; objLst = new ArrayList&lt;Object&gt;();
+      objLst.add(new Integer(55));
+      printList(objLst);   <span class="color-comment">// matches</span>
+   
+      List&lt;String&gt; strLst = new ArrayList&lt;String&gt;();
+      strLst.add(&quot;one&quot;);
+      <span class="color-error">printList(strLst);</span>  <span class="color-comment">// compilation error</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Unbounded Wildcard <span class="font-code">&lt;?&gt;</span></h5>
+<p>To resolve this problem, a wildcard (<code>?</code>) is provided in generics, which stands for <em>any unknown type</em>. For example, we can rewrite our <code>printList()</code> as follows to accept a <code>List</code> of any unknown type.</p>
+
+<pre class="color-example">
+public static void printList(List&lt;?&gt; lst) {
+  for (Object o : lst) System.out.println(o);
+}</pre>
+
+<h5>Upperbound Wildcard <span class="font-code">&lt;? extends <em>type</em>&gt;</span></h5>
+
+<p>The wildcard <code>&lt;? extends <em>type</em>&gt;</code> stands for <code><em>type</em></code> and its sub-<em><code>type</code></em><code></code>.  For example,</p>
+
+<pre class="color-example">
+public static void printList(List&lt;? extends Number&gt; lst) {
+  for (Object o : lst) System.out.println(o);
+}</pre>
+
+<p><code>List&lt;? extends Number&gt;</code> accepts <code>List</code> of <code>Number</code> and any subtype of <code>Number</code>, e.g., <code>List&lt;Integer&gt; </code>and <code>List&lt;Double&gt;</code>.</p>
+
+<p>Clearly, <code>&lt;?&gt;</code> can be interpreted as <code>&lt;? extends Object&gt;</code>, which is applicable to all Java classes.</p>
+
+<p>Another example,</p>
+<pre class="color-example">
+// List&lt;Number&gt; lst = new ArrayList&lt;Integer&gt;();  <span class="color-comment">// Compilation Error</span>
+List&lt;? extends Number&gt; lst = new ArrayList&lt;Integer&gt;();
+</pre>
+
+<h5>Lowerbound Wildcard <span class="font-code">&lt;? super <em>type</em>&gt;</span></h5>
+<p>The wildcard <code>&lt;? super <em>type</em>&gt;</code> matches <code><em>type</em></code>, as well as its super-<em><code>type</code></em><code></code>. In other words, it specifies the lower bound.</p>
+
+<p>Read Java Online Tutorial &quot;<a href="http://docs.oracle.com/javase/tutorial/extra/generics/morefun.html">More Fun with Wildcards</a>&quot;.</p>
+<p>[TODO] Example</p>
+
+<h4>Bounded Generics</h4>
+
+<p>A bounded parameter type is a generic type that specifies a bound for the generic, in the form of <code>&lt;T extends <em>ClassUpperBound</em>&gt;</code>, e.g., <code>&lt;T extends Number&gt;</code> accepts <code>Number</code> and its subclasses (such as <code>Integer</code> and <code>Double</code>).</p>
+
+<h5>Example</h5>
+
+<p>The method <code>add()</code> takes a type parameter <code>&lt;T extends Number&gt;</code>, which accepts <code>Number</code> and its subclasses (such as <code>Integer</code> and <code>Double</code>).</p>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre>
+</td>
+<td>
+<pre>
+public class MyMath {
+   public static &lt;T extends Number&gt; double add(T first, T second) {
+      return first.doubleValue() + second.doubleValue();
+   }
+ 
+   public static void main(String[] args) {
+      System.out.println(add(55, 66));     <span class="color-comment">// int -&gt; Integer</span>
+      System.out.println(add(5.5f, 6.6f)); <span class="color-comment">// float -&gt; Float</span>
+      System.out.println(add(5.5, 6.6));   <span class="color-comment">// double -&gt; Double</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>How the compiler treats the bounded generics?</h5>
+
+<p>As mentioned, by default, all the generic types are replaced with type <code>Object</code>, during the code translation.  However, in the case of <code>&lt;? extends Number&gt;</code>, the generic type is replaced by the type <code>Number</code>, which serves as the <em>upper bound</em> of the generic types.</p>
+
+<h5>Example</h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre>
+</td>
+<td>
+<pre>
+public class TestGenericsMethod {
+   public static &lt;T extends Comparable&lt;T&gt;&gt; T maximum(T x, T y) {
+      return (x.compareTo(y) &gt; 0) ? x : y;
+   }
+   
+   public static void main(String[] args) {
+      System.out.println(maximum(55, 66));
+      System.out.println(maximum(6.6, 5.5));
+      System.out.println(maximum(&quot;Monday&quot;, &quot;Tuesday&quot;));
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>By default, <code>Object</code> is the <em>upper-bound</em> of the parameterized type.  <code>&lt;T extends Comparable&lt;T&gt;&gt;</code> changes the upper bound to the <code>Comparable</code> interface, which declares an <code>abstract</code> method <code>compareTo()</code> for comparing two objects.</p>
+
+<p>The compiler translates the above generic method to the following codes:</p>
+<pre class="color-example">
+public static<strong> Comparable</strong> maximum(<strong>Comparable</strong> x, <strong>Comparable</strong> y) {   <span class="color-comment">// replace T by upper bound type Comparable</span>
+                                                                 <span class="color-comment">// Compiler checks x, y are of the type Comparable</span>
+                                                                 <span class="color-comment">// Compiler inserts a type-cast for the return value</span>
+   return (x.compareTo(y) &gt; 0) ? x : y;
+}</pre>
+
+<p>When this method is invoked, e.g. via <code>maximum(55, 66)</code>,  the primitive <code>int</code>s are auto-boxed to <code>Integer</code> objects, which are then implicitly upcasted to <code>Comparable</code>.  The compiler checks the type to ensure type-safety.  The compiler also inserts an explicit downcast operator for the return type.  That is,</p>
+<pre class="color-example">
+(Comparable)maximum(55, 66);
+(Comparable)maximum(6.6, 5.5);
+(Comparable)maximum(&quot;Monday&quot;, &quot;Tuesday&quot;);</pre>
+
+<p>We do not have to pass an actual type argument to a generic method.  The compiler infers the type argument automatically, based of the type of the actual argument passed into the method.</p>
+
+<a class="references" href="../howto/References.html#java">LINK TO JAVA REFERENCES &amp; RESOURCES</a>
+
+<p class="references">More References</p>
+<ol>
+<li>Java Online Tutorial on &quot;Generics&quot; @ <a href="http://docs.oracle.com/javase/tutorial/extra/generics/index.html">http://docs.oracle.com/javase/tutorial/extra/generics/index.html</a>.</li>
+<li>Java Online Tutorial on &quot;Collections&quot; @ <a href="http://docs.oracle.com/javase/tutorial/collections/index.html">http://docs.oracle.com/javase/tutorial/collections/index.html</a>.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7.0_03<br />
+Last modified: May, 2012</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

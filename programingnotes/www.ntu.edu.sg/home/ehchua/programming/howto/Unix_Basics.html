@@ -1,0 +1,1500 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Unix Basics</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Unix Basics</h1>
+<h2>(For Ubuntu Linux and Mac OS X)</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<p>If you are new to Unix, read &quot;<a href="Unix_SurvivalGuide.html#Terminal_getstarted">Unix Survival Guide for Mac &amp; Ubuntu - Terminal, File System and Users</a>&quot;.</p>
+
+<h3 id="bash">Bash Shell Basics</h3>
+
+<p>A <em>shell</em> (or <em>command interpreter</em>, or <em>command prompt</em>) is a program that lets you interact with the operating system by issuing text-based commands. It is called a shell, as it protects or shields you from interacting with the operating system directly. In addition to a set of commands, a shell also comes with its scripting language for you to write shell scripts (or shell programs), which could be a sequence of commands for automating system administration tasks.</p>
+
+<p>There are many shell programs: from the legacy and obsoleted <code>sh</code> (the original Bourne Shell), <code>csh</code> (C Shell), <code>ksh</code> (Korn Shell), <code>zsh</code> (Z Shell), to newer <code>bash</code> (Bourne Again Shell), <code>tcsh</code> (Tenex C Shell) and <code>tsh</code> (T Shell); and Windows <code>cmd</code> shell. </p>
+
+<p>In this article, we shall cover only GNU <code>bash</code> shell, which is based on the Unix's original bourne shell (<code>sh</code>), and provides features of <code>csh</code> and <code>tsh</code>. The mother site for bash shell is <a href="http://www.gnu.org/software/bash/">www.gnu.org/software/bash/</a>.</p>
+
+<p>Unixes provide an application called &quot;Terminal&quot;, which runs a shell program. By default, Mac OS X and Linux's Terminal runs the <code>bash</code> shell. Besides the Graphics &quot;Terminal&quot;, you can also use Ctrl+Alt+F1 to Ctrl+Alt+F6 to access one of the six virtual console (tty1 to tty6); and use Ctrl+Alt+F7 to switch back to the GUI screen (tty7). In addition, you can also login remotely via the secured <code>ssh</code> (Secure Shell) or the unsecured <code>telnet</code>.</p>
+
+<p>Bash shell supports <em>thousands</em> of commands - the philosophy of Unix is using small programs that perform one task, but performed it well. Bash shell is often identified by a &quot;<code>$</code>&quot; sign in the command prompt.</p>
+
+<h4>Help and Man Pages</h4>
+
+<p>You can issue <code>help</code> command:</p>
+<pre class="color-command">
+$ <strong>help</strong>                 <span class="color-comment">// Display the help menu for the bash shell</span>
+$ <strong>help &lt;command-name&gt;</strong>  <span class="color-comment">// Display the help menu for the command</span></pre>
+
+<p>Most of the commands also support an <code>help</code> option, but may exist in various style:</p>
+<pre class="color-command">
+$ <strong>&lt;command-name&gt; -h</strong>         <span class="color-comment">// Unix-style: dash followed by a single character</span>
+$ <strong>&lt;command-name&gt; -?</strong>
+$ <strong>&lt;command-name&gt; -help</strong>      <span class="color-comment">// X-style: dash followed by a keyword</span>
+$ <strong>&lt;command-name&gt; --help</strong>     <span class="color-comment">// GNU-style: double-dash followed by a keyword</span></pre>
+
+<p>Unix systems provide so called man pages (or manual pages) for all the commands and utilities. To display the man page for a particular command, use <code>man</code> command:</p>
+<pre class="color-command">
+$ <strong>man &lt;command-name&gt;</strong>          <span class="color-comment">// Display manual page for the command
+                              // You can use Up/Down/PgUp/PgDown keys to scroll the texts</span>
+$ <strong>info &lt;command-name&gt;</strong>
+$ <strong>man &lt;command-name&gt; | less</strong>   <span class="color-comment">// Display in page-mode</span></pre>
+
+<p>To search for commands:</p>
+<pre class="color-command">
+$ <strong>man -k &lt;keyword&gt;</strong>     <span class="color-comment">// Search for commands relevant to keyword</span>
+$ <strong>apropos &lt;keyword&gt;</strong>    <span class="color-comment">// Same as above</span></pre>
+
+<p>Man pages are comprehensive and can be hard to read on the text-based console. Online HTML-formatted man pages are available, for example, the Ubuntu's man pages @ <a href="http://manpages.ubuntu.com/">http://manpages.ubuntu.com</a>, Linux documentation @ <a href="http://linux.die.net/">http://linux.die.net</a>. You can also google &quot;<code>man <em>command-name</em></code>&quot; to search for online man pages.</p>
+
+<p>The man pages are divided into 10 sections:</p>
+<ol>
+<li>User Commands</li>
+<li>System Calls</li>
+<li>Subroutines</li>
+<li>Devices</li>
+<li>File Formats</li>
+<li>Games</li>
+<li>Miscellaneous</li>
+<li>System Administration</li>
+<li>Kernel</li>
+<li>New</li></ol>
+
+<p>A man page identified its section number in bracket, e.g., <code>chmod(1)</code>.</p>
+<p>Some commands have man pages in multiple sections. When a <code>man</code> command is issued, the earliest section will be shown by default. You can also explicitly request for another section. For example,</p>
+<pre class="color-command">
+$ <strong>man -k chmod</strong>     <span class="color-comment">// All commands relevant to chmod</span>
+chmod(1)  ......
+chmod(2)  ......
+$ <strong>man chmod</strong>        <span class="color-comment">// Show the earliest section</span>
+chmod(1) .....
+..............
+$ <strong>man 2 chmod</strong>      <span class="color-comment">// Explicitly request for other section</span>
+chmod(2) .....
+..............</pre>
+
+<p>The man pages are kept in <code>/usr/share/man/man&lt;x&gt;</code>, where <code>&lt;x&gt;</code> denotes the section number.</p>
+
+<h4>Useful Commands/Utilities</h4>
+
+<p>These are the commands/utilities that a good Unix programmer is expected to know. Check the man pages (&quot;<code>man <em>command-name</em></code>&quot; or google) to get the detailed description.</p>
+
+<ul>
+
+<li>File related:
+<ul>
+<li><strong><code>pwd</code></strong>: Print current working directory. In bash shell, the current working directory is also shown in the command prompt.</li>
+<li><strong><code>cd <em>pathname</em></code></strong>: Change current working directory. The <code><em>pathname</em></code> could be either absolute or relative (to the current working directory). Special notations &quot;<code>.</code>&quot; and &quot;<code>..</code>&quot; refer to the current and parent directories, respectively.</li>
+<li><strong><code>ls</code></strong>: List files (in short-format). &quot;<code>ls -l</code>&quot; lists file in long-format; &quot;<code>ls -a</code>&quot; lists also the hidden files.</li>
+<li><strong><code>cat</code></strong>: Concatenate files and print its content.</li>
+<li><strong><code>less</code></strong>, <strong><code>more</code></strong>: View file in pages.</li>
+<li><strong><code>head</code></strong>, <strong><code>tail</code></strong>: Print the first part or last part of the file.</li>
+<li><strong><code>mkdir</code></strong>, <strong><code>rmdir</code></strong>: Make directory or remove (delete) empty directory.</li>
+<li><strong><code>touch <em>filename</em></code></strong>: Create the file if it does not exist; otherwise, update the last-modified timestamp.</li>
+<li><strong><code>cp</code></strong>, <strong><code>mv</code></strong>, <strong><code>rm</code></strong>: copy, move or remove (delete) files.</li>
+<li><strong><code>chmod</code></strong>, <strong><code>chown</code></strong>, <strong><code>chgrp</code></strong>: change file mode, owner, or group.</li>
+<li><strong><code>ln</code></strong>: Create link.</li>
+</ul></li>
+
+<li>Resource related:
+<ul>
+<li><strong><code>ps</code></strong>: List processes. &quot;<code>ps aux | grep <em>process-name</em></code>&quot; to list the details of a particular process.</li>
+<li><strong><code>df</code></strong>: Report file system disk space usage.</li>
+<li><strong><code>export <em>name</em>=<em>value</em></code></strong>: Set a variable and export to global environment.</li>
+<li><strong><code>top</code></strong>: Print resource usage and top processes.</li>
+<li><strong><code>who</code></strong>: List all login users.</li>
+<li><strong><code>whoami</code></strong>: Print current login user.</li>
+<li><strong><code>hostname</code></strong>: Print hostname.</li>
+<li><strong><code>uptime</code></strong>: Print how long the system has been running.</li>
+<li><strong><code>date</code></strong>: Print date/time.</li>
+<li><strong><code>du</code></strong>: Print disk file space usage.</li>
+</ul></li>
+
+<li>Utilities:
+<ul>
+<li><strong><code>grep</code></strong>: Search for a string in input.</li>
+<li><strong><code>find</code></strong>: Find files.</li>
+<li><strong><code>which <em>program-name</em></code></strong>: Print the location of the program-name.</li>
+<li><strong><code>whereis <em>program-name</em></code></strong>: List all files related to the program-name.</li>
+<li><strong><code>whatis <em>program-name</em></code></strong>: Print one-line description of program-name.</li>
+<li><strong><code>locate <em>filename</em></code></strong>: Search for files in local system.</li>
+<li><strong><code>man <em>command-name</em></code></strong>: Display manual pages for the command.</li>
+</ul></li>
+
+<li>Editors:
+<ul>
+<li><strong><code>vi/vim</code></strong>, <strong><code>nano</code></strong>, <strong><code>emacs</code></strong>: Console-based (text-based) editors.</li>
+<li><strong><code>gedit</code></strong>: graphical text editor.</li>
+</ul></li>
+
+<li>Programming:
+<ul>
+<li><strong><code>make</code></strong>: Install programs.</li>
+<li><strong><code>gcc</code></strong>, <strong><code>g++</code></strong>: GNU C/C++ compiler.</li>
+</ul></li>
+
+<li>More: <code>diff</code>, <code>gzip</code>, <code>tar</code>, <code>ping</code>, <code>ssh</code>, <code>history</code>, <code>su</code>, <code>sudo</code>, <code>adduser</code>, <code>addgroup</code>, etc.</li>
+
+</ul>
+
+<h5>More on <span class="font-code">cd</span> (change directory) command</h5>
+
+<p>Read &quot;<a href="Unix_SurvivalGuide.html#cd">Change Directory (cd) command</a>&quot; for basic usage.</p>
+<p>You can use &quot;<code>cd <em>path</em></code>&quot; to change the current working directory. The new path could be an absolute path, beginning with root &quot;<code>\</code>&quot; or home &quot;<code>~</code>&quot;; or relative to the current working directory (PWD).</p>
+
+<p>In cd command, you can use &quot;<code>/</code>&quot; to denote the root directory, &quot;<code>~</code>&quot; to denote home directory of the current login user; &quot;<code>..</code>&quot; (double-dot) to refer to the parent directory; &quot;<code>.</code>&quot; (single-dot) to refer to the current directory; and &quot;<code>-</code>&quot; (dash) to refer to the previous working directory (OLDPWD).</p>
+
+<p>By default, in &quot;<code>cd <em>relative-path</em></code>&quot;, the new path is relative to the current working directory. Nonetheless, you can set the environment variable <code>CDPATH</code> to change the base. If <code>CDPATH</code> is not set, it is defaulted to current working directory. <code>CDPATH</code> could contain multiple directories separated by &quot;:&quot; (colon). For example,</p>
+
+<pre class="color-command">
+$ <strong>cd</strong>                    <span class="color-comment">// home directory</span>
+$ <strong>pwd</strong>
+/home/myuser
+$ <strong>mkdir local</strong>           <span class="color-comment">// create a directory local (/home/myuser/local)</span>
+ 
+$ <strong>export CDPATH=/usr</strong>    <span class="color-comment">// set base for relative cd to /usr</span>
+ 
+$ <strong>cd local</strong>              <span class="color-comment">// relative to CDPATH</span>
+/usr/local
+ 
+$ <strong>export CDPATH=.:/usr</strong>  <span class="color-comment">// set base for relative cd to current directory and /usr</span>
+$ <strong>cd</strong>                    <span class="color-comment">// home directory</span>
+$ <strong>pwd</strong>
+/home/myuser
+$ <strong>cd local</strong>              <span class="color-comment">// found local relative to current directory</span>
+/home/myuser/local</pre>
+
+<h4>Pipe and Input/Output Redirection</h4>
+
+<p>By default, the output of a command goes to the screen (called <code>STDOUT</code>), and the input of a command comes from the keyboard (called <code>STDIN</code>). You can use a <em>redirection operator</em> to redirect input and output from/to a file or another command:</p>
+
+<ul>
+<li><strong><code>&gt;</code></strong> (output redirection): Writes the output to a file (or a device such as printer), instead of the screen (<code>STDOUT</code>).</li>
+<li><strong><code>&gt;&gt;</code></strong> (output append redirection): Appends the output to a file, instead of the screen.</li>
+<li><strong><code>&lt;</code></strong> (input redirection): Reads the input from a file or a device, instead of the keyboard (<code>STDIN</code>).</li>
+<li><strong><code>|</code></strong> (pipe): Pipes the output of one command as the input of another command.</li>
+<li><strong><code>tee</code></strong>: sends output in two directions.</li>
+</ul>
+
+<p>An output redirector <code>'&gt;'</code> involves a program and a sink (destination). An input redirector <code>'&lt;'</code> involves a program and a source. A pipe <code>'|'</code> involves two programs.</p>
+
+<p>For examples,</p>
+
+<pre class="color-command">
+<span class="color-comment">// Redirect the output of the ls command to a file, instead of screen</span>
+$ <strong>ls -l &gt; listing.txt</strong>
+
+<span class="color-comment">// Pipe the output of ls command as the input of program less for view page-by-page</span>
+$ <strong>ls -l | less</strong>
+<span class="color-comment">// Pipe the output of ls command as the input of program wc to count the lines</span>
+$ <strong>ls -l | wc -w</strong>
+ 
+$ <strong>ls -l | tee grep test | listing.txt</strong></pre>
+
+<h4><span class="font-code">find</span>, <span class="font-code">locate</span> and <span class="font-code">grep</span></h4>
+
+<p><code>find</code> and <code>grep</code> are extremely powerful commands.</p>
+
+<h5><span class="font-code">find</span></h5>
+<p>You can use <code>find</code> to find files. For example,</p>
+
+<pre class="color-example">
+$ find -name &quot;*.c&quot;
+  <span class="color-comment">// Find all filename ending with .c, in current directory and subdirectories</span>
+ 
+$ find -iname &quot;*.c&quot;
+  <span class="color-comment">// option -i for case insensitive</span>
+ 
+$ find /usr -name &quot;*.c&quot;
+  <span class="color-comment">// Search /usr and its subdirectories</span></pre>
+
+<h5><span class="font-code">locate</span></h5>
+
+<p>The <code>find</code> command recursively search thru the directories and is slow. <code>locate</code>, on the other hand, search an index (which is build every night for the entire file system) and is fast. For example,</p>
+
+<pre class="color-example">
+$ locate *.c
+  <span class="color-comment">// Find all files (from index) ending with .c, in current directory and subdirectories</span></pre>
+
+<h5><span class="font-code">grep</span> - Print lines matching the pattern</h5>
+
+<p>You can use <code>grep</code> to find lines matching a search pattern. The syntax is:</p>
+<pre class="color-syntax">
+$ grep [<em>options</em>] <em>pattern</em> [<em>file</em>...]
+ 
+<span class="color-comment">For examples,</span>
+$ grep search-word filename
+$ grep search-word file1 file2 file3
+$ grep -r search-word directoryname  <span class="color-comment">// -r (or -R) for recursive</span></pre>
+
+<p>If input <code><em>file</em></code> is not present, grep takes its input from the standard input (STDIN).</p>
+
+<p>For examples,</p>
+
+<pre class="color-example">
+$ grep &quot;root&quot; /etc/passwd
+  <span class="color-comment">// Print lines containing &quot;root&quot; in /etc/passwd.
+  // Double-quote or single quote the keyword if it contains special characters.</span>
+ 
+$ grep &quot;root&quot; /etc/* | less
+  <span class="color-comment">// Print lines containing &quot;root&quot; from all files in /etc.
+  // Pipe the output to less.</span>
+  
+$ grep -r &quot;root&quot; /etc | less
+  <span class="color-comment">// Print lines containing &quot;root&quot; recursively from /etc directory.</span></pre>
+
+<p>Very often, the input of <code>grep</code> is piped from the output of another command as follows:</p>
+<pre class="color-syntax">
+$ <em>command</em> | grep [<em>options</em>] <em>pattern</em></pre>
+
+<p>For examples:</p>
+
+<pre class="color-example">
+$ ls -R | grep &quot;txt&quot;
+  <span class="color-comment">// Recursive list the file and pipe the output to grep pattern &quot;txt&quot;</span>
+  
+$ ps aux | grep -i www-data
+  <span class="color-comment">// List process(es) containing www-data, case insensitive (-i)</span></pre>
+
+<p>You can use option <code>-i</code> for case insensitive search, <code>-A <em>n</em></code> to print <code><em>n</em></code> lines after the match, <code>-B <em>n</em></code> to print <code><em>n</em></code> before the match. For example,</p>
+
+<pre class="color-example">
+grep -i -A3 -B3 &quot;www-data&quot; /etc/passwd
+   <span class="color-comment">// Print lines containing &quot;www-data&quot; in /etc/passwd,
+   // and print 3 lines before and after the matched lines.</span></pre>
+
+<p>You can use option <code>-v</code> to invert the search; <code>-n</code> to print the line number; <code>-c</code> to count the matched lines.</p>
+
+<h5><span class="font-code">grep</span> with Regular Expression</h5>
+
+<p>You can use regular expression (regex) as the search pattern. For example,</p>
+
+<pre class="color-command">
+$ grep '[0-9]\{5\}' /etc/passwd   <span class="color-comment">// Regex is [0-9]{5} - 5 consecutive digits</span></pre>
+
+<p>Take note that you need to use backslash for many of the regex metacharacter such as { and ].</p>
+
+<p>See &quot;Regular Expression&quot; section.</p>
+
+<h3 id="bash_more">Managing Users</h3>
+
+<h4>Users and Groups</h4>
+
+<p>Unix is a <em>multi-user</em> operating system. Each user is identified via an username (or login ID), configured in <code>/etc/passwd</code> and <code>/etc/shadow</code> files. Each user is assigned to one or more groups, configured in <code>/etc/group</code> file.</p>
+
+<p>User and group are used for access control of resources, such as files and directories.</p>
+
+<p>There are three types of users: superuser (or privileged user, or root user, or administrator), regular users (day-to-day users or non-administrative users), and system users (or pseudo-users).</p>
+
+<ul>
+<li>A regular user can only modify resources specific to his account, and cannot modify other user's resources or perform system-wide changes.</li>
+<li>Superuser has unrestricted access to the entire system, and is needed to carry out administrative tasks such as installing new software and performing system-wide configurations. Superuser can carry out ANY task, even destructive ones.</li>
+<li>System users are not persons (cannot login interactively), but administrative accounts for running various day-to-day services, e.g., <code>www-data</code> owns the apache web server and all its associated files; <code>nobody</code> owns no files and is not belong to a privileged group.</li>
+</ul>
+
+<h5>User's Home Directory</h5>
+
+<p>Each user is allocated a home directory. For regular users, it is typically called <code>/home/&lt;username&gt;</code> (for Ubuntu) or <code>/Users/&lt;username&gt;</code> (for Mac OS X). The home directory for superuser is <code>/root</code>. System users do not have home directory.</p>
+
+<h5><span class="font-code">/etc/passwd</span></h5>
+
+<p>Users are defined in <code>/etc/passwd</code>. Each user has an entry in the file. For example, below is the partial content of the Ubuntu's <code>/etc/passwd</code> after installation with a new user called <code>myuser</code>:</p>
+
+<pre class="color-example">
+$ <strong>less /etc/passwd</strong>
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/bin/sh
+bin:x:2:2:bin:/bin:/bin/sh
+......
+www-data:x:33:33:www-data:/var/www:/bin/sh
+mysql:x:116:125:MySQL Server,,,:/nonexistent:/bin/false
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+......
+<strong>myuser:x:1000:1000:My User:/home/myuser:/bin/bash</strong></pre>
+
+<p>The format of <code>/etc/passwd</code> is as follows, where items are separated by a colon:</p>
+
+<pre class="color-syntax">
+username:password:UID:GID:GECOS:home-directory:default-login-shell</pre>
+
+<ul>
+<li>username</li>
+<li>password: &quot;<code>x</code>&quot; indicates that the encrypted password is stored in <code>/etc/shadow</code>.</li>
+<li>UID (User ID): 0 for root, 1-999 and 65534 (nobody) for system users (pseudo-users), 1000 and above for regular user.</li>
+<li>GID (Group ID): same numbering scheme as UID, defined in <code>/etc/group</code>.</li>
+<li>GECOS: a comma-separated list of user's full name (display name), address, phone number and other contact information.</li>
+<li>Home directory: for non-interactive users, set it to <code>/nonexistent</code></li>
+<li>Default login shell: such as <code>/bin/bash</code> for Bash shell, <code>/bin/sh</code> for the original Bourne shell. For non-interactive users, set to <code>/usr/sbin/nologin</code> or <code>/sbin/nologin</code> or <code>/usr/bin/false</code> or <code>/bin/false</code> (which is defined in <code>/etc/lightdmusers.conf</code> for Ubuntu).</li>
+</ul>
+
+<h5><span class="font-code">/etc/group</span></h5>
+
+<p>Group information is stored in <code>/etc/group</code>. For example,</p>
+
+<pre class="color-example">
+$ <strong>less /etc/group</strong>
+root:x:0:
+daemon:x:1:
+bin:x:2:
+sys:x:3:
+adm:x:4:myuser
+......
+sudo:x:27:myuser
+......
+nogroup:x:65534:
+......
+<strong>myuser:x:1000:</strong>
+sambashare:x:124:myuser</pre>
+
+<p>The format of <code>/etc/group</code> is as follows:</p>
+
+<pre class="color-syntax">
+GroupName:Password:GID:UserList</pre>
+
+<ul>
+<li>Groupname</li>
+<li>Password: typically not used</li>
+<li>GID (Group ID): Used in <code>/etc/passwd</code>.</li>
+<li>UserList: list of users separated by commas.</li>
+</ul>
+
+<p>In Ubuntu, for each regular user (UID above 1000) created, an identical groupname and GID is also created (known as User Private Group (UPG)) and assigned to this user. More GIDs could be assigned. For example, user <code>myuser</code> has UID of 1000; a user private group called <code>myuser</code> is created with GID of 1000.</p>
+
+<h5>List Users and Groups</h5>
+
+<p>To list user information, use command <code>id</code>:</p>
+<pre class="color-command">
+$ <strong>id</strong>              <span class="color-comment">// current login user</span>
+uid=1000(myuser) gid=1000(myuser) groups=1000(myuser),4(adm),24(cdrom),27(sudo),
+30(dip),46(plugdev),107(lpadmin),124(sambashare)
+ 
+$ <strong>id &lt;username&gt;</strong>   <span class="color-comment">// specific user</span>
+......</pre>
+
+<p>To list the groups of a particular user, use command <code>groups</code>, for example,</p>
+<pre class="color-command">
+$ <strong>groups</strong>              <span class="color-comment">// current login user</span>
+myuser adm cdrom sudo dip plugdev lpadmin sambashare
+ 
+$ <strong>groups &lt;username&gt;</strong>   <span class="color-comment">// specific user</span>
+......</pre>
+
+<h5><span class="font-code">/etc/shadow</span></h5>
+
+<p>Contain the encrypted password, aging and account lockout information. For example,</p>
+
+<pre class="color-example">
+$ <strong>sudo less /etc/shadow</strong>  <span class="color-comment">// Required superuser privilege via sudo</span>
+root:*:15630:0:99999:7:::
+myuser:xxxxxxxx:15788:0:99999:7:::
+......</pre>
+ 
+<p>The format is:</p>
+<pre class="color-syntax">
+username:password:last-changed:min-days:max-days:warn-days:inactive-days:expire-days:reserved</pre>
+
+<ul>
+<li>username</li>
+<li>password: Salted-hashed password (in the format of $algorithmID$salt$hashed). A &quot;blank&quot; value indicates that password is not required (or empty password). An asterisk (<code>*</code>) indicates that password is not enabled, i.e., cannot login (meant for system users such as <code>www-data</code>, <code>nobody</code>). A value starts with a exclamation mark (<code>!xxxx</code>) means that the password is locked; the remaining characters on the line represent the password field before the password was locked.</li>
+
+<li>last-changed: days since Jan 1, 1970 that the password was last changed.</li>
+<li>min-days: The number of days before password may be changed (0 indicates password can be changed any time).</li>
+<li>max-days: maximum number of days that this password is valid (99999 indicates that password is valid forever).</li>
+<li>warn-days: number of days to issue a warning before the password is expired (7 for a full week).</li>
+<li>inactive-days: number of days after the password is expired that the account becomes inactive.</li>
+<li>expire-days: days since Jan 1, 1970 that the account has been disabled.</li>
+</ul>
+
+<h4><span class="font-code">root</span>, <span class="font-code">sudo</span> and <span class="font-code">su</span></h4>
+
+<h5>Superuser <span class="font-code">root</span></h5>
+
+<p>In Unix, the default superuser is called <code>root</code>, which can do everything and anything. Doing regular tasks (such as program development) with <code>root</code> can be dangerous, as <code>root</code> could remove important system files and destroy your system. Hence, it is strongly recommended to do regular work with a regular user instead of <code>root</code> superuser.</p>
+
+<p>However, at times, you need the superuser privilege to perform a task, such as install a new software to a system directory (e.g., <code>/sbin</code>, <code>/bin</code> or <code>/lib</code>), which is owned by <code>root</code> and not-writable by others. You can do it in two ways: <code>sudo</code> (superuser-do) or <code>su</code> (switch user).</p>
+
+<h5><span class="font-code">sudo &lt;command&gt;</span></h5>
+
+<p>An <em>authorized</em> user can run a command with superuser privilege by prefixing it with <code>sudo</code> (superuser-do), i.e., &quot;<code>sudo &lt;command&gt;</code>&quot;. The list of users authorized to do <code>sudo</code> is kept in <code>/etc/sudoers</code> (called sudo list).</p>
+
+<p>When you issue &quot;<code>sudo &lt;command&gt;</code>&quot;, the system will prompt for password. Reply with the CURRENT login-user's password (NOT the <code>root</code>'s password) - the current user must be a sudoer. The command will be then run with superuser privilege.  The entered password will not be shown (not even showing asterisks) for maximum security. The password entered is stored for 15 minutes (by default) for all subsequent <code>sudo</code> commands. After that, you will need to enter the password again. A log entry is created for every <code>sudo</code> command in <code>/var/log/auth.log</code> for auditing purpose.</p>
+
+<p>There are 2 ways to enable a user to <code>sudo</code>:</p>
+<ol>
+<li>Command-line: Add the user to &quot;<code>sudo</code>&quot; (or &quot;<code>admin</code>&quot;) group via command &quot;<code>adduser &lt;username&gt; &lt;groupname&gt;</code>&quot;. These groups are configured in <code>/etc/sudoers</code> to <code>sudo</code>.
+
+<pre class="color-command">
+<span class="color-comment">// Command: adduser &lt;username&gt; &lt;groupname&gt;</span>
+$ <strong>sudo adduser &lt;username&gt; sudo</strong>    <span class="color-comment">// or &quot;admin&quot; group</span></pre></li>
+
+<li>Interactive:
+<ul>
+<li>In Ubuntu: System Settings &rArr; User Accounts &rArr; Select the user &rArr; Unlock &rArr; Set the account type to &quot;Administrator&quot; (instead of &quot;Standard User&quot;), which adds the user to &quot;<code>sudo</code>&quot; group.</li>
+
+<li>In Mac OS X: System Preferences &rArr; Users and Groups &rArr; Select the user &rArr; Unlock &rArr; Check &quot;Allow users to administrator this computer&quot;.</li></ul></li>
+</ol>
+
+<p>Take note that all <code>sudo</code> commands are run as <code>root</code> user, NOT the sudoer user.  For example, all the files created are owned by <code>root:root</code>.</p>
+
+<h5><span class="font-code">/etc/sudoers</span></h5>
+
+<p>The following shows the contents of <code>/etc/sudoers</code> (on Ubuntu):</p>
+
+<pre class="color-example">
+$ <strong>sudo less /etc/sudoers</strong>
+#
+# This file MUST be edited with the 'visudo' command as root.
+#
+Defaults	env_reset
+Defaults	mail_badpass
+Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# User privilege specification
+root	ALL=(ALL:ALL) ALL
+
+# Members of the admin group may gain root privileges
+<strong>%admin ALL=(ALL) ALL</strong>
+
+# Allow members of group sudo to execute any command
+<strong>%sudo	ALL=(ALL:ALL) ALL</strong>
+
+# See sudoers(5) for more information on "#include" directives:
+#includedir /etc/sudoers.d</pre>
+
+<p>The format of <code>/etc/sudoers</code> is as follows:</p>
+<pre class="color-syntax">
+user|%group hostlist = (userlist:group) [NOPASSWD:] commandlist</pre>
+
+<ul>
+<li><code>user|%group</code>: name of the user or group (with prefix %) to which this rule applies.</li>
+<li><code>hostlist</code>: list of hosts this rule applies to.</li>
+<li><code>userlist</code>: list of users (and groups) that this rule can be run as. If omitted, the default is <code>root</code>. For example, <code>ALL:ALL</code> means that the command can be run as <code>ALL</code> users and <code>ALL</code> groups.</li>
+<li><code>commandlist</code>: list of commands that can be executed. Use <code>ALL</code> for all commands. The optional prefix <code>NOPASSWD:</code> indicates no password prompting.</li>
+</ul>
+
+<p>For Example,</p>
+
+<pre class="color-example">
+nobody       ALL=(root) NOPASSWD: /usr/sbin/rndc reload
+<span class="color-comment"># The user nobody is allowed to run &quot;rndc reload&quot; as root, on all hosts, without being asked for any password.</span></pre>
+
+<h5>&quot;<span class="font-code">sudo su</span>&quot; or &quot;<span class="font-code">sudo -i</span>&quot;</h5>
+
+<p>Some systems (e.g. Ubuntu) support so-called interactive sudo, or &quot;<code>sudo -i</code>&quot;, or &quot;<code>sudo su</code>&quot;, which allows you to issue multiple commands under a <code>sudo</code> session. The command prompt will be changed to the root prompt <code>#</code>. You can exit the <code>sudo</code> session via command &quot;<code>exit</code>&quot;.</p>
+
+<h5>&quot;<span class="font-code">sudo cd ...</span>&quot; won't work!</h5>
+<p>If you issue <code>sudo cd &lt;dir-name&gt;</code>, you get an error &quot;sudo: cd: command not found&quot;.  This is because <code>cd</code> is not a executable, but a shell buili-in.  Hence, you need to <code>sudo su</code> to switch to <code>root</code>, then <code>cd</code> into the directory.</p>
+
+
+<h5><span class="font-code">sudo -u &lt;username&gt; &lt;command&gt;</span></h5>
+
+<p>Run the <code>&lt;command&gt;</code> as <code>&lt;username&gt;</code> (instead of <code>root</code>).</p>
+
+<h5><span class="font-code">gksudo &lt;command&gt;</span> (or <span class="font-code">gksu &lt;command&gt;</span>)</h5>
+
+<p>To start a graphical application as <code>root</code> user, use <code>gksudo</code> (Graphical Superuser-do) instead of <code>sudo</code>, e.g.,</p>
+
+<pre class="color-command">
+$ <strong>gksudo gedit &lt;filename&gt;</strong></pre>
+<p><code>gksudo</code> sets <code>HOME=~root</code>, which prevents files in your home directory to be owned by <code>root</code>.</p>
+
+<p>In Ubuntu, you can also use <code>gksu</code> (<code>gksudo</code> is a symlink to <code>gksu</code>).</p>
+
+<h5>Switch User - <span class="font-code">su &lt;username&gt;</span></h5>
+
+<p>Unix provides a command called &quot;<code>su &lt;username&gt;</code>&quot; (switch user), which switches the current login user to the given <code><em>username</em></code>. You will be prompted for the password of <code><em>username</em></code> (NOT the current login user as in <code>sudo</code>).</p>
+
+<p>If <code><em>username</em></code> is omitted, the command <code>su</code> switches to the <code>root</code> user. You will be prompted for <code>root</code>'s password (provided <code>root</code> user is enabled). The command prompt will be changed to &quot;<code>#</code>&quot; - the default root user prompt. You can exit the root session via command &quot;<code>exit</code>&quot; or &quot;<code>quit</code>&quot;.</p>
+
+<p>In Ubuntu and Mac OS X, the <code>root</code> account is locked, by default. That is, you cannot login as <code>root</code>, or <code>su</code> as <code>root</code> user. However, you can use &quot;<code>sudo <em>command</em></code>&quot; to run <code><em>command</em></code> as <code>root</code>; or &quot;<code>sudo su</code>&quot; (or &quot;<code>sudo -i</code>&quot;) to switch to <code>root</code> if you are a sudoer (as described earlier). &quot;<code>sudo</code>&quot; will prompt for your (sudoer) password, instead of <code>root</code>'s password.</p>
+
+<h5>Enabling the <span class="font-code">root</span> account (NOT Recommended)</h5>
+
+<p>As mentioned, many Unix systems (such as Ubuntu and Mac OS X) disable the default superuser <code>root</code>. Instead, you need to use <code>sudo</code> to run a command with superuser privilege. This is to ensure that you use superuser privilege with great care.  However, if you wish to enable the <code>root</code> account (NOT RECOMMENDED), you could issue &quot;<code>sudo passwd</code>&quot;:</p>
+
+<pre class="color-command">
+$ <strong>sudo passwd</strong>
+[sudo] password for &lt;current user&gt;: 
+Enter new UNIX password: 
+Retype new UNIX password:</pre>
+
+<p>The &quot;new UNIX password&quot; refers to the <code>root</code>'s password. The <code>root</code> account will be enabled once its password is set.</p>
+
+<h4>User Management Commands - <span class="font-code">adduser/deluser/addgroup/delgroup/passwd</span></h4>
+
+<p>To add/delete a new user or group, use command <code>adduser</code>/<code>deluser</code> or <code>addgroup</code>/<code>delgroup</code>, which is friendlier than the older <code>useradd</code>, <code>userdel</code>, <code>usermod</code>, <code>groupadd</code>, <code>groupdel</code>, <code>groupmod</code>. Check the man pages on their syntax.</p>
+
+<h5>Add a Normal User - <span class="font-code">adduser</span></h5>
+<p>For example, to add a new user called <code>mytest</code>:</p>
+
+<pre class="color-example">
+$ <strong>sudo adduser mytest</strong>
+Adding user `mytest' ...
+Adding new group `mytest' (1001) ...
+Adding new user `mytest' (1001) with group `mytest' ...
+Creating home directory `/home/mytest' ...
+Copying files from `/etc/skel' ...
+Enter new UNIX password: 
+Retype new UNIX password: 
+passwd: password updated successfully
+Changing the user information for mytest
+Enter the new value, or press ENTER for the default
+	Full Name []: my test
+	Room Number []: 
+	Work Phone []: 
+	Home Phone []: 
+	Other []: 
+Is the information correct? [Y/n] y</pre>
+
+<p>The new user is added into <code>/etc/passwd</code>. A new group (with groupname the same as username) is also created in <code>/etc/group</code>. The home directory (with directory name the same as the username) is created under <code>/home</code> (for Linux) and <code>/Users</code> (for Mac OS X). The template files from <code>/etc/skel</code> are copied into the home directory.</p>
+
+<p>The set of initial files in <code>/etc/skel</code> includes:</p>
+
+<pre class="color-example">
+$ <strong>ls -al /etc/skel</strong>
+-rw-r--r--   1 root root  220 Sep 19  2012 .bash_logout
+-rw-r--r--   1 root root 3637 Sep 19  2012 .bashrc
+-rw-r--r--   1 root root 8445 Apr 16  2012 examples.desktop
+-rw-r--r--   1 root root  675 Sep 19  2012 .profile</pre>
+
+<h5>Add a Non-Login System User</h5>
+
+<p>At times, you might want to add a non-login user for running certain applications (similar to user <code>www-data</code> to run Apache, user <code>mysql</code> to run MySQL). You can use <code>adduser</code> as follows:</p>
+
+<pre class="color-command">
+$ <strong>adduser --system --no-create-home --group --disabled-login &lt;username&gt;</strong>
+   <span class="color-comment">// --system: system user (with UID less than 1000)
+   // --no-create-home: no home directory; or &quot;--home &lt;dir&gt;&quot; 
+   // --group: groupname the same as the username; or &quot;--ingroup &lt;groupname&gt;&quot;
+   // --disabled-login: do not set password; cannot log-in until password is set
+   // The default shell is /bin/false, or &quot;--shell &lt;shellname&gt;&quot;</span></pre>
+   
+<p>For example,</p>
+<pre class="color-command">
+$ <strong>sudo adduser --system --no-create-home --group --disabled-login xxxx</strong>
+Adding system user `xxxx' (UID 119) ...
+Adding new group `xxxx' (GID 127) ...
+Adding new user `xxxx' (UID 119) with group `xxxx' ...
+Not creating home directory `/home/xxxx'.
+
+<span class="color-comment"># Verify</span>
+$ <strong>getent passwd xxxx</strong>
+xxxx:x:119:127::/home/xxxx:/bin/false
+$ <strong>ll /home/xxxx</strong>
+ls: cannot access /home/xxxx: No such file or directory
+$ <strong>id xxxx</strong>
+uid=119(xxxx) gid=127(xxxx) groups=127(xxxx)
+$ <strong>sudo deluser --remove-home xxxx</strong>
+Looking for files to backup/remove ...
+Removing user `xxxx' ...
+Warning: group `xxxx' has no more members.
+Done.
+$ <strong>sudo delgroup xxxx</strong>
+The group `xxxx' does not exist.
+$ <strong>getent group xxxx</strong>
+$ <strong>getent passwd xxxx</strong></pre>
+
+
+<h5>Add a Group - <span class="font-code">addgroup</span></h5>
+
+<pre class="color-command">
+<span class="color-comment">// Create a new group</span>
+$ <strong>sudo addgroup &lt;groupname&gt;</strong></pre>
+
+
+<h5>Add a User to a Group</h5>
+
+<pre class="color-command">
+$ <strong>adduser &lt;username&gt; &lt;groupname&gt;</strong></pre>
+
+<h5>Set/Change/Lock Password - <span class="font-code">passwd</span></h5>
+
+<pre class="color-command">
+<span class="color-comment">// To change your password</span>
+$ <strong>passwd</strong>
+
+<span class="color-comment">// To set/change password for &lt;username&gt;</span>
+$ <strong>sudo passwd &lt;username&gt;</strong>
+
+<span class="color-comment">// To lock out a user</span>
+$ <strong>sudo passwd -l &lt;username&gt;</strong>
+
+<span class="color-comment">// To unlock out a user</span>
+$ <strong>sudo passwd -u &lt;username&gt;</strong></pre>
+
+<h5><span class="font-code">deluser/delgroup</span></h5>
+
+<pre class="color-command">
+<span class="color-comment">// To remove a user</span>
+$ <strong>sudo deluser --remove-home &lt;username&gt;</strong>
+   <span class="color-comment">// --remove-home: remove the home directory and mail spool</span>
+
+<span class="color-comment">// To remove a user from a group</span>
+$ <strong>sudo deluser &lt;username&gt; &lt;groupname&gt;</strong>
+
+<span class="color-comment">// To remove an empty group</span>
+$ <strong>sudo delgroup --only-if-empty &lt;groupname&gt;</strong></pre>
+
+<h5>Examples</h5>
+
+<pre class="color-command">
+<span class="color-comment">// Create a new user called peter (in primary group peter)</span>
+$ <strong>sudo adduser peter</strong>
+
+<span class="color-comment">// Create a new group called devel</span>
+$ <strong>sudo addgroup devel</strong>
+
+<span class="color-comment">// Add user peter to group devel</span>
+$ <strong>sudo adduser peter devel</strong>
+    <span class="color-comment">// OR, &quot;sudo usermod -a -G devel peter&quot;
+    // -a: append
+    // -G &lt;groupname&gt; to specify a secondary group</span>
+
+<span class="color-comment">// Display all groups for user peter</span>
+$ <strong>sudo id peter</strong>
+   <span class="color-comment">// Or, &quot;groups peter&quot;</span>
+
+<span class="color-comment">// Delete user peter from group devel</span>
+$ <strong>sudo delgroup peter devel</strong>
+
+<span class="color-comment">// Delete user peter</span>
+$ <strong>sudo deluser --remove-home peter</strong>
+
+<span class="color-comment">// Delete group devel</span>
+$ <strong>sudo delgroup --only-if-empty devel</strong>
+
+<span class="color-comment">// At times, you might need to remove the home directory</span>
+$ <strong>sudo rm -rfv /home/peter</strong>
+   <span class="color-comment">// -r: recursive
+   // -f: force, do not prompt
+   // -v: verbose</span></pre>
+
+
+
+<h3>File System</h3>
+
+<p>Everything in Unix is a <em>file</em> - from data files, executable programs, to input and output devices. Files are organized in <em>directories</em> (aka <em>folders</em>). The directories are organized in a hierarchical <em>tree</em> structure, starting from the <em>root</em> directory, denoted by &quot;<code>/</code>&quot;. There is only one root directory for the entire Unix's file system. A directory may contain sub-directories and files.</p>
+
+<p>Unix is a <em>multi-user</em> system. Some files are used solely by the system; some are shared by all users; while some  belong to a particular user.</p>
+
+<div class="side-note">
+<p><span class="line-heading">Disk Drives and Root Directory</span><br />
+Windows systems has a concept of drive (e.g., C drive and D drive). Each drive begins with a root directory (e.g., <code>c:\</code>, <code>d:\</code>), resulting in multiple root directories.<br />
+Unix has no concept of drive and has a single root for the entire file system. The drives are mounted under the file system at a specific directory.</p>
+</div>
+
+<h4>System and Application Software Directories</h4>
+
+<p>A Unix system has these directories for <em>system and application software</em> available to all users:</p>
+
+<ul>
+<li><code>/lib</code>, <code>/bin</code>, <code>/sbin</code>: System libraries, binaries and superuser's binaries. Binaries are executable programs (having <em>executable</em> file attribute). Libraries are supporting codes for programs. There are two types of libraries, static libraries (<code>.a</code> for archives in Unix, <code>.lib</code> in Windows) and dynamic libraries (<code>.so</code> for shared objects in Unix, <code>.dll</code> for dynamic link libraries in Windows). Static library codes are linked into the program; whereas shared library codes are loaded during runtime and can be shared by many programs.</li>
+
+<li><code>/usr</code>: Application Software (contrast to System Software in <code>/bin</code>, <code>/lib</code>, and <code>/sbin</code>). It contains sub-directories such as <code>/usr/bin</code>, <code>/usr/lib</code>, <code>/usr/include</code>, <code>/usr/share/man</code> (man pages), <code>/usr/share/doc</code> (documentation) and etc.</li>
+
+<li><code>/usr/local</code>: Locally installed application software which are not part of the distribution. It contains sub-directories such as <code>/usr/lcoal/bin</code>, <code>/usr/local/lib</code>, <code>/usr/local/include</code>, and etc.</li>
+
+<li><code>/opt</code>: optional application software package.</li>
+
+<li><code>/etc</code>: System-wide configuration files, such as <code>fstab</code> (file system table for disks, CD drives, and storage devices), <code>passwd</code> (list of users), and <code>sudoers</code> (list of users with superuser access). (It is called &quot;et cetera&quot; in early days to mean additional things to <code>bin</code> and <code>lib</code>.)</li>
+
+<li><code>/var</code>: Variable (changing) files, such as <code>/var/logs</code> (for log files), <code>/var/spool</code> (for printer spool files), <code>/var/mail</code> (for mail), <code>/var/tmp</code>, and etc.</li>
+
+<li><code>/root</code>: superuser's home directory.</li>
+
+<li><code>/dev</code>: file representation of devices. A special <code>/dev/null</code> (or the null device) is a special file that discards all data written to it but reports that the write operation succeeded. It provides no data to any process that reads from it, yielding EOF immediately.</li>
+<li><code>/mnt</code>: file system mount point for (fixed) hard disks, CD drive, etc.</li>
+<li><code>/media</code>: for removable media, such as external drive and USB drive.</li>
+<li><code>/sys</code>: real-time information on devices used by the kernel.</li>
+<li><code>/boot</code>: boot loader files and Linux kernel.</li>
+<li><code>/proc</code>: process information.</li>
+<li><code>/srv</code>: services.</li>
+<li><code>/tmp</code>: System's temporary directory.</li>
+</ul>
+
+<h4>Users' Home Directories</h4>
+<p>As mentioned, Unix is a <em>multi-user</em> operating system. Each user on a Unix system is allocated a directory for storing his/her files, known as user's <em>home</em> directory. The home directory of the current login user is denoted as &quot;<code>~</code>&quot;.</p>
+
+<p>The user's home directories are allocated under <code>/home/<em>username</em></code> for Ubuntu, or <code>/Users/<em>username</em></code> in Mac OS X. It contains sub-directories such as <code>~/Desktop</code> (i.e., <code>/home/<em>username</em>/Desktop</code> where <code>~</code> denotes the home directory), <code>~/Downloads</code>, <code>~/Documents</code>, <code>~/Music</code>, and etc.</p>
+
+<p>The superuser <code>root</code> has home directory called <code>/root</code>.</p>
+
+<h4>Pathname and Filename</h4>
+
+<p>To reference a file in a Unix file system, you need to provide the directory <em>pathname</em> and the <em>filename</em>. For example, in &quot;<code>/usr/lib/jvm/jdk1.7.0_07/bin/javac</code>&quot;, the pathname is &quot;<code>/usr/lib/jvm/jdk1.7.0_07/bin/</code>&quot; and the filename is &quot;<code>javac</code>&quot;.</p>
+
+<p>The pathname can be specified in two ways: absolute (starting from root &quot;<code>/</code>&quot; or current user's home directory &quot;<code>~</code>&quot;) or relative to the current working directory. You can also use double-dot &quot;<code>..</code>&quot; to refer to the parent directory and dot &quot;<code>.</code>&quot; to refer to the current directory.</p>
+
+<h4>Dot files and Dot Folders</h4>
+
+<p>Files and folders begins with a dot (<code>.</code>), such as <code>.profile</code> and <code>.bashrc</code>, are <em>hidden</em> from normal view. They are primarily used for configuration files. To view the hidden files and folder, you need to use <code>ls</code> command with option <code>-a</code> (all), e.g.,</p>
+
+<pre class="color-command">
+$ <strong>ls -a</strong>    <span class="color-comment">// list all files including hidden files</span>
+$ <strong>ls -al</strong>   <span class="color-comment">// list all files in long format</span>
+</pre>
+
+<h4>File/Directory Ownerships and Permissions</h4>
+
+<p>You can issue command &quot;<code>ls -l</code>&quot; to list files/directory in long format, which shows all the file attributes, e.g.,</p>
+
+<img class="image-center" src="images/UnixFileLongFormat.png" alt="UnixFileLongFormat.png" />
+
+<p>For each entry:</p>
+<ul>
+<li>The first character indicates the type, with <code>-</code> for file and <code>d</code> for directory. The other type codes are <code>l</code> for link (symlink or hard link), <code>b</code> for block device, <code>c</code> for character device, <code>p</code> for named pipe, and <code>s</code> for socket.</li>
+
+<li>A file/directory has a user-owner and a group-owner, as indicated. The user-owner may or may not belong to the group.</li>
+
+<li>A file/directory has 3 permission settings, read/list (r), write (w) and execute/access (x), for user-owner (u), group-owner (g) and others (or the world) (o), respectively. The permissions are represented with 9 characters, in 3 groups of &quot;<code>rwx</code>&quot; for user-owner, group-owner and others, as shown in the above listing. &quot;<code>-</code>&quot; indicates absence of permission. For examples,
+<pre class="color-example">
+-rwxr-x--- myuser devel test.php 
+   <span class="color-comment">// File,
+   // filename is test.php,
+   // user-owner is myuser, group-owner is devel,
+   // user-owner has read, write and execute permissions,
+   // group-owner has read and execute permissions,
+   // others (the world) have no permission</span>
+-rwx------ root root myconfig 
+   <span class="color-comment">// File,
+   // filename is myconfig,
+   // user-owner is root, group-owner is root,
+   // user-owner has read, write and execute permissions,
+   // group-owner and others have no permission</span>
+drwxr-xr-x myuser devel www
+   <span class="color-comment">// Directory,
+   // directory name is www,
+   // user-owner is myuser, group-owner is devel,
+   // user-owner has list, write and access permissions,
+   // group-owner has list and access permissions,
+   // others (the world) have list and access permissions</span></pre>
+</li>
+</ul>
+
+<h5>File Permissions</h5>
+<p>A file is indicated by type of &quot;<code>-</code>&quot;. For files:</p>
+<ul>
+<li>&quot;<code>r</code>&quot; (read) permits reading the file content.</li>
+<li>&quot;<code>w</code>&quot; (write) permits writing into the file.</li>
+<li>&quot;<code>x</code>&quot; (execute) indicates that the file is executable, i.e., a program file (or binary file).</li>
+</ul>
+
+<h5>Directory Permissions</h5>
+<p>A directory is indicated by type of &quot;<code>d</code>&quot;. For directories, &quot;<code>r</code>&quot; shall be interpreted as list and &quot;<code>x</code>&quot; as access, as follows:</p>
+<ul>
+<li>&quot;<code>r</code>&quot; (list) permits listing of directory's contents (filenames and sub-directory names only) via listing command such as <code>ls</code>. Without &quot;r&quot; permission, you cannot issue &quot;<code>ls</code>&quot; command.</li>
+<li>&quot;<code>w</code>&quot; (write) permits writing into the directory, i.e., creating new files or sub-directories inside the directory.</li>
+<li>&quot;x&quot; (access) permits access into this directory (i.e., &quot;<code>cd</code>&quot; into the directory).</li>
+</ul>
+
+<p>A directory holds two pieces of information for each file/sub-directory it contains: the filename/subdirectory-name and its inode number. I-node stores the attributes of the file/directory, including the disk block location. You can list the name and inode number via command &quot;<code>ls -i</code>&quot;. For directories, &quot;r&quot; permission is needed to get the name; &quot;x&quot; permission is needed to get its inode number given the name, which is needed to enter the directory. For example, to issue &quot;<code>cat /home/myuser/test/f1.txt</code>&quot;, you need &quot;<code>x</code>&quot; permission for directories <code>/</code>, <code>home</code>, <code>myuser</code>, <code>test</code> (so as to enter the directories); and &quot;<code>r</code>&quot; permission for file &quot;<code>f1.txt</code>&quot;. No &quot;<code>r</code>&quot; permission is needed for the directories, as the names are known. &quot;<code>r</code>&quot; permission is needed for a directory for issuing <code>ls</code> command.</p>
+
+<p>For production system, &quot;<code>x</code>&quot; is needed to enter (access) the directory. Very few programs need to list the directory contents. For development system, both &quot;<code>x</code>&quot; and &quot;<code>r</code>&quot; are needed to enter the directory and issue the <code>ls</code> command.</p>
+
+<p>For example, the following shows the difference between &quot;r&quot; (list or open) and &quot;x&quot; (access) permissions for directory:</p>
+
+<pre class="color-example">
+$ <strong>mkdir d1</strong>
+$ <strong>touch d1/f1.txt</strong>
+$ <strong>touch d1/f2.txt</strong>
+   <span class="color-comment">// Create a directory &quot;d1&quot;, with 2 files inside.</span>
+
+$ <strong>chmod 400 d1</strong>  <span class="color-comment">// Set directory &quot;d1&quot; to &quot;r&quot; only (400 = r-- --- ---).</span>
+$ <strong>ls -ld d1</strong>
+dr-------- 2 myuser myuser 1024 Mar 29 11:08 d1
+   <span class="color-comment">// Directory &quot;d1&quot; has &quot;r&quot; only.</span>
+$ <strong>ls d1</strong>
+ls: cannot access d1/f2.txt: Permission denied
+ls: cannot access d1/f1.txt: Permission denied
+f1.txt  f2.txt
+   <span class="color-comment">// Can read the filenames in this directory,
+   // but not the file attributes such as permissions and owners.</span>
+$ <strong>ls -l d1</strong>
+ls: cannot access d1/f2.txt: Permission denied
+ls: cannot access d1/f1.txt: Permission denied
+total 0
+-????????? ? ? ? ?            ? f1.txt
+-????????? ? ? ? ?            ? f2.txt
+$ <strong>cd d1</strong>
+bash: cd: d1: Permission denied        
+   <span class="color-comment">// Cannot &quot;cd&quot; into this directory without &quot;x&quot; permission.</span>
+$ <strong>cat d1/f1.txt</strong>
+cat: d1/f1.txt: Permission denied   
+   <span class="color-comment">// Cannot &quot;cat&quot; file inside this directory (cannot enter the directory without &quot;x&quot;).</span>
+
+$ <strong>chmod 100 d1</strong>        <span class="color-comment">// Set directory &quot;d1&quot; to &quot;x&quot; only (100 = --x --- ---)</span>
+$ <strong>ls -ld d1</strong>
+d--x------ 2 myuser myuser 1024 Mar 29 11:08 d1
+$ <strong>ls -l d1</strong>
+ls: cannot open directory d1: Permission denied  <span class="color-comment">// Cannot read filenames</span>
+$ <strong>cat d1/f1.txt</strong>
+.......                 <span class="color-comment">// Can &quot;cat&quot; file inside the directory</span>
+$ <strong>cd d1</strong>               <span class="color-comment">// Can &quot;cd&quot; into the directory</span>
+$ <strong>ls</strong>
+ls: cannot open directory .: Permission denied
+ 
+<span class="color-comment">// In &quot;d1&quot; directory, without &quot;w&quot; for directory.</span>
+$ <strong>touch f1.txt</strong>       <span class="color-comment">// can write on existing file</span> 
+$ <strong>touch f3.txt</strong>
+touch: cannot touch `f3.txt': Permission denied  <span class="color-comment">// Cannot creating new file without &quot;w&quot;.</span>
+
+$ <strong>cd ..</strong>   <span class="color-comment">// Back to parent of &quot;d1&quot;</span>
+$ <strong>chmod 200 d1</strong>  <span class="color-comment">Set &quot;d1&quot; to &quot;w&quot; only (200 = -w- --- ---)</span>
+$ <strong>ls -ld d1</strong>
+d-w------- 2 myuser myuser 1024 Mar 29 11:08 d1   <span class="color-comment">// Directory &quot;w&quot; only</span>
+$ <strong>touch d1/f1.txt</strong>
+touch: cannot touch `d1/f1.txt': Permission denied  <span class="color-comment">// Need &quot;x&quot; too</span>
+$ <strong>touch d1/f3.txt</strong>
+touch: cannot touch `d1/f3.txt': Permission denied
+
+$ <strong>chmod 300 d1</strong>  <span class="color-comment">Set &quot;d1&quot; to &quot;wx&quot; only (300 = -wx --- ---)</span>
+$ <strong>ls -ld d1</strong>
+d-wx------ 2 myuser myuser 1024 Mar 29 11:08 d1   <span class="color-comment">// &quot;r&quot; and &quot;x&quot;</span>
+$ <strong>touch d1/f1.txt</strong>
+$ <strong>touch d1/f3.txt</strong>    <span class="color-comment">// Can create new file</span>
+ 
+$ <strong>mkdir d1/d2</strong>    <span class="color-comment">// Make sub-directory</span>
+$ <strong>chmod 100 d1</strong>   <span class="color-comment">// &quot;x&quot; only</span>
+$ <strong>touch d1/d2/f4.txt</strong>  <span class="color-comment">// d1 has &quot;x&quot;, d2 has &quot;wx&quot;</span></pre>
+
+<h5>Change Mode (<span class="font-code">chmod</span>)</h5>
+
+<p>We can use the command <code>chmod</code> (change file mode) to change the file mode (i.e., permission), in the form of &quot;<code>ugoa±rwx</code>&quot; with &quot;<code>+</code>&quot; to add permission and &quot;<code>-</code>&quot; to remove; or &quot;<code>ugoa=rwx</code>&quot; to set the permission, where &quot;<code>u</code>&quot; for user-owner, &quot;<code>g</code>&quot; for group-owner, &quot;<code>o</code>&quot; for others, and &quot;<code>a</code>&quot; for all (i.e., u+g+o). For example,</p>
+
+<pre class="color-command">
+<span class="color-comment">// Grant executable mode for owner(u), group(g) for all *.sh files
+// -c lists all the changes</span>
+$ <strong>chmod -c ug+x *.sh</strong>
+ 
+<span class="color-comment">// Remove write permission from group(g), others(o) for all *.txt files</span>
+$ <strong>chmod -c go-w *.txt</strong>
+ 
+<span class="color-comment">// All (u+g+o) read and execute</span>
+<strong>$ chmod -c a=rx *</strong></pre>
+
+<p>You can also use three octal numbers (each for <code>u</code>, <code>g</code> and <code>o</code>) to represent the file permission. Each octal number carries 3 bits (xxx), corresponding to the read-write-execute permissions,  where 4 (100B) for read, 2 (010B) for write and 1 (001B) for execute. E.g., &quot;<code>700</code>&quot; is equivalent to &quot;<code>rwx------</code>&quot;; &quot;<code>664</code>&quot; is equivalent to &quot;<code>rw-rw-r--</code>&quot;; &quot;<code>775</code>&quot; is equivalent to &quot;<code>rwxrwxr-x</code>&quot;. For example,</p>
+
+<pre class="color-command">
+$ <strong>chmod -c 700 myfile.txt</strong>  <span class="color-comment">// 700 = 111 000 000 (rwx------)</span>
+$ <strong>chmod -c 600 *.txt</strong>       <span class="color-comment">// 600 = 110 000 000 (rw-------)</span></pre>
+
+<p>You can use option <code>-R</code> to recursively changing the files in the subdirectories. For example,</p>
+<pre class="color-command">
+$ <strong>chmod -R 770 dirName</strong>  <span class="color-comment">// recursive, all files and subdirectories under the dirName</span></pre>
+
+<p>You can use <code>--reference</code> to specify a file as the reference template for the file mode. For example,</p>
+
+<pre class="color-example">
+$ <strong>chmod --reference ~/test.txt *.txt</strong>  <span class="color-comment">// Use ~/test.txt's mode for all txt files</span></pre>
+
+<p>Only the file owner (or superuser root) can run <code>chmod</code>. If you are not the file owner, you need to use <code>sudo</code>, provided you are a sudoer.</p>
+
+<h5>Change Mode for files and Directories</h5>
+
+<p>Very often during software installation, you need to set all the files to a certain mode (e.g., <code>rw-rw----</code> or <code>660</code>), and all sub-directories to another mode (e.g., <code>rwxrwx---</code> or <code>770</code> to allow for directory access). You can accomplish via the <code>find</code> command as follows:</p>
+
+<pre class="color-command">
+$ cd baseDir
+<span class="color-comment">// Set current directory and directories to 2770 or rwxrwx---
+// with 2 for setgid (to be explained later)</span>
+$ <strong>sudo find . -type d -exec chmod 2770 {} +</strong>
+<span class="color-comment">// Set all files to 660 or rw-rw----</span>
+$ <strong>sudo find . -type f -exec chmod 0660 {} +</strong>
+</pre>
+
+<p>The <code>find</code> command is used to find all files/directories recursively with type of <code>d</code> (directory) or <code>f</code> (file). It then invokes <code>-exec</code> action to run the <code>chmod</code> command on each of the file found, with filename expanded in {}. The shell command must be ended with semi-colon (;). However, running a process for each of the file found is highly inefficient, you could place a + instead of semi-colon, to collect the filenames into sets and run the command once per set.</p>
+
+<h5>Change Owner/Group (<span class="font-code">chown</span>, <span class="font-code">chgrp</span>)</h5>
+<p>We can use command <code>chown</code> (change file owner/group) to change the owner of files, e.g.,</p>
+<pre class="color-command">
+<span class="color-comment">// Change owner for a file</span>
+$ <strong>chown myuser test.txt</strong>
+<span class="color-comment">// Change owner of the current directory</span>
+$ <strong>chown myuser .</strong>
+<span class="color-comment">// Also change the group to programmers for a directory</span>
+$ <strong>chown myuser:programmers /myproject</strong>
+ 
+<span class="color-comment">// Change Group</span>
+$ <strong>chgrp programmers .</strong></pre>
+
+<p>You can use option <code>-R</code> to recursively changing the files in the subdirectories.</p>
+
+<p>In most systems, only superuser can run <code>chown</code>, not even the file owner. This is because Unix systems prevent users from &quot;giving away&quot; files (you can only <code>chown</code> to yourself, which does not require any <code>chown</code> command!)</p>
+
+<p>The file owner can run the <code>chgrp</code> if he belongs to the target group (again, you cannot &quot;give away&quot; files).</p>
+
+<h5>umask</h5>
+
+<p>umask (filemode creation mask) controls the permissions for new files and directory created. Recall that permissions can be represented by 3 octal numbers, each representing rwx for u (user), g (group) and o (others) respectively, e.g., <code>660</code> for (<code>rw- rw- ---</code>); <code>775</code> for (<code>rwx rwx r-x</code>).</p>
+
+<p>umask is also represented in 3 octal numbers, with 1 to <em>disable</em> a certain permission. For example, suppose the umask is <code>022</code> (<code>--- -w- -w-</code>), it will disables the w for group and others, when a new file/directory is created. In other words, a new file/directory could have (<code>rwx r-x r-x</code>), or lesser permissions; it will never have w for group and others.</p>
+
+<p>Each program has its own umask. For &quot;Terminal&quot; application, you can set the umask in one of the login scripts (such as &quot;<code>~/.profile&quot;</code>) with the following line:</p>
+<pre class="color-example">
+umask 022</pre>
+
+<p>You can also issue the command <code>umask</code> to display/change the current umask setting.</p>
+
+<p>(For apache, the umask can be set in <code>/etc/apache2/envvars</code>.)</p>
+
+<h5><span class="font-code">setuid</span> and <span class="font-code">setgid</span> permission for executable-file</h5>
+
+<p>When you execute a program (having &quot;x&quot; file permission) with <code>setuid</code> (Set User ID upon execution) or <code>setgid</code> (Set Group ID upon execution), it takes on the file owner's (or group's) privilege. For example, if a <code>setuid</code> program is owned by <code>root</code>, and executable by all, it will be run in root privilege, even when invoked by a less privilege user. <code>setuid</code> and <code>setgid</code> can be dangerous! Use them with great care!</p>
+
+<p>You can use chmod command to enable <code>setuid/setgid</code>:</p>
+
+<pre class="color-command">
+$ <strong>chmod u+s <em>program-name</em></strong>   <span class="color-comment">// setuid for program</span>
+$ <strong>chmod g+s <em>program-name</em></strong>   <span class="color-comment">// setgid for program</span>
+ 
+<span class="color-comment">// Use Octal number</span>
+$ <strong>chmod 4750 <em>program-name</em></strong>   <span class="color-comment">// 4 (setuid) 750 (rwxr-x---)</span>
+$ <strong>chmod 2750 <em>program-name</em></strong>   <span class="color-comment">// 2 (setgid) 750 (rwxr-x---)</span></pre>
+
+<p>Program with <code>setuid</code> has owner's execute flag of &quot;<code>s</code>&quot;, instead of &quot;<code>x</code>&quot;. Similar, program with <code>setgid</code> has group's execute flag of &quot;<code>s</code>&quot;.</p>
+
+<h5><span class="font-code">setgid</span> permission on directories</h5>
+
+<p>Setting the <code>setgid</code> permission on a directory causes new files and sub-directories created within it to inherit its group-owner, rather than the operating user's primary group ID.</p>
+
+<p>You can use <code>chmod</code> command to <code>setgid</code>. For examples,</p>
+
+<pre class="color-command">
+$ <strong>chmod g+s <em>directory-name</em></strong>   <span class="color-comment">// setgid for directory</span>
+ 
+<span class="color-comment">// Using 4 Octal numbers</span>
+$ <strong>chmod 2750 <em>directory-name</em></strong>  <span class="color-comment">// 2 (setgid), 750 (rwxr-x---)</span></pre>
+
+<p><code>setuid</code> on directories are ignored.</p>
+
+<h5>Access Control List (ACL)</h5>
+<p>You can use the ACL to grant permission to specific users, other than the owner, group or all. [TODO]</p>
+
+<h5><span class="font-code">root</span> User</h5>
+<p>The superuser <code>root</code> can access any file in the system, regardless of the file permissions and ownerships.</p>
+
+<h5>Last Modified Date/Time and <span class="font-code">touch</span> Command</h5>
+
+<p>The date/time stamp shows the last modified date/time of the file. You can use command <code>touch</code> to set the last modified date/time to now for an existing file. If the file does not exist, <code>touch</code> creates a new empty file.</p>
+
+<pre class="color-command">
+$ <strong>touch <em>filename</em></strong>   <span class="color-comment">// If file exists, set the last modified date/time to now
+                   // Else, create a new empty file.</span></pre>
+
+<h4>Hard Links and Symbolic Links</h4>
+
+<p>A link is a special file that references another file or directory. A link serves as an alias, which can be used to access the linked file/directory. For example, In Ubuntu, the link <code>vi</code> (in <code>/usr/bin</code>) references <code>/etc/alternatives/vi</code>.</p>
+
+<p><span class="line-heading">Symlink</span>: A symbolic link (or symlink or soft link) maintains a reference (not a direct pointer) to a file or a directory. A symlink is a file that stores the path to another file/directory. If the referenced file is removed, the symlink will be referencing an non-existent file.</p>
+
+<p>To create a symbolic link, use command <code>ln</code> with option <code>-s</code>:</p>
+<pre class="color-command">
+$ <strong>ln -s <em>file-or-dir-name symlink-name</em></strong></pre>
+
+<p>In &quot;<code>ls -l</code>&quot;, symlinks are identified via the &quot;<code>symlink -&gt; referenced file/dir</code>&quot;.</p>
+
+<p><span class="line-heading">Hard Link</span>: A hard link is an <em>additional</em> pointer to the file's inode (physical location).  You can view the inode of files via &quot;<code>ls -i</code>&quot;. A file can be accessed via any hard link. It is available as long as there is at least one hard link left. The &quot;hard link count&quot; for a file is reflected in command &quot;<code>ls -l</code>&quot; (as illustrated in the earlier example).</p>
+<p> To create a hard link, use command <code>ln</code>:</p>
+<pre class="color-command">
+$ <strong>ln <em>filename</em> <em>hard-link-name</em></strong></pre>
+
+<br />
+
+<p> Symlinks are more commonly-used. Symlinks can span file systems; while hard links work only in the same file system. Hard links usually work for file (hard link to directory could lead to inconsistency); while symlinks work for both file and directory.  Hard links are also much hard to maintain, as there is little clue on where are the files, other than the link count.</p>
+
+<p>You can remove a link (hard or soft) via <code>rm</code> command, just like any file.  A hard-linked file is only deleted from the file system when there is no link to it.</p>
+
+<p>Windows does not support symlink until Windows 7?!</p>
+
+<h4>More on <span class="font-code">ls</span> (list) Command</h4>
+
+<pre class="color-command">
+$ <strong>touch testfile</strong>    <span class="color-comment">// Create files</span>
+$ <strong>touch .testfile</strong> 
+$ <strong>ls</strong>         <span class="color-comment">// short format (default)</span>
+$ <strong>ls -l</strong>      <span class="color-comment">// long format with file attributes</span>
+$ <strong>ls -a</strong>      <span class="color-comment">// all files including hidden files</span>
+$ <strong>ls -al</strong>     <span class="color-comment">// all files in long format</span>
+
+$ <strong>mkdir test_dir</strong>    <span class="color-comment">// Create (Make) a directory</span>
+$ <strong>ls -ld test_dir</strong>   <span class="color-comment">// Show directory name, not its content</span>
+$ <strong>ls -l test_dir</strong>    <span class="color-comment">// Show content of the directory</span>
+ 
+$ <strong>ls -alR</strong>    <span class="color-comment">// Recursively list the sub-directories</span>
+ 
+<span class="color-comment">// Re-direct the listing to a file</span>
+$ <strong>ls -alR &gt; listing.txt</strong>
+<span class="color-comment">// Pipe the output to grep to search for lines containing a keyword, and display page by page</span>
+$ <strong>ls -alR | grep <em>keyword</em> | less</strong></pre>
+
+<p>Wildcards for specifying filenames:</p>
+<ul>
+<li>Wildcard <code>*</code> matches zero or more characters; ? matches one character; </li>
+<li><code>[...]</code> for a character class (match any one character in the class), e.g., <code>[aeiou]</code>. You can use <code>-</code> to specify a range, e.g., <code>[a-zA-Z]</code>, <code>[0-9]</code>.</li>
+<li><code>[^...]</code> is the inverse of the above, i.e., match any character NOT in the class, <code>[^aeiou]</code>, <code>[^a-e]</code>.</li>
+</ul>
+
+<h4>File/Directory-Related Commands</h4>
+
+<pre class="color-command">
+<span class="color-comment">// Make/Remove sub-directory</span>
+$ <strong>mkdir &lt;directory-name&gt;</strong>   <span class="color-comment">// Make (create) directory</span>
+$ <strong>rmdir &lt;directory-name&gt;</strong>   <span class="color-comment">// Remove (delete) directory only if it is empty</span>
+$ <strong>rm -r &lt;directory-name&gt;</strong>   <span class="color-comment">// Remove directory recursively, including all files and subdirectories</span>
+ 
+<span class="color-comment">// Create file if not exist, else update last modified timestamp</span>
+$ <strong>touch &lt;filename&gt;</strong>
+ 
+<span class="color-comment">// Copy/Move/Remove file</span>
+$ <strong>cp &lt;fileToBeCopied&gt; &lt;newFilename&gt;</strong>  <span class="color-comment">// copy</span>
+$ <strong>mv &lt;fileTobeMoved&gt; &lt;newFilename&gt;</strong>   <span class="color-comment">// move (rename)</span>
+$ <strong>rm &lt;filename&gt;</strong>   <span class="color-comment">// remove (delete)</span>
+ 
+<span class="color-comment">// Display files on Screen</span>
+$ <strong>less &lt;filename&gt;</strong>    <span class="color-comment">// Display the file page-by-page on screen</span>
+$ <strong>cat &lt;filename&gt;</strong>     <span class="color-comment">// concatenate the given file to screen</span>
+$ <strong>head &lt;filename&gt;</strong>    <span class="color-comment">// Display the beginning of a file</span>
+$ <strong>tail &lt;filename&gt;</strong>    <span class="color-comment">// Display the end of a file - good for reading log files</span>
+ 
+$ <strong>file &lt;filename&gt;</strong>    <span class="color-comment">// Display information about a file</span></pre>
+
+<p>To remove an non-empty directory and its sub-directories:</p>
+
+<pre class="color-command">
+<span class="color-comment">// CAUTION: THERE IS NO UNDO!!!</span>
+$ <strong>rm -rfv &lt;directory-name&gt;</strong>
+   <span class="color-comment">// may require sudo
+   // -r: recursive
+   // -f: force, do not prompt
+   // -v: verbose</span></pre>
+
+<p>To monitor log file with &quot;auto-refresh&quot;:</p>
+<pre class="color-command">
+$ <strong>sudo tail -f /etc/log/apache2/error.log</strong>
+   <span class="color-comment">// -f: output appended data as the file grows</span>
+</pre>
+
+<h4>Compression (<span class="font-code">gzip</span>, <span class="font-code">bzip2</span>) and Archive (<span class="font-code">tar</span>)</h4>
+
+<p>The relevant file formats and utilities are:</p>
+<ul>
+<li><strong><code>.gz</code></strong>: A file compressed via <code>gzip</code> utility; which can be uncompress via <code>gunzip</code> utility.</li>
+
+<li><strong><code>.tar</code></strong>: A tar (tar archive) file, or tarball, is a collection of many files into a single file, used for distribution or backup. It is created via <code>tar</code> utility with option c (create); and can be extracted via<code>tar</code> with option x (extract).</li>
+
+<li><strong><code>.tar.gz</code></strong>: A compressed tar file with <code>gzip</code> - the most popular format for software distribution and backup.</li>
+</ul>
+
+<h5>The <code>tar</code> Utility</h5>
+
+<p>You can use the <code>tar</code> utility to create, list, and extract <code>.tar.gz</code> files, as follows:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Create a compressed archive of the given directory</span>
+$ <strong>tar czvf &lt;compressed-filename&gt;.tar.gz &lt;directory-name&gt;</strong>
+   <span class="color-comment">// Option &quot;c&quot; to create; &quot;z&quot; to compress; &quot;v&quot; for verbose; &quot;f&quot; for archive filename</span>
+
+<span class="color-comment">// List contents of a compressed archive</span>
+$ <strong>tar tzvf &lt;compressed-filename&gt;.tar.gz</strong>
+   <span class="color-comment">// Option &quot;t&quot; to list (table of contents)</span>
+   
+<span class="color-comment"><strong>// Extract compressed archive under the &quot;current&quot; directory</strong></span>
+$ <strong>cd /path/to/target-directory</strong>
+$ <strong>tar xzfv &lt;compressed-filename&gt;.tar.gz</strong>
+   <span class="color-comment">// Option &quot;x&quot; to extract</span>
+
+<span class="color-comment"><strong>// Extract compressed archive under the given directory</strong></span>
+$ <strong>tar xzfv &lt;compressed-filename&gt;.tar.gz -C &lt;target-directory-name&gt;</strong>
+   <span class="color-comment">// -C: extract under this directory</span>
+
+<span class="color-comment">// Extract but strip the top-level directory from the archive, so as to rename the top directory</span>
+$ <strong>tar xzfv &lt;compressed-filename&gt;.tar.gz -C &lt;target-directory-name&gt; --strip-components=1</strong></pre>
+
+<p>Notes: to process <code>.tar</code> files without <code>gzip</code> compression (instead of <code>.tar.gz</code>), use the above commands minus the <code>'z'</code> option.</p>
+
+<h5><span class="font-code">gzip/gunzip</span> Compression</h5>
+
+<p><code>gzip</code>/<code>gunzip</code> (GNU zip) is an older compression utility. The resultant file type is <code>.gz</code>. <code>gzip</code> is still the most popular form for software distribution over the Internet. The man pages are also kept in <code>gzip</code> format. For example,</p>
+
+<h5><span class="font-code">bzip2/bunzip2</span> Compression</h5>
+
+<p><code>bzip2</code>/<code>bunzip2</code> is a newer compression utility, which is more efficient than <code>gzip</code>, but not as popular.  The resultant file type is <code>.bz2</code>. For example,</p>
+
+<pre class="color-command">
+$ <strong>bzip2 -v listing.txt</strong>      <span class="color-comment">// Compress to listing.txt.bz2 (-v for verbose)</span>
+$ <strong>bunzip2 listing.txt.bz2</strong>   <span class="color-comment">// Uncompress</span>
+</pre>
+
+<h3>Processes (<span class="font-code">ps</span>)</h3>
+
+<p>Unix is a multi-process, multi-user operating system. It supports many processes concurrently.</p>
+
+<p>You can use <code>ps</code> to list all the processes:</p>
+
+<pre class="color-command">
+$ <strong>ps</strong>          <span class="color-comment">// Print processes of current user</span>
+$ <strong>ps -e</strong>       <span class="color-comment">// Print all processes</span>
+$ <strong>ps -ef</strong>      <span class="color-comment">// Print all processes in full-listing</span>
+$ <strong>ps aux</strong>      <span class="color-comment">// Same as above (in old BSD options)</span>
+ 
+<span class="color-comment">// Search for processes</span>
+$ <strong>ps aux | grep mysqld</strong>   <span class="color-comment">// Print MySQL server process</span>
+$ <strong>ps -ef | grep mysqld</strong>   <span class="color-comment">// same as above</span>
+$ <strong>ps -ef | grep tomcat</strong>
+$ <strong>ps -ef | grep $USER</strong>   <span class="color-comment">// of current user, same as ps -f</span></pre>
+
+<p>[TODO] pid, Sample full-listing of ps</p>
+
+<p>To terminal a process, you can issue <code>kill</code> command with the process ID, or job ID.</p>
+<pre class="color-command">
+$ <strong>kill <em>pid</em></strong>      <span class="color-comment">// Kill a particular possess with the given <em>processID</em></span>
+$ <strong>kill -9 <em>pid</em></strong>   <span class="color-comment">// Force kill</span></pre>
+
+<h5><span class="font-code">top</span> Command</h5>
+<p>The <code>top</code> command display the top processes. You can press &quot;k&quot; and enter the process ID (PID) to kill a process.</p>
+
+<h5>Foreground and Background Processes</h5>
+
+<p>You can have only one foreground process (that interacts with you) in a terminal session. But you can have many background processes (not interacting with you).</p>
+
+<p>To run a non-interactive job in the background, append an <code>&amp;</code> at the end of the command, e.g.,</p>
+
+<pre class="color-command">
+$ <strong>ls -alR &gt; listing.txt &amp;</strong>
+$ <strong>ls -l | lpr &amp;</strong></pre>
+
+<p>You can suspend a foreground job by pressing the crtl-z. Use command <code>jobs</code> to display all the suspended jobs (with the job number). To bring a background (or suspended) job to foreground, use &quot;<code>fg JobNumber</code>&quot; or &quot;<code>fg PID</code>&quot;.</p>
+
+<p>Example,</p>
+
+<pre class="color-example">
+$ <strong>yes</strong>    <span class="color-comment">// Print y repeatedly until killed</span>
+y
+y
+<strong>ctrt-z</strong>                  <span class="color-comment">// Suspend the job</span>
+[1]+ Stopped  yes       <span class="color-comment">// [n] is the job number</span>
+ 
+$ <strong>jobs</strong>    <span class="color-comment">// Show all jobs</span>
+[1]+ Stopped  yes
+
+$ <strong>ps</strong>     <span class="color-comment">// Show all processes</span>
+  PID TTY          TIME CMD
+21877 pts/1    00:00:00 bash
+22689 pts/1    00:00:00 yes
+22735 pts/1    00:00:00 ps
+
+$ <strong>fg %1</strong>    <span class="color-comment">// Bring Job number 1 to foreground (or use PID)</span>
+y
+y
+<strong>ctrt-z</strong>
+[1]+ Stopped  yes
+
+$ <strong>kill %1</strong>
+<span class="color-comment">// OR</span>
+$ <strong>kill -9 22689</strong></pre>
+
+
+<h3>Scheduling Tasks</h3>
+
+<p>Three commands: <code>at</code>, <code>batch</code> and <code>cron</code>.</p>
+
+<h5><span class="font-code">at</span></h5>
+
+<h5><span class="font-code">batch</span></h5>
+
+<h5><span class="font-code">cron</span></h5>
+<p>[TODO]</p>
+
+<h3>Shell Programming</h3>
+
+<h4>Startup Files</h4>
+
+<p>When a shell starts, it runs a series of startup files, to initialize itself. The &quot;login&quot; shell executes commands in <code>/etc/profile</code>, <code>~/.bash_profile</code>, <code>~/.bash_login</code> and <code>~/.profile</code>, in the order shown. After that, any interactive &quot;non-login&quot; shell also executes commands in <code>/etc/bashrc</code> and <code>~/.bashrc</code> (&quot;<code>rc</code>&quot; stands for run commands). Startup files <code>/etc/profile</code> and <code>/etc/bashrc</code> are applicable to all users, whereas startup in the user's home directory is applicable to the current login user. <code>/etc/bashrc</code> and <code>~/.bashrc</code> may run multiple times.</p>
+<p>You should set the PATH in <code>/etc/profile</code> (all users) or  <code>~/.bash_profile</code> or <code>~/.profile</code> (login user), as <code>/etc/bashrc</code> and <code>~/.bashrc</code> may run multiple times, and not suitable for commands such as &quot;<code>PATH=$PATH:.</code>&quot;. PATH is typically set and exported in <code>/etc/profile</code>, and it can be modified subsequently and does not need to be exported again.</p>
+<p>[TODO] <code>/etc/environment</code></p>
+
+<h4>Local Shell Variables and Global Environment Variables</h4>
+
+<p>You can define variables in shell. There are two type of shell variables:</p>
+<ol>
+<li>Local variables that are only available within the current shell.</li>
+<li>Global variables or environment variables that are available to all shells and programs that forked from this shell. The convention is to use uppercase for environment variables, e.g., PATH, HOME.</li>
+</ol>
+
+<p>The following commands are valid on Bash Shell (under Ubuntu and Mac OS X). For other shells, check the documentation.</p>
+
+<h5>Set/Unset a Local Variable</h5>
+
+<pre class="color-syntax">
+$ <strong><em>varname</em>=<em>value</em></strong>     <span class="color-comment">// Set a local variable, no space before and after &quot;=&quot;</span>
+$ <strong><em>varname</em>=<em>&quot;value&quot;</em></strong>   <span class="color-comment">// Double quotes needed if the value contains space</span>
+$ <strong><em>varname</em>=</strong>          <span class="color-comment">// Remove (Unset) a local variable by setting it to nothing</span></pre>
+
+<h5>Set an Environment Variable</h5>
+
+<pre class="color-command">
+$ <strong>export <em>varname</em>=<em>value</em></strong>    <span class="color-comment">// Set the <em>varname</em> to <em>value</em> and export <em>varname</em> to the environment</span>
+$ <strong>export <em>varname</em>=<em>&quot;value&quot;</em></strong>  <span class="color-comment">// Double quote needed if value contains space</span></pre>
+
+<h5>Display ALL Environment Variables</h5>
+
+<pre class="color-command">
+$ <strong>printenv</strong>
+$ <strong>env</strong>       <span class="color-comment">// same as above</span></pre>
+
+<h5>Display a Local Variable</h5>
+
+<pre class="color-command">
+$ <strong>echo $<em>varname</em></strong>  <span class="color-comment">// also work for environment variable</span></pre>
+
+<h5>Display a Environment Variable</h5>
+
+<pre class="color-command">
+$ <strong>printenv <em>varname</em></strong>
+$ <strong>echo $<em>varname</em></strong></pre>
+
+<h5>Special System's Environment Variables</h5>
+
+<ul>
+<li>HOME: contains your home directory.</li>
+<li>PATH: contains the list of search paths for executing programs (defined in <code>/etc/profile</code>).</li>
+<li>PWD: Full path of current working directory (OLDPWD for the previous working directory).</li>
+<li>USER: Current login username.</li>
+<li>SHELL: Current shell, e.g., /bin/bash</li>
+<li>[TODO]</li>
+</ul>
+
+<h5>PATH</h5>
+<p>When you issue a command (or run a program) in a shell, without specifying its full-path,  the shell searches for the command or executable program from all the directories listed in the PATH environment variable.  It returns message &quot;bash: xxx: command not found&quot;, if the command or executable program cannot be found in any directory listed in the PATH.</p>
+
+
+<h5>Current Working Directory and PATH</h5>
+
+<p>By default, Unix does not include the current working directory in the PATH (unlike Windows). Hence, if you try to run a program stored in the current directory without specifying its path, you will get the error &quot;command not found&quot;. This is because the current working directory is not searched.</p>
+<pre class="color-example">
+$ <em><strong>program-name</strong></em>
+bash: <em>program-name</em>: command not found</pre>
+
+<p>Hence, to run a program stored in the current working directory, you need to specify its path (either relative or absolute) as follows:</p>
+
+<pre class="color-command">
+$ <strong>./<em>program-name</em></strong>   <span class="color-comment">// Specify a relative path to the program</span></pre>
+
+<p>Alternatively, you can include the current working directory in the PATH environment variable, via:</p>
+
+<pre class="color-command">
+export PATH=.:$PATH    <span class="color-comment">// Append current working directory in front of the existing PATH</span></pre>
+
+<h5>Setting PATH Permanently</h5>
+
+<p>You can set the PATH permanently by placing the additional PATH at the end of <code>/etc/profile</code> (for all users); or <code>~/.profile</code>, <code>~/.bash_profile</code> (for current user). For example,</p>
+
+<pre class="color-example">
+<span class="color-comment"># Include current working directory
+# Use $PATH to refer to the existing PATH
+# Path entries separated by colon (:)</span>
+export PATH=.:$PATH
+
+<span class="color-comment"># More paths</span>
+export PATH=~/bin:/usr/local/mysql/bin:$PATH</pre>
+
+<h5><span class="font-code">source</span> or dot (<span class="font-code">.</span>) Command</h5>
+<p>After you edited a startup file, instead of logging out and logging in again, you can use the <code>source</code> or dot (<code>.</code>) command to re-run the startup file.</p>
+
+<pre class="color-syntax">
+$ <strong>echo $PATH</strong>
+$ <strong>source <em>filename</em></strong>    <span class="color-comment">// Run the startup file</span>
+$ <strong>. <em>filename</em></strong>         <span class="color-comment">// Same as above</span>
+$ <strong>echo $PATH</strong>         <span class="color-comment">// Display PATH</span></pre>
+
+<h4>File Descriptors and Redirection</h4>
+<p>Unix opens three file descriptors for each program: 0 for standard input, 1 for standard output and 2 for standard error. The output redirection  <code>&gt;</code> is short for <code>1&gt;</code>; while input redirection <code>&lt;</code> is short for <code>0&lt;</code>. To redirect standard error, use <code>2&gt;</code>. To combine standard output and standard error, use <code>&amp;&gt;</code>.</p>
+
+<h4>Shell Script</h4>
+
+<p>Begin with a <code>#!/bin/bash</code> (called Hash-Bang or She-Bang), which identifies the shell to run the script.</p>
+
+<p>Set it to executable (otherwise, you will get an error &quot;permission denied&quot;):</p>
+
+<pre class="color-command">
+$ <strong>chmod u+x <em>script-name</em></strong>   <span class="color-comment">// u+x (user-owner executable)
+                          // g+x (group-owner executable)
+                          // a+x (all executable)
+                          // +x (same as uga+x)</span></pre>
+
+
+<h3>Unix's Tools &amp; Utilities</h3>
+
+<h5>Console-Based Editor <span class="font-code">vim</span> (or <span class="font-code">vi</span>)</h5>
+<p>The <code>vim</code> is an improved version of the classical vi (visual) text editor. Launch via &quot;<code>vim &lt;filename&gt;</code>&quot;, or &quot;<code>vi &lt;filename&gt;</code>&quot;.</p>
+
+<p><code>vim</code> (or <code>vim</code>) operates in two mode: insert mode (for text editing) and command mode (for issuing commands such as quit and save).</p>
+<ul>
+<li>Press &quot;<code>i</code>&quot; to enter insert mode and start editing.</li>
+<li>Press ESC to return to command mode.</li>
+</ul>
+
+<p>The frequently-used commands in command-mode are:</p>
+<ul>
+<li>&quot;<code>:q</code>&quot; to quit; &quot;<code>:q!</code>&quot; to quit without saving.</li>
+<li>&quot;<code>:w</code>&quot; to write (save); &quot;<code>:w <em>filename</em></code>&quot; to save to the filename.</li>
+<li>&quot;<code>:s/foo/bar/g</code>&quot; to replace bar with foo for the current line, all occurrences (with option g, you can also use option c to ask for comfirmation, and i for case-insensitive).</li>
+<li>&quot;<code>:%s/foo/bar/g</code>ci&quot; to replace bar with foo for the all line (option g for global, option c to ask for comfirmation, and option i for case-insensitive).</li>
+<li><code>:/word</code> to search forward and <code>:?word</code> to search backward.</li>
+</ul>
+<p>You could run <code>vimtutor</code> to learn about <code>vim</code>.</p>
+
+<h5><span class="font-code">emacs</span></h5>
+
+<p>The comprehensive GNU emacs editing environment.</p>
+<p>[TODO] more</p>
+
+<h5><span class="font-code">ssh</span> and <span class="font-code">scp</span></h5>
+
+<p>To access and manage a remote Unix server, you need <code>ssh</code> and <code>scp</code>. <code>ssh</code> (secure shell) is used for remote login; while <code>scp</code> (secure copy) is used for remote file copy/transfer.</p>
+
+<pre class="color-command">
+<span class="color-comment">// To login to a remote server:</span>
+$ <strong>ssh &lt;user&gt;@&lt;hostname&gt;</strong>
+
+<span class="color-comment">// To copy/transfer files between local/remote machines:</span>
+$ <strong>scp -r &lt;src&gt; &lt;dest&gt;</strong>
+   <span class="color-comment">// -r: recursive to include sub-directories</span>
+   <span class="color-comment">// src, dest: &lt;user&gt;@&lt;hostname&gt;:file-dir-name</span></pre>
+
+<p>On Windows' client, you could use the more friendly Graphical Putty (for <code>ssh</code>) and WinSCP (for <code>scp</code>).</p>
+
+
+
+<p>[TODO] <code>grep</code>, <code>awk</code>, <code>diff</code>.</p>
+
+
+<h3>Tips and Tricks</h3>
+
+<h4>Using Terminal</h4>
+
+<p>These are important shortcut key in Terminal:</p>
+<ul>
+<li>Tab to auto-complete filename or directory name (type the first few characters and press tab to auto-complete.)</li>
+<li>Ctrl+U to delete all characters before Cursor (effectively clear command-line)</li>
+<li>Ctrl+K to delete all characters after Cursor</li>
+<li>Ctrl+A is to go to the beginning of the line.</li>
+<li>Up/Down arrow keys to retrieve command from history.</li>
+</ul>
+
+<h4>Refreshing Log file</h4>
+
+<pre class="color-command">
+$ tail -f &lt;filename&gt;
+      <span class="color-comment">// Display refreshes if there are new entries</span>
+      
+$ less &lt;filename&gt;
+$ head &lt;filename&gt;
+$ tail &lt;filename&gt;</pre>
+
+<h4>Installing Software from Source Distribution</h4>
+<ol>
+  <li>Download the source tarball (<code>.tar</code>, <code>.tar.gz</code>, <code>.tar.bz2</code>), and extract into folders.
+    <pre class="color-command">
+$ <strong>cd ......</strong>
+$ <strong>mkdir source</strong>
+$ <strong>cd source</strong>
+$ <strong>tar xvf <em>source-tarball</em></strong></pre>
+  </li>
+  <li>Read the installation instruction, typically in a text file called README or INSTALL.</li>
+  <li>Run <code>configure</code> script to create the <code>makefile</code>:
+    <pre class="color-command">
+$ <strong>./configure</strong></pre>
+  </li>
+  <li>Run the makefile to compile the software:
+    <pre class="color-command">
+$ <strong>make</strong>
+$ <strong>sudo make install</strong>
+$ <strong>make cleanup</strong></pre>
+  </li>
+  <li>To remove the software, run:
+    <pre class="color-command">
+$ <strong>sudo make uninstall</strong></pre>
+  </li>
+</ol>
+
+<h4>Find files from Folders</h4>
+<p>Use the <code>find</code> command. See section &quot;find, locate and grep&quot;.</p>
+
+<h4>Remove Non-empty Directory</h4>
+
+<pre class="color-command">
+<span class="color-comment">// CAUTION: THERE IS NO UNDO!</span> 
+
+<span class="color-comment">// Try these in sequence:</span>
+$ <strong>rm -r &lt;dir-name&gt;</strong>
+   <span class="color-comment">// -r: recursive</span> 
+
+$ <strong>sudo rm -r &lt;dir-name&gt;</strong>
+   <span class="color-comment">// Add sudo to overcome permission</span> 
+
+$ <strong>sudo rm -rfv &lt;dir-name&gt;</strong>
+   <span class="color-comment">// -f: force, do not prompt</span> 
+   <span class="color-comment">// -v: verbose</span> </pre>
+
+
+<h4>Miscellaneous</h4>
+
+<h5>Change Computer Name</h5>
+
+<p>To change your computer name:</p>
+<ol>
+<li>Edit <code>/etc/hostname</code>.</li>
+<li>Make the same changes in <code>/etc/hosts</code>.</li>
+<li>Run <code>sudo service hostname restart</code>, or <code>sudo /etc/init.d/hostname restart</code>, or restart your bash shell, or restart your machine, for the new computer name to take effect.</li>
+</ol>
+
+
+
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<p>[TODO]</p>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Ubuntu 14.04, Mac OS X 10.7.5 (Lion)<br />
+Last modified: November, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

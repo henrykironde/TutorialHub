@@ -1,0 +1,72 @@
+﻿/*
+ * Playing with Character Sets and Collations
+ */
+
+/*
+ * Set up database
+*/
+-- SHOW DATABASES;
+-- DROP DATABASE IF EXISTS `the_arena`;
+CREATE DATABASE IF NOT EXISTS `the_arena`;
+USE `the_arena`;
+-- SHOW TABLES;
+
+-- Enable client program to communicate with the server using utf8 character set
+SET NAMES 'utf8';
+
+/*
+ * Create a table with various charset/collation columns
+ */
+DROP TABLE IF EXISTS `charset_arena`;
+CREATE TABLE IF NOT EXISTS `charset_arena` (
+   `id`        INT UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+   `desc`      VARCHAR(50) NULL,
+   `cString1`  VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_general_cs DEFAULT NULL,  
+                           -- case-sensitive (cs)
+   `cString2`  VARCHAR(20) CHARACTER SET latin1 DEFAULT NULL,  
+                           -- default collation for latin1 is latin1_swedish_ci
+                           -- (Collation is not inherited from CREATE TABLE)
+                           -- case-insensitive (ci)
+   `cString3`  VARCHAR(20) DEFAULT NULL,                       
+                           -- use table's default charset and collation
+   PRIMARY KEY(`id`)
+) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+DESCRIBE `charset_arena`;
+SHOW CREATE TABLE `charset_arena` \G
+/*
+CREATE TABLE `charset_arena` (
+  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `desc` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `cString1` varchar(20) CHARACTER SET latin1 COLLATE latin1_general_cs DEFAULT NULL,
+  `cString2` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `cString3` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+*/
+
+/*
+ * Testing charsets and collations
+ */
+-- Insert records with valid values.
+INSERT INTO `charset_arena` VALUES
+  (NULL, 'lowercase b', 'bbb', 'bbb', 'bbb'),
+  (NULL, 'space', ' sp', ' sp', ' sp'),
+  (NULL, 'uppercase B', 'BBB', 'BBB', 'BBB'),
+  (NULL, 'digit 1', '111', '111', '111'),
+  (NULL, 'digit 0', '000', '000', '000'),
+  (NULL, 'uppercase A', 'AAA', 'AAA', 'AAA'),
+  (NULL, 'lowercase a', 'aaa', 'aaa', 'aaa');
+
+SELECT * FROM `charset_arena`;
+
+-- column cString1 uses cs (case-sensitive) collation, 'A' before 'a'
+SELECT `id`, `description`, `cString1` FROM `charset_arena` ORDER BY `cString1`, id;
+
+-- column cString2 uses ci (case-insensitive) collation, 'A' has the same rank 'a'
+SELECT `id`, `description`, `cString2`  FROM `charset_arena` ORDER BY `cString2`, id;
+
+-- column cString3 uses ci (case-insensitive) collation, 'A' has the same rank 'a'
+SELECT `id`, `description`, `cString3`  FROM `charset_arena` ORDER BY `cString3`, id;
+
+-- space -> '0' -> '1' -> '9' -> alphabets

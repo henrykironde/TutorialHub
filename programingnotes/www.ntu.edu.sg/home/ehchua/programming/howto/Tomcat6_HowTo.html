@@ -1,0 +1,490 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Install &amp; Configure Tomcat 6</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container div -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content div -->
+<div id="content">
+
+<h1>Apache Tomcat 6</h1>
+<h2>How to Install &amp; Configure</h2>
+
+<p><em>Apache Tomcat</em> is the official <em>Reference Implementation</em> (RI) for Java Servlets and JavaServer Pages (JSP).  Tomcat is an <em>open-source</em> project, under the &quot;Apache Software Foundation&quot; (which also provides the famous open-source industrial-strength Apache HTTP Server).  The mother site for Tomcat is <a href="http://tomcat.apache.org/">http://tomcat.apache.org</a>.</p>
+<p>This configuration guide is NOT meant for production purpose, but merely for teaching and self-learning. This guide is applicable to Tomact 6.0.x. Read &quot;<a href="Tomcat_HowTo.html">Tomcat 7 - How to Install and Configure</a>&quot; for Tomcat 7.</p>
+<p>This guide is applicable to my EE3072 Module P311.</p>
+
+<h5>Step 0: Read the Tomcat Documentation</h5>
+<p>Aaviable at Tomcat mother site (@ <a href="http://tomcat.apache.org/">http://tomcat.apache.org</a>). Select the documentation &rArr; Tomcat 6.0.</p>
+
+<h5>Step 1:  Download Tomcat</h5>
+
+<ul>
+<li>From <a href="http://tomcat.apache.org/">http://tomcat.apache.org</a> &rArr; Select &quot;Downloads&quot; &rArr; &quot;Tomcat 6.0&quot; &rArr; &quot;6.0.xx&quot; &rArr; &quot;Binary Distributions&quot; &rArr; &quot;Core&quot; &rArr; &quot;zip&quot; &rArr; &quot;<code>apache-tomcat-6.0.xx.zip</code>&quot;.</li>
+
+<li> UNZIP into a directory of your choice (says &quot;<code>c:</code>&quot;).    Tomcat will be unzipped into directory &quot;<code>c:\apache-tomcat-6.0.xx</code>&quot;. I shall refer to the Tomcat installed directory as <code>$CATALINA_HOME</code> or <code>%CATALINA_HOME%</code> hereafter (<code>Catalina</code> is the codename for Tomcat 5 and above. The earlier versions are simply codenamed Tomcat). I recommend &quot;zip&quot; version, as you could simply delete the entire directory when  Tomcat is no longer needed without running any un-installer. You could also rename the Tomcat's installed directory to a shorter name (says <code>c:\Tomcat6</code>).</li>
+</ul>
+
+
+<h5>Step 2:  Create Environment Variable</h5>
+<ul>
+<li>Create an environment variable called &quot;<code>JAVA_HOME</code>&quot; and set it to the JDK installed directory (e.g., <code>c:\program files\java\jdk1.6.0_xx</code>).</li>
+
+<li> In Windows XP/Vista/7: Click &quot;Start&quot; button &rArr; &quot;Control Panel&quot; &rArr; &quot;System&quot; &rArr; (Vista/7) Advanced system settings &rArr; &quot;Advanced&quot; &rArr; &quot;Environment Variables&quot; &rArr; &quot;System Variables&quot; &rArr; &quot;New&quot; &rArr; Enter &quot;<code>JAVA_HOME</code>&quot; in the &quot;Variable Name&quot; and your JDK base directory (e.g., &quot;<code>c:\program file\java\jdk1.6.0_xx</code>&quot;) in the &quot;Variable Value&quot;.</li>
+<li> To verify, start a<em> </em>CMD shell  and issue:
+<pre class="code-command">&gt; <strong>set JAVA_HOME</strong>
+JAVA_HOME=c:\program file\java\jdk1.6.0_xx</pre>
+</li>
+</ul>
+
+<h5>Step 3:  Configuring &quot;$CATALINA_HOME\conf\server.xml&quot;</h5>
+<p><strong>TCP Port Number</strong>: The default TCP port number configured in Tomcat is 8080, you may choose any number between 1024 and 65535 to run your Tomcat Test server. We shall stick to port 8080 in this article. (For production server, you should use port 80, which is pre-assigned to HTTP as the default port.)</p>
+<pre class="code-listing">
+&lt;!-- Define a <span class="code-comment">non-SSL HTTP/1.1 Connector</span> on port 8080 --&gt;
+&lt;Connector <span class="code-comment">port=&quot;8080&quot;</span> protocol=&quot;HTTP/1.1&quot; connectionTimeout=&quot;20000&quot; redirectPort=&quot;8443&quot; /&gt;</pre>
+
+<p><strong>Context</strong>: A <em>web context</em> is simply a <em>web application</em> running under Tomcat Server.  To create a new web applicaiton, add your application's &quot;<code>path</code>&quot; (URL path used by users to access your application) and provide the &quot;<code>docBase</code>&quot; (directory  where you store your application codes), before the <code>&lt;/Host&gt;</code> end-tag, as follows:</p>
+
+<pre class="code-listing">
+        ......
+        ......
+        <span class="code-comment">&lt;Context path=&quot;/ws&quot; docBase=&quot;d:/workshop&quot; reloadable=&quot;true&quot;&gt;</span>
+        <span class="code-comment">&lt;/Context&gt;</span>
+      &lt;/Host&gt;
+    &lt;/Engine&gt;
+  &lt;/Service&gt;
+&lt;/Server&gt;</pre>
+
+<p>Explanation:</p>
+<ul>
+<li>The &quot;<code>path</code>&quot; attribute refers to the <em>URL Path</em> used by the users to access you web application.  In the above example, a context path &quot;<strong><code>/ws</code></strong>&quot; is defined. To access this application, users issue URL http://<em>hostname</em>:8080<strong>/ws</strong>.</li>
+<li>The &quot;<code>docbase</code>&quot; attribute refers to the <em>Document Base Directory</em> (also known as the <em>Context Root</em>) in your server’s file system where you store your application's codes.  In the above example, the document base directory for context &quot;<code>/ws</code>&quot; is located in directory &quot;<code>d:\workshop</code>&quot;.</li>
+<li>It is important to note that the configuration create a <em>mapping</em> from the &quot;URL Path&quot; issued by the user to the &quot;Document Base Directory&quot; in the server's file system, where you store your application codes.</li>
+<li>Use Unix-style forward slash <code>'/'</code> as the <em>directory separator</em> in the configuration file, instead of Window-sytle back slash <code>'\'</code>.</li>
+
+<li>The attribute <code>reloadable=&quot;true&quot;</code> asks tomcat to monitor your servlets for changes, and automatically reload the servlets if changes is detected. This is handy for a development system, but inefficient in a production system.</li>
+</ul>
+
+<p>In your application's context root &quot;<code>d:\workshop</code>&quot;:</p>
+<ul>
+<li>Create a sub-directory &quot;<code>WEB-INF</code>&quot; (in uppercase with a &quot;dash&quot; - case sensitive!) under &quot;<code>d:\workshop</code>&quot;.</li>
+<li>Create a sub-sub-directory &quot;<code>classes</code>&quot; (in lowercase - case sensitive!) under &quot;<code>d:\workshop\WEB-INF</code>&quot;.  This is where you should keep all your servlet classes.</li>
+</ul>
+
+<p>Note: This configuration is meant for my laboratory class, where each student is given a dedicated directory in another drive. For production, it is recommended that you store your application under &quot;<code>$CATALINA_HOME/webapps</code>&quot;. In this case, you do not have to write the <code>&lt;Context&gt;</code> explicitly. A context will be automatically generated based on your application's directory name. For example, if your directory is called &quot;<code>eshop</code>&quot;, a context called &quot;<code>eshop</code>&quot; will be created automatically.</p>
+<p>[Click <a href="codes/server.xml">HERE</a> (right-click and &quot;Saved Link As&quot;) to download the &quot;<code>server.xml</code>&quot; configuration file.]</p>
+
+<h5>Step 4:  Configuring &quot;conf\web.xml&quot; and &quot;conf\context.xml&quot; for &quot;Invoker Servlet&quot;</h5>
+<p><strong>WARNING</strong>: The so-called &quot;Invoker Servlet&quot; that we are going to use is an <em>evil</em> (see Tomcat's FAQ @ <a href="http://wiki.apache.org/tomcat/FAQ/Miscellaneous">http://wiki.apache.org/tomcat/FAQ/Miscellaneous</a> on why is it evil), and should not be used for production purpose. But it is really a <em>quick and dirty</em> way for my teaching classes, and I shall continue to use it for teaching.</p>
+<p><strong>&quot;$CATALINA_HOME\conf\web.xml&quot;: Enable the Directory Listing</strong></p>
+
+<table class="table-program">
+<tr>
+<td width="40%">
+<pre class="code-listing">
+&lt;servlet&gt;
+  &lt;servlet-name&gt;<span class="code-comment">default</span>&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;
+    <span class="code-comment">org.apache.catalina.servlets.DefaultServlet</span>
+  &lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;debug&lt;/param-name&gt;
+    &lt;param-value&gt;0&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;<span class="code-comment">listings</span>&lt;/param-name&gt;
+    &lt;param-value&gt;<span class="code-comment">true</span>&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+</pre>
+</td>
+<td>
+<pre class="code-explanation">
+&nbsp;
+&larr; The default servlet name
+&nbsp;
+&larr; The default servlet class
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&larr; Directory Listing
+&larr; Change from &quot;false&quot; to &quot;true&quot; to enable directory listing
+&nbsp;
+&nbsp;
+&nbsp;
+</pre>
+</td>
+</tr>
+</table>
+
+<p>Note: If the  listing is enabled, Tomcat will display the directory listing when user issues an URL to a directory. Otherwise, Tomcat returns an error &quot;404 Page Not Found&quot;. Again, enabling directory listing is handy in testing, but poses security risk in production.</p>
+
+<p><strong>&quot;$CATALINA_HOME\conf\web.xml&quot;: Enable &quot;Invoker Servlet&quot; and Specify its URL Mapping</strong></p>
+
+<table class="table-program">
+<tr>
+<td width="55%">
+<pre class="code-listing"><strong>&lt;!--</strong>
+  &lt;servlet&gt;
+  &lt;servlet-name&gt;<span class="code-comment">invoker</span>&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.apache.catalina.servlets.<span class="code-comment">InvokerServlet</span>
+  &lt;/servlet-class&gt;
+  &lt;init-param&gt;
+  &lt;param-name&gt;debug&lt;/param-name&gt;
+  &lt;param-value&gt;0&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;load-on-startup&gt;2&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+<strong>--&gt;</strong>
+   
+......
+   
+&lt;!-- The mapping for the invoker servlet --&gt;
+<strong>&lt;!--</strong>
+  &lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;<span class="code-comment">invoker</span>&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;<span class="code-comment">/servlet/*</span>&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+<strong>--&gt;</strong></pre>
+</td>
+<td>
+<pre class="code-explanation">
+&larr; Remove this line (comment begin)
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&larr; Remove this line (comment end)
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&larr; Remove this line (comment begin)
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&larr; Remove this line (comment end)</pre>
+</td>
+</tr>
+</table>
+
+<p><strong>&quot;$CATALINA_HOME\conf\context.xml&quot;: Enable privilege for &quot;Invoker Servlet&quot;</strong><br />
+We need to grant privilege (evil!!!) to the &quot;Invoker Servlet&quot; by changing the <code>&lt;Context&gt;</code> begin-tag  in &quot;<code>conf\context.xml</code>&quot;:</p>
+<pre class="code-listing">&lt;Context <span class="code-comment">privileged=&quot;true&quot; reloadable=&quot;true&quot;</span>&gt;
+  ......
+  ......
+&lt;/Context&gt;</pre>
+
+<p>Note: In this configuration, we actually grant privilege to all the applications <em>system-wide</em>, which is really a big evil!</p>
+<p>[Click <a href="codes/web.xml">HERE</a> (right-click and &quot;Saved Link As&quot;) to download the &quot;<code>web.xml</code>&quot; configuration file.]</p>
+<p>[Click <a href="codes/context.xml">HERE</a> (right-click and &quot;Saved Link As&quot;) to download the &quot;<code>context.xml</code>&quot; configuration file.]</p>
+<p><strong></strong><strong>So what is this evil Invoker Servlet?</strong></p>
+<p>In a nut shell, it is a <em>dirty</em> way of deploying servlets <em>in mass</em>. The proper way to deploy  servlets is to configure <em>each and every</em> servlet in the application's configuration file. This is tedious (and problematic in my teaching classes).</p>
+<p>Suppose that we have a context &quot;<code>ws</code>&quot; with document base of &quot;<code>d:\workshop</code>&quot;, and we have created a servlet called &quot;<code>TestServlet.class</code>&quot;. With the Invoker Servlet enabled, we could simply drop our servlet into the application's &quot;<code>WEB-INF\classes</code>&quot; (i.e., &quot;<code>d:\workshop\WEB-INF\classes\TestServlet.class&quot;</code>). Users can request this servlet via URL <code>http://hostname:8080/ws/<strong>servlet</strong>/TestServlet</code>. In other words,, the URL path &quot;<code>servlet</code>&quot; is mapped to &quot;<code>WEB-INF\classes</code>&quot;.</p>
+
+<h5>Step 5:  Start the Tomcat Server</h5>
+<p>You can start the Tomcat Server by running &quot;<code>$CATALINA_HOME\bin\startup.bat</code>&quot;. A new console window will be started (as shown below). Study the messages (especially the Tomcat's port number). Future error messages will be send to this console window. <code>System.out.println()</code> issued by our servlets will also be sent to this console.</p>
+
+<pre class="code-command"><span class="code-comment">... change directory to $CATALINA_HOME\bin ...</span>
+&gt; <strong>startup</strong>
+......
+......
+Oct 20, 2009 10:56:37 PM org.apache.coyote.http11.Http11Protocol init
+INFO: Initializing Coyote <strong>HTTP/1.1 on http-8080</strong>
+......
+Oct 20, 2009 10:56:46 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 9215 ms</pre>
+
+<p> Start a browser and issue URL &quot;<code>http://localhost:8080</code>&quot; to access the Tomcat home page (as shown), and URL &quot;<code>http://localhost:8080/ws</code>&quot; to access your web application &quot;<code>/ws</code>&quot;. localhost (with IP address of 127.0.0.1) is meant for local loop-back testing only. For users on the other machines over the Internet, they have to use the proper IP address or DNS hostname to access the server.</p>
+
+<img class="image-center" src="images/TomcatHomePage.png"  />
+
+<p> You can <em>shutdown</em> the server by running &quot;<code>$CATALINA_HOME\bin\shutdown.bat</code>&quot;. If Tomcat does not respond to the <code>shutdown</code> command, you could terminate Tomcat by pressing Ctrl-Break (or Ctrl-C) on the Tomcat's console window. But do not kill the cat by pressing the &quot;close&quot; button.</p>
+
+
+<h5>Step 6:  Java Servlet JAR file</h5>
+<p>Servlet API  is needed to compile Java servlet. Servlet API is not part of JDK (but belongs to Java EE).  Tomcat also included a copy of Servlet API.  For simplicity, you could COPY the Servlet jar-file  &quot;<code>$CATALINA_HOME\lib\servlet-api.jar</code>&quot; into your JDK's <em>extension</em> directory &quot;<code>$JAVA_HOME\jre\lib\ext</code>&quot; (where <code>$JAVA_HOME</code> is the JDK installed directory).</p>
+<p> Alternatively, you could include the Servlet jar- file in the <code>CLASSPATH</code>.</p>
+
+<h5>Step 7: Write and Deploy a Test Java Servlet</h5>
+<p>Write the following servlet called &quot;<code>EchoServlet.java</code>&quot; and save it under your application's &quot;<code>WEB-INF\classes</code>&quot; (i.e., &quot;<code>d:\workshop\WEB-INF\classes\EchoServlet.java</code>&quot;. Compile the source into &quot;<code>EchoServlet.class</code>&quot;.</p>
+
+<pre class="code-listing">
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+   
+public class EchoServlet extends HttpServlet {
+   public void doGet(HttpServletRequest request,
+         HttpServletResponse response)
+         throws IOException, ServletException {
+
+      response.setContentType(&quot;text/html&quot;);
+      PrintWriter out = response.getWriter();
+
+      out.println(&quot;&lt;html&gt;&quot;);
+      out.println(&quot;&lt;head&gt;&lt;title&gt;Servlet Test&lt;/title&gt;&lt;/head&gt;&quot;);
+      out.println(&quot;&lt;body&gt;&quot;);
+      out.println(&quot;&lt;p&gt;Hello,&lt;/p&gt;&quot;);
+      out.println(&quot;&lt;p&gt;Request URI: &quot; + request.getRequestURI() + &quot;&lt;/p&gt;&quot;);
+      out.println(&quot;&lt;p&gt;Protocol: &quot; + request.getProtocol() + &quot;&lt;/p&gt;&quot;);
+      out.println(&quot;&lt;p&gt;PathInfo: &quot; + request.getPathInfo() + &quot;&lt;/p&gt;&quot;);
+      out.println(&quot;&lt;p&gt;Remote Address: &quot; + request.getRemoteAddr() + &quot;&lt;/p&gt;&quot;);
+      out.println(&quot;&lt;/body&gt;&quot;);
+      out.println(&quot;&lt;/html&gt;&quot;);
+   }
+}</pre>
+
+<p>To invoke this servlet, issue URL <code>http://localhost:8080/ws/servlet/EchoServlet</code>.</p>
+
+<h3>If Things Go Wrong...</h3>
+
+<ul>
+<li>Check the error messages on the Tomcat's console (and use the error message to google for solution).</li>
+<li>Check the log files (at <code>&quot;$CATALINA_HOME\logs</code>&quot;)</li>
+<li>If the Tomcat console flashed and  disappeared immediately, you can start the tomcat in the debugging mode by  running &quot;<code>catalina.bat debug</code>&quot; and type &quot;<code>run</code>&quot;  in the &quot;<code>jdb</code>&quot; prompt. Look out the error messages.</li>
+<li>Check your Tomcat configuration files (&quot;<code>server.xml</code>&quot;, &quot;<code>web.xml</code>&quot;, &quot;<code>content.xml</code>&quot;, etc.). I suggest that you revert back to the original configuration files to start Tomcat at port 8080. You may also modify the Tomcat startup scripts &quot;<code>startup.bat</code>&quot; and &quot;<code>catalina.bat</code>&quot; to display the error messages, by removing the command &quot;<code>echo off</code>&quot;.</li>
+</ul>
+
+<h3>Deploying Web Applications in Tomcat</h3>
+<p>This is the proper way of deploying web application (without using the evil Invoker Servlet):</p>
+
+<p><strong>Create a new Context</strong> (web application): Either</p>
+<ul>
+<li>(RECOMMENDED) Create a directory under <code>$CATALINA_HOME\webapps</code> and move your application codes under this directory. A context will be created automatically based on name of the directory.</li>
+<li>Write a <code>&lt;Context&gt;</code> element in <code>$CATALINA_HOME\conf\server.xml</code>, to specify the context's URL-Path and the document base directory. Refer to Step 3 above.</li>
+</ul>
+
+<p><strong>Create the directory structure for the new context</strong>:</p>
+<ul>
+<li>The directory that your application resides is called the <em>context root</em> or <em>document base directory</em>. You should keep all your HTML files and resources visible to the Internet users under the context root.</li>
+<li>Create a directory called &quot;<code>WEB-INF</code>&quot; under the context root. This directory, although under the context root, is not visible to the users. This is where you keep your application's configuration files such as <code>web.xml</code>.</li>
+<li>Create a directory called &quot;<code>classes</code>&quot; under &quot;<code>WEB-INF</code>&quot;. This is where you keep all the Java classes such as servlets.</li>
+<li>Create a dectory called &quot;<code>lib</code>&quot; under &quot;<code>WEB-INF</code>&quot;. This is where you keep the jar files and native libraries.</li>
+<li>Optionally, create a directory called &quot;<code>src</code>&quot; under &quot;<code>WEB-INF</code>&quot;, for keeping the source files.</li>
+</ul>
+
+<img class="image-left" src="images/TomcatWebappDirectories.png" />
+
+
+<p><strong>Write your Application's Web Configuration File</strong> called &quot;<code>web.xml</code>&quot; and place it under your application's &quot;<code>WEB-INF</code>&quot; directory.</p>
+<p>The complete specification for &quot;<code>web.xml</code>&quot; can be found in the &quot;Java Servlet Specification&quot; (@ <a href="http://java.sun.com/products/servlet">http://java.sun.com/products/servlet</a>), under &quot;Deployment Descriptor&quot;.</p>
+<p>Suppose that you wish to deploy two servlets: <code>TestServlet.class</code> and <code>QueryServlet.class</code> (that have to be kept under your application's &quot;<code>WEB-INF\classes</code>&quot; directory):</p>
+<pre class="code-listing">&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+&lt;!DOCTYPE web-app 
+    PUBLIC &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot; 
+    &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot;&gt;
+   
+&lt;web-app&gt;
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;<span class="code-comment">Test</span>&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;<span class="code-comment">TestServlet</span>&lt;/servlet-class&gt;
+  &lt;/servlet&gt;
+   
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;<span class="code-comment">Query</span>&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;<span class="code-comment">QueryServlet</span>&lt;/servlet-class&gt;
+  &lt;/servlet&gt;
+   
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;<span class="code-comment">Test</span>&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;<span class="code-comment">/Echo</span>&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+   
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;<span class="code-comment">Query</span>&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;<span class="code-comment">/Query</span>&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+   
+  &lt;session-config&gt;
+    &lt;session-timeout&gt;30&lt;/session-timeout&gt;    &lt;!-- 30 minutes --&gt;
+  &lt;/session-config&gt;
+&lt;/web-app&gt;</pre>
+<p>Explanation:</p>
+
+<ul>
+<li>Each servlet requires two configuration elements. A <code>&lt;servlet&gt;</code> to specify the <code>servlet-name</code> and the <code>servlet-class</code>, and a <code>&lt;servlet-mapping&gt;</code> to specify the <em>URL Path</em> for that particular <code>servlet-name</code>. In the above example, the <code>TestServlet</code> can be referenced via URL <code>http://<em>host</em>:<em>port</em>/<em>context-path</em><strong>/Echo</strong></code>, and the <code>QueryServlet</code> via URL <code>http://<em>host</em>:<em>port</em>/<em>context-path</em><strong>/Query</strong></code>.</li>
+<li>You have to list ALL the <code>&lt;servlet&gt;</code> elements first, followed by <code>&lt;servlet-mapping&gt;</code> elements.</li>
+</ul>
+
+<h4>Changing the default &quot;webapps&quot; directory</h4>
+<p>The <em>default</em> directory for deploying web applications is <code>$CATALINA_HOME\webapps</code>. You could change the default by modifying the configuration file <code>&quot;conf\server.xml&quot;</code> <code>&lt;host&gt;</code> tag's &quot;<code>appBase</code>&quot; attribute as follows:</p>
+<pre class="code-listing">
+&lt;Host name=&quot;localhost&quot;  <strong>appBase=&quot;webapps&quot;
+</strong>      unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;
+      xmlValidation=&quot;false&quot; xmlNamespaceAware=&quot;false&quot;&gt;
+   ......
+&lt;/host&gt;</pre>
+
+<h3><strong>Directory Listing</strong></h3>
+
+<p>Enable directory listing is handy for test server but not desire for production server.  To enable directory listing for all the web applications, modify the <code>$CATALINA_HOME\conf\web.xml</code>, by changing the &quot;<code>listings</code>&quot; to &quot;<code>true</code>&quot;, as follows:</p>
+<pre class="code-listing">&lt;!-- The default servlet for all web applications, that serves static     --&gt;
+&lt;!-- resources.  It processes all requests that are not mapped to other   --&gt;
+&lt;!-- servlets with servlet mappings.                                      --&gt;
+
+&lt;servlet&gt;
+  &lt;servlet-name&gt;<span class="code-comment">default</span>&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.apache.catalina.servlets.<span class="code-comment">DefaultServlet</span>&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;debug&lt;/param-name&gt;
+    &lt;param-value&gt;0&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;<span class="code-comment">listings</span>&lt;/param-name&gt;
+    &lt;param-value&gt;<span class="code-comment">true</span>&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+    
+&lt;!-- The mapping for the default servlet --&gt;
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;<span class="code-comment">default</span>&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;<span class="code-comment">/</span>&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+
+<p>Explanation: When a user reference the URL-path &quot;<code>/</code>&quot; (i.e., <code>http://<em>host</em>:<em>port</em>/<em>context-path</em><strong>/</strong></code>), the <code>DefaultServlet</code> will be invoked to show the directory listing.</p>
+
+<p>If you wish to allow directory listing of this web application only, you could disable the directory listing in &quot;<code>$CATALINA_HOME\conf\web.xml</code>&quot; globally, and define the following <code>&lt;servlet&gt;</code> and <code>&lt;servlet-mapping&gt;</code> in your application's &quot;<code>WEB-INF\web.xml</code>&quot;, as follows. You need to use another <code>servlet-name</code> for the <code>DefaultServlet</code>.</p>
+
+<pre class="code-listing">&lt;servlet&gt;
+  &lt;servlet-name&gt;<span class="code-comment">DirectoryListing</span>&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.apache.catalina.servlets.DefaultServlet&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;debug&lt;/param-name&gt;
+    &lt;param-value&gt;0&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;<span class="code-comment">listings</span>&lt;/param-name&gt;
+    &lt;param-value&gt;<span class="code-comment">true</span>&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/servlet&gt;
+   
+&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;<span class="code-comment">DirectoryListing</span>&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;<span class="code-comment">/</span>&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+
+<h3>Deploying a Web Application in a WAR file</h3>
+<p>You could use the JDK's <code>jar</code> utiltiy to &quot;zip&quot; up all the files of a web application to produce a so-called WAR (Web Application Archive) file for deployment, or distribution.</p>
+<pre class="code-command">
+.... Change current directory to the web application's context root
+&gt; <strong>jar cvf test.war .</strong></pre>
+
+<p>Drop the <code>test.war</code> into <code>$CATALINA_HOME\webapps</code>. A context called <code>test</code> will be created automatically. You can access the web application via URL <code>http://<em>host</em>:<em>port</em>/<strong>test</strong></code>.</p>
+<p>(Tomcat actually unpacks the <code>test.war</code> into a <code>test</code> directory in <code>$CATALINA_HOME\webapps</code>.)</p>
+<h3><strong>Automatic Servlet Reload</strong></h3>
+
+<p>To enable automatic servlet reload, you need to specify <code>&lt;Context <strong>reloadable=&quot;true&quot;</strong>&gt;...&lt;/Context&gt;</code> (either in &quot;<code>$CATALINA_HOME\conf\context.xml</code>&quot; or &quot;<code>$CATALINA_HOME\conf\server.xml</code>&quot;).</p>
+
+<p>The following messages appear on the Tomcat's console if you re-compile your servlet:</p>
+<pre class="code-output">XXX X, XXXX XX:XX:XX XX org.apache.catalina.core.StandardContext reload
+INFO: Reloading this Context has started</pre>
+
+
+
+
+<h3>Tomcat's Startup Script</h3>
+<p>To start tomcat server, you could invoke the batch file &quot;<code>startup.bat</code>&quot; (in directory &quot;<code>$CATALINA_HOME\bin</code>&quot;, where <code>CATALINA_HOME</code> refers to the Tomcat installed directory). The &quot;<code>startup.bat</code>&quot; invokes &quot;<code>catalina.bat start</code>&quot;.</p>
+<p>Alternatively, you could call the &quot;<code>catalina.bat</code>&quot; directly, which provides more options of starting Tomcat. Enter &quot;<code>catalina</code>&quot; to view the options:</p>
+
+<pre class="code-command">
+&gt; <strong>catalina</strong>
+Using CATALINA_BASE:   D:\bin\tomcat6.0.16
+Using CATALINA_HOME:   D:\bin\tomcat6.0.16
+Using CATALINA_TMPDIR: D:\bin\tomcat6.0.16\temp
+Using JRE_HOME:        d:\bin\jdk1.6
+Usage:  catalina ( commands ... )
+commands:
+  debug             Start Catalina in a debugger
+  debug -security   Debug Catalina with a security manager
+  jpda start        Start Catalina under JPDA debugger
+  run               Start Catalina in the current window
+  run -security     Start in the current window with security manager
+  <strong>start             Start Catalina in a separate window</strong>
+  start -security   Start in a separate window with security manager
+  stop              Stop Catalina
+  version           What version of tomcat are you running?</pre>
+
+<p>Study the source codes of &quot;<code>Tomcat.bat</code>&quot; and &quot;<code>catalina.bat</code>&quot;, if interested. Read <a href="CMD_HowTo.html">&quot;Command Shell - How to&quot;</a> about the syntax of batch files. At times, I need to use these files (comment-out the &quot;<code>ECHO OFF</code>&quot;) to debug Tomcat's startup problems.</p>
+
+<h3>Running Tomcat as a Windows Service</h3>
+<p>In a production environment, it is more convenient to run Tomcat as a &quot;service&quot;, so that it can start automatically whenever the system is started (or re-start automatically after an unexpected interruption).</p>
+<p>To install Tomcat as a service, start a <code>CMD</code> shell (with administrator right) and run:</p>
+<pre class="code-command"><span class="code-comment">... Change directory to $CATALINA_HOME\bin ...</span>
+$CATALINA_HOME\bin&gt; <strong>service install</strong>
+Installing the service 'Tomcat6' ...
+Using CATALINA_HOME:    d:\tomcat-6.0.20
+Using CATALINA_BASE:    d:\tomcat-6.0.20
+Using JAVA_HOME:        d:\jdk1.6
+Using JVM:              d:\jdk1.6\jre\bin\server\jvm.dll
+The service 'Tomcat6' has been installed.</pre>
+
+<p>The Tomcat service called &quot;Apache Tomcat 6&quot; is installed and will  start automatically whenever the system is started. Check the &quot;Services&quot; under &quot;Control Panel&quot; &rArr; &quot;Administrative Tools&quot;.</p>
+
+<p>A GUI application called <code>Tomcat6w</code> is available for monitoring and configuring Tomcat services. Read &quot;Windows service HOW-TO&quot; under the Tomcat documentation ($CATALINA_HOME\webapps\docs\windows-service-howto.html).  Try running the <code>Tomcat6w</code>.</p>
+<pre class="code-command">$CATALINA_HOME\bin&gt; tomcat6w
+</pre>
+
+<p>You could put the Tomcat icon in the system tray via the MS (Monitor Service) option:</p>
+<pre class="code-command">$CATALINA_HOME\bin&gt; tomcat6w //MS//
+</pre>
+
+<p> You can start/stop the Tomcat service now via (a) <code>Tomcat6w</code>; (b) &quot;Control Panel&quot; &rArr; &quot;Administrator Tools&quot; &rArr; &quot;Services&quot; &rArr; &quot;Apache Tomcat 6&quot; &rArr; &quot;Start&quot;; or (c) issue the following command from a <code>CMD</code> shell:</p>
+<pre class="code-command">&gt; <strong>net start tomcat6</strong>
+The Apache Tomcat 6 service is starting..
+The Apache Tomcat 6 service was started successfully.
+......
+......
+&gt; <strong>net stop <strong>tomcat6</strong></strong>
+The Apache Tomcat 6 service is stopping..
+The Apache Tomcat 6 service was stopped successfully.</pre>
+
+<p>To uninstall Tomcat Service, use <code>Tomcat6w</code> or issue the following command:</p>
+<pre class="code-command">$CATALINA_HOME\bin&gt; <strong>service remove</strong>
+The service 'Tomcat6' has been removed</pre>
+
+<p>A flip side of running Tomcat as a service is you need to read the error messages from <code>$CATALINA_HOME\logs</code> instead of the Tomcat console.</p>
+
+<p>&nbsp;</p>
+
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+  <li>Tomcat mother site @ <a href="http://tomcat.apache.org/">http://tomcat.apache.org</a></li>
+  <li>Tomcat Documentation @ &quot;<code>$CATALINA_HOME\webapps\docs</code>&quot;.</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: Tomcat 6.0.29<br />
+Last modified: August 30, 2010</p>
+
+</div>  
+<!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+
+</div>  <!-- End the container division -->
+
+</body>
+</html>

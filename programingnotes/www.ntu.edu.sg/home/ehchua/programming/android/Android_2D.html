@@ -1,0 +1,660 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Android Custom 2D Graphics &amp; Games Programming</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Android Programming</h1>
+<h2>Custom 2D Graphics and Games</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Custom 2D Graphics</h3>
+
+<p>Android support 2D graphics via its own  library in packages <code>android.graphics.drawable</code> and <code>android.view.animation</code>. Take note that Android does not support JDK's AWT and Swing.</p>
+<p>[TODO] more</p>
+
+<h3>Example 1: Bouncing Ball</h3>  
+
+<p>Let us illustrate custom 2D graphics with the classical bouncing ball.</p>
+
+<h4>Example 1a: Simple Bouncing Ball</h4>
+
+<img class="image-float-right" src="images/G2D_BouncingBall.png" width="250"/>
+
+<p>Create a project called &quot;<code>BouncingBall</code>&quot;, with application name of &quot;<code>Bouncing Ball</code>&quot; and  package &quot;<code>com.example.bouncingball</code>&quot;. Create a  main activity called &quot;<code><code></code>MainActivity</code>&quot;, with layout &quot;<code>activity_main</code>&quot;.</p>
+
+<h5><span class="font-code">MainActivity.java</span></h5>
+
+<pre class="color-example">
+package com.example.bouncingball;
+  
+import android.app.Activity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+  
+public class <span class="color-new">MainActivity extends Activity</span> {
+   <span class="color-comment">/** Called when the activity is first created. */</span>
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      <span class="color-new">View bouncingBallView = new BouncingBallView(this);
+      setContentView(bouncingBallView);
+      bouncingBallView.setBackgroundColor(Color.BLACK);</span>
+   }
+}</pre>
+
+<h5>Dissecting <span class="font-code">MainActivity.java</span></h5>
+
+<p>In method <code>onCreate()</code>, we construct an instance of our own custom <code>View</code> (called <code>BouncingBallView</code> to be written next), and set it as the content-view of the <code>MainActivity</code>.</p>
+
+<h5><span class="font-code">BouncingBallView.java</span></h5>
+
+<p>Create a new Java class for <code>BouncingBallView.java</code>:</p>
+<pre class="color-example">
+package com.example.bouncingball;
+  
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.view.View;
+   
+public class <span class="color-new">BouncingBallView extends View</span> {
+   private int xMin = 0;          <span class="color-comment">// This view's bounds</span>
+   private int xMax;
+   private int yMin = 0;
+   private int yMax;
+   private float ballRadius = 80; <span class="color-comment">// Ball's radius</span>
+   private float ballX = ballRadius + 20;  <span class="color-comment">// Ball's center (x,y)</span>
+   private float ballY = ballRadius + 40;
+   private float ballSpeedX = 5;  <span class="color-comment">// Ball's speed (x,y)</span>
+   private float ballSpeedY = 3;
+   private RectF ballBounds;      <span class="color-comment">// Needed for Canvas.drawOval</span>
+   private Paint paint;           <span class="color-comment">// The paint (e.g. style, color) used for drawing</span>
+   
+   <span class="color-comment">// Constructor</span>
+   public BouncingBallView(Context context) {
+      super(context);
+      ballBounds = new RectF();
+      paint = new Paint();
+   }
+  
+   <span class="color-comment">// Called back to draw the view. Also called by invalidate().</span>
+   @Override
+   protected void <span class="color-new">onDraw</span>(Canvas canvas) {
+      <span class="color-comment">// Draw the ball</span>
+      ballBounds.set(ballX-ballRadius, ballY-ballRadius, ballX+ballRadius, ballY+ballRadius);
+      paint.setColor(Color.GREEN);
+      canvas.drawOval(ballBounds, paint);
+        
+      <span class="color-comment">// Update the position of the ball, including collision detection and reaction.</span>
+      <span class="color-new">update</span>();
+  
+      <span class="color-comment">// Delay</span>
+      try {  
+         Thread.sleep(30);  
+      } catch (InterruptedException e) { }
+      
+      <span class="color-new">invalidate</span>();  <span class="color-comment">// Force a re-draw</span>
+   }
+   
+   <span class="color-comment">// Detect collision and update the position of the ball.</span>
+   private void update() {
+      <span class="color-comment">// Get new (x,y) position</span>
+      ballX += ballSpeedX;
+      ballY += ballSpeedY;
+      <span class="color-comment">// Detect collision and react</span>
+      if (ballX + ballRadius &gt; xMax) {
+         ballSpeedX = -ballSpeedX;
+         ballX = xMax-ballRadius;
+      } else if (ballX - ballRadius &lt; xMin) {
+         ballSpeedX = -ballSpeedX;
+         ballX = xMin+ballRadius;
+      }
+      if (ballY + ballRadius &gt; yMax) {
+         ballSpeedY = -ballSpeedY;
+         ballY = yMax - ballRadius;
+      } else if (ballY - ballRadius &lt; yMin) {
+         ballSpeedY = -ballSpeedY;
+         ballY = yMin + ballRadius;
+      }
+   }
+   
+   <span class="color-comment">// Called back when the view is first created or its size changes.</span>
+   @Override
+   public void onSizeChanged(int w, int h, int oldW, int oldH) {
+      <span class="color-comment">// Set the movement bounds for the ball</span>
+      xMax = w-1;
+      yMax = h-1;
+   }
+}</pre>
+
+<h5>Dissecting <span class="font-code">BouncingBallView.java</span></h5>
+
+<p>To perform custom drawing, we create our own custom <code>View</code> class (called <code>BouncingBallView</code>) by extending the <code>android.view.View</code> base class, and override the <code>onDraw()</code> method to program custom rendering.</p>
+
+<p>We first declare variables to keep track of the bounding box (<code>xMin</code>, <code>xMax</code>, <code>yMin</code>, <code>yMax</code>) and the ball (x, y position, speed and radius).</p>
+
+<p>In the overridden <code>onDraw()</code>, we use <code>Canvas</code>'s <code>drawOval(RectF bounds, Paint paint)</code> to draw a circle (for the ball). The <code>drawOval()</code> method takes two arguments - a <code>RectF</code> (rectangle in float) object which specifies the bounds of the circle, and a <code>Paint</code> object carrying the paint properties such as the color and the style. For the <code>RectF</code> object, we use <code>RectF</code>'s <code>set(float left, float top, float right, float bottom)</code> to specify its bounds with the current ball's position. For the <code>Paint</code> object, we construct an instance with default settings, and set the drawing color via <code>Paint</code>'s <code>setColor()</code>. We then call the <code>update()</code> helper method to update the position of the ball, considering possible collision with the bounding box. After a small delay (via <code>Thread.sleep()</code> to suspend the current thread), we invoke <code>View</code>'s <code>invalidate()</code> to inform the Android graphics sub-system to re-draw the view.</p>
+
+<p>In the <code>update()</code> helper method, we move the ball in the x and y directions according to its speeds. We then check for possible collision with the bounding box. If collision occurs, we adjust the position and speed of the ball accordingly.</p>
+
+<p>We also override the <code>onSizeChanged(int w, int h, int oldW, int oldH)</code> method, which is called back when the <code>View</code> is first displayed and whenever the <code>View</code>'s size changes. We set the bounding box width and height according to the <code>View</code>'s weight and height. Try Ctrl-F11 to change the screen orientation.</p>
+
+<h4>Example 1b: Bouncing Ball with a Status Message</h4>
+
+<p>Let's us include a status message to display the ball's center (x,y) and speed in the form of &quot;<code>Ball@(x,y),Speed=(x,y)</code>&quot;.</p>
+
+<h5><span class="font-code">BouncingBallView.java</span></h5>
+
+<p>Modify the <code>BouncingBallView.java</code> to include these codes:</p>
+  
+<pre class="color-example">
+import java.util.Formatter;
+import android.graphics.Typeface;
+......
+public class <span class="color-new">BouncingBallView extends View</span> {
+   ......
+   
+   <span class="color-comment">// Status message to show Ball's (x,y) position and speed.</span>
+   <span class="color-new">private StringBuilder statusMsg = new StringBuilder();
+   private Formatter formatter = new Formatter(statusMsg);</span>  <span class="color-comment">// Formatting the statusMsg</span>
+   
+   <span class="color-comment">// Constructor</span>
+   public BouncingBallView(Context context) {
+      super(context);
+      ballBounds = new RectF();
+      paint = new Paint();
+      <span class="color-comment">// Set the font face and size of drawing text</span>
+      <span class="color-new">paint.setTypeface(Typeface.MONOSPACE);
+      paint.setTextSize(16);</span>
+   }
+  
+   <span class="color-comment">// Called back to draw the view. Also called after invalidate().</span>
+   @Override
+   protected void onDraw(Canvas canvas) {
+      <span class="color-comment">// Draw the ball</span>
+      ballBounds.set(ballX-ballRadius, ballY-ballRadius, ballX+ballRadius, ballY+ballRadius);
+      paint.setColor(Color.GREEN);
+      canvas.drawOval(ballBounds, paint);
+      
+      <span class="color-comment">// Draw the status message</span>
+      <span class="color-new">paint.setColor(Color.CYAN);
+      canvas.drawText(statusMsg.toString(), 10, 30, paint);</span>
+      
+      <span class="color-comment">// Update the position of the ball, including collision detection and reaction.</span>
+      ......
+   }
+   
+   <span class="color-comment">// Detect collision and update the position of the ball.</span>
+   private void update() {
+      ......
+   
+      <span class="color-comment">// Build status message</span>
+      <span class="color-new">statusMsg.delete(0, statusMsg.length());</span>   <span class="color-comment">// Empty buffer</span>
+      <span class="color-new">formatter.format(&quot;Ball@(%3.0f,%3.0f),Speed=(%2.0f,%2.0f)&quot;, ballX, ballY,
+            ballSpeedX, ballSpeedY);</span>
+   }
+  
+   <span class="color-comment">// Called back when the view is first created or its size changes.</span>
+   @Override
+   public void onSizeChanged(int w, int h, int oldW, int oldH) { ...... }
+}</pre>
+
+<h5>Dissecting <span class="font-code">BouncingBallView.java</span></h5>
+
+<p>We allocate a <code>StringBuilder</code> as the buffer for our status message (which is more efficient than the immutable <code>String</code>). In the <code>onDraw()</code>, we use <code>Canvas</code>'s <code>drawText()</code> to draw the status message. We use <code>Paint</code>'s <code>setTypeFace()</code>, <code>setTextSize()</code> and <code>setColor()</code> to set the font face, size and color for the text.</p>
+<p>In <code>update()</code>, we write the ball's current position and speed to the status message.</p>
+
+<h4>Example 1c: Bouncing Ball - Handling Key Inputs</h4>
+
+<p>Let's modify our program to enable key-control. The keyboard can generate two main events:</p>
+
+<ol>
+<li>Key down: when a key is pressed down.</li>
+<li>Key up: when a key is lifted, which is always preceded by a key-down event.</li>
+</ol>
+
+<p>The <code>View</code> processes these events via the <code>onKeyUp()</code> an <code>onKeyDown()</code> event handlers:</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// In android.view.View
+// Called back when a key is pressed down/up</span>
+public boolean <strong>onKeyDown</strong> (int keyCode, KeyEvent event)
+public boolean <strong>onKeyUp</strong> (int keyCode, KeyEvent event)</pre>
+
+
+<p>We shall use the DPAD's left, right, up, down key to increase the speed in the respective direction; center key to halt the ball; keys <code>'A'</code> and <code>'Z'</code> to increase or decrease the radius of the ball.</p>
+<p>To enable DPAD for the emulator: Select a device with DPAD; or <em>clone</em> an existing device with DPAD by starting the &quot;AVD Manager&quot;  &rArr;  Select &quot;Device Definitions&quot; &rArr; Double-click to edit the device that you have chosen for your emulator &rArr; In &quot;Input&quot;, check &quot;DPAD&quot;.</p>
+
+<h5><span class="font-code">BouncingBallView.java</span></h5>
+<p>Modified as follows:</p>
+
+<pre class="color-example">
+......
+<span class="color-new">import android.view.KeyEvent;</span>
+......
+ 
+public class <span class="color-new">BouncingBallView extends View</span> {
+   ......
+   <span class="color-comment">// Constructor</span>
+   public BouncingBallView(Context context) {
+      ......
+      ......
+      <span class="color-comment">// To enable keypad on this View</span>
+      <span class="color-new">this.setFocusable(true);
+      this.requestFocus();</span>
+   }
+   ......
+   ......
+     
+   <span class="color-comment">// Key-up event handler</span>
+  <span class="color-new"> @Override
+   public boolean onKeyUp(int keyCode, KeyEvent event) {
+      switch (keyCode) {
+         case KeyEvent.KEYCODE_DPAD_RIGHT:</span> <span class="color-comment">// Increase rightward speed</span>
+            <span class="color-new">ballSpeedX++;
+            break;
+         case KeyEvent.KEYCODE_DPAD_LEFT:</span>  <span class="color-comment">// Increase leftward speed</span>
+            <span class="color-new">ballSpeedX--;
+            break;
+         case KeyEvent.KEYCODE_DPAD_UP:</span>    <span class="color-comment">// Increase upward speed</span>
+            <span class="color-new">ballSpeedY--;
+            break;
+         case KeyEvent.KEYCODE_DPAD_DOWN:</span>  <span class="color-comment">// Increase downward speed</span>
+            <span class="color-new">ballSpeedY++;
+            break;
+         case KeyEvent.KEYCODE_DPAD_CENTER:</span> <span class="color-comment">// Stop</span>
+            <span class="color-new">ballSpeedX = 0;
+            ballSpeedY = 0;
+            break;
+         case KeyEvent.KEYCODE_A:</span>    <span class="color-comment">// Zoom in</span>
+            <span class="color-comment">// Max radius is about 90% of half of the smaller dimension</span>
+            <span class="color-new">float maxRadius = (xMax &gt; yMax) ? yMax / 2 * 0.9f  : xMax / 2 * 0.9f;
+            if (ballRadius &lt; maxRadius) {
+               ballRadius *= 1.05;</span>   <span class="color-comment">// Increase radius by 5%</span>
+            <span class="color-new">}
+            break;
+         case KeyEvent.KEYCODE_Z:</span>    <span class="color-comment">// Zoom out</span>
+            <span class="color-new">if (ballRadius &gt; 20) {</span>   <span class="color-comment">// Minimum radius</span>
+               <span class="color-new">ballRadius *= 0.95;</span>   <span class="color-comment">// Decrease radius by 5%</span>
+            <span class="color-new">}
+            break;
+      }
+      return true;</span>  <span class="color-comment">// Event handled</span>
+   <span class="color-new">}</span>
+}</pre>
+
+<h5>Dissecting <span class="font-code">BouncingBallView.java</span></h5>
+
+<p>To process the key event, we  override the <code>onKeyUp()</code> or <code>onKeyDown()</code> methods of the <code>View</code> class. We adjust the ball's parameters based on the key inputs. Take note that to enable key inputs, we need to set the <code>View</code> to be focusable, and request for the focus.</p>
+  
+<h4>Example 1d: Bouncing Ball - Handling Touch Inputs</h4>
+
+<p>Let's modify our program to enable touch-control. The touch screen can generate events such as &quot;touch-down&quot;, &quot;touch-up&quot; and &quot;touch-drag&quot;.</p>
+
+<p>The <code>android.view.View</code> class processes these events via the <code>onTouchEvent()</code> event handlers:</p>
+
+<pre class="color-syntax">
+<span class="color-comment">// In android.view.View
+// Call back when screen is touched</span>
+public boolean <strong>onTouchEvent</strong> (MotionEvent event)</pre>
+
+<p>The <code>MotionEvent</code> contains these methods:</p>
+
+<ul>
+<li><code>getX()</code> and <code>getY()</code>, which return the x and y coordinates respectively.</li>
+<li><code>getAction()</code>, which returns the type of action in constant such as <code>ACTION_DOWN</code> (finger touches screen), <code>ACTION_MOVE</code> (fired continuously whenever the touched finger moves to a new coordinates), and <code>ACTION_UP</code> (touched finger lifts up).</li>
+</ul>
+
+<p>Alternatively, you can use <code>setOnTouchListener()</code> to register a listener object that implements the <code>OnTouchListener</code> interface and override the <code>onTouch()</code> method.</p>
+
+
+
+
+
+<p>We shall increase/decrease the speed according to the touch gradient.</p>
+
+<h5><span class="font-code">BouncingBallView.java</span></h5>
+
+<pre class="color-example">
+......
+import android.view.MotionEvent;
+......
+  
+public class <span class="color-new">BouncingBallView extends View</span> {
+   ......
+   
+   <span class="color-comment">// For touch inputs - previous touch (x, y)</span>
+   private float previousX;
+   private float previousY;
+   ......
+   
+   <span class="color-comment">// Constructor</span>
+   public BouncingBallView(Context context) {
+      .......
+      <span class="color-comment">// To enable touch mode</span>
+      <span class="color-new">this.setFocusableInTouchMode(true)</span>;
+   }
+   
+   <span class="color-comment">// Touch-input handler</span>
+   <span class="color-new">@Override
+   public boolean onTouchEvent(MotionEvent event) {
+      float currentX = event.getX();
+      float currentY = event.getY();
+      float deltaX, deltaY;
+      float scalingFactor = 5.0f / ((xMax &gt; yMax) ? yMax : xMax);
+      switch (event.getAction()) {
+         case MotionEvent.ACTION_MOVE:</span>
+            <span class="color-comment">// Modify rotational angles according to movement</span>
+            <span class="color-new">deltaX = currentX - previousX;
+            deltaY = currentY - previousY;
+            ballSpeedX += deltaX * scalingFactor;
+            ballSpeedY += deltaY * scalingFactor;
+      }</span>
+      <span class="color-comment">// Save current x, y</span>
+      <span class="color-new">previousX = currentX;
+      previousY = currentY;
+      return true;</span>  <span class="color-comment">// Event handled</span>
+   <span class="color-new">}</span>
+}</pre>
+
+<p>To enable and handle touch input, we override the <code>View.onTouchEvent()</code> to provide the touch-event handling codes. We need to invoke <code>View.setFocusableInTouchMode(true)</code> to enable touch inputs.</p>
+
+
+<h4>Example 1e: Bouncing Ball - Object-Oriented Design</h4>
+
+<p>Let's separate the ball, box and status message from the <code>View</code> to their own classes, as illustrated in the following class diagram:</p>
+
+<img class="image-center" src="images/G2D_BouncingBallClassDiagram.png"  />
+
+<h5><span class="font-code">Box.java</span></h5>
+
+<p>The <code>Box</code> class represents the rectangular bounding box. We maintain the bounds (<code>xMin</code>, <code>xMax</code>, <code>yMin</code>, and <code>yMax</code>) as <code>int</code> instance variables with package access. The <code>set()</code> method is to be used to set its bounds. <code>set()</code> takes four arguments: top-left x and y, width and height for safer operation. The <code>draw()</code> method render this shape via <code>Canvas.drawRect()</code>.</p>
+  <pre class="color-example">
+package com.example.bouncingball;
+  
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+  
+public class <strong>Box</strong> {
+   int xMin, xMax, yMin, yMax;
+   private Paint paint;  <span class="color-comment">// paint style and color</span>
+   private Rect bounds;
+   
+   public Box(int color) {
+      paint = new Paint();
+      paint.setColor(color);
+      bounds = new Rect();
+   }
+  
+   public void set(int x, int y, int width, int height) {
+      xMin = x;
+      xMax = x + width - 1;
+      yMin = y;
+      yMax = y + height - 1;
+      <span class="color-comment">// The box's bounds do not change unless the view's size changes</span>
+      bounds.set(xMin, yMin, xMax, yMax);
+   }
+   
+   public void draw(Canvas canvas) {
+      canvas.drawRect(bounds, paint);
+   }
+}</pre>
+
+<h5><span class="font-code">Ball.java</span></h5>
+
+<p>We keep the ball's center (x, y), speed and radius as instance variables with package access. We choose float for these variables as it may involve in mathematically operations. The method <code>moveWithCollisionDetection()</code> moves the ball (according to its speed), and adjusts the position and speed of the ball if collision occurs. The method <code>draw()</code> renders this shape via <code>Canvas.drawOval()</code> method.</p>
+  <pre class="color-example">
+package com.example.bouncingball;
+  
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+  
+public class <strong>Ball</strong> {
+   float radius = 80;      <span class="color-comment">// Ball's radius</span>
+   float x = radius + 20;  <span class="color-comment">// Ball's center (x,y)</span>
+   float y = radius + 40;
+   float speedX = 5;       <span class="color-comment">// Ball's speed (x,y)</span>
+   float speedY = 3;
+   private RectF bounds;   <span class="color-comment">// Needed for Canvas.drawOval</span>
+   private Paint paint;    <span class="color-comment">// The paint style, color used for drawing</span>
+   
+   <span class="color-comment">// Constructor</span>
+   public Ball(int color) {
+      bounds = new RectF();
+      paint = new Paint();
+      paint.setColor(color);
+   }
+  
+   public void moveWithCollisionDetection(Box box) {
+      <span class="color-comment">// Get new (x,y) position</span>
+      x += speedX;
+      y += speedY;
+      <span class="color-comment">// Detect collision and react </span>
+      if (x + radius &gt; box.xMax) {
+         speedX = -speedX;
+         x = box.xMax-radius;
+      } else if (x - radius &lt; box.xMin) {
+         speedX = -speedX;
+         x = box.xMin+radius;
+      }
+      if (y + radius &gt; box.yMax) {
+         speedY = -speedY;
+         y = box.yMax - radius;
+      } else if (y - radius &lt; box.yMin) {
+         speedY = -speedY;
+         y = box.yMin + radius;
+      }
+   }
+  
+   public void draw(Canvas canvas) {
+      bounds.set(x-radius, y-radius, x+radius, y+radius);
+      canvas.drawOval(bounds, paint);
+   }
+}</pre>
+
+<h5><span class="font-code">StatusMessage.java</span></h5>
+
+<p>The <code>StatusMessage</code> class maintains the message in a <code>StringBuilder</code> (for efficiency). It has a <code>update()</code> method, which takes the ball as argument, and update the ball's position and speed in the buffer. The <code>draw()</code> method renders the message via <code>Canvas.drawText()</code>.</p>
+  <pre class="color-example">
+package com.example.bouncingball;
+  
+import java.util.Formatter;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+ 
+public class <strong>StatusMessage</strong> {
+   <span class="color-comment">// Status message to show Ball's (x,y) position and speed.</span>
+   private StringBuilder statusMsg = new StringBuilder();
+   private Formatter formatter = new Formatter(statusMsg);
+   private Paint paint;
+   
+   <span class="color-comment">// Constructor</span>
+   public StatusMessage(int color) {
+      paint = new Paint();
+      <span class="color-comment">// Set the font face and size of drawing text</span>
+      paint.setTypeface(Typeface.MONOSPACE);
+      paint.setTextSize(16);
+      paint.setColor(color);
+   }
+  
+   public void update(Ball ball) {
+      <span class="color-comment">// Build status message</span>
+      statusMsg.delete(0, statusMsg.length());   // Empty buffer<br />      formatter.format(&quot;Ball@(%3.0f,%3.0f),Speed=(%2.0f,%2.0f)&quot;, ball.x, ball.y,<br />            ball.speedX, ball.speedY);<br />   }
+   
+   public void draw(Canvas canvas) {
+      canvas.drawText(statusMsg.toString(), 10, 30, paint);
+   }
+}</pre>
+
+<h5><span class="font-code">BouncingBallView.java</span></h5>
+
+<p>The <code>View</code> class is greatly simplified after removing the ball, box and status message. It contains only the overridden methods. It constructs a <code>Box</code>, a <code>Ball</code>, a <code>StatusMessage</code> in its constructor. In the <code>onDraw()</code>, it draws the ball, box, status message, perform the updates, and <code>invalidate()</code> the view to force a re-draw. The <code>onSizeChange()</code> sets up the <code>Box</code>'s bounds. The <code>onKeyUp()</code> process the key inputs and changes the <code>Ball</code>'s parameters such as speed and radius.</p>
+  <pre class="color-example">
+package com.example.bouncingball;
+  
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.view.KeyEvent;
+import android.view.View;
+  
+public class BouncingBallView extends View {
+   private Ball ball;
+   private Box box;
+   private StatusMessage statusMsg;
+   
+   <span class="color-comment">// For touch inputs - previous touch (x, y)</span>
+   private float previousX;
+   private float previousY;
+   
+   <span class="color-comment">// Constructor</span>
+   public BouncingBallView(Context context) {
+      super(context);
+      
+      box = new Box(0xff00003f);  <span class="color-comment">// ARGB</span>
+      ball = new Ball(Color.GREEN);
+      statusMsg = new StatusMessage(Color.CYAN);
+  
+      <span class="color-comment">// To enable keypad</span>
+      this.setFocusable(true);
+      this.requestFocus();
+      <span class="color-comment">// To enable touch mode</span>
+      this.setFocusableInTouchMode(true);
+   }
+  
+   <span class="color-comment">// Called back to draw the view. Also called after invalidate().</span>
+   @Override
+   protected void onDraw(Canvas canvas) {
+      <span class="color-comment">// Draw the components</span>
+      box.draw(canvas);
+      ball.draw(canvas);
+      statusMsg.draw(canvas);
+      
+      <span class="color-comment">// Update the position of the ball, including collision detection and reaction.</span>
+      ball.moveWithCollisionDetection(box);
+      statusMsg.update(ball);
+  
+      <span class="color-comment">// Delay</span>
+      try {  
+         Thread.sleep(30);  
+      } catch (InterruptedException e) { }
+      
+      invalidate();  <span class="color-comment">// Force a re-draw</span>
+   }
+   
+   <span class="color-comment">// Called back when the view is first created or its size changes.</span>
+   @Override
+   public void onSizeChanged(int w, int h, int oldW, int oldH) {
+      <span class="color-comment">// Set the movement bounds for the ball</span>
+      box.set(0, 0, w, h);
+   }
+  
+   <span class="color-comment">// Key-up event handler</span>
+   @Override
+   public boolean onKeyUp(int keyCode, KeyEvent event) {
+      switch (keyCode) {
+         case KeyEvent.KEYCODE_DPAD_RIGHT: <span class="color-comment">// Increase rightward speed</span>
+            ball.speedX++;
+            break;
+         case KeyEvent.KEYCODE_DPAD_LEFT:  <span class="color-comment">// Increase leftward speed</span>
+            ball.speedX--;
+            break;
+         case KeyEvent.KEYCODE_DPAD_UP:    <span class="color-comment">// Increase upward speed</span>
+            ball.speedY--;
+            break;
+         case KeyEvent.KEYCODE_DPAD_DOWN:  <span class="color-comment">// Increase downward speed</span>
+            ball.speedY++;
+            break;
+         case KeyEvent.KEYCODE_DPAD_CENTER: <span class="color-comment">// Stop</span>
+            ball.speedX = 0;
+            ball.speedY = 0;
+            break;
+         case KeyEvent.KEYCODE_A:    <span class="color-comment">// Zoom in</span>
+            <span class="color-comment">// Max radius is about 90% of half of the smaller dimension</span>
+            float maxRadius = (box.xMax &gt; box.yMax) ? box.yMax / 2 * 0.9f  : box.xMax / 2 * 0.9f;
+            if (ball.radius &lt; maxRadius) {
+               ball.radius *= 1.05;   <span class="color-comment">// Increase radius by 5%</span>
+            }
+            break;
+         case KeyEvent.KEYCODE_Z:    <span class="color-comment">// Zoom out</span>
+            if (ball.radius &gt; 20) {  <span class="color-comment">// Minimum radius</span>
+               ball.radius *= 0.95;  <span class="color-comment">// Decrease radius by 5%</span>
+            }
+            break;
+      }
+      return true;  <span class="color-comment">// Event handled</span>
+   }
+   
+   <span class="color-comment">// Touch-input handler</span>
+   @Override
+   public boolean onTouchEvent(MotionEvent event) {
+      float currentX = event.getX();
+      float currentY = event.getY();
+      float deltaX, deltaY;
+      float scalingFactor = 5.0f / ((box.xMax &gt; box.yMax) ? box.yMax : box.xMax);
+      switch (event.getAction()) {
+         case MotionEvent.ACTION_MOVE:
+            <span class="color-comment">// Modify rotational angles according to movement</span>
+            deltaX = currentX - previousX;
+            deltaY = currentY - previousY;
+            ball.speedX += deltaX * scalingFactor;
+            ball.speedY += deltaY * scalingFactor;
+      }
+      <span class="color-comment">// Save current x, y</span>
+      previousX = currentX;
+      previousY = currentY;
+      return true;  <span class="color-comment">// Event handled</span>
+   }
+}</pre>
+
+<h5><span class="font-code">MainActivity.java</span></h5>
+<p>No change.</p>
+
+<h4>Example 1f: A Refreshing Thread</h4>
+<p>[TODO]</p>
+
+
+<a class="references" href="../howto/References.html#android">REFERENCES &amp; RESOURCES</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Android SDK r15, Android 2.3, 3.2, 4.0, Eclipse 3.7.1<br />
+Last modified: November, 2011</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

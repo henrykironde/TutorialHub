@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>How to Set Up Apache/MySQL/PHP for Linux (LAMP), Windows (WAMP) and Mac (MAMP)</title>
+
+<!-- @@ start change in v1 -->
+<link rel="stylesheet" href="../css/programming_notes_v1.css">
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+<script src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Setting Up Apache/MySQL/PHP (AMP) for Linux, Windows and Mac</h1>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction</h3>
+
+<h5>LAMP/WAMP/MAMP Server</h5>
+
+<p>To develop PHP webapps, you need to setup Apache, MySQL and PHP, in a so called LAMP (Linux/Apache/MySQL/PHP), WAMP (Windows/Apache/MySQL/PHP), or MAMP (Mac OS X/Apache/MySQL/PHP) environment, for your operating platform.</p>
+
+<p>There are two ways of setting up LAMP/WAMP/MAMP:</p>
+<ol>
+<li>Install <em>individual</em> software components, i.e., Apache, MySQL and PHP.</li>
+<li>Install a <em>bundle</em> package, which includes all software components needed for developing PHP webapps.</li>
+</ol>
+
+<p>For beginners running on Windows/Mac, I certainly recommend the <em>bundle</em> approach for <em>simplicity</em> (although they might not bundled the latest releases). These are the bundles available:</p>
+
+<ul>
+<li>XAMPP @ <a href="https://www.apachefriends.org/index.html">https://www.apachefriends.org/index.html</a> (Cross-platform for Windows, Mac OS X and Linux).</li>
+<li>WampServer @ <a href="http://www.wampserver.com/en/">http://www.wampserver.com/en/</a> (for Windows only).</li>
+<li>Zend Server (@ <a href="http://files.zend.com/help/Zend-Server-Community-Edition/zend-server-community-edition.htm">http://files.zend.com/help/Zend-Server-Community-Edition/zend-server-community-edition.htm</a>) (Cross-platform for Windows, Mac OS X and Linux).</li>
+<li>Easy PHP (@ <a href="http://www.easyphp.org/">http://www.easyphp.org/</a>).</li>
+<li>Others.</li>
+</ul>
+
+<p>I shall describe how to install and setup some of these bundles in Section &quot;<a href="#AMPServer">LAMP/WAMP/MAMP Servers</a>&quot;.</p>
+
+<h5>Integrated Development Environment (IDE)</h5>
+
+<p>You also need to install an IDE, such as Eclipse PHP Development Tool (PDT). Read Section &quot;<a href="#eclipsePDT">How to install Eclipse PDT</a>&quot;.</p>
+<p>You need to setup these debugging tools and be familiar with:</p>
+
+<ul>
+<li>Server-side PHP debugging with xDebug, and</li>
+<li>Client-side JavaScript debugging with Firebug.</li>
+</ul>
+
+<p>Read Section &quot;<a href="#php_debug">Debugging PHP Webapps</a>&quot;.</p>
+
+<h5>Programming Languages</h5>
+
+<p>I shall assume that you have some basic knowledge on these programming languages. Otherwise, read the relevant sections.</p>
+
+<ol>
+<li>Database programming: SQL (or PostgreSQL). Read the &quot;<a href="../index.html#SQL">SQL Section</a>&quot;.</li>
+<li>Sever-side programming: PHP (or Python, or Perl). Read &quot;<a href="../index.html#php">PHP Section</a>&quot;</li>
+<li>Client-side programming: HTML, CSS and JavaScript. Read &quot;<a href="../index.html#Web">Client-side Programming: HTML/CSS/JavaScript Section</a>&quot;. In addition, BootStrap and jQuery for advanced programming.</li>
+</ol>
+
+<h5>(Not for Dummies) Version Control System</h5>
+
+<p>Set up a Version Control System, such as Git, for backup, version control and collaboration. Read &quot;<a href="../howto/Git_HowTo.html">How to setup and get started with Git</a>&quot;.</p>
+
+
+<h3 id="AMPServer">LAMP/WAMP/MAMP Server</h3>
+
+<p>In this section, I shall briefly describe how to install and customize some of the AMP bundles. To install individual components, read &quot;<a href="../howto/Apache_HowToInstall.html">How to install and get start with Apache</a>&quot;, &quot;<a href="../sql/MySQL_HowTo.html">How to install and get started with MySQL</a>&quot;.</p>
+
+<h4>XAMPP (For Windows/Mac OS X/Linux)</h4>
+
+<p>The XAMPP (stands for Cross-platform, Apache, MySQL, PHP and Perl @ <a href="https://www.apachefriends.org/index.html">https://www.apachefriends.org/index.html</a>) bundles Apache, MySQL, PHP and Perl, for Windows, Linux and Mac OS X. It also includes FileZilla FTP Server, Mercury Mail Server, and Tomcat Server; plus tools PhpMyAdmin, Webalizer, and Fake Sendmail.</p>
+
+<p>At the time of writing, XAMPP 1.8.3 bundles PHP 5.5.15, Apache 2.4.10, MySQL 5.6.20 and PhpMyAdmin 4.2.7.1.</p>
+
+<h5>Installing XAMPP on Windows</h5>
+
+<ol>
+<li><span class="line-heading">Download:</span> Goto XAMPP mother site at <a href="https://www.apachefriends.org/index.html">https://www.apachefriends.org/index.html</a> &rArr; Download the Windows package (e.g., <code>xampp-win32-1.8.3-5-VC11-installer.exe</code>).</li>
+
+<li><span class="line-heading">Install:</span> Simply run the downloaded Installer. Choose your installation directory. I shall assume that XAMPP is installed in &quot;<code>d:\xampp</code>&quot;, denoted as <code>&lt;XAMPP_HOME&gt;</code>, in this article.</li>
+</ol>
+
+<h5>Installing XAMPP on Mac OS X [@@To Check!!]</h5>
+
+<ol>
+<li><span class="line-heading">Download:</span> Goto XAMPP mother site at <a href="https://www.apachefriends.org/index.html">https://www.apachefriends.org/index.html</a> &rArr; Download the Mac OS X package (e.g., <code>.....</code>).</li>
+
+<li><span class="line-heading">Install:</span> Simply run the downloaded Installer. Choose your installation directory. I shall assume that XAMPP is installed in &quot;<code>......</code>&quot;, denoted as <code>&lt;XAMPP_HOME&gt;</code>, in this article.</li>
+</ol>
+
+<h5>Starting/Stopping XAMPP Servers</h5>
+
+<p>Launch the &quot;XAMPP Control Panel&quot; (&quot;<code>xampp-control.exe</code>&quot; for Windows, @@To Check ...... MAC OS X) under the XAMPP installed directory. A little icon appears in the Icon Tray. Right-click on the icon &rArr; &quot;Show/Hide&quot; to show the &quot;full&quot; Control Panel Window.</p>
+<p>The XAMPP Control Panel allows you to start/stop each of these servers: Apache HTTP Server, MySQL Database Server, FileZilla FTP Server, Mercury Mail Server, and Tomcat HTTP Server. You can also check their configurations (&quot;Config&quot;), logs (&quot;Logs&quot;) and launch the administrator tools such as PhpMyAdmin for MySQL (&quot;Admin&quot;).</p>
+
+<h5>Verifying the Apache/MySQL/PHP/Perl Installation</h5>
+
+<p>By default, a directory called &quot;<code>htdocs</code>&quot; was created under the XAMPP installed directory, which serves as the Apache's document root directory.</p>
+<p>To verify the installation, launch the XAMPP Control Panel. Start the Apache and MySQL servers by clicking the &quot;Start&quot; buttons.</p>
+<ul>
+<li>On your browser, issue &quot;<code>http://localhost</code>&quot; to get the welcome page. Select your language, which leads you to the XAMPP home page (under &quot;<code>htdocs/xampp</code>&quot;). You can now verify all the components by clicking on the info links on the left panel, e.g., <code>phpinfo()</code> for PHP, <code>perlinfo()</code> for Perl, PhpMyAdmin for MySQL.</li>
+<li>On your browser, issue &quot;<code>http://localhost/phpmyadmin</code>&quot; to access the MySQL via PhpMyAdmin. Select the &quot;Users&quot; tab. which reveals that no password is set for the superuser <code>root</code> and the anonymous user. (You can also click the &quot;Admin&quot; button under MySQL to launch PhpMyAdmin.)</li>
+</ul>
+
+<p>To shutdown XAMPP, stop all the services and press &quot;Quit&quot;.</p>
+
+
+<h5>Write a Hello-world PHP Script</h5>
+
+<p>By default, the Apache's document root directory is located at &quot;<code>&lt;XAMPP_HOME&gt;/htdocs</code>&quot;. Use a programming editor (such as notepad++  for Windows, or gedit for Ubuntu/Mac OS X) to write a simple PHP script called &quot;<code>hello.php</code>&quot; and save under the &quot;<code>htdocs</code>&quot; directory, as follows:</p>
+<pre class="color-example">
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;First PHP Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+<span class="color-new">&lt;?php
+echo '&lt;h1&gt;Hello, world!&lt;/h1&gt;';
+?&gt;
+</span>&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+<p>To run this PHP script, start a browser and issue URL <code>http://localhost/hello.php</code>, assuming that Apache server has been started.</p>
+
+<p><span class="line-heading">Another Example</span>: Write another PHP script called &quot;<code>phpinfo.php</code>&quot; (saved under &quot;<code>htdocs</code>&quot;) to display the PHP settings under Apache, as follows:</p>
+
+<pre class="color-example">
+&lt;?php
+phpinfo();
+?&gt;
+</pre>
+
+<p>Run the script by issuing URL &quot;<code>http://localhost/phpinfo.php</code>&quot;.</p>
+
+
+<h5>XAMPP Directory Structure</h5>
+
+<p>XAMPP is organized in the sub-directories. The important ones are:</p>
+
+<ul>
+  <li><span class="line-heading font-code">htdocs</span>: the default apache's document root directory.</li>
+  <li><span class="line-heading font-code">apache</span>, <span class="line-heading font-code">mysql</span>, <span class="line-heading font-code">FileZillaFTP</span>, <span class="line-heading font-code">MercuryMail</span>, <span class="line-heading font-code">tomcat</span>: for the server software.</li>
+  <li><span class="line-heading font-code">phpMyAdmin</span>: for the PhpMyAdmin tool.</li>
+  <li><span class="line-heading font-code">php</span>, <span class="line-heading font-code">perl</span>: for the languages.</li>
+</ul>
+
+<h5>Apache Configuration</h5>
+
+<p>The Apache's main configuration file &quot;<code>httpd.conf</code>&quot; is located at &quot;<code>&lt;XAMPP_HOME&gt;\apache\conf</code>&quot;. Take note of the following configuration directives:</p>
+
+<ul>
+<li>The <em>core</em> directives are:
+
+<pre class="color-syntax">
+ServerRoot &quot;&lt;XAMPP_HOME&gt;/apache&quot;
+Listen 80
+ServerName localhost:80
+DocumentRoot &quot;&lt;XAMPP_HOME&gt;/htdocs&quot;</pre>
+
+The <code>ServerRoot</code> specifies the apache's installed directory. <code>Listen</code> specifies the TCP port number for Apache web server, in this case, default of TCP port 80. The <code>DocumentRoot</code> specifies the root directory of the web server.</li>
+
+<li>The directives related to <em>directory authorization</em> are:
+
+<pre class="color-syntax">
+<span class="color-comment">#
+# Deny access to the entirety of your server's file system. You must
+# explicitly permit access to web content directories in other 
+# &lt;Directory&gt; blocks below.
+#</span>
+&lt;Directory /&gt;
+    AllowOverride none
+    Require all denied
+&lt;/Directory&gt;
+ 
+<span class="color-comment">#
+# DocumentRoot: The directory out of which you will serve your
+# documents. By default, all requests are taken from this directory, but
+# symbolic links and aliases may be used to point to other locations.
+#</span>
+DocumentRoot &quot;&lt;XAMPP_HOME&gt;/htdocs&quot;
+&lt;Directory &quot;&lt;XAMPP_HOME&gt;/htdocs&quot;&gt;
+    Options Indexes FollowSymLinks Includes ExecCGI
+    AllowOverride All
+    <span class="color-comment">#
+    # Controls who can get stuff from this server.
+    #</span>
+    Require all granted
+&lt;/Directory&gt;</pre>
+
+[TODO] Explanation</li>
+
+<li>The directives related to logging are:
+
+<pre class="color-syntax">
+ErrorLog &quot;logs/error.log&quot;
+CustomLog &quot;logs/access.log&quot; combined</pre>
+</li>
+
+</ul>
+
+
+<h5>PHP Configuration</h5>
+
+<p>The PHP's main configuration file &quot;<code>php.ini</code>&quot; is located from &quot;<code>&lt;XAMPP_HOME&gt;\php</code>&quot; (as revealed by <code>phpinfo()</code> output). </p>
+
+<p>[TODO] Explanation</p>
+
+<h5>MySQL Configuration</h5>
+
+<p>The MySQL's main configuration file &quot;<code>my.ini</code>&quot; is located at &quot;<code>&lt;XAMPP_HOME&gt;\mysql\bin</code>&quot;. Take note of the following settings:</p>
+
+<ul>
+<li>MySQL Server Daemon (<code>mysqld.exe</code>)
+
+<pre class="color-syntax">
+[mysqld]
+port = 3306
+socket = &quot;&lt;XAMPP_HOME&gt;/mysql/mysql.sock&quot;
+basedir = &quot;&lt;XAMPP_HOME&gt;/mysql&quot;
+tmpdir = &quot;&lt;XAMPP_HOME&gt;/tmp&quot;
+datadir = &quot;&lt;XAMPP_HOME&gt;/mysql/data&quot;
+pid_file = &quot;mysql.pid&quot;
+log_error = &quot;mysql_error.log&quot;</pre>
+
+The <code>port</code> specifies the TCP port number for the MySQL server (defaulted to 3306). The <code>basedir</code> specifies the MySQL installed directory. The <code>datadir</code> specifies the databases directory. The <code>log-error</code> specifies the MySQL error log file.</li>
+
+<li>MySQL Interactive Client (<code>mysql</code>)
+<pre class="color-syntax">
+[client]
+port = 3306
+socket = &quot;&lt;XAMPP_HOME&gt;/mysql/mysql.sock&quot;</pre></li>
+</ul>
+
+<h5>Customizing MySQL</h5>
+
+<p>The default MySQL installation creates a superuser called &quot;<code>root</code>&quot; without password. It also provides an anonymous user with no password. You need to</p>
+
+<ol>
+<li>Set a password for &quot;<code>root</code>&quot;.</li>
+<li>Remove the anonymous user.</li>
+<li>You should not use superuser &quot;<code>root</code>&quot; for normal daily operations. Instead, create a new user (says <code>xampppuser</code>) for operational use.</li>
+</ol>
+
+<p>There are a few ways to administer MySQL, via the graphical client &quot;PhpMyAdmin&quot;, or command-line client &quot;<code>mysql</code>&quot;.</p>
+<ul>
+<li>PhpMyAdmin: login to PhpMyAdmin via &quot;<code>http://localhost/phpmyadmin</code>&quot;. Click the &quot;Users&quot; tab &rArr; Set password for root (for all hosts) (Select &rArr; Edit Privilege &rArr; Change Password &rArr; GO &rArr; Refresh). Delete the anonymous user denoted as &quot;Any&quot; User (Select &rArr; Remove selected users  &rArr; GO). Create a new user called &quot;<code>xampppuser</code>&quot; by clicking the &quot;Add User&quot;. Grant all privileges to begin with.<br>
+Note: Once you set a password for root, you may need to modify the PHP configuration file in order to login with the new password. See &quot;<a href="#PhpMyAdminRootPassword">PhpMyAdmin PHP Configuration</a>&quot;.</li>
+
+<li>MySQL command-line client (&quot;<code>mysql.exe</code>&quot;): Read &quot;<a href="../sql/MySQL_HowTo.html#MySQL-install">How to setup MySQL</a>&quot;.</li>
+</ul>
+
+
+
+<h5>Start a new PHP Webapp</h5>
+
+<p>To start a new PHP webapp, create you working directory under &quot;<code>htdocs</code>&quot; (says  directory &quot;<code>hello</code>&quot;). You can launch your webapp via URL &quot;<code>http://localhost/hello</code>&quot;. Alternatively, you can use the &quot;<code>htdocs</code>&quot; directory, by removing all the existing contents. You can access the webapp via URL &quot;<code>http://localhost</code>&quot;.</p>
+
+<p>For Production, configure a virtual host (in Apache) for your project.</p>
+
+
+<h4>WampServer 2.5 (For Windows)</h4>
+
+<p>WampServer (@ <a href="http://www.wampserver.com/en/">http://www.wampserver.com/en/</a>) bundles Apache, MySQL and PHP for Winodws in a single package. It also includes tools such as PhpMyAdmin (a MySQL database administration tool), SQL Buddy (an alternative to PhpMyAdmin), XDebug (a PHP Debugging Tool), WebGrind (a PHP Profiling Tool).</p>
+
+<p>At the time of writing, WampServer 2.5 bundles Apache 2.4.9, MySQL 5.6.17, PHP 5.5.12, PhpMyAdmin 4.1.14, SqlBuddy 1.3.3 and XDbebug 2.2.5.</p>
+
+<h5>Installing WampServer</h5>
+
+<p>To Install WampServer:</p>
+
+<ol>
+<li><span class="line-heading">Download:</span> Goto WampServer mother site at <a href="http://www.wampserver.com/en/">http://www.wampserver.com/en</a> &rArr; Select &quot;DOWNLOADS&quot;  &rArr; Choose the appropriate package for your platform (32-bit or 64-bit)  &rArr; Download the installation file (e.g., <code>wampserver2.5-Apache-2.4.9-Mysql-5.6.17-php5.5.12-64b.exe</code>).</li>
+
+<li><span class="line-heading">Install:</span> To install the WampServer, simply run the downloaded installation file. Choose your installation directory. I shall assume that WampServer is installed in &quot;<code>d:\WampServer</code>&quot;, denoted as <code>&lt;WAMPSERVER_HOME&gt;</code>, in this article.</li>
+</ol>
+
+<h5>Starting/Stopping WampServer</h5>
+
+<p>To start the WampServer, choose &quot;Start WampServer&quot; from the &quot;Start&quot; menu; or run &quot;<code>wampmanager.exe</code>&quot; from the WampServer installed directory.</p>
+
+<p>An  little icon will appear on the icon tray. &quot;Green&quot; indicates that all the services have started; while &quot;Red&quot; indicates that all the services have stopped. Click on the icon to open the &quot;WampServer Control Panel&quot;. You could:</p>
+
+<ul>
+<li>Under &quot;Quick Admin&quot;: Start/Stop/Restart all the services (Apache &amp; MySQL services).</li>
+<li>Put the server online (so that user can access the server over the Internet) or offline.</li>
+<li>Configure Apache, MySQL and PHP, under their respective sections.</li>
+<li>Launch &quot;PhpMyAdmin&quot;.</li>
+<li>Others.</li>
+</ul>
+
+<p>To shutdown the program, click &quot;Stop All Services&quot; on WampServer Control Panel &rArr; right-click on the WampServer icon &rArr; Exit.</p>
+
+<h5>Verifying Apache/MySQL/PHP Installation</h5>
+
+<p>By default, a directory called &quot;<code>www</code>&quot; was created under the WampServer installed directory, which serves as the Apache's document root directory. A welcome page called &quot;<code>index.php</code>&quot; was also created in the &quot;<code>www</code>&quot; directory.</p>
+
+<p>To verify the installation:</p>
+
+<ol>
+<li>Start the WampServer. Wait for the icon to turn green indicating all services have started (otherwise, click the icon and select &quot;Start All Services&quot;).  For testing, put the server &quot;offline&quot; to disable external access (i.e., it can only be accessed in localhost).</li>
+
+<li>To verify Apache: Start a browser and issue URL <code>http://localhost</code>. This will in turn request for &quot;<code>index.php</code>&quot;. The index page provides links to documentations, aliases and tools. The installation creates these aliases for Apache: <code>phpmyadmin</code>, <code>sqlbuddy</code>, <code>phpsysinfo</code> for the respective services. You can issue URL <code>http://localhost/<em>alias-name</em></code> to access these services.</li>
+
+<li>To verify MySQL: Issue URL <code>http://localhost/phpmyadmin</code> to access the MySQL via PhpMyAdmin. Click on the &quot;Users&quot;, which reveals that no password was set for the superuser <code>root</code> and the anonymous user.</li>
+<li>To verify PHP: Issue URL <code>http://localhost/?phpinfo=1</code>, which runs the <code>phpinfo()</code> function.</li>
+</ol>
+
+<h5>Write a Hello-world PHP Script</h5>
+
+<p>Use a programming editor (such as notepad++ for Windows, or gedit for Ubuntu/Mac OS X) to write a simple PHP script called &quot;<code>hello.php</code>&quot; and save under the &quot;<code>www</code>&quot; directory, as follows:</p>
+<pre class="color-example">
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;First PHP Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+<span class="color-new">&lt;?php
+echo '&lt;h1&gt;Hello, world!&lt;/h1&gt;';
+?&gt;
+</span>&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>To run this script, start a browser and issue URL <code>http://localhost/hello.php</code>, assuming that the Apache server has been started.</p>
+
+<p><span class="line-heading">Another Example</span>: Write another PHP script called &quot;<code>phpinfo.php</code>&quot; (saved under &quot;<code>www</code>&quot;) to display the PHP settings under Apache, as follows:</p>
+
+<pre class="color-example">
+&lt;?php
+phpinfo();
+?&gt;
+</pre>
+
+<p>Run the script by issuing URL &quot;<code>http://localhost/phpinfo.php</code>&quot;.</p>
+
+<h5>WampServer Directory Structure</h5>
+
+<p>WampServer is organized in the following directory structure. The important ones are:</p>
+
+<ul>
+<li><span class="line-heading font-code">bin</span>: contains binaries for Apache, MySQL, and PHP, in their respectively sub-directory. For each component, you can install multiple versions and select one of them in operation.</li>
+<li><span class="line-heading font-code">apps</span>: contains server-side tools such as PhpMyAdmin, SQL Buddy, and WebGrind.</li>
+<li><span class="line-heading font-code">tools</span>: contains client-side tool such as xdc (XDebug Client).</li>
+<li><span class="line-heading font-code">www</span>: the default apache's document root directory.</li>
+<li><span class="line-heading font-code">logs</span>: contains apache, php, mysql error/access logs.</li>
+<li><span class="line-heading font-code">alias</span>: contains the the apache's alias configuration for PhpMyadmin, SQL Buddy and WebGrind.</li>
+</ul>
+
+<h5>Apache Configuration</h5>
+
+<p>The Apache's main configuration file &quot;<code>httpd.conf</code>&quot; is located at &quot;<code>&lt;WAMPSERVER_HOME&gt;\bin\apache\Apache2.<em>x</em>.<em>xx</em>\conf</code>&quot;. Take note of the following configuration directives.</p>
+
+<ul>
+<li>The <em>core</em> directives are:
+
+<pre class="color-syntax">
+ServerRoot &quot;&lt;WAMPSERVER_HOME&gt;/bin/apache/apache2.<em>x</em>.<em>xx</em>&quot;
+Listen 80
+ServerName localhost:80
+DocumentRoot &quot;&lt;WAMPSERVER_HOME&gt;/www/&quot;</pre>
+
+The <code>ServerRoot</code> specifies the apache's installed directory. <code>Listen</code> specifies the TCP port number for Apache web server, in this case, default of TCP port 80. The <code>DocumentRoot</code> specifies the root directory of the web server.</li>
+
+<li>The directives related to <em>directory authorization</em> are:
+
+<pre class="color-syntax">
+<span class="color-comment">#
+# Each directory to which Apache has access can be configured with respect
+# to which services and features are allowed and/or disabled in that
+# directory (and its sub-directories). 
+#
+# First, we configure the &quot;default&quot; to be a very restrictive set of 
+# features.  
+#
+</span>&lt;Directory /&gt;
+    Options FollowSymLinks
+    AllowOverride None
+    Order deny,allow
+    Deny from all
+&lt;/Directory&gt;
+<span class="color-comment">#
+# This should be changed to whatever you set DocumentRoot to.
+#</span>
+DocumentRoot &quot;&lt;WAMPSERVER_HOME&gt;/www/&quot;
+&lt;Directory &quot;&lt;WAMPSERVER_HOME&gt;/www/&quot;&gt;
+    Options Indexes FollowSymLinks
+    AllowOverride all
+<span class="color-comment"></span>    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+&lt;/Directory&gt;</pre>
+
+[TODO] Explanation</li>
+
+<li>The directives related to logging are:
+
+<pre class="color-syntax">
+ErrorLog &quot;&lt;WAMPSERVER_HOME&gt;/logs/apache_error.log&quot;
+CustomLog &quot;&lt;WAMPSERVER_HOME&gt;/logs/access.log&quot; common</pre></li>
+
+</ul>
+
+
+<h5>PHP Configuration</h5>
+
+<p>The PHP's main configuration for Apache2 &quot;<code>php.ini</code>&quot; is located at &quot;<code>&lt;WAMPSERVER_HOME&gt;\bin\apache\Apache2.<em>x</em>.<em>xx</em>\bin</code>&quot; (as revealed by <code>phpinfo()</code> output).</p>
+
+<p>[TODO] Explanation</p>
+
+<h5>MySQL Configuration</h5>
+
+<p>The MySQL's main configuration file &quot;<code>my.ini</code>&quot; is located at &quot;<code>&lt;WAMPSERVER_HOME&gt;\bin\mysql\mysql5.<em>x</em>.<em>xx</em></code>&quot;. Take note of the following settings:</p>
+
+<ul>
+<li>MySQL Server
+<pre class="color-syntax">
+[wampmysqld]
+port = 3306
+socket = /tmp/mysql.sock
+basedir=&lt;WAMPSERVER_HOME&gt;/bin/mysql/mysql5.x.xx
+log-error=&lt;WAMPSERVER_HOME&gt;/logs/mysql.log
+datadir=&lt;WAMPSERVER_HOME&gt;/bin/mysql/mysql5.x.xx/data</pre>
+
+The <code>port</code> specifies the TCP port number for the MySQL server (defaulted to 3306). The <code>basedir</code> specifies the MySQL installed directory. The <code>datadir</code> specifies the databases directory. The <code>log-error</code> specifies the MySQL error log file.</li>
+
+<li>MySQL Server Daemon (<code>mysqld.exe</code>)
+
+<pre class="color-syntax">
+[mysqld]
+port = 3306</pre></li>
+
+<li>MySQL Interactive Client (<code>mysql</code>)
+<pre class="color-syntax">
+[client]
+port = 3306</pre></li>
+</ul>
+
+<h5>Customizing MySQL</h5>
+
+<p>The default MySQL installation creates a superuser &quot;<code>root</code>&quot; without password. It also creates an anonymous user with no password. You need to:</p>
+
+<ol>
+<li>Set a password for &quot;<code>root</code>&quot;.</li>
+<li>Remove the anonymous user.</li>
+<li>You should not use superuser &quot;<code>root</code>&quot; for normal daily operations. Instead, create a new user (says <code>wampuser</code>) for operational use.</li>
+</ol>
+
+<p>There are many ways to administer MySQL, via the graphical client &quot;PhpMyAdmin&quot; or &quot;SQL Buddy&quot;; or command-line client &quot;<code>mysql.exe</code>&quot;.</p>
+<ul>
+<li>PhpMyAdmin: login to PhpMyAdmin via &quot;<code>http://localhost/phpmyadmin</code>&quot;. Click the &quot;Users&quot; tab &rArr; Set password for root (for all hosts) (Select &rArr; Edit Privilege &rArr; Change Password &rArr; GO  &rArr; Refresh). Delete the anonymous user denoted as &quot;Any&quot; User (Select &rArr; Remove selected users  &rArr; GO). Create a new user called &quot;<code>wampuser</code>&quot; by clicking the &quot;Add User&quot;. Grant all privileges to begin with.<br>
+Note: Once you set a password for root, you may need to modify the PHP configuration file in order to login with the new password. See &quot;<a href="#PhpMyAdminRootPassword">PhpMyAdmin PHP Configuration</a>&quot;.</li>
+  
+<li>SQL Buddy: login to SQL Buddy via &quot;<code>http://localhost/sqlBuddy</code>&quot;. Click &quot;Submit&quot; with empty password for &quot;root&quot;. Select &quot;Users&quot;. Set password for all root users of all hosts (Select &rArr; Edit). Remove the anonymous user (the row with empty user name) (Select &rArr; Delete). Create a new user called &quot;<code>wampuser</code>&quot; by filling in &quot;Add a New User&quot;. Grant all privileges except the &quot;Grant option&quot; to begin with.</li>
+<li>MySQL command-line client (&quot;<code>mysql.exe</code>&quot;): Read &quot;<a href="../sql/MySQL_HowTo.html#MySQL-install">How to setup MySQL</a>&quot;.</li>
+</ul>
+
+<h5>Start a new PHP Webapp</h5>
+
+<p>To start a new PHP webapp, create you <em>working directory</em> under &quot;<code>www</code>&quot; (says  directory &quot;<code>hello</code>&quot;). You can launch your webapp via URL &quot;<code>http://localhost/hello</code>&quot;. Alternatively, you can use the &quot;<code>www</code>&quot; directory, by removing all the existing contents. You can access the webapp via URL &quot;<code>http://localhost</code>&quot;.</p>
+<p>For Production, configure a virtual host (in Apache) for your project.</p>
+
+
+<h4>LAMP Server (For Ubuntu)</h4>
+
+<p>Read the various sections in &quot;<a href="../howto/Ubuntu_HowTo.html">How to Install and Setup Ubuntu</a>&quot;. For example,</p>
+<ol>
+  <li>Install Ubuntu: Read &quot;<a href="../howto/Ubuntu_HowTo.html#ubuntu-install">How to install Ubuntu Desktop</a>&quot;.</li>
+  <li>Install LAMP Server: Read &quot;<a href="../howto/howto/Ubuntu_HowTo.html#lamp">How to install LAMP Server for Ubuntu</a>&quot;.</li>
+  <li>Install PHPMyAdmin: Read &quot;<a href="../howto/howto/Ubuntu_HowTo.html#PHPMyAdmin">How to install PHPMyAdmin for Ubuntu</a>&quot;.</li>
+  <li>Others.</li>
+</ol>
+
+<h3 id="eclipsePDT">Eclipse PDT (PHP Developer Tool)</h3>
+
+<p>Eclipse PDT (@ <a href="http://www.eclipse.org/pdt/">http://www.eclipse.org/pdt</a>) is an IDE for PHP webapp development. The main advantage is it can debug PHP Server-side scripts with XDebug or Zend Debugger.</p>
+
+<p>Alternative PHP IDEs are: NetBeans (@ <a href="http://www.netbeans.org">http://www.netbeans.org</a>), PHPEclipse (@ <a href="http://www.phpeclipse.com">http://www.phpeclipse.com</a>).</p>
+
+<h5>Install Eclipse PDT</h5>
+
+<ul>
+<li>If you have never installed any Eclipse package, goto Eclipse mother site @ <a href="http://www.eclipse.org/">http://www.eclipse.org</a> &rArr; Downloads  &rArr; Select &quot;Eclipse for PHP Developers&quot;:
+
+<ul>
+<li>For Windows: Download the ZIP file (32-bit or 64-bit). Unzip the downloaded file in a directory of your choice.</li>
+<li>For Mac OS X: Read &quot;<a href="../howto/MacUsers_HowTo.html#eclipse">How to Install Eclipse on Mac</a>&quot;.</li>
+<li>For Ubuntu: Read &quot;<a href="../howto/Ubuntu_HowTo.html#ubuntu-eclipse">How to Install Eclipse on Ubuntu</a>&quot;.</li>
+</ul></li>
+
+<li>If you have installed an Eclipse package (such as Eclipse IDE for Java Developers), you can add the PDT plugin by:
+<ol>
+<li>Launched Eclipse &rArr; Select menu &quot;Help&quot; &rArr; &quot;Install New Software&quot;.</li>
+<li>The &quot;Install&quot; dialog appears. In &quot;Work with&quot; field, pull down the drop-down menu and select &quot;Luna - http://download.eclipse.org/releases/luna&quot; (or Kepler for Eclipse 4.3; or Juno for Eclipse 4.2; or helios for Eclipse 3.7).</li>
+<li> In the &quot;Name&quot; box, expand &quot;Programming Language&quot; node  &rArr; Check &quot;PHP Development Tools (PDT)&quot; &rArr; &quot;Next&quot; &rArr; Accept the license &rArr; &quot;Finish&quot;.</li>
+</ol></li>
+</ul>
+
+<h5>Configure Eclipse PDT</h5>
+
+<p>Launch Eclipse (run &quot;eclipse.exe&quot; from the Eclipse installed directory)  &rArr; Select menu &quot;Window&quot;  &rArr; &quot;Preferences&quot;  &rArr; Expand &quot;PHP&quot; node:</p>
+
+<ol>
+<li>Select &quot;PHP Servers&quot;  &rArr; Check that there is an entry with &quot;Name&quot; of &quot;Default PHP Server&quot; and &quot;URL&quot; of &quot;http://localhost&quot;   &rArr; Select the entry   &rArr; Edit   &rArr; Select &quot;Server&quot; tab   &rArr; In &quot;Debugger&quot;: Select &quot;XDebug&quot;.</li>
+
+<li>Select &quot;PHP Executable&quot;  &rArr; &quot;Add&quot;:
+
+  <ul>
+<li>In &quot;Name&quot;, Enter a name, e.g. &quot;WampServer&quot; or &quot;XAMPP&quot;.</li>
+<li>In &quot;Executable Path&quot;, enter the location of PHP executable &quot;<code>php.exe</code>&quot; (e.g., &quot;<code>&lt;WAMPSERVER_HOME&gt;\bin\php\php5.<em>x</em>.<em>x</em>\php.exe</code>&quot; for WampServer,  &quot;<code>&lt;XAMPP_HOME&gt;\php\php.exe</code>&quot; for XAMPP (Windows)).</li>
+<li>In &quot;PHP ini file&quot;, enter the php configuration file used by the Apache (e.g., &quot;<code>&lt;WAMPSERVER_HOME&gt;\bin\apache\Apache2.2.<em>xx</em>\bin\php.ini</code>&quot; for WampServer. &quot;<code>&lt;XAMPP_HOME&gt;\php\php.ini</code>&quot; for XAMPP (Windows)).</li>
+<li>In &quot;SAPI Type&quot;, select &quot;CGI&quot;.</li>
+<li>In &quot;PHP Debugger&quot;, select &quot;XDebug&quot; (which is bundled in WampServer and XAMPP).</li>
+</ul></li>
+
+<li>Select &quot;Debug&quot;:
+<ul>
+<li>In &quot;PHP Debugger&quot;, select &quot;XDebug&quot;.</li>
+<li>In &quot;Server&quot;, select &quot;Default PHP Server&quot;.</li>
+<li>In &quot;PHP Executable&quot;, select the PHP Executable configured in the previous step (i.e., &quot;WampServer&quot; or &quot;XAMPP&quot;).</li>
+</ul></li>
+
+
+<li>Select &quot;PHP Manual&quot;  &rArr; Check that there is an entry with &quot;Site Name&quot; of &quot;<code>php.net</code>&quot; with &quot;URL&quot; of &quot;<code>http://www.php.net/manual/en</code>&quot;.</li>
+
+<li>Browse through the other settings for PHP.</li>
+</ol>
+
+<h5>Writing a Hello-world PHP program in Eclipse PDT</h5>
+
+<ol>
+<li>Launch Eclipse. Choose a workspace.</li>
+
+<li>Create a new PHP project: &quot;File&quot;  &rArr; New  &rArr; PHP Project (or &quot;Project...&quot;  &rArr; PHP   &rArr; PHP Project).
+  <ul>
+<li>In &quot;Project Name&quot;, enter a name for the project, e.g., &quot;<code>hello</code>&quot;.</li>
+<li>In &quot;Contents&quot;, select &quot;Create project at exiting location&quot;, enter your web server's root directory followed by the project name (e.g., &quot;<code>&lt;WAMPSERVER_HOME&gt;\www\hello</code>&quot; for WampServer, &quot;<code>&lt;XAMPP_HOME&gt;\htdocs\hello</code>&quot; for XAMPP - Make a sub-directory called &quot;<code>hello</code>&quot; under &quot;<code>www</code>&quot; or &quot;<code>htdocs</code>&quot;) &rArr; &quot;Finish&quot;.</li>
+</ul></li>
+
+<li>Write your PHP program: Right-click on the project &quot;<code>hello</code>&quot;  &rArr; &quot;New&quot;  &rArr; &quot;PHP File&quot;. Enter the following codes and saved as &quot;<code>HelloObj.php</code>&quot;:
+<pre class="color-example">
+&lt;?php
+class Hello{
+   <span class="color-comment">// Variables</span>
+   var $message;
+ 
+   <span class="color-comment">// Constructor</span>
+   function __construct(){
+      $this-&gt;message= &quot;Hello World!&quot;;
+   }
+ 
+   <span class="color-comment">/**
+    * Function that prints the value of the instance variable $message
+    */</span>
+   function printMessage(){
+      echo $this-&gt;message;
+   }
+}
+?&gt;</pre>
+
+<p>Again, create a new PHP file for the following driver program &quot;<code>HelloDriver.php</code>&quot;:</p>
+<pre class="color-example">
+&lt;?php
+include_once('HelloObj.php');
+$hello= new hello();
+$hello-&gt;printMessage();
+?&gt;</pre></li>
+
+<li>To run the program, right-click anywhere on &quot;<code>HelloDriver.php</code>&quot;  &rArr; &quot;Run As&quot;  &rArr; &quot;PHP Web Application&quot; (output shown in Eclipse internal browser or external browser)  &rArr; The launch URL shall be <code>http://localhost/hello/HelloDriver.php</code>.<br>
+To select your browser, select &quot;Window&quot;  &rArr; Preferences   &rArr; General   &rArr; Web Browser   &rArr; Choose your browser, such as internal web browser, or external web browser (Firefox, IE, etc).<br>
+The browser shall display &quot;Hello World!&quot;.<br>
+Note: You can also run this script as a &quot;PHP CLI Application&quot;, i.e., a standalone command-line interface program instead of server-side script, as the above program are purely PHP, with no HTML statements.</li>
+</ol>
+
+<h5>Debugging PHP Server-side Script</h5>
+<p><a href="#xdebug">HERE</a>.</p>
+
+<h3>PhpMyAdmin</h3>
+
+<p>PhpMyAdmin (<a href="http://www.phpmyadmin.net">http://www.phpmyadmin.net</a>) is a popular open source web-base tool intended to handle the administration of MySQL database system.</p>
+
+<h5>Installing PhpMyAdmin</h5>
+
+<p>PhpMyAdmin is bundled in WampServer, installed under &quot;<code>&lt;WAMPSERVER_HOME&gt;\apps\phpmyadmin4.<em>x</em>.<em>xx</em></code>&quot;. It is also bundled in XAMPP, under &quot;<code>&lt;XAMPP_HOME&gt;\phpmyadmin</code>&quot;.</p>
+<p>For Ubuntu, read &quot;<a href="../howto/Ubuntu_HowTo.html#PHPMyAdmin">Install PhpMyAdmin for Ubuntu</a>&quot;.</p>
+
+<h5>Launching PhpMyAdmin</h5>
+
+<p>PhpMyAdmin is an Apache PHP application. Typically, an alias called &quot;<code>phpmyadmin</code>&quot; is defined which maps to its installed directory.</p>
+<p>To launch PhpMyAdmin, start Apache and MySQL servers. Then, start a browser and issue URL <code>http://localhost/phpmyadmin</code>.</p>
+
+<h5>Using PhpMyAdmin</h5>
+
+<p>[TODO]</p>
+
+<h5>PhpMyAdmin's Configuration for Apache</h5>
+
+<ul>
+<li>In WampServer: PhpMyAdmin is configured in &quot;<code>&lt;WAMPSERVER_HOME&gt;\alias\phpmyadmin.conf</code>&quot;, which is included into Apache's main configuration file &quot;<code>&lt;WAMPSERVER_HOME&gt;\bin\apache\apache2.4.9\conf\httpd.conf</code>&quot; via directive &quot;<code>Include &quot;&lt;WAMPSERVER_HOME&gt;/alias/*&quot;</code>&quot;. In the &quot;<code>phpmyadmin.conf</code>&quot;, an alias called &quot;<code>/phpmyadmin</code>&quot; is defined which maps to PhpMyAdmin's directory &quot;<code>&lt;WAMPSERVER_HOME&gt;/apps/phpmyadmin4.<em>x</em>.<em>xx</em>/</code>&quot;.</li>
+
+<li>In XAMPP: PhpMyAdmin is configured in &quot;<code>&lt;XAMPP_HOME&gt;\apache\conf\extra\httpd-xampp.conf</code>&quot;, which is included into Apache's main configuration file &quot;<code>&lt;XAMPP_HOME&gt;\apache\conf\httpd.conf</code>&quot; via an <code>Include</code> directive.  In the configuration, an alias called &quot;<code>/phpmyadmin</code>&quot; is defined which maps to PhpMyAdmin's directory at &quot;<code>&lt;XAMPP_HOME&gt;/phpMyAdmin/</code>&quot;.</li>
+</ul>
+
+<h5 id="PhpMyAdminRootPassword">PhpMyAdmin's PHP Configuration</h5>
+
+<p>PhpMyAdmin is a PHP app running under Apache. The PHP app uses a configuration file called &quot;<code>config.inc.php</code>&quot;, located at the PhpMyAdmin installed directory. The default configuration uses so-called &quot;<code>config</code>&quot; authentication type which requires you to hardcode the MySQL user and password inside the configuration file:</p>
+
+<pre class="color-syntax">
+$cfg['Servers'][$i]['auth_type'] = 'config'
+$cfg['Servers'][$i]['user'] = 'root';
+$cfg['Servers'][$i]['password'] = 'your_root_password';
+$cfg['Servers'][$i]['AllowNoPassword'] = true;</pre>
+
+<p>If you change MySQL root's password, you need to enter the new password into this file, in order to login into MySQL.</p>
+
+<p>I recommend that you change the authentication type to &quot;cookie&quot;, which <em>prompts</em> you to for the login user and password.</p>
+
+<pre class="color-syntax">
+// $cfg['Servers'][$i]['auth_type'] = 'config'
+$cfg['Servers'][$i]['auth_type'] = 'cookie';
+// $cfg['Servers'][$i]['user'] = 'root';
+// $cfg['Servers'][$i]['password'] = 'your_root_password';
+// $cfg['Servers'][$i]['AllowNoPassword'] = true;</pre>
+
+<h5>Notes on Errors</h5>
+
+<ul>
+<li>Cannot login using <code>root</code>, after setting password. See above.</li>
+<li>If you get an error &quot;Connection for controluser as defined in your configuration failed&quot;, see &quot;<a href="http://stackoverflow.com/questions/11506224/connection-for-controluser-as-defined-in-your-configuration-failed-phpmyadmin-xa">http://stackoverflow.com/questions/11506224/connection-for-controluser-as-defined-in-your-configuration-failed-phpmyadmin-xa</a>&quot;. (I encountered this error for XAMPP.)</li>
+</ul>
+
+<h3>SQL Buddy</h3>
+
+<p>SQL Buddy (<a href="http://www.sqlbuddy.com">http://www.sqlbuddy.com</a>) is an alternative to PhpMyAdmin. SQL Buddy is bundled in WampServer, under directory <code>&lt;WAMPSERVER_HOME&gt;\apps\sqlbuddy1.3.<em>x</em></code>. SQL Buddy could be easier to use than PhpMyAdmin.</p>
+
+<p>To use SQL Buddy, start a browser, and issue URL <code>http://localhost/sqlbuddy</code>.</p>
+
+<p>[TODO] more user guide</p>
+
+<h3 id="php_debug">Debugging PHP Webapps</h3>
+
+<h4 id="xdebug">XDebug for Debugging Server-side PHP Script</h4>
+
+<p>XDebug (@ <a href="http://xdebug.org">http://xdebug.org</a>) is an PHP extension, that allow you to debug server-side PHP Script running under Apache in Eclipse PDT.</p>
+
+<h5>Install xDebug Extension for PHP</h5>
+
+<ul>
+<li>For WampServer, xDebug module is installed as &quot;<code>&lt;WAMPSERVER_HOME&gt;/bin/php/php5.x.xx/zend_ext/php_xdebug-2.x.x-5.x-vc11-x86_64.dll</code>&quot;.</li>
+<li>For XAMPP (Windows), xDebug module is &quot;<code>&lt;XAMPP_HOME&gt;/php/ext/php_xdebug.dll</code>&quot;.</li>
+<li>For XAMPP (Mac OS X), xDebug module is ...... @@To check</li>
+<li>For Ubuntu, read &quot;<a href="../howto/Ubuntu_HowTo.html#xdebugPHP">Install XDebug extension for PHP" for Eclipse PDT</a>&quot;.</li>
+</ul>
+
+<p>To verify that xDebug is installed, search the <code>phpinfo()</code> output (run &quot;<code>phpinfo.php</code>&quot; written earlier) for &quot;<code>xdebug</code>&quot;, which shall show up as follows:</p>
+
+<img class="image-center" src="../howto/images/xdebug.png" alt="xdebug">
+
+<h5>Configure xDebug for Eclipse PDT</h5>
+
+<ol>
+<li>Find the PHP configuration file for Apache from the <code>phpinfo()</code> output, under &quot;Loaded Configuration File&quot;.
+<ul>
+<li>For WampServer, it is &quot;<code>&lt;WAMPSERVER_HOME&gt;\bin\apache\apache2.4.9\bin\php.ini</code>&quot;.</li>
+<li>For XAMPP (Windows), it is &quot;<code>&lt;XAMPP_HOME&gt;/php/php.ini</code>&quot;.</li>
+<li>For XAMPP (Mac OS X), it is &quot;<code>&lt;XAMPP_HOME&gt;/php/php.ini</code>&quot;. (@@ To Check)</li>
+<li>For Ubuntu: See &quot;<a href="../howto/Ubuntu_HowTo.html#xdebugPHP">Install XDebug extension for PHP" for Eclipse PDT</a>&quot;.</li>
+</ul>
+</li>
+
+<li>Check if the following lines are included in the PHP configuration file (include them otherwise):
+  <pre class="color-example">
+<span class="color-comment">; For WampServer</span>
+zend_extension = &quot;&lt;WAMPSERVER_HOME&gt;/bin/php/php5.5.12/zend_ext/php_xdebug-2.2.5-5.5-vc11-x86_64.dll&quot;
+<span class="color-comment">; For Ubuntu</span>
+zend_extension=xdebug.so
+<span class="color-comment">; For XAMPP (For Windows)</span>
+zend_extension = &quot;&lt;XAMPP_HOME&gt;/php/ext/php_xdebug.dll&quot;
+; <span class="color-comment">For XAMPP (for Mac OS X)</span>
+<span class="color-comment"></span>zend_extension = &quot;&lt;XAMPP_HOME&gt;/.......&quot;
+
+......
+
+[xdebug]<br>xdebug.remote_enable = On
+xdebug.remote_port = 9000
+xdebug.remote_host = 127.0.0.1</pre>
+
+Restart the Apache Server.</li>
+
+</ol>
+
+<h5>Example 1: Debugging PHP Server-side Script</h5>
+
+<p>Let's trace through the &quot;<code>hello</code>&quot; PHP Webapp created earlier, which contains two PHP scripts: &quot;<code>HelloDriver.php</code>&quot; and &quot;<code>HelloObj.php</code>&quot;.</p>
+
+<ol>
+<li>Set a breakpoint at line 2 of &quot;<code>HelloDriver.php</code>&quot; by clicking on the left margin.</li>
+<li>Right-click on &quot;<code>HelloDriver.php</code>&quot;  &rArr; &quot;Debug As&quot;  &rArr; &quot;PHP Web Application&quot;.</li>
+<li>Switch to &quot;Debug&quot; perspective.</li>
+<li>The program shall break at line 2 of &quot;<code>HelloDriver.php</code>&quot;. Click &quot;Step Into (F5)&quot; or &quot;Step Over (F6)&quot; to trace through the program. Inspect the variables and observe the output at the web browser.</li>
+<li>You need to terminate the debugging session by pushing the &quot;Terminate&quot; button.</li>
+
+</ol>
+
+
+<p>Take note that if you check &quot;Break at First Line&quot; in the debug configuration, the program will pause at the first line of a PHP file. You need to push &quot;Resume&quot; or &quot;Step Over&quot;.</p>
+
+<h5>Example 2: Debugging PHP Webapp (HTML+PHP)</h5>
+
+<p>Create the following two files &quot;<code>Query.php</code>&quot; and &quot;<code>ProcessQuery.php</code>&quot;, saved under Apache's document root directory.</p>
+
+<pre class="color-example">
+&lt;!DOCTYPE html&gt;
+<span class="color-comment">&lt;!--  Query.php  --&gt;</span>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Test HTML Form&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;form method=&quot;post&quot; action=&quot;ProcessQuery.php&quot;&gt;
+  What is your name? &lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;
+  &lt;input type=&quot;submit&quot; /&gt;
+  &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+<pre class="color-example">
+&lt;?php
+<span class="color-comment">// ProcessQuery.php</span>
+echo '&lt;h2&gt;Thank you for your query&lt;/h2&gt;';
+if (isset($_POST['username'])) {
+   echo '&lt;h2&gt;Hello, ' . htmlentities($_POST['username']) . '&lt;/h2&gt;';
+}
+?&gt;</pre>
+
+<p>Note: This code is meant for illustrating PHP webapp debugging. In practice, the two files are often merged into one.</p>
+
+<p>To run the PHP webapp, right-click on &quot;<code>Query.php</code>&quot; &rArr; Run As &rArr; PHP Web Application</p>
+
+<p>To debug the PHP webapp: </p>
+
+<ol>
+<li>right-click on &quot;<code>Query.html</code>&quot; &rArr; Debug As &rArr; Debug Configuration &rArr; Select &quot;Debugger&quot; tab &rArr; Check &quot;Break at First Line&quot; (which sets a breakpoint at the beginning of each file) &rArr; &quot;Debug&quot;.</li>
+<li>Switch to &quot;Debug&quot; perspective.</li>
+<li>Push &quot;Resume (F8)&quot; button to run thru the HTML code.</li>
+<li>Switch to the browser. Enter something in the textfield and click &quot;submit&quot;.</li>
+<li>Switch back to Eclipse, it now breaks at the first line of &quot;<code>ProcessQuery.php</code>&quot;.</li>
+<li>Click &quot;Step Into (F5)&quot; or &quot;Step Over (F6)&quot; to trace through the program. Inspect the variables and observe the output at the web browser.</li>
+<li>You need to terminate the debugging session by pushing the &quot;Terminate&quot; button.</li>
+</ol>
+
+<p>Take note that if your program contains HTML and PHP, your  need to switch between the web browser (to enter data) and eclipse (to push &quot;Resume&quot; to run thru the HTML codes, or &quot;Step Over/Into&quot; to execute the PHP codes). At times, the browser/eclipse icons on the taskbar brink to remind you to switch over.</p>
+
+<p>Note: I actually intend to name &quot;<code>Query.php</code>&quot; and &quot;<code>Query.html</code>&quot;, but the XDebug session does not seem to start on HTML (although you could tailor the &quot;Run configuration&quot; to start running from an HTML file)?! Let me know if you have an answer. For the time being, name all files (may be only the starting page) &quot;<code>.php</code>&quot; even they contains only HTML. This is not really a problem.</p>
+
+
+<h4 id="ZendDebug">Zend Debugger for Debugging Server-side PHP Script</h4>
+
+<p>[TODO]  Can't install Zend Debugger long time ago. To try again and compare with XDebug. Not critical.</p>
+
+
+<h4>Firebug Plugin for Firefox for Debugging Client-side JavaScript/HTML/CSS</h4>
+
+<p><a href="JavaScript_Introduction.html#JavaScript_Debug">HERE</a></p>
+
+<h3>PHP Webapp Exercises</h3>
+
+<ol>
+<li>Read &quot;<a href="php1_basics.html">PHP Basics</a>&quot;.</li>
+<li>Read &quot;<a href="php2_webapps.html">PHP MySQL webapps</a>&quot;. Use &quot;PDO&quot; for database connection.</li>
+<li>Convert the &quot;<a href="../java/JavaServletCaseStudy.html">Java Servlet Case Study ebookshop</a>&quot; from Java Servlet (Tomcat/MySQL) to PHP (Apache/MySQL).</li>
+<li>Read HTML, CSS and JavaScript.</li>
+<li>Proceed to &quot;Advanced PHP Webapp Development&quot;.</li>
+</ol>
+
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+  <li>Robin Nixon, &quot;Learning PHP, MySQL, JavaScript, and CSS&quot;, 2nd ed, O'Reilly, 2012. </li>
+  <li>Timothy Boronczyk, Elizabeth Naramore, Jason Gerner, Yann Le   Scouarnec, Jeremy Stolz and Michael K. Glass, &quot;Beginning PHP6 Apache   MySQL Web Development&quot;, Wrox Programmer to Programmer, 2009.</li>
+  <li>Luke Welling and Laura Thomson, &quot;PHP and MySQL Web Development&quot;, 4th edition, Addison-Wesley, 2008.</li>
+  <li>Dirk Merkel, &quot;Expert PHP 5 Tools&quot;, Packt Publishing, 2010.</li>
+</ol>
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: WampServer 2.5, XAMPP 1.8.3<br>
+Last modified: September, 2014</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

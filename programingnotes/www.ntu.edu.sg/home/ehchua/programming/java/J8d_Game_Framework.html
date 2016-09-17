@@ -1,0 +1,1566 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Game Engine &amp; Framework in Java</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>Java  GAME Programming</h1>
+<h2>Game Engine &amp; FrameWork</h2>
+
+<h5>Click the image to run applet demo</h5>
+
+<a href="Applet_Snake.html" target="_blank"><img src="images/GameSnake_Applet.png" alt="GameSnake_Applet.png" width="200" height="200" /></a>&nbsp;&nbsp;
+<a href="Applet_Tetris.html" target="_blank"><img src="images/GameTetris_Applet.png" alt="Tetris_Applet.png" width="200" height="200" /></a>&nbsp;&nbsp;
+
+
+
+<p>Instead of writing games in an ad-hoc manner (which I did but found it grossly inefficient), I decided to put up a framework for programming games in Java.  This is because many of the tasks involved in game programming are similar in many types of games.  A framework not only helps in improving the productivity but also ensures high quality codes.  Before presenting the entire framework, let's look at the individual pieces involved in game programming.</p>
+
+<h3>Custom Drawing</h3>
+
+<p>Game programming  requires custom drawing. For a Swing application, we extend a <code>JPanel</code> (called <code>GameCanvas</code>) and override the <code>paintComponent(Graphics)</code> method to do custom drawing. (Older Java AWT applications perform custom drawing on <code>java.awt.Canvas</code>, which is discouraged for Swing applications.) The <code>paintComponent()</code> method is not meant to be called directly, but called-back via the <code>repaint()</code> method. The <code>Graphics</code> context supports rendering of text (<code>drawString()</code>), primitive shapes (<code>drawXxx()</code>, <code>fillXxx()</code>), and bitmap images (<code>drawImage()</code>). For higher-quality graphics, we could use <code>Graphics2D</code> (of the Java 2D API) instead of the legacy <code>Graphics</code>. The custom drawing panel is usually designed as an inner class to the main game class, in order to directly access the private variables of the outer class - in particular, the game objects. The <code>GameCanvas</code> is a key-event source, as well as listener (via <code>addKeyListener(this)</code>). As source, it triggers <code>KeyEvent</code> upon key-pressed, key-released and key-typed. As a listener, it implements <code>KeyListener</code> interface and provides event handlers for key-pressed, key-released and key-typed.</p>
+
+<p>The main game class is derived from a <code>JPanel</code>, so that it can be run as an application as well as an applet. An instance of <code>GameCanvas</code> called <code>canvas</code> is instantiated and added to the <code>JPanel</code>.</p>
+
+<p>The game logic is supported in these methods:</p>
+<ul>
+<li><code>gameInit()</code>: initialization codes. Run only once.</li>
+<li><code>gameStart()</code>: to start or re-start the game.</li>
+<li><code>gameShutdown()</code>: clean-up codes (e.g., write the high-score). Run once before the program terminates.</li>
+<li><code>gameUpdate()</code>: to be called in the game loop for updating the position and state of the game objects, detecting collision and providing proper responses.</li>
+<li><code>gameDraw(Graphics2D g2d)</code> or <code>gameDraw(Graphics g)</code>: render the graphics, to be called inside the <code>paintComponent()</code> of the drawing <code>JPanel</code>.</li>
+<li><code>gameKeyPressed(int keyCode)</code>, <code>gameKeyReleased(int keyCode)</code>, and <code>gameKeyTyped(int keyCode)</code>: <code>KeyEvent</code> handler for key-pressed, key-released and key-typed.</li>
+</ul>
+
+
+<p> The structure (i.e., template) of the graphics part of the a Java game is as follows:</p>
+
+<pre class="code-syntax">
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+   
+public class GameMain extends JPanel {     <span class="code-comment">// main class for the game</span>   
+   <span class="code-comment">// Define constants for the game</span>
+   static final String TITLE = ....        <span class="code-comment">// title of the game</span>
+   static final int CANVAS_WIDTH = 800;    <span class="code-comment">// width and height of the drawing canvas</span>
+   static final int CANVAS_HEIGHT = 600;
+   <span class="code-comment">// ......</span>
+   
+   <span class="code-comment">// Define instance variables for the game objects</span>
+   <span class="code-comment">// ......
+   // ......</span>
+   
+   <span class="code-comment">// Handle for the custom drawing panel</span>
+   private GameCanvas canvas;
+   
+   //public static JMenuBar menuBar;    <span class="code-comment">// the menu bar (if needed)</span>
+   
+   <span class="code-comment">// Constructor to initialize the UI components and game objects</span>
+   public GameMain() {
+      <span class="code-comment">// Initialize the game objects</span>
+      gameInit();
+   
+      <span class="code-comment">// UI components</span>
+      canvas = new GameCanvas();
+      canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+      add(canvas);   <span class="code-comment">// center of default BorderLayout</span>
+   
+      <span class="code-comment">// Other UI components such as button, score board, if any.</span>
+      <span class="code-comment">// ......</span>
+   
+      <span class="code-comment">// Set up menu bar</span>
+      
+   }
+   
+   <span class="code-comment">// ------ All the game related codes here ------</span>
+   
+   <span class="code-comment">// Initialize all the game objects, run only once.</span>
+   public void gameInit() { ...... }
+   
+   <span class="code-comment">// Start and re-start the game.</span>
+   public void gameStart() { ...... }
+   
+   <span class="code-comment">// Shutdown the game, clean up code that runs only once.</span>
+   public void gameShutdown() { ...... }
+   
+   <span class="code-comment">// One step of the game.</span>
+   public void gameUpdate() { ...... }
+   
+   <span class="code-comment">// Refresh the display after each step.
+   // Use (Graphics g) as argument if you are not using Java 2D.</span>
+   public void gameDraw(Graphics2D g2d) { ...... }
+   
+   <span class="code-comment">// Process a key-pressed event.</span>
+   public void gameKeyPressed(int keyCode) {
+      switch (keyCode) {
+         case KeyEvent.VK_UP:
+            // ......
+            break;
+         case KeyEvent.VK_DOWN:
+            // ......
+            break;
+         case KeyEvent.VK_LEFT:
+            // ......
+            break;
+         case KeyEvent.VK_RIGHT:
+            // ......
+            break;
+      }
+   }
+   
+   <span class="code-comment">// Other methods</span>
+   <span class="code-comment">// ......</span>
+   
+   <span class="code-comment">// Custom drawing panel, written as an inner class.</span>
+   class GameCanvas extends JPanel implements KeyListener {
+      <span class="code-comment">// Constructor</span>
+      public GameCanvas() {
+         setFocusable(true);  <span class="code-comment">// so that this can receive key-events</span>
+         requestFocus();
+         addKeyListener(this);
+      }
+   
+      <span class="code-comment">// Override paintComponent to do custom drawing.
+      // Called back by repaint().</span>
+      @Override
+      public void paintComponent(Graphics g) {
+         Graphics2D g2d = (Graphics2D)g;  <span class="code-comment">// if using Java 2D</span>
+         super.paintComponent(g2d);       <span class="code-comment">// paint background</span>
+         setBackground(Color.BLACK);  <span class="code-comment">    // may use an image for background</span>
+   
+         <span class="code-comment">// Draw the game objects</span>
+         gameDraw(g2d);
+      }
+      
+      <span class="code-comment">// KeyEvent handlers</span>
+      @Override
+      public void keyPressed(KeyEvent e) {
+         gameKeyPressed(e.getKeyCode());
+      }
+      
+      @Override
+      public void keyReleased(KeyEvent e) { }  <span class="code-comment">// not used</span>
+   
+      @Override
+      public void keyTyped(KeyEvent e) { }     <span class="code-comment">// not used</span>
+   }
+   
+   <span class="code-comment">// main</span>
+   public static void main(String[] args) {
+      <span class="code-comment">// Use the event dispatch thread to build the UI for thread-safety.</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            JFrame frame = new JFrame(TITLE);
+            <span class="code-comment">// Set the content-pane of the JFrame to an instance of main JPanel</span>
+            frame.setContentPane(new GameMain());  <span class="code-comment">// main JPanel as content pane</span>
+            //frame.setJMenuBar(menuBar);          <span class="code-comment">// menu-bar (if defined)</span>
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setLocationRelativeTo(null); <span class="code-comment">// center the application window</span>
+            frame.setVisible(true);            <span class="code-comment">// show it</span>
+         }
+      });
+   }
+}</pre>
+
+<p>To run as an applet:</p>
+
+<pre class="code-syntax">
+package ......;
+import ......;
+  
+@SuppressWarnings("serial")
+public class AppletMain extends JApplet {
+ 
+   <span class="code-comment">/** init() to setup the GUI components */</span>
+   @Override
+   public void init() {
+      <span class="code-comment">// Run GUI codes in the Event-Dispatching thread for thread safety</span>
+      try {
+         <span class="code-comment">// Use invokeAndWait() to ensure that init() exits after GUI construction</span>
+         SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+               GameMain mainPanel = new GameMain();  <span class="code-comment">// main game JPanel</span>
+               <span class="code-comment">// To resolve width/height problem on Firefox, set content-pane to
+               // FlowLayout and add JPanel.</span>
+               Container cp = getContentPane();
+               cp.setLayout(new FlowLayout());
+               cp.add(mainPanel);
+               //setJMenuBar(GameMain.menuBar);      <span class="code-comment">// set menu-bar (if any)</span>
+            }
+         });
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+}</pre>
+
+<p>The purpose of the template (and framework) is to guide you on where to place your programming codes. In other words, do not modify the &quot;fixed&quot; portion of the template, but concentrate on implementing your game logic.</p>
+
+<p>The above template implements only key listener. Some games may require mouse listener or mouse-motion listener.  They can be added similar to key listener.</p>
+
+<h3>Init and Shutdown - <code>gameInit() &amp; gameShutdown()</code></h3>
+<p>The <code>gameInit()</code> method is meant to be run once, to instantiate all the gaming objects, pre-load images and sound effects, among others. In this framework, <code>gameInit()</code> is called once in the constructor of the main application <code>GameMain</code>.</p>
+
+<p>The <code>gameShutdown()</code> is also meant to be run once, for clean-up operations such as writing out the high-score.</p>
+
+<h3>Starting the Game Play - <code>gameStart()</code></h3>
+
+<p>Once all the game objects are in place (via <code>gameInit()</code>), we can start the game by running a <em>game loop</em> to repeat the game steps.</p>
+
+<p>In a typical single-player game, the game loop executes at a fixed interval. It calculates the new position of all the game objects and move them into the new position. It then detects collision among the game objects and provides responses, renders a new frame and pushes it to the screen.</p>
+
+<img class="image-center" src="images/GameBall_GameLoop.png" alt="game loop" />
+
+<p>We shall use the method <code>gameStart()</code> to start the play, or re-start after the the previous play. The <code>gameStart()</code> runs the game-loop as follows:</p>
+<pre class="code-syntax">
+<span class="code-comment">// Start (and re-start) the game.</span>
+public void gameStart() {
+   <span class="code-comment">// Regenerate the game objects for a new game</span>
+   ......
+   <span class="code-comment">// Game loop</span>
+   while (true) {
+      <span class="code-comment">// Update the state and position of all the game objects,
+      // detect collisions and provide responses.</span>
+      gameUpdate();
+      <span class="code-comment">// Refresh the display.</span>
+      repaint();
+      <span class="code-comment">// Delay timer to provide the necessary delay to meet the target rate.</span>
+      ......
+   }
+}
+</pre>
+
+
+
+<p>Within the game loop, we invoke the <code>gameUpdate()</code> method to calculate the position of the game objects, update their states, detect collision and provide responses.</p>
+<p>The game loop is written as an <em>infinite</em> loop. We need to keep track of the <em>state</em> of the game via <code>boolean</code> variables such as <code>gameOver</code> and <code>gamePaused</code>. (I will change it to an enumeration later.) We can then use these <code>boolean</code> flags to control the loop. For example,</p>
+<pre class="code-syntax">
+<span class="code-comment">// State of the game</span>
+boolean gameOver = false;
+boolean gamePaused = false;
+......
+......
+   
+public void gameStart() {
+   <span class="code-comment">// Regenerate the game objects for a new game</span>
+   ......
+   <span class="code-comment">// Game loop</span>
+   while (<strong>!gameOver</strong>) {
+      <strong>if (!gamePaused) {</strong>
+         <span class="code-comment">// Update the state and position of all the game objects,
+         // detect collisions and provide responses.</span>
+         gameUpdate();
+      }
+      <span class="code-comment">// Refresh the display</span>
+      repaint();
+      <span class="code-comment">// Delay timer to provide the necessary delay to meet the target rate.</span>
+      ......
+   }
+}
+</pre>
+
+<h3>Controlling the Refresh (Update) Rate of the Game</h3>
+
+<p>The monitor refreshes at 50-100 Hz. It is pointless for your game to update your game faster than the monitor. For some action games, you may wish to intercept the video buffer and update the game at the same rate as the monitor. For others like tetris and snake games, you may wish to update at the same rate as the player's response, says 1-5 moves per second.</p>
+<p>Suppose that we wish to refresh the game at 5 moves per second. Each move takes 1000/5 = 200 milliseconds. The delay timer must provide (200 - time taken to run the earlier processes).  This can be achieved as follows:</p>
+
+<pre class="code-syntax">
+<strong>static final int UPDATES_PER_SEC = 4</strong>;  <span class="code-comment">// number of game update per second</span>
+<strong>static final long UPDATE_PERIOD_NSEC = 1000000000L / UPDATES_PER_SEC;</strong>  <span class="code-comment">// nanoseconds</span>
+   
+<span class="code-comment">// State of the game</span>
+boolean gameOver = false;
+boolean gamePaused = false;
+......
+......
+   
+public void gameStart() {
+   <strong>long beginTime, timeTaken, timeLeft;</strong>   <span class="code-comment">// in msec</span>
+   <span class="code-comment">// Regenerate the game objects for a new game</span>
+   ......
+   <span class="code-comment">// Game loop</span>
+   while (<strong>!gameOver</strong>) {
+      <strong>beginTime = System.nanoTime();
+</strong>      <strong>if (!gamePaused) {</strong>
+         <span class="code-comment">// Update the state and position of all the game objects,
+         // detect collisions and provide responses.</span>
+         gameUpdate();
+      }
+      <span class="code-comment">// Refresh the display</span>
+      repaint();
+      <span class="code-comment">// Delay timer to provide the necessary delay to meet the target rate</span>
+      <strong>timeTaken = System.nanoTime() - beginTime;
+      timeLeft = (UPDATE_PERIOD_NSEC - timeTaken) / 1000000;</strong>  <span class="code-comment">// in milliseconds</span>
+      <strong>if (timeLeft &lt; 10) timeLeft = 10;</strong>   <span class="code-comment">// set a minimum</span>
+      <strong>try {</strong>
+         <span class="code-comment">// Provides the necessary delay and also yields control so that other thread can do work.</span>
+         <strong>Thread.sleep(timeLeft);
+      } catch (InterruptedException ex) { }</strong>
+   }
+}
+</pre>
+
+<p>JDK 1.5 provides a new timer called <code>System.nanoTime()</code> for measuring the elapsed time, which is reportedly more precise than the legacy <code>System.currentTimeMillis()</code>.</p>
+
+<p>The static method <code>Thread.sleep()</code> suspends the current thread, and wait for the specified milliseconds before attempting to resume. This process serves two purposes. Firstly, it provides the necessary time delay needed to meet the target  rate.  
+Secondly, by suspending itself, another thread can resume and perform its  task. In particular, the so-called <em>event dispatch thread</em>, which is responsible for processing input events (such as mouse-clicked, key-pressed) and refreshing the display, cannot be <em>starved</em>. Otherwise, the infamous <em>unresponsive user-interface</em> resulted, that is, the display is frozen and the system does not response to any input event.</p>
+
+<h3>Game Thread</h3>
+
+<p>Next, we need to run the game loop in its own thread - let's call it the game thread.  We use a dedicated thread to run our game loop to ensure responsive user-interface (as mentioned above).</p>
+
+<p>The game thread (called <code>GameThread</code>) is derived from the class <code>Thread</code>. It is written as an inner class. We override the <code>run()</code> method to program the running behavior of the thread. To start the play, we need to create a new instance of the <code>GameThread</code> and invoke the <code>start()</code> method, which will call-back the <code>run()</code> method to run the programmed behavior.</p>
+
+<p>There is, however, an issue here. We would like to start the play via the <code>gameStart()</code> method. But we need to program the running behavior in the overridden <code>run()</code>.  To resolve this program, I break the game starting method into two parts: <code>gameStart()</code> which simply create and run a new <code>GameThread</code>; and <code>gameLoop()</code>, which is called by the <code>run()</code> method to run the game loop, as follows:</p>
+
+<pre class="code-syntax">
+public class GameMain extends JPanel {  <span class="code-comment">// main game class</span>
+   static final int UPDATES_PER_SEC = 4;    <span class="code-comment">// number of game update per second</span>
+   static final long UPDATE_PERIOD_NSEC = 1000000000L / UPDATES_PER_SEC;  <span class="code-comment">// nanoseconds</span>
+   
+   <span class="code-comment">// State of the game</span>
+   boolean gameOver = false;
+   boolean gamePaused = false;
+   ......
+   ......
+   
+   <span class="code-comment">// To start and re-start the game.</span>
+   public void gameStart() { 
+      <span class="code-comment">// Create a new thread</span>
+      Thread gameThread =  new Thread() {
+         <span class="code-comment">// Override run() to provide the running behavior of this thread.</span>
+         @Override
+         public void run() {
+            gameLoop();
+         }
+      };
+      <span class="code-comment">// Start the thread. start() calls run(), which in turn calls gameLoop().</span>
+      gameThread.start();
+   }
+   
+   <span class="code-comment">// Run the game loop here.</span>
+   private void gameLoop() {
+      <span class="code-comment">// Regenerate the game objects for a new game</span>
+      ......
+   
+      <span class="code-comment">// Game loop</span>
+      long beginTime, timeTaken, timeLeft;
+      while (!gameOver) {
+         beginTime = System.nanoTime();
+         if (!gamePaused) {
+            <span class="code-comment">// Update the state and position of all the game objects,
+            // detect collisions and provide responses.</span>
+            gameUpdate();
+         }
+         <span class="code-comment">// Refresh the display</span>
+         repaint();
+         <span class="code-comment">// Delay timer to provide the necessary delay to meet the target rate</span>
+         timeTaken = System.nanoTime() - beginTime;
+         timeLeft = (UPDATE_PERIOD_NSEC - timeTaken) / 1000000;  <span class="code-comment">// in milliseconds</span>
+         if (timeLeft &lt; 10) timeLeft = 10;   <span class="code-comment">// set a minimum</span>
+         try {
+            <span class="code-comment">// Provides the necessary delay and also yields control so that other thread can do work.</span>
+            Thread.sleep(timeLeft);
+         } catch (InterruptedException ex) { }
+      }
+   }
+}
+</pre>
+
+<h3>Game States</h3>
+<p>Let's try to handle the game state in a more systematic way, instead of using boolean flags (such as <code>gameOver</code> and <code>gamePaused</code>). The state diagram for a typical game is as illustrated below:</p>
+
+<img class="image-center" src="images/Game_StateDiagram.png" alt="game states" />
+
+<p>We shall define a nested static enumeration to represent the game states in the <code>GameMain</code> class as follow:</p>
+<pre class="code-syntax">
+public class GameMain extends JFrame
+   <span class="code-comment">// Enumeration for the states of the game.</span>
+   static enum GameState {
+      INITIALIZED, PLAYING, PAUSED, GAMEOVER, DESTROYED
+   }
+   
+   static GameState state;   <span class="code-comment">// current state of the game</span>
+   
+   ......
+}
+</pre> 
+
+<p>The enumeration <code>State</code> and the instance variable <code>state</code> are declared as static, which can be accessed via the classname directly. For example, you can manipulate the <code>state</code>:</p>
+<pre class="code-example">
+<span class="code-comment">// in GameMain class</span>
+state = GameState.GAMEOVER;
+......
+switch (state) {
+   case INITIALIZED:
+      ......
+      break;
+   case PLAYING:
+      ......
+      break;
+   case PAUSED:
+      ......
+      break;
+   case GAMEOVER:
+      ......
+      break;
+   case DESTROYED:
+      ......
+      break;
+}</pre>
+
+
+<h3>The Complete Java Game Framework</h3>
+
+<pre class="code-syntax">
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+   
+public class GameMain extends JPanel {    <span class="code-comment">// main class for the game</span>
+   
+   <span class="code-comment">// Define constants for the game</span>
+   static final int CANVAS_WIDTH = 800;    <span class="code-comment">// width and height of the game screen</span>
+   static final int CANVAS_HEIGHT = 600;
+   static final int UPDATES_PER_SEC = 4;    <span class="code-comment">// number of game update per second</span>
+   static final long UPDATE_PERIOD_NSEC = 1000000000L / UPDATES_PER_SEC;  <span class="code-comment">// nanoseconds</span>
+   <span class="code-comment">// ......</span>
+&nbsp;
+   <span class="code-comment">// Enumeration for the states of the game.</span>
+   static enum GameState {
+      INITIALIZED, PLAYING, PAUSED, GAMEOVER, DESTROYED
+   }
+   static GameState state;   <span class="code-comment">// current state of the game</span>
+   
+   <span class="code-comment">// Define instance variables for the game objects</span>
+   <span class="code-comment">// ......
+   // ......</span>
+   
+   <span class="code-comment">// Handle for the custom drawing panel</span>
+   private GameCanvas canvas;
+   
+   <span class="code-comment">// Constructor to initialize the UI components and game objects</span>
+   public GameMain() {
+      <span class="code-comment">// Initialize the game objects</span>
+      gameInit();
+   
+      <span class="code-comment">// UI components</span>
+      canvas = new GameCanvas();
+      canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+      this.setContentPane(canvas);
+   
+      <span class="code-comment">// Other UI components such as button, score board, if any.</span>
+      <span class="code-comment">// ......</span>
+   
+   }
+   
+   <span class="code-comment">// All the game related codes here</span>
+   
+   <span class="code-comment">// Initialize all the game objects, run only once in the constructor of the main class.</span>
+   public void gameInit() {
+      <span class="code-comment">// ...... </span>
+      state = GameState.INITIALIZED;
+   }
+   
+   <span class="code-comment">// Shutdown the game, clean up code that runs only once.</span>
+   public void gameShutdown() {
+      <span class="code-comment">// ......</span> 
+   }
+   
+   <span class="code-comment">// To start and re-start the game.</span>
+   public void gameStart() { 
+      <span class="code-comment">// Create a new thread</span>
+      Thread gameThread =  new Thread() {
+         <span class="code-comment">// Override run() to provide the running behavior of this thread.</span>
+         @Override
+         public void run() {
+            gameLoop();
+         }
+      };
+      <span class="code-comment">// Start the thread. start() calls run(), which in turn calls gameLoop().</span>
+      gameThread.start();
+   }
+   
+   <span class="code-comment">// Run the game loop here.</span>
+   private void gameLoop() {
+      <span class="code-comment">// Regenerate the game objects for a new game</span>
+      <span class="code-comment">// ......</span>
+      state = GameState.PLAYING;
+   
+      <span class="code-comment">// Game loop</span>
+      long beginTime, timeTaken, timeLeft;  <span class="code-comment">// in msec</span>
+      while (state != GameState.GAMEOVER) {
+         beginTime = System.nanoTime();
+         if (state == GameState.PLAYING) {   <span class="code-comment">// not paused</span>
+            <span class="code-comment">// Update the state and position of all the game objects,
+            // detect collisions and provide responses.</span>
+            gameUpdate();
+         }
+         <span class="code-comment">// Refresh the display</span>
+         repaint();
+         <span class="code-comment">// Delay timer to provide the necessary delay to meet the target rate</span>
+         timeTaken = System.nanoTime() - beginTime;
+         timeLeft = (UPDATE_PERIOD_NSEC - timeTaken) / 1000000L;  <span class="code-comment">// in milliseconds</span>
+         if (timeLeft &lt; 10) timeLeft = 10;   <span class="code-comment">// set a minimum</span>
+         try {
+            <span class="code-comment">// Provides the necessary delay and also yields control so that other thread can do work.</span>
+            Thread.sleep(timeLeft);
+         } catch (InterruptedException ex) { }
+      }
+   }
+   
+   <span class="code-comment">// Update the state and position of all the game objects,
+   // detect collisions and provide responses.</span>
+   public void gameUpdate() { ...... }
+   
+   <span class="code-comment">// Refresh the display. Called back via repaint(), which invoke the paintComponent().</span>
+   private void gameDraw(Graphics2D g2d) {
+      switch (state) {
+         case INITIALIZED:
+            <span class="code-comment">// ......</span>
+            break;
+         case PLAYING:
+            <span class="code-comment">// ......</span>
+            break;
+         case PAUSED:
+            <span class="code-comment">// ......</span>
+            break;
+         case GAMEOVER:
+            <span class="code-comment">// ......</span>
+            break;
+      }
+      <span class="code-comment">// ...... </span>
+   }
+   
+   <span class="code-comment">// Process a key-pressed event. Update the current state.</span>
+   public void gameKeyPressed(int keyCode) {
+      switch (keyCode) {
+         case KeyEvent.VK_UP:
+            <span class="code-comment">// ......</span>
+            break;
+         case KeyEvent.VK_DOWN:
+            <span class="code-comment">// ......</span>
+            break;
+         case KeyEvent.VK_LEFT:
+            <span class="code-comment">// ......</span>
+            break;
+         case KeyEvent.VK_RIGHT:
+            <span class="code-comment">// ......</span>
+            break;
+      }
+   }
+   
+   <span class="code-comment">// Other methods</span>
+   <span class="code-comment">// ......</span>
+   
+   <span class="code-comment">// Custom drawing panel, written as an inner class.</span>
+   class GameCanvas extends JPanel implements KeyListener {
+      <span class="code-comment">// Constructor</span>
+      public GameCanvas() {
+         setFocusable(true);  <span class="code-comment">// so that can receive key-events</span>
+         requestFocus();
+         addKeyListener(this);
+      }
+   
+      <span class="code-comment">// Override paintComponent to do custom drawing.
+      // Called back by repaint().</span>
+      @Override
+      public void paintComponent(Graphics g) {
+         Graphics2D g2d = (Graphics2D)g;
+         super.paintComponent(g2d);   <span class="code-comment">// paint background</span>
+         setBackground(Color.BLACK);  <span class="code-comment">// may use an image for background</span>
+   
+         <span class="code-comment">// Draw the game objects</span>
+         gameDraw(g2d);
+      }
+      
+      <span class="code-comment">// KeyEvent handlers</span>
+      @Override
+      public void keyPressed(KeyEvent e) {
+         gameKeyPressed(e.getKeyCode());
+      }
+      
+      @Override
+      public void keyReleased(KeyEvent e) { }
+   
+      @Override
+      public void keyTyped(KeyEvent e) { }
+   }
+   
+   <span class="code-comment">// main</span>
+   public static void main(String[] args) {
+      <span class="code-comment">// Use the event dispatch thread to build the UI for thread-safety.</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            JFrame frame = new JFrame(TITLE);
+            <span class="code-comment">// Set the content-pane of the JFrame to an instance of main JPanel</span>
+            frame.setContentPane(new GameMain());  <span class="code-comment">// main JPanel as content pane</span>
+            //frame.setJMenuBar(menuBar);          <span class="code-comment">// menu-bar (if defined)</span>
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setLocationRelativeTo(null); <span class="code-comment">// center the application window</span>
+            frame.setVisible(true);            <span class="code-comment">// show it</span>
+         }
+      });
+   }
+}</pre>
+
+<h4>Summary</h4>
+<p>You can use the above template by:</p>
+<ul>
+<li>Declare all the instance variables for game objects.</li>
+<li>Instantiate all the game objects in the method <code>gameInit()</code>.</li>
+<li>Program the <code>gameUpdate()</code>, for calculating the new position of the game objects, updating the states, detecting the collision and providing the responses.</li>
+<li>Program the <code>gameDraw()</code>, for display game objects and information after each game step.</li>
+<li>Handle the input event in <code>gameKeyPressed()</code>. Update the state of the game.</li>
+</ul>
+
+<h3>Case Study 1: The Snake Game (Part I)</h3>
+
+<p>Let's design a simple snake game based on this framework. The snake move around the pit in search of food. It grows by one cell-length whenever it eats a piece of food.  The snake dies when it try to eat itself, or moves outside the pit.</p>
+
+<img class="image-center" src="images/GameSnakeV1_Captured.png" alt="screen capture"/>
+
+<img class="image-center" src="images/GameSnake_ClassDiagram.png" alt="class diagram" />
+
+<p>A <code>Snake</code> is made up of one or more horizontal or vertical <code>SnakeSegment</code>s. A <code>Pit</code> contains one <code>Snake</code> and one piece of <code>Food</code>. An enumeration called <code>Direction</code> is defined as a static nested class of <code>Snake</code> for the four moving directions: <code>UP</code>, <code>DOWN</code>, <code>LEFT</code> and <code>RIGHT</code>.</p>
+
+<h4>Game Actor Design</h4>
+
+<p>In general, a &quot;moving&quot; game actor should have these properties:</p>
+
+<pre class="code-syntax">
+protected boolean alive;         <span class="code-comment">// alive or dead</span>
+protected double x, y;           <span class="code-comment">// (x, y) location of its center</span>
+protected double speed;          <span class="code-comment">// speed in pixels per game-step</span>
+protected double direction;      <span class="code-comment">// movement direction in degrees</span>
+protected double rotationSpeed;  <span class="code-comment">// rotational speed in degrees per game-step (optional)</span>
+protected double width, height;  <span class="code-comment">// width and height of this actor</span>
+</pre>
+
+<p>It should possess these operations:</p>
+<pre class="code-syntax">
+<span class="code-comment">// Draw itself</span>
+public void draw(Graphics2D g2d) { ...... }
+<span class="code-comment">// Initialize (or re-initialize) this actor at the start of the game.</span>
+public void regenerate() { ...... }
+<span class="code-comment">// For collision detection</span>
+public boolean intersects(Shape shape) { ...... }  <span class="code-comment">// intersects with the given shape</span>
+public boolean contains(Shape shape) { ...... }    <span class="code-comment">// completely encloses the given shape</span>
+public Shape getBounds2D() { ...... }              <span class="code-comment">// returns a bounding box</span>
+</pre>
+
+<p>For the snake game, we can simplify the design as the snake can move  left/right/up/down, one cell at each update. The pit consists of cells (of <code>ROWS</code> by <code>COLUMNS</code>). The coordinates are referenced to the cells' row and column numbers.</p>
+
+<h4>Enum <code>Snake.Direction</code></h4>
+
+<p>We first decided to have an enum called <code>Direction</code>, to represent the movement direction of the snake. We decided to place this enum as a static nested enum inside the <code>Snake</code> class as follows:</p>
+<pre class="code-listing">
+public class Snake {
+   <strong>public static enum Direction {
+      UP, DOWN, LEFT, RIGHT
+   }</strong>
+   ......
+   ......
+}</pre>
+
+<h4>Class <code>SnakeSegment</code></h4>
+
+<p>Next, we decided that a snake shall make up of horizontal and vertical segments. Each segment has its head at (<code>headX</code>, <code>headY</code>), a length, and a movement direction. Segment can grow (at the head) and shrink (at the tail) by one cell. It can draw itself. It has a method called <code>contains(int x, int y)</code> for collision detection.</p>
+
+<pre class="code-listing">
+import java.awt.Graphics;
+<span class="code-comment">/**
+ * SnakeSegment represents one horizontal or vertical segment of a snake. The &quot;head&quot; of
+ * this segment is at (headX, headY). The segment is drawn starting from the &quot;head&quot;
+ * and proceeding &quot;length&quot; cells in &quot;direction&quot;, until it reaches the &quot;tail&quot;.
+ */</span>
+public class SnakeSegment {
+   
+   private int headX, headY;   <span class="code-comment">// The position of the head of this segment</span>
+   private int length;         <span class="code-comment">// length of this segment</span>
+   private Snake.Direction direction;   <span class="code-comment">// direction of this segment</span>
+   
+   <span class="code-comment">// Construct a new snake segment at given (headX, headY), length and direction.</span>
+   public SnakeSegment(int headX, int headY, int length, Snake.Direction direction) {
+      this.headX = headX;
+      this.headY = headY;
+      this.direction = direction;
+      this.length = length;
+   }
+   
+   <span class="code-comment">// Grow by adding one cell to the head of this segment.</span>
+   public void grow() {
+      ++length;
+      <span class="code-comment">// need to adjust the headX and headY</span>
+      switch (direction) {
+         case LEFT:  --headX; break;
+         case RIGHT: ++headX; break;
+         case UP:    --headY; break;
+         case DOWN:  ++headY; break;
+      }
+   }
+   
+   <span class="code-comment">// Shrink by removing one cell from the tail of this segment.</span>
+   public void shrink() {
+      length--;  <span class="code-comment">// no change in headX and headY needed</span>
+   }
+   
+   <span class="code-comment">// Get the length, in cells, of this segment.</span>
+   public int getLength() { return length; }
+   
+   <span class="code-comment">// Get the X coordinate of the cell that contains the head of this snake segment.</span>
+   public int getHeadX() { return headX; }
+   
+   <span class="code-comment">// Get the Y coordinate of the cell that contains the head of this snake segment.</span>
+   public int getHeadY() { return headY; }
+   
+   <span class="code-comment">// Get the X coordinate of the cell that contains the tail of this snake segment.</span>
+   private int getTailX() {
+      if (direction == Snake.Direction.LEFT) {
+         return headX + length - 1;
+      } else if (direction == Snake.Direction.RIGHT) {
+         return headX - length + 1;
+      } else {   <span class="code-comment">// UP and DOWN</span>
+         return headX;
+      }
+   }
+   
+   <span class="code-comment">// Get the Y coordinate of the cell that contains the tail of this snake segment.</span>
+   private int getTailY() {
+      if (direction == Snake.Direction.DOWN) {
+         return headY - length + 1;
+      } else if (direction == Snake.Direction.UP) {
+         return headY + length - 1;
+      } else {   <span class="code-comment">// LEFT and RIGHT</span>
+         return headY;
+      }
+   }
+   
+   <span class="code-comment">// Returns true if the snake segment contains the given cell. Used for collision detection.</span>
+   public boolean contains(int x, int y) {
+      switch (direction) {
+         case LEFT:  return ((y == this.headY) &amp;&amp; ((x &gt;= this.headX) &amp;&amp; (x &lt;= getTailX())));
+         case RIGHT: return ((y == this.headY) &amp;&amp; ((x &lt;= this.headX) &amp;&amp; (x &gt;= getTailX())));
+         case UP:    return ((x == this.headX) &amp;&amp; ((y &gt;= this.headY) &amp;&amp; (y &lt;= getTailY())));
+         case DOWN:  return ((x == this.headX) &amp;&amp; ((y &lt;= this.headY) &amp;&amp; (y &gt;= getTailY())));
+      }
+      return false;
+   }
+   
+   <span class="code-comment">// Draw this segment.</span>
+   public void draw(Graphics g) {
+      int x = headX;
+      int y = headY;
+   
+      switch (direction) {
+         case LEFT:
+            for (int i = 0; i &lt; length; ++i) {
+               g.fill3DRect(x * GameMain.CELL_SIZE, y * GameMain.CELL_SIZE,
+                     GameMain.CELL_SIZE - 1, GameMain.CELL_SIZE - 1, true);
+               ++x;
+            }
+            break;
+         case RIGHT:
+            for (int i = 0; i &lt; length; ++i) {
+               g.fill3DRect(x * GameMain.CELL_SIZE, y * GameMain.CELL_SIZE,
+                     GameMain.CELL_SIZE - 1, GameMain.CELL_SIZE - 1, true);
+               --x;
+            }
+            break;
+         case UP:
+            for (int i = 0; i &lt; length; ++i) {
+               g.fill3DRect(x * GameMain.CELL_SIZE, y * GameMain.CELL_SIZE,
+                     GameMain.CELL_SIZE - 1, GameMain.CELL_SIZE - 1, true);
+               ++y;
+            }
+            break;
+         case DOWN:
+            for (int i = 0; i &lt; length; ++i) {
+               g.fill3DRect(x * GameMain.CELL_SIZE, y * GameMain.CELL_SIZE,
+                     GameMain.CELL_SIZE - 1, GameMain.CELL_SIZE - 1, true);
+               --y;
+            }
+            break;
+      }
+   }
+   
+   <span class="code-comment">// For debugging.</span>
+   @Override
+   public String toString() {
+      return &quot;SnakeSegment[head=(&quot; + headX + &quot;,&quot; + headY + &quot;), tail=(&quot; + getTailX() + &quot;,&quot;
+            + getTailY() + &quot;), length=&quot; + length + &quot;, dir=&quot; + direction + &quot;]&quot;;
+   }
+}</pre>
+
+<h4>Class <code>Snake</code></h4>
+
+<p>Next, the <code>Snake</code> class is designed to maintain a list of <code>SnakeSegments</code>.</p>
+
+<pre class="code-listing">
+import java.awt.*;
+import java.util.*;
+<span class="code-comment">/**
+ * A Snake is made up of one or more SnakeSegment. The first SnakeSegment is the
+ * &quot;head&quot; of the snake. The last SnakeSegment is the &quot;tail&quot; of the snake. As the
+ * snake moves, it adds one cell to the head and then removes one from the tail. If
+ * the snake eats a piece of food, the head adds one cell but the tail will not
+ * shrink.
+ */</span>
+public class Snake {
+   private static final int INIT_LENGTH = 12;
+      
+   public static enum Direction {
+      UP, DOWN, LEFT, RIGHT
+   }
+   
+   private Color color = Color.BLACK;     <span class="code-comment">// color for this snake body</span>
+   private Color colorHead = Color.GREEN; <span class="code-comment">// color for the &quot;head&quot;</span>
+   private Snake.Direction direction;     <span class="code-comment">// the current direction of the snake's head</span>
+   
+   <span class="code-comment">// The snake segments that forms the snake</span>
+   private java.util.List&lt;SnakeSegment&gt; snakeSegments = new ArrayList&lt;SnakeSegment&gt;();
+   
+   private boolean dirUpdatePending;   <span class="code-comment">// Pending update for a direction change?</span>
+   private Random random = new Random();   <span class="code-comment">// for randomly regenerating a snake</span>
+   
+   <span class="code-comment">// Regenerate the snake.</span>
+   public void regenerate() {
+      snakeSegments.clear();
+      <span class="code-comment">// Randomly generate a snake inside the pit.</span>
+      int length = INIT_LENGTH;
+      int headX = random.nextInt(GameMain.COLUMNS - length * 2) + length;
+      int headY = random.nextInt(GameMain.ROWS - length * 2) + length;
+      direction = Snake.Direction.values()[random.nextInt(Snake.Direction.values().length)];
+      snakeSegments.add(new SnakeSegment(headX, headY, length, direction));
+      dirUpdatePending = false;
+   }
+   
+   <span class="code-comment">// Change the direction of the snake, but no 180 degree turn allowed.</span>
+   public void setDirection(Snake.Direction newDir) {
+      <span class="code-comment">// Ignore if there is a direction change pending and no 180 degree turn</span>
+      if (!dirUpdatePending &amp;&amp; (newDir != direction)
+            &amp;&amp; ((newDir == Snake.Direction.UP &amp;&amp; direction != Snake.Direction.DOWN)
+             || (newDir == Snake.Direction.DOWN &amp;&amp; direction != Snake.Direction.UP)
+             || (newDir == Snake.Direction.LEFT &amp;&amp; direction != Snake.Direction.RIGHT) 
+             || (newDir == Snake.Direction.RIGHT &amp;&amp; direction != Snake.Direction.LEFT))) {
+         SnakeSegment headSegment = snakeSegments.get(0);  <span class="code-comment">// get the head segment</span>
+         int x = headSegment.getHeadX();
+         int y = headSegment.getHeadY();
+         <span class="code-comment">// add a new segment with zero length as the new head segment</span>
+         snakeSegments.add(0, new SnakeSegment(x, y, 0, newDir));
+         direction = newDir;
+         dirUpdatePending = true; <span class="code-comment">// will be cleared after updated</span>
+      }
+   }
+   
+   <span class="code-comment">// Move the snake by one step. The snake &quot;head&quot; segment grows by one cell. The rest of the 
+   // segments remain unchanged. The &quot;tail&quot; segment will later be shrink if collision detected.</span>
+   public void update() {
+      SnakeSegment headSegment = snakeSegments.get(0);   <span class="code-comment">// &quot;head&quot; segment</span>
+      headSegment.grow();
+      dirUpdatePending = false;   <span class="code-comment">// can process the key input again</span>
+   }
+   
+   <span class="code-comment">// Not eaten a food item. Shrink the tail by one cell.</span>
+   public void shrink() {
+      SnakeSegment tailSegment = snakeSegments.get(snakeSegments.size() - 1);
+      tailSegment.shrink();
+      if (tailSegment.getLength() == 0) {
+         snakeSegments.remove(tailSegment);
+      }
+   }
+   
+   <span class="code-comment">// Get the X coordinate of the cell that contains the head of this snake segment.</span>
+   public int getHeadX() {
+      return snakeSegments.get(0).getHeadX();
+   }
+   
+   <span class="code-comment">// Get the Y coordinate of the cell that contains the head of this snake segment.</span>
+   public int getHeadY() {
+      return snakeSegments.get(0).getHeadY();
+   }
+   
+   <span class="code-comment">// Returns the length of this snake by adding up all the segments.</span>
+   public int getLength() {
+      int length = 0;
+      for (SnakeSegment segment : snakeSegments) {
+         length += segment.getLength();
+      }
+      return length;
+   }
+   
+   <span class="code-comment">// Returns true if the snake contains the given (x, y) cell. Used in collision detection</span>
+   public boolean contains(int x, int y) {
+      for (int i = 0; i &lt; snakeSegments.size(); ++i) {
+         SnakeSegment segment = snakeSegments.get(i);
+         if (segment.contains(x, y)) {
+            return true;
+         }
+      }
+      return false;
+   }
+   
+   <span class="code-comment">// Returns true if the snake eats itself</span>
+   public boolean eatItself() {
+      int headX = getHeadX();
+      int headY = getHeadY();
+      <span class="code-comment">// eat itself if the (headX, headY) hits its body segment (4th onwards)</span> 
+      for (int i = 3; i &lt; snakeSegments.size(); ++i) {
+         SnakeSegment segment = snakeSegments.get(i);
+         if (segment.contains(headX, headY)) {
+            return true;
+         }
+      }
+      return false;
+   }
+   
+   <span class="code-comment">// Draw itself.</span>
+   public void draw(Graphics g) {
+      g.setColor(color);
+      for (int i = 0; i &lt; snakeSegments.size(); ++i) {
+         snakeSegments.get(i).draw(g);   <span class="code-comment">// draw all the segments</span>
+      }
+      if (snakeSegments.size() &gt; 0) {
+         g.setColor(colorHead);
+         g.fill3DRect(getHeadX() * GameMain.CELL_SIZE, getHeadY()
+               * GameMain.CELL_SIZE, GameMain.CELL_SIZE - 1,
+               GameMain.CELL_SIZE - 1, true);
+      }
+   }
+   
+   <span class="code-comment">// For debugging.</span>
+   @Override
+   public String toString() {
+      StringBuffer sb = new StringBuffer();
+      sb.append(&quot;Snake[dir=&quot; + direction + &quot;\n&quot;);
+      for (SnakeSegment segment : snakeSegments) {
+         sb.append(&quot;   &quot;).append(segment).append('\n');
+      }
+      sb.append(&quot;]&quot;);
+      return sb.toString();
+   }
+}</pre>
+
+<p>In order to process only the first key input, and ignore the rest until the first key is processed, a flag called <code>dirUpdatePending</code> is used, which will be set whenever a change of direction input is received. This stops further changes, until the snake is updated.</p>
+
+<img class="image-center" src="images/GameWorm_TimingDiagram.gif" alt="game update" />
+
+<p>[PENDING] more explanation</p>
+
+<h4>Class <code>Food</code></h4>
+
+<p>Next, the Food class, which is rather straight forward.</p>
+
+<pre class="code-listing">
+import java.awt.*;
+import java.util.*;
+<span class="code-comment">/**
+ * Food is a food item that the snake can eat. It is placed randomly in the pit.
+ */</span>
+public class Food {
+   
+   private int x, y;   <span class="code-comment">// current food location (x, y) in cells</span>
+   private Color color = Color.BLUE;   <span class="code-comment">// color for display</span>
+   private Random rand = new Random(); <span class="code-comment">// For randomly placing the food</span>
+   
+   // Default constructor.
+   public Food() {
+      <span class="code-comment">// place outside the pit, so that it will not be &quot;displayed&quot;.</span>
+      x = -1;
+      y = -1;
+   }
+   
+   <span class="code-comment">// Regenerate a food item. Randomly place inside the pit (slightly off the edge).</span>
+   public void regenerate() {
+      x = rand.nextInt(GameMain.COLUMNS - 4) + 2;
+      y = rand.nextInt(GameMain.ROWS - 4) + 2;
+   }
+   
+   <span class="code-comment">// Returns the x coordinate of the cell that contains this food item.</span>
+   public int getX() { return x; }
+   
+   <span class="code-comment">// Returns the y coordinate of the cell that contains this food item.</span>
+   public int getY() { return y; }
+   
+   <span class="code-comment">// Draw itself.</span>
+   public void draw(Graphics g) {
+      g.setColor(color);
+      g.fill3DRect(x * GameMain.CELL_SIZE, y * GameMain.CELL_SIZE,
+            GameMain.CELL_SIZE, GameMain.CELL_SIZE, true);
+   }
+}
+</pre>
+
+<h4>Class <code>GameMain</code></h4>
+
+<p>Finally, it is the main class <code>GameMain</code>, based on the framework.</p> 
+
+<pre class="code-listing">
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+   
+public class GameMain extends JPanel {   <span class="code-comment">// main class for the game</span>
+   
+   <span class="code-comment">// Define constants for the game</span>
+   static final String TITLE = &quot;SNAKE&quot;;
+   static final int ROWS = 40;      <span class="code-comment">// number of rows (in cells)</span>
+   static final int COLUMNS = 40;   <span class="code-comment">// number of columns (in cells)</span>
+   static final int CELL_SIZE = 15; <span class="code-comment">// Size of a cell (in pixels)</span>
+   static final int CANVAS_WIDTH  = COLUMNS * CELL_SIZE;  <span class="code-comment">// width and height of the game screen</span>
+   static final int CANVAS_HEIGHT = ROWS * CELL_SIZE;
+   static final int UPDATES_PER_SEC = 3;    <span class="code-comment">// number of game update per second</span>
+   static final long UPDATE_PERIOD_NSEC = 1000000000L / UPDATES_PER_SEC;  <span class="code-comment">// nanoseconds</span>
+   private final Color COLOR_PIT = Color.LIGHT_GRAY;
+   
+   <span class="code-comment">// Enumeration for the states of the game.</span>
+   static enum GameState {
+      INITIALIZED, PLAYING, PAUSED, GAMEOVER, DESTROYED
+   }
+   static GameState state;   <span class="code-comment">// current state of the game</span>
+   
+   <span class="code-comment">// Define instance variables for the game objects</span>
+   private Food food;
+   private Snake snake;
+   
+   <span class="code-comment">// Handle for the custom drawing panel</span>
+   private GameCanvas pit;
+   
+   <span class="code-comment">// Constructor to initialize the UI components and game objects</span>
+   public GameMain() {
+      <span class="code-comment">// Initialize the game objects</span>
+      gameInit();
+   
+      <span class="code-comment">// UI components</span>
+      pit = new GameCanvas();
+      pit.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+      add(pit);
+   
+      <span class="code-comment">// Start the game.</span>
+      gameStart();
+   }
+   
+   <span class="code-comment">// ------ All the game related codes here ------</span>
+   
+   <span class="code-comment">// Initialize all the game objects, run only once in the constructor of the main class.</span>
+   public void gameInit() {
+      <span class="code-comment">// Allocate a new snake and a food item, do not regenerate.</span>
+      snake = new Snake();
+      food = new Food();
+      state = GameState.INITIALIZED;
+   }
+   
+   <span class="code-comment">// Shutdown the game, clean up code that runs only once.</span>
+   public void gameShutdown() { }
+   
+   <span class="code-comment">// To start and re-start the game.</span>
+   public void gameStart() { 
+      <span class="code-comment">// Create a new thread</span>
+      Thread gameThread =  new Thread() {
+         <span class="code-comment">// Override run() to provide the running behavior of this thread.</span>
+         @Override
+         public void run() {
+            gameLoop();
+         }
+      };
+      <span class="code-comment">// Start the thread. start() calls run(), which in turn calls gameLoop().</span>
+      gameThread.start();
+   }
+   
+   <span class="code-comment">// Run the game loop here.</span>
+   private void gameLoop() {
+      <span class="code-comment">// Regenerate and reset the game objects for a new game</span>
+      if (state == GameState.INITIALIZED || state == GameState.GAMEOVER) {
+         <span class="code-comment">// Generate a new snake and a food item</span>
+         snake.regenerate();
+         int x, y;
+         do {
+            food.regenerate();
+            x = food.getX();
+            y = food.getY();
+         } while (snake.contains(x, y)); <span class="code-comment">// regenerate if food placed under the snake</span>
+         state = State.PLAYING;
+      }
+   
+      <span class="code-comment">// Game loop</span>
+      long beginTime, timeTaken, timeLeft;   <span class="code-comment">// in msec</span>
+      while (state != GameState.GAMEOVER) {
+         beginTime = System.nanoTime();
+         if (state == GameState.PLAYING) {
+            <span class="code-comment">// Update the state and position of all the game objects,
+            // detect collisions and provide responses.</span>
+            gameUpdate();
+         }
+         <span class="code-comment">// Refresh the display</span>
+         repaint();
+         <span class="code-comment">// Delay timer to provide the necessary delay to meet the target rate</span>
+         timeTaken = System.nanoTime() - beginTime;
+         timeLeft = (UPDATE_PERIOD_NSEC - timeTaken) / 1000000;  <span class="code-comment">// in milliseconds</span>
+         if (timeLeft &lt; 10) timeLeft = 10;  <span class="code-comment">// set a minimum</span><br />         try {
+            <span class="code-comment">// Provides the necessary delay and also yields control so that other thread can do work.</span>
+            Thread.sleep(timeLeft);
+         } catch (InterruptedException ex) { }
+      }
+   }
+   
+   <span class="code-comment">// Update the state and position of all the game objects,
+   // detect collisions and provide responses.</span>
+   public void gameUpdate() { 
+      snake.update();
+      processCollision();
+   }
+   
+   <span class="code-comment">// Collision detection and response</span>
+   public void processCollision() {
+      <span class="code-comment">// check if this snake eats the food item</span>
+      int headX = snake.getHeadX();
+      int headY = snake.getHeadY();
+   
+      if (headX == food.getX() &amp;&amp; headY == food.getY()) {
+         <span class="code-comment">// food eaten, regenerate one</span>
+         int x, y;
+         do {
+            food.regenerate();
+            x = food.getX();
+            y = food.getY();
+         } while (snake.contains(x, y));
+      } else {
+         <span class="code-comment">// not eaten, shrink the tail</span>
+         snake.shrink();
+      }
+   
+      <span class="code-comment">// Check if the snake moves out of bounds</span>
+      if (!pit.contains(headX, headY)) {
+         state = GameState.GAMEOVER;
+         return;
+      }
+   
+      <span class="code-comment">// Check if the snake eats itself</span>
+      if (snake.eatItself()) {
+         state = GameState.GAMEOVER;
+         return;
+      }
+   }
+   
+   <span class="code-comment">// Refresh the display. Called back via rapaint(), which invoke the paintComponent().</span>
+   private void gameDraw(Graphics g) {
+      <span class="code-comment">// draw game objects</span>
+      snake.draw(g);
+      food.draw(g);
+      <span class="code-comment">// game info</span>
+      g.setFont(new Font(&quot;Dialog&quot;, Font.PLAIN, 14));
+      g.setColor(Color.BLACK);
+      g.drawString(&quot;Snake: (&quot; + snake.getHeadX() + &quot;,&quot; + snake.getHeadY() + &quot;)&quot;, 5, 25);
+      if (state == GameState.GAMEOVER) {
+         g.setFont(new Font(&quot;Verdana&quot;, Font.BOLD, 30));
+         g.setColor(Color.RED);
+         g.drawString(&quot;GAME OVER!&quot;, 200, CANVAS_HEIGHT / 2);
+      }
+   }
+   
+   <span class="code-comment">// Process a key-pressed event. Update the current state.</span>
+   public void gameKeyPressed(int keyCode) {
+      switch (keyCode) {
+         case KeyEvent.VK_UP:
+            snake.setDirection(Snake.Direction.UP);
+            break;
+         case KeyEvent.VK_DOWN:
+            snake.setDirection(Snake.Direction.DOWN);
+            break;
+         case KeyEvent.VK_LEFT:
+            snake.setDirection(Snake.Direction.LEFT);
+            break;
+         case KeyEvent.VK_RIGHT:
+            snake.setDirection(Snake.Direction.RIGHT);
+            break;
+      }
+   }
+   
+   <span class="code-comment">// Custom drawing panel, written as an inner class.</span>
+   class GameCanvas extends JPanel implements KeyListener {
+      <span class="code-comment">// Constructor</span>
+      public GameCanvas() {
+         setFocusable(true);  <span class="code-comment">// so that can receive key-events</span>
+         requestFocus();
+         addKeyListener(this);
+      }
+   
+      <span class="code-comment">// Override paintComponent to do custom drawing.
+      // Called back by repaint().</span>
+      @Override
+      public void paintComponent(Graphics g) {
+         super.paintComponent(g);   <span class="code-comment">// paint background</span>
+         setBackground(COLOR_PIT);  <span class="code-comment">// may use an image for background</span>
+   
+         <span class="code-comment">// Draw the game objects</span>
+         gameDraw(g);
+      }
+   
+      <span class="code-comment">// KeyEvent handlers</span>
+      @Override
+      public void keyPressed(KeyEvent e) {
+         gameKeyPressed(e.getKeyCode());
+      }
+   
+      @Override
+      public void keyReleased(KeyEvent e) { }
+   
+      @Override
+      public void keyTyped(KeyEvent e) { }
+   
+      <span class="code-comment">// Check if this pit contains the given (x, y), for collision detection</span>
+      public boolean contains(int x, int y) {
+         if ((x &lt; 0) || (x &gt;= ROWS)) {
+            return false;
+         }
+         if ((y &lt; 0) || (y &gt;= COLUMNS)) {
+            return false;
+         }
+         return true;
+      }
+   }
+   
+   <span class="code-comment">// main</span>
+   public static void main(String[] args) {
+      <span class="code-comment">// Use the event dispatch thread to build the UI for thread-safety.</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            JFrame frame = new JFrame(TITLE);
+            frame.setContentPane(new GameMain());  <span class="code-comment">// main JPanel as content pane</span>
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setLocationRelativeTo(null); <span class="code-comment">// center the application window</span>
+            frame.setVisible(true);            <span class="code-comment">// show it</span>
+         }
+      });
+   }
+}</pre>
+
+<ul>
+<li>An instance of <code>GameCanvas</code> called <code>pit</code> is used. A method <code>contains(x, y)</code> is added in the <code>GameCanvas</code> for collision detection.</li>
+<li>[PENDING]</li>
+</ul>
+
+<h5>AppletMain.java</h5>
+<p>To Run as Applet:</p>
+
+<pre class="code-syntax">
+import java.awt.Container;
+import java.awt.FlowLayout;
+import javax.swing.*;
+ 
+<span class="code-comment">/** Snake (Applet) */</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class AppletMain extends JApplet {
+ 
+   <span class="code-comment">/** init() to setup the GUI components */</span>
+   @Override
+   public void init() {
+      <span class="code-comment">// Run GUI codes in the Event-Dispatching thread for thread safety</span>
+      try {
+         <span class="code-comment">// Use invokeAndWait() to ensure that init() exits after GUI construction</span>
+         SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+               GameMain mainPanel = new GameMain();  <span class="code-comment">// main game JPanel</span>
+               
+               <span class="code-comment">// To resolve width/height problem on Firefox, set content-pane to
+               // FlowLayout and add JPanel.</span>
+               Container cp = getContentPane();
+               cp.setLayout(new FlowLayout());
+               cp.add(mainPanel);
+            }
+         });
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+}</pre>
+
+<ol>
+<li>Prepare a manifest and jar up all the class files.</li>
+<li>Sign the applet (using jarsigner).</li>
+<li>Write an HTML file to embed the applet using <code>&lt;applet&gt;</code> tag.</li>
+</ol>
+
+<h3>Collision Detection &amp; Response</h3>
+<p>The hardest thing to decide is where (which class) to place the collision detection and responses codes. Should they be separated? How to add in these codes and yet the actors are still well encapsulated? If other words, one actor should not know the existence of the other actors.</p>
+
+<p>I recommend that:</p>
+<ul>
+<li>Separate the detection and response codes. The game loop shall carry out these steps:
+<ol>
+<li>All sprites move to the next position (i.e., move one step).</li>
+<li>Check for collision in these new positions, and update the state of the sprites.</li>
+<li>Based on the new state, perform collision response.</li>
+<li>Repeat the loop.</li>
+</ol>
+</li>
+
+<li>For simple game, you may combine detection (in step 2) and response (in step 3) together. But take note that all the actors should move into the next position before carry out the collision detection.</li>
+
+<li>The collision detection and responses code should be kept in the main game class, instead of within the actor. To support this, the main class must be able to retrieve certain information from the actor. Hence, it is proposed that each of the actor should have the following methods. The main class can use these methods of the two sprites to detect collision between them. (What to return? Shape and Rectangle2D?)
+<pre class="code-syntax">
+public boolean intersects(Shape shape) { ...... }  <span class="code-comment">// intersects with the given shape</span>
+public boolean contains(Shape shape) { ...... }    <span class="code-comment">// completely encloses the given shape</span>
+public Shape getBounds2D() { ...... }              <span class="code-comment">// returns a bounding box</span></pre>
+<pre class="code-example">
+for each pair of actors, actor1.checkCollision(actor2).
+for each actor, responseUponCollision().</pre>
+</li>
+
+<li>Actor shall maintain its own state, via an associated enumeration called <code>State</code>.</li>
+
+</ul>
+
+<p>[TODO] Shall I move, check collision, and unmove if not collided; or check move, move (no unmove)?</p>
+
+<h3>Snake Game - Part II</h3>
+
+<p>Let zest up the snake game by adding a control panel, score board, and sound effects.</p>
+
+<h4>Control Panel</h4>
+
+<img class="image-center" src="images/GameSnakeV2_ControlCaptured.png" alt="screen capture" />
+
+<pre class="code-listing">
+public class GameMain extends JPanel {
+   
+   ......
+   ......
+   <span class="code-comment">// Handle for the custom drawing panel and UI components.</span>
+   private GameCanvas pit;
+   private ControlPanel control;
+   private JLabel lblScore;
+   
+   <span class="code-comment">// Constructor to initialize the UI components and game objects</span>
+   public GameMain() {
+      <span class="code-comment">// Initialize the game objects</span>
+      gameInit();
+   
+      <span class="code-comment">// UI components</span>
+      setLayout(new BorderLayout());
+      pit = new GameCanvas();               <span class="code-comment">// drawing panel</span>
+      pit.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+      add(pit, BorderLayout.CENTER);
+      control = new ControlPanel();   <span class="code-comment">// control panel</span>
+      add(control, BorderLayout.SOUTH);
+   }
+   
+   <span class="code-comment">// Game Control Panel with Start, Stop, Pause and Mute buttons, designed as an inner class.</span>
+   class ControlPanel extends JPanel {
+      private JButton btnStartPause;
+      private JButton btnStop;
+      private JButton btnMute;
+   
+      private ImageIcon iconStart = new ImageIcon(getClass().getClassLoader().getResource(&quot;images/media-playback-start.png&quot;), &quot;START&quot;);
+      private ImageIcon iconPause = new ImageIcon(getClass().getClassLoader().getResource(&quot;images/media-playback-pause.png&quot;), &quot;PAUSE&quot;);
+      private ImageIcon iconStop = new ImageIcon(getClass().getClassLoader().getResource(&quot;images/media-playback-stop.png&quot;), &quot;STOP&quot;);
+      private ImageIcon iconSound = new ImageIcon(getClass().getClassLoader().getResource(&quot;images/audio-volume-high.png&quot;), &quot;SOUND ON&quot;);
+      private ImageIcon iconMuted = new ImageIcon(getClass().getClassLoader().getResource(&quot;images/audio-volume-muted.png&quot;), &quot;MUTED&quot;);
+   
+      public ControlPanel() {
+         this.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+         btnStartPause = new JButton(iconStart);
+         btnStartPause.setEnabled(true);
+         add(btnStartPause);
+         btnStop = new JButton(iconStop);
+         btnStop.setEnabled(false);
+         add(btnStop);
+         btnMute = new JButton(iconMuted);
+         btnMute.setEnabled(true);
+         add(btnMute);
+         lblScore = new JLabel(&quot;        Score: 0&quot;);
+         add(lblScore);
+   
+         btnStartPause.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               switch (state) {
+                  case INITIALIZED:
+                  case GAMEOVER:
+                     btnStartPause.setIcon(iconPause);
+                     gameStart();
+                     break;
+                  case PLAYING:
+                     state = GameState.PAUSED;
+                     btnStartPause.setIcon(iconStart);
+                     break;
+                  case PAUSED:
+                     state = GameState.PLAYING;
+                     btnStartPause.setIcon(iconPause);
+                     break;
+               }
+               btnStop.setEnabled(true);
+               pit.requestFocus();
+            }
+         });
+         btnStop.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               state = GameState.GAMEOVER;
+               btnStartPause.setIcon(iconStart);
+               btnStartPause.setEnabled(true);
+               btnStop.setEnabled(false);
+            }
+         });
+         btnMute.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               if (SoundEffect.volume == SoundEffect.Volume.MUTE) {
+                  SoundEffect.volume = SoundEffect.Volume.LOW;
+                  btnMute.setIcon(iconSound);
+                  pit.requestFocus();
+               } else {
+                  SoundEffect.volume = SoundEffect.Volume.MUTE;
+                  btnMute.setIcon(iconMuted);
+                  pit.requestFocus();
+               }
+            }
+         });
+      }
+   
+      <span class="code-comment">// Reset control for a new game</span>
+      public void reset() {
+         btnStartPause.setIcon(iconStart);
+         btnStartPause.setEnabled(true);
+         btnStop.setEnabled(false);
+      }
+   }
+}</pre>
+
+<ul>
+<li>The control panel is derived from <code>JPanel</code> and is designed as an inner class, just like the drawing panel.</li>
+<li>There are four <code>JButton</code> inside the panel. Instead of text-label buttons, image-icons are used. The icons are downloaded from the open-source &quot;Tango desktop project @ <a href="http://tango.freedesktop.org">http://tango.freedesktop.org</a>&quot;. For the &quot;mute&quot; button, two image-icons are required (mute and volume-on).</li>
+<li>You need to enable/disable the button accordingly, and transfer the focus to the drawing panel, after a button is pushed.</li>
+</ul>
+
+<h4>Menubar</h4>
+
+<pre class="code-syntax">
+   <span class="code-comment">// Declare menubar</span>
+   static JMenuBar menuBar;
+   ......
+
+   <span class="code-comment">// Constructor</span>
+   setupMenuBar()
+   ......
+   
+   <span class="code-comment">// Helper function to setup the menubar</span>
+   private void setupMenuBar() {
+      JMenu menu;         <span class="code-comment">// a menu in the menu-bar</span>
+      JMenuItem menuItem; <span class="code-comment">// a regular menu-item in a menu</span>
+      
+      menuBar = new JMenuBar();
+      
+      <span class="code-comment">// First Menu - "Game"</span>
+      menu = new JMenu(&quot;Game&quot;);
+      menu.setMnemonic(KeyEvent.VK_G);
+      menuBar.add(menu);
+ 
+      menuItem = new JMenuItem(&quot;New&quot;, KeyEvent.VK_N);
+      menu.add(menuItem);
+      menuItem.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            <span class="code-comment">// Stop the current game if needed</span>
+            if (state == GameState.PLAYING || state == GameState.PAUSED) {
+               state = GameState.GAMEOVER;
+            }
+            gameStart();
+            control.reset();
+         }
+      });
+ 
+      <span class="code-comment">// Help Menu</span>
+      menu = new JMenu(&quot;Help&quot;);
+      menu.setMnemonic(KeyEvent.VK_H);
+      menuBar.add(menu);
+
+      menuItem = new JMenuItem(&quot;Help Contents&quot;, KeyEvent.VK_H);
+      menu.add(menuItem);
+      menuItem.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            String msg = &quot;Arrow keys to change direction\n&quot;
+                  + &quot;P to pause/resume\n&quot;
+                  + &quot;S to toggle sound on/off\n&quot;;
+            JOptionPane.showMessageDialog(GameMain.this, 
+                  msg, &quot;Instructions&quot;, JOptionPane.PLAIN_MESSAGE);
+         }
+      });
+
+      menuItem = new JMenuItem(&quot;About&quot;, KeyEvent.VK_A);
+      menu.add(menuItem);
+      menuItem.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(GameMain.this, 
+                  &quot;The brain-dead snake game for teaching my students game programming&quot;,
+                  &quot;About&quot;, JOptionPane.PLAIN_MESSAGE);
+         }
+      });
+   }
+   
+   <span class="code-comment">// in main()</span>
+   JFrame frame = new JFrame(TITLE);
+   frame.setJMenuBar(menuBar);
+   ......</pre>
+
+
+<h4>Playing Sound Effect</h4>
+<p>Include the <code>SoundEffect</code> enum, descried in the earlier chapter. Define the names of the sound effects and their associated wave file.  You can then play the sound effect in the game logic.</p>
+
+<pre class="code-syntax">
+public enum SoundEffect {
+   DIE(&quot;die.wav&quot;),     <span class="code-comment">// game over</span>
+   EAT(&quot;eatfood.wav&quot;); <span class="code-comment">// eat an food item</span>
+&nbsp;
+   ......
+   ......
+}</pre>
+
+<h3>Two Snakes</h3>
+<p>Try:</p>
+<ul>
+<li>Each snake shall maintain its own set of keys for UP, DOWN, LEFT and RIGHT turn, and other attributes such as color.</li>
+<li>The snake cannot climb over another. If one snake's movement is blocked by another, it halts, until its direction is changed via a proper key input.</li>
+<li>Each snake has a &quot;heart&quot; (3rd cells from its head). It will be killed if it is hit at its heart.</li>
+</ul>
+
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>Source codes of the &quot;Sun Java Wireless Toolkit (WTK) 2.5 Demo: Worm Game&quot;.</li>
+<li>Jonathan S. Harbour, &quot;Beginning Java 5 Game Programming&quot;: Good introductory book with sufficient technical details to get you started. Nice coverage on 2D vector graphics and bitmap including sprite animation. Easy to read and can be finished in a few days. However, the games are written in applet. No coverage of 3D technologies such as JOGL, JOAL and Java 3D. Also does not take full advantage of Java 5, in particular enumeration for keeping game and sprite states. No coverage on full-screen API, and performance for advanced game.</li>
+<li>Dustin Clingman, Shawn Kendall and Syrus Mesdaghi, &quot;Practical Java Game Programming&quot;: filled with more advanced technical details. Topics such as IO operations and performance are applicable even for non-gaming applications. Much harder to read. Cover 2D and 3D (JOGL, JOAL, Java 3D).</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: JDK 1.6<br />
+Last modified: September 4, 2008</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>

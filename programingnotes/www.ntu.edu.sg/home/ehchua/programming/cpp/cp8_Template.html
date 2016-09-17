@@ -1,0 +1,1155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Object-oriented Programming (OOP) in C++</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>C++ Programming Language</h1>
+<h2>Template and Generic Programming</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Introduction</h3>
+
+<p>We are familiar in passing value/variable into function. Instead of passing a variable, we pass a <em>type</em> (such as <code>int</code>, <code>double</code>, and <code>Point</code>) into <em>template</em>. Passing type is known as <em>generic programming</em>, as we can program in <em>generic type</em> and invoke the code using a <em>specific type</em>.</p>
+
+<p>The goal of <em>generic programming</em> is to write code that is independent of the <em>data types</em>. In C language, all codes are tied to a specific data type. For container data structures (such as array and structure), you need to specify the type of the elements. For algorithms (such as searching or sorting), the code works only for a specific type, you need to rewrite the code for another type. Can we write a single sorting routine that works on all types (or most of the types) by specifying the type during invocation? Can we have a general container that can work on all types?</p>
+
+<p>Template lets you program on generic type, instead of on a specific type. Template supports so-called <em>parameterized type</em> - i.e., you can use type as argument in building a class or a function (in class template or function template). Template is extremely useful if a particular algorithm is to be applied to a variety of types, e.g., a <em>container</em> class which contains elements, possibly of various types.</p>
+<p>C++'s Standard Template Library (STL) provides template implementation of many <em>container</em> classes, such as <code>vector</code>, which can be used to hold elements of all types. STL also provides generic representation of algorithm (such as searching and sorting), which works on the generic container.</p>
+
+<h3>Example: STL's <span class="font-code">vector</span> Template Class</h3>
+
+<p>C/C++ built-in array has many drawbacks:</p>
+
+<ol>
+<li>It is fixed-size and needs to be allocated with the fixed-size during declaration. It does not support <em>dynamic allocation</em>. You cannot increase the size of an array during execution.</li>
+<li>Array does not provide index-bound check. You could use an index which is outside the array's bound.</li>
+
+<li>You need to roll your own codes to compare two arrays (via <code>==</code>), copy an array into another array (via assignment <code>=</code>), etc.</li>
+</ol>
+
+<p>C++ provides a <code>vector</code> template class, as part of Standard Template Library (STL). It is defined in header <code>&lt;vector&gt;</code>, belonging to the namespace <code>std</code>. (In computing, a vector refers to an array-like structure that holds a set of direct-access elements of the same kinds, instead of mathematical n-component vector.) <code>vector</code> is the most commonly used STL class, which provides an alternative to the error-phone array, supports dynamic memory allocation and many operations (such as comparison and assignment).</p>
+<p><code>vector</code> is a template class, which can be instantiated with a type, in the format: <code>vector&lt;int&gt;</code>, <code>vector&lt;double&gt;</code>, <code>vector&lt;string&gt;</code>. The same template class can be used to handle many types, instead of repeatably writing codes for each of the type.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test vector template class (TestVectorTemplate.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+using namespace std;
+ 
+void print(const vector&lt;int&gt; &amp; v);
+ 
+int main() {
+   <span class="color-new">vector&lt;int&gt; v1(5);</span> <span class="color-comment"> // Create a vector with 5 elements;</span>
+ 
+  <span class="color-comment"> // Assign values into v1, using array-like index []</span>
+  <span class="color-comment"> // You can retrieve the size of vector via size()</span>
+   for (int i = 0; i &lt; <span class="color-new">v1.size()</span>; ++i) {
+      <span class="color-new">v1[i]</span> = (i+1) * 2;         <span class="color-comment"> // no index-bound check for []</span>
+   }
+ 
+  <span class="color-comment"> // Print vector content, using at()</span>
+   for (int i = 0; i &lt; v1.size(); ++i) {
+      cout &lt;&lt; <span class="color-new">v1.at(i)</span> &lt;&lt; &quot; &quot;;   <span class="color-comment"> // do index-bound check with at()</span>
+   }
+   cout &lt;&lt; endl;
+ 
+   <span class="color-new">vector&lt;int&gt; v2;</span>  <span class="color-comment"> // Create a vector with 0 elements</span>
+  <span class="color-comment"> // Assign v1 to v2 memberwise</span>
+   <span class="color-new">v2 = v1;</span>
+   for (int i = 0; i &lt; v2.size(); ++i) {
+      cout &lt;&lt; v2[i] &lt;&lt; &quot; &quot;;
+   }
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Compare 2 vectors memberwise</span>
+   cout &lt;&lt; boolalpha &lt;&lt; (<span class="color-new">v1 == v2</span>) &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Append more elements - dynamically allocate memory</span>
+   <span class="color-new">v1.push_back(80);</span>
+   <span class="color-new">v1.push_back(81);</span>
+   for (int i = 0; i &lt; v1.size(); ++i) {
+      cout &lt;&lt; v1[i] &lt;&lt; &quot; &quot;;
+   }
+   cout &lt;&lt; endl;
+ 
+  <span class="color-comment"> // Remove element from the end</span>
+   <span class="color-new">v1.pop_back();</span>
+   for (int i = 0; i &lt; v1.size(); ++i) {
+      cout &lt;&lt; v1[i] &lt;&lt; &quot; &quot;;
+   }
+   cout &lt;&lt; endl;
+ 
+   <span class="color-new">vector&lt;string&gt; v3;</span> <span class="color-comment"> // Create a vector of string with 0 element</span>
+   v3.push_back(&quot;A for Apple&quot;);   <span class="color-comment"> // append new elements</span>
+   v3.push_back(&quot;B for Boy&quot;);
+   for (int i = 0; i &lt; v3.size(); ++i) {
+      cout &lt;&lt; v3[i] &lt;&lt; &quot; &quot;;
+   }
+   cout &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>You can instantiate a <code>vector</code> of <code>int</code> via declaration <code>vector&lt;int&gt; v1(<em>n</em>)</code>, where <code><em>n</em></code> specifies the initial number of elements.</li>
+<li>You can use <code>v1.size()</code> to get the current size (number of elements) of the <code>vector</code>.</li>
+<li>You can directly access element via <code>v1[<em>i</em>]</code> or <code>v1.at(<em>i</em>)</code>. The <code>[]</code> operator does not perform index-bound check; whereas <code>at()</code> does. Try issuing an out-of-bound index via <code>[]</code> and <code>at()</code> and observe the result.</li>
+<li>You can assign a <code>vector</code> into another <code>vector</code> via the assignment operator (<code>=</code>). The assignment is carried out memberwise.</li>
+<li>You can compare two vectors memberwise via the comparison operators (<code>==</code>, <code>!=</code>).</li>
+<li>You can append/remove element from the end via <code>push_back()</code> and <code>pop_back()</code>. The size of vector will be adjusted  and memory allocated automatically.</li>
+<li>You can also create vector of other types, such as <code>vector&lt;string&gt;</code>, <code>vector&lt;double&gt;</code>, etc. The bigger advantage of template class is the same algorithm and operation can be applied to different types - you do not need to write separate codes for different types.</li>
+
+
+</ul>
+
+
+<h3>Function Template</h3>
+
+<p>A <em>function template</em> is a generic function that is defined on a generic type for which a specific type can be substituted. Compiler will generate a function for each specific type used. Because types are used in the function parameters, they are also called <em>parameterized types</em>.</p>
+
+<p>The syntax of defining function template is:</p>
+<pre class="color-syntax">
+<strong>template &lt;typename T&gt;</strong> <span class="color-comment">OR</span> <strong>template &lt;class T&gt;</strong>
+<em>return-type</em> <em>function-name</em>(<em>function-parameter-list</em>) { ...... }</pre>
+<p>Similar to function's parameter-list, which passes variables (e.g., <code>int number</code>), the template's parameter list passes types.</p>
+
+
+
+<h5>Example 1</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Function Template (FuncationTemplate.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+template &lt;typename T&gt;
+void mySwap(T &amp;a, T &amp;b);
+  <span class="color-comment"> // Swap two variables of generic type passed-by-reference</span>
+  <span class="color-comment"> // There is a version of swap() in &lt;iostream&gt;</span>
+ 
+int main() {
+   int i1 = 1, i2 = 2;
+   mySwap(i1, i2);  <span class="color-comment"> // Compiler generates mySwap(int &amp;, int &amp;)</span>
+   cout &lt;&lt; &quot;i1 is &quot; &lt;&lt; i1 &lt;&lt; &quot;, i2 is &quot; &lt;&lt; i2 &lt;&lt; endl;
+ 
+   char c1 = 'a', c2 = 'b';
+   mySwap(c1, c2);  <span class="color-comment"> // Compiler generates mySwap(char &amp;, char &amp;)</span>
+   cout &lt;&lt; &quot;c1 is &quot; &lt;&lt; c1 &lt;&lt; &quot;, c2 is &quot; &lt;&lt; c2 &lt;&lt; endl;
+ 
+   double d1 = 1.1, d2 = 2.2;
+   mySwap(d1, d2);  <span class="color-comment"> // Compiler generates mySwap(double &amp;, double &amp;)</span>
+   cout &lt;&lt; &quot;d1 is &quot; &lt;&lt; d1 &lt;&lt; &quot;, d2 is &quot; &lt;&lt; d2 &lt;&lt; endl;
+ 
+<span class="color-error">//</span> mySwap(i1, d1);
+     <span class="color-error">// error: no matching function for call to 'mySwap(int&amp;, double&amp;)'
+     // note: candidate is:
+     // note: template&lt;class T&gt; void mySwap(T&amp;, T&amp;)</span>
+}
+ 
+template &lt;typename T&gt;
+void mySwap(T &amp;a, T &amp;b) {
+   T temp;
+   temp = a;
+   a = b;
+   b = temp;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Take note that the C++ compiler generate a version of the code for each type used in the program, in a process known as <em>instantiation of template</em>. For example, with type of <code>int</code>, the following code will be generated by the compiler:</p>
+
+<pre class="color-example">
+void mySwap(<span class="color-new">int</span> &amp;a, <span class="color-new">int</span> &amp;b) {
+   <span class="color-new">int</span> temp;
+   temp = a;
+   a = b;
+   b = temp;
+}</pre>
+
+<p>There is no improvement in term of execution speed or memory usage. But there is a big improvement in programmer's productivity, ease-of-use and ease-of-maintenance.</p>
+<p>Also, the above code can handle the fundamental types (such as <code>int</code>, <code>double</code>), but not some types such as array. It, however, works for objects and structs, thanks to the memberwise assignment.</p>
+
+<p>You could use <code>&lt;typename T&gt;</code> or <code>&lt;class T&gt;</code> in the template parameter list. The keywords <code>typename</code> and <code>class</code> serve the same purpose.</p>
+
+<h5>Example 2</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Test function Template (TestFunctionTemplate.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+template&lt;typename T&gt;
+T abs(T value) {
+   T result;    <span class="color-comment">// result's type is also T</span>
+   result = (value &gt;= 0) ? value : -value;
+   return result;
+}
+ 
+int main() {
+   int i = -5;
+   cout &lt;&lt; abs(i) &lt;&lt; endl;
+ 
+   double d = -55.5;
+   cout &lt;&lt; abs(d) &lt;&lt; endl;
+ 
+   float f = -555.5f;
+   cout &lt;&lt; abs(f) &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The compiler creates three versions of the <code>abs</code> function based on the function template, for types of <code>int</code>, <code>double</code>, and <code>float</code>.</p>
+
+<h5>Function Template Overloading</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Function Template Overloading (FuncationTemplateOverloading.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+template &lt;typename T&gt;
+void mySwap(T &amp;a, T &amp;b);
+  <span class="color-comment"> // Swap two variables of generic fundamental type</span>
+ 
+template &lt;typename T&gt;
+void mySwap(T a[], T b[], int size);
+  <span class="color-comment"> // Swap two arrays of generic type</span>
+ 
+template &lt;typename T&gt;
+void print(const T * const array, int size);
+  <span class="color-comment"> // Print an array of generic type</span>
+ 
+int main() {
+   int i1 = 1, i2 = 2;
+   mySwap(i1, i2);  <span class="color-comment"> // Compiler generates mySwap(int &amp;, int &amp;)</span>
+   cout &lt;&lt; &quot;i1 is &quot; &lt;&lt; i1 &lt;&lt; &quot;, i2 is &quot; &lt;&lt; i2 &lt;&lt; endl;
+ 
+   const int SIZE = 3;
+   int ar1[] = {1, 2, 3}, ar2[] = {4, 5, 6};
+   mySwap(ar1, ar2, SIZE);
+   print(ar1, SIZE);
+   print(ar2, SIZE);
+}
+ 
+template &lt;typename T&gt;
+void mySwap(T &amp;a, T &amp;b) {
+   T temp;
+   temp = a;
+   a = b;
+   b = temp;
+}
+ 
+template &lt;typename T&gt;
+void mySwap(T a[], T b[], int size) {
+   T temp;
+   for (int i = 0; i &lt; size; ++i) {
+      temp = a[i];
+      a[i] = b[i];
+      b[i] = temp;
+   }
+}
+ 
+template &lt;typename T&gt;
+void print(const T * const array, int size) {
+   cout &lt;&lt; &quot;(&quot;;
+   for (int i = 0; i &lt; size; ++i) {
+      cout &lt;&lt; array[i];
+      if (i &lt; size - 1) cout &lt;&lt; &quot;,&quot;;
+   }
+   cout &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Explicit Specialization</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Function Template Explicit Specialization (FuncationTemplateSpecialization.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+ 
+template &lt;typename T&gt;
+void mySwap(T &amp;a, T &amp;b); <span class="color-comment"> // Template</span>
+ 
+template &lt;&gt;
+void mySwap&lt;int&gt;(int &amp;a, int &amp;b);
+  <span class="color-comment"> // Explicit Specialization for type int</span>
+ 
+int main() {
+   double d1 = 1, d2 = 2;
+   mySwap(d1, d2);  <span class="color-comment"> // use template</span>
+ 
+   int i1 = 1, i2 = 2;
+   mySwap(i1, i2);  <span class="color-comment"> // use specialization</span>
+}
+ 
+template &lt;typename T&gt;
+void mySwap(T &amp;a, T &amp;b) {
+   cout &lt;&lt; &quot;Template&quot; &lt;&lt; endl;
+   T temp;
+   temp = a;
+   a = b;
+   b = temp;
+}
+ 
+template &lt;&gt;
+void mySwap&lt;int&gt;(int &amp;a, int &amp;b) {
+   cout &lt;&lt; &quot;Specialization&quot; &lt;&lt; endl;
+   int temp;
+   temp = a;
+   a = b;
+   b = temp;
+}
+ </pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Take note that if there is any non-template definition that matches the function call. The non-template version will take precedence over explicit specialization, then template.</p>
+
+<h3>Class Template</h3>
+
+<p>The syntax for defining a <em>class template</em> is as follow, where <em>T</em> is a <em>placeholder</em> for a type, to be provided by the user.</p>
+<pre class="color-syntax">
+template &lt;class <em>T</em>&gt;    <span class="color-comment">// OR template &lt;<span class="color-new">typename</span> T&gt;</span>
+class <em>ClassName</em> {
+   ......
+}</pre>
+
+<p>The keywords <code>class</code> and <code>typename</code> (newer and more appropriate) are synonymous in the definition of template.</p>
+<p>To use the template defined, use the syntax <code><em>ClassName</em>&lt;<em>actual-type</em>&gt;</code>.</p>
+
+<p>For Example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Test Class Template (TestClassTemplate.cpp)
+ */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+template &lt;typename T&gt;
+class Number {
+private:
+   T value;
+public:
+   Number(T value) { this-&gt;value = value; };
+   T getValue() { return value; }
+   void setValue(T value) { this-&gt;value = value; };
+};
+ 
+int main() {
+   Number&lt;int&gt; i(55);
+   cout &lt;&lt; i.getValue() &lt;&lt; endl;
+ 
+   Number&lt;double&gt; d(55.66);
+   cout &lt;&lt; d.getValue() &lt;&lt; endl;
+ 
+   Number&lt;char&gt; c('a');
+   cout &lt;&lt; c.getValue() &lt;&lt; endl;
+ 
+   Number&lt;string&gt; s(&quot;Hello&quot;);
+   cout &lt;&lt; s.getValue() &lt;&lt; endl;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Separating Template Function Declaration and Definition</h5>
+
+<p>If you separate the function implementation, you need to use keyword <code>template &lt;typename T&gt;</code> on each of the function implementation. For example,</p>
+
+<pre class="color-example">
+<span class="color-new">template &lt;typename T&gt;</span>
+T <span class="color-new">Number&lt;T&gt;</span>::getValue() {
+   return value;
+}</pre>
+
+<h5>Keep All Template Codes in the Header file</h5>
+
+<p>Templates are not class nor member function definition. They are instructions to the C++ compiler how to generate the class definition. Hence, placing member functions in a separate file will not work. All template codes shall be placed in the header file - to be included in all files using the template. Template cannot be compiled separately.</p>
+<p>A particular realization of template is called an <em>instantiation</em> or <em>specialization</em>. The C++ compiler generate a class for <em>each</em> of the parameterized type used in the program.</p>
+
+<h5>More than one Type Parameters</h5>
+
+<p>To use more than one type parameters in a template:</p>
+
+<pre class="color-syntax">
+template &lt;typename T1, typename T2, ....&gt;
+class ClassName { ...... }</pre>
+
+<h5>Default Type</h5>
+
+<p>You can also provide default type in template. For example,</p>
+
+<pre class="color-example">
+template &lt;typename T <span class="color-new">= int</span>&gt;
+class ClassName { ...... }</pre>
+
+<p>To instantiate with the default type, use <code>ClassName&lt;&gt;</code>.</p>
+
+<h5>Specialization</h5>
+
+<pre class="color-example">
+<span class="color-comment">// General Template</span>
+template &lt;typename T&gt;
+class Complex { ...... }
+ 
+<span class="color-comment">// Specialization for type double</span>
+template &lt;&gt;
+class Complex&lt;double&gt; { ...... }
+ 
+<span class="color-comment">// Specialization for type int</span>
+template &lt;&gt;
+class Complex&lt;int&gt; { ....... }</pre>
+
+<p>The specialization version will be matched, if available.</p>
+
+<h3>Example: <span class="font-code">MyComplex</span> Template Class</h3>
+
+<h5><span class="font-code">MyComplex.h</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * The MyComplex template class header (MyComplex.h)
+ * All template codes are kept in the header, to be included in program
+ * (Follow, modified and simplified from GNU GCC complex template class.)
+ */</span>
+#ifndef MY_COMPLEX_H
+#define MY_COMPLEX_H
+ 
+#include &lt;iostream&gt;
+ 
+<span class="color-comment">// Forward declaration</span>
+template &lt;typename T&gt; class MyComplex;
+ 
+template &lt;typename T&gt;
+std::ostream &amp; operator&lt;&lt; (std::ostream &amp; out, const MyComplex&lt;T&gt; &amp; c);
+template &lt;typename T&gt;
+std::istream &amp; operator&gt;&gt; (std::istream &amp; in, MyComplex&lt;T&gt; &amp; c);
+ 
+<span class="color-comment">// MyComplex template class declaration</span>
+template &lt;typename T&gt;
+class MyComplex {
+private:
+   T real, imag;
+ 
+public:
+  <span class="color-comment"> // Constructor</span>
+   explicit MyComplex&lt;T&gt; (T real = 0, T imag = 0)
+         : real(real), imag(imag) { }
+ 
+  <span class="color-comment"> // Overload += operator for c1 += c2</span>
+   MyComplex&lt;T&gt; &amp; operator+= (const MyComplex&lt;T&gt; &amp; rhs) {
+      real += rhs.real;
+      imag += rhs.imag;
+      return *this;
+   }
+ 
+  <span class="color-comment"> // Overload += operator for c1 += value</span>
+   MyComplex&lt;T&gt; &amp; operator+= (T value) {
+      real += value;
+      return *this;
+   }
+ 
+  <span class="color-comment"> // Overload comparison == operator for c1 == c2</span>
+   bool operator== (const MyComplex&lt;T&gt; &amp; rhs) const {
+      return (real == rhs.real &amp;&amp; imag == rhs.imag);
+   }
+ 
+  <span class="color-comment"> // Overload comparison != operator for c1 != c2</span>
+   bool operator!= (const MyComplex&lt;T&gt; &amp; rhs) const {
+      return !(*this == rhs);
+   }
+ 
+  <span class="color-comment"> // Overload prefix increment operator ++c</span>
+  <span class="color-comment"> // (Separate implementation for illustration)</span>
+   MyComplex&lt;T&gt; &amp; operator++ ();
+ 
+  <span class="color-comment"> // Overload postfix increment operator c++</span>
+   const MyComplex&lt;T&gt; operator++ (int dummy);
+ 
+   <span class="color-comment">/* friends */</span>
+ 
+  <span class="color-comment"> // (Separate implementation for illustration)</span>
+   friend std::ostream &amp; operator&lt;&lt; &lt;&gt;(std::ostream &amp; out, const MyComplex&lt;T&gt; &amp; c);<span class="color-comment"> // out &lt;&lt; c</span>
+   friend std::istream &amp; operator&gt;&gt; &lt;&gt;(std::istream &amp; in, MyComplex&lt;T&gt; &amp; c);       <span class="color-comment"> // in &gt;&gt; c</span>
+ 
+  <span class="color-comment"> // Overloading + operator for c1 + c2</span>
+  <span class="color-comment"> // (inline implementation for illustration)</span>
+   friend const MyComplex&lt;T&gt; operator+ (const MyComplex&lt;T&gt; &amp; lhs, const MyComplex&lt;T&gt; &amp; rhs) {
+      MyComplex&lt;T&gt; result(lhs);
+      result += rhs; <span class="color-comment"> // uses overload +=</span>
+      return result;
+   }
+ 
+  <span class="color-comment"> // Overloading + operator for c + double</span>
+   friend const MyComplex&lt;T&gt; operator+ (const MyComplex&lt;T&gt; &amp; lhs, T value) {
+      MyComplex&lt;T&gt; result(lhs);
+      result += value; <span class="color-comment"> // uses overload +=</span>
+      return result;
+   }
+ 
+  <span class="color-comment"> // Overloading + operator for double + c</span>
+   friend const MyComplex&lt;T&gt; operator+ (T value, const MyComplex&lt;T&gt; &amp; rhs) {
+      return rhs + value;  <span class="color-comment"> // swap and use above function</span>
+   }
+};
+ 
+<span class="color-comment">// Overload prefix increment operator ++c</span>
+template &lt;typename T&gt;
+MyComplex&lt;T&gt; &amp; MyComplex&lt;T&gt;::operator++ () {
+  ++real;  <span class="color-comment"> // increment real part only</span>
+  return *this;
+}
+ 
+<span class="color-comment">// Overload postfix increment operator c++</span>
+template &lt;typename T&gt;
+const MyComplex&lt;T&gt; MyComplex&lt;T&gt;::operator++ (int dummy) {
+   MyComplex&lt;T&gt; saved(*this);
+   ++real; <span class="color-comment"> // increment real part only</span>
+   return saved;
+}
+ 
+<span class="color-comment">/* Definition of friend functions */</span>
+ 
+<span class="color-comment">// Overload stream insertion operator out &lt;&lt; c (friend)</span>
+template &lt;typename T&gt;
+std::ostream &amp; operator&lt;&lt; (std::ostream &amp; out, const MyComplex&lt;T&gt; &amp; c) {
+   out &lt;&lt; '(' &lt;&lt; c.real &lt;&lt; ',' &lt;&lt; c.imag &lt;&lt; ')';
+   return out;
+}
+ 
+<span class="color-comment">// Overload stream extraction operator in &gt;&gt; c (friend)</span>
+template &lt;typename T&gt;
+std::istream &amp; operator&gt;&gt; (std::istream &amp; in, MyComplex&lt;T&gt; &amp; c) {
+   T inReal, inImag;
+   char inChar;
+   bool validInput = false;
+  <span class="color-comment"> // Input shall be in the format &quot;(real,imag)&quot;</span>
+   in &gt;&gt; inChar;
+   if (inChar == '(') {
+      in &gt;&gt; inReal &gt;&gt; inChar;
+      if (inChar == ',') {
+         in &gt;&gt; inImag &gt;&gt; inChar;
+         if (inChar == ')') {
+            c = MyComplex&lt;T&gt;(inReal, inImag);
+            validInput = true;
+         }
+      }
+   }
+   if (!validInput) in.setstate(std::ios_base::failbit);
+   return in;
+}
+ 
+#endif</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>[TODO]</li>
+</ul>
+
+
+<h5><span class="font-code">TestMyComplex.cpp</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test Driver for MyComplex template class (TestMyComplex.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &quot;MyComplex.h&quot;
+ 
+int main() {
+   std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(2);
+ 
+   MyComplex&lt;double&gt; c1(3.1, 4.2);
+   std::cout &lt;&lt; c1 &lt;&lt; std::endl; <span class="color-comment"> // (3.10,4.20)</span>
+   MyComplex&lt;double&gt; c2(3.1);
+   std::cout &lt;&lt; c2 &lt;&lt; std::endl; <span class="color-comment"> // (3.10,0.00)</span>
+ 
+   MyComplex&lt;double&gt; c3 = c1 + c2;
+   std::cout &lt;&lt; c3 &lt;&lt; std::endl; <span class="color-comment"> // (6.20,4.20)</span>
+   c3 = c1 + 2.1;
+   std::cout &lt;&lt; c3 &lt;&lt; std::endl; <span class="color-comment"> // (5.20,4.20)</span>
+   c3 = 2.2 + c1;
+   std::cout &lt;&lt; c3 &lt;&lt; std::endl; <span class="color-comment"> // (5.30,4.20)</span>
+ 
+   c3 += c1;
+   std::cout &lt;&lt; c3 &lt;&lt; std::endl; <span class="color-comment"> // (8.40,8.40)</span>
+   c3 += 2.3;
+   std::cout &lt;&lt; c3 &lt;&lt; std::endl; <span class="color-comment"> // (10.70,8.40)</span>
+ 
+   std::cout &lt;&lt; ++c3 &lt;&lt; std::endl;<span class="color-comment"> // (11.70,8.40)</span>
+   std::cout &lt;&lt; c3++ &lt;&lt; std::endl;<span class="color-comment"> // (11.70,8.40)</span>
+   std::cout &lt;&lt; c3   &lt;&lt; std::endl;<span class="color-comment"> // (12.70,8.40)</span>
+ 
+<span class="color-comment">// c1+c2 = c3; <span class="color-comment"> // error: c1+c2 returns a const</span></span>
+<span class="color-comment">// c1++++;     <span class="color-comment"> // error: c1++ returns a const</span></span>
+ 
+<span class="color-comment">// MyComplex&lt;int&gt; c4 = 5; <span class="color-comment"> // error: implicit conversion disabled</span></span>
+   MyComplex&lt;int&gt; c4 = (MyComplex&lt;int&gt;)5; <span class="color-comment"> // explicit type casting allowed</span>
+   std::cout &lt;&lt; c4 &lt;&lt; std::endl;<span class="color-comment"> // (5,0)</span>
+ 
+   MyComplex&lt;int&gt; c5;
+   std::cout &lt;&lt; &quot;Enter a complex number in (real,imag): &quot;;
+   std::cin &gt;&gt; c5;
+   if (std::cin.good()) {
+      std::cout &lt;&lt; c5 &lt;&lt; std::endl;
+   } else {
+      std::cerr &lt;&lt; &quot;Invalid input&quot; &lt;&lt; std::endl;
+   }
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Program Notes:</p>
+
+<ul>
+<li>[TODO]</li>
+</ul>
+
+
+<a class="references" href="../howto/References.html#cpp">Link to &quot;C++ References &amp; Resources&quot;</a>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Cygwin/MinGW GCC 4.6.2<br />
+Last modified: May, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+
+</body>
+</html>

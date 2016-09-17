@@ -1,0 +1,3228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Tic-tac-toe - Java Game Programming Case Study</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Graphics Programming</h1>
+<h2>Case Study on Tic-Tac-Toe &amp; Assignment</h2>
+</div>
+
+<div id="content-main">
+
+<h5><span class="color-new">Click on the Image to run the Applet Demo (tested on FireFox/Windows only)</span></h5>
+<br />
+<a href="Applet_TicTacToe.html" target="_blank"><img src="images/GameTTT_Applet.png" alt="GameTTT_Applet.png" /></a>&nbsp;&nbsp;
+<a href="Applet_Connect4.html" target="_blank"><img src="images/GameConnect4_Applet.png" alt="GameConnect4_Applet.png"/></a>
+&nbsp;&nbsp;
+<a href="Applet_Othello.html" target="_blank"><img src="images/GameOthello_Applet.png" alt="GameOthello_Applet.png" /></a>&nbsp;&nbsp;
+<a href="Applet_MineSweeper.html" target="_blank"><img src="images/GameMineSweeper_Applet.png" alt="MineSweeper_Applet.png" width="151" height="147" /></a>&nbsp;&nbsp;
+<a href="Applet_Sudoku.html" target="_blank"><img src="images/GameSudoku.png" alt="Sudoku_Applet.png" width="151" height="147" /></a>&nbsp;&nbsp;
+<a href="Applet_Tetris.html" target="_blank"><img src="images/GameTetris_Applet.png" alt="Tetris_Applet.png" width="151" height="147" /></a>&nbsp;&nbsp;
+<a href="Applet_Snake.html" target="_blank"><img src="images/GameSnake_Applet.png" alt="GameSnake_Applet.png" width="151" height="147" /></a>&nbsp;&nbsp;
+
+
+
+<h3>Let's Start with a 2-Player Console Non-OO Tic-Tac-Toe</h3>
+<p>Let us start with a 2-player console (non-graphics) version of Tic-Tac-Toe, where player <code>'X'</code> and player <code>'O'</code> enter their moves successively, as shown below:</p>
+
+<pre class="output">
+Player 'X', enter your move (row[1-3] column[1-3]): <strong>2 2</strong>
+   |   |   
+-----------
+   | X |   
+-----------
+   |   |   
+
+Player 'O', enter your move (row[1-3] column[1-3]): <strong>1 1</strong>
+ O |   |   
+-----------
+   | X |   
+-----------
+   |   |   
+
+Player 'X', enter your move (row[1-3] column[1-3]): <strong>1 3</strong>
+ O |   | X 
+-----------
+   | X |   
+-----------
+   |   |   
+
+Player 'O', enter your move (row[1-3] column[1-3]): <strong>3 1</strong>
+ O |   | X 
+-----------
+   | X |   
+-----------
+ O |   |   
+
+Player 'X', enter your move (row[1-3] column[1-3]): <strong>2 2</strong>
+<span class="color-new">This move at (2,2) is not valid. Try again...</span>
+Player 'X', enter your move (row[1-3] column[1-3]): <strong>2 3</strong>
+ O |   | X 
+-----------
+   | X | X 
+-----------
+ O |   |   
+
+Player 'O', enter your move (row[1-3] column[1-3]): <strong>2 1</strong>
+ O |   | X 
+-----------
+ O | X | X 
+-----------
+ O |   |   
+
+<strong>Player 'O' won!</strong>
+</pre>
+
+<h5 class="font-code">TTTCosnoleNonOO2P.java</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155</pre>
+</td>
+<td>
+<pre>
+import java.util.Scanner;
+<span class="color-comment">/**
+ * Tic-Tac-Toe: Two-player console, non-graphics, non-OO version.
+ * All variables/methods are declared as static (belong to the class)
+ *  in the non-OO version.
+ */</span>
+public class TTTConsoleNonOO2P {
+   <span class="color-comment">// Name-constants to represent the seeds and cell contents</span>
+   public static final int EMPTY = 0;
+   public static final int CROSS = 1;
+   public static final int NOUGHT = 2;
+ 
+   <span class="color-comment">// Name-constants to represent the various states of the game</span>
+   public static final int PLAYING = 0;
+   public static final int DRAW = 1;
+   public static final int CROSS_WON = 2;
+   public static final int NOUGHT_WON = 3;
+ 
+   <span class="color-comment">// The game board and the game status</span>
+   public static final int ROWS = 3, COLS = 3; <span class="color-comment">// number of rows and columns</span>
+   public static int[][] board = new int[ROWS][COLS]; <span class="color-comment">// game board in 2D array
+                                                      //  containing (EMPTY, CROSS, NOUGHT)</span>
+   public static int currentState;  <span class="color-comment">// the current state of the game</span>
+                                    <span class="color-comment">// (PLAYING, DRAW, CROSS_WON, NOUGHT_WON)</span>
+   public static int currentPlayer; <span class="color-comment">// the current player (CROSS or NOUGHT)</span>
+   public static int currntRow, currentCol; <span class="color-comment">// current seed's row and column</span>
+ 
+   public static Scanner in = new Scanner(System.in); <span class="color-comment">// the input Scanner</span>
+ 
+   <span class="color-comment">/** The entry main method (the program starts here) */</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Initialize the game-board and current status</span>
+      initGame();
+      <span class="color-comment">// Play the game once</span>
+      do {
+         playerMove(currentPlayer); <span class="color-comment">// update currentRow and currentCol</span>
+         updateGame(currentPlayer, currntRow, currentCol); <span class="color-comment">// update currentState</span>
+         printBoard();
+         <span class="color-comment">// Print message if game-over</span>
+         if (currentState == CROSS_WON) {
+            System.out.println(&quot;'X' won! Bye!&quot;);
+         } else if (currentState == NOUGHT_WON) {
+            System.out.println(&quot;'O' won! Bye!&quot;);
+         } else if (currentState == DRAW) {
+            System.out.println(&quot;It's a Draw! Bye!&quot;);
+         }
+         <span class="color-comment">// Switch player</span>
+         currentPlayer = (currentPlayer == CROSS) ? NOUGHT : CROSS;
+      } while (currentState == PLAYING); <span class="color-comment">// repeat if not game-over</span>
+   }
+ 
+   <span class="color-comment">/** Initialize the game-board contents and the current states */</span>
+   public static void initGame() {
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            board[row][col] = EMPTY;  <span class="color-comment">// all cells empty</span>
+         }
+      }
+      currentState = PLAYING; <span class="color-comment">// ready to play</span>
+      currentPlayer = CROSS;  <span class="color-comment">// cross plays first</span>
+   }
+ 
+   <span class="color-comment">/** Player with the &quot;theSeed&quot; makes one move, with input validation.
+       Update global variables &quot;currentRow&quot; and &quot;currentCol&quot;. */</span>
+   public static void playerMove(int theSeed) {
+      boolean validInput = false;  <span class="color-comment">// for input validation</span>
+      do {
+         if (theSeed == CROSS) {
+            System.out.print(&quot;Player 'X', enter your move (row[1-3] column[1-3]): &quot;);
+         } else {
+            System.out.print(&quot;Player 'O', enter your move (row[1-3] column[1-3]): &quot;);
+         }
+         int row = in.nextInt() - 1;  <span class="color-comment">// array index starts at 0 instead of 1</span>
+         int col = in.nextInt() - 1;
+         if (row &gt;= 0 &amp;&amp; row &lt; ROWS &amp;&amp; col &gt;= 0 &amp;&amp; col &lt; COLS &amp;&amp; board[row][col] == EMPTY) {
+            currntRow = row;
+            currentCol = col;
+            board[currntRow][currentCol] = theSeed;  <span class="color-comment">// update game-board content</span>
+            validInput = true;  <span class="color-comment">// input okay, exit loop</span>
+         } else {
+            System.out.println(&quot;This move at (&quot; + (row + 1) + &quot;,&quot; + (col + 1)
+                  + &quot;) is not valid. Try again...&quot;);
+         }
+      } while (!validInput);  <span class="color-comment">// repeat until input is valid</span>
+   }
+ 
+   <span class="color-comment">/** Update the &quot;currentState&quot; after the player with &quot;theSeed&quot; has placed on
+       (currentRow, currentCol). */</span>
+   public static void updateGame(int theSeed, int currentRow, int currentCol) {
+      if (hasWon(theSeed, currentRow, currentCol)) {  <span class="color-comment">// check if winning move</span>
+         currentState = (theSeed == CROSS) ? CROSS_WON : NOUGHT_WON;
+      } else if (isDraw()) {  <span class="color-comment">// check for draw</span>
+         currentState = DRAW;
+      }
+      <span class="color-comment">// Otherwise, no change to currentState (still PLAYING).</span>
+   }
+ 
+   <span class="color-comment">/** Return true if it is a draw (no more empty cell) */</span>
+   <span class="color-comment">// TODO: Shall declare draw if no player can &quot;possibly&quot; win</span>
+   public static boolean isDraw() {
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            if (board[row][col] == EMPTY) {
+               return false;  <span class="color-comment">// an empty cell found, not draw, exit</span>
+            }
+         }
+      }
+      return true;  <span class="color-comment">// no empty cell, it's a draw</span>
+   }
+ 
+   <span class="color-comment">/** Return true if the player with &quot;theSeed&quot; has won after placing at
+       (currentRow, currentCol) */</span>
+   public static boolean hasWon(int theSeed, int currentRow, int currentCol) {
+      return (board[currentRow][0] == theSeed         <span class="color-comment">// 3-in-the-row</span>
+                   &amp;&amp; board[currentRow][1] == theSeed
+                   &amp;&amp; board[currentRow][2] == theSeed
+              || board[0][currentCol] == theSeed      <span class="color-comment">// 3-in-the-column</span>
+                   &amp;&amp; board[1][currentCol] == theSeed
+                   &amp;&amp; board[2][currentCol] == theSeed
+              || currentRow == currentCol            <span class="color-comment">// 3-in-the-diagonal</span>
+                   &amp;&amp; board[0][0] == theSeed
+                   &amp;&amp; board[1][1] == theSeed
+                   &amp;&amp; board[2][2] == theSeed
+              || currentRow + currentCol == 2  <span class="color-comment">// 3-in-the-opposite-diagonal</span>
+                   &amp;&amp; board[0][2] == theSeed
+                   &amp;&amp; board[1][1] == theSeed
+                   &amp;&amp; board[2][0] == theSeed);
+   }
+ 
+   <span class="color-comment">/** Print the game board */</span>
+   public static void printBoard() {
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            printCell(board[row][col]); <span class="color-comment">// print each of the cells</span>
+            if (col != COLS - 1) {
+               System.out.print(&quot;|&quot;);   <span class="color-comment">// print vertical partition</span>
+            }
+         }
+         System.out.println();
+         if (row != ROWS - 1) {
+            System.out.println(&quot;-----------&quot;); <span class="color-comment">// print horizontal partition</span>
+         }
+      }
+      System.out.println();
+   }
+ 
+   <span class="color-comment">/** Print a cell with the specified &quot;content&quot; */</span>
+   public static void printCell(int content) {
+      switch (content) {
+         case EMPTY:  System.out.print(&quot;   &quot;); break;
+         case NOUGHT: System.out.print(&quot; O &quot;); break;
+         case CROSS:  System.out.print(&quot; X &quot;); break;
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Dissecting the Program</h5>
+
+<p>Non-OO programs (like C programs) are organized in methods, which access common global variables. (OO programs are organized in classes.) All the variables/methods shall be declared <code>static</code> (belong to the class instead of instances). The program starts at the <code>main()</code> method. No instance will be created.</p>
+
+<p>A board game (such as Tic-tac-toe) is typically programmed as a <em>state machine</em>. Depending on the current-state and the player's move, the game goes into the next-state. In this example, I use a variable <code>currentState</code> to keep track of the <em>current-state</em> of the game, and define named-constants to denote the various  states of the game (<code>PLAYING</code>,  <code>DRAW</code>, <code>CROSS_WON</code>, and <code>NOUGHT_WON</code>).  A method called <code>updateGame()</code> is defined, which will be called after every move to update this <code>currentState</code>, by checking  the status of the game-board.</p>
+<p>Two methods are defined for printing the game board, <code>printBoard()</code> and <code>printCell()</code>. The <code>printBoard()</code> shall call <code>printCell()</code> to  print each of the 9 cells.  This seems  trivial here, but will be useful in the object-oriented design to separate the  board and cells into separate classes.</p>
+
+<p>[TODO] more explanation</p>
+
+<p><span class="line-heading">TRY:</span> Prompt the user whether to play again after gameover.</p>
+<pre class="color-example">
+<span class="color-comment">// in main()</span>
+do {
+   <span class="color-comment">// Play the game once</span>
+   initGame();
+   ......
+   ......
+   <span class="color-comment">// Prompt the user whether to play again</span>
+   System.out.print(&quot;Play again (y/n)? &quot;);
+   char ans = in.next().charAt(0);
+   if (ans != 'y' &amp;&amp; ans != 'Y') {
+      System.out.println(&quot;Bye!&quot;);
+      System.exit(0);  <span class="color-comment">// terminate the program</span>
+   }
+} while (true);  <span class="color-comment">// repeat until user did not answer yes</span></pre>
+
+
+<h3>A Console OO Tic-Tac-Toe</h3>
+
+<p>Let us convert the earlier non-OO version of Tic-Tac-Toe to object-oriented. The OO version of this simple Tic-Tac-Toe is more complex than the non-OO version, because Tic-Tac-Toe is a rather simple application. But OO design is a necessity to build a complex application.</p>
+
+<h5>Enumerations <span class="font-code">State</span> and <span class="font-code">Seed</span></h5>
+
+<p>In our earlier version, we used <code>int</code> named-constants to represent the various game states, as follows:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Named-constants to represent the various states of the game</span>
+public static final int PLAYING = 0;
+public static final int DRAW = 1;
+public static final int CROSS_WON = 2;
+public static final int NOUGHT_WON = 3;
+ 
+<span class="color-comment">// The current state of the game</span>
+public static int currentState = PLAYING;  <span class="color-comment">// Assigned to a name, which is easier to read and understand,
+                                           // instead of an int number 0</span></pre>
+
+<p>This approach of using <code>int</code> named-constants is better than using number in the programming statements, but it is not ideal. This is because you may inadvertently assign an <code>int</code> value <em>outside the valid range</em> to the variable <code>currentState</code>. For example,</p>
+
+<pre class="color-example">
+currentState = 99;   <span class="color-comment">// A logical error but can compile</span></pre>
+
+<p>JDK 1.5 introduces a new feature called <em>enumeration</em>, which is a <span class="underline"><em>special class</em></span> for storing <em>an enumeration (list) of items</em>. In our case, we can define an enumeration called <code>GameState</code> as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/**
+ *  Enumerations for the various states of the game
+ */</span>
+public enum GameState {  <span class="color-comment">// to save as &quot;GameState.java&quot;</span>
+   PLAYING, DRAW, CROSS_WON, NOUGHT_WON
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+To reference an <em>item</em> in an <code>enum</code>, use <code><em>enumName</em>.<em>itemName</em></code> (e.g., <code>GameState.PLAYING</code> and  <code>GameState.DRAW</code>), just like referencing <code>static</code> variables of a class (e.g., <code>Math.PI</code>).
+
+<p>You can create an instance for an <code>enum</code> (just like creating an instance of a <code>class</code>) and assign a value into it.  We shall now declare the variable <code>currentState</code> as an instance of <code>GameState</code>, which can take the value of <code>GameState.PLAYING</code>, <code>GameState.DRAW</code>, <code>GameState.CROSS_WON</code>, and <code>GameState.NOUGHT_WON</code>.</p>
+
+<pre class="color-example">
+private GameState currentState;    <span class="color-comment">// declare variable currentState as an instance of enum GameState</span>
+currentState = GameState.PLAYING;  <span class="color-comment">// assign a value (an enum item) to the variable currentState</span></pre>
+
+<p>Take note that you can only assign a value defined in the enumeration (such as <code>GameState.PLAYING</code>, <code>GameState.DRAW</code>), and NOT an arbitrary <code>int</code> value in the earlier example. Enum is SAFE!</p>
+
+<p>We shall also create an <code>enum</code> called <code>Seed</code> for the various seeds and cell contents.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/**
+ * Enumerations for the seeds and cell contents
+ */</span>
+public enum Seed { <span class="color-comment">// to save as &quot;Seed.java&quot;</span>
+   EMPTY, CROSS, NOUGHT
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Again, you need to use <code>Seed.EMPTY</code>, <code>Seed.CROSS</code>, <code>Seed.NOUGHT</code> to refer to these values, just like any <code>public</code> <code>static</code> variable.</p>
+<p>We shall declare the variables <code>currentPlayer</code> and <code>content</code> as instances of enum <code>Seed</code>.</p>
+
+<pre class="color-example">
+private Seed currentPlayer;  <span class="color-comment">// declare variable currentPlayer as an instance of Seed</span>
+currentPlayer = Seed.CROSS;  <span class="color-comment">// assign a value (an enum item) to the variable currentPlayer</span>
+ 
+private Seed content;   <span class="color-comment">// cell's content
+</span>content = Seed.EMPTY;</pre>
+
+<p>In brief, an <code>enum</code> is just <em>a special class with a list of named-constants</em>. But enum is safe, compared with name-constants.</p>
+
+<h5>Classes <span class="font-code">Board</span> and <span class="font-code">Cell</span></h5>
+
+<img class="image-float-right" src="images/GameTTT_Board_Cell.png" alt="GameTTT_Board_Cell.png" />
+
+
+<p>Next, let's design the OO classes needed for our Tic-Tac-Toe game.  Each class shall maintain its own attributes and operations (variables and methods), and <em>it can paint itself</em> in a graphics program.</p>
+<p>We begin with two classes, a class <code>Cell</code> for each individual cell of the game board, and a class <code>Board</code> for the 3x3 game board.</p>
+
+<p>The <code>Cell</code> class has an instance variable called <code>content</code> (with package access), of the type <code>enum</code> <code>Seed</code>. You can only assign a value from the <code>enum</code>'s constants, such as <code>Seed.EMPTY</code>, <code>Seed.CROSS</code>, and <code>Seed.NOUGHT</code>, into <code>content</code>. A <code>Cell</code> can <code>paint()</code> itself and has its own operations such as <code>clear()</code>.</p>
+
+<p>The <code>Board</code> class composes of nine <code>Cell</code> instances, arranged in an 3&times;3 array called <code>cells</code> (with package access), of the type <code>Cell[][]</code>.  A <code>Board</code> can <code>paint()</code> itself, and supports its own operations such as checking the status of the current board (<code>isDraw()</code>, <code>hasWon()</code>).</p>
+
+<h5 class="font-code">Cell.java</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/**
+ * The Cell class models each individual cell of the game board.
+ */</span>
+public class Cell {  <span class="color-comment">// save as Cell.java</span>
+   <span class="color-comment">// package access</span>
+   Seed content; <span class="color-comment">// content of this cell of type Seed.
+                 // take a value of Seed.EMPTY, Seed.CROSS, or Seed.NOUGHT</span>
+   int row, col; <span class="color-comment">// row and column of this cell, not used in this program</span>
+ 
+   <span class="color-comment">/** Constructor to initialize this cell */</span>
+   public Cell(int row, int col) {
+      this.row = row;
+      this.col = col;
+      clear();  <span class="color-comment">// clear content</span>
+   }
+ 
+   <span class="color-comment">/** Clear the cell content to EMPTY */</span>
+   public void clear() {
+      content = Seed.EMPTY;
+   }
+ 
+   <span class="color-comment">/** Paint itself */</span>
+   public void paint() {
+      switch (content) {
+         case CROSS:  System.out.print(&quot; X &quot;); break;
+         case NOUGHT: System.out.print(&quot; O &quot;); break;
+         case EMPTY:  System.out.print(&quot;   &quot;); break;
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5 class="font-code">Board.java</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/**
+ * The Board class models the game-board.
+ */</span>
+public class Board {  <span class="color-comment">// save as Board.java</span>
+   <span class="color-comment">// Named-constants for the dimensions</span>
+   public static final int ROWS = 3;
+   public static final int COLS = 3;
+ 
+   <span class="color-comment">// package access</span>
+   Cell[][] cells;  <span class="color-comment">// a board composes of ROWS-by-COLS Cell instances</span>
+   int currentRow, currentCol;  <span class="color-comment">// the current seed's row and column</span>
+ 
+   <span class="color-comment">/** Constructor to initialize the game board */</span>
+   public Board() {
+      cells = new Cell[ROWS][COLS];  <span class="color-comment">// allocate the array</span>
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            cells[row][col] = new Cell(row, col); <span class="color-comment">// allocate element of the array</span>
+         }
+      }
+   }
+ 
+   <span class="color-comment">/** Initialize (or re-initialize) the contents of the game board */</span>
+   public void init() {
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            cells[row][col].clear();  <span class="color-comment">// clear the cell content</span>
+         }
+      }
+   }
+ 
+   <span class="color-comment">/** Return true if it is a draw (i.e., no more EMPTY cell) */</span>
+   public boolean isDraw() {
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            if (cells[row][col].content == Seed.EMPTY) {
+               return false; <span class="color-comment">// an empty seed found, not a draw, exit</span>
+            }
+         }
+      }
+      return true; <span class="color-comment">// no empty cell, it's a draw</span>
+   }
+ 
+   <span class="color-comment">/** Return true if the player with &quot;theSeed&quot; has won after placing at
+       (currentRow, currentCol) */</span>
+   public boolean hasWon(Seed theSeed) {
+      return (cells[currentRow][0].content == theSeed         <span class="color-comment">// 3-in-the-row</span>
+                   &amp;&amp; cells[currentRow][1].content == theSeed
+                   &amp;&amp; cells[currentRow][2].content == theSeed
+              || cells[0][currentCol].content == theSeed      <span class="color-comment">// 3-in-the-column</span>
+                   &amp;&amp; cells[1][currentCol].content == theSeed
+                   &amp;&amp; cells[2][currentCol].content == theSeed
+              || currentRow == currentCol            <span class="color-comment">// 3-in-the-diagonal</span>
+                   &amp;&amp; cells[0][0].content == theSeed
+                   &amp;&amp; cells[1][1].content == theSeed
+                   &amp;&amp; cells[2][2].content == theSeed
+              || currentRow + currentCol == 2    <span class="color-comment">// 3-in-the-opposite-diagonal</span>
+                   &amp;&amp; cells[0][2].content == theSeed
+                   &amp;&amp; cells[1][1].content == theSeed
+                   &amp;&amp; cells[2][0].content == theSeed);
+   }
+ 
+   <span class="color-comment">/** Paint itself */</span>
+   public void paint() {
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            cells[row][col].paint();   <span class="color-comment">// each cell paints itself</span>
+            if (col &lt; COLS - 1) System.out.print(&quot;|&quot;);
+         }
+         System.out.println();
+         if (row &lt; ROWS - 1) {
+            System.out.println(&quot;-----------&quot;);
+         }
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Class <span class="font-code">GameMain</span></h5>
+
+<img class="image-float-right" src="images/GameTTT_GameMain.png" alt="GameTTT_GameMain.png" />
+
+<p>Finally, let's write a main class called <code>GameMain</code> to pull all the pieces together.  <code>GameMain</code> acts as the overall <em>controller</em> for the game.</p>
+
+<h5 class="font-code">GameMain.java</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83</pre>
+</td>
+<td>
+<pre>
+import java.util.Scanner;
+<span class="color-comment">/**
+ * The main class for the Tic-Tac-Toe (Console-OO, non-graphics version)
+ * It acts as the overall controller of the game.
+ */</span>
+public class GameMain {
+   private Board board;            <span class="color-comment">// the game board</span>
+   private GameState currentState; <span class="color-comment">// the current state of the game (of enum GameState)</span>
+   private Seed currentPlayer;     <span class="color-comment">// the current player (of enum Seed)</span>
+ 
+   private static Scanner in = new Scanner(System.in);  <span class="color-comment">// input Scanner</span>
+ 
+   <span class="color-comment">/** Constructor to setup the game */</span>
+   public GameMain() {
+      board = new Board();  <span class="color-comment">// allocate game-board</span>
+ 
+      <span class="color-comment">// Initialize the game-board and current status</span>
+      initGame();
+      <span class="color-comment">// Play the game once. Players CROSS and NOUGHT move alternately.</span>
+      do {
+         playerMove(currentPlayer); <span class="color-comment">// update the content, currentRow and currentCol</span>
+         board.paint();             <span class="color-comment">// ask the board to paint itself</span>
+         updateGame(currentPlayer); <span class="color-comment">// update currentState</span>
+         <span class="color-comment">// Print message if game-over</span>
+         if (currentState == GameState.CROSS_WON) {
+            System.out.println(&quot;'X' won! Bye!&quot;);
+         } else if (currentState == GameState.NOUGHT_WON) {
+            System.out.println(&quot;'O' won! Bye!&quot;);
+         } else if (currentState == GameState.DRAW) {
+            System.out.println(&quot;It's Draw! Bye!&quot;);
+         }
+         <span class="color-comment">// Switch player</span>
+         currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
+      } while (currentState == GameState.PLAYING);  <span class="color-comment">// repeat until game-over</span>
+   }
+ 
+   <span class="color-comment">/** Initialize the game-board contents and the current states */</span>
+   public void initGame() {
+      board.init();  <span class="color-comment">// clear the board contents</span>
+      currentPlayer = Seed.CROSS;       <span class="color-comment">// CROSS plays first</span>
+      currentState = GameState.PLAYING; <span class="color-comment">// ready to play</span>
+   }
+ 
+   <span class="color-comment">/** The player with &quot;theSeed&quot; makes one move, with input validation.
+       Update Cell's content, Board's currentRow and currentCol. */</span>
+   public void playerMove(Seed theSeed) {
+      boolean validInput = false;  <span class="color-comment">// for validating input</span>
+      do {
+         if (theSeed == Seed.CROSS) {
+            System.out.print(&quot;Player 'X', enter your move (row[1-3] column[1-3]): &quot;);
+         } else {
+            System.out.print(&quot;Player 'O', enter your move (row[1-3] column[1-3]): &quot;);
+         }
+         int row = in.nextInt() - 1;
+         int col = in.nextInt() - 1;
+         if (row &gt;= 0 &amp;&amp; row &lt; Board.ROWS &amp;&amp; col &gt;= 0 &amp;&amp; col &lt; Board.COLS
+               &amp;&amp; board.cells[row][col].content == Seed.EMPTY) {
+            board.cells[row][col].content = theSeed;
+            board.currentRow = row;
+            board.currentCol = col;
+            validInput = true; <span class="color-comment">// input okay, exit loop</span>
+         } else {
+            System.out.println(&quot;This move at (&quot; + (row + 1) + &quot;,&quot; + (col + 1)
+                  + &quot;) is not valid. Try again...&quot;);
+         }
+      } while (!validInput);   <span class="color-comment">// repeat until input is valid</span>
+   }
+ 
+   <span class="color-comment">/** Update the currentState after the player with &quot;theSeed&quot; has moved */</span>
+   public void updateGame(Seed theSeed) {
+      if (board.hasWon(theSeed)) {  <span class="color-comment">// check for win</span>
+         currentState = (theSeed == Seed.CROSS) ? GameState.CROSS_WON : GameState.NOUGHT_WON;
+      } else if (board.isDraw()) {  <span class="color-comment">// check for draw</span>
+         currentState = GameState.DRAW;
+      }
+      <span class="color-comment">// Otherwise, no change to current state (still GameState.PLAYING).</span>
+   }
+ 
+   <span class="color-comment">/** The entry main() method */</span>
+   public static void main(String[] args) {
+      new GameMain();  <span class="color-comment">// Let the constructor do the job</span>
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Take note that the OO-version and the non-OO version have the same codes, but are organized differently. The organization in OO enables you to design and develop complex system.</p>
+
+<h3 id="TTTGraphics">A Graphics Simple-OO Tic-Tac-Toe</h3>
+
+<img class="image-float-right" src="images/GameTTT_Graphics.png" alt="GameTTT_Graphics.png" />
+
+<p>Let's rewrite the &quot;console&quot; version into a &quot;graphics&quot; version - a Java Swing application, as illustrated. In this initial design, we do not separate the cell and board into dedicated classes, but include them in the main class. We used an inner class <code>DrawCanvas</code> (that extends <code>JPanel</code>) to do the custom drawing, and an anonymous inner class for <code>MouseListener</code>.</p>
+<p>The content-pane (of the top-level container <code>JFrame</code>) is set to <code>BorderLayout</code>. The <code>DrawCanvas</code> (<code>JPanel</code>) is placed at the <code>CENTER</code>; while a status-bar (a <code>JLabel</code>) is placed at the <code>SOUTH</code> (<code>PAGE_END</code>).</p>
+
+<p class="float-clear">The class diagram is as follows:</p>
+
+<img class="image-center" src="images/GameTTT_GraphicsClassDiagram.png" alt="GameTTT_GraphicsClassDiagram.png" />
+
+<h5 class="font-code">TTTGraphics2P.java</h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+<span class="color-comment">/**
+ * Tic-Tac-Toe: Two-player Graphics version with Simple-OO
+ */</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class TTTGraphics2P extends JFrame {
+   <span class="color-comment">// Named-constants for the game board</span>
+   public static final int ROWS = 3;  <span class="color-comment">// ROWS by COLS cells</span>
+   public static final int COLS = 3;
+ 
+   <span class="color-comment">// Named-constants of the various dimensions used for graphics drawing</span>
+   public static final int CELL_SIZE = 100; <span class="color-comment">// cell width and height (square)</span>
+   public static final int CANVAS_WIDTH = CELL_SIZE * COLS;  <span class="color-comment">// the drawing canvas</span>
+   public static final int CANVAS_HEIGHT = CELL_SIZE * ROWS;
+   public static final int GRID_WIDTH = 8;                   <span class="color-comment">// Grid-line's width</span>
+   public static final int GRID_WIDHT_HALF = GRID_WIDTH / 2; <span class="color-comment">// Grid-line's half-width</span>
+   <span class="color-comment">// Symbols (cross/nought) are displayed inside a cell, with padding from border</span>
+   public static final int CELL_PADDING = CELL_SIZE / 6;
+   public static final int SYMBOL_SIZE = CELL_SIZE - CELL_PADDING * 2; <span class="color-comment">// width/height</span>
+   public static final int SYMBOL_STROKE_WIDTH = 8; <span class="color-comment">// pen's stroke width</span>
+ 
+   <span class="color-comment">// Use an enumeration (inner class) to represent the various states of the game</span>
+   public enum GameState {
+      PLAYING, DRAW, CROSS_WON, NOUGHT_WON
+   }
+   private GameState currentState;  <span class="color-comment">// the current game state</span>
+ 
+   <span class="color-comment">// Use an enumeration (inner class) to represent the seeds and cell contents</span>
+   public enum Seed {
+      EMPTY, CROSS, NOUGHT
+   }
+   private Seed currentPlayer;  <span class="color-comment">// the current player</span>
+ 
+   private Seed[][] board   ; <span class="color-comment">// Game board of ROWS-by-COLS cells</span>
+   private DrawCanvas canvas; <span class="color-comment">// Drawing canvas (JPanel) for the game board</span>
+   private JLabel statusBar;  <span class="color-comment">// Status Bar</span>
+ 
+   <span class="color-comment">/** Constructor to setup the game and the GUI components */</span>
+   public TTTGraphics2P() {
+      canvas = new DrawCanvas();  <span class="color-comment">// Construct a drawing canvas (a JPanel)</span>
+      canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+ 
+      <span class="color-comment">// The canvas (JPanel) fires a MouseEvent upon mouse-click</span>
+      canvas.addMouseListener(new MouseAdapter() {
+         @Override
+         public void mouseClicked(MouseEvent e) {  <span class="color-comment">// mouse-clicked handler</span>
+            int mouseX = e.getX();
+            int mouseY = e.getY();
+            <span class="color-comment">// Get the row and column clicked</span>
+            int rowSelected = mouseY / CELL_SIZE;
+            int colSelected = mouseX / CELL_SIZE;
+ 
+            if (currentState == GameState.PLAYING) {
+               if (rowSelected &gt;= 0 &amp;&amp; rowSelected &lt; ROWS &amp;&amp; colSelected &gt;= 0
+                     &amp;&amp; colSelected &lt; COLS &amp;&amp; board[rowSelected][colSelected] == Seed.EMPTY) {
+                  board[rowSelected][colSelected] = currentPlayer; <span class="color-comment">// Make a move</span>
+                  updateGame(currentPlayer, rowSelected, colSelected); <span class="color-comment">// update state</span>
+                  <span class="color-comment">// Switch player</span>
+                  currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
+               }
+            } else {       <span class="color-comment">// game over</span>
+               initGame(); <span class="color-comment">// restart the game</span>
+            }
+            <span class="color-comment">// Refresh the drawing canvas</span>
+            repaint();  <span class="color-comment">// Call-back paintComponent().</span>
+         }
+      });
+ 
+      <span class="color-comment">// Setup the status bar (JLabel) to display status message</span>
+      statusBar = new JLabel(&quot;  &quot;);
+      statusBar.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 15));
+      statusBar.setBorder(BorderFactory.createEmptyBorder(2, 5, 4, 5));
+ 
+      Container cp = getContentPane();
+      cp.setLayout(new BorderLayout());
+      cp.add(canvas, BorderLayout.CENTER);
+      cp.add(statusBar, BorderLayout.PAGE_END); <span class="color-comment">// same as SOUTH</span>
+ 
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      pack();  <span class="color-comment">// pack all the components in this JFrame</span>
+      setTitle(&quot;Tic Tac Toe&quot;);
+      setVisible(true);  <span class="color-comment">// show this JFrame</span>
+ 
+      board = new Seed[ROWS][COLS]; <span class="color-comment">// allocate array</span>
+      initGame(); <span class="color-comment">// initialize the game board contents and game variables</span>
+   }
+ 
+   <span class="color-comment">/** Initialize the game-board contents and the status */</span>
+   public void initGame() {
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            board[row][col] = Seed.EMPTY; <span class="color-comment">// all cells empty</span>
+         }
+      }
+      currentState = GameState.PLAYING; <span class="color-comment">// ready to play</span>
+      currentPlayer = Seed.CROSS;       <span class="color-comment">// cross plays first</span>
+   }
+ 
+   <span class="color-comment">/** Update the currentState after the player with &quot;theSeed&quot; has placed on
+       (rowSelected, colSelected). */</span>
+   public void updateGame(Seed theSeed, int rowSelected, int colSelected) {
+      if (hasWon(theSeed, rowSelected, colSelected)) {  <span class="color-comment">// check for win</span>
+         currentState = (theSeed == Seed.CROSS) ? GameState.CROSS_WON : GameState.NOUGHT_WON;
+      } else if (isDraw()) {  <span class="color-comment">// check for draw</span>
+         currentState = GameState.DRAW;
+      }
+      <span class="color-comment">// Otherwise, no change to current state (still GameState.PLAYING).</span>
+   }
+ 
+   <span class="color-comment">/** Return true if it is a draw (i.e., no more empty cell) */</span>
+   public boolean isDraw() {
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            if (board[row][col] == Seed.EMPTY) {
+               return false; <span class="color-comment">// an empty cell found, not draw, exit</span>
+            }
+         }
+      }
+      return true;  <span class="color-comment">// no more empty cell, it's a draw</span>
+   }
+ 
+   <span class="color-comment">/** Return true if the player with &quot;theSeed&quot; has won after placing at
+       (rowSelected, colSelected) */</span>
+   public boolean hasWon(Seed theSeed, int rowSelected, int colSelected) {
+      return (board[rowSelected][0] == theSeed  <span class="color-comment">// 3-in-the-row</span>
+            &amp;&amp; board[rowSelected][1] == theSeed
+            &amp;&amp; board[rowSelected][2] == theSeed
+       || board[0][colSelected] == theSeed      <span class="color-comment">// 3-in-the-column</span>
+            &amp;&amp; board[1][colSelected] == theSeed
+            &amp;&amp; board[2][colSelected] == theSeed
+       || rowSelected == colSelected            <span class="color-comment">// 3-in-the-diagonal</span>
+            &amp;&amp; board[0][0] == theSeed
+            &amp;&amp; board[1][1] == theSeed
+            &amp;&amp; board[2][2] == theSeed
+       || rowSelected + colSelected == 2  <span class="color-comment">// 3-in-the-opposite-diagonal</span>
+            &amp;&amp; board[0][2] == theSeed
+            &amp;&amp; board[1][1] == theSeed
+            &amp;&amp; board[2][0] == theSeed);
+   }
+ 
+   <span class="color-comment">/**
+    *  Inner class DrawCanvas (extends JPanel) used for custom graphics drawing.
+    */</span>
+   class DrawCanvas extends JPanel {
+      @Override
+      public void paintComponent(Graphics g) {  <span class="color-comment">// invoke via repaint()</span>
+         super.paintComponent(g);    <span class="color-comment">// fill background</span>
+         setBackground(Color.WHITE); <span class="color-comment">// set its background color</span>
+ 
+         <span class="color-comment">// Draw the grid-lines</span>
+         g.setColor(Color.LIGHT_GRAY);
+         for (int row = 1; row &lt; ROWS; ++row) {
+            g.fillRoundRect(0, CELL_SIZE * row - GRID_WIDHT_HALF,
+                  CANVAS_WIDTH-1, GRID_WIDTH, GRID_WIDTH, GRID_WIDTH);
+         }
+         for (int col = 1; col &lt; COLS; ++col) {
+            g.fillRoundRect(CELL_SIZE * col - GRID_WIDHT_HALF, 0,
+                  GRID_WIDTH, CANVAS_HEIGHT-1, GRID_WIDTH, GRID_WIDTH);
+         }
+ 
+         <span class="color-comment">// Draw the Seeds of all the cells if they are not empty</span>
+         <span class="color-comment">// Use Graphics2D which allows us to set the pen's stroke</span>
+         Graphics2D g2d = (Graphics2D)g;
+         g2d.setStroke(new BasicStroke(SYMBOL_STROKE_WIDTH, BasicStroke.CAP_ROUND,
+               BasicStroke.JOIN_ROUND));  <span class="color-comment">// Graphics2D only</span>
+         for (int row = 0; row &lt; ROWS; ++row) {
+            for (int col = 0; col &lt; COLS; ++col) {
+               int x1 = col * CELL_SIZE + CELL_PADDING;
+               int y1 = row * CELL_SIZE + CELL_PADDING;
+               if (board[row][col] == Seed.CROSS) {
+                  g2d.setColor(Color.RED);
+                  int x2 = (col + 1) * CELL_SIZE - CELL_PADDING;
+                  int y2 = (row + 1) * CELL_SIZE - CELL_PADDING;
+                  g2d.drawLine(x1, y1, x2, y2);
+                  g2d.drawLine(x2, y1, x1, y2);
+               } else if (board[row][col] == Seed.NOUGHT) {
+                  g2d.setColor(Color.BLUE);
+                  g2d.drawOval(x1, y1, SYMBOL_SIZE, SYMBOL_SIZE);
+               }
+            }
+         }
+ 
+         <span class="color-comment">// Print status-bar message</span>
+         if (currentState == GameState.PLAYING) {
+            statusBar.setForeground(Color.BLACK);
+            if (currentPlayer == Seed.CROSS) {
+               statusBar.setText(&quot;X's Turn&quot;);
+            } else {
+               statusBar.setText(&quot;O's Turn&quot;);
+            }
+         } else if (currentState == GameState.DRAW) {
+            statusBar.setForeground(Color.RED);
+            statusBar.setText(&quot;It's a Draw! Click to play again.&quot;);
+         } else if (currentState == GameState.CROSS_WON) {
+            statusBar.setForeground(Color.RED);
+            statusBar.setText(&quot;'X' Won! Click to play again.&quot;);
+         } else if (currentState == GameState.NOUGHT_WON) {
+            statusBar.setForeground(Color.RED);
+            statusBar.setText(&quot;'O' Won! Click to play again.&quot;);
+         }
+      }
+   }
+ 
+   <span class="color-comment">/** The entry main() method */</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Run GUI codes in the Event-Dispatching thread for thread safety</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            new TTTGraphics2P(); <span class="color-comment">// Let the constructor do the job</span>
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Dissecting the Program</h5>
+<p>[TODO]</p>
+
+<h3>Game Programming Assignment</h3>
+
+<p>You can use the above Tic-tac-toe as a template to develop board games such as Connect-4 and Othello.</p>
+
+<h4>Connect-Four</h4>
+
+<a href="Applet_Connect4.html" target="_blank"><img class="image-float-right" src="images/GameConnect4_Applet.png" alt="GameConnect4_Applet.png" /></a>
+
+<p><span class="color-new">Click on the image to run the demo (in applet).</span></p>
+
+<p>Wiki &quot;Connect-4&quot; to understand the rules of the game.</p>
+
+<p>To write a Connect-Four game, let's start from Tic-Tac-Toe's &quot;<a href="#TTTGraphics">Graphics Version</a>&quot;. Do the following changes on &quot;<code>TTTGraphics2P.java</code>&quot;:</p>
+
+<ol>
+<li>Change constants <code>ROWS</code> to 6 and <code>COLS</code> to 7. Run the program. You shall see a 6&times;7 grid. Try clicking on the cells, &quot;cross&quot; and &quot;nought&quot; shall be displayed alternately.</li>
+
+<li>Modify the <code>mouseClicked()</code> event-handler to position the seed at the &quot;bottom&quot; row of the column clicked, instead of on the the cell clicked. You need to check that there is empty cell on that column.
+<pre class="color-example">
+if (colSelected >= 0 && colSelected < COLS) {
+   <span class="color-comment">// Look for an empty cell starting from the bottom row</span>
+   for (int row = ROWS -1; row >= 0; row--) {
+      if (board[row][colSelected] == Seed.EMPTY) {
+         board[row][colSelected] = currentPlayer; <span class="color-comment">// Make a move</span>
+         updateGame(currentPlayer, row, colSelected); <span class="color-comment">// update state</span>
+         <span class="color-comment">// Switch player</span>
+         currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
+         break;
+      }
+   }
+}</pre></li>
+
+<li>Modify the <code>hasWon()</code> method to check for 4-in-a-line (along row, column, diagonal or opposite-diagonal).
+  <pre class="color-example">
+<span class="color-comment">// HINTS:</span>
+public boolean hasWon(Seed theSeed, int rowSelected, int colSelected) {
+<span class="color-comment">   // Check for 4-in-a-line on the rowSelected</span>
+   int count = 0;
+   for (int col = 0; col &lt; COLS; ++col) {
+      if (board[rowSelected][col] == theSeed) {
+         ++count;
+         if (count == 4) return true;  <span class="color-comment">// found</span>
+      } else {
+         count = 0; <span class="color-comment">// reset and count again if not consecutive</span>
+      }
+   }
+   <span class="color-comment">// Check column and diagonals</span>
+   ......
+   return false;  <span class="color-comment">// no 4-in-a-line found</span>
+}</pre></li>
+</ol>
+
+<p>That's all!</p>
+<p>Next,</p>
+
+<ol>
+<li>Tidy up the names (In Eclipse, Refactor &rArr; Rename).</li>
+<li>Tidy up the display (using red and yellow discs, instead of cross and nought).</li>
+<li>Add more features. For example, sound effect; or buttons to control the game.</li>
+<li>Re-design your classes (Read the &quot;<a href="#TTTGraphicsAdvanceOO">Graphics Advanced-OO Tic-Tac-Toe</a>&quot;).</li>
+<li>Improve your display (e.g., using images, animation etc).</li>
+</ol>
+
+<h4>Othello (Reversi)</h4>
+
+<a href="Applet_Othello.html" target="_blank"><img class="image-float-right" src="images/GameOthello_Applet.png" alt="images/GameOthello_Applet.png" /></a>
+
+<p><span class="color-new">Click on the image to run my demo (in applet).</span></p>
+
+<p>Wiki &quot;Othello&quot; or &quot;Reversi&quot; to understand the rules of the game.</p>
+
+<p>Modify the above Tic-Tac-Toe (&quot;<code>TTTGraphics2P.java</code>&quot;):</p>
+<ol>
+<li>Change <code>ROWS</code> and <code>COLS</code> to 8. Run the program. You shall see a 8&times;8 grid. Try clicking on the cells, &quot;cross&quot; and &quot;nought&quot; shall be displayed alternately.</li>
+<li>Modify the <code>updateGame(Seed theSeed, int rowSelected, int colSelect)</code> to flip the opponent's seeds along the row, column, diagonal and opposite diagonal - centered at <code>(rowSelected, colSelected)</code> - after the player with &quot;<code>theSeed</code>&quot; has placed on <code>(rowSelected, colSelected)</code>. If there is no more empty space, the game is over. Decide the winner by counting the numbers of black and white seeds.<br />
+HINTS:
+
+<pre class="color-example">
+public void updateGame(Seed mySeed, int rowSelected, int colSelected) {
+   Seed opponentSeed = (mySeed == Seed.BLACK) ? Seed.WHITE : Seed.BLACK; 
+   int col, row;
+
+   <span class="color-comment">// Flip opponent's seeds along the row to the right if any</span>
+   col = colSelected + 1;
+   <span class="color-comment">// Look for adjacent opponent's seeds up to 2nd last column</span><br />   while (col &lt; COLS - 1 &amp;&amp; board[rowSelected][col] == opponentSeed) {
+      ++col;
+   }
+   <span class="color-comment">// Look for my seed immediately after opponent's seeds</span>
+   if (col &lt;= COLS - 1 &amp;&amp; board[rowSelected][col] == mySeed) {
+      <span class="color-comment">// Flip opponent's seeds in between to my seeds</span>
+      for (int colFlip = colSelected + 1; colFlip &lt;= col - 1; ++colFlip) {
+         board[rowSelected][colFlip] = mySeed;
+      }
+   }
+   ......
+   <span class="color-comment">// Check for game over and declare winner</span>
+   ......</pre>
+
+</li>
+<li>Remove <code>isDraw()</code> and <code>hasWon()</code>.</li></ol>
+
+<p>Next,</p>
+
+<ol>
+<li>Tidy up the names (Refactor &rArr; Rename).</li>
+<li>Tidy up the display (using black and white discs, instead of cross and nought).</li>
+<li>Add more features. For example, sound effect; or buttons to control the game.</li>
+<li>Re-design your classes (Read the &quot;<a href="#TTTGraphicsAdvanceOO">Graphics Advanced-OO Tic-Tac-Toe</a>&quot;).</li>
+<li>Improve your display (e.g., using images, animation etc).</li>
+</ol>
+
+<h4>Sudoku</h4>
+
+<img class="image-float-right" src="images/GameSudoku.png" alt="GameSudoku.png" />
+
+<p>You could wiki &quot;Sudoku&quot; to understand the rules of the game.</p>
+<p>Sudoku's graphics does not involve custom drawing (such as drawing lines or circles). Hence, the above Tic-Tac-Toe graphics example is not really applicable. You can simply use a 9x9 <code>JTextFields</code> arranged in a 9x9 <code>GridLayout</code> - the GUI codes is simple!</p>
+
+<p>The steps for producing the display are:</p>
+<ul>
+<li>Set the <code>JFrame</code>'s content-pane to 9&times;9 <code>GridLayout</code>. Create 9&times;9 <code>JTextField</code>s and add to the content-pane. You need to set up two 9&times;9 arrays. One <code>int[9][9]</code> to store the numbers (1-9, or 0 if empty). Another <code>JTextField[9][9]</code> to do the display (print blank if the number is 0).</li>
+
+<li>Initialize the game by reading in an input puzzle with blank cells, and populate the <code>int[9][9]</code> and <code>JTextField[9][9]</code> arrays. Set the non-empty cells to non-editable.</li></ul>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+ 
+public class SudokuDisplayOnly extends JFrame {
+   <span class="color-comment">// Name-constants for the various dimensions</span>
+   public static final int ROWS = 9; <span class="color-comment">// ROWS by COLS cells</span>
+   public static final int COLS = 9;
+   public static final int CELL_SIZE = 60; <span class="color-comment">// Cell width/height</span>
+   public static final int CANVAS_WIDTH = CELL_SIZE * COLS;
+   public static final int CANVAS_HEIGHT = CELL_SIZE * ROWS;
+ 
+   <span class="color-comment">// Game board</span>
+   private int[][] cells;
+   private JTextField[][] tfCells;
+ 
+   <span class="color-comment">// Puzzle to solve. Can have more and pick one in random.</span>
+   private int[][] puzzle =
+      {{5, 3, 4, 6, 7, 8, 9, 1, 2},
+       {6, 7, 2, 1, 9, 5, 3, 4, 8},
+       {1, 9, 8, 3, 4, 2, 5, 6, 7},
+       {8, 5, 9, 7, 6, 1, 4, 2, 3},
+       {4, 2, 6, 8, 5, 3, 7, 9, 1},
+       {7, 1, 3, 9, 2, 4, 8, 5, 6},
+       {9, 6, 1, 5, 3, 7, 2, 8, 4},
+       {2, 8, 7, 4, 1, 9, 6, 3, 5},
+       {3, 4, 5, 2, 8, 6, 1, 7, 9}};
+ 
+   <span class="color-comment">// Mask for puzzle should be generated randomly</span>
+   private boolean[][] mask =
+      {{false, false, false, false, false, true, false, false, false},
+       {false, false, false, false, false, false, false, false, true},
+       {false, false, true, false, false, false, false, false, false},
+       {true, false, false, false, false, false, false, false, false},
+       {false, false, false, true, false, false, false, false, false},
+       {false, false, false, false, false, false, true, false, false},
+       {false, false, false, false, false, false, false, true, false},
+       {false, true, false, false, false, false, false, false, false},
+       {false, false, false, false, true, false, false, false, false}};
+ 
+   <span class="color-comment">/** Constructor to setup the game and the GUI */</span>
+   public SudokuDisplayOnly() {
+      Container cp = getContentPane();
+      cp.setLayout(new GridLayout(ROWS, COLS));
+ 
+      cells = new int[ROWS][COLS];
+      tfCells = new JTextField[ROWS][COLS]; <span class="color-comment">// allocate JTextField array</span>
+ 
+      <span class="color-comment">// Create 9x9 JTextFields and place on the GridLayout</span>
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            tfCells[row][col] = new JTextField(); <span class="color-comment">// allocate element of array</span>
+            cp.add(tfCells[row][col]);  <span class="color-comment">// ContentPane adds JTextField</span>
+            int number = puzzle[row][col];
+            if (mask[row][col]) {
+               cells[row][col] = 0;
+               tfCells[row][col].setText(&quot;&quot;);  <span class="color-comment">// empty</span>
+               tfCells[row][col].setEditable(true);
+               tfCells[row][col].setBackground(Color.YELLOW);
+            } else {
+               cells[row][col] = number;
+               tfCells[row][col].setText(number + &quot;&quot;);
+               tfCells[row][col].setEditable(false);
+            }
+            tfCells[row][col].setHorizontalAlignment(JTextField.CENTER);
+            tfCells[row][col].setFont(new Font(&quot;Monospaced&quot;, Font.BOLD, 20));
+         }
+      }
+      cp.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+ 
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      pack();
+      setTitle(&quot;Sudoku&quot;);
+      setVisible(true);
+   }
+ 
+   <span class="color-comment">/** The entry main() entry method */</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Run the GUI construction on the event-dispatching thread for thread safety</span>
+      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            new SudokuDisplayOnly(); <span class="color-comment">// Let the constructor do the job</span>
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Some useful methods of <code>JTextField</code> are:</p>
+<pre class="color-example">
+setBackground(Color <em>c</em>)  <span class="color-comment">// Set the background color of the component</span>
+setForeground(Color <em>c</em>)  <span class="color-comment">// Set the text color of the JTextField</span>
+setFont(Font <em>f</em>)         <span class="color-comment">// Set the font used by the JTextField</span>
+setHorizontalAlignment(int <em>align</em>);  <span class="color-comment">// <em>align</em>: JTextField.CENTER, JTextField.LEFT, JTextField.RIGHT</span>
+</pre>
+
+<p>Next, write the event handler <code>actionPerformed()</code> for the <code>ActionEvent</code> fired by the <code>JTextField</code>. You may use one listener to listen to all the 9&times;9 <code>JTextField</code>s. In order to ascertain the <code>JTextField</code> that has fired the <code>ActionEvent</code>. You could use the <code>event.getSource()</code> method to retrieve the source object that has fired the event and compare with all the 9&times;9 <code>JTextField</code>s:</p>
+<pre class="color-example">
+@Override
+public void actionPerformed(ActionEvent evt) {
+   int rowSelected = -1;
+   int colSelected = -1;
+   <span class="color-comment">// Get the source object that fired the event</span>
+   JTextField source = (JTextField)e.getSource();
+   boolean found = false;
+   for (int row = 0; row &lt; ROWS &amp;&amp; !found; ++row) {
+      for (int col = 0; col &lt; COLS &amp;&amp; !found; ++col) {
+         if (tfCells[row][col] == source) {
+            rowSelected = row;
+            colSelected = col;
+            found = true;
+         }
+      }
+   }
+   ......</pre>
+
+<p>More:</p>
+<ul>   
+<li>Validate the input (show invalid input in a different color or show it in &quot;X&quot;) and check for puzzle solved.</li>
+<li>Refine your display. Use 3x3 <code>JPanel</code>s in <code>GridLayout</code>. Each <code>JPanel</code> has 3x3 <code>JTextField</code>s in <code>GridLayout</code> too. In this way, you can control the border of the <code>JPanel</code>s via <code>setBorder()</code>.</li>
+<li>Add more features (e.g., sound effect, buttons for controlling the game, undo).</li>
+<li>Improve the game, e.g., difficulty level (easy, medium, hard), hints and cheats, etc.</li>
+<li>Re-design your classes.</li>
+<li>Improve display (e.g., images and animation).</li>   
+</ul>
+
+<p>Triggering <code>JTextField</code>'s <code>ActionEvent</code> involves hitting the &quot;enter&quot; key. That is, without hitting the enter key, the number is not captured by <code>actionPerformed()</code>, although it may appear on the text field. Try using the <code>KeyEvent</code>, which is fired after every key stroke.</p>
+
+<h4>Mine Sweeper</h4>
+<p>Similar to Sudoku, the graphics for Mine Sweeper does not involve custom drawings. For the basic version with 10x10 cells, construct a 10x10 <code>JButton</code>  array and arranged in <code>GridLayout</code>. Study the sample code in Sudoku to create the display.</p>
+<p>In Mine Sweeper, you need to response to left-mouse click and right-mouse-click differently. Hence, instead of listening to the <code>ActionEvent</code>, you shall listen to the <code>MouseEvent</code> with mouse-clicked handler so as to response to the left-click and right-click. Since <code>ActionEvent</code> is not used, you probably can use 10x10 <code>JLabel</code> instead of <code>JButton</code>, as <code>JLabel</code> can also trigger mouse-event.</p>
+
+<h4>MasterMind</h4>
+<p>[TODO]</p>
+
+<h4>Checker</h4>
+<p>[TODO]</p>
+
+<h3 id="TTTGraphicsAdvanceOO">A Graphics Advanced-OO Tic-Tac-Toe - Separating the <span class="font-code">Board</span> and <span class="font-code">Cell</span> Classes</h3>
+
+<h4>A More Versatile Swing Program Template</h4>
+
+<p>Before I proceed, I have modified the Swing program template to make the codes more versatile (the same codes can be run as a standalone application, as well as Applet and Java Web-Start application).</p>
+<ol>
+<li>The main class extends from <code>JPanel</code> instead of <code>JFrame</code>.</li>
+<li>In the entry <code>main()</code> method, an instance of <code>JFrame</code> is constructed, and its content-pane is set to an instance of the main class. The <code>JFrame</code> is then set visible.</li>
+</ol>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+ 
+<span class="color-comment">/** ... Purpose of this program ... */</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class SwingTemplateJPanel extends JPanel {
+   <span class="color-comment">// Name-constants</span>
+   public static final int CANVAS_WIDTH = 640;
+   public static final int CANVAS_HEIGHT = 480;
+   public static final String TITLE = &quot;...Title...&quot;;
+   <span class="color-comment">// ......</span>
+ 
+   <span class="color-comment">// Declare private variables of GUI components</span>
+   <span class="color-comment">// ......</span>
+ 
+   <span class="color-comment">/** Constructor to setup the GUI components */</span>
+   public SwingTemplateJPanel() {
+      setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+      <span class="color-comment">// &quot;super&quot; JPanel container sets layout</span>
+      <span class="color-comment">// setLayout(new ....Layout());</span>
+ 
+      <span class="color-comment">// Allocate the GUI components</span>
+      <span class="color-comment">// .....</span>
+ 
+      <span class="color-comment">// &quot;super&quot; JPanel adds components</span>
+      <span class="color-comment">// add(....)</span>
+ 
+      <span class="color-comment">// Source objects add listeners</span>
+      <span class="color-comment">// .....</span>
+   }
+ 
+   <span class="color-comment">/** Custom painting codes on this JPanel */</span>
+   @Override
+   public void paintComponent(Graphics g) {
+      super.paintComponent(g);  <span class="color-comment">// fill background</span>
+      setBackground(Color.BLACK);
+ 
+      <span class="color-comment">// Custom painting codes</span>
+      <span class="color-comment">// ......</span>
+   }
+ 
+   <span class="color-comment">/** The entry main() method */</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Run GUI codes in the Event-Dispatching thread for thread safety</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         public void run() {
+            JFrame frame = new JFrame(TITLE);
+            <span class="color-comment">// Set the content-pane of the JFrame to an instance of main JPanel</span>
+            frame.setContentPane(new SwingTemplateJPanel());
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.pack();                      <span class="color-comment">// JFrame packs its components</span>
+            frame.setLocationRelativeTo(null); <span class="color-comment">// center the application window</span>
+            frame.setVisible(true);            <span class="color-comment">// show it</span>
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h5>Running as a Standalone Application</h5>
+<p>The above template has a <code>main()</code> method, which can be run as a standalone application, a web-start application, or from a JAR file.</p>
+
+<h5>Running as an Applet</h5>
+
+<p>An Swing Applet extends <code>javax.swing.JApplet</code>, intead of <code>javax.swing.JFrame</code>. An applet starts at <code>init()</code>, instead of <code>main()</code>. We can provide another class to run the main class as an applet as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre>
+</td>
+<td>
+<pre>
+import javax.swing.*;
+ 
+<span class="color-comment">/** Applet for .... */</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class SwingTemplateJApplet extends JApplet {
+ 
+   <span class="color-comment">/** init() to setup the UI components */</span>
+   @Override
+   public void init() {
+      <span class="color-comment">// Run GUI codes in the Event-Dispatching thread for thread safety</span>
+      try {
+         <span class="color-comment">// Use invokeAndWait() to ensure that init() exits after GUI construction</span>
+         SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+               <span class="color-comment">// Set the content-pane of &quot;super&quot; JApplet to an instance of main JPanel</span>
+               setContentPane(new SwingTemplateJPanel());
+            }
+         });
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>You need to provide an HMTL file to run the applet in production. (For testing, You could run your applet directly under Eclipse/NetBeans using the so-called &quot;appletviewer&quot; without an HTML file.) For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre>
+</td>
+<td>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;An .... Applet&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Heading ...&lt;/h1&gt;
+  <strong>&lt;applet code=&quot;SwingTemplateJApplet.class&quot; width=&quot;640&quot; height=&quot;480&quot; alt=&quot;Error Loading Applet?!&quot;&gt;
+  Your browser does not seem to support &amp;lt;APPLET&amp;gt; tag!
+  &lt;/applet&gt;</strong>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Graphics with OO Design</h4>
+<p>In a good OO design, each class shall be encapsulated, shall have its own attributes and operations (variables and methods), and responsible for <em>painting itself</em> in a graphics program.</p>
+
+
+
+<p>The class diagram is as follows:</p>
+
+<img class="image-center" src="images/GameTTT_GraphicsOOClassDiagram.png" alt="GameTTT_GraphicsOOClassDiagram.png" />
+
+<h5>Enumeration <span class="font-code">Seed.java</span></h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/**
+ * Enumerations for the seeds and cell contents
+ */</span>
+public enum Seed {  <span class="color-comment">// to save as &quot;Seed.java&quot;</span>
+   EMPTY, CROSS, NOUGHT
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Enumeration <span class="font-code">State.java</span></h5>
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/**
+ *  Enumerations for the various states of the game
+ */</span>
+public enum State {  <span class="color-comment">// to save as &quot;GameState.java&quot;</span>
+   PLAYING, DRAW, CROSS_WON, NOUGHT_WON
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Class <span class="font-code">Cell.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+<span class="color-comment">/**
+ * The Cell class models each individual cell of the game board.
+ */</span>
+public class Cell {
+   <span class="color-comment">// Package access</span>
+   Seed content; <span class="color-comment">// content of this cell (Seed.EMPTY, Seed.CROSS, or Seed.NOUGHT)</span>
+   int row, col; <span class="color-comment">// row and column of this cell</span>
+ 
+   <span class="color-comment">/** Constructor to initialize this cell with the specified row and col */</span>
+   public Cell(int row, int col) {
+      this.row = row;
+      this.col = col;
+      clear(); <span class="color-comment">// clear content</span>
+   }
+ 
+   <span class="color-comment">/** Clear this cell's content to EMPTY */</span>
+   public void clear() {
+      content = Seed.EMPTY;
+   }
+ 
+   <span class="color-comment">/** Paint itself on the graphics canvas, given the Graphics context */</span>
+   public void paint(Graphics g) {
+      <span class="color-comment">// Use Graphics2D which allows us to set the pen's stroke</span>
+      Graphics2D g2d = (Graphics2D)g;
+      g2d.setStroke(new BasicStroke(GameMain.SYMBOL_STROKE_WIDTH,
+            BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)); <span class="color-comment">// Graphics2D only</span>
+      <span class="color-comment">// Draw the Seed if it is not empty</span>
+      int x1 = col * GameMain.CELL_SIZE + GameMain.CELL_PADDING;
+      int y1 = row * GameMain.CELL_SIZE + GameMain.CELL_PADDING;
+      if (content == Seed.CROSS) {
+         g2d.setColor(Color.RED);
+         int x2 = (col + 1) * GameMain.CELL_SIZE - GameMain.CELL_PADDING;
+         int y2 = (row + 1) * GameMain.CELL_SIZE - GameMain.CELL_PADDING;
+         g2d.drawLine(x1, y1, x2, y2);
+         g2d.drawLine(x2, y1, x1, y2);
+      } else if (content == Seed.NOUGHT) {
+         g2d.setColor(Color.BLUE);
+         g2d.drawOval(x1, y1, GameMain.SYMBOL_SIZE, GameMain.SYMBOL_SIZE);
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Class <span class="font-code">Board.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+<span class="color-comment">/**
+ * The Board class models the ROWS-by-COLS game-board.
+ */</span>
+public class Board {
+   <span class="color-comment">// package access</span>
+   Cell[][] cells; <span class="color-comment">// composes of 2D array of ROWS-by-COLS Cell instances</span>
+ 
+   <span class="color-comment">/** Constructor to initialize the game board */</span>
+   public Board() {
+      cells = new Cell[GameMain.ROWS][GameMain.COLS]; <span class="color-comment">// allocate the array</span>
+      for (int row = 0; row &lt; GameMain.ROWS; ++row) {
+         for (int col = 0; col &lt; GameMain.COLS; ++col) {
+            cells[row][col] = new Cell(row, col); <span class="color-comment">// allocate element of array</span>
+         }
+      }
+   }
+ 
+   <span class="color-comment">/** Initialize (or re-initialize) the game board */</span>
+   public void init() {
+      for (int row = 0; row &lt; GameMain.ROWS; ++row) {
+         for (int col = 0; col &lt; GameMain.COLS; ++col) {
+            cells[row][col].clear(); <span class="color-comment">// clear the cell content</span>
+         }
+      }
+   }
+ 
+   <span class="color-comment">/** Return true if it is a draw (i.e., no more EMPTY cell) */</span>
+   public boolean isDraw() {
+      for (int row = 0; row &lt; GameMain.ROWS; ++row) {
+         for (int col = 0; col &lt; GameMain.COLS; ++col) {
+            if (cells[row][col].content == Seed.EMPTY) {
+               return false; <span class="color-comment">// an empty seed found, not a draw, exit</span>
+            }
+         }
+      }
+      return true; <span class="color-comment">// no empty cell, it's a draw</span>
+   }
+ 
+   <span class="color-comment">/** Return true if the player with &quot;seed&quot; has won after placing at
+       (seedRow, seedCol) */</span>
+   public boolean hasWon(Seed seed, int seedRow, int seedCol) {
+      return (cells[seedRow][0].content == seed   <span class="color-comment">// 3-in-the-row</span>
+                 &amp;&amp; cells[seedRow][1].content == seed
+                 &amp;&amp; cells[seedRow][2].content == seed
+             || cells[0][seedCol].content == seed <span class="color-comment">// 3-in-the-column</span>
+                 &amp;&amp; cells[1][seedCol].content == seed
+                 &amp;&amp; cells[2][seedCol].content == seed
+             || seedRow == seedCol              <span class="color-comment">// 3-in-the-diagonal</span>
+                 &amp;&amp; cells[0][0].content == seed
+                 &amp;&amp; cells[1][1].content == seed
+                 &amp;&amp; cells[2][2].content == seed
+             || seedRow + seedCol == 2          <span class="color-comment">// 3-in-the-opposite-diagonal</span>
+                 &amp;&amp; cells[0][2].content == seed
+                 &amp;&amp; cells[1][1].content == seed
+                 &amp;&amp; cells[2][0].content == seed);
+   }
+ 
+   <span class="color-comment">/** Paint itself on the graphics canvas, given the Graphics context */</span>
+   public void paint(Graphics g) {
+      <span class="color-comment">// Draw the grid-lines</span>
+      g.setColor(Color.GRAY);
+      for (int row = 1; row &lt; GameMain.ROWS; ++row) {
+         g.fillRoundRect(0, GameMain.CELL_SIZE * row - GameMain.GRID_WIDHT_HALF,
+               GameMain.CANVAS_WIDTH - 1, GameMain.GRID_WIDTH,
+               GameMain.GRID_WIDTH, GameMain.GRID_WIDTH);
+      }
+      for (int col = 1; col &lt; GameMain.COLS; ++col) {
+         g.fillRoundRect(GameMain.CELL_SIZE * col - GameMain.GRID_WIDHT_HALF, 0,
+               GameMain.GRID_WIDTH, GameMain.CANVAS_HEIGHT - 1,
+               GameMain.GRID_WIDTH, GameMain.GRID_WIDTH);
+      }
+ 
+      <span class="color-comment">// Draw all the cells</span>
+      for (int row = 0; row &lt; GameMain.ROWS; ++row) {
+         for (int col = 0; col &lt; GameMain.COLS; ++col) {
+            cells[row][col].paint(g);  <span class="color-comment">// ask the cell to paint itself</span>
+         }
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Classes <span class="font-code">GameMain.java</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+<span class="color-comment">/**
+ * Tic-Tac-Toe: Two-player Graphic version with better OO design.
+ * The Board and Cell classes are separated in their own classes.
+ */</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class GameMain extends JPanel {
+   <span class="color-comment">// Named-constants for the game board</span>
+   public static final int ROWS = 3;  <span class="color-comment">// ROWS by COLS cells</span>
+   public static final int COLS = 3;
+   public static final String TITLE = &quot;Tic Tac Toe&quot;;
+ 
+   <span class="color-comment">// Name-constants for the various dimensions used for graphics drawing</span>
+   public static final int CELL_SIZE = 100; <span class="color-comment">// cell width and height (square)</span>
+   public static final int CANVAS_WIDTH = CELL_SIZE * COLS;  <span class="color-comment">// the drawing canvas</span>
+   public static final int CANVAS_HEIGHT = CELL_SIZE * ROWS;
+   public static final int GRID_WIDTH = 8;  <span class="color-comment">// Grid-line's width</span>
+   public static final int GRID_WIDHT_HALF = GRID_WIDTH / 2; <span class="color-comment">// Grid-line's half-width</span>
+   <span class="color-comment">// Symbols (cross/nought) are displayed inside a cell, with padding from border</span>
+   public static final int CELL_PADDING = CELL_SIZE / 6;
+   public static final int SYMBOL_SIZE = CELL_SIZE - CELL_PADDING * 2;
+   public static final int SYMBOL_STROKE_WIDTH = 8; <span class="color-comment">// pen's stroke width</span>
+ 
+   private Board board;            <span class="color-comment">// the game board</span>
+   private GameState currentState; <span class="color-comment">// the current state of the game</span>
+   private Seed currentPlayer;     <span class="color-comment">// the current player</span>
+   private JLabel statusBar;       <span class="color-comment">// for displaying status message</span>
+ 
+   <span class="color-comment">/** Constructor to setup the UI and game components */</span>
+   public GameMain() {
+ 
+      <span class="color-comment">// This JPanel fires MouseEvent</span>
+      this.addMouseListener(new MouseAdapter() {
+         @Override
+         public void mouseClicked(MouseEvent e) {  <span class="color-comment">// mouse-clicked handler</span>
+            int mouseX = e.getX();
+            int mouseY = e.getY();
+            <span class="color-comment">// Get the row and column clicked</span>
+            int rowSelected = mouseY / CELL_SIZE;
+            int colSelected = mouseX / CELL_SIZE;
+ 
+            if (currentState == GameState.PLAYING) {
+               if (rowSelected &gt;= 0 &amp;&amp; rowSelected &lt; ROWS
+                     &amp;&amp; colSelected &gt;= 0 &amp;&amp; colSelected &lt; COLS
+                     &amp;&amp; board.cells[rowSelected][colSelected].content == Seed.EMPTY) {
+                  board.cells[rowSelected][colSelected].content = currentPlayer; <span class="color-comment">// move</span>
+                  updateGame(currentPlayer, rowSelected, colSelected); <span class="color-comment">// update currentState</span>
+                  <span class="color-comment">// Switch player</span>
+                  currentPlayer = (currentPlayer == Seed.CROSS) ? Seed.NOUGHT : Seed.CROSS;
+               }
+            } else {        <span class="color-comment">// game over</span>
+               initGame();  <span class="color-comment">// restart the game</span>
+            }
+            <span class="color-comment">// Refresh the drawing canvas</span>
+            repaint();  <span class="color-comment">// Call-back paintComponent().</span>
+         }
+      });
+ 
+      <span class="color-comment">// Setup the status bar (JLabel) to display status message</span>
+      statusBar = new JLabel(&quot;         &quot;);
+      statusBar.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 14));
+      statusBar.setBorder(BorderFactory.createEmptyBorder(2, 5, 4, 5));
+      statusBar.setOpaque(true);
+      statusBar.setBackground(Color.LIGHT_GRAY);
+ 
+      setLayout(new BorderLayout());
+      add(statusBar, BorderLayout.PAGE_END); <span class="color-comment">// same as SOUTH</span>
+      setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT + 30));
+            <span class="color-comment">// account for statusBar in height</span>
+ 
+      board = new Board();   <span class="color-comment">// allocate the game-board</span>
+      initGame();  <span class="color-comment">// Initialize the game variables</span>
+   }
+ 
+   <span class="color-comment">/** Initialize the game-board contents and the current-state */</span>
+   public void initGame() {
+      for (int row = 0; row &lt; ROWS; ++row) {
+         for (int col = 0; col &lt; COLS; ++col) {
+            board.cells[row][col].content = Seed.EMPTY; <span class="color-comment">// all cells empty</span>
+         }
+      }
+      currentState = GameState.PLAYING;  <span class="color-comment">// ready to play</span>
+      currentPlayer = Seed.CROSS;        <span class="color-comment">// cross plays first</span>
+   }
+ 
+   <span class="color-comment">/** Update the currentState after the player with &quot;theSeed&quot; has placed on (row, col) */</span>
+   public void updateGame(Seed theSeed, int row, int col) {
+      if (board.hasWon(theSeed, row, col)) {  <span class="color-comment">// check for win</span>
+         currentState = (theSeed == Seed.CROSS) ? GameState.CROSS_WON : GameState.NOUGHT_WON;
+      } else if (board.isDraw()) {  <span class="color-comment">// check for draw</span>
+         currentState = GameState.DRAW;
+      }
+      <span class="color-comment">// Otherwise, no change to current state (PLAYING).</span>
+   }
+ 
+   <span class="color-comment">/** Custom painting codes on this JPanel */</span>
+   @Override
+   public void paintComponent(Graphics g) {  <span class="color-comment">// invoke via repaint()</span>
+      super.paintComponent(g);    <span class="color-comment">// fill background</span>
+      setBackground(Color.WHITE); <span class="color-comment">// set its background color</span>
+ 
+      board.paint(g);  <span class="color-comment">// ask the game board to paint itself</span>
+ 
+      <span class="color-comment">// Print status-bar message</span>
+      if (currentState == GameState.PLAYING) {
+         statusBar.setForeground(Color.BLACK);
+         if (currentPlayer == Seed.CROSS) {
+            statusBar.setText(&quot;X's Turn&quot;);
+         } else {
+            statusBar.setText(&quot;O's Turn&quot;);
+         }
+      } else if (currentState == GameState.DRAW) {
+         statusBar.setForeground(Color.RED);
+         statusBar.setText(&quot;It's a Draw! Click to play again.&quot;);
+      } else if (currentState == GameState.CROSS_WON) {
+         statusBar.setForeground(Color.RED);
+         statusBar.setText(&quot;'X' Won! Click to play again.&quot;);
+      } else if (currentState == GameState.NOUGHT_WON) {
+         statusBar.setForeground(Color.RED);
+         statusBar.setText(&quot;'O' Won! Click to play again.&quot;);
+      }
+   }
+ 
+   <span class="color-comment">/** The entry &quot;main&quot; method */</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Run GUI construction codes in Event-Dispatching thread for thread safety</span>
+      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+         public void run() {
+            JFrame frame = new JFrame(TITLE);
+            <span class="color-comment">// Set the content-pane of the JFrame to an instance of main JPanel</span>
+            frame.setContentPane(new GameMain());
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setLocationRelativeTo(null); <span class="color-comment">// center the application window</span>
+            frame.setVisible(true);            <span class="color-comment">// show it</span>
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Running as a Standalone Program</h4>
+<p>Simply run the class containing the entry <code>main()</code> method.</p>
+
+<h4>Deploying an Application via a JAR file</h4>
+<p>To deploy an application containing many classes, you have to pack (i.e., jar) all classes and resources into a single file, with a manifest that specifies the main class (containing the entry <code>main()</code> method).</p>
+
+<p>For example:</p>
+<ul>
+<li>via the Eclipse's &quot;Export&quot; option: Right-click on the project &rArr; Export &rArr; Java &rArr; JAR file &rArr; Next &rArr; Specify the JAR filename &rArr; Next &rArr; Next &rArr; Select &quot;Generate the manifest file&quot; &rArr; Browse to select the main class &quot;<code>GameMain</code>&quot; &rArr; Finish.</li>
+<li>via the &quot;<code>jar</code>&quot; command.<br />
+  First, create a manifest file called &quot;<code>tictactoe.mf</code>&quot;, as follow:
+<pre class="color-example">
+Manifest-Version: 1.0
+Main-Class: GameMain</pre>
+
+Next, issue a &quot;<code>jar</code>&quot; command (form CMD shell) where options <code>'c'</code> for create, <code>'m'</code> for manifest, <code>'f'</code> for output jar filename, and <code>'v'</code> for verbose:
+<pre class="color-command">
+&gt; jar cmfv tictactoe.mf tictactoe.jar *.class</pre>
+
+</li>
+</ul>
+
+<p>You can run the program from a JAR file directly (without unpacking the JAR file) by:</p>
+<ol>
+<li>In Windows' Explorer, right-click on the JAR file &rArr; Open with &rArr; Java Platform SE Binary; or</li>
+<li>From the CMD shell, run <code>java.exe</code> with <code>-jar</code> option, i.e., &quot;<code>java -jar <em>JarFileName</em>.jar</code>&quot;.</li>
+</ol>
+
+<p>Note: JAR file uses the ZIP algorithm. In other words, you could use WinZIP/WinRAR to open and extract the contents of a JAR file.</p>
+
+<h4>Running as an Applet</h4>
+<a href="Applet_TicTacToe.html" target="_blank"><img class="image-float-right" src="images/GameTTT_Applet.png" alt="GameTTT_Applet.png" /></a>
+
+<p>Click the image to run the demo applet:</p>
+
+<h5><span class="font-code">AppletMain.java</span></h5>
+
+<p>Provide a main class (says <code>AppletMain.java</code>) for the applet that extends <code>javax.swing.JApplet</code>:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre>
+</td>
+<td>
+<pre>
+import javax.swing.*;
+ 
+<span class="color-comment">/** Tic-tac-toe Applet */</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class AppletMain extends JApplet {
+ 
+   <span class="color-comment">/** init() to setup the GUI components */</span>
+   @Override
+   public void init() {
+      <span class="color-comment">// Run GUI codes in the Event-Dispatching thread for thread safety</span>
+      try {
+         <span class="color-comment">// Use invokeAndWait() to ensure that init() exits after GUI construction</span>
+         SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+               <strong>setContentPane(new GameMain());</strong>
+            }
+         });
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">TicTacToe.html</span></h5>
+
+<p>Provide an HMTL file (says &quot;<code>TicTacToe.html</code>&quot;) that embeds the &quot;<code>AppletMain.class</code>&quot;:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre>
+</td>
+<td>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Tic Tac Toe&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Tic Tac Toe&lt;/h1&gt;
+  <strong>&lt;applet code=&quot;AppletMain.class&quot; width=&quot;300&quot; height=&quot;330&quot; alt=&quot;Error Loading Applet?!&quot;&gt;
+  Your browser does not seem to support &amp;lt;APPLET&amp;gt; tag!
+  &lt;/applet&gt;</strong>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5><span class="font-code">tictactoe.jar</span></h5>
+<p>To deploy an applet which contains more than one classes, you need to pack all the classes and resources into a JAR file (e.g., via Eclipse's &quot;Export&quot; option or &quot;<code>jar</code>&quot; command described earlier), but you need not use a manifest (for specify a main class as applet does not need a <code>main()</code> method). Then, use the following <code>&lt;applet&gt;</code> tag with an &quot;<code>archive</code>&quot; attribute to specify the JAR filename:</p>
+
+<pre class="color-example">
+&lt;applet code=&quot;AppletMain.class&quot;
+   <strong>archive=&quot;<em>JarFileName</em>.jar&quot;</strong>
+   width=&quot;300&quot; height=&quot;300&quot;
+   alt=&quot;Error Loading Applet?!&quot; &gt;
+Your browser does not seem to support &amp;lt;APPLET&amp;gt; tag!
+&lt;/applet&gt;
+</pre>
+
+
+<h3>Adding Sound Effect</h3>
+
+<h4>How to Play an Audio File</h4>
+
+<h5 class="font-code">SoundTest.java</h5>
+
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+<span class="color-new">import java.net.URL;
+import javax.sound.sampled.*;</span>
+import javax.swing.*;
+ 
+<span class="color-comment">/** Test playing sound file */</span>
+@SuppressWarnings(&quot;serial&quot;)
+public class SoundTest extends JFrame {
+   <span class="color-new">private String fileGameOver = &quot;gameover.wav&quot;;</span> <span class="color-comment">// audio filename (&quot;wav&quot;, &quot;au&quot;, &quot;aiff&quot; only)</span>
+   <span class="color-new">private Clip soundClipGameOver;</span>               <span class="color-comment">// Java Internal Sound Clip</span>
+ 
+   <span class="color-comment">/** Constructor to setup the GUI components and sound clips */</span>
+   public SoundTest() {
+      <span class="color-comment">// Prepare the Sound Clip</span>
+      <span class="color-new">try {</span>
+         <span class="color-comment">// Generate an URL from filename</span>
+         <span class="color-new">URL url = this.getClass().getClassLoader().getResource(fileGameOver);
+         if (url == null) {
+            System.err.println(&quot;Couldn't find file: &quot; + fileGameOver);
+         } else {</span>
+            <span class="color-comment">// Get an audio input stream to read the audio data</span>
+            <span class="color-new">AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);</span>
+            <span class="color-comment">// Allocate a sound clip, used by Java internal</span>
+            <span class="color-new">soundClipGameOver = AudioSystem.getClip();</span>
+            <span class="color-comment">// Read the audio data into sound clip</span>
+            <span class="color-new">soundClipGameOver.open(audioIn);
+         }
+      } catch (UnsupportedAudioFileException e) {
+         System.err.println(&quot;Audio Format not supported: &quot; + fileGameOver);
+      } catch (Exception e) {
+         e.printStackTrace();
+      }</span>
+ 
+      Container cp = getContentPane();
+      cp.setLayout(new FlowLayout());
+      JButton btn = new JButton(&quot;Play Sound&quot;);
+      cp.add(btn);
+      btn.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            <span class="color-comment">// Play sound clip</span>
+            <span class="color-new">if (soundClipGameOver.isRunning()) soundClipGameOver.stop();
+            soundClipGameOver.setFramePosition(0);</span> <span class="color-comment">// rewind to the beginning</span>
+            <span class="color-new">soundClipGameOver.start();</span>             <span class="color-comment">// start playing</span>
+         }
+      });
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      setTitle(&quot;Test Sound&quot;);
+      setSize(200, 100);
+      setVisible(true);
+   }
+ 
+   <span class="color-comment">/** The entry &quot;main&quot; method */</span>
+   public static void main(String[] args) {
+      <span class="color-comment">// Run GUI codes in Event-Dispatching thread for thread safety</span>
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            new SoundTest(); <span class="color-comment">// Let the constructor do the job</span>
+         }
+      });
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>Prepare a sound file called &quot;<code>gameover.wav</code>&quot; (try googling) and place it under under your project root (or &quot;<code>bin</code>&quot;) directory.</li>
+<li>If you receive error message &quot;Couldn't find file: xxx&quot;. Try moving your file around your project (such as under the &quot;bin&quot; sub-directory).</li>
+<li>JDK supports only a sampled audio format, &quot;<code>.wav</code>&quot;, &quot;<code>.au</code>&quot;, and &quot;<code>.aiff</code>&quot;. It does not support &quot;<code>.mp3</code>&quot; (You will get an error message &quot;Audio Format not supported: xxx&quot;. There used to be a &quot;Java Media Framework (JMF)&quot; that supports MP3.</li>
+<li>You may try to download the pronunciations for the words &quot;game&quot; and &quot;over&quot;, and join them into a &quot;<code>wav</code>&quot; file.</li>
+<li>We need to test the sound effect under a Swing application, instead of placing all the codes under the <code>main()</code>. This is because <code>main()</code> exits before the sound gets a chance to play.</li>
+</ul>
+
+<h4>Adding Sound Effect to the Tic-Tac-Toe Graphics Version</h4>
+
+<p>Two sound clips were used in the demo: one for the move (&quot;<code>move.wav</code>&quot;) and the other for game-over (&quot;<code>gameover.wav</code>&quot;). (Google to find some interesting &quot;<code>wav</code>&quot; files.)</p>
+<p>Include the following codes at the <em>appropriate</em> locations:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Add the following import statements</span>
+import java.io.IOException;
+import java.net.URL;
+import javax.sound.sampled.*;
+ 
+......
+
+<span class="color-comment">// Declare the following variables for the sound clips in the main class</span>
+<span class="color-comment"></span>String fileMove = &quot;sounds/move.wav&quot;;         <span class="color-comment">// audio filename for move effect</span>
+String fileGameOver = &quot;sounds/gameover.wav&quot;; <span class="color-comment">// audio filename for game-over effect</span>
+Clip soundClipMove;      <span class="color-comment">// Sound clip for move effect</span>
+Clip soundClipGameOver;  <span class="color-comment">// Sound clip for game-over effect</span>
+ 
+......
+ 
+<span class="color-comment">// In the main class's Constructor, prepare the sound clips</span>
+try {<br />   URL url = this.getClass().getClassLoader().getResource(fileGameOver);<br />   if (url == null) {<br />      System.err.println(&quot;Couldn't find file: &quot; + fileGameOver);<br />   } else {<br />      AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);<br />      soundClipGameOver = AudioSystem.getClip();<br />      soundClipGameOver.open(audioIn);<br />   }<br />       <br />   url = this.getClass().getClassLoader().getResource(fileMove);<br />   if (url == null) {<br />      System.err.println(&quot;Couldn't find file: &quot; + fileMove);<br />   } else {<br />      AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);<br />      soundClipMove = AudioSystem.getClip();<br />      soundClipMove.open(audioIn);<br />   }<br />} catch (UnsupportedAudioFileException e) {<br />   System.err.println(&quot;Audio Format not supported!&quot;);<br />} catch (Exception e) {<br />   e.printStackTrace();<br />}<br /> 
+......
+  
+<span class="color-comment">// In mouseClicked() event-handler - play sound effect upon mouse-click</span>
+if (currentState == GameState.PLAYING) {
+   if (soundClipMove.isRunning()) soundClipMove.stop();
+   soundClipMove.setFramePosition(0); <span class="color-comment">// rewind to the beginning</span>
+   soundClipMove.start();             <span class="color-comment">// Start playing</span>
+} else {
+   if (soundClipGameOver.isRunning()) soundClipGameOver.stop();
+   soundClipGameOver.setFramePosition(0); <span class="color-comment">// rewind to the beginning</span>
+   soundClipGameOver.start();             <span class="color-comment">// Start playing</span>
+}</pre>
+
+<p>You may consider using different sound files for &quot;win&quot;, &quot;loss&quot;, &quot;draw&quot;, &quot;valid_move&quot; and &quot;invalid_move&quot;.</p>
+
+<h3>Using Images</h3>
+
+<p>Read &quot;<a href="J4b_CustomGraphics.html#DrawImage">Drawing Images</a>&quot; of &quot;Custom Graphics&quot;.</p>
+
+<h3>Animation</h3>
+
+<p>Read &quot;<a href="J4b_CustomGraphics.html#animation">Animation</a>&quot; of &quot;Custom Graphics&quot;.</p>
+
+<h3>Fast Matching of Winning Patterns with Bit-Masks (Advanced)</h3>
+
+<p><span class="line-heading">Reference:</span> Arthur van Hoff's Tic Tac Toe Applet Demo (under the JDK demo &quot;applets&quot; folder).</p>
+
+<p>A much more efficient method for matching with a winning pattern in a Tic-tac-toe is to use <em>a 9-bit binary number</em> (stored as an <code>int</code> or <code>short</code> type) to denote the placement of the seeds, and use bit operations to perform the matching.</p>
+
+<img class="image-center" src="images/GameTTT_BitOp.png" alt="GameTTT_BitOp.png" />
+
+<p>The following table summaries all the bit-wise operations, which are efficient and fast.</p>
+
+<table class="table-zebra" style="width:80%">
+<tr>
+  <th>Operator</th>
+  <th>Description</th>
+  <th>Usage</th>
+  <th>Example</th>
+</tr>
+<tr>
+  <td class="td-center"><code><strong>&amp;</strong></code></td>
+  <td>Bit-wise AND</td>
+  <td><code><em>expr1</em> &amp; <em>expr2</em></code></td>
+  <td><code>0b0110 0001 &amp; Ob1110 0000</code> gives <code>0b0110 0000</code></td>
+</tr>
+<tr class="table-row-alt">
+  <td class="td-center"><code><strong>|</strong></code></td>
+  <td>Bit-wise OR</td>
+  <td><code><em>expr1</em> | <em>expr2</em></code></td>
+  <td><code>0b0110 0001 | Ob0000 1000</code> gives <code>0b0110 1001</code></td>
+</tr>
+<tr>
+  <td class="td-center"><code><strong>!</strong></code></td>
+  <td>Bit-wise NOT</td>
+  <td><code>!<em>expr</em></code></td>
+  <td><code>^0b0110 0001</code> gives <code>0b1001 1110</code></td>
+</tr>
+<tr class="table-row-alt">
+  <td class="td-center"><code><strong>^</strong></code></td>
+  <td>Bit-wise XOR</td>
+  <td><code><em>expr1</em> ^ <em>expr2</em></code></td>
+  <td><code>0b0110 0001 ^ Ob0000 0001</code> gives <code>0b0110 1001</code></td>
+</tr>
+<tr>
+  <td class="td-center"><code><strong>&lt;&lt;</strong></code></td>
+  <td>Left-shift and padded with zeros</td>
+  <td><code>operand &lt;&lt; number</code></td>
+  <td><code>0b0000 0001 &lt;&lt; 4</code> gives <code>0b0001 0000</code></td>
+</tr>
+<tr class="table-row-alt">
+  <td class="td-center"><code><strong>&gt;&gt;</strong></code></td>
+  <td>Right-shift and padded with the &quot;sign-bit&quot;<br />
+    (Signed-extended right-shift)</td>
+  <td><code>operand &gt;&gt; number</code></td>
+  <td><code>0b1000 0001 &gt;&gt; 2</code> gives <code>0b1110 0000</code></td>
+</tr>
+<tr>
+  <td class="td-center"><code><strong>&gt;&gt;&gt;</strong></code></td>
+  <td>Right-shift and padded with zeros<br />
+  (Unsigned-extended right-shift)</td>
+  <td><code>operand &gt;&gt;&gt; number</code></td>
+  <td><code>0b1000 0001 &gt;&gt;&gt; 2</code> gives <code>0b0010 0000</code></td>
+</tr>
+
+</table>
+
+<p>We can keep the 8 winning patterns in an <code>int</code> array as follows:</p>
+
+<pre class="color-example">
+int[] winningPatterns = {
+      0x1c0,   <span class="color-comment">// 0b111 000 000 (row 2)</span>
+      0x038,   <span class="color-comment">// 0b000 111 000 (row 1)</span>
+      0x007,   <span class="color-comment">// 0b000 000 111 (row 0)</span>
+      0x124,   <span class="color-comment">// 0b100 100 100 (col 2)</span>
+      0x092,   <span class="color-comment">// 0b010 010 010 (col 1)</span>
+      0x049,   <span class="color-comment">// 0b001 001 001 (col 0)</span>
+      0x111,   <span class="color-comment">// 0b100 010 001 (diagonal)</span>
+      0x054};  <span class="color-comment">// 0b001 010 100 (opposite diagonal)</span>
+   <span class="color-comment">// msb is (2, 2); lsb is (0, 0)</span></pre>
+      
+<p>Note: JDK 1.7 supports binary literals beginning with prefix &quot;<code>0b</code>&quot;. Pre-JDK 1.7 does not support binary literals but supports hexadecimal literals beginning with prefix &quot;<code>0x</code>&quot;. Eclipse IDE supports JDK 1.7 only after Eclipse 3.7.2. Hence, try <code>0b...</code> but fall back to <code>0x...</code> if compilation fails.</p>
+
+<p>We define two placement binary patterns for the cross and nought respectively.</p>
+
+<pre class="color-example">
+int crossPattern;
+int noughtPattern;
+ 
+<span class="color-comment">// updating the pattern after each move</span>
+int bitPosition = rowSelected * ROWS + colSelected;
+if (currentPlayer == Seed.CROSS) {
+   crossPattern = crossPattern | (0x1 &lt;&lt; bitPosition);
+} else {
+   noughtPattern = noughtPattern | (0x1 &lt;&lt; bitPosition);
+}</pre>
+
+<p><code>(0x1 &lt;&lt; bitPosition)</code> shifts a binary <code>0b 000 000 001</code> to the left by the <code>bitPosition</code> number of bits, so as to place a <code>'1'</code> bit at the proper position. It is then bit-OR with the existing pattern to include the new bit, without modifying the existing bits. For example, suppose <code>rowSelect = 2</code> and <code>colSelected = 0</code>, then <code>bitPosition = 6</code>. <code>(0x1 &lt;&lt; bitPosition)</code> gives <code>0b 001 000 000</code>.</p>
+
+<p>To match with the winning patterns:</p>
+
+<pre class="color-example">
+public boolean hasWon(Seed theSeed) {
+   int playerPattern = (theSeed == Seed.CROSS) ? crossPattern : noughtPattern; 
+   for (int aWinningPattern : winningPatterns) {
+      if ((aWinningPattern &amp; playerPattern) == aWinningPattern) {
+         return true;
+      }
+   }
+   return false;
+}</pre>
+
+<p><code>(aWinningPattern &amp; playerPattern)</code> masks out all the bits in the <code>playerPattern</code> except those having 1's in <code>aWinningPattern</code>. For example, suppose that <code>playerPattern = 0b111 000 101</code>, it matches the <code>aWinningPattern = 0b111 000 000</code>. This is because <code>(playerPattern &amp; aWinningPattern)</code> returns <code>0b111 000 000</code>, which is the same the the <code>aWinningPattern</code>.</p>
+
+<p>This code is very much more efficient as it involves only comparison with 8 integers (plus 8 efficient bit-AND operations).</p>
+
+<h3>Other Modes of Operation</h3>
+
+<h4>WebStart Application</h4>
+<p>[TODO]</p>
+<h4>Playing Over the Net</h4>
+<p>[TODO]</p>
+
+
+<h3>Playing Against Computer with AI (Advanced)</h3>
+
+<p>Read &quot;<a href="JavaGame_TicTacToe_AI.html">Case Study on Tic-Tac-Toe Part 2: With AI</a>&quot;.</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+
+<ol>
+<li>JDK Applets demo &quot;TicTacToe&quot; (under JDK demo applets folder).</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7.0_17<br />
+Last modified: April, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

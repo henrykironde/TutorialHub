@@ -1,0 +1,869 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>C++ More Basics</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>C++ Programming Language</h1>
+<h2>More Basics</h2>
+</div>
+
+<div id="content-main">
+
+<p>This chapter is written for completeness. Novices may slip this chapter.</p>
+
+<h3>*Enumeration (<span class="font-code">enum</span>)</h3>
+
+<p>An <em>enum</em> is a user-defined type of a set of named constants, called <em>enumerators</em>. An enumeration define the complete set of values that can be assigned to objects of that type. For example,</p>
+
+<pre class="color-example">enum Color {
+   RED, GREEN, BLUE
+} myColor;        <span class="color-comment">// Define an enum and declare a variable of the enum</span>
+......
+myColor = RED;    <span class="color-comment">// Assign a value to an enum</span>
+Color yourColor;
+yourColor = GREEN;</pre>
+
+<p>The enumerators are represented internally as integers. You have to use the names in assignment, not the numbers. However, it will be promoted to int in arithmetic operations. By default, they are running numbers starting from zero. You can assigned different numbers, e.g.,</p>
+<pre class="color-example">
+enum Color {
+   RED = 1, GREEN = 5, BLUE
+};</pre>
+
+<p>To print the enumerator names, you may need to define a array of string, indexed by the enumerator numbers.</p>
+
+<h5>Example: Deck of Card</h5>
+<p>[TODO]</p>
+
+<h3>*Structure (<span class="font-code">struct</span>)</h3>
+
+<p>A <code>struct</code> (structure) is a user-defined data structure that can be used to hold a set of variables of different types (called <em>members</em>).  To defined a <code>struct</code>:</p>
+
+<pre class="color-syntax">
+struct <em>StructName</em> {
+   <em>type1 var1</em>;
+   <em>type2 var2</em>;
+   .......
+};  <span class="color-comment">// need to terminate by a semi-colon</span></pre>
+
+<p><code>struct</code> is an intermediate step towards Object-oriented Programming (OOP). In OOP, we use <code>class</code> that is an user-defined structure containing both data members and member functions.</p>
+
+<h5>Example: struct <span class="font-code">Point</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></td>
+<td>
+<pre>
+<span class="color-comment">/* Testing struct (TestStruct.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+struct Point {
+   int x;
+   int y;
+};
+ 
+int main() {
+   Point p1 = {3, 4};  <span class="color-comment">// declare and init members</span>
+   cout &lt;&lt; &quot;(&quot; &lt;&lt; p1.x &lt;&lt; &quot;,&quot; &lt;&lt; p1.y &lt;&lt; &quot;)&quot; &lt;&lt; endl; <span class="color-comment"> // (3,4)</span>
+ 
+   Point p2 = {};  <span class="color-comment">    // declare and init numbers to defaults</span>
+   cout &lt;&lt; &quot;(&quot; &lt;&lt; p2.x &lt;&lt; &quot;,&quot; &lt;&lt; p2.y &lt;&lt; &quot;)&quot; &lt;&lt; endl; <span class="color-comment"> // (0,0)</span>
+   p2.x = 7;
+   p2.y = 8;
+   cout &lt;&lt; &quot;(&quot; &lt;&lt; p2.x &lt;&lt; &quot;,&quot; &lt;&lt; p2.y &lt;&lt; &quot;)&quot; &lt;&lt; endl; <span class="color-comment"> // (7,8)</span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Notes:</p>
+
+<ul>
+<li>You can declare and initialize an instance of <code>struct</code> as shown in Line 11 and Line 14.</li>
+<li>To access members of a <code>struct</code>, use the dot (<code>.</code>) operator.</li>
+</ul>
+
+<h5>Example: <span class="font-code">struct Person</span></h5>
+
+<p>A <code>struct</code> can contains members of different types.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Testing struct (TestStructPerson.cpp) */</span>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+ 
+struct Person {
+   string name;
+   int age;
+   double height;
+   double weight;
+};
+ 
+int main() {
+   Person peter = {&quot;Peter Jone&quot;, 18, 180.5, 70.5};
+   cout &lt;&lt; &quot;Name: &quot; &lt;&lt; peter.name &lt;&lt; endl;
+   cout &lt;&lt; &quot;Age: &quot; &lt;&lt; peter.age &lt;&lt; endl;
+   cout &lt;&lt; &quot;Height: &quot; &lt;&lt; peter.height &lt;&lt; endl;
+   cout &lt;&lt; &quot;weight: &quot; &lt;&lt; peter.weight &lt;&lt; endl;
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Example: <span class="font-code">structs Point</span> and <span class="font-code">Rectangle</span></h5>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ * Testing struct (TestStruct.cpp)
+ */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+struct Point {
+  int x, y;
+};
+ 
+struct Rectangle {
+  Point topLeft;
+  Point bottomRight;
+};
+ 
+int main() {
+   Point p1, p2;
+   p1.x = 0;  <span class="color-comment">// p1 at (0, 3)</span>
+   p1.y = 3;
+   p2.x = 4;  <span class="color-comment">// p2 at (4, 0)</span>
+   p2.y = 0;
+ 
+   cout &lt;&lt; &quot;p1 at (&quot; &lt;&lt; p1.x &lt;&lt; &quot;,&quot; &lt;&lt; p1.y &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+   cout &lt;&lt; &quot;p2 at (&quot; &lt;&lt; p2.x &lt;&lt; &quot;,&quot; &lt;&lt; p2.y &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+ 
+   Rectangle rect;
+   rect.topLeft = p1;
+   rect.bottomRight = p2;
+ 
+   cout &lt;&lt; &quot;Rectangle top-left at (&quot; &lt;&lt; rect.topLeft.x
+        &lt;&lt; &quot;,&quot; &lt;&lt; rect.topLeft.y &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+   cout &lt;&lt; &quot;Rectangle bottom-right at (&quot; &lt;&lt; rect.bottomRight.x
+        &lt;&lt; &quot;,&quot; &lt;&lt; rect.bottomRight.y &lt;&lt; &quot;)&quot; &lt;&lt; endl;
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="output">
+p1 at (0,3)
+p2 at (4,0)
+Rectangle top-left at (0,3)
+Rectangle bottom-right at (4,0)</pre>
+
+<h5>C++ <span class="font-code">struct</span>s</h5>
+
+<p>C++ evolves the C's <code>struct</code>s into OOP classes. The legacy C's <code>struct</code>s contain public data members. C++ <code>struct</code>s, like classes, may contain access specifiers (<code>public</code>, <code>private</code>, <code>protected</code>), member functions, constructor, destructor and support inheritance. The only difference for C++'s <code>struct</code>s and classes is the <code>struct</code>'s members default to <code>public</code> access while class members default to <code>private</code> access, if no access specifier is used. Also, C++ <code>struct</code>s default to <code>public</code>-inheritance whereas classes default to <code>private</code>-inheritance.</p>
+
+
+<h3>*Bit-wise Operations</h3>
+
+<h4>Bit-wise Logical Operations</h4>
+
+<p>Bit-wise  operators perform operation on one or two operands on a bit-by-bit basis.</p>
+
+<table class="table-zebra" style="width:80%">
+<tr>
+  <th>Operator</th>
+  <th>Description</th>
+  <th>Usage</th>
+</tr>
+<tbody class="font-code" style="width:80%">
+<tr>
+  <td>&amp;</td>
+  <td class="font-normal">Bit-wise AND</td>
+  <td><em>expr1</em> &amp; <em>expr2</em></td>
+</tr>
+<tr class="tr-alt">
+  <td>|</td>
+  <td class="font-normal">Bit-wise OR</td>
+  <td><em>expr1</em> | <em>expr2</em></td>
+</tr>
+<tr>
+  <td>!</td>
+  <td class="font-normal">Bit-wise NOT</td>
+  <td>!<em>expr</em></td>
+</tr>
+<tr class="tr-alt">
+  <td>^</td>
+  <td class="font-normal">Bit-wise XOR</td>
+  <td><em>expr1</em> ^ <em>expr2</em></td>
+</tr>
+</tbody>
+</table>
+
+<p>Compound operator <code>&amp;=</code>, <code>|=</code> and <code>^=</code> are also available.</p>
+
+
+<h4>Bit-Shift Operations</h4>
+
+<p>Bit-shift operators perform left or right shift on an operand by a specified number of bits.  Left-shift is padded with zeros. Right-shift may padded with zero or sign-bit, depending on implementation.</p>
+
+<table class="table-zebra" style="width:80%">
+  <tr>
+  <th>Operator</th>
+  <th>Usage</th>
+  <th>Description</th>
+</tr>
+<tbody class="font-code">
+<tr>
+  <td>&lt;&lt;</td>
+  <td>operand &lt;&lt; number</td>
+  <td class="font-normal">Left-shift and padded with zeros</td>
+</tr>
+<tr class="tr-alt">
+  <td>&gt;&gt;</td>
+  <td>operand &gt;&gt; number</td>
+  <td class="font-normal">Right-shift</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>*More on Functions</h3>
+
+<h4>Inline Functions</h4>
+<p>Function call has its overhead (handling the argument, managing function stack, branch and return). For simple and short functions, you may use <code>inline</code> functions to remove the function call overhead. The keyword <code>inline</code> (before the function's return-type) <em>suggest</em> to the compiler to &quot;expand&quot; the function code in place, instead of performing a function call. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">//  TestInlineFunction.cpp</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-new">inline</span> int max(int n1, int n2) {
+   return (n1 &gt; n2) ? n1 : n2;
+}
+ 
+int main() {
+   int i1 = 5, i2 = 6;
+   cout &lt;&lt; <span class="color-new">max(i1, i2)</span> &lt;&lt; endl;  <span class="color-comment">// inline request to expand to <span class="color-new">(i1 &gt; i2) ? i1 : i2</span></span>
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The compiler may expand line 11 as:</p>
+<pre class="color-example">
+cout &lt;&lt; <span class="color-new">(i1 &gt; i2) ? i1 : i2</span> &lt;&lt; endl;</pre>
+
+<p>The expanded statement is  faster than invoking a function call. The trade-off is bigger code size.</p>
+<p>Inline is just a recommendation. Compiler may not support or may ignored the recommendation.</p>
+
+<h5>Inline Function vs. <span class="font-code">#define</span> Macro</h5>
+
+<p>In C, you can use the <code>#define</code> preprocessor directive to define a macro with argument, which would then be expanded during pre-processing. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/* Test #define macro (TestMacro.cpp) */</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-new">#define SQUARE(x) x*x</span>    <span class="color-comment"> // Macro with argument</span>
+ 
+<span class="color-new">inline int square(int x) { return x*x; }</span>  <span class="color-comment">// inline function</span>
+ 
+int main() {
+   cout &lt;&lt; SQUARE(5) &lt;&lt; endl; <span class="color-comment"> // expand to 5*5 (25)</span>
+   int x = 2, y = 3;
+   cout &lt;&lt; SQUARE(x) &lt;&lt; endl; <span class="color-comment"> // expand to x*x (4)</span>
+ 
+  <span class="color-comment"> // Problem with the following macro expansions</span>
+   cout &lt;&lt; <span class="color-new">SQUARE(5+5)</span> &lt;&lt; endl;  <span class="color-comment"> // expand to 5+5*5+5 - wrong answer</span>
+   cout &lt;&lt; square(5+5) &lt;&lt; endl;  <span class="color-comment"> // Okay square(10)</span>
+   cout &lt;&lt; <span class="color-new">SQUARE(x+y)</span> &lt;&lt; endl;  <span class="color-comment"> // expand to x+y*x+y - wrong answer</span>
+   cout &lt;&lt; square(x+y) &lt;&lt; endl;  <span class="color-comment"> // Okay</span>
+     <span class="color-comment"> // can be fixed using #define SQUARE(x) (x)*(x)</span>
+ 
+   cout &lt;&lt; <span class="color-new">SQUARE(++x)</span> &lt;&lt; endl;  <span class="color-comment"> // expand to ++x*++x (16) - x increment twice</span>
+   cout &lt;&lt; x &lt;&lt; endl;            <span class="color-comment"> // x = 4</span>
+   cout &lt;&lt; square(++y) &lt;&lt; endl;  <span class="color-comment"> // Okay ++y, (y*y) (16)</span>
+   cout &lt;&lt; y &lt;&lt; endl;            <span class="color-comment"> // y = 4</span>
+}
+ </pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>Inline function is preferred over macro expansion, as seen from the above example.</p>
+
+<h4>Ellipses (...)</h4>
+
+<p>Ellipses (<code>...</code>) can be used as the <em>last</em> parameter of a function to denote zero or more arguments of unknown type. The compiler suspends type checking for these parameters. For example,</p>
+
+<table class="table-program">
+  <col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  TestEllipses.cpp
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;cstdarg&gt;
+using namespace std;
+ 
+int sum(int, ...);
+ 
+int main() {
+   cout &lt;&lt; sum(3, 1, 2, 3) &lt;&lt; endl;       <span class="color-comment">// 6</span>
+   cout &lt;&lt; sum(5, 1, 2, 3, 4, 5) &lt;&lt; endl; <span class="color-comment">// 15</span>
+ 
+   return 0;
+}
+ 
+int sum(int count, ...) {
+   int sum = 0;
+ 
+   <span class="color-comment">// Ellipses are accessed thru a va_list</span>
+   va_list lst;  <span class="color-comment">// Declare a va_list</span>
+   <span class="color-comment">// Use function va_start to initialize the va_list,</span>
+   <span class="color-comment">// with the list name and the number of parameters.</span>
+   va_start(lst, count);
+   for (int i = 0; i &lt; count; ++i) {
+      <span class="color-comment">// Use function va_arg to read each parameter from va_list,</span>
+      <span class="color-comment">// with the type.</span>
+      sum += va_arg(lst, int);
+   }
+   <span class="color-comment">// Cleanup the va_list.</span>
+   va_end(lst);
+ 
+   return sum;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Scope Resolution Operator</h4>
+<p>The symbol <code>::</code> is known as scope resolution operator. If a global variable is hidden by a local variable of the same name (of course not recommended), you could use the scope resolution operator to retrieve the hidden global variable. For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">//  TestScopeResolutionOperator.cpp</span>
+#include &lt;iostream&gt;
+using namespace std;
+ 
+<span class="color-comment">// Global variable</span>
+int x = 5;
+ 
+int main() {
+   <span class="color-comment">// A local variable having the Same name as a global variable,</span>
+   <span class="color-comment">// which hides the global variable</span>
+   float x = 55.5f;
+ 
+   <span class="color-comment">// Local</span>
+   cout &lt;&lt; x &lt;&lt; endl;
+ 
+   <span class="color-comment">// Use unary scope resolution operator to retrieve the global variable</span>
+   cout &lt;&lt; ::x &lt;&lt; endl;
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h4>Command-Line Arguments</h4>
+<p>You may include arguments in the command-line, when running a program, for example,</p>
+<pre class="color-command">
+$ gcc -o test test.cpp</pre>
+
+<p>&quot;<code>-o test test.cpp</code>&quot; are called <em>command-line arguments</em>. Each of the argument is a string, all the arguments form a string array, and passed into the <code>main()</code> function of the program.</p>
+
+<p>To process command-line argument, the <code>main()</code> function shall use this header:</p>
+<pre class="color-syntax">
+int main(int argc, char *argv[]) { ...... }</pre>
+
+<p>The second parameter <code>char *argv[]</code> captures the string array, while the first parameter capture the size of the array, or the number of arguments.</p>
+
+<p>For example,</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/*
+ *  Arithmetic.cpp
+ *  Usage: Arithmetic num1 num2 operator
+ */</span>
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+using namespace std;
+ 
+int main(int argc, char *argv[]) {
+ 
+   if (argc != 4) {
+      cout &lt;&lt; &quot;Usage: Arithmetic num1 num2 operator&quot; &lt;&lt; endl;
+      exit(1);
+   }
+ 
+   int operand1 = atoi(argv[1]);  <span class="color-comment">// Parse string to int</span>
+   int operand2 = atoi(argv[2]);  <span class="color-comment">// Parse string to int</span>
+   char op = argv[3][0];          <span class="color-comment">// Extract first character only</span>
+ 
+   switch (op) {
+      case '+':
+         cout &lt;&lt; operand1 &lt;&lt; &quot; + &quot; &lt;&lt; operand2 &lt;&lt; &quot; = &quot; &lt;&lt; operand1 + operand2 &lt;&lt; endl;
+         break;
+      case '-':
+         cout &lt;&lt; operand1 &lt;&lt; &quot; - &quot; &lt;&lt; operand2 &lt;&lt; &quot; = &quot; &lt;&lt; operand1 - operand2 &lt;&lt; endl;
+         break;
+      case '*':
+         cout &lt;&lt; operand1 &lt;&lt; &quot; * &quot; &lt;&lt; operand2 &lt;&lt; &quot; = &quot; &lt;&lt; operand1 * operand2 &lt;&lt; endl;
+         break;
+      case '/':
+         cout &lt;&lt; operand1 &lt;&lt; &quot; / &quot; &lt;&lt; operand2 &lt;&lt; &quot; = &quot; &lt;&lt; operand1 / operand2 &lt;&lt; endl;
+         break;
+      default:
+         cout &lt;&lt; &quot;Unknown operator&quot; &lt;&lt; endl;
+         exit(1);
+   }
+ 
+   return 0;
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>*More on Preprocessor Directives</h3>
+
+<p>A <em>preprocessor </em><em>directive</em> begins with <code>#</code> (e.g., &quot;<code>#include &lt;stdio.h&gt;</code>&quot;, &quot;<code>#define PI 3.14256295</code>&quot;). When you compile a C/C++ program, these commands will be <em>pre-processed</em> to produce the source file for the actual compilation (e.g., to include a specific header file in this program or to define a certain macro substitution).</p>
+<p>A preprocessor command is NOT a C statement, and it does NOT end with a semi-colon.</p>
+
+<p><span class="line-heading"><code>#include</code>: </span><code>#include</code> is most commonly-used to <em>include a header file</em> into this source file for subsequent compilation. The syntax is as follows:</p>
+<table class="table-program">
+  <tr>
+    <td><pre class="color-syntax"><span class="color-comment">// Syntax</span>
+#include <em>header_file</em>
+   </pre></td>
+    <td><pre class="color-example"><span class="color-comment">// Examples</span>   
+#include &lt;stdio.h&gt;      <span class="color-comment">// Search the compiler's include paths</span>
+#include &quot;myHeader.h&quot;   <span class="color-comment">// Search the current directory first</span>
+</pre></td>
+  </tr>
+</table>
+
+<p><span class="line-heading"><code>#define</code>, <code>#undef</code>:</span> <code>#define</code> can be used to define a <em>macro</em>. When the macro pattern appears subsequently in the source codes, it will be replaced or substituted by the macro's body. Macro may take parameters.<code> </code>You can use <code>#undef</code> to un-define a macro.</p>
+<table class="table-program">
+  <tr>
+    <td><pre class="color-syntax"><span class="color-comment">// Define a macro substitution</span>
+#define <em>marco_name</em> <em>macro_value</em>
+   
+<span class="color-comment">// Define a macro with parameters</span>
+#define <em>marco_name</em>(<em>args</em>) <em>marco_definition
+</em>   
+   
+   
+   
+<span class="color-comment">// Un-define a macro name</span>
+#undef <em>marco_name</em></pre></td>
+    <td><pre class="color-example"><span class="color-comment">// Example</span>   
+#define PI 3.14159256
+   
+<span class="color-comment">// Example</span>
+#define square(x)  (x*x)
+#define max(x,y)   ((x &gt; y) ? x : y)
+#define REP(i,n)   for (i = 0; i &lt; n; ++i)
+#define FOR(i,a,b) for (i = a; i &lt; b; ++i)
+   
+<span class="color-comment">// Example</span>
+#undef PI</pre></td>
+  </tr>
+</table>
+
+<p>Two common mistakes when using a <code>#define</code> command for macro substitution are:</p>
+<pre class="color-example">#define PI = 3.14159265   <span class="color-comment">// 1</span>
+#define PI 3.14159265;    <span class="color-comment">// 2</span>
+</pre>
+<p>In case 1, the macro name &quot;<code>PI</code>&quot; is defined to be &quot;<code>= 3.14159265</code>&quot; (with the leading <code>'='</code> sign). In case 2, it is &quot;<code>3.14159265;</code>&quot; (with a tailing <code>';'</code>). These will certainly trigger errors in your program during the actual compilation.</p>
+<p><code>#define</code> is also commonly-used in define a macro name with an empty body, to be used in the conditional directives such as <code>#ifdef</code> and <code>#ifndef</code>.</p>
+
+<p><span class="line-heading"><code>#ifdef</code>, <code>#ifndef</code>, <code>#if</code>, <code>#elif</code>, <code>#endif</code>:</span> Conditional directives can be used to control the sections of program send for compilation:</p>
+
+<table class="table-program">
+  <tr>
+    <td>
+<pre class="color-syntax">
+<span class="color-comment">// if the <em>marco_name</em> is defined</span>
+#ifdef <em>macro_name</em>
+  ......
+#endif
+  
+<span class="color-comment">// if the macro_name is NOT defined</span>
+#ifndef <em>macro_name</em>
+  ......
+#endif
+  <span class="color-comment">
+// conditional if else</span>
+#if <em>expression</em>
+  ......
+#elif <em>condition</em>
+  ......
+#else
+  ......
+#endif</pre></td>
+    <td><pre class="color-example"><span class="color-comment">// Examples</span>
+  
+  
+  
+  
+  
+  
+   
+  
+  
+
+<span class="color-comment">#if 1 (always true), #if 0 (always false)</span>
+  
+  
+  
+ 
+ 
+ </pre></td>
+  </tr>
+</table>
+
+<p>For example,</p>
+<pre class="color-example">#ifndef SIZE
+#define SIZE 1000
+#endif
+......</pre>
+<p>For example, in a header file (e.g., <code>myHeader.h</code>), the following directive are often used to prevent this header from included more than once in a source file.</p>
+<pre class="color-example">#ifndef __MY_HEADER
+#define __MY_HEADER
+#endif
+......</pre>
+
+<p><span class="line-heading"><code>#pragma</code>:</span> The directive <code>#pragma</code> can be used to direct compiler for system-dependent information. A common usage is:</p>
+<pre class="color-example">
+#ifdef _MSC_VER                        <span class="color-comment">// This pragma comment works on MS Visual C++ only, NOT Gcc</span>
+#pragma comment(lib, &quot;opengl32.lib&quot;)   <span class="color-comment">// Direct compiler to include this library, same as -l command-line option</span>
+#endif</pre>
+<p><span class="line-heading">Others:</span> Other directives include <code>#errors</code> and <code>#line</code>, which are not commonly used.</p>
+
+
+<a class="references" href="../howto/References.html#cpp">Link to &quot;C++ References &amp; Resources&quot;</a>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Gygwin/MinGW GCC 4.6.2<br />
+Last modified: May, 2013</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

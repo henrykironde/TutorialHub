@@ -1,0 +1,39 @@
+/* JSTicTacToe.css */
+body {
+  background-color: white;
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+}
+ 
+h1 {
+  font-size: 28px;
+}
+ 
+table {
+  border-collapse: collapse;
+}
+ 
+td {
+  padding: 10px;
+  border: 3px #888 solid;
+  text-align: center;
+  font-size: 28px;
+  width: 20%;
+  font-family: Consolas, monospace
+}
+ 
+/* Set the border (top, right, bottom, left) of the cells */
+#cell0 { border-style: none  solid solid none;  }
+#cell1 { border-style: none  solid solid solid; }
+#cell2 { border-style: none  none  solid solid; }
+#cell3 { border-style: solid solid solid none;  }
+#cell4 { border-style: solid solid solid solid; }
+#cell5 { border-style: solid none  solid solid; }
+#cell6 { border-style: solid solid none  none;  }
+#cell7 { border-style: solid solid none  solid; }
+#cell8 { border-style: solid none  none  solid; }
+ 
+/* winning cells style */
+.winningCell {
+  background-color: #f88;
+}

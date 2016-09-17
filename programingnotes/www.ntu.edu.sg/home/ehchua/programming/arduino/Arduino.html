@@ -1,0 +1,389 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Android Basics and User Interfaces</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Getting Started with Arduino</h1>
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction</h3>
+
+<p>"Arduino is an open-source electronics prototyping platform based on 
+flexible, easy-to-use hardware and software. It is intended for artists,
+ designers, hobbyists, and anyone interested in creating interactive 
+objects or environments."</p>
+
+<p>The mother site for Arduino is <a href="http://arduino.cc/">http://arduino.cc</a>.</p>
+
+<h3>Getting Started</h3>
+
+<h5>Step 0: Buy an Arduino Board</h5>
+<p>A minimal "Arduino UNO" board for starter costs less than US$30 and can be purchased thru many online stores (Refer to <a href="http://arduino.cc/en/Main/Buy">http://arduino.cc/en/Main/Buy</a>).</p>
+
+<img class="image-center" src="images/ArduinoUno.png" alt="arduino" />
+
+<p>An Arduino UNO board contains the following (as illustrated):</p>
+<ul>
+<li>Atmel ATmega328P 8-bit Microcontroller (<a href="http://www.atmel.com/Images/doc8161.pdf">datasheet</a>),
+ with 32KB of Flash memory for application programs, 2KB of SRAM, and 
+1KB of  EEPROM for non-volatile data. The clock speed is 16MHz.</li>
+<li>USB Port: to communicate to the computer; also double as the power supply.</li>
+<li>Power IN: The power can be supplied either from USB connector (5V), 
+DC power jack (7-12V via AC-to-DC adapter), or VIN/Ground PIN (7-12V via
+ 9V battery).</li>
+<li>Power OUT: The board output regulated 5V and 3.3V (50mA) for powering external components.</li>
+<li>14x Digital INPUT/OUTPUT pins (numbered from 0 to 13):
+  <ul>
+<li>Use function <code>pinMode(<em>pinNumber</em>, INPUT|OUTPUT)</code> to configure the pin for input or output; and <code>digitalRead(<em>pinNumber</em>)</code> or <code>digitalWrite(<em>pinNumber</em>, <em>value</em>)</code> to read or write.</li>
+<li>Each pin operates at 5V, and can provide or receive a maximum of 40mA.</li>
+<li>Pin 13: There is a built-in LED connected to Pin 13, as illustrated in the above diagram.</li>
+<li>PWM output: 6 of the pins (pins 3, 5, 6, 9, 10 and 11, marked by ~) can produce PWM (Pulse Width Modulated) output via function <code>analogWrite(<em>pinNumber</em>, <em>dutyCycle</em>)</code>
+ with duty cycle between 0 (off) to 255 (on). The PWM square wave at 
+various duty cycles can be used to simulate "analog" output (e.g., to 
+control the brightness of LED or speed of motor). The frequency of PWM 
+is 980Hz on pins 5 and 6; and 490Hz for other pins.</li>
+</ul></li>
+<li>6x Analog INPUT pins (A0 to A5): By default, each pin can measure 
+between 0 to 5V with 10-bit of resolution. The upper range can be 
+changed using the AREF pin and <code>analogReference()</code> function.</li>
+</ul>
+
+<h5>Step 1: Download the Arduino Development Software</h5>
+
+<ol>
+<li>From Arduino download @ <a href="http://arduino.cc/en/Main/Software">http://arduino.cc/en/Main/Software</a>, choose the version that matches your operating platform (e.g., Windows) and download the zip file (e.g., <code>arduino-1.0.5-windows.zip</code>).</li>
+<li>Unzip the downloaded file into a directory of your choice (e.g., "<code>D:\bin</code>"). The Arduino Development Kit will be unzipped into "<code>D:\bin\arduino-1.0.5</code>". I shall denote the installed directory as <code>$ARDUINO_HOME</code> in this article. Arduino SDK is "<code>arduino.exe</code>". Many program examples are provided in the "<code>examples</code>" directory.</li>
+
+</ol>
+
+<h5>Step 2: Plug-in the Arduino Board to Install the Driver</h5>
+<ol>
+<li>Plug in the Arduino board with the USB cable to the computer. You shall see the "ON" LED lights up (in green or orange).</li>
+<li>Install the driver. Run "Control Panel" ⇒ "Device Manager" ⇒ Look 
+for and right-click on the "Unknown device" ⇒ "Update Device Driver" ⇒ 
+Set to <code>$ARDUINO_HOME\drivers</code> (i.e., the unzipped Arduino 
+directory). Ignore the warning message. The device shall be installed as
+ "Arduino UNO R3" under Ports (COM &amp; LPT).</li></ol>
+
+<h5>Step 3: Launch the Arduino SDK to Write your First Program</h5>
+<ol>
+<li>Run "<code>arduino.exe</code>" (at <code>$ARDUINO_HOME</code>).</li>
+<li>Copy the following program (called <em>sketch</em> in Arduino) into the editor panel:
+  <pre class="color-example">int ledPin = 13;    <span class="color-comment">// LED connected to digital pin 13</span>
+ 
+<span class="color-comment">/* Setup() runs only once */</span>
+void setup() {
+  pinMode(ledPin, OUTPUT);    <span class="color-comment">// Set pin 13 (digital) to OUTPUT mode</span>
+}
+<span class="color-comment">
+/* loop() repeats forever */</span>
+void loop() {
+  digitalWrite(ledPin, HIGH);  <span class="color-comment">// Set pin 13 to HIGH (5V) to turn on the pin 13's built-in LED</span>
+  delay(1000);                 <span class="color-comment">// ON time delay in msec</span>
+ 
+  digitalWrite(ledPin, LOW);   <span class="color-comment">// Set pin 13 to LOW (0V) to turn off the pin 13's built-in LED</span>
+  delay(1000);                 <span class="color-comment">// OFF time delay in msec</span>
+}</pre></li>
+
+<li>Click "Verify" button (or "Sketch" menu ⇒ "Verify/Compile"; or Ctrl-R) to compile the code.</li>
+<li>Click "Upload" button (or "File" menu ⇒ "Upload"; or Ctrl-U) to 
+upload the code onto the Arduino board. You should see a small light 
+beside Pin 13 blinking (in orange).<br />
+If you see the error message "<code>avrdude: stk500_getsync(): not in sync: resp=0x30</code>".
+ Start "Device Manager" (under "Control Panel"), take note of the COM 
+port setting for "Arduino UNO", such as COM1, COM3 or COM6. Go to 
+Arduino's menu "Tool" ⇒ "Serial Port" ⇒ "COMx" where x corresponds to 
+the COM port setting reflected in the device manager.</li>
+</ol>
+
+<h5>Dissecting the Program</h5>
+<ul>
+<li>An arduino program (called sketch) has these two functions: <code>setup()</code> which runs once for initialization tasks, and <code>loop()</code> which runs in circles.</li>
+
+<li>The <code>pinMode(<em>pinNumber</em>, INPUT|OUTPUT)</code> function sets the <em><code>pinNumber</code></em> to either <code>INPUT</code> or <code>OUTPUT</code>.</li>
+
+<li>The <code>digitalWrite(<em>pinNumber</em>, HIHG|LOW)</code> function sets the digital output pin to either <code>HIGH</code> (5V) or <code>LOW</code> (0V). A digital output pin can provide a maximum current of 40mA.</li>
+</ul>
+
+<h3>Exercises</h3>
+
+<p>I shall follow the exercises in:</p>
+<ul>
+<li>&quot;Oomlout's Arduino Experimentation Kit (ARDX)&quot; @ <a href="http://www.oomlout.com/oom.php">http://www.oomlout.com/oom.php</a> under &quot;Products&quot; &rArr; &quot;ARDX&quot;.</li>
+<li>&quot;SparkFun Inventor's Kit for Arduino&quot; @ <a href="https://www.sparkfun.com/products/retired/11227">https://www.sparkfun.com/products/retired/11227</a>, with User's Guide @ <a href="http://cdn.sparkfun.com/datasheets/Kits/SFE03-0012-SIK.Guide-300dpi-01.pdf">http://cdn.sparkfun.com/datasheets/Kits/SFE03-0012-SIK.Guide-300dpi-01.pdf.</a></li>
+</ul>
+<p>but provide more technical explanation and computation for my 
+engineering students. You need the hardware components to do these 
+exercises. You can purchase the "SparkFun Inventor's Kit for Arduino"; 
+or  "Arduino Starter Kit"; or individual components.</p>
+
+<h5>Equipment - MUST Have</h5>
+
+<ul>
+<li>Digital Multimeter (you can buy a cheap multimeter for less than $30)</li>
+<li>Soldering Kit (or Soldering Station)</li>
+</ul>
+
+<h5>Equipment - Nice to Have</h5>
+
+<ul>
+<li>DC Power Supply (e.g., 160W Digital Bench Power Supply, 0 to 32V DC, 0 to 5A).</li>
+</ul>
+
+<h5>Equipment - Really Nice to Have</h5>
+
+<ul>
+<li>Oscilloscope</li>
+<li>Function Generator</li>
+</ul>
+
+<h4>Exercise 1: Blinking LED (with Current Limiting Resistor)</h4>
+
+<p><strong>Reference</strong>: "CIRC01 Getting Started" @ <a href="http://www.oomlout.com/oom.php/products/ardx/circ-01">http://www.oomlout.com/oom.php/products/ardx/circ-01</a>.</p>
+
+<p>The objective is to turn ON and OFF a LED repeatably.</p>
+
+<h5>Components</h5>
+<ul>
+<li>1x LED (Basic 5mm Red or Green) (sample <a href="https://www.sparkfun.com/products/9590">datasheet</a>). LED has polarity. The shorter leg with a flat spot is the cathode (-). The longer leg is the anode (+).</li>
+<li>1x 330Ω resistor</li>
+</ul>
+
+
+<h5>Circuit Diagram</h5>
+
+<img class="image-center" src="images/ArduinoEx1Blink.png" alt="Blinking LED" />
+
+<h5>Program</h5>
+
+<p>Run the program in the "Getting Started" section; or "<code>$ARDUINO_HOME\examples\01.Basics\Blink\Blink.ino</code>".</p>
+<p>The program initializes (in <code>setup()</code>) by setting pin 13 to OUTPUT mode (via <code>pinMode()</code>), which could output a HIGH (5V) or LOW (0V). It then outputs a HIGH (5V), delays for 1000 msec (1 sec), outputs a LOW (0V), delays for 1000 msec, repeatably (in <code>loop()</code>).</p>
+
+<h5>Dissecting the Circuit</h5>
+
+<img class="image-float-right" src="images/LED5mm_Spec.png" alt="LED Spec" />
+
+<p>The brightness of an LED is directly dependent on how much current 
+flowing through it. The more the current, the brighter the LED will be. 
+However, high current drains battery power; and excessive current 
+burns the LED. The suggested current for a typical 5mm LED is 15mA (max 20mA). A 
+resistor is needed to limit the current flowing through the LED, with 
+typical value of 330Ω for a 5V source.  Using Ohm's law and ignoring the
+ voltage drop across the LED, 5V/330Ω = 15mA (see <a href="https://learn.sparkfun.com/tutorials/light-emitting-diodes-leds">LED Tutorial</a>).</p>
+ 
+<p>The digital pin 13 outputs 5V when it is set to HIGH. A typical 5mm LED (see <a href="https://www.sparkfun.com/products/9590">datasheet</a>) has a <em>forward voltage</em> of 1.8V to 2.2V, with suggested current 16-18mA. With a 330Ω resistor (in the above circuit), the <em>forward current</em> = (5V-2.0V)/330Ω = 9mA. To get 16mA at 2.0V, the resistor shall be (5V-2.0V)/16mA = 188Ω.</p>
+
+<p> Take note that the digital output pins provide a maximum current of 
+40mA, which is sufficient to drive one LED but not multiple (&gt;3) LEDs concurrently.</p>
+
+<h5>Practice</h5>
+
+<p>Set pin 13 to HIGH (to turn on the LED):</p>
+<ol>
+<li>Using a digital multimeter, measure the voltage at pin 13 and the voltage across the LED.</li>
+<li>Apply Ohm's law to compute the current flowing through the resistor (this same current 
+flowing through the LED). Using a multimeter, measure this current and 
+compare with the computed value.</li>
+</ol>
+
+<p>Set pin 13 to LOW (to turn off the LED). Repeat the above.</p>
+
+<h5>More Exercise 1: Change the Blinking Time</h5>
+<p>To change the blinking rate, you can modify the delay, currently set at 1000 msec (or 1 sec).</p>
+
+<h5>More Exercise 2: Controlling the Brightness of LED</h5>
+<p>To control the brightness of the LED, use pin 9 (instead of pin 13), 
+which can produce a PWM (Pulse Width Modulation) square wave via 
+function <code>analogWrite(<em>pinNumber</em>, <em>dutyCycle</em>)</code> (<a href="http://arduino.cc/en/Tutorial/PWM">PWM Tutorial</a>). The <code>dutyCycle </code>sets the ON duration of the square wave, <code></code>with value ranges from 0 (always OFF) to 255 (always ON).</p>
+
+<p>Try the following program:</p>
+
+<pre class="color-example">int ledPin = 9;    <span class="color-comment">// LED connected to digital pin 9</span>
+ 
+<span class="color-comment">/* Setup() runs only once */</span>
+void setup() {
+  pinMode(ledPin, OUTPUT);  <span class="color-comment">// Set to OUTPUT mode</span>
+}
+<span class="color-comment">
+/* loop() repeats forever */</span>
+void loop() {
+  analogWrite(ledPin, 192);  <span class="color-comment">// Set to 192 for 75%
+                             // Try other values from 0 to 255</span>
+  delay(1000);               <span class="color-comment">// time delay in msec before repeat</span>
+}</pre>
+
+<p>The brightness of the LED is proportional to the duty cycle (ON duration). For example, if the value of duty cycle is 64, the LED is 25% of the full brightness. </p>
+
+<h5>More Exercise 3: Fading LED</h5>
+
+<p>Use pin 9 again, and run the program in "<code>$ARDUINO_HOME\examples\03.Analog\Fading\Fading.ino</code>". Study the program. Also run and study "<code>$ARDUINO_HOME\examples\01.Basics\Fade\Fade.ino</code>".</p>
+
+
+<h4>Exercise 2: Multiple LEDs</h4>
+
+<p>Follow "CIRC02 8 LEDs Fun" @ <a href="http://www.oomlout.com/oom.php/products/ardx/circ-02">http://www.oomlout.com/oom.php/products/ardx/circ-02</a>.</p>
+
+<h4>Exercise 3: DC Motor and Transistor (for driving larger load)</h4>
+
+<p>Follow "CIRC03 Spin Motor Spin" @ <a href="http://www.oomlout.com/oom.php/products/ardx/circ-03">http://www.oomlout.com/oom.php/products/ardx/circ-03</a>.</p>
+
+<h5>Circuit Diagram</h5>
+
+<img class="image-center" src="images/ArduinoEx3DCMotor.png" alt="DC motor" />
+
+<h5>Dissecting the Circuit</h5>
+<p>A transistor (P2N2222AG NPN BJT, rated at 40V and 200mA max) (<a href="https://www.sparkfun.com/products/12852">datasheet</a>) is used as an electronic switch in the above circuit. It is turned ON when pin 9 (connected to the <em>base</em> (b) of transistor) outputs a HIGH (5V), with base current I<sub>B</sub> = (5V-0.8V)/330Ω = 13mA; and voltage drop across <em>collector</em> (c) and <em>emitter</em> (e) of 0.2V. It is OFF when pin 9 is LOW (0V).</p>
+<p>A transistor is needed here as the output from pin 9 (with maximum 
+current of 40mA) is not sufficient to drive the DC motor directly. But 
+only a small amount of current (2mA) is required to turn on the 
+transistor.</p>
+
+<p>A DC motor spins at a rate proportional to the applied voltage (once 
+sufficient voltage is applied) at no load. The speed decreases when load
+ is applied. The current is also proportional to the torque. (See <a href="http://www.micromo.com/dc-motor-tutorials">DC Motor Tutorials</a>.)</p>
+<p>DC motors have various specifications. A toy DC motor has an 
+operating voltage range of 1.5 to 4.5V and a no load speed of 23000 RPM 
+(@4.5VDC, 70mA) (<a href="https://www.sparkfun.com/products/retired/9608">datasheet</a>); another has an operating voltage range of 1.0 to 3.0V and a no load speed of 6600 RPM (@1.0V DC, 110mA) (<a href="https://www.sparkfun.com/products/11696">datasheet</a>).
+ Generally, it requires around 100mA and cannot be supplied via output 
+pin (max of 40mA). The transistor has a rating of 200mA.</p>
+
+<h5>Practice</h5>
+
+<p>Connect the DC motor directly to 5V. Measure the no load current.</p>
+
+<p>Set pin 9 to HIGH (to turn on the transistor):</p>
+<ol>
+<li>Using a digital multimeter, measure the voltage at pin 9, the voltage across the base and emitter V<sub>BE</sub>. Compute the base current I<sub>B</sub> (through the base resistor).</li>
+<li>Measure the voltage across the collector and emitter V<sub>CE</sub>.</li>
+<li>Measure the collector current I<sub>C</sub>.</li>
+</ol>
+
+<h4>Exercise 4: Servo Motor</h4>
+
+<p>Follow "CIRC04 Servo" @ <a href="http://www.oomlout.com/oom.php/products/ardx/circ-04">http://www.oomlout.com/oom.php/products/ardx/circ-04</a>.</p>
+
+<h5>Dissecting the Circuit</h5>
+
+<p>A servo motor (sample <a href="https://www.sparkfun.com/products/9347">datasheet</a>) is a rotary actuator that allows for precise control of angular position, velocity and acceleration.</p>
+
+<h4>Exercise 5: Shift Register</h4>
+
+<p>Follow "CIRC05 Shift Register" @ <a href="http://www.oomlout.com/oom.php/products/ardx/circ-05">http://www.oomlout.com/oom.php/products/ardx/circ-05</a>.</p>
+
+<h4>Exercise 6: Piezo Speaker</h4>
+
+<p>Follow "CIRC06 Piezo speaker" @ <a href="http://www.oomlout.com/oom.php/products/ardx/circ-06">http://www.oomlout.com/oom.php/products/ardx/circ-06</a>.</p>
+
+<h4>Exercise 7: Push Button</h4>
+
+<p>Follow "CIRC07 Push Button" @ <a href="http://www.oomlout.com/oom.php/products/ardx/circ-07">http://www.oomlout.com/oom.php/products/ardx/circ-07</a>.</p>
+
+<h4>Exercise 8: Potentialmeter</h4>
+
+<p>Follow "CIRC08 Potentialmeter" @ <a href="http://www.oomlout.com/oom.php/products/ardx/circ-08">http://www.oomlout.com/oom.php/products/ardx/circ-08</a>.</p>
+
+<h5>Practice</h5>
+<p>Use a multimeter, measure the resistance across the entire potentiometer. (Mine is 10 kΩ).</p>
+
+<h4>Exercise 9: Photo-Resistor</h4>
+
+<p>Follow "CIRC09 Photo-Resistor" @ <a href="http://www.oomlout.com/oom.php/products/ardx/circ-09">http://www.oomlout.com/oom.php/products/ardx/circ-09</a>.</p>
+
+<h5>Practice</h5>
+<p>Use a multimeter, measure the resistance of the photo-resistor at 
+darkness (by covering the surface) and at full brightness (shine light 
+on it). (Darkness: 60 kΩ; brightness: 3 kΩ).</p>
+
+<h4>Exercise 10: Temperature Sensor</h4>
+
+<p>Follow "CIRC10 Precision Temperature Sensor" @ <a href="http://www.oomlout.com/oom.php/products/ardx/circ-10">http://www.oomlout.com/oom.php/products/ardx/circ-10</a>.</p>
+
+<h4>Exercise 11: Relay (for large load)</h4>
+
+<p>Follow "CIRC11 Larger Load Relay" @ <a href="http://www.oomlout.com/oom.php/products/ardx/circ-11">http://www.oomlout.com/oom.php/products/ardx/circ-11</a>.</p>
+
+<h3>Debugging Arduino Programs</h3>
+
+<h4><span class="font-code">Serial.println()|print()|write()</span></h4>
+
+<p>You can use <code>Serial.println(<em>var</em>)</code> to print the value of a variable in human-readable ASCII texts, and capture the output in the &quot;Serial Monitor&quot; (under &quot;tools&quot; menu) of Arduino IDE.</p>
+<p> <code>Serial.println()</code> appends a new line at the end of the output; while <code>Serial.print()</code> does not. <code>Serial.write()</code> writes a raw byte.</p>
+<p>You need to include a <code>Serial.open(9600)</code> statement in the <code>setup()</code>, where 9600 is a typical serial transmission baud rate.</p>
+<p>&nbsp;</p>
+
+<h4>Atmel Studio</h4>
+
+<p>Atmel Studio is a free Arduino IDE, which you can set breakpoints and trace through the program. [TODO more]</p>
+
+<h4>Arduino Project - LED Cube</h4>
+
+<h5>Circuit Diagram</h5>
+<img class="image-center" src="images/LEDCube.png" alt="LED Cube" />
+
+<h5>Dissecting the Circuit Diagram</h5>
+<p>[TODO]</p>
+
+<h5>Program</h5>
+<p>[TODO]</p>
+
+
+<h3>Miscellaneous</h3>
+
+<p><span class="line-heading">Which Arduino Boards:</span> You can check the specification of the various Arduino board @ <a href="http://arduino.cc/en/Products.Compare">http://arduino.cc/en/Products.Compare</a>.</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+
+<ol>
+<li>Arduino mother site @ <a href="http://arduino.cc/">http://arduino.cc</a>.</li>
+<li>Arduino github @ <a href="https://github.com/arduino/Arduino">https://github.com/arduino/Arduino</a> (source codes).</li>
+<li>Oomlout @ <a href="http://oomlout.com/oom.php">http://oomlout.com/oom.php</a> (Arduino getting started tutorials).</li>
+<li>Sparkfun @ <a href="https://www.sparkfun.com/">https://www.sparkfun.com</a> (Electronic components with datasheets).</li>
+</ol>
+
+<p class="references">Online Electronic Components Store @ SG</p>
+<ol>
+<li>SGBotic @ <a href="http://www.sgbotic.com/">http://www.sgbotic.com/</a>.</li>
+<li>RS Components @ <a href="http://sg.rs-online.com/web/">http://sg.rs-online.com/web/</a>.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Arduino SDK 1.0.5 on Arduino Uno Board<br />
+Last modified: October, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>Feedback, comments, corrections, and errata can be sent to Chua Hock-Chuan (ehchua@ntu.edu.sg) &nbsp;&nbsp;|&nbsp;&nbsp; <a href="http://www.ntu.edu.sg/home/ehchua/programming/index.html">HOME</a></p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+
+
+</body></html>

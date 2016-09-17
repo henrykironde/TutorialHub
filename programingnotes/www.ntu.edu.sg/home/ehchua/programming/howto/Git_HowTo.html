@@ -1,0 +1,1828 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Get Started with GIT and work with GIT Remote Repo</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+</head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>How to get started with GIT and work with GIT Remote Repo</h1>
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction</h3>
+<p>GIT is a Version Control System (VCS) (aka Revision Control System (RCS), Source Code Manager (SCM)). A VCS serves as a <em> Repository</em> (or <em>repo</em>) of program codes, including all the historical revisions. It records <em>changes to files</em> at so-called <em>commits</em> in a <em>log</em> so that you can recall any file at any commit point.</p>
+
+<p>Why VCS?</p>
+<ol>
+<li>The  Repository serves as the <em>backup</em> (in case of code changes or disk crash).</li>
+<li>It is a living archive of all historical <em>revisions</em>. It lets you revert back to a specific version, if the need arises.</li>
+<li>It facilitates <em>collaboration</em> between team members, and serves as a project management tool.</li>
+<li>more...</li>
+</ol>
+
+<p>Git was initially designed and developed by Linus Torvalds, in 2005, to support the development of the Linux kernel.</p>
+
+<p>GIT is a <em>Distributed Version Control System</em> (DVCS). Other popular VCSes include:</p>
+<ol>
+<li>The standalone and legacy Unix's RCS (Revision Control System).</li>
+<li>Centralized Client-Server Version Control System (CVCS): CVS (Concurrent Version System), SVN (Subversion) and Perforce.</li>
+<li>Distributed VCS (DVCS): GIT, Merurial, Bazaar, Darcs.</li>
+</ol>
+
+<p>The mother site for Git is <a href="http://git-scm.com/">http://git-scm.com.</a></p>
+
+<h3>Setting Up Git</h3>
+
+<p>You need to setup Git on your local machine, as follows:</p>
+
+<ol>
+<li>Download &amp; Install:
+
+<ul>
+<li>For Windows and Mac, download the installer from <a href="http://git-scm.com/downloads">http://git-scm.com/downloads</a> and run the downloaded installer.</li>
+<li>For Ubuntu, issue command &quot;<code>sudo apt-get install git</code>&quot;.</li>
+</ul>
+
+For Windows, use the &quot;Git Bash&quot; command shell bundled with Git Installer to issue commands. For Mac/Ubuntu, use the &quot;Terminal&quot;.</li>
+
+<li>Customize Git:<br />
+Issue &quot;<code>git config</code>&quot; command (for Windows, run &quot;Git Bash&quot; from the Git installed directory. For Ubuntu/Mac, launch a &quot;Terminal&quot;):
+<pre class="color-command">
+<span class="color-comment">// Set up your username and email (to be used in labeling your commits)</span>
+$ <strong>git config --global user.name &quot;<em>your-name</em>&quot;</strong>
+$ <strong>git config --global user.email &quot;<em>your-email@youremail.com</em>&quot;</strong></pre>
+
+The settings are kept in &quot;<code>&lt;GIT_HOME&gt;/etc/gitconfig</code>&quot; (of the GIT installed directory) and &quot;<code>&lt;USER_HOME&gt;/.gitconfig</code>&quot; (of the user's home directory.<br />
+You can issue &quot;<code>git config --list</code>&quot; to list the settings:
+<pre class="color-command">
+$ <strong>git config --list</strong>
+user.email=xxxxxx@xxxxxx.com
+user.name=xxxxxx</pre>
+</li>
+</ol>
+
+<h3>Git Basics</h3>
+
+<h5>Git Commands</h5>
+
+<p>Git provides a set of simple, distinct, standalone commands
+developed according to the &quot;Unix toolkit&quot; philosophy - build small, interoperable tools.</p>
+
+<p>To issue a command, start a &quot;Terminal&quot; (for Ubuntu/Mac) or &quot;Git Bash&quot; (for Windows):</p>
+<pre class="color-command">
+$ <strong>git &lt;command&gt; &lt;arguments&gt;</strong>
+</pre>
+
+<p>The commonly-used commands are:</p>
+
+<ol>
+<li><span class="line-heading font-code">init</span>, <span class="line-heading font-code">clone</span>, <span class="line-heading font-code">config</span>: for starting a Git-managed project.</li>
+
+<li><span class="line-heading font-code">add</span>, <span class="line-heading font-code">mv</span>, <span class="line-heading font-code">rm</span>: for staging file changes.</li>
+
+<li><span class="line-heading font-code">commit</span>, <span class="line-heading font-code">rebase</span>, <span class="line-heading font-code">reset</span>, <span class="line-heading font-code">tag</span>:</li>
+
+<li><span class="line-heading font-code">status</span>, <span class="line-heading font-code">log</span>, <span class="line-heading font-code">diff</span>, <span class="line-heading font-code">grep</span>, <span class="line-heading font-code">show</span>: show status</li>
+
+<li><span class="line-heading font-code">checkout</span>, <span class="line-heading font-code">branch</span>, <span class="line-heading font-code">merge</span>, <span class="line-heading font-code">push</span>, <span class="line-heading font-code">fetch</span>, <span class="line-heading font-code">pull</span></li>
+</ol>
+
+<h5>Help and Manual</h5>
+<p>The best way to get help these days is certainly <em>googling</em>.</p>
+<p>To get help on Git commands:</p>
+<pre class="color-command">
+$ <strong>git help &lt;<em>command</em>&gt;</strong>
+<span class="color-comment">// or</span>
+$ <strong>git &lt;<em>command</em>&gt; --help</strong></pre>
+
+<p>The GIT manual is bundled with the software (under the &quot;<code>doc</code>&quot; directory), and also available online @ <a href="http://git-scm.com/docs">http://git-scm.com/docs</a>.</p>
+
+<h4>Getting Started with Local Repo</h4>
+
+<p>There are 2 ways to start a Git-managed project:</p>
+<ol>
+<li>Starting your own project;</li>
+<li>Cloning an existing project from a GIT host.</li>
+</ol>
+
+<p>We shall begin with &quot;Starting your own project&quot; and cover &quot;Cloning&quot; later @ &quot;<a href="#CloneProject">Clone a Project from a Remote Repo</a>&quot;.</p>
+
+<h5>Setup the Working Directory for a New Project</h5>
+
+<p>Let's start  a programming project under the <em>working directory</em> called &quot;<code>hello-git</code>&quot;, with one source file &quot;<code>Hello.java</code>&quot; (or &quot;<code>Hello.cpp</code>&quot;, or &quot;<code>Hello.c</code>&quot;) as follows:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Hello.java</span>
+public class Hello {
+   public static void main(String[] args) {
+      System.out.println(&quot;Hello, world from GIT!&quot;);
+   }
+}</pre>
+
+<p>Compile the &quot;<code>Hello.java</code>&quot; into &quot;<code>Hello.class</code>&quot; (or &quot;<code>Hello.cpp</code>&quot; or &quot;<code>Hello.c</code>&quot; into &quot;<code>Hello.exe</code>&quot;).</p>
+
+<p>It is also highly recommended to provide a &quot;<code>README.md</code>&quot; file (a text file in a so-called &quot;Markdown&quot; syntax such as &quot;<a href="https://help.github.com/articles/github-flavored-markdown">GitHub Flavored Markdown</a>&quot;) to describe your project:</p>
+
+<pre class="color-example">
+<span class="color-comment">// README.md</span>
+This is the README file for the Hello-world project.</pre>
+
+<p>Now, we have 3 files in the <em>working tree</em>: &quot;<code>Hello.java</code>&quot;, &quot;<code>Hello.class</code>&quot; and &quot;<code>README.md</code>&quot;. We do not wish to track the &quot;<code>.class</code>&quot; as they can be reproduced from &quot;<code>.java</code>&quot;.</p>
+
+<h5>Initialize a new Git Repo (<span class="font-code">git init</span>)</h5>
+
+<p>To manage a project under Git, run &quot;<code>git init</code>&quot; at the project <em>root</em> directory (i.e., &quot;<code>hello-git</code>&quot;) (via &quot;Git Bash&quot; for Windows, or &quot;Terminal&quot; for Ubuntu/Mac):</p>
+ 
+<pre class="color-command">
+<span class="color-comment">// Change directory to the project directory</span>
+$ <strong>cd /<em>path-to</em>/hello-git</strong>
+ 
+<span class="color-comment">// Initialize Git repo for this project</span>
+$ <strong>git init</strong>
+Initialized empty Git repository in /<em>path-to</em>/hello-git/.git/
+
+$ <strong>ls -al</strong>
+drwxr-xr-x    1 xxxxx    xxxxx     4096 Sep 14 14:58 <span class="color-new">.git</span>
+-rw-r--r--    1 xxxxx    xxxxx      426 Sep 14 14:40 Hello.class
+-rw-r--r--    1 xxxxx    xxxxx      142 Sep 14 14:32 Hello.java
+-rw-r--r--    1 xxxxx    xxxxx       66 Sep 14 14:33 README.md</pre>
+
+<p>A hidden sub-directory called &quot;<code>.git</code>&quot; will be created under your project <em>root</em> directory (as shown in the above &quot;<code>ls -a</code>&quot; listing), which contains ALL Git related data.</p>
+
+<p>Take note that EACH Git repo is associated with a project directory (and its sub-directories). The Git repo is completely contain within the project directory. Hence, it is safe to copy, move or rename the project directory. If your project uses more than one directories, you may create one Git repo for EACH directory, or use symlinks to link up the directories, or ... (?!).</p>
+
+<h5>Git Storage Model</h5>
+
+<img alt="image" class="image-center" src="images/Git_StorageDataFlow.png" />
+
+<p>The local repo after  &quot;<code>git init</code>&quot; is empty. You need to explicitly deposit files into the repo.</p>
+<p>Before we proceed, it is important to stress that Git manages <em>changes to files between so-called commits</em>. In other words, it is a <em>version control system</em> that allows you to keep track of the <em>file changes at the commits</em>.</p>
+
+<h5>Staging File Changes for Tracking (<span class="font-code">git add &lt;file&gt;...</span>)</h5>
+
+<p>Issue a &quot;<code>git status</code>&quot; command to show the status of the files:</p>
+
+<pre class="color-command">
+$ <strong>git status</strong>
+<span class="color-new">On branch master</span>
+Initial commit
+ 
+<span class="color-new">Untracked files:</span>
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+      <span class="color-new">Hello.class</span>
+      <span class="color-new">Hello.java</span>
+      <span class="color-new">README.md</span>
+nothing added to commit but untracked files present (use "git add" to track)
+</pre>
+
+<p>By default, we start on a <em>branch</em> called &quot;<code>master</code>&quot;. We will discuss &quot;branch&quot; later.</p>
+<p>In Git, the files in the working tree are either <em>untracked</em> or <em>tracked</em>. Currently, all 3 files are <em>untracked</em>. To stage a new file for tracking, use &quot;<code>git add &lt;file&gt;...</code>&quot; command.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Add README.md file</span>
+$ <strong>git add README.md</strong>
+ 
+$ <strong>git status</strong>
+On branch master
+Initial commit
+ 
+<span class="color-new">Changes to be committed:</span>
+  (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)
+        <span class="color-new">new file:   README.md</span>
+ 
+<span class="color-new">Untracked files:</span>
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+        Hello.class
+        Hello.java
+ 
+<span class="color-comment">// You can use wildcard * in the filename</span>
+<span class="color-comment">// Add all Java source files into Git repo
+</span>$ <strong>git add *.java</strong>
+ 
+<span class="color-comment">// You can also include multiple files in the &quot;git add&quot;
+// E.g.,
+// git add Hello.java README.md</span>
+ 
+$ <strong>git status</strong>
+On branch master
+Initial commit
+ 
+<span class="color-new">Changes to be committed:</span>
+  (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)
+        <span class="color-new">new file:   Hello.java</span>
+        new file:   README.md
+
+<span class="color-new">Untracked files:</span>
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+        Hello.class</pre>
+
+<p>The command &quot;<code>git add &lt;file&gt;...</code>&quot; takes one or more filenames or pathnames with possibly wildcards pattern. You can also use &quot;<code>git add .</code>&quot; to add all the files in the current directory (and all sub-directories). But this will include &quot;<code>Hello.class</code>&quot;, which we do not wish to be tracked.</p>
+
+<p>When a new file is added, it is <em>staged</em> <em></em> (or <em>index</em>ed, or <em>cached</em>) in the <em>staging area</em> (as shown in the GIT storage model), but NOT yet <em>committed</em>.</p>
+
+<p>Git uses two stages to commit file changes:</p>
+<ol>
+<li>&quot;<code>git add &lt;file&gt;</code>&quot; to stage file changes into the <em>staging area</em>, and</li>
+<li><code>&quot;git commit</code>&quot; to commit ALL the file changes in the <em>staging area</em> to the <em>local repo</em>.</li>
+</ol>
+
+<p>The staging area allows you to group related file changes and commit them together.</p>
+
+<h5>Committing File Changes (<span class="font-code">git commit</span>)</h5>
+
+<p>The &quot;<code>git commit</code>&quot; command commits ALL the file changes in the <em>staging area</em>. Use a <code>-m</code> option to provide a <em>message</em> for the commit.</p>
+
+<pre class="color-command">
+$ <strong>git commit -m &quot;First commit&quot;</strong>   <span class="color-comment">// -m to specify the commit message</span>
+[master (root-commit) <span class="color-new">858f3e7</span>] first commit
+ 2 files changed, 8 insertions(+)
+ create mode 100644 <span class="color-new">Hello.java</span>
+ create mode 100644 <span class="color-new">README.md</span>
+ 
+<span class="color-comment">// Check the status</span>
+$ <strong>git status</strong>
+On branch master
+<span class="color-new">Untracked files:</span>
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+      <span class="color-new">Hello.class</span>
+nothing added to commit but untracked files present (use &quot;git add&quot; to track)</pre>
+
+<h5>Viewing the Commit Data (<span class="font-code">git log</span>)</h5>
+
+<p>Git records several pieces of metadata for every commit, which includes a log message, timestamp, the author's username and email (set during customization).</p>
+
+<p>You can use &quot;<code>git log</code>&quot; to list the commit data; or &quot;<code>git log --stat</code>&quot; to view the file statistics:</p>
+
+<pre class="color-command">
+$ <strong>git log</strong>
+commit <span class="color-new">858f3e7</span>1b95271ea320d45b69f44dc55cf1ff794
+Author: <em>username</em> &lt;<em>email</em>&gt;
+Date:   Thu Nov 29 13:31:32 2012 +0800
+    <span class="color-new">First commit</span>
+ 
+$ <strong>git log --stat</strong>
+commit <span class="color-new">858f3e7</span>1b95271ea320d45b69f44dc55cf1ff794
+Author: <em>username</em> &lt;<em>email</em>&gt;
+Date:   Thu Nov 29 13:31:32 2012 +0800
+    First commit
+ <span class="color-new">Hello.java | 6 ++++++
+ README.md  | 2 ++</span>
+ 2 files changed, 8 insertions(+)</pre>
+
+<p>Each commit is identified by a 40-hex-digit SHA-1 hash code. But we typcially use the first 7 hex digits to reference a commit, as highlighted.</p>
+
+<p>To view the commit details, use &quot;<code>git log -p</code>&quot;, which lists all the <em>patches</em> (or <em>changes</em>).</p>
+<pre class="color-command">
+$ <strong>git log -p</strong>
+commit <span class="color-new">858f3e7</span>1b95271ea320d45b69f44dc55cf1ff794
+Author: <em>username</em> &lt;<em>email</em>&gt;
+Date:   Thu Nov 29 13:31:32 2012 +0800
+    First commit
+<span class="color-new">diff --git a/Hello.java b/Hello.java</span>
+new file mode 100644
+index 0000000..dc8d4cf
+--- /dev/null
++++ b/Hello.java
+@@ -0,0 +1,6 @@
++// Hello.java
++public class Hello {
++   public static void main(String[] args) {
++      System.out.println("Hello, world from GIT!");
++   }
++}
+<span class="color-new">diff --git a/README.md b/README.md</span>
+new file mode 100644
+index 0000000..9565113
+--- /dev/null
++++ b/README.md
+@@ -0,0 +1,2 @@
++// README.md
++This is the README file for the Hello-world project.</pre>
+
+<p>Below are more options of using &quot;<code>git log</code>&quot;:</p>
+
+<pre class="color-example">
+$ <strong>git log --oneline</strong>
+   <span class="color-comment">// Display EACH commit in one line.</span>
+ 
+$ <strong>git log --author=&quot;&lt;author-name-pattern&gt;&quot;</strong>
+   <span class="color-comment">// Display commits by author</span>
+   
+$ <strong>git log &lt;file-pattern&gt;</strong>
+   <span class="color-comment">// Display commits for particular file(s)</span>
+
+<span class="color-comment">// EXAMPLES</span>
+$ <strong>git log --author=&quot;Tan Ah Teck&quot; -p Hello.java</strong>
+   <span class="color-comment">// Display commits for file &quot;Hello.java&quot; by a particular author</span></pre>
+
+
+<h5>File Status (<span class="font-code">git status</span>)</h5>
+
+<p>A file could be <em>untracked</em> or <em>tracked</em>.</p>
+<p>As mentioned, Git tracks file changes at commits. In Git, changes for a <em>tracked</em> file could be:</p>
+<ol>
+<li><em>unstaged</em> (in <em>Working Tree</em>) - called <em>unstaged changes</em>,</li>
+<li><em>staged</em> (in <em>Staging Area</em> or <em>Index</em> or <em>Cache</em>) - called <em>staged changes</em>, or</li>
+<li><em>committed</em> (in <em>local repo object database</em>).</li>
+</ol>
+
+<p>The files in &quot;working tree&quot; or &quot;staging area&quot; could have status of <em>unmodified</em>, <em>added</em>, <em>modified</em>, <em>deleted</em>, <em>renamed</em>, <em>copied</em>, as reported by &quot;<code>git status</code>&quot;.</p>
+
+<p>The &quot;<code>git status</code>&quot; output is divided into 3 sections: &quot;Changes not staged for commit&quot; for the unstaged changes in &quot;working tree&quot;, &quot;Changes to be committed&quot; for the staged changes in the &quot;staging area&quot;, and &quot;Untracked files&quot;.  In each section, It lists all the files that have been changed, i,e., files having status other than <em>unmodified</em>.</p>
+
+<p>When a new file is created in the working tree, it is marked as <em>new</em> in working tree and shown as an untracked file. When the file change is staged, it is marked as <em>new</em> (<em>added</em>) in the staging area, and <em>unmodified</em> in working tree.  When the file change is committed, it is marked as <em>unmodified</em> in both the working tree and staging area.</p>
+
+<img class="image-center" src="images/Git_FileNew.png" alt="New File" />
+
+<p>When a committed file is modified, it is marked as <em>modified</em> in the working tree and <em>unmodified</em> in the staging area. When the file change is staged, it is marked as <em>modified</em> in the staging area and <em>unmodified</em> in the working tree. When the file change is committed, it is marked as <em>unmodified</em> in both the working tree and staging area.</p>
+
+<img class="image-center" src="images/Git_FileModified.png" alt="New File" />
+
+<p>For example, made some changes to the file &quot;<code>Hello.java</code>&quot;, and check the status again:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Hello.java</span>
+public class Hello {
+   public static void main(String[] args) {
+      System.out.println(&quot;Hello, world from GIT!&quot;);
+      <span class="color-new">System.out.println(&quot;Changes after First commit!&quot;);</span>
+   }
+}</pre>
+
+<pre class="color-command">
+$ <strong>git status</strong>
+On branch master
+<span class="color-new">Changes not staged for commit:</span>
+  (use "git add &lt;file&gt;..." to update what will be committed)
+  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)
+      <span class="color-new">modified:   Hello.java</span>
+ 
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+      Hello.class
+no changes added to commit (use "git add" and/or "git commit -a")
+</pre>
+
+<p>The &quot;<code>Hello.java</code>&quot; is marked as <em>modified</em> in the working tree (under &quot;Changes not staged for commit&quot;), but <em>unmodified</em> in the staging area (not shown in &quot;Changes to be committed&quot;).</p>
+
+<p>You can inspect all the unstaged changes using &quot;<code>git diff</code>&quot; command (or &quot;<code>git diff &lt;file&gt;</code>&quot; for the specified file). It shows the file changes in the working tree since the last commit:</p>
+
+<pre class="color-command">
+$ <strong>git diff</strong>
+diff --git a/Hello.java b/Hello.java
+index dc8d4cf..f4a4393 100644
+--- a/Hello.java
++++ b/Hello.java
+@@ -2,5 +2,6 @@
+ public class Hello {
+    public static void main(String[] args) {
+       System.out.println(&quot;Hello, world from GIT!&quot;);
+<span class="color-new">+      System.out.println(&quot;Changes after First commit!&quot;);</span>
+    }
+ }</pre>
+
+<p>The older version (as of last commit) is marked as <code>---</code> and new one as <code>+++</code>. Each chunk of changes is delimited by &quot;<code>@@ -&lt;old-line-number&gt;,&lt;number-of-lines&gt; +&lt;new-line-number&gt;,&lt;number-of-lines&gt; @@</code>&quot;. Added lines are marked as <code>+</code> and deleted as <code>-</code>. In the above output, older version (as of last commit) from line 2 for 5 lines and the modified version from line 2 for 6 lines are compared. One line (marked as +) is added.</p>
+
+
+<p>Stage the changes of &quot;<code>Hello.java</code>&quot; by issuing the &quot;<code>git add &lt;file&gt;...</code>&quot;:</p>
+
+<pre class="color-command">
+$ <strong>git add Hello.java</strong>
+ 
+$ <strong>git status</strong>
+On branch master
+<span class="color-new">Changes to be committed:</span>
+  (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)
+      <span class="color-new">modified:   Hello.java</span>
+ 
+Untracked files:
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+      Hello.class</pre>
+
+<p>Now, it is marked as <em>modified</em> in the staging area (&quot;Changes to be committed&quot;), but <em>unmodified</em> in the working tree (not shown in &quot;Changes not staged for commit&quot;).</p>
+<p>Now, the changes have been staged. Issuing an &quot;<code>git diff</code>&quot; to show the unstaged changes results in empty output.</p>
+<p>You can inspect the staged change (in the staging area) via &quot;<code>git diff --staged</code>&quot; command:</p>
+
+<pre class="color-command">
+<span class="color-comment">// List all &quot;unstaged&quot; changes for all files (in the working tree)</span>
+$ <strong>git diff</strong>
+   <span class="color-comment">// empty output - no unstaged change</span>
+ 
+<span class="color-comment">// List all &quot;staged&quot; changes for all files (in the staging area)</span>
+$ <strong>git diff --staged
+</strong>diff --git a/Hello.java b/Hello.java
+index dc8d4cf..f4a4393 100644
+--- a/Hello.java
++++ b/Hello.java
+@@ -2,5 +2,6 @@
+ public class Hello {
+    public static void main(String[] args) {
+       System.out.println(&quot;Hello, world from GIT!&quot;);
+<span class="color-new">+      System.out.println(&quot;Changes after First commit!&quot;);</span>
+    }
+ }
+   <span class="color-comment">// The &quot;unstaged&quot; changes are now &quot;staged&quot;.</span></pre>
+
+<p>Commit ALL staged file changes via &quot;<code>git commit</code>&quot;:</p>
+
+<pre class="color-command">
+$ <strong>git commit -m &quot;Second commit&quot;</strong>
+[master 96efc96] Second commit
+ 1 file changed, 1 insertion(+)
+ 
+$ <strong>git status</strong>
+On branch master
+Untracked files:
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+      Hello.class
+nothing added to commit but untracked files present (use &quot;git add&quot; to track)</pre>
+
+<p>Once the file changes are committed, it is marked as <em>unmodified</em> in the staging area (not shown in &quot;Changes to be committed&quot;).</p>
+
+<p>Both &quot;<code>git diff</code>&quot; and &quot;<code>git diff --staged</code>&quot; return empty output, signalling there is no &quot;unstaged&quot; and &quot;staged&quot; changes.</p>
+<p>The stage changes are cleared when the changes are committed; while the unstaged changes are cleared when the changes are staged.</p>
+
+<p>Issue &quot;<code>git log</code>&quot; to list all the commits:</p>
+
+<pre class="color-command">
+$ <strong>git log</strong>
+commit <span class="color-new">96efc96</span>f0856846bc495aca2e4ea9f06b38317d1
+Author: <em>username</em> &lt;<em>email</em>&gt;
+Date:   Thu Nov 29 14:09:46 2012 +0800
+    <span class="color-new">Second commit</span>
+
+commit 858f3e71b95271ea320d45b69f44dc55cf1ff794
+Author: <em>username</em> &lt;<em>email</em>&gt;
+Date:   Thu Nov 29 13:31:32 2012 +0800
+    First commit</pre>
+
+<p>Check the patches for the latest commit via &quot;<code>git log -p -1</code>&quot;, with option <code>-<em>n</em></code> to limit to the last <code><em>n</em></code> commit:</p> 
+
+<pre class="color-command">
+$ <strong>git log -p -1</strong>
+commit <span class="color-new">96efc96</span>f0856846bc495aca2e4ea9f06b38317d1
+Author: <em>username</em> &lt;<em>email</em>&gt;
+Date:   Thu Nov 29 14:09:46 2012 +0800
+    Second commit
+<span class="color-new">diff --git a/Hello.java b/Hello.java</span>
+index dc8d4cf..ede8979 100644
+--- a/Hello.java
++++ b/Hello.java
+@@ -2,5 +2,6 @@
+ public class Hello {
+    public static void main(String[] args) {
+       System.out.println(&quot;Hello, world from GIT!&quot;);
+<span class="color-new">+      System.out.println(&quot;Changes after First commit!&quot;);</span>
+    }
+ }</pre>   
+
+<p>I shall stress again Git tracks the &quot;file changes&quot; at each commit over the previous commit.</p>
+
+<h5>The <span class="font-code">.gitignore</span> File</h5>
+
+<p>All the files in the Git directory are either <em>tracked</em> or <em>untracked</em>. To ignore files (such as <code>.class</code>, <code>.o</code>, <code>.exe</code> which could be reproduced from source) from being tracked and remove them from the <em>untracked</em> file list, create a &quot;<code>.gitignore</code>&quot; file in your project directory, which list the files to be ignored, as follows:</p>
+
+<pre class="color-example">
+<span class="color-comment"># .gitignore</span>
+ 
+<span class="color-comment"># Java class files</span>
+*.class
+
+<span class="color-comment"># Executable files</span>
+*.exe
+
+<span class="color-comment"># Object and archive files</span>
+<span class="color-comment"># Can use regular expression, e.g., [oa] matches either o or a</span>
+*.[oa]
+
+<span class="color-comment"># temp sub-directory (ended with a directory separator)</span>
+temp/</pre>
+
+<p>There should NOT be any trailing comments for filename. You can use regexe for matching the filename/pathname patterns, e.g. <code>[oa]</code> denotes either <code>o</code> or <code>a</code>. You can override the rules by using the inverted pattern (<code>!</code>), e.g., Adding <code>!hello.exe</code> includes the <code>hello.exe</code> although <code>*.exe</code> are excluded.</p>
+
+<p> Now, issue a &quot;<code>git status</code>&quot; command to check the untracked files.</p>
+
+<pre class="color-command">
+$ <strong>git status</strong>
+On branch master
+<span class="color-new">Untracked files:</span>
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+      <span class="color-new">.gitignore</span>
+nothing added to commit but untracked files present (use "git add" to track)</pre>
+
+<p>Now, &quot;<code>Hello.class</code>&quot; is not shown in &quot;Untracked files&quot;.</p>
+
+<p>Typically, we also track and commit the <code>.gitignore</code> file.</p>
+
+<pre class="color-command">
+$ <strong>git add .gitignore</strong>
+ 
+$ <strong>git status</strong>
+On branch master
+<span class="color-new">Changes to be committed:</span>
+  (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)
+        <span class="color-new">new file:   .gitignore</span>
+ 
+$ <strong>git commit -m &quot;Added .gitignore&quot;</strong>
+[master 711ef4f] Added .gitignore
+ 1 file changed, 14 insertions(+)
+ create mode 100644 .gitignore
+  
+$ <strong>git status</strong>
+On branch master
+<span class="color-new">nothing to commit, working directory clean</span></pre>
+
+
+<h4>Setting up Remote Repo</h4>
+
+<ol>
+<li>Sign up for a GIT host, such as Github <a href="https://github.com/signup/free">https://github.com/signup/free</a> (Unlimited for public projects; fee for private projects); or BitBucket @ <a href="https://bitbucket.org/">https://bitbucket.org/</a> (Unlimited users for public projects; 5 free users for private projects; Unlimited for Academic Plan); among others.</li>
+
+<li>Login to the GIT host. Create a new remote repo called &quot;<code>test</code>&quot;.</li>
+
+<li>On your local repo (let's continue to work on our &quot;<code>hello-git</code>&quot; project), set up the remote repo's <em>name</em> and <em>URL</em> via &quot;<code>git remote add &lt;remote-name&gt; &lt;remote-url&gt;</code>&quot; command.<br />
+
+By convention, we shall name our remote repo as &quot;<code>origin</code>&quot;. You can find the URL of a remote repo from the Git host. The URL may take the form of HTTPS or SSH. Use HTTPS for simplicity.
+  <pre class="color-command">
+<span class="color-comment">// Change directory to your local repo's working directory</span>
+$ <strong>cd /<em>path-to</em>/hello-git</strong>
+ 
+<span class="color-comment">// Add a remote repo called &quot;origin&quot; via &quot;git remote add &lt;remote-name&gt; &lt;remote-url&gt;&quot;
+// For examples,</span>
+$ <strong>git remote add origin https://github.com/<em>your-username</em>/test.git</strong>              <span class="color-comment">// for GitHub</span>
+$ <strong>git remote add origin https://<em>username</em>@bitbucket.org/<em>your-username</em>/test.git</strong>  <span class="color-comment">// for Bitbucket</span></pre>
+
+You can list all the remote names and their corresponding URLs via &quot;<code>git remote -v</code>&quot;, for example,
+<pre class="color-command">
+<span class="color-comment">// List all remote names and their corresonding URLs</span>
+$ <strong>git remote -v</strong>
+origin  https://github.com/<em>your-username</em>/test.git (fetch)
+origin  https://github.com/<em>your-username</em>/test.git (push)</pre>
+
+Now, you can manage the remote connection, using a simple <em>name</em> instead of the complex URL.<br />
+
+</li>
+
+<li>Push the commits from the local repo to the remote repo via &quot;<code>git push -u &lt;remote-name&gt; &lt;local-branch-name&gt;</code>&quot;.<br />
+By convention, the main branch of our local repo is called &quot;<code>master</code>&quot;
+(as seen from the earlier &quot;<code>git status</code>&quot; output). We shall discuss &quot;branch&quot; later.
+<pre class="color-command">
+<span class="color-comment">// Push all commits of the branch &quot;master&quot; to remote repo &quot;origin&quot;</span>
+$ <strong>git push origin master</strong>
+Username for 'https://github.com': ******
+Password for 'https://<em>your-username</em>@github.com': *******
+Counting objects: 10, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (10/10), done.
+Writing objects: 100% (10/10), 1.13 KiB | 0 bytes/s, done.
+Total 10 (delta 1), reused 0 (delta 0)
+To https://github.com/<em>your-username</em>/test.git
+ * [new branch]      master -&gt; master
+Branch master set up to track remote branch master from origin.</pre></li>
+
+<li>Login to the GIT host and select the remote repo &quot;test&quot;, you shall find all the committed files.</li>
+
+<li>On your local system, make some change (e.g., on &quot;<code>Hello.java</code>&quot;); stage and commit the changes on the local repo; and push it to the remote. This is known as the &quot;Edit/Stage/Commit/Push&quot; cycle.
+
+  <pre class="color-example">
+<span class="color-comment">// Hello.java</span>
+public class Hello {
+   public static void main(String[] args) {
+      System.out.println(&quot;Hello, world from GIT!&quot;);
+      System.out.println(&quot;Changes after First commit!&quot;);
+      <span class="color-new">System.out.println(&quot;Changes after Pushing to remote!&quot;);</span>
+   }
+}</pre>
+
+<pre class="color-command">
+$ <strong>git status</strong>
+On branch master
+<span class="color-new">Your branch is up-to-date with 'origin/master'.</span>
+ 
+<span class="color-new">Changes not staged for commit:</span>
+  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
+  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working dire
+      modified:   <span class="color-new">Hello.java</span>
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)
+ 
+<span class="color-comment">// Stage file changes</span>
+$ <strong>git add *.java</strong>
+
+$ <strong>git status</strong>
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+Changes to be committed:
+  (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)
+        modified:   Hello.java
+ 
+<span class="color-comment">// Commit all staged file changes</span>
+$ <strong>git commit -m &quot;Third commit&quot;</strong>
+[master 744307e] Third commit
+ 1 file changed, 1 insertion(+)
+ 
+<span class="color-comment">// Push the commits on local master branch to remote</span>
+$ <strong>git push origin master</strong>
+Username for 'https://github.com': ******
+Password for 'https://<em>username</em>@github.com': ******
+Counting objects: 5, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 377 bytes | 0 bytes/s, done.
+Total 3 (delta 1), reused 0 (delta 0)
+To https://github.com/<em>your-username</em>/test.git
+   711ef4f..744307e  master -&gt; master</pre>
+
+Again, login to the remote to check the committed files.</li>
+</ol>
+
+<h4 id="CloneProject">Cloning a Project from a Remote Repo (<span class="font-code">git clone &lt;remote-url&gt;</span>)</h4>
+
+<p>As mentioned earlier, you can start a local GIT repo either running &quot;<code>git init</code>&quot; on your own project, or &quot;<code>git clone &lt;remote-url&gt;</code>&quot; to copy from an existing project.</p>
+
+<p>Anyone having read access to your remote repo can <em>clone</em> your project. You can also <em>clone</em> any project in any <em>public</em> remote repo.</p>
+
+<p>The &quot;<code>git clone &lt;remote-url&gt;</code>&quot; initializes a local repo and copies all files into the working tree. You can find the URL of a remote repo from the Git host.</p>
+
+<pre class="color-command">
+<span class="color-comment">// SYNTAX
+// ======</span>
+$ <strong>git clone &lt;remote-url&gt;</strong>
+   <span class="color-comment">// &lt;url&gt;: can be https (recommended), ssh or file.
+   // Clone the project UNDER the current directory
+   // The name of the &quot;working directory&quot; is the same as the remote project name</span>
+$ <strong>git clone &lt;remote-url&gt; &lt;working-directory-name&gt;</strong>
+   <span class="color-comment">// Clone UNDER current directory, use the given &quot;working directory&quot; name</span>
+
+<span class="color-comment">// EXAMPLES
+// ========</span>
+<span class="color-comment">// Change directory (cd) to the &quot;parent&quot; directory of the project directory</span>
+$ <strong>cd <em>path-to-parent-of-the-working-directory</em></strong>
+ 
+<span class="color-comment">// Clone our remote repo &quot;test&quot; into a new working directory called &quot;hello-git-cloned&quot;</span>
+$ <strong>git clone https://github.com/<em>your-username</em>/test.git hello-git-cloned</strong>
+Cloning into 'hello-git-cloned'...
+remote: Counting objects: 13, done.
+remote: Compressing objects: 100% (11/11), done.
+remote: Total 13 (delta 2), reused 13 (delta 2)
+Unpacking objects: 100% (13/13), done.
+Checking connectivity... done.
+ 
+<span class="color-comment">// Verify</span>
+$ <strong>cd hello-git-cloned</strong>
+ 
+$ <strong>ls -a</strong>
+.  ..  .git  .gitignore  Hello.java  README.md
+ 
+$ <strong>git status</strong>
+On branch master
+Your branch is up-to-date with 'origin/master'.
+nothing to commit, working directory clean</pre>
+
+<p>The &quot;<code>git clone</code>&quot; automatically creates a remote name called &quot;<code>origin</code>&quot; mapped to the cloned remote-URL. You can check via &quot;<code>git remote -v</code>&quot;:</p>
+
+<pre class="color-command">
+<span class="color-comment">// List all the remote names</span>
+$ <strong>git remote -v</strong>
+origin  https://github.com/<em>your-username</em>/test.git (fetch)
+origin  https://github.com/<em>your-username</em>/test.git (push)</pre>
+
+
+<h4>Summary of Basic &quot;Edit/Stage/Commit/Push&quot; Cycle</h4>
+
+<pre class="color-command">
+<span class="color-comment">// Edit (Create, Modified, Rename, Delete) files,
+//  which produces &quot;unstaged&quot; file changes.</span>
+ 
+<span class="color-comment">// Stage file changes, which produces &quot;Staged&quot; file changes</span>
+$ <strong>git add &lt;file&gt;</strong>                          <span class="color-comment">// for new and modified files</span>
+$ <strong>git rm &lt;file&gt;</strong>                           <span class="color-comment">// for deleted files</span>
+$ <strong>git mv &lt;old-file-name&gt; &lt;new-file-name&gt;</strong>  <span class="color-comment">// for renamed file</span>
+
+<span class="color-comment">// Commit (ALL staged file changes)</span>
+$ <strong>git commit -m &lt;message&gt;</strong>
+
+<span class="color-comment">// Push</span>
+$ <strong>git push &lt;remote-name&gt; &lt;local-branch-name&gt;</strong></pre>
+
+<h4>More on Staged and Unstaged Changes</h4>
+
+<p>If you modify a file, stage the changes and modify the file again, there will be <em>staged changes</em> and <em>unstaged changes</em> for that file.</p>
+<p>For example, let's continue the &quot;<code>hello-git</code>&quot; project. Add one more line to &quot;<code>README.md</code>&quot; and stage the changes:</p>
+
+<pre class="color-example">
+// README.md
+This is the README file for the Hello-world project.
+<span class="color-new">Make some changes and staged.</span></pre>
+
+<pre class="color-command">
+$ <strong>git status</strong>
+On branch master
+Your branch is up-to-date with 'origin/master'.
+<span class="color-new">Changes not staged for commit:
+        modified:   README.md</span>
+ 
+$ <strong>git add README.md</strong>
+ 
+$ <strong>git status</strong>
+On branch master
+Your branch is up-to-date with 'origin/master'.
+<span class="color-new">Changes to be committed:
+        modified:   README.md</span>
+</pre>
+
+<p>Before the changes are committed, suppose we modify the file again:</p>
+
+<pre class="color-example">
+// README.md
+This is the README file for the Hello-world project.
+Make some changes and staged.
+<span class="color-new">Make more changes before the previous changes are committed.</span></pre>
+
+<pre class="color-command">
+$ <strong>git status</strong>
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+<span class="color-new">Changes to be committed:
+        modified:   README.md
+
+Changes not staged for commit:
+        modified:   README.md</span>
+
+<span class="color-comment">// Now, &quot;README.md&quot; has both unstaged and staged changes.</span>
+
+<span class="color-comment">// Show the staged changes</span>
+$ <strong>git diff --staged</strong>
+diff --git a/README.md b/README.md
+index 9565113..b2e9afb 100644
+--- a/README.md
++++ b/README.md
+@@ -1,2 +1,3 @@
+ // README.md
+ This is the README file for the Hello-world project.
+<span class="color-new">+Make some changes and staged.</span>
+ 
+<span class="color-comment">// Show the unstaged changes</span>
+$ <strong>git diff</strong>
+diff --git a/README.md b/README.md
+index b2e9afb..ca6622a 100644
+--- a/README.md
++++ b/README.md
+@@ -1,3 +1,4 @@
+ // README.md
+ This is the README file for the Hello-world project.
+ Make some changes and staged.
+<span class="color-new">+Make more changes before the previous changes are committed.</span>
+ 
+<span class="color-comment">// Stage the changes</span>
+$ <strong>git add README.md</strong>
+ 
+$ <strong>git status</strong>
+On branch master
+Your branch is up-to-date with 'origin/master'.
+ 
+<span class="color-new">Changes to be committed:
+        modified:   README.md</span>
+
+<span class="color-comment">// Show staged changes</span>
+$ <strong>git diff --staged</strong>
+diff --git a/README.md b/README.md
+index 9565113..ca6622a 100644
+--- a/README.md
++++ b/README.md
+@@ -1,2 +1,4 @@
+ // README.md
+ This is the README file for the Hello-world project.
+<span class="color-new">+Make some changes and staged.
++Make more changes before the previous changes are committed.</span>
+ 
+<span class="color-comment">// Commit the staged changes</span>
+$ <strong>git commit -m &quot;Unstaged vs. Staged Changes&quot;</strong>
+[master a44199b] Unstaged vs. Staged Changes
+ 1 file changed, 2 insertions(+), 0 deletion(-)</pre>
+
+<img class="image-center" src="images/Git_FileChanged.png" alt="Stage and Unstaged Changes" />
+
+<p>Take note that the stage changes are cleared when the changes are committed; while the unstaged changes are cleared when the changes are staged.</p>
+
+<p>For convenience, you can also use the &quot;git-gui&quot; tool to view the unstaged and staged changes.</p>
+
+
+<h4>Git GUI Tools</h4>
+
+<h5>Git-GUI (Windows)</h5>
+
+<p>For convenience, Git provides a GUI tool, called <code>git-gui</code>, which can be used to perform all tasks and view the commit log graphically.</p>
+<p>Install &quot;Git-Gui&quot;.</p>
+<p>To run the <code>git-gui</code>, you can right-click on the project folder and choose &quot;Git Gui&quot;; or launch the Git-bash shell and run &quot;<code>git gui</code>&quot; command.</p>
+<p>To view the log, choose &quot;Repository&quot; &rArr; &quot;Visualize master's history&quot;, which launches the &quot;gitk&quot;. You can view the details of each commit.</p>
+<p>You can also view each of the file via &quot;Repository&quot; &rArr; &quot;Browse master's Files&quot; &rArr; Select a file.</p>
+
+
+<p>Git-gui is bundled with Git. To launch git-gui, right click on the working directory and choose &quot;git gui&quot;, or run &quot;<code>git gui</code>&quot; command on the Git-Bash shell.</p>
+
+
+<p>[TODO]</p>
+
+<h5>EGit Plugin for Eclipse</h5>
+<p>[TODO]</p>
+
+
+<h3>Tagging</h3>
+
+<p>Tag (or label) can be used to tag a specific commit as being important, for example, to mark a particular release. The release is often marked in this format: <em><code>version-number</code></em><code>.<em>release-no</em>.<em>modificaton-no</em></code> (e.g., <code>v1.1.5</code>) or or <em><code>version-number</code></em><code>.<em>release-no.upgrade-no</em>_<em>modificaton-no</em></code> (e.g., <code>v1.7.0_26</code>).</p>
+
+<p>I recommend that you commit your code and push it to the remote repo as often as needed (e.g., daily), to BACKUP your code. When you code reaches a stable point (in turn of functionality), create a tag to mark the commit, which can then be used for CHECKOUT, if you need to show your code to others.</p>
+
+<h5>Listing Tags (<span class="font-code">git tag</span>)</h5>
+
+<p>To list the existing tags, use &quot;<code>git tag</code>&quot; command.</p>
+
+<h5>Types of Tags - Lightweight Tags and Annotated Tags</h5>
+<p>There are two kinds of tags: lightweight tag and annotated tag. Lightweight tag is simply a pointer to a commit. Annotated tag contains annotations (meta-data) and can be digitally signed and verified.</p>
+
+<h5>Creating an Annotated Tag (<span class="font-code">git tag -a &lt;tag-name&gt; -m &lt;message&gt;</span>)</h5>
+
+<p>To create an annotated tag at the latest commit, use &quot;<code>git tag -a &lt;tag-name&gt; -m &lt;message&gt;</code>&quot;, where <code>-a</code> option specifies annotation tag having meta-data. For example,</p>
+
+<pre class="color-command">
+$ <strong>git tag -a v1.0.0 -m &quot;First production system&quot;</strong>
+ 
+<span class="color-comment">// List all tags</span>
+$ <strong>git tag</strong>
+v1.0.0
+ 
+<span class="color-comment">// Show tag details</span>
+$ <strong>git show v1.0.0</strong>
+   <span class="color-comment">// Show the commit point and working tree</span></pre>
+
+
+<p>To create a tag for an earlier commit, you need to find out the commit's name (first seven character hash code) (via &quot;<code>git log</code>&quot;), and issue &quot;<code>git tag -a &lt;tag-name&gt; -m &lt;message&gt; &lt;commit-name&gt;</code>&quot;. For example,</p>
+
+<pre class="color-command">
+$ <strong>git log</strong>
+......
+commit <span class="color-new">7e7cb40</span>a9340691e2b16a041f7185cee5f7ba92e
+......
+    Commit 3
+ 
+$ <strong>git tag -a &quot;v0.9.0&quot; -m &quot;Last pre-production release&quot; 7e7cb40</strong>
+ 
+<span class="color-comment">// List all tags</span>
+$ <strong>git tag</strong>
+v0.9.0
+v1.0.0
+ 
+<span class="color-comment">// Show details of a tag</span>
+$ <strong>git show v0.9.0</strong>
+......</pre>
+
+<p>[TODO] Diagram</p>
+
+<h5>Creating Lightweight Tags (<span class="font-code">git tag &lt;tag-name&gt;</span>)</h5>
+
+<p>To create a lightweight tag (without meta-data), use &quot;<code>git tag &lt;tag-name&gt;</code>&quot; without the <code>-a</code> option. The lightweight tag stores only the commit hash code.</p>
+
+<h5>Signed Tags</h5>
+
+<p>You can signed your tags with your private key, with <code>-s</code> option instead of <code>-a</code>.</p>
+<p>To verify a signed tag, use <code>-v</code> option and provide the signer's public key.</p>
+<p>[TODO] Example</p>
+
+<h5>Pushing to Remote Repo</h5>
+<p>By default, Git does not push tags (and branches) to remote repo. You need to push them explicitly, via &quot;<code>git push origin &lt;tag-name&gt;</code>&quot; for a particular tag or &quot;<code>git push origin --tags</code>&quot; for all the tags.</p>
+
+
+<h3>Branching/Merging</h3>
+
+<h4>Git's Data Structures</h4>
+
+<p>Git has two primary data structures:</p>
+<ol>
+<li>an immutable, append-only <em>object database</em> (or <em>local repo</em>) that stores all the commits and file contents;</li>
+<li>a mutable <em>staging area</em> (or <em>index</em>, or <em>cache</em>) that caches the staged information.</li>
+</ol>
+
+<p>The <em>staging area</em> serves as the connection between <em>object database</em> and <em>working tree</em> (as shown in the storage model diagram). It serves to avoid volatility, and allows you to stage ALL the file changes before issuing a commit, instead of committing individual file change. Changes to files that have been explicitly added to the index (staging area) via &quot;<code>git add &lt;file&gt;</code>&quot; are called <em>staged changes</em>. Changes that have not been added are called <em>unstaged changes</em>. Staged and unstaged changes can co-exist. Performing a commit copies the statged changes into object database (local repo) and clears the index. The unstaged changes remain in working tree.</p>
+
+<img class="image-center" alt="image" src="images/Git_Objects.png" />
+<p>The object database contains these objects:</p>
+<ul>
+<li>Each version of a file  is represented by a <em>blob</em> (binary large object - a file that can contain any data: binaries or characters). A blob holds the file data only, without any metadata - not even the filename.</li>
+<li>A <em>snapshot</em> of the working tree is represented by a <em>tree</em> object, which links the blobs and sub-trees for sub-directories.</li>
+<li>A <em>commit</em> object points to a tree object, i.e., the snapshot of the working tree at the point the commit was created. It holds metadata such as timestamp, log message, author's and committer's username and email. It also references its parent commit(s), except the root commit which has no parent. A normal commit has one parent; a merge commit could have multiple parents. A commit, where new branch is created, has more than one children. By referencing through the chain of parent commit(s), you can discover the history of the project.</li>
+</ul>
+
+<p>Each object is identified (or named) by a 160-bit (or 40 hex-digit) SHA-1 hash value of its contents (i.e., a content-addressable name). Any tiny change to the contents produces a different hash value, resulted in a different object. Typically, we use the first 7 hex-digit prefix to refer to an object, as long as there is no ambiguity.</p>
+
+<p>There are two ways to refer to a particular commit: via a branch or a tag.</p>
+
+<ul>
+<li>A branch is a mobile reference of commit. It moves forward whenever commit is made on that branch.</li>
+<li>A tag (like a label) marks a particular commit. Tag is often used for marking the releases.</li>
+</ul>
+
+<h4>Branching</h4>
+<p>Branching allows you and your team members to work on different aspects of the software <em>concurrently</em> (on so-called feature branches), and merge into the <code>master</code> branch as and when they completes. Branching is the most important feature in a <em>concurrent</em> version control system.</p>
+<p>A branch in Git is a lightweight movable pointer to one of the commits. For the initial commit, Git assigns the default branch name called <code>master</code> and sets the <code>master</code> branch pointer at the initial commit. As you make further commits on the <code>master</code> branch, the <code>master</code> branch pointer move forward accordingly. Git also uses a special pointer called <code>HEAD</code> to keep track of the branch that you are currently working on. The <code>HEAD</code> always refers to the latest commit on the current branch. Whenever you switch branch, the <code>HEAD</code> also switches to the latest commit on the branch switched.</p>
+
+<h5>Example</h5>
+
+<p>For example, let's create a Git-managed project called <code>git_branch_test</code> with only the a single-line <code>README.md</code> file:</p>
+
+<pre class="color-example">
+This is the README. My email is xxx@somewhere.com</pre>
+
+<pre class="color-example">
+$ <strong>git init</strong>
+$ <strong>git add README.md</strong>
+$ <strong>git commit -m &quot;Commit 1&quot;</strong>
+
+<span class="color-comment">// Append a line in README.md: This line is added after Commit 1</span>
+$ <strong>git status</strong>
+$ <strong>git add README.md</strong>
+$ <strong>git commit -m &quot;Commit 2&quot;</strong>
+
+<span class="color-comment">// Append a line in README.md: This line is added after Commit 2</span>
+$ <strong>git status</strong>
+$ <strong>git add README.md</strong>
+$ <strong>git commit -m &quot;Commit 3&quot;</strong>
+ 
+<span class="color-comment">// Show all the commits (oneline each)</span>
+$ <strong>git log --oneline</strong>
+44fdf4c Commit 3
+51f6827 Commit 2
+fbed70e Commit 1</pre>
+
+<img alt="imgae" class="image-center" src="images/Git_Branch1.png" />
+
+<h5>Creating a new Branch (<span class="font-code">git branch &lt;branch-name&gt;</span>)</h5>
+<p>You can create a new branch via &quot;<code>git branch &lt;branch-name&gt;</code>&quot; command. When you create a new branch (says <code>devel</code>, or <code>development</code>), Git creates a new <em>branch pointer</em> for the branch <code>devel</code>, pointing initially at the latest commit on the current branch <code>master</code>.</p>
+
+<pre class="color-command">
+$ <strong>git branch devel</strong></pre>
+
+<img alt="imgae" class="image-center" src="images/Git_Branch2.png" />
+
+<p>Take note that when you create a new branch, the HEAD pointer is still pointing at the current branch.</p>
+
+<h5>Branch Names Convention</h5>
+<ul>
+<li><code>master</code> branch: the production branch with tags for the various releases.</li>
+<li><code>development</code> (or <code>next</code> or <code>devel</code>) branch: developmental branch, to be merged into master if and when completes.</li>
+<li>topics branch:  a short-live branch for a specific topics, such as introducing a feature (for the <code>devel</code> branch) or fixing a bug (for the <code>master</code> branch).</li>
+</ul>
+
+<h5>Switching to a Branch (<span class="font-code">git checkout &lt;branch-name&gt;</span>)</h5>
+<p>Git uses a special pointer called <code>HEAD</code> to keep track of the branch that you are working on. The &quot;<code>git branch &lt;branch-name&gt;</code>&quot; command simply create a branch, but does not switch to the new branch. To switch to a branch, use &quot;<code>git checkout &lt;branch-name&gt;</code>&quot; command. The <code>HEAD</code> pointer will be pointing at the switched branch (e.g., <code>devel</code>).</p>
+
+<pre class="color-command">
+$ <strong>git checkout devel</strong>
+Switched to branch 'devel'</pre>
+
+<img alt="imgae" class="image-center" src="images/Git_Branch3.png" />
+
+<p>Alternatively, you can use &quot;<code>git checkout -b &lt;branch-name&gt;</code>&quot; to create a new branch and switch into the new branch.</p>
+<p>If you switch to a branch and make changes and commit. The <code>HEAD</code> pointer moves forward in that branch.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Append a line in README.md: This line is added on devel branch after Commit 3</span>
+$ <strong>git status</strong>   <span class="color-comment">// NOTE &quot;On branch devel&quot;</span>
+$ <strong>git add README.md</strong>
+$ <strong>git commit -m &quot;Commit 4&quot;</strong>
+[<span class="color-new">devel</span> c9b88d9] Commit 4</pre>
+
+<img alt="imgae" class="image-center" src="images/Git_Branch4.png" />
+
+<p> You can switch back to the <code>master</code> branch via &quot;<code>git checkout master</code>&quot;. The <code>HEAD</code> pointer moves back to the last commit of the <code>master</code> branch, and the working directory is <em>rewinded</em> back to the latest commit on the <code>master</code> branch.</p>
+
+<pre class="color-command">
+$ <strong>git checkout master</strong>
+Switched to branch 'master'
+<span class="color-comment">// Check the content of the README.md, which is reminded back to Commit 3</span></pre>
+
+<img alt="imgae" class="image-center" src="images/Git_Branch5.png" />
+
+<p>If you continue to work on the <code>master</code> branch and commit, the <code>HEAD</code> pointer moves forward on the <code>master</code> branch. The two branches now <em>diverge</em>.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Append a line in README.md: This line is added on master branch after Commit 4</span>
+$ <strong>git status</strong>   <span class="color-comment">// NOTE &quot;On branch master&quot;</span>
+$ <strong>git add README.md</strong>
+$ <strong>git commit -m &quot;Commit 5&quot;</strong>
+[<span class="color-new">master</span> 6464eb8] Commit 5</pre>
+
+<img alt="imgae" class="image-center" src="images/Git_Branch6.png" />
+
+<p>If you check out the <code>devel</code> branch, the file contents will be rewinded back to Commit-4.</p>
+
+<pre class="color-command">
+$ <strong>git checkout devel</strong>
+<span class="color-comment">// Check file contents</span></pre>
+
+<h4>Merging Two Branches (<span class="font-code">git merge &lt;branch-name&gt;</span>)</h4>
+<p>To merge two branches, says <code>master</code> and <code>devel</code>, check out the first branch, e,g, <code>master</code>, (via &quot;<code>git checkout &lt;branch-name&gt;</code>&quot;) and merge with another branch, e.g., <code>devel</code>, via command &quot;<code>git merge &lt;branch-name&gt;</code>&quot;.</p>
+
+<h5>Fast-Forward Linear Merge</h5>
+<p>If the branch to be merged is a direct descendant, Git performs <em>fast forward</em> by moving the <code>HEAD</code> pointer forward. For example, suppose that you are currently working on the <code>devel</code> branch at commit-4, and the <code>master</code> branch's latest commit is at commit-3:</p>
+
+<pre class="color-command">
+$ <strong>git checkout master</strong>
+
+<span class="color-comment">// Let discard the Commit-5 totally and rewind to commit-3 on master branch
+// This is solely for illustration!!! Do this with great care!!!</span>
+$ <strong>git reset --hard HEAD~1</strong>
+HEAD is now at 7e7cb40 Commit 3
+  <span class="color-comment">// HEAD~1 moves the HEAD pointer back by one commit (-1)
+  // --hard also resets the working tree
+ 
+// Check the file contents</span>
+ 
+$ <strong>git merge devel</strong>
+Updating 7e7cb40..4848c7b
+<span class="color-new">Fast-forward</span>
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+ 
+<span class="color-comment">// Check the file contents</span></pre>
+
+<img alt="imgae" class="image-center" src="images/Git_MergeForward.png" />
+
+<p>Take note that no <em>new</em> commit is created.</p>
+
+<h5>3-Way Merge</h5>
+<p>If the two branches are diverged, git automatically searches for the <em>common ancestor commit</em> and performs a 3-way merge. If there is no conflict, a new commit will be created.</p>
+<p>If git detects a conflict, it will pause the merge and issue a merge conflict and ask you to resolve the conflict manually. The file is marked as <em>unmerged</em>. You can issue &quot;<code>git status</code>&quot; to check the unmerged files, study the details of the conflict, and decide which way to resolve the conflict. Once the conflict is resolve, stage the file (via &quot;<code>git add &lt;file&gt;</code>&quot;). Finally, run a &quot;<code>git commit</code>&quot; to finalize the 3-way merge (the same Edit/Stage/Commit cycle).</p>
+
+<pre class="color-command">
+$ <strong>git checkout master</strong>
+<span class="color-comment">// undo the Commit-4, back to Commit-3</span>
+$ <strong>git reset --hard HEAD~1</strong>
+HEAD is now at 7e7cb40 Commit 3
+
+<span class="color-comment">// Change the email to abc@abc.com</span>
+$ <strong>git add README.md</strong>
+$ <strong>git commit -m &quot;Commit 5&quot;</strong>
+
+$ <strong>git checkout devel</strong>
+<span class="color-comment">// undo the Commit-4, back to Commit-3</span>
+$ <strong>git reset --hard HEAD~1</strong>
+<span class="color-comment">// Change the email to xyz@xyz.com to trigger conflict</span>
+$ <strong>git add README.md</strong>
+$ <strong>git commit -m &quot;Commit 4&quot;</strong>
+
+<span class="color-comment">// Let's do a 3-way merge with conflict</span>
+$ <strong>git checkout master</strong>
+$ <strong>git merge devel</strong>
+Auto-merging README.md
+<span class="color-new">CONFLICT (content): Merge conflict in README.md</span>
+Automatic merge failed; fix conflicts and then commit the result.
+ 
+$ <strong>git status</strong>
+# On branch master
+# <span class="color-new">You have unmerged paths.</span>
+#   (fix conflicts and run &quot;git commit&quot;)
+#
+# Unmerged paths:
+#   (use "git add &lt;file&gt;..." to mark resolution)
+#       <span class="color-new">both modified:      README.md</span>
+no changes added to commit (use "git add" and/or "git commit -a")</pre>
+
+<p>The conflict file is marked as follows (in &quot;<code>git status</code>&quot;):</p>
+
+<pre class="color-example">
+<span class="color-new">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
+This is the README. My email is abc@abc.com
+<span class="color-new">=======</span>
+This is the README. My email is xyz@xyz.com
+<span class="color-new">&gt;&gt;&gt;&gt;&gt;&gt;&gt; devel</span>
+This line is added after Commit 1
+This line is added after Commit 2</pre>
+
+<p>You need to manually decide which way to take, or you could discard both by setting the email to zzz@nowhere.com.</p>
+
+<pre class="color-command">
+$ <strong>git add README.md</strong>
+$ <strong>git commit -m &quot;Commit 6&quot;</strong></pre>
+
+<img alt="imgae" class="image-center" src="images/Git_Merge3Way.png" />
+
+<p>Take note that In a 3-way merge, a new commit will be created in the process (unlike fast-forward merge).</p>
+
+<h5>Deleting a Merged Branch (<span class="font-code">git branch -d &lt;branch-name&gt;</span>)</h5>
+<p>The merged branch (e.g., <code>devel</code>) is no longer needed. You can delete it via &quot;<code>git branch -d &lt;branch-name&gt;</code>&quot;.</p>
+
+<pre class="color-command">
+$ <strong>git branch -d devel</strong>
+Deleted branch devel (was a20f002).
+ 
+<span class="color-comment">// Create the development branch again at the latest commit</span>
+$ <strong>git branch devel</strong></pre>
+
+<h4>Rebasing Branch (<span class="font-code">git rebase</span>)</h4>
+
+<img alt="imgae" class="image-center" src="images/Git_Rebase1.png" />
+
+
+<p>The primary purpose for rebasing is to maintain a linear project history. For example, if you checkout a <code>devel</code> branch and work on commit-5 and commit-6, instead of doing a 3-way merge into the <code>master</code> branch and subsequently remove the <code>devel</code> branch, you can rebase the commit-5 and commit-6, on commit-4, and perform a linear forward merge to maintain all the project history. New commits (7 and 8) will be created for the rebased commit (5 and 6).</p>
+
+<p>The syntax is:</p>
+<pre class="color-command">
+<span class="color-comment">// SYNTAX</span>
+$ <strong>git rebase &lt;base-name&gt;</strong>
+   <span class="color-comment">// &lt;base-name&gt; could be any kind of commit reference
+   // (such as an commit-name, a branch name, a tag, 
+   // or a relative reference to HEAD).</span></pre>
+
+<p>Examples:</p>
+
+<pre class="color-example">
+<span class="color-comment">// Start a new feature branch from the current master</span>
+$ <strong>git checkout -b feature master</strong>
+<span class="color-comment">// Edit/Stage/Commit changes to feature branch</span>
+ 
+<span class="color-comment">// Need to work on a fix on the master</span>
+$ <strong>git checkout -b hotfix master</strong>
+<span class="color-comment">// Edit/Stage/Commit changes to hotfix branch
+// Merge hotfix into master</span>
+$ <strong>git checkout master</strong>
+$ <strong>git merge hotfix</strong>
+<span class="color-comment">// Delete hotfix branch</span>
+$ <strong>git branch -d hotfix</strong>
+ 
+<span class="color-comment">// Rebase feature branch on master branch
+//  to maintain a linear history</span>
+$ <strong>git checkout feature</strong>
+$ <strong>git rebase master</strong>
+<span class="color-comment">// Now, linear merge</span>
+$ <strong>git checkout master</strong>
+$ <strong>git merge feature</strong></pre>
+
+
+<h4>Amend the Last Commit (<span class="font-code">git commit --amend</span>)</h4>
+
+<p>If you make a commit but want to change the commit message or adding more changes, you may amend the recent commit (instead of creating new commit) via command &quot;<code>git commit --amend</code>&quot;):</p>
+<pre class="color-command">
+$ <strong>git commit --amend -m &quot;message&quot;</strong>
+</pre>
+
+<p>For example,</p>
+
+<pre class="color-command">
+<span class="color-comment">// Do a commit</span>
+$ <strong>git commit -m &quot;added login menu&quot;</strong>
+
+<span class="color-comment">// Realize that you have not staged some files.
+// Amend the commit</span>
+$ <strong>git add morefile</strong>
+$ <strong>git commit --amend</strong>
+    <span class="color-comment">// You could modify the commit message here</span></pre>
+
+<h4>More on &quot;<span class="font-code">git checkout</span>&quot; and Detached HEAD</h4>
+
+<p>&quot;<code>git checkout</code>&quot; can be used to checkout a branch, a commit, or files. The syntaxes are:</p>
+
+<pre class="color-command">
+$ <strong>git checkout &lt;branch-name&gt;</strong>
+$ <strong>git checkout &lt;commit-name&gt;</strong>
+$ <strong>git checkout &lt;commit-name&gt; &lt;filename&gt;</strong></pre>
+
+<p>When you <code>checkout</code> a commit, Git switches into so-called &quot;Detached HEAD&quot; state, i.e., the HEAD detached from the tip of a branch. Suppose that you continue to work on the detached HEAD on commit-5, and wish to merge the commit-5 back to <code>master</code>. You checkout the master branch, but there is no branch name for your to reference the commit-5!!!</p>
+
+<img alt="imgae" class="image-center" src="images/Git_DetachedHead1.png" />
+
+<img alt="imgae" class="image-center" src="images/Git_DetachedHead2.png" />
+
+<p>In Summary, you can use &quot;<code>git checkout &lt;commit-name&gt;</code>&quot; to inspect a commit. BUT you should always work on a branch, NOT on a detached HEAD. </p>
+
+
+<h4>More on &quot;<span class="font-code">git reset</span>&quot; and &quot;<span class="font-code">git reset --hard</span>&quot;</h4>
+
+<p>[TODO] examples and diagram</p>
+
+<pre class="color-example">
+$ <strong>git reset &lt;file&gt;</strong>
+   <span class="color-comment">// Unstage the changes of &lt;file&gt; from staging area,
+   //   not affecting the working tree.</span>
+ 
+$ <strong>git reset</strong>
+   <span class="color-comment">// Reset the staging area
+   // Remove all changes (of all files) from staging area,
+   //   not affecting the working tree.</span>
+
+$ <strong>git reset --hard</strong>
+   <span class="color-comment">// Reset the staging area and working tree to match the
+   //   recent commit  (i.e., discard all changes since the
+   //   last commit).</span>
+ 
+$ <strong>git reset &lt;commit-name&gt;</strong>
+   <span class="color-comment">// Move the HEAD of current branch to the given commit,
+   //   not affecting the working tree.</span>
+ 
+$ <strong>git reset --hard &lt;commit-name&gt;</strong>
+   <span class="color-comment">// Reset both staging area and working tree to the given
+   //   commit, i.e., discard all changes after that commit.</span></pre>
+
+<p>[TODO] Diagram</p>
+
+<p>[TODO] --soft option</p>
+
+<h4><span class="font-code">git revert &lt;commit-name&gt;</span></h4>
+
+<p>The &quot;<code>git revert</code>&quot; undoes a commit. But, instead of removing the commit from the project history, it undos the changes introduced by the commit and appends a new commit with the resulting content. This prevents Git from losing history. &quot;<code>git revert</code>&quot; is a safer way comparing with &quot;<code>git reset</code>&quot;.</p>
+
+<pre class="color-example">
+<span class="color-comment">// SYNTAX</span>
+$ <strong>git revert &lt;commit-name&gt;</strong>
+ 
+<span class="color-comment">// EXAMPLE</span>
+[TODO] example and diagram</pre>
+
+
+
+
+<h4>Summary of Work Flows</h4>
+
+<h5>Setting up GIT and &quot;Edit/Stage/Commit/Push&quot; Cycle</h5>
+
+<p><span class="line-heading">Step 1</span>: Install GIT.</p>
+
+<ul>
+<li>For Windows and Mac, download the installer from <a href="http://git-scm.com/downloads">http://git-scm.com/downloads</a> and run the downloaded installer.</li>
+<li>For Ubuntu, issue command &quot;<code>sudo apt-get install git</code>&quot;.</li>
+</ul>
+
+<p>For Windows, use &quot;<code>git-bash</code>&quot; command shell provided by Windows installer to issue command. For Mac/Ubuntu, use &quot;Terminal&quot;.</p>
+
+<p><span class="line-heading">Step 2</span>: Configuring GIT:</p>
+
+<pre class="color-command">
+<span class="color-comment">// Setup your username and email to be used in labeling commits</span>
+$ <strong>git config --global user.email &quot;<em>your-email@yourmail.com</em>&quot;</strong>
+$ <strong>git config --global user.name &quot;<em>your-name</em>&quot;</strong></pre>
+
+<p><span class="line-heading">Step 3</span>: Set up GIT repo for a project. For example, we have a project called &quot;<code>olas1.1</code>&quot; located at &quot;<code>/usr/local/olas/olas1.1</code>&quot;.</p>
+
+<pre class="color-command">
+$ <strong>cd /usr/local/olas/olas1.1</strong>
+ 
+<span class="color-comment">// Initialize the GIT repo</span>
+$ <strong>git init</strong>
+ 
+$ <strong>ls -al</strong>
+   <span class="color-comment">// Check for &quot;.git&quot; directory</span></pre>
+
+<p>Create a &quot;<code>README.md</code>&quot; (or &quot;<code>README.textile</code>&quot; if you are using Eclipse's WikiText in &quot;textile&quot; markup) under your project directory to describe the project.</p>
+
+<p><span class="line-heading">Step 4</span>: Start &quot;Edit/Stage/Commit/Push&quot; cycles.</p>
+<p>Create/Modify files. Stage files into the staging area via &quot;<code>git add &lt;file&gt;</code>&quot;.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Check the status</span>
+$ <strong>git status</strong>
+......
+ 
+<span class="color-comment">// Add files into repo</span>
+$ <strong>git add README.md</strong>
+$ <strong>git add www</strong>
+......
+ 
+<span class="color-comment">// Check the status</span>
+$ <strong>git status</strong>
+......</pre>
+
+<p><span class="line-heading">Step 5</span>: Create a &quot;<code>.gitignore</code>&quot; (in the project base directory) to exclude folders/files from being tracked by GIT. Check your &quot;<code>git status</code>&quot; output to decide which folders/files to be ignored.</p>
+
+<p>For example,</p>
+
+<pre class="color-example">
+<span class="color-comment"># ignore files and directories beginning with dot</span>
+.*
+ 
+<span class="color-comment"># ignore directories beginning with dot (a directory ends with a slash)</span>
+.*/
+ 
+<span class="color-comment"># ignore these files and directories</span>
+www/test/
+www/.*
+www/.*/</pre>
+
+<p>The trailing slash indicate directory (and its sub-directories and files).</p>
+
+<p>If you want the &quot;<code>.gitignore</code>&quot; to be tracked (which is in the ignore list):</p>
+
+<pre class="color-command">
+$ <strong>git add -f .gitignore</strong>
+      <span class="color-comment">// -f to override the .gitignore</span></pre>
+
+<p><span class="line-heading">Step 6</span>: Commit.</p>
+
+<pre class="color-command">
+$ <strong>git status</strong>
+......
+ 
+<span class="color-comment">// Commit with a message</span>
+$ <strong>git commit -m "Initial Commit"</strong>
+......
+ 
+$ <strong>git status</strong>
+......</pre>
+
+<p><span class="line-heading">Step 7</span>: Push to the Remote Repo (for backup, version control, and collaboration).</p>
+
+<p>You need to first create a repo (says olas) in a remote GIT host, such as GitHub or BitBucket. Take note of the remote repo URL, e.g., https://<em>username</em>@<em>hostname</em>.org/<em>username</em>/olas.git.</p>
+
+<pre class="color-command">
+$ <strong>cd /<em>path-to</em>/<em>local-repo</em></strong>
+ 
+<span class="color-comment">// Add a remote repo name called &quot;origin&quot; mapped to the remote URL</span>
+$ <strong>git remote add origin https://<em></em><em>hostname</em>/<em>username</em>/olas.git</strong>
+ 
+<span class="color-comment">// Push the &quot;master&quot; branch to the remote &quot;origin&quot;
+// &quot;master&quot; is the default branch name of your local repo after init. 
+</span>$ <strong>git push origin master</strong></pre>
+
+<p>Check the remote repo for the files committed.</p>
+
+<p><span class="line-heading">Step 8</span>: Work on the source files, make changes, commit and push to remote repo.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Check the files modified</span> 
+$ <strong>git status</strong>
+......
+ 
+<span class="color-comment">// Stage for commit the modified files</span>
+$ <strong>git add ....</strong>
+......
+ 
+<span class="color-comment">// Commit (with a message)</span>
+$ <strong>git commit -m "<em>commit-message</em>"</strong>
+ 
+<span class="color-comment">// Push to remote repo</span>
+$ <strong>git push origin master</strong></pre>
+
+<p><span class="line-heading">Step 9</span>: Create a &quot;tag&quot; (for version number).</p>
+
+<pre class="color-command">
+<span class="color-comment">// Tag a version number to the current commit</span>
+$ <strong>git tag -a v1.1 -m "Version 1.1"</strong>
+      <span class="color-comment">// -a to create an annotated tag, -m to provide a message</span>
+ 
+<span class="color-comment">// Display all tags</span>
+$ <strong>git tag</strong>
+......
+ 
+<span class="color-comment">// Push the tags to remote repo
+// (&quot;git push -u origin master&quot; does not push the tags)</span>
+$ <strong>git push origin --tags</strong></pre>
+
+<h5>Branch and Merge Workflow</h5>
+
+<p>It is a good practice to freeze the &quot;<code>master</code>&quot; branch for production; and work on a development branch (says &quot;<code>devel</code>&quot;) instead. You may often spawn a branch to fix a bug in the production.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Create a branch called &quot;devel&quot; and checkout.
+// The &quot;devel&quot; is initially synchronized with the &quot;master&quot; branch.</span>
+$ <strong>git checkout -b devel</strong>
+      <span class="color-comment">// same as:
+      // $ <strong>git branch devel</strong>
+      // $ <strong>git checkout</strong></span>
+
+<span class="color-comment">// Edit/Stage/Commit</span>
+$ <strong>git add &lt;file&gt;</strong>
+$ <strong>git commit -m "<em>commit-message</em>"</strong>
+
+<span class="color-comment">// To merge the &quot;devel&quot; into the production &quot;master&quot; branch</span>
+$ <strong>git checkout master</strong>
+$ <strong>git merge devel</strong>
+
+<span class="color-comment">// Push both branches to remote repo</span>
+$ <strong>git push origin master devel</strong>
+
+<span class="color-comment">// Checkout the &quot;devel&quot; branch and continue...</span>
+$ <strong>git checkout devel</strong>
+   <span class="color-comment">// Edit/Stage/Commit/Push</span>
+
+<span class="color-comment">// Need to fix a bug in production (in &quot;master&quot; branch)</span>
+$ <strong>git checkout master</strong>
+<span class="color-comment"></span><span class="color-comment">// Spawn a &quot;fix&quot; branch to fix the bug, and merge with the &quot;master&quot; branch</span>
+
+<span class="color-comment">// To remove the &quot;devel&quot; branch (if the branch is out-of-sync)</span>
+$ <strong>git branch -d devel</strong>
+<span class="color-comment">// To re-create the &quot;devel&quot; branch</span>
+$ <strong>git checkout -b devel</strong></pre>
+
+<h4>Viewing the Commit Graph (<span class="font-code">gitk</span>)</h4>
+
+<p>You can use the &quot;git-gui&quot; &quot;gitk&quot; tool to view the commit graph.</p>
+
+<p>To run the git-gui, you can right-click on the project folder and choose &quot;Git Gui&quot;; or launch the Git-bash shell and run &quot;<code>git gui</code>&quot; command.</p>
+<p>To view the commit graph, choose &quot;Repository&quot; &rArr; &quot;Visualize master's history&quot;, which launches the &quot;gitk&quot;. You can view the details of each commit.</p>
+
+
+<h3>Collaboration</h3>
+
+<p>Reference: <a href="https://www.atlassian.com/git/tutorials/making-a-pull-request/how-it-works">https://www.atlassian.com/git/tutorials/making-a-pull-request/how-it-works</a>.</p>
+
+<h4>Synchronizing Remote and Local: Fetch/Merge, Pull and Push</h4>
+
+<h5>Setup up a remote repo (revision)</h5>
+
+<p>As described earlier, you can use &quot;<code>git remote</code>&quot; command to set up a &quot;remote name&quot;, mapped to the URL of a remote repo.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Add a new &quot;remote name&quot; maps to the URL of a remote repo</span>
+$ <strong>git remote add &lt;remote-name&gt; &lt;remote-url&gt;</strong>
+<span class="color-comment">// For example,</span>
+$ <strong>git remote add origin https://<em>hostname</em>/<em>username</em>/<em>project-name</em>.git</strong>
+    <span class="color-comment">// Define a new remote name &quot;origin&quot; mapping to the given URL</span>
+ 
+<span class="color-comment">// List all the remote names</span>
+$ <strong>git remote -v</strong>
+
+<span class="color-comment">// Delete a remote name</span>
+$ <strong>git remote rm &lt;remote-name&gt;</strong>
+
+<span class="color-comment">// Rename a remote name</span>
+$ <strong>git remote rename &lt;old-remote-name&gt; &lt;new-remote-name&gt;</strong></pre>
+
+<h5>Cloning a Remote Repo  (revision)</h5>
+
+<pre class="color-command">
+$ <strong>git clone &lt;remote-url&gt;</strong>
+    <span class="color-comment">// Init a GIT local repo and copy all objects from the remote repo</span>
+$ <strong>git clone &lt;remote-url&gt; &lt;working-directory-name&gt;</strong>
+   <span class="color-comment">// Use the working-directory-name instead of default to project name</span></pre>
+
+<p>Whenever you <em>clone</em> a remote repo using command &quot;<code>git clone &lt;remote-url&gt;</code>&quot;, a remote name called &quot;<code>origin</code>&quot; is automatically added and mapped to <code>&lt;remote-url&gt;</code>.</p>
+
+<p>[TODO] Diagram</p>
+
+<h5>Fetch/Merge Changes from remote (<span class="font-code">git fetch/merge</span>)</h5>
+
+<p>The &quot;<code>git fetch</code>&quot; command imports commits from a remote repo to your local repo, without updating your local working tree. This gives you a chance to review changes before updating (merging into) your working tree. The fetched objects are stored in remote branches, that are differentiated from the local branches.</p>
+
+<pre class="color-command">
+$ <strong>cd /<em>path-to</em>/<em>working-directory</em></strong>
+ 
+$ <strong>git fetch &lt;remote-name&gt;</strong>
+   <span class="color-comment">// Fetch ALL branches from the remote repo to your local repo </span>
+ 
+$ <strong>git fetch &lt;remote-name&gt; &lt;branch-name&gt;</strong>
+   <span class="color-comment">// Fetch the specific branch from the remote repo to your local repo</span>
+
+<span class="color-comment">// List the local branches</span>
+$ <strong>git branch</strong>
+* master
+  devel
+   <span class="color-comment">// * indicates current branch</span>   
+ 
+<span class="color-comment">// List the remote branches</span>
+$ <strong>git branch -r</strong>
+  origin/master
+  origin/devel
+
+<span class="color-comment">// You can checkout a remote branch to inspect the files/commits.
+// But this put you into &quot;Detached HEAD&quot; state, which prevent you
+// from updating the remote branch.</span>
+
+<span class="color-comment">// You can merge the fetched changes into local repo</span>
+$ <strong>git checkout master</strong>
+   <span class="color-comment">// Switch to &quot;master&quot; branch of local repo</span>
+$ <strong>git merge origin/master</strong>
+   <span class="color-comment">// Merge the fetched changes from stored remote branch to local</span></pre>
+   
+<p>[TODO] Diagram</p>
+   
+<h5><span class="font-code">git pull</span></h5>
+
+<p>As a short hand, &quot;<code>git pull</code>&quot; combines &quot;<code>git fetch</code>&quot; and &quot;<code>git merge</code>&quot; into one command, for convenience.</p>
+
+<pre class="color-command">
+$ <strong>git pull &lt;remote-name&gt;</strong>
+   <span class="color-comment">// Fetch the remote's copy of the current branch and merge it 
+   //  into the local repo immediately, i.e., update the working tree</span>
+   
+<span class="color-comment">// Same as</span>
+$ <strong>git fetch &lt;remote-name&gt; &lt;current-branch-name&gt;</strong>
+$ <strong>git merge &lt;remote-name&gt; &lt;current-branch-name&gt;</strong>
+
+$ <strong>git pull --rebase &lt;remote-name&gt;</strong>
+   <span class="color-comment">// linearize local changes after the remote branch.</span></pre>
+
+<p>The &quot;<code>git pull</code>&quot; is an easy way to <em>synchronize</em> your local repo with origin's (or upstream) changes (for a specific branch).</p>
+
+<p>[TODO] Diagram</p>
+
+<h5>Pushing to Remote Repo (<span class="font-code">revision</span>)</h5>
+
+<p>The &quot;<code>git push &lt;remote-name&gt; &lt;branch-name&gt;</code>&quot; is the counterpart of &quot;<code>git fetch</code>&quot;, which exports commits from local repo to remote repo.</p>
+
+<pre class="color-command">
+$ <strong>git push &lt;remote-name&gt; &lt;branch-name&gt;</strong>
+   <span class="color-comment">// Push the specific branch of the local repo</span>
+ 
+$ <strong>git push &lt;remote-name&gt; <span class="color-new">--all</span></strong>
+   <span class="color-comment">// Push all branches of the local repo</span>
+ 
+$ <strong>git push &lt;remote-name&gt; <span class="color-new">--tag</span></strong>
+   <span class="color-comment">// Push all tags
+   // &quot;git push&quot; does not push tags</span>
+   
+$ <strong>git push <span class="color-new">-u</span> &lt;remote-name&gt; &lt;branch-name&gt;</strong>
+   <span class="color-comment">// Save the remote-name and branch-name as the
+   // reference (or current) remote-name and branch-name.
+   // Subsequent &quot;git push&quot; without argument will use these references.</span></pre>
+
+<p>[TODO] Diagram</p>
+
+<h4>&quot;Fork&quot; and &quot;Pull Request&quot;</h4>
+
+<p>&quot;Fork&quot; and &quot;Pull Request&quot; are features provided by GIT hosts (such as GitHub and BitBucket):</p>
+<ul>
+<li>Pushing &quot;Fork&quot; button to <em>copy</em> a project from an account (e.g., project maintainer) to your own personal account. [TODO] diagram</li>
+<li>Pushing &quot;Pull Request&quot; button to <em>notify</em> other developers (e.g., project maintainer or the entire project team) to review your changes. If accepted, the project maintainer can pull and apply the changes. A pull request shall provide the source's repo name, source's branch name, destination's repo name and destination's branch name.</li>
+</ul>
+
+
+<h4>Feature-Branch Workflow for Shared Repo</h4>
+
+<p>Feature-Branch workflow  is more prevalent with small teams on private projects. Everyone in the team is granted push access to a single shared remote repository and feature (or topic) branches are used to isolate changes made by the team members.</p>
+<p>The project maintainer starts the &quot;<code>master</code>&quot; branch on the shared remote repo. All developers clone the <code>&quot;master</code>&quot; branch into their local repos. Each developer starts a feature branch (e.g., &quot;<code>user1-featureX</code>&quot;) to work on a feature. Once completed (or even work-in-progress), he files a &quot;pull request&quot; to initiate a review for his feature. All developers can provide comments and suggestions. Once accepted, the project maintainer can then merge the feature branch into the &quot;<code>master</code>&quot; branch.</p>
+
+<img class="image-center" src="images/Git_FeatureBranchWorkFlow.png" alt="Feature Branch Workflow" />
+
+<p>The steps are:</p>
+
+<ol>
+<li>Mark, the project maintainer, starts the project by pushing to the shared remote repo's &quot;<code>master</code>&quot; branch.</li>
+<li>Carol, a contributor, clones the project into her local repo, via:
+  <pre class="color-command">
+<span class="color-comment">// Carol:</span>
+$ <strong>cd <em>parent-directory-of-the-working-directory</em></strong>
+$ <strong>git clone https://<em>hostname</em>/<em>path-to</em>/<em>project-name</em>.git</strong>
+    <span class="color-comment">// Create a remote-name &quot;origin&quot; (default), branch &quot;master&quot;
+    //  on her local repo</span></pre>
+</li>
+
+<li>Carol starts a feature branch (says &quot;<code>carol-feature</code>&quot;) under the &quot;<code>master</code>&quot; branch to work on a new feature, via:
+  <pre class="color-command">
+<span class="color-comment">// Carol:</span>
+$ <strong>git checkout -b carol-feature master</strong>
+   <span class="color-comment">// Create a new branch &quot;carol-feature&quot; under &quot;master&quot; branch
+   //   and switch to the new branch</span>
+
+<span class="color-comment">// Edit/Stage/Commit/Push cycles on carol-feature branch</span>
+$ <strong>git status</strong>
+$ <strong>git add &lt;file&gt;</strong>
+$ <strong>git commit -m &lt;message&gt;</strong>
+$ <strong>git push origin carol-feature</strong>
+
+<span class="color-comment">// Repeat until done</span></pre>
+</li>
+
+<li>Carol completes the new feature. She files a &quot;pull request&quot; (by pushing the &quot;pull request&quot; button on the Git host) to notify the rest of the team members.</li>
+
+<li>Mark, the project maintainer, or anyone in the team, can comment on Carol's feature. Carol can re-work on the feature, if necessary, and pushes all subsequent commits under her feature branch.</li>
+
+<li>Once the feature is accepted, Mark, or anyone in the team (including Carol), performs a merge to apply the feature branch into the &quot;<code>master</code>&quot; branch:
+  <pre class="color-command">
+<span class="color-comment">// Mark, or Anyone:</span>
+$ <strong>git checkout master</strong>
+   <span class="color-comment">// Switch to the &quot;master&quot; branch of the local repo</span>
+$ <strong>git pull origin master</strong>
+   <span class="color-comment">// Fetch and merge the latest changes on local's &quot;master&quot; branch,
+   //   if any (i.e., synchronize)</span>
+$ <strong>git pull origin carol-feature</strong>
+   <span class="color-comment">// Fetch and merge carol-feature branch on local's &quot;master&quot; branch</span>
+$ <strong>git push origin master</strong>
+   <span class="color-comment">// Update the shared remote repo</span></pre></li>
+   
+<li>Everyone can update their local repo, via:
+<pre class="color-command">
+<span class="color-comment">// Everyone:</span>
+$ <strong>git checkout master</strong>
+   <span class="color-comment">// Switch to the &quot;master&quot; branch of the local repo</span>
+$ <strong>git pull origin master</strong>
+   <span class="color-comment">// Fetch and merge the latest changes on local &quot;master&quot; branch</span></pre></li>
+
+</ol>
+
+<p>[TODO] Diagram</p>
+
+
+
+<h4>Forking Workflow</h4>
+
+<p>In Forking workflow, Instead of using a common shared remote repo, each developer <em>forks</em> the project to his own personal account on the remote host. He then works on his feature (preferably in a feature branch). Once completed, he files a &quot;pull request&quot; to notify the maintainer to review his changes, and if accepted, merge the changes.</p>
+
+<p>Forking workflow is applicable to developers working in small teams and to a third-party developer contributing to an open source project.</p>
+
+<img class="image-center" src="images/Git_ForkingWorkFlow.png" alt="Forking Workflow" />
+<p>The steps are:</p>
+<ol>
+<li>Mark, the project maintainer, <em>pushes</em> the project from his local repo (&quot;<code>master</code>&quot; branch) to a remote Git host. He permits &quot;read&quot; access by contributors.</li>
+<li>Carol, a contributor, gotos Mark's repo, <em>forks</em> the project (by pushing the <em>fork</em> button). &quot;Forking&quot; copies the project to Carol's own <em>personal account</em> on the same Git host.</li>
+
+<li>Carol then <em>clones</em> the project from her forked repo into her local repo, via:
+  <pre class="color-command">
+<span class="color-comment">// Carol:</span>
+$ <strong>cd <em>parent-directory-of-the-working-directory</em></strong>
+$ <strong>git clone https://<em>hostname</em>/<em>carol</em>/<em>project-name</em>.git</strong>
+   <span class="color-comment">// Create a remote name &quot;origin&quot; automatically 
+   // Copy the &quot;master&quot; branch</span></pre></li>
+
+<li>When a fork is cloned, Git creates a remote-name called <code>origin</code> that points to the fork, not the original repo it was forked from. To keep track of the original repo, Carol creates a remote name called &quot;<code>upstream</code>&quot; and pulls (fetches and merges) all new changes:
+
+  <pre class="color-command">
+<span class="color-comment">// Carol:</span>
+$ <strong>cd <em>carol-local-repo-of-the-fork</em></strong>
+$ <strong>git remote add upstream https://<em>hostname</em>/<em>mark</em>/<em>project-name</em>.git</strong>
+<span class="color-comment">   // Create a remote-name &quot;upstream&quot; pointing to the original remote repo</span>
+ 
+$ <strong>git remote -v</strong>
+   <span class="color-comment">// List all the remote names and URLs
+   // origin: mapped to Carol's forked remote repo
+   // upstream: mapped to Mark's original remote repo</span>
+ 
+$ <strong>git pull upstream master</strong>
+   <span class="color-comment">// Fetch and merge all changes from the original remote repo to local repo
+   //   for the &quot;master&quot; branch</span></pre>
+</li>
+
+<li>Now, Carol can make changes on her local repo (on a new branch), stage and commit the changes, and pushes them to her forked remote repo (so called Edit/Stage/Commit/Push cycles):
+
+  <pre class="color-command">
+<span class="color-comment">// Carol:</span>
+$ <strong>git checkout -b carol-feature master</strong>
+   <span class="color-comment">// Create a new branch called &quot;carol-feature&quot; under &quot;master&quot;
+   //  and switch to the new branch</span>
+ 
+<span class="color-comment">// Edit/Stage/Commit/Push cycles on &quot;carol-feature&quot; branch
+</span>$ <strong>git status</strong>
+$ <strong>git add &lt;file&gt;</strong>
+$ <strong>git commit -m &lt;message&gt;</strong>
+$ <strong>git push origin carol-feature</strong>
+ 
+<span class="color-comment">// Repeat until done</span></pre></li>
+
+<li>Carol files a <em>pull request</em> to Mark (the project maintainer) by pushing the <em>pull-request</em> button. She needs to specify her forked remote repo-name, her branch name (<code>carol-feature</code>), Mark's remote repo-name, and Mark's branch name (<code>master</code>).</li>
+
+<li>Mark opens the pull request (in pull request tab), reviews the change, and decides whether to accept the changes. Mark can ask Carol to re-work on the feature. Carol repeats the Edit/Stage/Commit/Push cycles.<br />
+  If Mark decides to accept the changes, he pushes the &quot;Merge&quot; button to merge Carol's contribution to his <code>master</code> branch on the remote repo.<br />
+
+[If there is no &quot;Merge&quot; button] Mark needs to do the following:
+<pre class="color-example">
+<span class="color-comment">// Mark:</span>
+$ <strong>git checkout master</strong>
+   <span class="color-comment">// Checkout the &quot;master&quot; branch of the local repo</span>
+ 
+$ <strong>git remote add <em>carol</em> git://<em>hostname</em>/<em>carol</em>/<em>project-name</em>.git</strong>
+   <span class="color-comment">// Add a new remote pointing to the Carol's forked remote repo</span>
+ 
+$ <strong>git pull carol carol-feature</strong>
+   <span class="color-comment">// Fetch and merge the changes into local repo's master branch</span>
+ 
+$ <strong>git push origin master</strong>
+   <span class="color-comment">// Push the update to the Mark's original remote repo</span></pre>
+
+
+</li>
+
+<li>All contributors (including Mark and Carol) shall regularly synchronize their local repo by fetch/merge with Mark's <code>master</code> branch.
+<pre class="color-command">
+<span class="color-comment">// Carol (and everyone):</span>
+$ <strong>git checkout master</strong>
+   <span class="color-comment">// Switch to the &quot;master&quot; branch of the local repo</span>
+$ <strong>git pull upstream master</strong>
+   <span class="color-comment">// Fetch and merge the latest changes on &quot;master&quot; branch from 
+   //  original remote repo to his local repo</span></pre></li>
+</ol>
+
+<h4>Other Workflows</h4>
+There are other workflows such as &quot;Centralized Workflow&quot; and &quot;GitFlow Workflow&quot;. Read &quot;<a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow">https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow</a>&quot;.
+
+
+<h3>Miscellaneous and How-To</h3>
+
+<h5>Stage and Commit (<span class="font-code">git commit -a -m &lt;message</span>&gt;)</h5>
+<p>You can skip the staging (i.e., the &quot;<code>git add &lt;file&gt;...</code>&quot;) and commit all<em> </em>changes in the working tree via &quot;<code>git commit  -a -m &lt;message&gt;</code>&quot; with <code>-a</code>  (or <code>--all</code>) option.</p>
+
+<h5>Stage all changes (<span class="font-code">git add -A</span>)</h5>
+
+<p>You can use &quot;<code>git add -A</code>&quot; to stages all changes in the working tree to the staging area.</p>
+
+<h5>Unstage a Staged file (<span class="font-code">git rm --cached &lt;file&gt;</span> / <span class="font-code">git reset head &lt;file&gt;</span>)</h5>
+
+<p>Recall that you can use &quot;<code>git add &lt;file&gt;</code>&quot; to stage new files or modified files into the staging area.</p>
+<p>To unstage a staged new file, use &quot;<code>git rm --cached &lt;file&gt;</code>&quot;.</p>
+<p>To unstage a staged modified file, use &quot;<code>git reset head &lt;file&gt;</code>&quot;.</p>
+
+<h5>Unmodified a modified file (<span class="font-code">git checkout -- &lt;file&gt;</span>)</h5>
+<p>After a commit, you may have modified some files. You can discard the changes by checking out the last commit via &quot;<code>git checkout -- &lt;file&gt;</code>&quot;.</p>
+
+<h5>How to Amend the Last Commit (<span class="font-code">git commit --amend</span>)</h5>
+
+<p>If you make a commit but want to change the commit message:</p>
+<pre class="color-command">
+$ <strong>git commit --amend -m &quot;message&quot;</strong>
+</pre>
+
+<p>If you make a commit but realize that you have not staged some file changes, you can also do it with <code>--amend</code>:</p>
+
+<pre class="color-command">
+$ <strong>git add morefile</strong>
+$ <strong>git commit --amend</strong></pre>
+
+<p>You can also make some changes to working tree, stage, and amend the last commit</p>
+<pre class="color-command">
+<span class="color-comment">// Edit morefile (make changes)</span>
+$ <strong>git add morefile</strong>
+$ <strong>git commit --amend</strong></pre>
+
+
+<h5>How to Undo the Previous Commit(s) (<span class="font-code">git reset</span>)</h5>
+
+<p>To undo previous commit(s):</p>
+
+<pre class="color-command">
+<span class="color-comment">// Reset the HEAD to the previous commit
+// --soft to keep the working tree and index</span>
+$ <strong>git reset --soft HEAD~1</strong>   <span class="color-comment">// Windows</span>
+$ <strong>git reset --soft HEAD^</strong>    <span class="color-comment">// Unix</span>
+
+<span class="color-comment">// Make changes</span>
+......
+
+<span class="color-comment">// Stage</span>
+$ <strong>git add ......</strong>
+<span class="color-comment">// Commit</span>
+$ <strong>git commit -c ORIG_HEAD</strong></pre>
+
+<p>The &quot;<code>git reset --hard HEAD~1</code>&quot; moves the <code>HEAD</code> to the previous commit, restore the working tree and discard the index (i.e., discard all change after the previous commit). Instead of <code>HEAD~<em>n</em></code>, you can also specify the commit hash code.</p>
+<p>The &quot;<code>git rest HEAD~1</code>&quot; with default <code>--mixed</code> moves the <code>HEAD</code> to the previous commit, keep the working tree and discard the index</p>
+<p>The &quot;<code>git reset --soft HEAD~1</code>&quot; moves the <code>HEAD</code> to the previous commit, keep the working tree and the index (i.e., keep all changes after the previous commit).</p>
+
+<p>[TODO] Examples, diagrams and &quot;<code>git status</code>&quot; outputs.</p>
+
+<p>For a public repo, you probably need to make another commit and push the commit to the public repo, or ...</p>
+
+<h5>Relative Commit Names</h5>
+<p>A commit is uniquely and absolutely named using a 160-bit (40-hex-digit) SHA-1 hash code of its contents. You can always refer to a commit via its hash value or abbreviated hash value (such as the first 7 hex-digit) if there is no ambiguity.</p>
+<p>You can also refer to a commit <em>relatively</em>, e.g., <code>master~1</code> (Windows), <code>master^</code> (may not work in Windows), <code>master^1</code> refers to the <em>previous</em> (parent) commit on the <code>master</code> branch; <code>master~2</code>, <code>master^^</code> refers to the previous of the previous (grandparent) commit, and etc. If a commit has multiple parents (e.g., due to merging of branches), <code>^1</code> refers to the first parent, <code>^2</code> refers to the second parent, and so on.</p>
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>GIT mother site @ <a href="http://git-scm.com">http://git-scm.com</a> and GIT Documentation @ <a href="http://git-scm.com/doc">http://git-scm.com/doc</a>.</li>
+<li>Git User's Manual @ <a href="http://www.kernel.org/pub/software/scm/git/docs/user-manual.html">http://www.kernel.org/pub/software/scm/git/docs/user-manual.html</a>.</li>
+<li>Git Hosts: GitHub @ <a href="https://github.com/">https://github.com</a>, Bitbucket @ <a href="https://bitbucket.org/">https://bitbucket.org</a>.</li>
+<li>Git Tutorials @ <a href="https://www.atlassian.com/git/tutorials">https://www.atlassian.com/git/tutorials</a>.</li>
+<li>Bitbucket Documentation Home @ <a href="https://confluence.atlassian.com/display/BITBUCKET/Bitbucket+Documentation+Home">https://confluence.atlassian.com/display/BITBUCKET/Bitbucket+Documentation+Home</a>.</li>
+<li>Bitbucket 101 @ <a href="https://confluence.atlassian.com/display/BITBUCKET/Bitbucket+101">https://confluence.atlassian.com/display/BITBUCKET/Bitbucket+101</a>.</li>
+<li>Jon Loeliger and Matthew McCullough, &quot;Version Control with Git&quot;, 2nd Eds, O'reilly, 2012.</li>
+<li>Scott Chacon, &quot;Pro Git&quot;, Apress, 2009.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest Version Test: git 1.9.0 (Windows), git x.x.x (Ubuntu)<br />
+Last modified: September, 2014</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

@@ -1,0 +1,930 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Java Server Faces (JSF)</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Java Server-Side Programming</h1>
+<h2>JavaServer Faces (JSF) (1.2, 2.0 and 2.1)</h2>
+</div>
+
+<div id="content-main">
+
+<h3>Introduction</h3>
+<p>JavaServer Faces (JSF) enables building of <em>user interfaces</em> for Java-based web applications from  the server-side programs. JSF supports:</p>
+<ul>
+  <li>Standard user interface components like input fields, buttons, and links.</li>
+  <li>Navigation between pages.</li>
+  <li>User input validation, error handling and event handing.</li>
+  <li>Javabean management.</li>
+  <li>Internationalization support.</li>
+  </ul>
+
+<p>JSF is an <em>application framework,</em> which helps you in designing and structuring your web applications. Other Java web application frameworks includes Apache Struts, Spring, Hibernate, Apache Tapestry, Apache Wicket, and many others. An application framework helps you to improve your productivity and efficiency, by providing clear processes and pre-defined components, enforcing MVC (Model-View-Controller) architecture and good programming practices. Framework, such as JSF and struts, are not easy to use. You need to spend a considerable amount of initial effort to learn (it is equivalent to learning another language). However, once you master a framework, you could develop better applications in faster time. However, there are many frameworks available. Choosing one could be an issue. [Beside Java web application framework, PHP's frameworks include Yii, CodeIgniter, CakePHP, Zend, Symfony, and etc. Ruby has Ruby on Rails.]</p>
+
+<p>JSF has these versions:</p>
+
+<ul>
+  <li>Java EE 5 (2006) (Java Servlet 2.5, JSP 2.1, JSTL 1.2, <strong>JSF 1.2</strong>, EJB 3.0, JDBC 3.0)</li>
+  <li>Java EE 6 (2009) (Java Servlet 3.0, JSP 2.2/EL 2.2, JSTL 1.2, <strong>JSF 2.0</strong>, EJB 3.1, JDBC 4.0)</li>
+<li><strong>JSF 2.1</strong>: Bundled in GlassFish 3.1</li>
+</ul>
+
+<p>The JSF Home Page is @ <a href="http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html">http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html</a>. For developers, check out the JSF Developer Site (under Project Mojarra of GlassFish) @ <a href="http://javaserverfaces.java.net">http://javaserverfaces.java.net</a>.</p>
+
+<h3>Develop and Deploy JSF Applications on Apache Tomcat</h3>
+
+<p>Before writing our first JSF program, I shall assume that you have installed and configured Tomcat server. I shall also assume that Tomcat is running on port 8080 and denote the Tomcat's installed directory as <code>$CATALINA_HOME</code>. (Otherwise, read &quot;<a href="../howto/Tomcat_HowTo.html">How to install Tomcat</a>&quot;.) I shall also assume that you are familiar with Java web applications, servlet and JavaServer Pages (JSP) technologies.</p>
+
+<h4>Example 1(a): Hello-world</h4>
+
+<p>Let us begin with a Hello-world example.</p>
+
+<h5>Step 1: Create a new Webapp for the JSF Hello-world</h5>
+
+<img class="image-float-right" src="images/JSF_HellojsfDirectory.png" />
+
+<p>Let's define a new <em>web context</em> (<em>web application</em>) called &quot;<code>hellojsf</code>&quot; in Tomcat for our JSF Hello-world application. First of all, we need to create the standard directory structure for the web context (as shown in the figure below). Create a directory called &quot;<code>hellojsf</code>&quot;, under <code>the $CATALINA_HOME\webapps</code> directory (where <code>$CATALINA_HOME</code> is the Tomcat's installed directory). Create a sub-directory &quot;<code>WEB-INF</code>&quot; under &quot;<code>hellojsf</code>&quot;. Create sub-sub-directories: &quot;<code>classes</code>&quot;, &quot;<code>lib</code>&quot; and &quot;<code>src</code>&quot; under &quot;<code>WEB-INF</code>&quot;.</p>
+
+<p>Keep the files in the appropriate directories:</p>
+
+<ul>
+<li>&quot;<code>$CATALINA_HOME</code>\<code>webapps\</code><code>hellojsf</code>&quot;: This directory is known as <em>context root</em>, and   keeps the &quot;<code>jsp</code>&quot;, &quot;<code>html</code>&quot; and resources available to web users.</li>
+
+<li>&quot;<code>$CATALINA_HOME</code>\<code>webapps\</code><code>hellojsf\WEB-INF</code>&quot;: Keeps the webapp configuration files, such as &quot;<code>web.xml</code>&quot;, &quot;<code>faces-config.xml</code>&quot;.</li>
+
+<li>&quot;<code>$CATALINA_HOME</code>\<code>webapps\</code><code>hellojsf\WEB-INF\src</code>&quot;: Keeps the java program source files (optional).</li>
+
+<li>&quot;<code>$CATALINA_HOME</code>\<code>webapps\</code><code>hellojsf\WEB-INF\classes</code>&quot;: Keeps the java classes.</li>
+
+<li>&quot;<code>$CATALINA_HOME</code>\<code>webapps\</code><code>hellojsf\WEB-INF\lib</code>&quot;: keeps the &quot;<code>jar</code>&quot; files, which could be provided by external libraries.</li>
+</ul>
+
+<h5>(NetBeans)</h5>
+
+<ol>
+
+<li>Create a new webapp project: File &rArr; New &rArr;  Project &rArr; In &quot;Categories&quot;: select &quot;Java Web&quot; &rArr; In &quot;Projects&quot;: select &quot;Web Application&quot; &rArr; In &quot;Project Name&quot;: enter &quot;<code>hellojsf</code>&quot; &rArr; Choose the right &quot;Server&quot; &rArr; In &quot;Context Path&quot;: enter &quot;<code>/hellojsf</code>&quot; &rArr; In &quot;Frameworks&quot;, select &quot;JavaServer Faces&quot; &rArr; In &quot;Libraries&quot; tab, &quot;Registered Libraries&quot;: select &quot;JSF 2.1&quot; &rArr; In &quot;Configuration&quot; tab, &quot;JSF servlet URL Pattern&quot;: enter &quot;<code>/faces/*</code>&quot; &rArr; Finish.</li>
+
+<li>A welcome file &quot;<code>index.xhtml</code>&quot;, which says hello, is automatically created.</li>
+
+<li>Right-click on project &quot;<code>hellojsf</code>&quot; &rArr; Deploy.</li>
+<li>Issue URL <code>http://localhost:8080/hellojsf</code> (which is redirected to <code>http://localhost:8080/hellojsf/faces/index.xhtml</code> as configured in <code>web.xml</code>).</li>
+<li>Check &quot;<code>WEB-INF\lib</code>&quot;. The &quot;<code>jsf-api.jar</code>&quot; and &quot;<code>jsf-impl.jar</code>&quot; are the JSF libraries. The &quot;<code>jstl.jar</code>&quot; and &quot;<code>standard.jar</code>&quot; are the JSTL libraries.</li>
+<li>Check out the configuration in &quot;<code>hellojsf\WEB-INF\web.xml</code>&quot;. The URL pattern &quot;<code>/faces/*</code>&quot; is mapped to <code>FacesServlet</code>.</li>
+<li>Skip the following steps 2, 3, and 4, which has been done by NetBeans.</li>
+
+</ol>
+
+<h5>Step 2: Install JSF Runtime in Tomcat</h5>
+
+<ol>
+<li>Download the JSF runtime @ <a href="http://javaserverfaces.java.net/download.html">http://javaserverfaces.java.net/download.html</a>. Under &quot;Stable Versions of Mojarra&quot;, &quot;Current Release&quot;,  select &quot;2.x.x binary bundle (&quot;<code>mojarra-x.x_xx-FCS-binary.zip</code>&quot;).</li>
+
+<li>Unzip.</li>
+<li> Copy &quot;<code>jsf-api.jar</code>&quot; and &quot;<code>jsf-impl.jar</code>&quot; from JSF's <code>lib</code> into Tomcat's <code>lib</code> (i.e., <code>$CATALINA_HOME\lib</code>), which will be available to all the web applications. Alternatively, you could copy them into <code>hellojsf</code> web context's <code>lib</code> (&quot;<code>$CATALINA_HOME</code>\<code>webapps\hellojsf\WEB-INF\lib</code>&quot;), which will be available to only the <code>hellojsf</code> web application.</li>
+</ol>
+
+<h5>Step 3: Install JSTL (JSP Standard Tag Libraries) in Tomcat</h5>
+<ol>
+<li>Download JSTL from <a href="http://jakarta.apache.org/taglibs/index.html">http://jakarta.apache.org/taglibs/index.html</a>. Select &quot;Downloads&quot; &rArr; &quot;Standard 1.1 Taglibs&quot; (or latest release) &rArr; &quot;Binaries&quot; &rArr; &quot;<code>1.1.x.zip</code>&quot; &rArr;  &quot;<code>jakarta-taglibs-standard-1.1.x.zip</code>&quot;.</li>
+<li>Unzip.</li>
+<li>Copy &quot;<code>jstl.jar</code>&quot; and &quot;<code>standard.jar</code>&quot; from the downloaded Taglibs' <code>lib</code> to Tomcat's <code>lib</code>, or <code>hellojsf</code> web context's <code>lib</code>, like the above step.</li>
+<li> [Alternatively, you could copy these two jar-files from Tomcat's &quot;<code>webapps\examples\lib</code>&quot;.]</li>
+</ol>
+
+<h5>Step 4: Configure &quot;<span class="font-code">web.xml</span>&quot; for JSF Support</h5>
+
+<p>Write the following web configuration file &quot;<code>web.xml</code>&quot; and save it in <code>$CATALINA_HOME\webapps\hellojsf\WEB-INF</code>.</p>
+<pre class="color-example">
+&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;web-app version=&quot;2.5&quot;
+         xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot;&gt;
+  
+  <span class="color-comment">&lt;!-- Faces Servlet --&gt;</span>
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;<strong>Faces Servlet</strong>&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;<strong>javax.faces.webapp.FacesServlet</strong>&lt;/servlet-class&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+  &lt;/servlet&gt;
+  
+  <span class="color-comment">&lt;!-- Faces Servlet Mapping --&gt;</span>
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;<strong>Faces Servlet</strong>&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;<strong>/faces/*</strong>&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;</pre>
+
+<p>The above configuration routes all URL requests &quot;<code>/faces/*</code>&quot;  to the JSF's <code>FacesServlet</code> for processing.</p>
+
+
+<h5>Step 5: Write our Hello-world JSF Application</h5>
+
+<p>Write the following JSP file, and save it as &quot;<code>hello.jsp</code>&quot; under the <em>context root</em> (<code>$CATALINA_HOME\webapps\hellojsf</code>). Take note that this is a JSP page (just like any other regular JSP page), but uses JSF custom taglibs.</p>
+
+<p><span class="line-heading">(NetBeans)</span> Right-click on project &quot;<code>hellojsf</code>&quot; &rArr; New  &rArr; Other &rArr; In &quot;Categories&quot;: select &quot;Web&quot; &rArr; In &quot;File Type&quot;: select &quot;JSF Page&quot; &rArr; In &quot;File Name&quot;: enter &quot;<code>hello</code>&quot; &rArr; In &quot;Options&quot;: select &quot;JSP File (Standard Syntax)&quot; &rArr; &quot;Finish&quot;.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+</td>
+<td>
+<pre>
+&lt;%@page contentType=&quot;text/html&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+<strong>&lt;%@taglib prefix=&quot;f&quot; uri=&quot;http://java.sun.com/jsf/core&quot;%&gt;
+&lt;%@taglib prefix=&quot;h&quot; uri=&quot;http://java.sun.com/jsf/html&quot;%&gt;</strong>
+&lt;!DOCTYPE html&gt;
+ 
+<strong>&lt;f:view&gt;</strong>
+  &lt;html&gt;
+    &lt;head&gt;
+      &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;
+      &lt;title&gt;Hello JSF in JSP Syntax&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;h1&gt;<strong>&lt;h:outputText value=&quot;Hello World from JSF!&quot;/&gt;</strong>&lt;/h1&gt;
+    &lt;/body&gt;
+  &lt;/html&gt;
+<strong>&lt;/f:view&gt;</strong></pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Explanation:</p>
+<ul>
+  <li>Line 1 is a JSP page directive, declaring this file as a JSP page.</li>
+  <li>Line 2 and 3 are JSP taglib directives declaring the JSF tags prefix and library. Two JSF taglibs are used: <code>core</code> (with prefix <code>f</code>) and <code>html</code> (with prefix <code>h</code>).</li>
+  <li>A HTML output text (<code>h:outputText</code>) is defined within a JSF view (<code>f:view</code>).</li>
+</ul>
+<h5>Step 6: Start Tomcat</h5>
+<p>Start the Tomcat server. Check for the following messages to confirm that web context &quot;<code>hellojsf</code>&quot; has been started. Also take note of the JSF (Mojarra) version number.</p>
+<pre class="output">......
+INFO: Deploying web application directory hellojsf
+Apr 29, 2010 10:54:02 PM com.sun.faces.config.ConfigureListener contextInitialized
+INFO: Initializing <strong>Mojarra 2.1.1</strong> (FCS 20110408) for context '<strong>/hellojsf</strong>'
+......</pre>
+
+<h5>Step 7: Run the JSF Application</h5>
+<p>Issue the following URL to trigger the JSF app. The URL &quot;<code>/faces/hello.jsp</code>&quot; is mapped to JSF's <code>FacesServlet</code>, as configured in <code>web.xml</code>.</p>
+<pre class="color-command">http://localhost:8080/hellojsf<strong>/faces/hello.jsp</strong></pre>
+
+<p>You shall see the output text &quot;Hello, world!&quot; created by JSF tag <code>&lt;h:outputText&gt;</code>. (JSF is primarily meant for creating UI such as texts, input box, etc.) Do a &quot;View Source&quot; to check the HTML output produced by the JSF.</p>
+
+<h4>Example 1(b): Hello-world in Facelets (JSF 2.0)</h4>
+
+<p>Instead of writing JSF in JSP syntax (as in the earlier example), you could also write your JSF in <code>facelets</code>, which is XML-compliance (since JSF 2.0). Write the following JSF codes, and save it as &quot;<code>hello.xhtml</code>&quot; under the <em>context root</em> (<code>$CATALINA_HOME\webapps\hellojsf</code>). Take note that the file extension for facelet is &quot;<code>.xhtml</code>&quot; instead of &quot;<code>.jsp</code>&quot;.</p>
+
+<p><span class="line-heading">(NetBeans)</span> Right-click on project &quot;<code>hellojsf</code>&quot; &rArr; New  &rArr; Other &rArr; In &quot;Categories&quot;: select &quot;Web&quot; &rArr; In &quot;File Type&quot;: select &quot;JSF Page&quot; &rArr; In &quot;File Name&quot;: enter &quot;<code>hello</code>&quot; &rArr; In &quot;Options&quot;: select &quot;<strong>Facelets</strong>&quot; &rArr; &quot;Finish&quot;.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version='1.0' encoding='UTF-8' ?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;
+      xmlns:h=&quot;http://java.sun.com/jsf/html&quot;&gt;
+  <strong>&lt;h:head&gt;</strong>
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;
+    &lt;title&gt;Hello JSF in Facelet Format&lt;/title&gt;
+  <strong>&lt;/h:head&gt;
+  &lt;h:body&gt;</strong>
+     &lt;h1&gt;Hello from Facelets&lt;/h1&gt;
+  <strong>&lt;/h:body&gt;</strong>
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Explanation:</p>
+
+<ul>
+<li>Line 1 declares that this document is a XML document.</li>
+<li>Line 4 declares the namespace for JSF <code>html</code> taglib with prefix <code>h</code>.</li>
+<li>We use JSF custom tags <code>&lt;h:head&gt;</code> and <code>&lt;h:body&gt;</code> to replace the HTML <code>&lt;head&gt;</code> and <code>&lt;body&gt;</code>.</li>
+</ul>
+
+<p>To run this JSF, issue URL <code>http://localhost:8080/hellojsf/faces/hello.xhtml</code>. Use &quot;View Source&quot; to check the output generated.</p>
+
+<h4>Example 2(a): User Input, Navigation and Javabean (JSF in JSP syntax)</h4>
+
+<p>This example involves two pages for illustrating JSF navigation, and a Javabean.</p>
+
+<h5>&quot;<span class="font-code">input.jsp</span>&quot;</h5>
+
+<p>Let us write the UI for user input called &quot;<code>input.jsp</code>&quot; to produce the following form:</p>
+<img class="image-left image-border" src="images/JSF_InputForm.png" />
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>
+&lt;%@page contentType=&quot;text/html&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@taglib prefix=&quot;f&quot; uri=&quot;http://java.sun.com/jsf/core&quot;%&gt;
+&lt;%@taglib prefix=&quot;h&quot; uri=&quot;http://java.sun.com/jsf/html&quot;%&gt;
+&lt;!DOCTYPE html&gt;
+ 
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;
+    &lt;title&gt;User Input Form (JSF in JSP syntax)&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;f:view&gt;
+      &lt;h1&gt;&lt;h:outputText value=&quot;User Input Form&quot;/&gt;&lt;/h1&gt;
+      <strong>&lt;h:form id=&quot;UserEntryForm&quot;&gt;
+        &lt;h:outputText value=&quot;Enter Your Name:&quot;/&gt;
+        &lt;h:inputText value=&quot;#{userBean.name}&quot; /&gt;
+        &lt;h:commandButton action=&quot;send&quot; value=&quot;OK&quot; /&gt;
+      &lt;/h:form&gt;</strong>
+    &lt;/f:view&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Explanation</h5>
+<ul>
+<li>An HTML form (with output text, input text and button) is defined inside a JSF view.</li>
+<li>The user's input will be saved in a Javabean's field called <code>name</code>. The Javabean is referred to as <code>userBean</code>. The EL <em>request-time</em> evaluator <code>#{...}</code> (instead of compile-time evaluator <code>${...}</code>) is used.</li>
+</ul>
+
+<h5>&quot;<span class="font-code">response.jsp</span>&quot;</h5>
+
+<p>The second page called &quot;<code>response.jsp</code>&quot; is as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+</td>
+<td>
+<pre>
+&lt;%@page contentType=&quot;text/html&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@taglib prefix=&quot;f&quot; uri=&quot;http://java.sun.com/jsf/core&quot;%&gt;
+&lt;%@taglib prefix=&quot;h&quot; uri=&quot;http://java.sun.com/jsf/html&quot;%&gt;
+&lt;!DOCTYPE html&gt;
+ 
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;
+    &lt;title&gt;Response (JSF in JSP syntax)&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;f:view&gt;
+      &lt;h2&gt;Hello, <strong>&lt;h:outputText value=&quot;#{userBean.name}&quot; /&gt;</strong>!&lt;/h2&gt;
+    &lt;/f:view&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Explanation:</p>
+<ul>
+<li>A HTML <code>outputText</code>, which retrieves its value from a JavaBean (called <code>userBean</code>)'s field <code>name</code>, is defined within a JSF view.</li>
+</ul>
+
+<h5>JavaBean &quot;<span class="font-code">mypkg.MyUserBean</span>&quot; as &quot;<span class="font-code">userBean</span>&quot;</h5>
+
+<p>These two JSP pages refer to a Javabean (called <code>userBean</code>)'s field (called <code>name</code>), which is implemented in a class called <code>MyUserBean.java</code> in package <code>mypkg</code> as follows.</p>
+
+<p><span class="line-heading">(NetBeans)</span> Right-click on the project &quot;<code>hellojsf</code>&quot; &rArr; New &rArr; Others &rArr; In &quot;Categories&quot;: select &quot;JavaServer Faces&quot; &rArr; In &quot;File Types&quot;: select &quot;JSF Managed Bean&quot; &rArr; In &quot;Class Name&quot;: enter &quot;<code>MyUserBean</code>&quot; &rArr; In &quot;Package&quot;: enter &quot;<code>mypkg</code>&quot; &rArr; Check &quot;Add data to configuration file&quot; &rArr; In &quot;Name&quot;: enter &quot;userBean&quot; &rArr; In &quot;Scope&quot;: select &quot;request&quot; &rArr; Finish.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">// Saved as &quot;hellojsf\WEB-INF\src\mypkg\MyUserBean.java&quot;</span>
+<span class="color-comment">// To compile using JDK:</span>
+<span class="color-comment">// &gt; cd to &quot;hellojsf\WEB-INF&quot;</span>
+<span class="color-comment">// &gt; javac src\mypkg\MyUeseBean.java -d classes</span>
+<span class="color-comment">// Output in &quot;hellojsf\WEB-INF\classes\mypkg\MyUserBean.class&quot;</span>
+package mypkg;
+public class MyUserBean {
+   private String name;
+ 
+   <span class="color-comment">// default constructor</span>
+   public MyUserBean() { }
+ 
+   <span class="color-comment">// Getter</span>
+   public String getName() { return name; }
+ 
+   <span class="color-comment">// Setter</span>
+   public void setName(String name) { this.name = name; }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Explanation</h5>
+<ul>
+<li>A Javabean is a special Java class, which follows a certain set of rules. For instance, it has a no-arg constructor; if the class has a <code>private</code> instance variable called <code>xxx</code>, there shall be a <code>public</code> getter called <code>getXxx()</code> and a <code>public</code> setter called <code>setXxx()</code>. The rationale of having this rule is if we find <code>public</code> methods <code>getXxx()</code> and <code>setXxx()</code>, we can infer that there is a <code>private</code> variable called <code>xxx</code>, even thought <code>private</code> entities are not exposed to the user.</li>
+<li>The above Javabean simply define a private instance variable called <code>name</code>, and its public getter and setter. JSP pages references the <code>private</code> variable <code>name</code> (via the public getter and setter).</li>
+<li>The purpose of this bean is to capture and save the user's input after the user clicks the submit button, and return this value to the response page. This bean provides a bridge between the JSP pages and the application logic (i.e., Model in the Model-View-Control (MVC) design pattern).</li>
+</ul>
+
+<h5>Configuring &quot;<span class="font-code">faces-config.xml</span>&quot;</h5>
+
+<p>To define the navigation rule and manage the Javabean, a configuration file called &quot;<code>faces-config.xml</code>&quot; needs to be created and save in &quot;<code>$CATALINA_HOME\hellojsf\WEB-INF</code>&quot;.</p>
+
+<p><span class="line-heading">(NetBeans)</span> Right-click on the project &quot;<code>hellojsf</code>&quot; &rArr; New &rArr; Others &rArr; In &quot;Categories&quot;: select &quot;JavaServer Faces&quot; &rArr; In &quot;File Types&quot;: select &quot;JSF Faces Configuration&quot; &rArr; In &quot;Face Name&quot;: use the default &quot;<code>faces-config.xml</code>&quot; &rArr; In &quot;Folder&quot;: leave it empty to use the default directory &quot;<code>WEB-INF</code>&quot; &rArr; Finish.</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;faces-config version=&quot;2.0&quot;
+    xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd&quot;&gt;
+ 
+  &lt;navigation-rule&gt;
+    &lt;from-view-id&gt;<strong>/input.jsp</strong>&lt;/from-view-id&gt;
+    &lt;navigation-case&gt;
+      &lt;from-outcome&gt;<strong>send</strong>&lt;/from-outcome&gt;
+      &lt;to-view-id&gt;<strong>/response.jsp</strong>&lt;/to-view-id&gt;
+      &lt;redirect /&gt;
+    &lt;/navigation-case&gt;
+  &lt;/navigation-rule&gt;
+ 
+  &lt;managed-bean&gt;
+    &lt;managed-bean-name&gt;<strong>userBean</strong>&lt;/managed-bean-name&gt;
+    &lt;managed-bean-class&gt;<strong>mypkg.MyUserBean</strong>&lt;/managed-bean-class&gt;
+    &lt;managed-bean-scope&gt;<strong>session</strong>&lt;/managed-bean-scope&gt;
+  &lt;/managed-bean&gt;
+&lt;/faces-config&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Explanation</h5>
+<ul>
+<li>The navigation rule states that: from the view (page) &quot;<code>/input.jsp</code>&quot;, if the <em>outcome</em> of the executing <code>input.jsp</code> is &quot;<code>send</code>&quot;, then go to &quot;<code>/response.jsp</code>&quot; view (page). The <code>&lt;redirect /&gt;</code> send a redirect response to the client and causes the browser to request for a new page, instead of remaining in the current page.</li>
+<li>A managed bean called <code>userBean</code> (this name is used by the JSP pages) is defined. It is implemented in class  <code>MyUserBean</code> in package <code>mypkg</code>. The bean has <code>session</code> scope, and is available to all the requests under the current client session.</li>
+</ul>
+
+<h5>Run the JSF Application</h5>
+<p>Start Tomcat, and issue this URL:</p>
+<pre class="color-command">http://localhost:8080/hellojsf<strong>/faces/input.jsp</strong></pre>
+
+<img class="image-left image-border" src="images/JSF_InputForm.png" />
+
+<p>Use &quot;View Source&quot; to study the HTML code generated by the JSF.</p>
+
+<p>Input &quot;someone&quot; into the text box, and click OK. The output shows &quot;Hello, someone!&quot; as programmed in the &quot;<code>response.jsp</code>&quot; page.</p>
+
+
+<h4>Example 2(b): User Input, Navigation and Javabean (JSF in Facelets) (JSF 2.0)</h4>
+<p>Let's rewrite the above example using facelets (instead of JSP syntax) and do it under JSF 2.0</p>
+
+
+<h5>&quot;<span class="font-code">inputFacelet.xhtml</span>&quot;</h5>
+<p>Let us write the UI for user input called &quot;<code>input.xhtml</code>&quot; (saved in the context root <code>$CATALINA_HOME\webapps\hellojsf</code>) to produce the following input form. We also included an image.</p>
+
+<img class="image-left image-border" src="images/JSF_Hellojsf20InputForm.png" />
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version='1.0' encoding='UTF-8' ?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;
+      xmlns:h=&quot;http://java.sun.com/jsf/html&quot;&gt;
+  &lt;h:head&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;
+    &lt;title&gt;Input Form (in Facelet)&lt;/title&gt;
+  &lt;/h:head&gt;
+  &lt;h:body&gt;
+    &lt;h2&gt;User Input Form&lt;/h2&gt;
+    &lt;h:form id=&quot;UserEntryForm&quot;&gt;
+      Enter Your Name: &lt;h:inputText id=&quot;username&quot; value=&quot;<strong>#{userBean.name}</strong>&quot; /&gt;
+      <strong>&lt;h:commandButton id=&quot;submit&quot; action=&quot;responseFacelet&quot; value=&quot;OK&quot; /&gt;</strong>
+    &lt;/h:form&gt;
+    <strong>&lt;h:graphicImage id=&quot;image&quot; url=&quot;#{resource['glassfish.gif']}&quot; /&gt;</strong>
+  &lt;/h:body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+<p>Explanation:</p>
+<ul>
+  <li>The <code>&lt;h:inputText&gt;</code> tag defines an input text field. The <code>value</code> attribute specifies the storage location of the user input. The <code>#{userBean.name}</code> refers to the field <code>name</code> of a Javabean instance called <code>userBean</code>. We shall configure this JavaBean later.</li>
+  <li>The <code>&lt;h:commandButton&gt;</code> tag defines a submit button. The <code>action</code> attribute specifies the processing page of this form, i.e., &quot;<code>responseFacelet</code>&quot;.</li>
+  <li>The <code>&lt;h:graphicImage&gt;</code> tag defines an image. The <code>#{resource['glassfish.gif']}</code> refer to the file &quot;<code>glassfish.gif</code>&quot;. By default, the resources are kept in directory &quot;<code>resources</code>&quot; (with a <code>'s'</code> here).</li>
+</ul>
+
+<h5>&quot;<span class="font-code">responseFacelet.xhtml</span>&quot;</h5>
+
+<p>The processing page &quot;<code>responseFacelet.xhtml</code>&quot; is as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+</td>
+<td>
+<pre>
+&lt;?xml version='1.0' encoding='UTF-8' ?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;
+      xmlns:h=&quot;http://java.sun.com/jsf/html&quot;&gt;
+  &lt;h:head&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;
+    &lt;title&gt;Response Page (in Facelet)&lt;/title&gt;
+  &lt;/h:head&gt;
+  &lt;h:body&gt;
+    &lt;h:form id=&quot;responseform&quot;&gt;
+      &lt;h2&gt;Hello, <strong>#{userBean.name}</strong>
+      <strong>&lt;h:commandButton id=&quot;back&quot; action=&quot;inputFacelet&quot; value=&quot;Back&quot; /&gt;</strong>&lt;/h2&gt;
+    &lt;/h:form&gt;
+    <strong>&lt;h:graphicImage id=&quot;image&quot; url=&quot;#{resource['glassfish.gif']}&quot; /&gt;</strong>
+  &lt;/h:body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Explanation:</p>
+<ul>
+<li>The <code>&lt;h:commandButton&gt;</code> directs to &quot;<code>inputFacelet.xhtml</code>&quot;, upon submission of this form.</li>
+</ul>
+
+<h5>Javabean &quot;<span class="font-code">MyUserBeanFacelet.java</span>&quot; as &quot;<span class="font-code">userBean</span>&quot;</h5>
+<p>These two pages use a Javabean called <code>UserBean</code> with a field called <code>name</code>, which is implemented in a class called &quot;<code>MyUserBeanFacelet.java</code>&quot;, as follows:</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre>
+</td>
+<td>
+<pre>
+package mypkg;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+ 
+<strong>@ManagedBean(name=&quot;userBean&quot;)</strong>
+<strong>@RequestScoped</strong>
+public class MyUserBeanFacelet {
+   private String name;
+ 
+   <span class="color-comment">// Default constructor</span>
+   public MyUserBeanFacelet() { }
+ 
+   <span class="color-comment">// Getter</span>
+   public String getName() { return name; }
+ 
+   <span class="color-comment">// Setter</span>
+   public void setName(String name) { this.name = name; }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Explanation:</p>
+<ul>
+<li>Instead of configuring the JavaBean in the &quot;<code>faces-config.xml</code>&quot;, we use the annotation <code>@ManagedBean</code> and <code>@RequestScoped</code> (JSF 2.0) to configure the bean. In <code>@ManageBean</code> annotation, we set the deployment name to &quot;<code>userBean</code>&quot;, which can then be used by the JSF. By default, <code>MyUserBeanFacelet</code> will be deployed as <code>myUserBeanFacelet</code>, with the first letter converted to lowercase.</li>
+</ul>
+
+<h5>Configuring &quot;<span class="font-code">faces-config.xml</span>&quot;</h5>
+<p>There is no need to do any configuration for this example (under JSF 2.0). You may need to provide an empty skeleton (save as &quot;<code>faces-config.xml</code>&quot; in &quot;<code>$CATALINA_HOME\hellojsf\WEB-INF</code>&quot;).</p>
+
+<pre class="color-example">
+&lt;?xml version=&quot;1.0&quot; encoding='UTF-8'?&gt;
+&lt;faces-config xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; 
+   xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+   xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee 
+      http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd&quot;
+   version=&quot;2.0&quot;&gt;
+   
+   <span class="color-comment">&lt;!-- Empty for this sample.
+        Managed bean name automatically derived from bean class name.
+		Bean scope is request by default.
+        Results pages automatically derived from return value of action controller.  --&gt;</span>
+		
+&lt;/faces-config&gt;
+</pre>
+
+<h5>Run the JSF Application</h5>
+<p>Start Tomcat, and issue this URL:</p>
+<pre class="color-command">http://localhost:8080/hellojsf<strong>/faces/inputFacelet.xhtml</strong></pre>
+<p>Use &quot;View Source&quot; to study the HTML code generated by the JSF.</p>
+
+
+<h3>JSF Basics</h3>
+
+<h4>JSF Templates</h4>
+<p>JSF provides two custom taglibs: <code>core</code> and <code>html</code>, that needs to be declared. The <code>html</code> custom tags are used to generate HTML codes.</p>
+
+<ol>
+<li>For JSF in JSP syntax (<code>.jsp</code>), the following JSP taglib directives are needed:
+<pre class="color-syntax">
+&lt;%@page contentType=&quot;text/html&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+<strong>&lt;%@taglib prefix=&quot;f&quot; uri=&quot;http://java.sun.com/jsf/core&quot;%&gt;
+&lt;%@taglib prefix=&quot;h&quot; uri=&quot;http://java.sun.com/jsf/html&quot;%&gt;</strong>
+&lt;!DOCTYPE html&gt;
+&lt;f:view&gt;
+  &lt;html&gt;
+    &lt;head&gt;
+      &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;
+      &lt;title&gt;....&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      ......
+      ......
+    &lt;/body&gt;
+  &lt;/html&gt;
+&lt;/f:view&gt;</pre></li>
+
+<li>For JSF in JSP XML Syntax (<code>.jspx</code>):
+
+<pre class="color-syntax">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;jsp:root xmlns:jsp=&quot;http://java.sun.com/JSP/Page&quot;
+          xmlns:f=&quot;http://java.sun.com/jsf/core&quot;
+          xmlns:h=&quot;http://java.sun.com/jsf/html&quot; version=&quot;2.1&quot;&gt;
+  &lt;jsp:directive.page language=&quot;java&quot;contentType=&quot;text/html&quot; pageEncoding=&quot;UTF-8&quot;/&gt;
+  &lt;html&gt;  
+    &lt;head&gt;
+      &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;
+      &lt;title&gt;....&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      ......
+      ......
+    &lt;/body&gt;
+  &lt;/html&gt;
+&lt;/jsp:root&gt;</pre>
+
+
+</li>
+
+<li>For JSF in Facelet (<code>.xhtml</code>), we use the xml namespace (xmlns) declarations:
+<pre class="color-syntax">
+&lt;?xml version='1.0' encoding='UTF-8' ?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;
+      <strong>xmlns:f=&quot;http://java.sun.com/jsf/core&quot;
+      xmlns:h=&quot;http://java.sun.com/jsf/html&quot;</strong>&gt;
+  &lt;h:head&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;/&gt;
+    &lt;title&gt;....&lt;/title&gt;
+  &lt;/h:head&gt;
+  &lt;h:body&gt;
+    ......
+    ......
+  &lt;/h:body&gt;
+&lt;/html&gt;</pre></li></ol>
+
+<h4><span class="font-code">&lt;f:view&gt;</span>, <span class="font-code">&lt;h:outputText&gt;</span></h4>
+
+<p>A JSF <em>user interface</em> is called a <em>view</em>. Hence, all the JSF tags must be enclosed in  <code>&lt;f:view&gt;....&lt;/f:view&gt;</code> tags.</p>
+<p> In example 1(a), we have:</p>
+
+<pre class="color-example">
+<strong>&lt;f:view&gt;</strong>
+  ......
+  &lt;h1&gt;<strong>&lt;h:outputText value=&quot;Hello World from JSF!&quot;/&gt;</strong>&lt;/h1&gt;<strong>
+  ......
+&lt;/f:view&gt;</strong></pre>
+
+<p>The <code>&lt;h:outputText&gt;</code> custom action is used to render text specified in <code>value</code> attribute. Other optional attributes can be applied, e.g., <code>style=<em>CssStyle</em></code>, <code>styleClass=<em>CssStyleClass</em></code>, <code>id=<em>identifier</em></code>, <code>escape=true|false</code> (convert special HTML character to escape sequence), and others. Check the JSF API.</p>
+
+<h4><span class="font-code">&lt;h:form&gt;</span>, <span class="font-code">&lt;h:inputText&gt;</span>, <span class="font-code">&lt;h:commandButton&gt;</span></h4>
+
+<p>In Example 2(a), we have:</p>
+
+<pre class="color-example">
+&lt;f:view&gt;       
+  ......
+  <strong>&lt;h:form id=&quot;UserEntryForm&quot;&gt;
+    &lt;h:outputText value=&quot;Enter Your Name:&quot;/&gt;
+    &lt;h:inputText value=&quot;#{userBean.name}&quot; /&gt;
+    &lt;h:commandButton action=&quot;send&quot; value=&quot;OK&quot; /&gt;
+  &lt;/h:form&gt;</strong>
+&lt;/f:view&gt;</pre>
+
+<p>The <code>&lt;h:form&gt;...&lt;/h:form&gt;</code> custom action produce a HTML <code>&lt;form&gt;...&lt;/form&gt;</code>, as follows:</p>
+
+<pre class="output">&lt;form id=&quot;UserEntryForm&quot; name=&quot;UserEntryForm&quot; method=&quot;post&quot;  <span class="color-comment">// &lt;h:form&gt;</span>
+      action=&quot;/hellojsf/faces/input.jsp;jsessionid=...&quot; 
+      enctype=&quot;application/x-www-form-urlencoded&quot;&gt;
+  
+  &lt;input type=&quot;hidden&quot; name=&quot;UserEntryForm&quot; value=&quot;UserEntryForm&quot; /&gt;
+  
+  Enter Your Name:  <span class="color-comment">// &lt;h:outputText&gt;</span>
+  &lt;input type=&quot;text&quot; name=&quot;UserEntryForm:j_id_jsp_1153749161_4&quot; /&gt;  <span class="color-comment">// &lt;h:inputText&gt;
+</span>  &lt;input type=&quot;submit&quot; name=&quot;UserEntryForm:j_id_jsp_1153749161_5&quot;   <span class="color-comment">// &lt;h:commandButton&gt;</span>
+         value=&quot;OK&quot; /&gt;
+  
+  &lt;input type=&quot;hidden&quot; name=&quot;javax.faces.ViewState&quot; 
+         id=&quot;javax.faces.ViewState&quot; value=&quot;2513188408420307189:1425545453185206650&quot;
+         autocomplete=&quot;off&quot; /&gt;
+&lt;/form&gt;  <span class="color-comment">// &lt;/h:form&gt;</span></pre>
+
+<p>The <code>&lt;form&gt;</code> has default method of POST; default action of the current page (itself), with a session id attached via URL rewriting.</p>
+<p>The <code>&lt;h:inputText&gt;</code> generate an input text field (<code>&lt;input type=&quot;text&quot;&gt;</code>). The <code>&lt;h:commandButton&gt;</code> produces a submit button (<code>&lt;input type=&quot;submit&quot;&gt;</code>)</p>
+
+<h4><span class="font-code">&lt;h:graphicImage&gt;</span>, <span class="font-code">&lt;h:commandLink&gt;</span></h4>
+
+<p>The <code>&lt;h:graphicImage&gt;</code> produces a HTML <code>&lt;img&gt;</code>, e.g.</p>
+
+<pre class="color-example">
+&lt;h:graphicImage url=&quot;/images/glassfish.gif&quot; /&gt;
+&lt;h:graphicImage id=&quot;image&quot; url=&quot;#{resource['glassfish.gif']}&quot; /&gt;</pre>
+
+<p>The <code>&lt;h:commandLink&gt;</code> produces a HTML <code>&lt;a&gt;</code> tag that acts like a <code>&lt;form&gt;</code>'s submit button when clicked, e.g.,</p>
+
+<pre class="color-example">
+&lt;h:commandLink action=&quot;back&quot; immediate=&quot;true&quot; /&gt;
+</pre>
+
+<p>[TODO] more</p>
+
+<h3>Converter</h3>
+
+<p>[TODO]</p>
+
+<h3>Validator</h3>
+
+<p>[TODO]</p>
+
+
+<p>&nbsp;</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>JSF (JavaServer Faces) Home Page @ <a href="http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html">http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html</a>, and JSF Developer Site (Project Mojarra of GlassFish) @ <a href="http://javaserverfaces.java.net">http://javaserverfaces.java.net</a>.</li>
+<li>JSF 1.2, 2.0, 2.1 Specifications.</li>
+
+<li>Apache Tomcat @ <a href="http://tomcat.apache.org/">http://tomcat.apache.org</a>.</li>
+<li>Java Servlets Home Page @ <a href="http://java.sun.com/products/servlet/">http://java.sun.com/products/servlet</a>. Servlet Developers @ <a href="http://java.net/projects/servlet/">http://java.net/projects/servlet/</a>.</li>
+<li>JSP (JavaServer Pages) Home Page @ <a href="http://www.oracle.com/technetwork/java/javaee/jsp/index.html">http://www.oracle.com/technetwork/java/javaee/jsp/index.html</a>, and JSP Developer Site @ <a href="http://jsp.java.net">http://jsp.java.net</a>.</li>
+
+<li>JSTL (JSP Standard Tag Libraries) 1.2 developers @ <a href="http://jstl.java.net">http://jstl.java.net</a>, and JSTL 1.1 Apache Jakarta's Taglibs @ <a href="http://jakarta.apache.org/taglibs/index.html">http://jakarta.apache.org/taglibs/index.html</a>.</li>
+
+<li>EL Developers @ <a href="http://uel.java.net">http://uel.java.net</a>.</li>
+
+<li>Glassfish developers @ <a href="http://glassfish.java.net">http://glassfish.java.net</a>.</li>
+
+<li>The Java EE 6 Tutorial, Chapter 4 JavaServer Faces Technology, December 2009 @ <a href="http://java.sun.com/javaee/6/docs/tutorial/doc/bnaph.html">http://java.sun.com/javaee/6/docs/tutorial/doc/bnaph.html</a>.</li>
+
+<li>The Java EE 5 Tutorial, Chapter 10 JavaServer Faces Technology, October 2008 @ <a href="http://download.oracle.com/javaee/5/tutorial/doc/bnaph.html">http://download.oracle.com/javaee/5/tutorial/doc/bnaph.html</a>.</li>
+
+<li>Java EE 6 Technologies @ <a href="http://www.oracle.com/technetwork/java/javaee/tech/index-jsp-142185.html">http://www.oracle.com/technetwork/java/javaee/tech/index-jsp-142185.html</a>.</li>
+
+<li>Java EE 5 Technologies @ <a href="http://www.oracle.com/technetwork/java/javaee/tech/javaee5-jsp-135162.html">http://www.oracle.com/technetwork/java/javaee/tech/javaee5-jsp-135162.html</a>.</li>
+
+<li>java.net - The Source for Java Technology Collaboration @ <a href="http://www.java.net">http://www.java.net</a>.</li>
+
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: JDK 1.7, Tomcat 7.0.21, JSF 2.1.3, JSTL 2, NetBeans 7<br />
+Last modified: October, 2011</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+</body>
+</html>

@@ -1,0 +1,783 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to Install Eclipse for Java Programming on Windows, Mac and Linux</title>
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>Eclipse  for Java</h1>
+<h2>How To Install Eclipse and Get Started with Java Programming<br /> 
+(on Windows, Mac and Linux)</h2>
+</div>
+
+<div id="content-main">
+
+<p>Eclipse (@ <a href="http://www.eclipse.org/">www.eclipse.org</a>) is an <em>open-source</em> Integrated Development Environment (IDE) supported by IBM. Eclipse is popular for Java application development (Java SE and Java EE) and Android apps. It also supports C/C++, PHP, Python, Perl, and other web project developments via extensible plug-ins. Eclipse is cross-platform and runs under Windows, Linux and Mac OS.</p>
+
+<h5>Eclipse Versions</h5>
+<p>The various versions are:</p>
+<ul>
+<li>Eclipse 1.0 (November 7, 2001): based on an earlier Java IDE called VisualAge from IBM.</li>
+<li>Eclipse 2.0 (June 28, 2002)</li>
+<li>Eclipse 2.1 (March 28, 2003)</li>
+<li>Eclipse 3.0 (June 25, 2004)</li>
+<li>Eclipse 3.1 (June 28, 2005)</li>
+<li>Eclipse 3.2  (June 30, 2006) (Callisto - named after one of the Jupiter's Galilean moons): started annual simultaneous release of all the related Eclipse projects.</li>
+<li>Eclipse 3.3  (June 25, 2007) (Europa - named after another Jupiter's Galilean moons)</li>
+<li>Eclipse 3.4  (June 19, 2008) (Ganymede - named after yet another Jupiter's Galilean moons)</li>
+<li>Eclipse 3.5  (June 12, 2009) (Galileo - named after the great 17th century scientist and astronomer Galileo Galilei)</li>
+<li>Eclipse 3.6 (June 23, 2010) (Helios - named after  god of the sun in Greek Mythology)</li>
+<li>Eclipse 3.7 (June 23, 2011) (Indigo)</li>
+<li>Eclipse 4.2 (June 27, 2012) (Juno)</li>
+<li>Eclipse 4.3 (June, 2013) (Kepler)</li>
+<li>Eclipse 4.4 (June, 2014) (Luna)</li>
+<li>Eclipse 4.5 (June, 2015) (Mars)</li>
+</ul>
+
+<h3 id="eclipse-java-install">How to Install Eclipse 4.5 (Mars) for Java</h3>
+
+<h4>For Windows</h4>
+
+<h5>Step 0: Install JDK</h5>
+
+<p>To use Eclipse for Java programming, you need to first install Java Development Kit (JDK).  Read &quot;<a href="JDK_Howto.html#jdk-install">How to Install JDK (on Windows)</a>&quot;.</p>
+
+<h5>Step 1: Download</h5>
+
+<p>Download Eclipse from <a href="http://www.eclipse.org/downloads/">http://www.eclipse.org/downloads</a>. For beginners, choose &quot;<strong>Eclipse IDE for Java Developers</strong>&quot; (32-bit or 64-bit) (e.g., &quot;<code>eclipse-java-luna-SR1a-win32-x86_64.zip</code>&quot;).</p>
+
+<h5>Step 2: Unzip</h5>
+
+<p>To install Eclipse, simply unzip the downloaded file into a directory of your choice (e.g., &quot;<code>d:\myproject</code>&quot;).</p>
+<p>There is no need to run any installer. Moreover,  you can simply delete the entire Eclipse directory when it is no longer needed (without running any un-installer). You are free to move or rename the directory. You can install (unzip) multiple copies of Eclipse in the same machine.</p>
+
+<h4>For Macs</h4>
+<p>Read &quot;<a href="MacUsers_HowTo.html#eclipse">How to Install Eclipse on Mac</a>&quot;.</p>
+
+<h4>For Ubuntu Linux</h4>
+<p>Read &quot;<a href="Ubuntu_HowTo.html#eclipse">How to Install Eclipse on Ubuntu</a>&quot;.</p>
+
+
+<h3 id="eclipse-java-first">Writing your First Java Program in Eclipse</h3>
+
+<h5>Step 0: Launch Eclipse</h5>
+
+<ol>
+<li>Start Eclipse by running &quot;<code>eclipse.exe</code>&quot; in the Eclipse installed directory.</li>
+
+<li>Choose an appropriate directory for your <em>workspace</em> (i.e., where you would like to save your files).</li>
+
+<li>If the &quot;Welcome&quot; screen shows up, close it by clicking the &quot;close&quot; button.</li>
+</ol>
+
+<h5>Step 1: Create a new Java Project</h5>
+
+<p>For each Java application, you need to create a <em>project</em> to keep all the source files, classes and relevant resources.</p>
+
+<p>To create a new Java project:</p>
+<ol>
+<li>Choose &quot;File&quot; menu &rArr; &quot;New&quot; &rArr; &quot;Java project&quot;.</li>
+
+<li>The &quot;New Java Project&quot; dialog pops up.
+<ol>
+<li>In the &quot;Project name&quot; field, enter &quot;<code>FirstProject</code>&quot;.</li>
+<li>Check &quot;Use default location&quot;.</li>
+<li>In the &quot;JRE&quot; box, select &quot;Use default JRE (currently 'JDK1.x')&quot;. But check the JDK version, you should be using JDK 1.5 and above.</li>
+<li>Click &quot;Finish&quot;.</li>
+</ol>
+</li>
+</ol>
+ 
+<h5>Step 2: Write a Hello-world Java Program</h5>
+<ol>
+<li>In the &quot;Package Explorer&quot; (left panel) ⇒  Right-click on &quot;<code>FirstProject</code>&quot; (or use the &quot;File&quot; menu) ⇒  New &rArr; Class.</li>
+
+<li>The &quot;New Java Class&quot; dialog pops up.
+<ol>
+<li>In &quot;Name&quot; field, enter &quot;<code>Hello</code>&quot;.</li>
+<li>In &quot;package&quot; field, delete the content if it is not empty.</li>
+<li>Check &quot;<code>public static void main(String[] args)</code>&quot; box.</li>
+<li>Click &quot;Finish&quot;.</li>
+</ol>
+</li>
+
+<li>The source file &quot;<code>Hello.java</code>&quot; opens on the editor panel. Enter the following codes:
+<pre class="color-example">
+public class Hello {  <span class="color-comment"> // &quot;Hello.java&quot;</span>
+   public static void main(String[] args) {
+      <strong>System.out.println(&quot;Hello, world!&quot;);</strong>
+   }
+}</pre>
+</li></ol>
+
+<h5>Step 3: Compile &amp; Execute the Java Program</h5>
+
+<ol>
+<li>There is no need to <em>compile</em> the Java source file explicitly. It is because Eclipse performs the so-called <em>incremental compilation</em>, i.e., the Java statement is compiled as and when it is entered.</li>
+<li>To run the program, right-click anywhere on the source file &quot;<code>Hello.java</code>&quot; (or from the &quot;Run&quot; menu) &rArr; Choose &quot;Run As&quot; &rArr; &quot;Java Application&quot;.</li>
+<li>The output &quot;Hello, world!&quot; appears on the &quot;Console&quot; panel.</li>
+</ol>
+
+<p>NOTES:</p>
+<ul>
+<li>You should create a <em>new</em> Java project for each of your Java application.</li>
+<li>Nonetheless, Eclipse allows you to keep more than one programs in a project, which is handy for writing toy programs (such as your tutorial exercises). If you have more than one files with <code>main()</code> method in one project, you need to right-click the source and choose &quot;Run As&quot; &rArr; &quot;Java Application&quot; to run that particular source. Clicking the &quot;Run&quot; button runs the recently-run program (based on the previous configuration). Try clicking on the &quot;down-arrow&quot; besides the &quot;Run&quot; button.</li>
+</ul>
+
+<h3>Read the Documentation</h3>
+<p>At a minimum, you SHOULD browse through Eclipse's &quot;<strong>Workbench User Guide</strong>&quot; and &quot;<strong>Java Development User Guide</strong>&quot; - accessible via the Eclipse's &quot;Welcome&quot; page or &quot;Help&quot; menu. This will save you many agonizing hours trying to figure out how to do somethings later.</p>
+
+
+<h3 id="eclipse-java-debug">Debugging Programs in Eclipse</h3>
+
+<p>Able to use a graphics debugger to debug program is crucial in programming. It could save you countless  hours guessing on what went wrong.</p>
+
+<h5>Step 0: Write a Java Program</h5>
+
+<p>The following program computes and prints the factorial of <code><em>n</em></code> (<code>=1*2*3*...*<em>n</em></code>).  The program, however, has a logical error and produce a wrong answer for <em><code>n</code></em><code>=20</code> (&quot;<code>The Factorial of 20 is -2102132736</code>&quot; - a negative number?!).</p>
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre>
+</td>
+<td>
+<pre>
+<span class="color-comment">/** Compute the Factorial of n, where n=20.
+  *    n! = 1*2*3*...*n
+  */</span>
+public class Factorial {
+   public static void main(String[] args) {
+      int n = 20;          <span class="color-comment">// To compute factorial of n</span>
+      int factorial = 1;   <span class="color-comment">// Init the product to 1</span>
+ 
+      int i = 1;
+      while (i &lt;= n) {
+         factorial = factorial * i;
+         i++;
+      }
+      System.out.println(&quot;The Factorial of &quot; + n + &quot; is &quot; + factorial);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Let's use the graphic debugger to debug the program.</p>
+
+<h5>Step 1: Set an Initial Breakpoint</h5>
+<img class="image-float-right" src="images/EclipseJavaDebugSetBreakpoint.png" alt="EclipseJavaDebugSetBreakpoint.png" />
+
+<p>A <em>breakpoint</em> suspends program execution for you to examine the internal states (e.g., value of variables) of the program. Before starting the debugger, you need to set at least one breakpoint to suspend the execution inside the program. Set a breakpoint at <code>main()</code> method by double-clicking on the <em>left-margin</em> of the line containing <code>main()</code>.  A  <em>blue circle</em> appears in the left-margin indicating a breakpoint is set at that line. </p>
+
+<h5 class="float-clear">Step 2: Start Debugger</h5>
+
+<img class="image-float-right" src="images/EclipseJavaDebugStart.png" alt="EclipseJavaDebugStart.png" />
+
+<p>Right click anywhere on the source code (or from the &quot;Run&quot; menu) &rArr; &quot;Debug As&quot; &rArr; &quot;Java Application&quot; &rArr; choose &quot;Yes&quot; to switch into &quot;Debug&quot; perspective (A <em>perspective</em> is a particular arrangement of panels to suits a certain development task such as editing or debugging). The program begins execution but suspends its operation at the breakpoint, i.e., the <code>main()</code> method.</p>
+
+<p>As illustrated in the following diagram, the highlighted line (also pointed to by a blue arrow) indicates the statement to be executed in the <em>next</em> step.</p>
+
+<h5 class="float-clear">Step 3: Step-Over and Watch the Variables and Outputs</h5>
+<img class="image-float-right" src="images/EclipseJavaDebugVariables.png" alt="EclipseJavaDebugVariables.png" />
+<img class="image-float-right" src="images/EclipseJavaDebugToolbar.png" alt="EclipseJavaDebugToolbar.png" />
+
+<p>Click the &quot;Step Over&quot; button (or select &quot;Step Over&quot; from &quot;Run&quot; menu) to <em>single-step</em> thru your program. At each of the step, examine the value of the  variables (in the &quot;Variable&quot; panel) and the outputs produced by your program (in the &quot;Console&quot; Panel), if any. You can also place your cursor at any variable to inspect the content of the variable.</p>
+
+<p>Single-stepping thru the program and watching the values of internal variables and the outputs produced is the <em>ultimate</em> mean in debugging programs - because it is exactly how the computer runs your program!</p>
+
+<h5>Step 4: Breakpoint, Run-To-Line, Resume and Terminate</h5>
+
+<p>As mentioned, a breakpoint <em>suspends</em> program execution and let you examine the internal states of the program. To set a breakpoint on a particular statement, double-click the left-margin of that line (or select &quot;Toggle Breakpoint&quot; from &quot;Run&quot; menu).</p>
+<p>&quot;Resume&quot; continues the program execution, up to the next breakpoint, or till the end of the program.</p>
+<p>&quot;Single-step&quot; thru a loop with a large count is time-consuming. You could set a breakpoint at the statement immediately outside the loop (e.g., Line 11 of the above program), and issue &quot;Resume&quot; to complete the loop.</p>
+<p>Alternatively, you can place the cursor on a particular statement, and issue &quot;Run-To-Line&quot; from the &quot;Run&quot; menu to continue execution up to the line.</p>
+<p> &quot;Terminate&quot; ends the debugging session. Always terminate your current debugging session using &quot;Terminate&quot; or &quot;Resume&quot; till the end of the program.</p>
+
+<h5>Step 5: Switching Back to Java perspective</h5>
+
+<p>Click the &quot;Java&quot; perspective icon on the upper-right corner to switch back to the &quot;Java&quot; perspective for further programming (or &quot;Window&quot; menu &rArr; Open Perspective &rArr; Java).</p>
+<p><strong>Important:</strong> I can's stress more that mastering the use of debugger is crucial in programming. Explore the features provided by the debuggers.</p>
+
+<h5>Other Debugger's Features</h5>
+
+<p><strong>Modify the Value of a Variable:</strong> You can modify the value of a variable by entering a new value in the &quot;Variable&quot; panel. This is handy for temporarily modifying the behavior of a program, without changing the source code.</p>
+
+<p><strong>Step-Into and Step-Return:</strong> To debug a <em>method</em>, you need to use &quot;Step-Into&quot; to step into the <em>first</em> statement of the method.  (&quot;Step-Over&quot; runs the function in a single step without stepping through the statements within the function.) You could use &quot;Step-Return&quot; to return back to the caller, anywhere within the method.  Alternatively, you could set a breakpoint inside a method.</p>
+
+<h3 id="tips">Tips &amp; Tricks</h3>
+
+<h4>General Usages (for all Programming Tasks)</h4>
+<p>These are the features that I find to be most useful in Eclipse:</p>
+
+<ol>
+<li><span class="line-heading">Maximizing Window (Double-Clicking):</span> You can double-click on the &quot;header&quot; of any panel to <em>maximize</em> that particular panel, and double-click again to <em>restore</em> it back. This feature is particularly useful for writing source code in full panel.</li>
+
+<li><span class="line-heading">Shorthand Templates (sysout, for,...):</span> You can type &quot;<code>sysout</code>&quot; followed by a ctrl+space (or alt-/) as a shorthand for typing &quot;<code>System.out.println()</code>&quot;.<br />
+  The default shortcut key (ctrl-space or alt-/) depends on the system. Check your system's shortcut key setting in &quot;Edit&quot; &rArr; &quot;Content Assist&quot; &rArr; &quot;Default&quot;. Take note that many of you use ctrl+space to switch between input languages. You need to reconfigure either your language switching hot-key or Eclipse.<br />
+  Similarly, you can type &quot;for&quot; followed by ctrl-space (or alt-/) to get a for-loop.<br />
+You can create your own shorthand in &quot;Window&quot;  menu &rArr; &quot;Preferences&quot;  &rArr; &quot;Java&quot;  &rArr; &quot;Editor&quot;  &rArr; &quot;Templates&quot;. (Alternatively, in &quot;Window&quot; &rArr; &quot;Preferences&quot; &rArr; type &quot;template&quot; as filter text and choose &quot;Java&quot;  &rArr; &quot;Editor&quot;  &rArr; &quot;Templates&quot;.)<br />
+You can change your key settings in &quot;Window&quot;  menu &rArr; &quot;Preferences&quot;  &rArr; &quot;General&quot;  &rArr; &quot;Key&quot;  &rArr; choose &quot;Command&quot;, &quot;Content Assist&quot;. (Alternatively, in &quot;Window&quot; &rArr; &quot;Preferences&quot; &rArr; type &quot;key&quot; as filter text and choose &quot;General&quot;  &rArr; &quot;Key&quot;.)</li>
+
+<li><span class="line-heading">Intelli-Sense (ctrl-space):</span> You can use  ctrl-space to activate the &quot;intelli-sense&quot; (or content assist). That is, Eclipse will offer you the choices, while you are typing.</li>
+
+<li><span class="line-heading">Source Formatting (ctrl-shift-f):</span> Right-click on the source. Choose &quot;Source&quot; &rArr; &quot;Format&quot; to let Eclipse to layout your source codes with the proper indentation.</li>
+
+<li><span class="line-heading">Source Toggle Comment (ctrl-/):</span> To comment/uncomment a block of codes, choose &quot;Source&quot; &rArr; &quot;Toggle Comment&quot;.</li>
+
+<li><span class="line-heading">Hints for Correcting Syntax Error:</span> If there is a syntax error on a statement, a red mark will show up on the left-margin on that statement. You could click on the  &quot;light bulb&quot; to display the error message, and also select from the available hints for correcting that syntax error.</li>
+
+<li><span class="line-heading">Refactor (or Rename) (alt-shift-r):</span> You can rename a variable, method, class, package or even the project easily in Eclipse. Select and right-click on the entity to be renamed &rArr; &quot;Refactor&quot; &rArr; &quot;Rename&quot;. Eclipse can rename all the occurrences of the entity.</li>
+
+<li><span class="line-heading">Line Numbers:</span> To show the line numbers, choose &quot;Window&quot; menu &rArr; &quot;Preferences&quot; &rArr; &quot;General&quot; &rArr; &quot;Editors&quot; &rArr; &quot;Text Editors&quot; &rArr; Check the &quot;Show Line Numbers&quot; Box. You can also configure many editor options, such as the number of spaces for tab. Alternatively, you can right-click on the left-margin, and check &quot;Show Line Numbers&quot;.</li>
+
+<li><span class="line-heading">Error Message Hyperlink:</span> Click on an error message will hyperlink to the corresponding source statement.</li>
+
+<li><span class="line-heading">Changing Font Type and Size:</span> From &quot;Window&quot; menu &rArr; &quot;Preferences&quot; &rArr; &quot;General&quot; &rArr; &quot;Appearance&quot; &rArr; &quot;Colors and Fonts&quot; &rArr; expand &quot;Java&quot; &rArr; &quot;Java Editor Text Font&quot; &rArr; &quot;Edit&quot;. (Alternatively, in &quot;Window&quot; &rArr; &quot;Preferences&quot; &rArr; type &quot;font&quot; as filter text and choose the appropriate entry.)</li>
+
+<li><span class="line-heading">Unicode Support:</span> To enable Unicode support, select &quot;Window&quot; menu &rArr; Preferences &rArr; General &rArr; Workspace &rArr; Text file encoding &rArr; UTF-8. This sets the default character set used for file encoding, similar to VM's command-line option <code>-Dfile.encoding=UTF-8</code>. Commonly used charsets for Unicode are UTF-8, UTF-16 (with BOM), UTF-16BE, UTF-16LE. Other charsets are US-ASCII, ISO-8859-1.</li>
+  
+<li><span class="line-heading">Mouse Hover-over:</span> In debug mode, you could configure to show the variable's value when the mouse hovers over the variable. Select &quot;Window&quot;  menu &rArr; &quot;Preferences&quot;  &rArr; &quot;Java&quot;  &rArr; &quot;Editor&quot;  &rArr; &quot;Hover&quot;.</li>
+<li><span class="line-heading">Comparing Two Files:</span> In &quot;Package Explorer&quot;, select two files (hold the control key) ⇒ Right-click ⇒ Compare with.</li>
+
+<li><span class="line-heading">Useful Eclipse Shortcut Keys:</span>
+<ul>
+  <li>F3: Goto the declaration of the highlighted variable/method.</li>
+  <li>Ctrl-Shift-G: Search for ALL references of the highlighted variable/method  in workspace.</li>
+<li>Ctrl-G: Search for the Declaration of a variable/method in workspace.<br />
+Don't use Find (Ctrl-F), but use the above context-sensitive search.</li>
+<li>Ctrl-Shift-F: Format the source code.</li>
+<li>Ctrl-Shift-O: Organize imports.</li>
+<li>Alt-Shift-R: Rename. (Don't use Find/Replace.)</li>
+<li>Ctrl-Space: auto-complete.</li>
+</ul></li>
+
+<li><span class="line-heading">Package Explorer vs. Navigator:</span> We usually use &quot;Package Explorer&quot; in programming, but it will not show you all the folders and files under the project. On the other hand, &quot;Navigator&quot; is a file manager that shows the exact file structure of the project (similar to Windows Explorer). You can enable the Navigator by &quot;Window&quot; &rArr; Show view &rArr; Navigator.</li>
+
+<li><span class="line-heading">Spell Check:</span> To enable spell check, select Window &rArr; Preferences &rArr; type &quot;spell&quot; in the filter &rArr; General &rArr; Editors &rArr; Text Editors &rArr; Spelling &rArr; Check &quot;Enable spell checking&quot;. Also provide a &quot;User defined dictionary&quot; (with an initially empty text file).<br />
+To correct mis-spell words, right-click and press ctrl-1 (or Edit menu &rArr; Quick Fix).</li>
+
+<li><span class="line-heading">Eclipse's Log File:</span> Goto Help &rArr; about Eclipse &rArr; Installation details &rArr; Configuration &rArr; View Error Log.</li>
+
+<li><span class="line-heading">Viewing two files in split screen:</span> Simply click and hold on the title of one file and drag it to the lower side of the screen.  [To view the same file on split screen, create a new editor window by selecting Window &rArr; New Editor; and drag one window to the lower side of the screen.]</li>
+
+<li><span class="line-heading">Block Select:</span> Push Alt-Shift-A to toggle between block-select mode and normal mode.</li>
+
+<li><span class="line-heading">Snippets:</span>
+<ul>
+<li>To view the snippet window: choose &quot;Window&quot; &rArr; Show View &rArr; Snippets.</li>
+<li>To create a new snippet category: Right-click &rArr; Customize &rArr; New.</li>
+<li>To create a new snippet item: Copy the desired text &rArr; Select the snippet category &rArr; paste as snippet.</li>
+<li>To insert a snippet: place the cursor on the desired location at the editor panel &rArr; click the snippet item.</li>
+</ul>
+</li>
+
+<li><span class="line-heading">Word Wrap (Line Wrap):</span> Word-wrap (or line-wrap) is essential for editing long HTML documents without the horizontal scroll bar. However, the Eclipse's HTML Editor and Text Editor do not support word-wrap.<br />
+You could install a plug-in called "Word Wrap" from http://ahtik.com/eclipse-update/.<br />
+Choose &quot;Help&quot; &rArr; Install New Software &rArr; in &quot;Work with&quot; Enter &quot;http://ahtik.com/eclipse-update/&quot;.<br />
+To activate word wrap, right-click on the editor panel &rArr; select &quot;Word Wrap&quot;.</li>
+
+<li><span class="line-heading">Creating &quot;link folder&quot; in project</span>: You do not have to place all the folders under the project base directory, instead, you can use so-called &quot;link folders&quot; to link to folder outside the project base directory.<br />
+To create a link folder in a project, right-click on the project &rArr; File &rArr; New &rArr; Folder &rArr; Advanced &rArr; Check Link to alternate Location (Linked Folder).</li>
+
+<li><span class="line-heading">Running Eclipse in &quot;clean&quot; mode:</span> You can run eclipse in so-called &quot;<code>clean</code>&quot; mode, which wipes all the cached data and re-initialize the cache, by running eclipse from command-line with &quot;-clean&quot; argument (i.e., &quot;<code>eclipse -clean</code>&quot;). It is useful if something is not working proper, especially if you install a new copy of Eclipse.</li>
+
+<li>Show the Right Margin: Window &rArr; Preferences &rArr; General &rArr; Editors &rArr; Text Editors &rArr; Show Print Margin and set the column number.</li>
+
+<li>Let me know if you have more tips to be included here.</li>
+</ol>
+
+<h4>Update Eclipse and Install new Software</h4>
+
+<ol>
+<li><span class="line-heading">Install New Software:</span> Select &quot;Help&quot; menu &rArr; Install New Software &rArr; In &quot;Work With&quot;, pull down the select menu and choose a software site.</li>
+<li><span class="line-heading">Update:</span> Select &quot;Help&quot; menu &rArr; Check for Updates &rArr;.</li>
+</ol>
+
+<h4>For Java Application Development Only</h4>
+<ol>
+  <li>Eclipse 3.7 does not support JDK 7. Eclipse 4.2 does.</li>
+  <li><span class="line-heading">Small Toy Java Programs:</span> You can keep many small programs (with <code>main()</code>) in one Java project instead of create a new project for each toy program. To run the desired program, right-click on the source file &rArr; &quot;Run as&quot; &rArr; &quot;Java Application&quot;.</li>
+  
+<li><span class="line-heading"><span class="font-code">Scanner/printf()</span> and JDK 1.5:</span> If you encounter syntax error in using <code>printf()</code> or <code>Scanner</code> (which are available from JDK 1.5), you need to check your compiler settings. Select &quot;Window&quot; menu &rArr; Preferences &rArr; open the &quot;Java&quot; node &rArr; select &quot;Compiler&quot; &rArr; in &quot;Compiler compliance level&quot; &rArr; select the latest release, which should be &quot;1.5&quot; or above.</li>
+
+<li><span class="line-heading">Command-Line Arguments:</span> To provide command-line arguments to your Java program in Eclipse, right-click on the source file &rArr; &quot;Run Configurations&quot; &rArr; Under the &quot;Main&quot; panel, check that &quot;Project&quot; name and &quot;Main Class&quot; are appropriate &rArr; Select the &quot;Argument&quot; tab &rArr; type your command-line arguments inside the &quot;Program Arguments&quot; box &rArr; &quot;Run&quot;.</li>
+  <li><span class="line-heading">Resolving Import (Ctrl-Shift-o)</span>: To ask Eclipse to insert the <code>import</code> statements for classes. Useful when you copy a large chunk of codes without the corresponding import statements.</li>
+<li><span class="line-heading">Including Another Project:</span> To include another project in the same work space, right-click on the project  ⇒ Build Path ⇒ Configure Build Path... ⇒ Select &quot;Projects&quot; tab  ⇒ &quot;Add...&quot; to select project in the existing work space ⇒ OK.</li>
+
+<li><span class="line-heading">Exporting a Project to a JAR file:</span> Right-click on the project ⇒ Export... ⇒ Java, JAR File  ⇒ Next ⇒ Select the files to be exported  ⇒ Next ⇒ Next ⇒ In &quot;JAR Manifest Specification&quot; dialog, enter the main class (if you wish to run the JAR file directly) ⇒ Finish.</li>
+<li><span class="line-heading">Unit Testing:</span> If you keep your test in another project, you need to include the project under test in your Build Path (see above). <br />
+
+To create a test case: Right-click on the project  &rArr; New &rArr; JUnit Test Case &rArr; the &quot;New JUnit Test Case&quot; dialog appears. Select &quot;New JUnit 4 Test&quot;. In &quot;Name&quot;, enter your class name. In &quot;Class under test&quot;, browse and select the class to be tested.<br  />
+To run the test: Right-click  &rArr; &quot;Run As&quot;  &rArr; &quot;JUnit Test&quot;. The results are displayed in a special &quot;JUnit console&quot;.</li>
+
+<li><span class="line-heading">Adding External JAR files &amp; Native Libraries (&quot;<span class="font-code">.dll</span>&quot;, &quot;<span class="font-code">.lib</span>&quot;, &quot;<span class="font-code">.a</span>&quot;, &quot;<span class="font-code">.so</span>&quot;):</span> Many external Java packages (such as JOGL, Java3D, JAMA, etc) are available to extend the functions of JDK. These packages typically provide a &quot;<code>lib</code>&quot; directory containing JAR files (&quot;<code>.jar</code>&quot;) (Java Archive - a single-file package of Java classes) and native libraries (&quot;<code>.dll</code>&quot;, &quot;<code>.lib</code>&quot; for windows, &quot;<code>.a</code>&quot;, &quot;<code>.so</code>&quot; for Linux and Mac).<br />
+To include these external packages into an Eclipse's project, right-click on the project &rArr; Build Path &rArr; Add External Archives &rArr; Navigate to select the JAR files (&quot;<code>.jar</code>&quot;) to be included.<br  />
+
+In &quot;Package Explorer&quot;, right-click on the JAR file added &rArr; Properties:
+
+<ul>
+<li>To include native libraries (&quot;<code>.dll</code>&quot;, &quot;<code>.lib</code>&quot;, &quot;<code>.a</code>&quot;, &quot;<code>.so</code>&quot;), select &quot;Native Library&quot; &rArr; &quot;Location Path&quot; &rArr; &quot;External Folder&quot;.</li>
+<li>To include the javadoc, select &quot;JavaDoc Location&quot; &rArr; &quot;JavaDoc URL&quot; &rArr; You can specify a <em>local</em> file or a remote link.</li>
+<li>To include source file (for debugging), select &quot;Java Source Attachment&quot;.</li>
+</ul>
+All the above options are also accessible via project's property &rArr; &quot;Build Path&quot;.<br  />
+<strong>Notes:</strong> The JAR files must be included in the <code>CLASSPATH</code>. The native library directories must be included in JRE's property &quot;<code>java.library.path</code>&quot;, which normally but not necessarily includes all the paths from the <code>PATH</code> environment variable. Read &quot;<a href="JDK_HowTo.html#external_jar">External JAR files and Native Libraries</a>&quot;.</li>
+
+<li><span class="line-heading">Creating a User Library:</span> You can also create a Eclipse's <em>user library</em> to include a set of JAR files and native libraries, that can then be added into subsequent Eclipse projects.<br />
+For example, I created a user library for &quot;JOGL&quot; as follows:<br />
+<ol>
+  <li>From &quot;Window&quot; menu  ⇒ Preferences  ⇒ Java  ⇒ Build Path ⇒ User Libraries  ⇒ New  ⇒ In &quot;User library name&quot;, enter &quot;<code>jogl</code>&quot;. The &quot;User Library&quot; dialog appears.</li>
+  <li>In &quot;User Library&quot; dialog ⇒ Select &quot;<code>jogl</code>&quot;  ⇒ Add JAR... ⇒ Navigate to <code>&lt;JOGL_HOME&gt;/lib</code>, and select &quot;<code>gluegen-rt.jar</code>&quot; and  &quot;<code>jogl.jar</code>&quot;.</li>
+  <li>Expand the &quot;<code>jogl.jar</code>&quot; node ⇒ Select &quot;Native library location: (none)&quot; &rArr; Edit... &rArr; External Folder... &rArr; select <code>&lt;JOGL_HOME&gt;/lib</code>.</li>
+  <li>Expand the &quot;<code>jogl.jar</code>&quot; node  ⇒ Select &quot;Javadoc location: (none)<code>&quot; </code>&rArr; Edit... &rArr; Javadoc in archive  &rArr; In &quot;Archive Path&quot;, &quot;Browse&quot; and  select the downloaded JOGL API documentation zip-file   ⇒ In &quot;Path within archive&quot;, &quot;Browse&quot; and expand the zip-file to select the top-level path (if any) ⇒ Validate. Alternatively, you can provide the path to the un-zipped javadocs. This is needed for Eclipse to display javadoc information about classes, fields, and methods.</li>
+  <li>You may provide the source files by editing &quot;Source attachment: (none)&quot;. Source is needed only if you are interested to debug into the JOGL source codes.</li>
+</ol>
+
+For EACH subsequent Java project created that uses JOGL, right-click on the project ⇒ Build Path ⇒ Add Libraries ⇒ Select &quot;User Library&quot; ⇒ Check &quot;<code>jogl</code>&quot;.</li>
+
+<li><span class="line-heading">Running an External Program:</span> Suppose that you want to run a Perl script on the selected file, you can configure an external tool as follows:
+  <ol>
+<li>From &quot;Run&quot; menu ⇒ External Tools ⇒ External Tools Configuration... ⇒ The &quot;External Tools Configuration&quot; dialog appears.</li>
+<li>In &quot;Name&quot;, enter your tool name.</li>
+<li>Choose the &quot;Main&quot; tab ⇒ In &quot;Location&quot;, &quot;Browse File System...&quot; to choose the perl interpreter &quot;perl&quot; ⇒ In &quot;Arguments&quot;, enter &quot;<code>path/scriptname.pl ${resource_loc}</code>&quot;, where <code>${resource_loc}</code> is an Eclipse variable that denotes the currently selected resource with absolute path.</li>
+<li>Choose the &quot;Common&quot; tab ⇒ In &quot;Standard Input and Output&quot;, uncheck &quot;Allocate Console&quot;, check &quot;File&quot; and provide an output file (e.g., <code>d:\temp\${resource_name}.txt</code>).</li>
+<li>(If you use the CYGWIN perl interpreter, need to set environment variable CYGWIN=nodosfilewarning to disable warning message.)</li>
+  </ol>
+
+To run the configured external tool, select a file &rArr; run &rArr; external tool &rArr; tool name.</li>
+<li><span class="line-heading">Viewing Hex Code of Primitive Variables in Debug mode: </span>In debug perspective, &quot;Variable&quot; panel  ⇒ Select the &quot;menu&quot; (inverted triangle) ⇒ Java  ⇒ Java Preferences... ⇒ Primitive Display Options ⇒ Check &quot;Display hexadecimal values (byte, short, char, int, long)&quot;.</li>
+<li><span class="line-heading">Adding a New Version of JDK/JRE:</span> First, you can check the installed JDK/JRE via &quot;Window&quot; menu  ⇒ &quot;Preferences&quot; ⇒ Expand &quot;Java&quot; node ⇒ &quot;Installed JREs&quot;. Check the  &quot;Location&quot; current JRE installed to make sure that it is the intended one. You can use the &quot;Add&quot; button to add a new version of JRE. For program development, I recommend that you add the JDK (instead of JRE). [The &quot;Location&quot; decides the extension directory used for including additional JAR files, e.g., <code>$JAVA_HOME\jre\lib\ext</code>.]</li>
+
+</ol>
+
+<h4>For Web Developers</h4>
+
+<ol>
+<li><span class="line-heading">HTML Editor:</span> Use the &quot;Web Page Editor&quot; (available in Eclipse Java EE), which provides the design view (WYSISYG).
+<br />To use the &quot;Web Page Editor&quot;, right-click on the HTML file, open as &quot;Web Page Editor&quot;.
+<br />To make the &quot;Web Page Editor&quot; as default for HTML file, goto Window &rArr; Preferenes &rArr; General &rArr; Editor &rArr; File Associations &rArr; .htm and .html &rArr; Select "Web page editor" &rArr; default.</li>
+</ol>
+
+<h3 id="io"> File I/O in Eclipse</h3>
+
+<p>Suppose that  your want to write a Java program, which inputs from a text file called &quot;<code>xxxx.in</code>&quot; and outputs to a text file called &quot;<code>xxxx.out</code>&quot;. This is a little tricky under Eclipse due to:</p>
+<ol>
+<li>When you create a text file in Windows' Notepad and saved it as &quot;<code>xxxx.in</code>&quot;, Notepad will append the &quot;<code>.txt</code>&quot; to your file and it becomes &quot;<code>xxxx.in.txt</code>&quot;.  Worse still, the Windows' Explorer, by default, will not show the &quot;<code>.txt</code>&quot; extension. (The first thing I always do to an alien computer is to change this setting. From &quot;Tools&quot; menu &rArr; Folder Options... &rArr; View &rArr; Uncheck &quot;Hide extensions for known file types&quot;.) You need to put a pair of double quotes around <code>xxxx.in</code> to override the default &quot;<code>.txt</code>&quot; extension. This is one good reason not to use Notepad for programming at all. You should use Eclipse to create the text file instead.</li>
+<li>Which directory to keep the input file &quot;<code>xxxx.in</code>&quot; in Eclipse?
+<ul>
+<li>If you did not separate the sources and class files into two separate directories, then the answer is straight forward, because there is only one directory to place your input file.</li>
+<li>If you choose to keep your sources and class files in two separate directories, eclipse will create two sub-directories &quot;src&quot; and &quot;bin&quot; under the <em>base</em> directory. BUT you need to put your input file &quot;<code>xxxx.in</code>&quot; in the <em>base</em> directory of your project, instead of the &quot;src&quot; or &quot;bin&quot;..</li>
+</ul>
+</li>
+</ol>
+
+For writing simple programs:<br />
+<ul>
+<li>Put the sources, class files, and the input/output files in the same directory. (When you create a new project, select &quot;Use project folder as root for sources and class files&quot; in &quot;Project Layout&quot;.) (But put your sources and class files in separate directories for big project.)</li>
+<li>You can create you input file from eclipse directly via &quot;File&quot; menu &rArr; &quot;New&quot; &rArr; &quot;File&quot;.</li>
+<li>Remember to add a newline to the end of your input file.</li>
+<li>You may need to right-click the project and select &quot;Refresh&quot; to see the output file &quot;<code>xxxx.out</code>&quot; created in the package explorer.</li>
+<li>To open the &quot;<code>xxxx.in</code>&quot; and &quot;<code>xxxx.out</code>&quot;: right-click &rArr; Open With &rArr; Text Editor.</li>
+</ul>
+<p>This is a sample JDK 1.5 program for file input/output:</p> 
+<pre class="color-example">
+import java.util.Scanner;
+import java.util.Formatter;
+import java.io.File;
+import java.io.IOException;
+   
+public class <strong>FileIOTest</strong> {  <span class="color-comment">// saved as &quot;FileIOTest.java&quot;</span>
+   public static void main (String [] args) throws IOException {
+      Scanner in = new Scanner(new File(&quot;FileIOTest.in&quot;));        <span class="color-comment">// file input</span>
+      Formatter out = new Formatter(new File(&quot;FileIOTest.out&quot;));  <span class="color-comment">// file output</span>
+   
+      int a = in.nextInt();
+      int b = in.nextInt();
+      out.format(&quot;%d\n&quot;,a+b);  <span class="color-comment">// format() has the same syntax as printf()</span>
+   
+      out.close();    <span class="color-comment">// flush the output and close the output file</span>
+   }
+}</pre>
+<p>Create the input text file called &quot;<code>FileIOTest.in</code>&quot; with the following contents and terminated with a newline:</p>
+<pre class="output">
+55 66&nbsp;
+</pre>
+
+<h3 id="GUIBuider">Writing Swing Applications using Eclipse GUI Builder</h3>
+
+<p>Eclipse provides a visual GUI builder called &quot;WindowBuilder&quot; (@ <a href="https://www.eclipse.org/windowbuilder">https://www.eclipse.org/windowbuilder</a>), which supports AWT/Swing, SWT (Eclipse's Standard Widget Toolkit  - an alternative to JDK's AWT/Swing), XWT, GWT, eRCT.</p>
+
+<h5>Step 1: Create a New &quot;Java Application&quot; Project</h5>
+<ol>
+<li>Choose &quot;File&quot; menu &rArr; &quot;New&quot; &rArr; &quot;Java project&quot;.</li>
+
+<li>The &quot;New Java Project&quot; dialog pops up.
+<ol>
+<li>In the &quot;Project name&quot; field, enter &quot;<code>FirstSwingProject</code>&quot;.</li>
+<li>Check &quot;Use default location&quot;.</li>
+<li>In the &quot;JRE&quot; box, select &quot;Use default JRE (currently 'JDK1.x')&quot;. But check the JDK version, you should be using JDK 1.5 and above.</li>
+<li>Click &quot;Finish&quot;.</li>
+</ol>
+</li>
+</ol>
+
+<h5>Step 2: Create a Swing JFrame Subclass</h5>
+
+<ol>
+<li>Choose &quot;File&quot; menu &rArr; &quot;New&quot; &rArr; &quot;Other...&quot; &rArr; &quot;WindowBuilder&quot; &rArr; &quot;Swing Designer&quot; &rArr; &quot;JFrame&quot; &rArr; &quot;Next&quot;. [If you cannot find &quot;WindowBuilder&quot; option, you need to install the &quot;WindowBuilder&quot; plug-in for Eclipse. Check <a href="https://www.eclipse.org/windowbuilder">https://www.eclipse.org/windowbuilder</a>.]</li>
+
+<li>In the &quot;Create JFrame&quot; dialog &rArr; Enter &quot;SwingMain&quot; in the &quot;Name&quot; field &rArr; &quot;Finish&quot;.</li>
+<li>Select the &quot;Design&quot; pane.</li>
+<li>In &quot;Layouts&quot;, select &quot;FlowLayout&quot; and click on the &quot;design form&quot;.</li>
+<li>From &quot;Components&quot;, select &quot;<code>JLabel</code>&quot; and click on the design form. Change the label text to &quot;Counter: &quot;. Select a &quot;JTextField&quot; and place it on the design form. Change the text to &quot;0&quot;. Select a &quot;JButton&quot; and place it on the design form. Change the text label to &quot;Count&quot;.</li>
+
+<li>To attach a event-handler to the button, double-click the <code>JButton</code> to switch into the &quot;Source&quot; pane, with the event-handler skeleton created. Complete the <code>actionPerformed()</code> as follows:
+
+<pre class="color-example">
+public void actionPerformed(ActionEvent e) {
+   <strong>count++;
+   textField.setText(count + &quot;&quot;);</strong>
+}</pre>
+
+Add an instance variable called <code>count</code> as follow:
+  <pre class="color-example">
+public class SwingMain extends JFrame {
+   <strong>private int count = 0;</strong>
+   ......</pre></li>
+   
+<li>You can now ready run the program. Right-click on the project &rArr; Run As &rArr; Java Application.</li>
+</ol>
+
+<h5>Eclipse Generated Codes</h5>
+<p>Study the codes generated by Eclipse GUI Builder, as follows, which is just a typical Swing application.</p>
+
+
+<table class="table-program">
+<col class="col-line-number" />
+<col class="col-program" />
+<tbody>
+<tr>
+<td>
+<pre class="text-right">
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59</pre>
+</td>
+<td>
+<pre>
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+ 
+public class SwingMain extends JFrame {  <span class="color-comment">// A JFrame application</span>
+ 
+   <span class="color-comment">// Define private variables of all the GUI components</span>
+   private JPanel contentPane;
+   private JTextField textField;
+   private int count = 0;
+ 
+   <span class="color-comment">/**
+    * Launch the application.
+    */</span>
+   public static void main(String[] args) {
+      EventQueue.invokeLater(new Runnable() {  <span class="color-comment">// same as SwingUtilities.invokeLater()</span>
+         @Override
+         public void run() {
+            try {
+               SwingMain frame = new SwingMain();
+               frame.setVisible(true);
+            } catch (Exception e) {
+               e.printStackTrace();
+            }
+         }
+      });
+   }
+ 
+   <span class="color-comment">/**
+    * Create the frame.
+    */</span>
+   public SwingMain() {
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      setBounds(100, 100, 450, 300);
+      contentPane = new JPanel();
+      contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+      setContentPane(contentPane);
+      contentPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+ 
+      JLabel lblNewLabel = new JLabel(&quot;Counter: &quot;);
+      contentPane.add(lblNewLabel);
+ 
+      textField = new JTextField();
+      textField.setText(&quot;0&quot;);
+      contentPane.add(textField);
+      textField.setColumns(10);
+ 
+      JButton btnCount = new JButton(&quot;Count&quot;);
+      btnCount.addActionListener(new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            count++;
+            textField.setText(count + &quot;&quot;);
+         }
+      });
+      contentPane.add(btnCount);
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Eclipse for C/C++ Programming</h3>
+<p><a href="EclipseCpp_HowTo.html">Here</a>.</p>
+
+<h3 id="eclipsePDT">Eclipse PDT (PHP Development Tool)</h3>
+<p><a href="../webprogramming/AMP_Setup.html#eclipsePDT">Here</a>.</p>
+
+<h3 id="eclipseMySQL">Eclipse and Database Development (MySQL)</h3>
+
+<p>Reference: &quot;Data Tools Platform User Documentation&quot; @ Eclipse Welcome page.</p>
+
+<p>You need to install Eclipse for Java EE, MySQL and MySQL Connector/J Driver. Read &quot;<a href="../sql/MySQL_HowTo.html">How to install and get started with MySQL</a>&quot;.</p>
+
+<p>To use Eclipse for MySQL development:</p>
+
+<ol>
+<li>Switch to &quot;Database Development&quot; perspective: From &quot;Window&quot; menu &rArr; Open Perspective &rArr; Other &rArr; Database Development.</li>
+
+<li>Connect to MySQL database server: Start your MySQL database server. Right-click &quot;Database Connection&quot; &rArr; New.
+  <ol>
+<li>In &quot;Connection Profile&quot;, choose &quot;MySQL&quot; &rArr; Next.</li>
+<li>In &quot;Driver&quot;, choose &quot;New Driver Definition&quot; &rArr; Choose the MySQL Connector/J Driver &rArr; In JAR List, select the MySQL Connector/J Driver JAR file (that you have installed). In &quot;Properties&quot;, &quot;General&quot;, specify URL (take note of the database name), User name and password &rArr; Test Connection &rArr; Finish.</li>
+<li>In &quot;Datasource Explorer&quot;, you can &quot;connect&quot; and &quot;disconnect&quot; the connection.</li>
+  </ol>
+</li>
+
+<li>To create a new SQL script, choose File &rArr; New &rArr; SQL File &rArr; You may use an existing project or create a new project (General - Project or Web - Dynamic Web Project) &rArr; Enter filename, and set the connection profile name &rArr; Finish. Enter a SQL statement (e.g., SELECT * FROM tablename) &rArr; Right-click on the text &rArr; &quot;Execute Current Text&quot; or &quot;Execute All&quot;.</li>
+<li>To use an existing SQL file, drop the file into a project and open the SQL file. In Connection profile, set the type and connection name. Right-click on a statement &rArr; &quot;Execute ...&quot;.</li>
+<li>To CURD (create-update-read-delete) tables, in &quot;Datasource Explorer&quot; (of the &quot;Database Development&quot; perspective), expand &quot;database&quot; to view the tables. Right-right on the table &rArr; Datat &rArr; Edit.</li>
+</ol>
+
+
+<h3 id="EclipseWebapp">Developing and Deploying Web Applications in Eclipse for Java EE</h3>
+
+<h4>Setting Up Eclipse for Web Development</h4>
+<ol>
+<li>Install &quot;Eclipse for Java EE (Enterprise Edition)&quot;.</li>
+<li>Install Tomcat (or Glassfish) server.</li>
+<li>Configuring Web Server: Launch Eclipse &rArr; Window &rArr; Preferences &rArr; Expand the &quot;Server&quot; node  &rArr; &quot;Runtime Environments&quot; &rArr; &quot;Add...&quot; &rArr; Expand &quot;Apache&quot; and select &quot;Apache Tomcat v7.0&quot; &rArr; Enter the &quot;Tomcat Installation Directory&quot;  &rArr; &quot;Finish&quot;.</li>
+</ol>
+
+<h4>Writing a Hello-world JSP Page</h4>
+<ol>
+<li>Create a new Web Application: File &rArr; New &rArr; Dynamic Web Project (under &quot;Web&quot; category) &rArr; In &quot;Project Name&quot;, enter &quot;<code>HelloJSP</code>&quot; &rArr; Finish.</li>
+
+<li>Create a new JSP File: Right-click on the project &quot;<code>HelloJSP</code>&quot;  &rArr; New  &rArr; JSP File  &rArr; The parent folder shall be &quot;HelloJSP/WebContent&quot; &rArr; In &quot;File Name&quot;, enter &quot;<code>Hello</code>&quot; &rArr; &quot;Finsih&quot;.</li>
+
+<li>Enter the following HTML/JSP codes within the <code>&lt;body&gt;...&lt;/body&gt;</code><code></code> tags:
+
+  <pre class="color-example">
+&lt;h1&gt;Hello World!&lt;/h1&gt;
+&lt;%
+out.println(&quot;Your IP address is &quot; + request.getRemoteAddr() + &quot;&lt;br/&gt;&quot;);
+out.println(&quot;Your user agent is &quot; + request.getHeader(&quot;user-agent&quot;) + &quot;&lt;br/&gt;&quot;);
+%&gt;
+</pre></li>
+<li>To execute the JSP, right-click on &quot;<code>Hello.jsp</code>&quot; &rArr; Run As 
+ &rArr; Run on Server.</li>
+</ol>
+
+<h4>Writing a Hello-world Servlet</h4>
+<ol>
+  <li>Create a new Web Application: File &rArr; New &rArr; Dynamic Web Project (under &quot;Web&quot; category) &rArr; In &quot;Project Name&quot;, enter &quot;<code>HelloServlet</code>&quot; &rArr; &quot;Finish&quot;.</li>
+  <li>Create a new Servlet: Right-click on the project &quot;<code>HelloServlet</code>&quot;  &rArr; New  &rArr; Servlet  &rArr; In &quot;Java Package&quot;, enter &quot;<code>hello</code>&quot;; in &quot;Class Name&quot;, enter &quot;<code>HelloServlet</code>&quot; &rArr; Next &rArr; In &quot;URL Mappings&quot;, select &quot;<code>\HelloServlet</code>&quot;, &quot;Edit&quot; to &quot;<code>\Hello</code>&quot; &rArr; Next &rArr; In &quot;Which method stubs would you like to create&quot;, check &quot;Inherited abstract method&quot; and &quot;doGet&quot; &rArr; Finish.<br />
+In &quot;HelloServlet.java&quot;, enter the following codes:
+<pre class="color-example">
+package hello;
+ 
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.WebServlet;
+ 
+@WebServlet(&quot;/sayhello&quot;)  <span class="color-comment">// URL for this Servlet (for Servlet 3.0 with Tomcat 7)</span>
+public class HelloServlet extends HttpServlet {
+   private static final long serialVersionUID = 1L;
+ 
+   @Override
+   protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+      <span class="color-comment">// Set the response message MIME type (in Content-Type response header)</span>
+      response.setContentType(&quot;text/html&quot;);
+      <span class="color-comment">// Get an output Writer to write the response message over the network</span>
+      PrintWriter out = response.getWriter();
+      <span class="color-comment">// Write the response message (in an HTML page) to display &quot;Hello, world!&quot;</span>
+      out.println(&quot;&lt;!DOCTYPE html&gt;&quot;);
+      out.println(&quot;&lt;html&gt;&lt;head&gt;&quot;);
+      out.println(&quot;&lt;meta http-equiv='Content-Type' content='text/html; charset=UTF-8'&gt;&quot;);
+      out.println(&quot;&lt;title&gt;Hello Servlet&lt;/title&gt;&lt;/head&gt;&quot;);
+      out.println(&quot;&lt;body&gt;&lt;h1&gt;Hello, World!&lt;/h1&gt;&quot;);
+      out.println(&quot;&lt;p&gt;Your IP address is &quot; + request.getRemoteAddr() + &quot;&lt;/p&gt;&quot;);
+      out.println(&quot;&lt;p&gt;Your user agent is &quot; + request.getHeader(&quot;user-agent&quot;) + &quot;&lt;/p&gt;&quot;);
+      out.println(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);
+   }
+}</pre>
+
+<p><strong>(For Servlet 2.4/2.5 with Tomcat 6)</strong> The annotation <code>@WebServlet</code> is new in Servlet 3.0 and is not supported in Servlet 2.4/2.5. Hence, you need to manually configure the URL for the servlet in the Web Application Deployment Descriptor &quot;<code>web.xml</code>&quot; under directory &quot;<code>WEB-INF</code>&quot;, as follows:</p>
+
+<pre class="color-example">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+&lt;web-app xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot;
+  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd&quot;
+  version=&quot;3.0&quot; metadata-complete=&quot;true&quot;&gt;
+ 
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;<strong>HelloServletExample</strong>&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;<strong>hello.HelloServlet</strong>&lt;/servlet-class&gt;
+  &lt;/servlet&gt;
+ 
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;<strong>HelloServletExample</strong>&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;<strong>/sayhello</strong>&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+ 
+&lt;/web-app&gt;</pre>
+
+</li>
+
+<li>To execute the Servlet, right-click on the &quot;<code>HelloServlet</code>&quot; project &rArr; &quot;Run As&quot; &rArr; &quot;Run on Server&quot; &rArr; Change the URL to &quot;<code>http://localhost:8080/HelloServlet/sayhello</code>&quot;.</li>
+</ol>
+
+<h4>Exporting a Web Application as a WAR file</h4>
+<p>Right-click on the project to be exported &rArr; Export &rArr; WAR File &rArr; In &quot;Destination&quot;, specify the destination directory and filename (the filename shall be the web application name) &rArr; Finish.</p>
+
+<ol>
+<li>To deploy the war file in Tomcat, simply drop the war file into Tomcat's &quot;<code>webapps</code>&quot; folder. The war file will be automatically extracted and deployed. The web application name is the war-filename.</li>
+<li>You could use WinZip (or WinRAR) to view the content of the war file, as war-file is in ZIP format.</li>
+</ol>
+
+<h4>Writing a Hello-world JSF Page</h4>
+<p>[TODO]</p>
+
+<h4>Debugging Web Applications</h4>
+<p>You can debug a webapp just like standalone application. For example, you can set breakpoints, single-step through the programs, etc.</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+  <li>Eclipse mother site @ <a href="http://www.eclipse.org">www.eclipse.org</a>.</li>
+  <li>Eclipse documentation and user guides, accessible via Eclipse's Help and  menu.</li>
+</ol>
+
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Eclipse 4.5 (Mars)<br />
+Last modified: January, 2016</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+
+</body>
+</html>

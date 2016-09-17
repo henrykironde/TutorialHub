@@ -1,0 +1,1660 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>How to install Ubuntu and Get Started</title>
+
+<!-- @@ start change in v1 -->
+<link href="../css/programming_notes_v1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../scripts/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>&nbsp;</p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="#show-toc">(HIDE)</a></h5>
+<div id="toc"></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>How to install and Get Started with Ubuntu 14.04 (LTS)</h1>
+<h2>&nbsp;</h2>
+</div>
+
+<div id="content-main">
+
+<!-- @@ end change in v1 -->
+
+<h3>Introduction</h3>
+
+<p>Ubuntu is a <em>distribution</em> (or <em>distros</em> in short) of &quot;GNU-Linux&quot;, just like RedHat, Fedora, SUSE, and Debian. In other words, it is a <em>packaging</em> of &quot;<em>Linux Kernel + GNU System Programs/Utilities</em>&quot;.</p>
+
+<p>Ubuntu is open-source and free (&quot;free&quot; as in &quot;free speech&quot;, not as in &quot;free beer&quot;). Ubuntu is sponsored by Mark Shuttleworth, a south African entrepreneur who made his fortune in IT, via a company called Canonical Inc. The term &quot;ubuntu&quot; means &quot;<em>humanity towards others</em>&quot; in southern African language. </p>
+
+<p>Ubuntu runs the GNOME desktop manager. It includes the OpenOffice suite,  Firefox Web browser,
+Mozilla Thunderbird,  Pidgin IM client, and a collection of tools and games. It uses Advanced Packaging Tool (APT) - Debian's high-level package management system - for managing the software on the system.</p>
+
+<p>The first Ubuntu version was released in October 2004. Since then, there are two releases per year, in April (<em>YY</em>-04) and October (<em>YY</em>-10), e.g., 14.04, 14.10. Some version are marked as LTS (Long Term Support), which will be supported over the next 5 years, e.g., 14.04 LTS.</p>
+
+<p>Ubuntu has many flavors: Ubuntu Desktop, Ubuntu Server, Ubuntu Cloud, Ubuntu Netbook, Ubuntu Core, Kubuntu, EdUbuntu, Xubuntu, and others.</p>
+
+<h3 id="ubuntu-install">Installing Ubuntu Desktop for Programmers/Developers</h3>
+
+<h4>Ubuntu &quot;Desktop&quot; vs. Ubuntu &quot;Server&quot;</h4>
+<p>Ubuntu has many flavors, notably Ubuntu <em>Desktop</em> and Ubuntu <em>Server</em>. Ubuntu Desktop and Ubuntu Server are almost identical, except that the Server does not come with the Windowing system, i.e., no GUI applications. For development, install the Desktop first; and then install the server packages (such as LAMP). For production, use the Server without the Windowing system.</p>
+
+<h4>Installing Ubuntu alongside other Operating System</h4>
+
+<p>There are various ways to install Ubuntu alongside other Operating Systems (such as Windows, Mac OS), such as:</p>
+
+<ol>
+<li>Via a virtualization software such as VirtualBox or VMWare.</li>
+<li>Dual-boot or multi-boot, with each OS running in its own disk partition.</li>
+<li>For Windows, via so-called &quot;Wubi&quot; which installs Ubuntu in a Windows' file, instead of disk partition (available for some Ubuntu versions only).</li>
+</ol>
+
+<h5>Installing Ubuntu via VirtualBox or VMWare</h5>
+
+<p>[TODO]</p>
+
+<h5>Dual-Boot Windows and Ubuntu</h5>
+
+<p>The installation procedure changes over the Ubuntu releases. Follow the instructions in the Ubuntu download site, and google if you encounter problems.</p>
+<ol>
+<li>Download Ubuntu Desktop from <a href="http://www.ubuntu.com/download">http://www.ubuntu.com/download</a>. Select &quot;Ubuntu Desktop&quot; &rArr; Download.</li>
+<li>Read &quot;How to burn a DVD&quot; or &quot;How to create a bootable USB stick&quot;. Create a DVD or USB Stick.</li>
+<li>Read &quot;Installation instructions for Ubuntu for desktop&quot; @ <a href="http://www.ubuntu.com/download/desktop/install-ubuntu-desktop">http://www.ubuntu.com/download/desktop/install-ubuntu-desktop</a>.</li>
+<li>Change your computer's boot setting to boot from Live-CD, typically by pressing F2 or F12 or other function key, immediately after power up.</li>
+
+<li>You could try out Ubuntu from Live-CD without installing; or install Ubuntu.</li>
+
+<li>Choose Install Ubuntu. Follow the "Installation Instruction". The installer could detect the presence of the Windows OS, and "install Ubuntu alongside with Windows 7".</li>
+
+<li>Allocate sufficient disk space for Ubuntu (20-80 GB). Ubuntu will be installed in two partitions: a &quot;root&quot; partition and a &quot;swap&quot; partition. The default swap partition's size is your RAM size (4-16 GB). Give 20-50 GB for the root partition, depending on your usage.</li>
+
+<li>Follow the instruction on the screen to complete the installation.</li>
+</ol>
+
+<h5>Install Ubuntu Desktop with &quot;Wubi (Windows Installer)&quot;</h5>
+
+<p>NOTES: This is probably out-dated. Wubi could not install the latest version of Ubuntu!</p>
+
+<p>To run Ubuntu together with Windows, you could install Ubuntu via &quot;Wubi&quot; (or Windows Installer), instead of using dual-boot. Ubuntu will be installed in a single file instead of a partition; and it will be much easier to uninstall. You need to have about 20 GB of free space. The installation takes about an hour.</p>
+
+<p>&quot;Wubi&quot;, however, is available for certain versions for Ubuntu under some operating platforms only. Check &quot;Wubi Guide&quot; @ <a href="https://wiki.ubuntu.com/WubiGuide">https://wiki.ubuntu.com/WubiGuide</a>.</p>
+
+<ol>
+<li>Goto <a href="http://www.ubuntu.com/download/desktop">http://www.ubuntu.com/download/desktop</a> &rArr; Choose &quot;Download Windows Installer&quot; (only if &quot;Wubi&quot; is available).</li>
+
+<li>Read &quot;<a href="http://www.ubuntu.com/download/help/install-ubuntu-with-windows">Installing Ubuntu with the Windows installer</a>&quot;.</li>
+
+<li>Run the downloaded installer &rArr; Set a &quot;username&quot;. Choose a short, lowercase name without spaces, such as &quot;peter&quot; - it will be used as your login ID and your home directory name &rArr; Set a &quot;password&quot; &rArr; Install.<br />
+Ubuntu, by default, disables the superuser <code>root</code> for security. This user can issue <code>sudo</code> command to perform system administration.</li>
+</ol>
+
+<p>In a Wubi install, your Windows' C drive is mounted under <code>/host</code>. Other drives (e.g. D drive) are mounted under <code>/media/<em>username</em>/User</code>. In &quot;Files Manager&quot;, you can view the Windows' C drive by selecting &quot;Computer&quot; under &quot;Devices&quot;; and other drives by selecting &quot;User&quot;.</p>
+
+
+<h4>Post Installation - Updating Software</h4>
+
+<p>Run the software update:</p>
+<pre class="color-command">
+<span class="color-comment">// Update (Re-synchronize) your software list (or Package Index Files).
+// This does not run any actual update.</span>  
+<strong>sudo apt-get update</strong>
+ 
+<span class="color-comment">// Run actual upgrade</span>
+<strong>sudo apt-get upgrade</strong></pre>
+
+
+<h4>Errors that I have encountered</h4>
+
+<h5>Error: Ubuntu installation does not detect Windows 7</h5>
+
+<p>Reference: http://askubuntu.com/questions/287352/ubuntu-13-04-amd64-installation-does-not-detect-windows-7</p>
+
+<p>This error could be caused by a MBR (Master Boot Record) with corrupt GPT, that can be fixed by gdisk.</p>
+
+<ol>
+<li>Boot up the machine using Live-CD and choose "Try Ubuntu with install".</li>
+
+<li>Install gdisk (I have problems on 12.04 LTS, but fine with 13.04):
+<pre class="color-command">
+$ sudo apt-get update 
+$ sudo apt-get install gdisk</pre></li>
+
+<li>Back up the current MBR:
+<pre class="color-command">
+$ sudo dd if=/dev/sda of=sda.mbr bs=512 count=1</pre></li>
+
+<li>Run gdisk to clear the GPT signatures (BE EXTREMELY CAREFUL!!!):
+<pre class="color-command">
+$ sudo gdisk /dev/sda
+Switch to expert mode: x
+To zap GPT, enter: z
+Choose "MBR". Make sure not to blank out the MBR.</pre></li>
+
+<li>Re-boot with Live-CD, and you shall see the option to install alongside Windows 7.</li>  
+
+</ol>
+
+<h5>Error: Dual-boot menu does not show up during boot</h5>
+
+<p>Reference: http://askubuntu.com/questions/78544/ubuntu-missing-from-boot-menu-after-setting-up-dual-boot</p>
+
+<p>Need to repair the Grub, using boot-repair.</p>
+
+<ol>
+<li>Boot up the machine using Live-CD and choose "Try Ubuntu with install".</li>
+
+<li>Install boot-repair:
+<pre class="color-command">
+$ sudo add-apt-repository ppa:yannubuntu/boot-repair
+$ sudo apt-get update
+$ sudo apt-get install -y boot-repair</pre></li>
+
+<li>Run boot-repair:
+<pre class="color-command">
+$ gksu boot-repair
+Select &quot;Recommended repair&quot; and follow the screen instructions.</pre></li>
+</ol>
+
+<h5>Error: Time resets to UTC after boot</h5>
+
+<p>In &quot;<code>/etc/default/rcS</code>&quot;:</p>
+<pre class="color-example">
+# assume that the BIOS clock is set to UTC time (recommended)
+UTC=no</pre>
+
+<h5>Error: GUI console hangs (after upgrade)</h5>
+<p>Reinstall Unity desktop:</p>
+
+<ol>
+<li>At login menu &rArr; Press Ctrl-Alt-F2 to get a command-line console.</li>
+<li>Reinstall Unity desktop:
+<pre class="color-command">
+$ <strong>sudo su</strong>
+$ <strong>apt-get update</strong>
+$ <strong>apt-get install --reinstall ubuntu-desktop</strong>
+$ <strong>apt-get install unity</strong>
+
+<span class="color-comment">// reinstall nvidia (if applicable)</span>
+$ <strong>apt-get remove --purge nvidia* bumblebee*</strong>
+$ <strong>apt-get install nvidia-prime</strong>
+
+$ <strong>shutdown -r now</strong>
+   <span class="color-comment">// -r for restart</span></pre>
+</li>
+</ol>
+
+<h3>Getting Started with Ubuntu</h3>
+
+<p>Read the Documentation available at <a href="https://help.ubuntu.com/">https://help.ubuntu.com</a>.</p>
+
+<h4>&quot;Unity&quot; Desktop</h4>
+
+<p>Ubuntu uses the &quot;Unity&quot; desktop, which is designed &quot;to minimize distractions, give you more room to work, and help you get things done&quot;.  I highlight some of the key features of Unity desktop here:</p>
+
+<ul>
+<li><span class="line-heading">Launcher</span>: On the left of the screen for you to launch commonly-used applications (similar to Windows' taskbar and Mac's dock). Apps that aren't currently running have <em>translucent</em> icon squares. When you start an app, the icon square <em>pulses</em>. When an app is running, the icon square becomes <em>opaque</em>. Small white triangles to the left of the icon square indicates the number of windows opened. Two triangles means that two windows opened. Three triangles means three or more windows. A small white triangle to the right of the icon square indicates the current app.</li>
+
+<li><span class="line-heading">Dash</span>: The top icon in the launcher (painted with the Ubuntu logo) for finding programs and files. It can also be started using the &quot;super&quot; key (or &quot;Windows&quot; key). The Dash is designed to make it easier to find, open, and use apps, files, music, and more. The various <em>lenses</em> (applications, files, etc.) at the bottom allow you to focus the search on a particular resource.</li>
+
+<li><span class="line-heading">Panel</span>: The bar on top of the screen is called the <em>panel</em>. When you move the mouse pointer over it, it shows the <em>App Menus</em> for the current application on its left. The panel also houses the <em>Status Indicators</em> on its right.</li>
+
+<li><span class="line-heading">Status Indicators</span>: comprising mail, battery, bluetooth, network, sound, clock, and system menus.</li>
+
+<li><span class="line-heading">Overlay scrollbars</span>: The scroll bars appear as thin orange strips at the right and bottom edge of the window to conserve space. You can move the mouse pointer over it to reveal the &quot;Thumb Slider&quot;. You can click the top half of the thumb slider to scroll one page up; or click the bottom half to scroll one page down. You can drag the thumb slider to position the page.</li>
+
+<li><span class="line-heading">HUD (Heads Up Display)</span>: HUD is a search-based alternative to traditional menus. It can be activated via the &quot;alt&quot; key. Instead of clicking and selecting from the menus, you can type the search phrase (such as &quot;replace&quot;) to locate the menu item.</li>
+
+<li><span class="line-heading">Workspaces</span>: Ubuntu provides four workspace, by default. You can group your applications in different workspaces; and use the &quot;Workspace Switcher&quot; to switch between workspaces.</li>
+</ul>
+
+<h4>Using Terminal - MUST READ Before You Start Programming</h4>
+
+<p>Programmers use &quot;Terminal&quot; to issue commands, instead of the graphical user interface - which is meant for common users.</p>
+
+<p>You MUST have knowledge on the File system and using the Terminal. Read &quot;<a href="Unix_SurvivalGuide.html">Programmer's Survival Guide for Macs and Ubuntu</a>&quot;.</p>
+
+<h4>Applications and Utilities</h4>
+
+<p><span class="line-heading">LibreOffice</span>: The default Ubuntu's productivity suite, which is a variant of OpenOffice (currently owned by Apache). It includes:</p>
+
+<ul>
+<li><span class="line-heading">Writer</span>: word processor, similar to Microsoft Word.</li>
+<li><span class="line-heading">Calc</span>: spreadsheet, similar to Microsoft Excel.</li>
+<li><span class="line-heading">Writer</span>: word processor, similar to Microsoft Word.</li>
+<li><span class="line-heading">Impresss</span>: Presentation program, similar to Microsoft Powerpoint.</li>
+<li><span class="line-heading">Math</span>: Math formula editor.</li>
+<li><span class="line-heading">Base</span>: Database application, similar to Microsoft Access.</li>
+<li><span class="line-heading">Draw</span>: Graphics application for creating images.</li>
+<li><span class="line-heading">Dia</span>: Technical diagram drawing editor, similar to Microsoft Visio.</li>
+<li><span class="line-heading">Planner</span>: Project management application, similar to Microsoft Project.</li>
+</ul>
+
+<p><span class="line-heading">GEdit Text Editor</span>: The GNU <code>gedit</code> is the default text editor in Ubuntu. [TODO] more.</p>
+
+<p><span class="line-heading">Screenshot</span>: Press PrintScreen key to capture the entire screen; alt+PrintScreen key to capture the current window. The images are captured in PNG. Alternatively, use the dash to search for &quot;Screenshot&quot;. You can set the area of screenshot.</p>
+
+<p><span class="line-heading">PDF Documents</span>: Evince is the default PDF reader (you can also install the Acrobat Reader). To edit PDF document, you can install an extension called PDF Import to LibreOffice, or use programs such as PDF Editor (<code>pdfedit</code>).</p>
+
+<p><span class="line-heading">PDF Printer</span>: You can install CUPS PDF printer via:</p>
+<pre class="color-command">
+$ sudo apt-get install cups-pdf</pre>
+<p>The default &quot;printing location&quot; is at ~/PDF. You can configure the printer setting via &quot;System Setting&quot; &rArr; Printers.</p>
+
+<h4>Command-line Interface (CLI) Consoles</h4>
+<p>You can press Ctrl-Alt-F1 to Ctrl-Alt-F6 to activate one of the 6 virtual command-line consoles (provided by getty/agetty programs). Press Ctrl-Alt-F7 to return to the GUI console.</p>
+<p>These command-line console is handy if your GUI console is having problem.</p>
+
+
+<h3>APT for Managing Software</h3>
+
+<p><strong>Reference</strong>: https://help.ubuntu.com/community/AptGet/Howto</p>
+
+<p>Ubuntu adopts Debian's Advanced Packaging Tool (APT) for software package management of &quot;<code>.deb</code>&quot; package. Other Linux distros, such as Red Hat, uses RPM Package Manager.</p>
+
+<p>APT can properly handle the dependencies. It automatically finds and downloads all the dependencies of the packages to be installed. It can also resume installation after an interruption.</p>
+
+<h5>Upgrading Installed Software of Your System</h5>
+
+<p>To perform software upgrade for your system:</p>
+
+<ol>
+<li>Check the Ubuntu repositories for updates to your installed software:
+  <pre class="color-command">
+$ <strong>sudo apt-get update</strong></pre>
+
+The <code>update</code> option resynchronizes your <em>package index files</em> from their source. The list of available sources are fetched from <code>/etc/apt/sources.list</code> and <code>/etc/apt/sources.list.d/</code>. This command does not actually install any new versions of the software.
+</li>
+
+<li>Upgrade your software by entering:
+<pre class="color-command">
+$ <strong>sudo apt-get upgrade</strong>       <span class="color-comment">// Do not upgrade version</span>
+<span class="color-comment">// or</span>
+$ <strong>sudo apt-get dist-upgrade</strong>  <span class="color-comment">// Make version upgrade, if any</span></pre>
+These commands install new versions of software.<br />
+The &quot;<code>dist-upgrade</code>&quot; option ensure that any dependencies that are needed will be installed, even if major changes are needed - it was designed to upgrade from one version of Linux to a new version. On the other hand, the &quot;<code>upgrade</code>&quot; option will not make major change, but install security and simple package upgrade. &quot;<code>apt-get upgrade</code>&quot; never removes or adds new package, but patches up existing packages (under the same version number). On the other hand, &quot;<code>apt-get dist-upgrade</code>&quot; may add/remove packages.<br />
+Use <code>upgrade</code> for your production system!</li>
+</ol>
+
+<h5>Installing New Software</h5>
+
+<p>When you type a command, such as &quot;<code>mysql</code>&quot; or &quot;<code>g++</code>&quot;, which is not installed in the system, Ubuntu is smart enough to suggest packages that contain such command.</p>
+
+<p>To install new software, use &quot;<code>apt-get install &lt;package-name&gt;</code>&quot;. For example, to install MySQL Server:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get install mysql-server</strong></pre>
+
+<p>It lists all the <em>dependencies</em>. It also lists the <em>recommended</em> packages, and <em>suggested</em> packages (less important than recommended packages). It will install the dependencies automatically. But you need to explicitly install the recommended and suggested packages.</p>
+
+<h5>Removing Software</h5>
+
+<p>You can use &quot;<code>apt-get remove</code>&quot; or &quot;<code>apt-get purge</code>&quot; to remove installed software. Beware that all the packages that rely on this package will also be removed, as they are no longer valid. For example,</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get remove &lt;package-name&gt;</strong>
+ 
+$ <strong>sudo apt-get remove --purge &lt;package-name&gt;</strong>   <span class="color-comment">// Also purge the configuration files in &quot;/etc&quot;</span>
+$ <strong>sudo apt-get purge &lt;package-name&gt;</strong>            <span class="color-comment">// Same as above</span></pre>
+
+<h5>Configuration</h5>
+<p>APT's configuration is stored in <code>/etc/apt</code>.</p>
+<ul>
+<li><code>/etc/apt/sources.list</code> and <code>/etc/apt/sources.list.d/</code>: locations of software repositories to fetch packages. You can also configure via the GUI &quot;Software Sources&quot;.</li>
+<li><code>/etc/apt/apt.conf</code>: APT configuration file.</li>
+</ul>
+
+<p>APT stores temporary files in <code>/var/cache/apt</code> and <code>/var/lib/apt</code>. You can use command &quot;<code>apt-get clean</code>&quot; to clean the cached DEB files.</p>
+
+<h5>Check the Version/Status of the Installed Packages</h5>
+
+<p>There are several ways to list information of installed packages:</p>
+
+<ol>
+<li>use <code>dpkg</code> (Debian Package Manager) command with option:
+<ul>
+<li><code>-l, --list &lt;package-name-pattern&gt;</code>: List packages matching given pattern</li>
+<li><code>-s, --status &lt;package-name&gt;</code>: Report status of specified package</li>
+<li><code>-L, --listfiles &lt;package-name&gt;</code>: List files installed to your system from package-name</li>
+<li><code>-S, --search &lt;filename-search-pattern&gt;</code>: Search for a filename from installed packages</li>
+</ul>
+
+For example:
+<pre class="color-command">
+<span class="color-comment">// List installed software</span>
+$ <strong>dpkg --list</strong>               <span class="color-comment">// List ALL install packages</span>
+$ <strong>dpkg --list mysql-server</strong>  <span class="color-comment">// List package mysql-server</span>
+$ <strong>dpkg --list mysql*</strong>        <span class="color-comment">// List packages beginning with mysql*</span>
+$ <strong>dpkg --status mysql-server</strong>     <span class="color-comment">// Show status of package mysql-server</span>
+$ <strong>dpkg --filenames mysql-server</strong>  <span class="color-comment">// List files installed for package mysql-server</span></pre></li>
+
+<li><code>apt-cache policy &lt;package-name&gt;</code>:
+<pre class="color-command">
+$ <strong>apt-cache policy mysql-server</strong>   <span class="color-comment">// Show package mysql-server</span>
+$ <strong>apt-cache policy mysql-server*</strong>  <span class="color-comment">// Show packages beginning with mysql-server</span></pre>
+<p>The <code>apt-cache</code> queries the APT cache, and lists installed as well as the available packages.</p>
+</li>
+
+<li><code>apt-cache show &lt;package-name&gt;</code>:
+<pre class="color-command">
+$ <strong>apt-cache show mysql-server</strong>
+$ <strong>apt-cache show mysql-server</strong>
+   <span class="color-comment">// Similar to <code>apt-cache policy</code>, but show more information</span>
+</pre></li>
+
+<li><code>apt-cache search &lt;key&gt;</code>:
+<pre class="color-command">
+$ <strong>apt-cache search mysql --names-only</strong>
+   <span class="color-comment">// Show all available package names containing mysql</span></pre></li>
+</ol>
+
+<h3 id="jdk">How to Install JDK 8 on Ubuntu</h3>
+
+<p>There are several JDK implementations available for Linux, such as Oracle JDK, OpenJDK, Sun JDK, IBM JDK and GNU Java Compiler. We shall choose the Oracle JDK 8. Ubuntu chooses OpenJDK as its default JDK, which is not 100% compatible with Oracle JDK.</p>
+
+<h5>Step 0: Check if JDK has already been Installed</h5>
+<p>Open a Terminal and issue this command:</p>
+<pre class="color-command">
+$ <strong>javac -version</strong></pre>
+
+<p>If a JDK version number (e.g., &quot;<code>javac 1.x.x_xx</code>&quot;) appears, JDK has already been installed. You can skip the installation and goto step 2.</p>
+
+<p>To remove OpenJDK, issue command:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get purge openjdk-\*</strong></pre>
+
+
+<h5>Step 1: Download and Install JDK</h5>
+
+<ol>
+<li>Goto JDK (Java SE) download site @ <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">http://www.oracle.com/technetwork/java/javase/downloads/index.html</a>. Select &quot;Java SE 8u{xx}&quot; &rArr; JDK &rArr; Download &rArr; &quot;Accept License Agreement&quot; &rArr; Select Linux x86 (for 32-bit system) or Linux x64 (for 64-bit system) &quot;<code><strong>tar.gz</strong></code>&quot; package, e.g., &quot;<code>jdk-8u{xx}-linux-i586.tar.gz</code>&quot;. (To check your OS version, goto &quot;Settings&quot; &rArr; &quot;Details&quot;; or issue command &quot;<code>file /sbin/init</code>&quot;.) The tarball will be stored in folder &quot;<code>~/Downloads</code>&quot;, by default.</li>
+
+<li>We shall install JDK under &quot;<code>/usr/local/java</code>&quot; (or Ubuntu's default JDK directory <code>/usr/lib/jvm</code>). First, create a directory &quot;<code>java</code>&quot; under &quot;<code>/usr/local</code>&quot;. Open a Terminal and issue these commands:
+  <pre class="color-command">
+$ <strong>cd /usr/local</strong>
+$ <strong>sudo mkdir java</strong></pre>
+
+Extract the downloaded package (Check your downloaded filename!)
+  <pre class="color-command">
+$ <strong>cd /usr/local/java</strong>
+$ <strong>sudo tar xzvf ~/Downloads/jdk-8u{xx}-linux-x64.tar.gz</strong>
+       <span class="color-comment">// x: extract, z: for unzipping gz, v: verbose, f: filename</span></pre>
+  JDK shall be extracted in a folder &quot;<code>/usr/local/java/jdk1.8.0_{xx}</code>&quot;, where <code>{xx}<span class="color-comment"></span></code> is the upgrade number.</li>
+
+<li>Inform the Ubuntu to use this JDK/JRE:
+  <pre class="color-command">
+<span class="color-comment">// Setup the location of java, javac and javaws</span>
+$ <strong>sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/jdk1.8.0_{xx}/jre/bin/java" 1</strong>
+      <span class="color-comment">// --install <em>symlink name path priority</em></span>
+$ <strong>sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/local/java/jdk1.8.0_{xx}/bin/javac" 1</strong>
+$ <strong>sudo update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/local/java/jdk1.8.0_{xx}/jre/bin/javaws" 1</strong>
+ 
+<span class="color-comment">// Use this Oracle JDK/JRE as the default</span>
+$ <strong>sudo update-alternatives --set java /usr/local/java/jdk1.8.0_{xx}/jre/bin/java</strong>
+      <span class="color-comment">// --set <em>name path</em></span>
+$ <strong>sudo update-alternatives --set javac /usr/local/java/jdk1.8.0_{xx}/bin/javac</strong>
+$ <strong>sudo update-alternatives --set javaws /usr/local/java/jdk1.8.0_{xx}/jre/bin/javaws</strong></pre>
+
+The above steps set up symlinks <code>java</code>, <code>javac</code>, <code>javaws</code> at <code>/usr/bin</code> (which is in the PATH), that link to <code>/etc/alternatives</code> and then to JDK bin directory.<br />
+The &quot;alternatives&quot; system aims to resolve the situation where several programs fulfilling the same function (e.g., different version of JDKs). It sets up symlinks thru <code>/etc/alternatives</code> to refer to the actual programs to be used.<br />
+
+<pre class="color-command">
+$ <strong>cd /usr/bin</strong>
+$ <strong>ls -ld java*</strong>
+lrwxrwxrwx 1 root root 22 Mar 31 20:41 java -&gt; /etc/alternatives/java
+lrwxrwxrwx 1 root root 23 Mar 31 20:42 javac -&gt; /etc/alternatives/javac
+lrwxrwxrwx 1 root root 24 Mar 31 20:42 javaws -&gt; /etc/alternatives/javaws
+ 
+$ <strong>cd /etc/alternatives</strong>
+$ <strong>ls -ld java*</strong>
+lrwxrwxrwx 1 root root 40 Aug 29 18:18 java -&gt; /usr/local/java/jdk1.8.0_20/jre/bin/java
+lrwxrwxrwx 1 root root 37 Aug 29 18:18 javac -&gt; /usr/local/java/jdk1.8.0_20/bin/javac
+lrwxrwxrwx 1 root root 42 Aug 29 18:19 javaws -&gt; /usr/local/java/jdk1.8.0_20/jre/bin/javaws</pre>
+</li>
+
+<li>To verify the JDK installation, issue these commands:
+<pre class="color-command">
+<span class="color-comment">// Show the Java Compiler (javac) version</span>
+$ <strong>javac -version</strong>
+javac 1.8.0_20
+ 
+<span class="color-comment">// Show the Java Runtime (java) version</span>
+$ <strong>java -version</strong>
+java version "1.8.0_20"
+Java(TM) SE Runtime Environment (build 1.8.0_20-b26)
+Java HotSpot(TM) 64-Bit Server VM (build 25.20-b23, mixed mode)
+ 
+<span class="color-comment">// Show the location of javac and java</span>
+$ <strong>which javac</strong>
+/usr/bin/javac
+$ <strong>which java</strong>
+/usr/bin/java</pre></li>
+
+
+<li>To use Java under Firefox, you need to enable the so-called &quot;Java Plugin for web browser&quot;.
+
+<pre class="color-command">
+$ <strong>cd /usr/lib/mozilla/plugins</strong>
+<span class="color-comment">// if this directory does not exist, create it</span>
+$ <strong>sudo mkdir -p /usr/lib/mozilla/plugins</strong></pre>
+  
+Then, create a symbolic link to your Mozilla plugins folder, (check your JDK folder)
+<pre class="color-command">
+$ <strong>cd /usr/lib/mozilla/plugins</strong>
+$ <strong>sudo ln -s /usr/local/java/jdk1.8.0_{xx}/jre/lib/amd64/libnpjp2.so</strong></pre>
+
+To verify the installation, restart your Firefox and issue URL &quot;<code>about:plugins</code>&quot;.Check for Java plugins with the correct version.<br />
+
+Starting from JDK 1.8u??, to run unsigned applets, you need to set security level to &quot;high&quot; add the sites to the &quot;Exception List&quot; (under the Java Control Panel &rArr; Security).  To start the Java Control Panel:
+
+<pre class="color-command">
+$ cd /usr/local/java/jdk1.8.0_{xx}/jre/bin
+$ ./ControlPanel      <span class="color-comment">// OR ./jcontrol</span>
+</pre>
+
+You need to restart Firefox after modifying the Exception List.
+</li>
+
+
+<li>[Don't Do this step - taken care by  &quot;alternative&quot; in Step 3. Keep here to show you how to set PATH.] Add JDK's binary directory (&quot;<code>bin</code>&quot;) to the &quot;PATH&quot; by editing &quot;<code>/etc/profile</code>&quot;:
+
+  <pre class="color-command">
+$ <strong>cd /etc</strong>
+$ <strong>gksudo gedit profile</strong>   <span class="color-comment">// OR &quot;sudo nano profile&quot; to use the console-based nano editor</span></pre>
+
+Add these lines at the <em>end</em> of the file &quot;<code>/etc/profile</code>&quot;, replace &quot;<code>{xx}</code>&quot; with the actual number:
+<pre class="color-example">
+export JAVA_HOME=/usr/local/java/jdk1.8.0_{xx}
+export PATH=$JAVA_HOME/bin:$PATH</pre>
+
+Rerun the configuration file by:
+<pre class="color-command">
+$ <strong>source /etc/profile</strong>
+ 
+<span class="color-comment">// Check the new settings for JAVA_HOME and PATH</span>
+$ <strong>echo $JAVA_HOME</strong>
+/usr/local/java/jdk1.8.0_{xx}
+ 
+$ <strong>echo $PATH</strong>
+.....:/usr/local/java/jdk1.8.0_{xx}/bin</pre>
+
+</li>
+</ol>
+
+<h5>Step 2: Compile and Run a Hello-world Java Program</h5>
+
+<ol>
+<li>Open &quot;Folder&quot; and create a new directory called &quot;<code>myProject</code>&quot; under your home directory to keep all your works.</li>
+
+<li>Open &quot;Text Editor&quot; (gedit). Enter the following source code and save as &quot;<code>Hello.java</code>&quot; under the &quot;<code>~/myProject</code>&quot; directory created earlier.
+  <pre class="color-example">
+public class Hello {   <span class="color-comment">// To save as &quot;Hello.java&quot; under &quot;~/myProject&quot;</span>
+   public static void main(String[] args) {
+      System.out.println(&quot;Hello, world from Ubuntu!&quot;);
+   }
+}</pre></li>
+
+<li>To compile the Hello-world Java program, launch a Terminal and issue these commands:
+  <pre class="color-command">
+<span class="color-comment">// Change directory to where the source code resides</span>
+$ <strong>cd ~/myProject</strong>
+ 
+<span class="color-comment">// List the contents of current directory. Check for &quot;Hello.java&quot;</span>
+$ <strong>ls</strong>
+...... Hello.java ....
+ 
+<span class="color-comment">// Compile &quot;Hello.java&quot; into &quot;Hello.class&quot;</span>
+$ <strong>javac Hello.java</strong>
+ 
+<span class="color-comment">// Check for &quot;Hello.class&quot;</span>
+$ <strong>ls</strong>
+...... Hello.class ....</pre>
+</li>
+
+<li>Run the Hello-world Java program:
+<pre class="color-command">
+<span class="color-comment">// Run &quot;Hello.class&quot;</span>
+$ <strong>java Hello</strong>
+Hello, world from Ubuntu!</pre>
+</li>
+
+</ol>
+
+<h3 id="ubuntu-eclipse">How to Install Eclipse 4.4 (Luna) on Ubuntu</h3>
+
+<p>Eclipse comes with many flavors (See &quot;Eclipse Packages&quot; @ <a href="https://www.eclipse.org/downloads/compare.php?release=luna">https://www.eclipse.org/downloads/compare.php?release=luna</a>):</p>
+<ul>
+<li>To use Eclipse for Java programming, choose &quot;Eclipse IDE for Java Developers&quot; or &quot;Eclipse IDE for Java EE Developers&quot;. You need to first install JDK. Read &quot;<a href="#jdk">How to install JDK on Ubuntu</a>&quot;.</li>
+<li>To use Eclipse for PHP programming, choose &quot;Eclipse IDE for PHP Developers&quot;.</li>
+<li>To use Eclipse for C/C++ programming, choose &quot;Eclipse IDE for C/C++ Developers&quot;.</li>
+<li>Nonetheless, you can install any package, and then add more features.</li>
+</ul>
+
+<p>To install Eclipse (e.g, for Java Programming):</p>
+<ol>
+<li>Download Eclipse from <a href="http://www.eclipse.org/downloads/">http://www.eclipse.org/downloads/</a>. Choose &quot;Linux&quot; 32-bit or 64-bit &rArr; &quot;Eclipse IDE for Java Developers&quot; (or &quot;Eclipse Standard|Classic&quot;) for Java SE program development; or &quot;Eclipse IDE for Java EE Developers&quot; for developing webapps. You will receive a  TAR file (e.g., &quot;<code>eclipse-jee-luna-R-linux-gtk-x86_64.tar.gz</code>&quot;) in the &quot;<code>~/Downloads</code>&quot; folder.</li>
+
+<li>Install:
+<pre class="color-command">
+<span class="color-comment">// Unzip the tarball into /usr/local</span>
+$ <strong>cd /usr/local</strong>
+$ <strong>sudo tar xzvf ~/Downloads/eclipse-jee-luna-R-linux-gtk-x86_64.tar.gz</strong>
+      <span class="color-comment">// Extract the downloaded package
+      // x: extract, z: for unzipping gz, v: verbose, f: filename
+      // You can also unzip in &quot;File Explorer&quot; by double-clicking the tarball.</span>
+ 
+<span class="color-comment">// Change ownership</span>
+$ <strong>cd /usr/local</strong>
+$ <strong>sudo chown -R <em>your-username</em>:<em>your-groupname</em> eclipse</strong>
+      <span class="color-comment">// Change ownership to your chosen username and groupname
+      // -R recursive</span>
+ 
+<span class="color-comment">// Set up a symlink</span>
+$ <strong>cd /usr/bin</strong>
+$ <strong>sudo ln -s /usr/local/eclipse/eclipse</strong>
+      <span class="color-comment">// Make a symlink in /usr/bin, which is in the PATH.</span>
+$ <strong>ls -ld eclipse</strong>
+lrwxrwxrwx 1 root root 26 Aug 30 11:53 eclipse -&gt; /usr/local/eclipse/eclipse
+$ <strong>which eclipse</strong>
+/usr/bin/eclipse
+$ <strong>whereis eclipse</strong>
+eclipse: /usr/bin/eclipse /usr/bin/X11/eclipse /usr/local/eclipse</pre>
+</li>
+</ol>
+
+<p>To run Eclipse, open the &quot;<code>/usr/local/eclipse</code>&quot; folder and click on the &quot;Eclipse&quot; icon; or start a &quot;Terminal&quot;, enter &quot;eclipse&quot;.</p>
+
+<h5>Pin Eclipse on Launcher</h5>
+<p>To pin Eclipse on the launcher, create a /usr/share/applications/eclipse.desktop file with the following contents:</p>
+
+<pre class="color-example">
+[Desktop Entry]
+Name=Eclipse 
+Type=Application
+Exec=eclipse
+Terminal=false
+Icon=/usr/local/eclipse/icon.xpm
+Comment=Integrated Development Environment
+NoDisplay=false
+Categories=Development;IDE;
+Name[en]=Eclipse</pre>
+
+<p>Start Eclipse, right-click on the Eclipse icon on launcher &rArr; lock to launcher.</p>
+
+<h5>Tips and Tricks on using Eclipse</h5>
+<p>Read <a href="EclipseJava_HowTo.html#tips">"Eclipse How-To"</a>.</p>
+
+
+<h3 id="netbeans">How to Install NetBeans on Ubuntu</h3>
+
+<p>To use NetBeans for Java programming, you need to first install JDK. Read &quot;<a href="#jdk">How to install JDK on Ubuntu</a>&quot;.</p>
+
+<p>To install NetBeans:</p>
+<ol>
+<li>Download NetBeans from <a href="http://netbeans.org/downloads/">http://netbeans.org/downloads/</a>. Choose platform &quot;Linux (x86/x64)&quot; &rArr; &quot;Java SE&quot;. You shall receive a <code>sh</code> file (e.g., &quot;<code>netbeans-7.x-ml-javase-linux.sh</code>&quot;) in &quot;<code>~/Downloads</code>&quot;.</li>
+
+<li>Set the downloaded <code>sh</code> file to executable and run the <code>sh</code> file. Open a Terminal:
+<pre class="color-command">
+$ <strong>cd ~/Downloads</strong>
+$ <strong>chmod a+x netbeans-7.x-ml-javase-linux.sh</strong>   <span class="color-comment">// Set to executable for all (a+x)</span>
+$ <strong>./netbeans-7.x-ml-javase-linux.sh</strong>           <span class="color-comment">// Run</span></pre>
+Follow the instructions to install NetBeans.
+</li>
+</ol>
+
+<p>To start NetBeans, run the script &quot;<code>netbeans</code>&quot; in the NetBeans' <code>bin</code> directory:</p>
+<pre class="color-command">
+$ <strong>cd <em>netbeans-bin-directory</em></strong>
+$ <strong>./netbeans</strong></pre>
+
+
+<h3 id="lamp">How to Install and Setup LAMP (Linux-Apache-MySQl-PHP) Server on Ubuntu</h3>
+
+<h4>Install LAMP Server</h4>
+<p>First, install the &quot;<code>tasksel</code>&quot; utility, which simplifies the installation of LAMP packages:</p>
+<pre class="color-command">
+$ <strong>sudo apt-get install tasksel</strong></pre>
+
+<p>You can view the manual page of tasksel via &quot;<code>man tasksel</code>&quot;.</p>
+
+<p>Then, run the &quot;<code>lamp-server</code>&quot; installation task:</p>
+
+<pre class="color-command">
+$ <strong>sudo tasksel install lamp-server</strong></pre>
+
+<p>To check the packages installed:</p>
+
+<pre class="color-command">
+$ <strong>tasksel --task-packages lamp-server</strong>
+apache2
+......
+mysql-common
+mysql-server
+mysql-server-5.5
+mysql-server-core-5.5
+mysql-client-5.5
+mysql-client-core-5.5
+......
+php5-common
+php5-mysql
+php5-cli</pre>
+
+<h4>Setup MySQL 5</h4>
+
+<p>Read &quot;<a href="#mysql">How to Install and Configure MySQL 5 on Ubuntu</a>&quot; (Skip Step 1: Installation).</p>
+
+
+<h4>Setup Apache 2</h4>
+
+<p>Read &quot;<a href="#apache2">How to Install and Configure Apache 2</a>&quot; (Skip Step 1: Installation).</p>
+
+<h4>Setup PHP 5</h4>
+
+<p>PHP supports Apache interface and Command-line interface (CLI). PHP executable is available in &quot;<code>/usr/bin/php</code>&quot; (link to &quot;<code>/usr/bin/php5</code>&quot; via alternatives as shown below):</p>
+
+<pre class="color-command">
+$ <strong>which php</strong>
+/usr/bin/php
+$ <strong>ls -ld /usr/bin/php</strong>
+lrwxrwxrwx 1 root root 21 Sep 24  2013 php -&gt; /etc/alternatives/php
+$ <strong>ls -ld /etc/alternatives/php</strong>
+lrwxrwxrwx 1 root root 13 Sep 24  2013 /etc/alternatives/php -&gt; /usr/bin/php5
+ 
+$ <strong>whereis php5</strong>
+php5: /usr/bin/php5 /etc/php5 /usr/lib/php5 /usr/include/php5 /usr/share/php5 /usr/share/man/man1/php5.1.gz
+$ <strong>man php5</strong>    <span class="color-comment">// Read manual</span></pre>
+
+<p>You could try out the Command-Line (CLI) PHP via:</p>
+
+<pre class="color-command">
+<span class="color-comment">// Say hello</span>
+$ <strong>php -r 'echo "Hello, world!\n";'</strong>
+Hello, world!
+ 
+<span class="color-comment">// Run phpinfo()</span>
+$ <strong>php -r 'phpinfo();'
+</strong>......</pre>
+
+<p>The PHP configuration files are &quot;<code>/etc/php5/apache2/php.ini</code>&quot; for the Apache interface; and &quot;<code>/etc/php5/cli/php.ini</code>&quot; for standalone command-line interface.</p>
+
+<p>Write a PHP script called &quot;<code>test.php</code>&quot; (place under Apache's base at &quot;<code>var/www</code>&quot; or &quot;<code>var/www/html</code>&quot;) to run <code>phpinfo()</code> under Apache, as below.</p>
+
+<pre class="color-example">
+&lt;?php 
+phpinfo();
+?&gt;</pre>
+
+<p>Run the script via http://localhost/test.php. The output shows that the loaded configuration files are &quot;<code>/etc/php5/apache2/php.ini</code>&quot; and &quot;<code>/etc/php5/apache2/conf.d/*.ini</code>&quot;. The &quot;<code>conf.d</code>&quot; contains links to &quot;<code>/etc/php5/mods-available</code>&quot;.</p>
+
+<p>The Apache loads the PHP module via &quot;<code>/etc/apache2/apache2.conf</code>&quot; &rArr; &quot;<code>/etc/apache2/mods-enabled/php5.conf|php5.load</code>&quot; &rArr; &quot;<code>/etc/apache2/mods-available/php5.conf|php5.load</code>&quot;.</p>
+
+<h4 id="PHPMyAdmin">Install PhpMyAdmin</h4>
+
+<p>&quot;PhpMyAdmin&quot; is a PHP app running under Apache, which provides an GUI for managing MySQL. Run <code>apt-get</code> to install <code>phpmyadmin</code>:</p>
+<pre class="color-command">
+$ <strong>sudo apt-get install phpmyadmin</strong>
+ 
+$ <strong>whereis phpmyadmin</strong>
+phpmyadmin: /etc/phpmyadmin /usr/share/phpmyadmin</pre>
+
+<p>You can access PhpMyAdmin via <code>http://localhost/phpmyadmin</code>.</p>
+
+<p>PHP's configuration file for Apache is &quot;<code>/etc/phpmyadmin/apache.conf</code>&quot;, which is included into Apache's main config file &quot;<code>/etc/apache2/apache2.conf</code>&quot; thru &quot;<code>/etc/apache2/conf-enabled/phpmyadmin.conf</code>&quot;. In the configuration, an alias &quot;<code>/phpmyadmin</code>&quot; is defined which is mapped to phpMyAdmin's web pages at &quot;<code>/usr/share/phpmyadmin</code>&quot;.</p>
+
+
+<h4 id="xdebugPHP">Install &quot;xdebug extension for PHP&quot; for Eclipse PDT</h4>
+<p>The mother site for xdebug extension for PHP is <a href="http://xdebug.org/">http://xdebug.org</a>.</p>
+
+<ol>
+<li>Install xdebug extension for PHP
+<pre class="color-command">
+$ <strong>sudo apt-get install php5-xdebug</strong></pre></li>
+
+<li>Check the location of &quot;<code>xdebug.so</code>&quot; module, which is kept under &quot;<code>/usr/lib/php5/20121212</code>&quot;, where the number depends on the PHP version.</li>
+
+<li>The installation creates a configuration file &quot;<code>/etc/php5/mods-available/xdebug.ini</code>&quot; with the following line (otherwise, create one):
+<pre class="color-command">
+zend_extension=xdebug.so</pre>
+
+<p>NOTE: in the previous version, you need to specify the full-path filename, e.g., &quot;<code>zend_extension=/usr/lib/php5/20121212/xdebug.so</code>&quot;.</p>
+
+Include the following lines into &quot;<code>xdebug.ini</code>&quot; to enable remote debugging from Eclipse PDT:
+<pre class="color-command">
+xdebug.remote_enable = On
+xdebug.remote_port = 9000
+xdebug.remote_host = 127.0.0.1</pre>
+
+<p>Recall that Apache loads PHP configuration files &quot;<code>/etc/php5/apache2/php.ini</code>&quot; and &quot;<code>/etc/php5/apache2/conf.d/*.ini</code>&quot;. To enable the above xdebug configuration file, create the following symlink in &quot;<code>/etc/php5/apache2/conf.d</code>&quot;:</p>
+
+<pre class="color-command">
+$ <strong>cd /etc/php5/apache2/conf.d</strong>
+$ <strong>sudo ln -s ../../mods-available/xdebug.ini 20-xdebug.ini</strong>
+$ <strong>ls -l</strong>
+lrwxrwxrwx 1 root root   31 Sep 11 19:42 20-xdebug.ini -> ../../mods-available/xdebug.ini</pre></li>
+
+<li>Check PHP configuration file &quot;<code>/etc/php5/apache2/php.ini</code>&quot; for the following settings:
+
+<pre class="color-command">
+<span class="color-comment">; Turn on the error display for development system, 
+; but not for production system.</span>
+display_errors = On
+ 
+<span class="color-comment">; Format error in HTML</span>
+html_errors = On</pre></li>
+
+<li>Restart the Apache2:
+<pre class="color-command">
+$ <strong>sudo service apache2 restart</strong>
+</pre></li>
+
+<li>Check the <code>phpinfo()</code> output to verify xdebug has been started. Create a PHP script called &quot;<code>test.php</code>&quot; with the following lines, and save under the Apache's base directory &quot;<code>/var/www</code>&quot; (or &quot;<code>/var/www/html</code>&quot;):
+<pre class="color-example">
+&lt;?php
+phpinfo();
+?&gt;</pre>
+Issue <code>http://localhost/test.php</code>, and search for xdebug (as shown below) to confirm that xdebug is activated.
+<img src="images/xdebug.png" alt="xdebug" />
+<p>NOTE: If the above steps does not work, add the lines directly into <code>/etc/php5/apache2/php.ini</code>.</p>
+</li>
+
+<li>Configure Eclipse PDT to work with &quot;xdebug extension for PHP&quot; for remote debugging of PHP programs: Read &quot;<a href="EclipseJava_HowTo.html#eclipsePDT">Eclipse PDT</a>&quot; (debugging section).</li>
+
+</ol>
+
+<h4 id="firebug">Install Firebug plugin for Firefox for debugging client-side HTML/CSS/JavaScript</h4>
+
+<p>Start Firefox, select menu &quot;Tools&quot; &rArr; Add-ons &rArr; Search for &quot;Firebug&quot; &rArr; Install.</p>
+
+<p>[TODO] Debugging JavaScript</p>
+
+<h4>Install Zend Debugger for PHP</h4>
+
+<p>You can use either xdebug or Zend Debugger, but not both?!</p>
+
+<p>NOTE: I have problems setting up Zend Debugger. I suggest you use xDebug (descried in the previous section).</p>
+
+<ol>
+<li>Download the Zend PHP debugger from <a href="http://www.zend.com/en/products/studio/downloads">http://www.zend.com/en/products/studio/downloads</a>.</li>
+<li>Extract the tarball.</li>
+
+<li>Check your PHP version via &quot;php --version&quot;.</li>
+
+<li>Copy the &quot;<code>ZendDebugger.so</code>&quot; module from the corresponding PHP version folder into <code>/usr/lib/php5</code>. At the time of writing, PHP 5.4 is not supported!!!</li>
+
+<li>Edit the php configuration file <code>/etc/php5/apache2/php.ini</code> to append the below:
+<pre>
+<span class="color-comment">; The section name is optional, but it's always a good idea to add it,
+; especially if you are not using a separate file</span>
+[Zend]
+
+<span class="color-comment">; This directive needs the full path to the Zend Debugger binary</span>
+zend_extension =/usr/lib/php5/ZendDebugger.so
+
+<span class="color-comment">; This directive allows Zend Debugger to start a debug session with:</span>
+zend_debugger.allow_hosts=127.0.0.1/32
+
+<span class="color-comment">; This directive allows Zend Debugger to expose itself
+; upon request (this is used in some service functionality).
+; The possible options are:
+; never – do not expose (default)
+; always – expose to whoever wants to know
+; allowed_hosts – expose only if the request comes from an IP listed above</span>
+zend_debugger.expose_remotely=always</pre>
+</li>
+
+<li>Restart the Apache2 via
+<pre>
+$ <strong>sudo service apache2 restart</strong></pre></li>
+
+<li>Check the Apache's error log via
+<pre>
+$ <strong>tail /var/log/apache2/error.log</strong>
+</pre>
+If error &quot;Failed loading <code>/usr/lib/php5/ZendDebugger.so</code>: <code>libssl.so.0.9.8</code>: cannot open shared object  file: No such file or directory&quot; occurs, you need to install <code>libssl</code>.
+<pre>
+$ <strong>sudo apt-cache search libssl0.9.8</strong>
+libssl0.9.8 - SSL shared libraries
+libssl0.9.8-dbg - Symbol tables for libssl and libcrypto
+ 
+$ <strong>sudo apt-get install libssl0.9.8</strong></pre>
+Restart apache2 and check the Apache's error log.
+</li>
+
+<li>Check the <code>phpinfo()</code> output to verify Zend Debugger has been started.</li>
+</ol>
+
+
+<h3 id="mysql">How to Install and Configure MySQL 5 on Ubuntu</h3>
+
+<h5>Step 1: Install MySQL</h5>
+
+<p>Open a new Terminal and issue this command:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get install mysql-server</strong></pre>
+
+<p>The installer will prompt for the password for the MySQL <code>root</code> user. Set a password for <code>root</code>, and remember this password.</p>
+
+<h5>Step 2: Verify the MySQL Installation</h5>
+<pre class="color-command">
+<span class="color-comment">// Show packages relating to mysql</span>
+$ <strong>dpkg --get-selections | grep mysql</strong>
+mysql-client-5.5                install
+mysql-client-core-5.5           install
+mysql-common                    install
+mysql-server                    install
+mysql-server-5.5                install
+mysql-server-core-5.5           install
+php5-mysql                      install
+......
+$ <strong>dpkg -l | grep mysql</strong>
+......
+ 
+<span class="color-comment">// Show where a package is installed</span>
+$ <strong>dpkg -L mysql-server</strong>
+$ <strong>dpkg -L mysql-common</strong>
+$ <strong>dpkg -L mysql-client-5.5 | less</strong>
+.......
+ 
+<span class="color-comment">// Check the location of &quot;mysqld&quot; (MySQL server deamon)</span>
+$ <strong>which mysqld</strong>
+/usr/sbin/mysqld
+$ <strong>whereis mysqld</strong>
+mysqld: /usr/sbin/mysqld /usr/share/man/man8/mysqld.8.gz
+$ <strong>man mysqld</strong>   <span class="color-comment">// Read the manual</span>
+
+<span class="color-comment">// Check the location of &quot;mysql&quot; (MySQL command-line client)</span>
+$ <strong>which mysql</strong>
+/usr/bin/mysql
+$ <strong>whereis mysql</strong>
+mysql: /usr/bin/mysql /etc/mysql /usr/lib/mysql /usr/bin/X11/mysql /usr/share/mysql /usr/share/man/man1/mysql.1.gz
+$ <strong>man mysql</strong>   <span class="color-comment">// Read the manual</span></pre>
+
+<p>As seen from the above output, the MySQL server daemon &quot;<code>mysqld</code>&quot; is installed at &quot;<code>/usr/sbin</code>&quot; (system software binaries). The MySQL command-line client &quot;<code>mysql</code>&quot; and utilities such as &quot;<code>mysqladmin</code>&quot; and &quot;<code>mysqldump</code>&quot; are located at &quot;<code>/usr/bin</code>&quot; (application software binaries).</p>
+
+
+<h5>Step 3: Configure MySQL Server</h5>
+
+<p>The MySQL main configuration file is &quot;<code>/etc/mysql/my.cnf</code>&quot;. Additional configuration files are be placed under <code>/etc/mysql/conf.d</code> directory. The configuration files are combined in this order (if available): &quot;<code>/etc/my.cnf</code>&quot;, &quot;<code>/etc/mysql/my.cnf</code>&quot; (&quot;<code><em>SYSCONFDIR</em>/mf.cnf</code>&quot;), &quot;<code>$MYSQL_HOME/my.cnf</code>&quot;, &quot;<code>[<em>DataDir</em>]/my.cnf</code>&quot;, &quot;<code>~/.my.cnf</code>&quot;.</p>
+
+<p>From &quot;<code>/etc/mysql/my.cnf</code>&quot;, the MySQL server (<code>mysqld</code>):</p>
+
+<ul>
+<li>runs on the default port number of 3306.</li>
+<li>A special user called &quot;<code>mysql</code>&quot; is created to run the MySQL server.</li>
+<li>The data directory (<code>datadir</code>) is located at <code>/var/lib/mysql</code> (owned by user:group <code>mysql:mysql</code>).</li>
+
+<li>The error log is located at <code>/var/log/mysql/error.log</code>.</li>
+</ul>
+
+<h5>Step 4: Start/Shutdown MySQL Server (mysqld)</h5>
+
+<p>MySQL is run as a <em>service</em> called &quot;<code>mysql</code>&quot; (configured at &quot;<code>/etc/init.d/mysql</code>&quot;), which is started automatically after boot. To start/stop/restart mysql, you could:</p>
+
+<pre class="color-command">
+$ <strong>sudo service mysql start</strong>
+$ <strong>sudo service mysql stop</strong>
+$ <strong>sudo service mysql restart</strong>
+ 
+<span class="color-comment">// OR (same as above)</span>
+$ <strong>sudo /etc/init.d/mysql restart</strong>
+$ <strong>sudo /etc/init.d/mysql stop</strong>
+$ <strong>sudo /etc/init.d/mysql start</strong></pre>
+
+<p>MySQL server will be started automatically after the installation. You CANNOT start another instance! To check the <code>mysqld</code> process:</p>
+
+<pre class="color-command">
+$ <strong>ps aux | grep mysqld</strong>
+mysql     1113  0.0  0.3 484432 50024 ?        Ssl  18:33   0:08 /usr/sbin/mysqld</pre>
+
+<h5>Step 5: Start/Stop MySQL Command-line Client (mysql)</h5>
+
+<p>To start a MySQL client:</p>
+<pre class="color-command">
+$ <strong>mysql -u root -p</strong>
+   <span class="color-comment">// Enter the password for the root user you have set in Step 1</span></pre>
+
+<p>To quit the MySQL client, type &quot;<code>exit</code>&quot; or &quot;<code>quit</code>&quot; on the &quot;<code>mysql&gt;</code>&quot; prompt.</p>
+
+<h5>Step 6: Remove the anonymous users:</h5>
+<pre class="color-command">
+<span class="color-comment">// Login to MySQL Server using root user</span>
+$ <strong>mysql -u root -p</strong>
+Enter Password:
+ 
+mysql&gt; <strong>select user, host, password from mysql.user;</strong>
+<span class="color-comment">   // Look for users without name, or without password</span>
+ 
+mysql&gt; <strong>drop user ''@'localhost';</strong>
+mysql&gt; <strong>drop user ''@'ubuntu';</strong>
+......
+ 
+mysql&gt; <strong>select user, host, password from mysql.user;</strong>
+......</pre>
+
+
+<h5>Step 7: (For Java Programmers) Install MySQL JDBC Driver</h5>
+<ol>
+
+<li>Download the latest JDBC driver from <a href="http://www.mysql.com/downloads">http://www.mysql.com/downloads</a> &rArr; MySQL Connectors &rArr; Connector/J &rArr; Compressed TAR archive (e.g., <code>mysql-connector-java-{5.x.xx}.tar.gz</code>, where <code>{5.x.xx}</code> is the latest release number).</li>
+
+<li>Double-click on the downloaded TAR file (at ~/Downloads) to expand into folder &quot;<code>mysql-connector-java-{5.x.xx}</code>&quot;.</li>
+
+<li>Open the expanded folder. Copy the JAR file &quot;<code>mysql-connector-java-{5.x.xx}-bin.jar</code>&quot; to JDK's <em>extension</em> directory at &quot;<code>/usr/local/java/jdk1.8.0_{xx}/jre/lib/ext</code>&quot;.
+
+<pre class="color-command">
+$ <strong>cd /usr/local/java/jdk1.8.0_{xx}/jre/lib/ext</strong>
+$ <strong>sudo cp ~/Downloads/mysql-connector-java-{5.x.xx}/mysql-connector-java-{5.x.xx}-bin.jar .</strong></pre></li>
+</ol>
+
+<!-- ------------------------------------------------------ -->
+
+<h3 id="apache2">How to Install and Configure Apache 2 on Ubuntu</h3>
+
+<h5>Step 1: Install Apache</h5>
+
+<p>Open a new Terminal and issue this command:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get install apache2</strong></pre>
+
+<h5>Step 2: Verify Apache Installation</h5>
+
+<pre class="color-command">
+<span class="color-comment">Show all package relating to apache</span>
+$ <strong>dpkg --get-selections | grep apache</strong>
+apache2                 install
+apache2-bin             install
+apache2-data            install
+apache2-mpm-prefork     install
+apache2-utils           install
+apache2.2-common        deinstall
+libapache2-mod-php5     install
+ 
+$ <strong>dpkg -l | grep apache</strong>
+
+<span class="color-comment">List the locations of a package</span>
+$ <strong>dpkg -L apache2 | less</strong>
+.......
+
+$ <strong>which apache2</strong>
+/usr/sbin/apache2
+$ <strong>whereis apache2</strong>
+apache2: /usr/sbin/apache2 /etc/apache2 /usr/lib/apache2 /usr/share/apache2 /usr/share/man/man8/apache2.8.gz
+$ <strong>man apache2</strong></pre>
+
+<p>As shown in the above output, the Apache server program &quot;<code>apache2</code>&quot; (called &quot;<code>httpd</code>&quot; in the previous version) is installed in <code>/usr/sbin</code> (system software binaries).</p>
+
+<h5>Step 3: Configure Apache</h5>
+
+<p>The Apache's main configuration files is &quot;<code>/etc/apache2/apache2.conf</code>&quot;, which includes:</p>
+
+<ul>
+<li><code>/etc/apache2/ports.conf</code>: defines the listening ports (defaults of 80 for HTTP and 443 for HTTPS).</li>
+
+<li><code>/etc/apache2/envvars</code>: defines the environment variables used by Apache, such as:
+<ul>
+<li><code>APACHE_RUN_USER</code>: <code>www-data</code></li>
+<li><code>APACHE_RUN_GROUP</code>: <code>www-data</code></li>
+<li><code>APACHE_RUN_DIR</code>: <code>/var/run/apache2</code></li>
+<li><code>APACHE_LOG_DIR</code>: <code>/var/log/apache2</code></li>
+</ul>
+A special user <code>www-data</code> is used to run the apache server (defined in <code>/etc/apache2/envvars</code>). User <code>www-data</code> should have &quot;<code>r</code>&quot; permission to all the files in the public www directory and &quot;<code>rx</code>&quot; permission to all the directories leading to the public www directory and the sub-directories.</li>
+
+<li><code>/etc/apache2/sites-enabled/*.conf</code>: for manage application web sites.<br />
+The default &quot;<code>000-default.conf</code>&quot; (called &quot;<code>default.conf</code>&quot; in the earlier releases) defines a virtual host:
+<ul>
+<li>listening at port 80 (enabled in &quot;<code>port.conf</code>&quot;).</li>
+<li><code>DocumentRoot</code> at &quot;<code>/var/www/html</code>&quot; (&quot;<code>/var/www</code>&quot; in the previous version?!).</li>
+</ul>
+
+To create or modify a site, you should create or tailor a configuration in <code>/etc/apache2/sites-available</code>&quot; and use helper utility <code>a2ensite</code> to make a symlink to the &quot;<code>/etc/apache2/sites-enabled</code>&quot;. Similarly, use helper utility <code>a2dissite</code> to remove a site from <code>/etc/apache2/sites-enabled</code>&quot;.</li>
+
+<li><code>/etc/apache2/mods-enabled/*.load|*.conf</code>: for manage modules. Use helper utilities <code>a2enmod/a2dismod</code> to enable or disable a module by symlinking to &quot;<code>/etc/apache2/mods-available</code>&quot;.</li>
+
+<li><code>/etc/apache2/conf-enabled/*.conf</code>: for additional configuration (such as <code>phpMyAdmin</code>). Use helper utilities <code>a2enconf/a2disconf</code> to enable or disable a configuration by symlinking to &quot;<code>/etc/apache2/conf-available</code>&quot;.</li>
+
+</ul>
+
+<h5>Step 4: Start/Shutdown Apache Server</h5>
+
+<p>Apache is installed as a <em>service</em> called &quot;<code>apache2</code>&quot; (configured at &quot;<code>/etc/init.d/apache2</code>&quot;). The Apache server will be started automatically after the installation.</p>
+
+<p> You can restart/stop/start Apache via:</p>
+
+<pre class="color-command">
+$ <strong>sudo service apache2 restart</strong>
+$ <strong>sudo service apache2 stop</strong>
+$ <strong>sudo service apache2 start</strong>
+$ <strong>sudo service apache2 reload</strong>  
+   <span class="color-comment">// Reload the configuration file without shutdown and restarting</span></pre>
+
+<p>NOTE: The &quot;<code>service xxx reload</code>&quot; reloads the configuration file, without shutting down the service. On the other hand, &quot;<code>service xxx restart</code>&quot; shutdown and restart the service. Not all services support <code>reload</code>.</p>
+
+<p>To check the apache process:</p>
+<pre class="color-command">
+$ <strong>ps aux | grep apache</strong>
+root      3950  0.0  0.0 319488 16160 ?        Ss   19:48   0:00 /usr/sbin/apache2 -k start
+www-data  3954  0.0  0.0 319772  9028 ?        S    19:48   0:00 /usr/sbin/apache2 -k start
+www-data  3955  0.0  0.0 319772  8816 ?        S    19:48   0:00 /usr/sbin/apache2 -k start
+......</pre>
+
+<p>The apache parent process is started by <code>root</code>; the child processes are run by <code>www-data</code>.</p>
+
+<h5>Step 4: Accessing the Apache 2 Server</h5>
+
+<p>Start a web browser (such as Firefox) and issue URL <code>http://localhost</code>.</p>
+
+<p>Take note that the default configuration &quot;<code>000-default.conf</code>&quot; defines a virtual host listening at port 80 with <code>DocumentRoot</code> at &quot;<code>/var/www/html</code>&quot; (&quot;<code>/var/www</code>&quot; in the previous version?!).</p>
+
+<!-- ------------------------------------------------------------- -->
+
+<h3 id="https">How to Setup HTTPS on Apache 2 (Ubuntu)</h3>
+
+<p><span class="line-heading">Step 1</span>: Enable the SSL module:</p>
+
+<pre class="color-command">
+$ <strong>sudo a2enmod ssl</strong></pre>
+
+<p>This command create symlinks for <code>ssl.conf</code> and <code>ssl.load</code> from &quot;<code>/etc/apache2/mods-available</code>&quot; to &quot;<code>/etc/apache2/mods-enabled</code>&quot;.</p>
+
+<p><span class="line-heading">Step 2</span>: Create a self-signed Certificate for the apache server. Read &quot;<code>/usr/share/doc/apache2.2-common/README.Debian.gz</code>&quot;.</p>
+
+<pre class="color-command">
+$ <strong>sudo make-ssl-cert /usr/share/ssl-cert/ssleay.cnf /etc/ssl/private/apache-ssl.crt</strong>
+   <span class="color-comment">// In the common name, enter the server's DNS name or IP address. E.g,
+   // Common Name (e.g. server FQDN or YOUR name) []:127.0.0.1</span></pre>
+
+<p>The <code>make-ssl-cert</code> utility generates a certificate &quot;<code>apache-ssl.crt</code>&quot; (in &quot;<code>/etc/ssl/private</code>&quot;). The key is contained in the certificate.</p>
+<p>[Alternative, you can use OpenSSL to generate a certificate and a private key file. See &quot;<a href="Apache_HowToConfigure.html#openssl">Create a Self-Signed Certificate</a>&quot;].</p>
+
+<p>The SSL key file should only be readable by root, the certificate file may be globally readable. These files are read by the Apache parent process which runs as root. Therefore it is not necessary to make the files readable by the user <code>www-data</code>.</p>
+
+<p><span class="line-heading">Step 3</span>: Create HTTPS config file:</p>
+
+<pre class="color-command">
+$ <strong>cd /etc/apache2/sites-available</strong>
+<span class="color-comment">// Duplicate from default-ssl</span> 
+$ <strong>cp default-ssl my-ssl</strong>
+ 
+<span class="color-comment">// Edit configuration (using nano editor - there is no graphical editor in Ubuntu server)</span>
+$ <strong>sudo nano my-ssl</strong></pre>
+
+<pre class="color-example">
+<span class="color-comment">// Set the root directory your webapp</span>
+DocumentRoot ......
+
+<span class="color-comment">// Define the permissions of the root directory</span>
+&lt;Directory ...... &gt;
+......
+&lt;/Directory&gt;
+ 
+<span class="color-comment">// Check to ensure that SSL is on</span>
+SSLEngine on
+ 
+<span class="color-comment">// Set the certificate (no key file needed if you use make-ssl-cert)</span>
+SSLCertificateFile    /etc/ssl/private/apache-ssl.crt
+# SSLCertificateKeyFile /etc/ssl/private/apache.key</pre>
+
+<p>If you are not using the default HTTPS port of 443, you need to add the port number to &quot;<code>/etc/apache2/ports.conf&quot;</code>.</p>
+
+<p><span class="line-heading">Step 4</span>: Activate the HTTPS site.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Run helper utility a2ensite to enable the site by symlinking to &quot;/etc/apache2/sites-enabled&quot;</span>
+$ <strong>sudo a2ensite</strong>
+   <span class="color-comment">// choose 'my-ssl'</span>
+ 
+<span class="color-comment">// Reload the configuration file (without restarting)</span>
+$ <strong>sudo service apache2 reload</strong>
+<span class="color-comment">// or</span>
+$ <strong>sudo service apache2 restart</strong></pre>
+
+<p><span class="line-heading">Step 5</span>: You can access the site via <code>https://localhost</code>, if the default port number 443 is used.</p>
+
+<h5>NOTES:</h5>
+
+<ul>
+<li>To resolve the warning &quot;[warn] RSA server certificate CommonName (CN) `...' does NOT match server name!?&quot; Add a <code>ServerName</code> right below the ServerAdmin under <code>&lt;VirtualHost&gt;</code>, in the config file:
+
+<pre class="color-example">
+ServerName <em>your-hostname-or-IPaddr</em></pre></li>
+ 
+<li>Switching between HTTPS and HTTP is not really needed, as HTTPS's overhead is not very high (other than the initial hand-shake). Otherwise, you need to pass session from HTTPS (login) to HTTP.</li>
+</ul>
+
+
+
+
+<h3 id="tomcat">How to Install Tomcat 7/8 on Ubuntu</h3>
+
+<h4>Install via APT</h4>
+
+<p>Search for tomcat packages:</p>
+<pre class="color-command">
+<span class="color-comment">// Search for package containing the term &quot;tomcat&quot;</span>
+$ <strong>apt-cache search tomcat</strong>
+    <span class="color-comment">// tomcat7 and tomcat6 available</span>
+
+<span class="color-comment">// Show the description of tomcat7</span>
+$ <strong>apt-cache show tomcat7 | less</strong>
+    <span class="color-comment">// Check the suggest packages</span></pre>
+
+<p>Install tomcat packages:</p>
+<pre class="color-command">
+$ <strong>sudo apt-get install tomcat7</strong>
+ 
+<span class="color-comment">// Optional: Install some suggested packages</span>
+$ <strong>sudo apt-get install tomcat7-docs tomcat7-admin tomcat7-examples tomcat7-user</strong></pre>
+
+<p>Define environment variable JAVA_HOME (?!)</p>
+
+<p>To start/stop tomcat:</p>
+
+<pre class="color-command">
+$ <strong>sudo service tomcat7 start</strong>
+$ <strong>sudo service tomcat7 stop</strong>
+$ <strong>sudo service tomcat7 restart</strong></pre>
+
+<p>You can access tomcat via <code>http://localhost:8080</code>.</p>
+
+<h4>Install Manually</h4>
+
+<h5>Step 1: Download</h5>
+
+<p>Goto <a href="http://tomcat.apache.org">http://tomcat.apache.org</a> &rArr; Download &rArr; Tomcat 8.0 &rArr; <code>8.0.{<em>xx</em>}</code> (where <code>{<em>xx</em>}</code> denotes the latest release) &rArr; Binary distribution &rArr; Core &rArr; Download the &quot;<code><strong>tar.gz</strong></code>&quot; package (e.g., &quot;<code>apache-tomcat-8.0.{<em>xx</em>}.tar.gz</code>&quot;).</p>
+
+<h5>Step 2: Install</h5>
+
+<p>Assume that it is to be installed under &quot;<code>/usr/local/tomcat</code>&quot;.</p>
+
+<pre class="color-command">
+$ <strong>cd /usr/local/tomcat</strong>
+$ <strong>sudo tar xzvf /PATH/TO/apache-tomcat-8.0.{<em>xx</em>}.tar.gz</strong>
+    <span class="color-comment">// unzip into /usr/local/tomcat/apache-tomcat-8.0.{<em>xx</em>}</span></pre>
+    
+<p>For security reasons, you should NOT run tomcat using <code>root</code> user. We shall create a non-login user called <code>tomcat</code> (in group <code>tomcat</code>) to run the server.</p>
+
+<pre class="color-command">
+<span class="color-comment">// Create a user called &quot;tomcat&quot; in group &quot;tomcat&quot;</span>
+$ <strong>sudo useradd -s /sbin/nologin -d /opt/tomcat/temp tomcat</strong>
+   <span class="color-comment">// -s &lt;login-shell&gt;: specify the login shell
+   // -d &lt;home-dir&gt;</span>
+
+<span class="color-comment">// Change ownership to user &quot;tomcat&quot; and group &quot;tomcat&quot;</span>
+$ <strong>cd /usr/local/tomcat</strong>
+$ <strong>sudo chown -R tomcat:tomcat apache-tomcat-8.0.{xx}</strong>
+   <span class="color-comment">// -R: recursively for the sub-directories</span>
+$ <strong>sudo chmod -R 750 apache-tomcat-8.0.{xx}</strong>
+   <span class="color-comment">// -R: recursively for the sub-directories</span></pre>
+
+<p>[TODO] Test the permissions; change to adduser from useradd.</p>
+    
+    
+<h5>Step 3: Set Environment Variable <span class="font-code">JAVA_HOME</span></h5>
+
+<p>Check if the environment variable <code>JAVA_HOME</code>, containing the JDK installed directory, has been set. To verify:</p>
+
+<pre class="color-command">
+$ <strong>echo $JAVA_HOME</strong>
+[<em>JDK installed directory</em>]</pre>
+
+<p>If <code>JAVA_HOME</code> is not set, you can edit &quot;<code>/etc/profile</code>&quot;:</p>
+
+<pre class="color-command">
+$ <strong>sudo nano /etc/profile</strong></pre>
+
+<p>Include the following line at the <em>end</em> of the file. I shall assume that JDK is installed in <code>/usr/local/java/jdk1.8.0_{<em>xx</em>}</code>. But you need to verify the location of your JDK installed directory!!!</p>
+<pre class="color-example">export JAVA_HOME=/usr/local/java/jdk1.8.0_{<em>xx</em>}</pre>
+
+<p>Rerun the script:</p>
+
+<pre class="color-command">
+$ <strong>source /etc/profile</strong>
+<span class="color-comment"> 
+// To verify:</span>
+$ <strong>echo $JAVA_HOME</strong>
+[/usr/local/java/jdk1.8.0_{<em>xx</em>}]</pre>
+
+<h5>Step 4: Configure Tomcat Server</h5>
+
+<p>You can start tomcat using the default configuration files provided. Read &quot;<a href="Tomcat_HowTo.html#configure">Configure Tomcat Server</a>&quot; for the configuration options.</p>
+
+<h5>Step 4: Start/Stop Tomcat Server Manually</h5>
+
+<p>To start the Tomcat server, open a new &quot;Terminal&quot; and issue:</p>
+<pre class="color-command">
+$ <strong>cd /usr/local/tomcat/apache-tomcat-8.0.{xx}/bin</strong>
+<span class="color-comment">// All the following commands can be used to start tomcat</span>
+$ <strong>./startup.sh</strong>
+$ <strong>./catalina.sh run</strong>
+$ <strong>./catalina.sh start</strong>
+   <span class="color-comment">// use &quot;sudo&quot; if permissions denied</span></pre>
+
+<p>If you will get an error &quot;permission denied&quot; on running the script, you need to set the script to be executable, via command &quot;<code>chmod uga+x *.sh</code>&quot;.</p>
+
+<p>Check for the Tomcat server's TCP port number from the console messages. The default is 8080.</p>
+
+<p>To verify if the Tomcat server is started, start a browser and issue URL <code>http://localhost:8080</code>, suppose that Tomcat is running on the default TCP port number of 8080.</p>
+
+<p>Also try URL <code>http://localhost:8080/examples</code> which shows the Servlet/JSP examples.</p>
+
+<p>To shutdown the Tomcat server, you can simply press control-c on the tomcat console, or issue command:</p>
+<pre class="color-command">
+$ <strong>cd /usr/local/tomcat/apache-tomcat-8.0.{xx}/bin</strong>
+<span class="color-comment">// All the following commands can be used to shutdown tomcat</span>
+$ <strong>./shutdown.sh</strong>
+$ <strong>./catalina.sh stop</strong></pre>
+
+<h5>Step 5: Running Tomcat as a service</h5>
+
+<p>Create an initialization script called &quot;<code>tomcat8</code>&quot; under directory &quot;<code>/etc/init.d</code>&quot;, with the following contents. Check your tomcat installed directory in <code>CATALINA_HOME</code>.</p>
+
+<pre class="color-command">
+$ <strong>sudo nano /etc/init.d/tomcat8</strong></pre>
+
+<pre class="color-example">
+#!/bin/bash
+export CATALINA_HOME=/usr/local/tomcat/apache-tomcat-8.0.12
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+start() {
+ sh $CATALINA_HOME/bin/startup.sh
+}
+stop() {
+ sh $CATALINA_HOME/bin/shutdown.sh
+}
+case $1 in
+  start|stop) $1;;
+  restart) stop; start;;
+  *) echo "Run as $0 &lt;start|stop|restart&gt;"; exit 1;;
+esac</pre>
+
+<p>Set the permissions (executable):</p>
+
+<pre class="color-command">
+$ <strong>sudo chmod 755 /etc/init.d/tomcat8</strong></pre>
+
+<p>To start/stop the tomcat8 service:</p>
+
+<pre class="color-command">
+<span class="color-comment">// To start</span>
+$ <strong>sudo service tomcat8 start</strong>
+$ <strong>sudo /etc/init.d/tomcat8 start</strong>  <span class="color-comment">// same as above</span>
+ 
+<span class="color-comment">// To stop</span>
+$ <strong>sudo service tomcat8 stop</strong>
+$ <strong>sudo /etc/init.d/tomcat8 stop</strong>  <span class="color-comment">// same as above</span></pre>
+
+<p>To start tomcat8 service automatically after boot:</p>
+<pre class="color-command">
+$ <strong>sudo update-rc.d tomcat8 defaults</strong></pre>
+
+<h5>Step 6: Servlet API</h5>
+<p>To write Java servlets, you need to COPY the Servlet API JAR file (&quot;<code>servlet-api.jar</code>&quot;) from &quot;<code>~/myProject/tomcat/lib</code>&quot; to the JDK's extension directory at &quot;<code>/usr/local/java/jdk1.8.0_{xx}/jre/lib/ext</code>&quot;. You may need the superuser right.</p>
+
+<p>[TODO] Does not work on latest JDK/Tomcat. Need to include <code>servlet-api.jar</code> in classpath to compile.</p>
+
+
+<h3 id="mailServer">How to Install Postfix as a Send-Only Mail Server</h3>
+<p>Reference: Postfix @ <a href="https://help.ubuntu.com/community/Postfix">https://help.ubuntu.com/community/Postfix</a>.</p>
+<br />
+
+<p>Postfix is an MTA (Mail Transfer Agent), an application used to send and receive email.</p>
+
+<p>To install postfix mail server:</p>
+<pre class="color-command">
+$ <strong>sudo apt-get install postfix</strong></pre>
+
+<p>To configure postfix, run:</p>
+<pre class="color-command">
+$ <strong>sudo dpkg-reconfigure postfix</strong></pre>
+<p>Read &quot;postfix&quot; @ <a href="https://help.ubuntu.com/community/Postfix">https://help.ubuntu.com/community/Postfix</a> for the configuration options.</p>
+
+<p>The utility &quot;<code>sendmail</code>&quot; is installed in <code>/usr/sbin/sendmail</code>.</p>
+
+<p>To send an email:</p>
+<pre class="color-command">
+$ <strong>sendmail -v user@example.com</strong>
+Subject: test
+This is a test message
+Ctrl-D</pre>
+
+<p>The -v option requests for a mail delivery report, which is optional.</p>
+
+<p>You should also install the &quot;<code>mailutils</code>&quot;, for the &quot;<code>mail</code>&quot; utility.</p>
+<pre class="color-command">
+$ <strong>sudo apt-get install mailutils</strong></pre>
+
+<p>Try sending an email to a user at the localhost, via &quot;<code>sendmail local-username</code>&quot;, you can then read the email by logging-in as the <code>local-username</code>, and run:</p>
+<pre class="color-command">
+$ <strong>mail</strong>
+.......</pre>
+
+<p>The postfix configuration is kept in <code>/etc/postfix/main.cf</code>. Run &quot;<code>/etc/init.d/postfix reload</code>&quot; to reload the configuration.</p>
+
+<h5>Disable Incoming Mail</h5>
+
+<p>You can use the inet_interfaces directive in <code>/etc/postfix/main.cf</code> to control what address Postfix listens on for incoming connections. If you set it to the following it will only listen on the loopback interface, which means that connections can only originate from that machine.</p>
+
+<pre class="color-example">
+inet_interfaces = loopback-only</pre>
+
+
+<h3>C/C++ Programming on Ubuntu</h3>
+
+<h5>C Programming</h5>
+
+<p>To install the GNU C-compiler &quot;gcc&quot;:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get install gcc</strong></pre>
+
+<p>Write the following hello-world program and save as &quot;<code>Hello.c&quot;</code> in a directory of your choice:</p>
+
+<pre class="color-example">
+#include &lt;stdio.h&gt;
+ 
+int main() {
+   printf(&quot;Hello, world!\n&quot;);
+}</pre>
+
+<pre class="color-command">
+$ cd your-directory
+<span class="color-comment">// Compile the program</span>
+$ gcc Hello.c
+<span class="color-comment">// To run the program</span>
+$ ./a.out
+Hello, world!</pre>
+
+<h5>C++ Programming</h5>
+
+<p>To install the GNU C++ compiler &quot;g++&quot;:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get install g++</strong></pre>
+
+<p>Write the following hello-world program and save as &quot;<code>Hello.cpp&quot;</code> in a directory of your choice:</p>
+
+<pre class="color-example">
+#include &lt;iostream&gt;
+using namespace std;
+ 
+int main() {
+   cout &lt;&lt; &quot;Hello, world!&quot; &lt;&lt; endl; 
+}</pre>
+
+<pre class="color-command">
+$ cd your-directory
+<span class="color-comment">// Compile the program</span>
+$ g++ Hello.cpp
+<span class="color-comment">// To run the program</span>
+$ ./a.out
+Hello, world!</pre>
+
+<h5>C/C++ IDE</h5>
+
+<p>You could use Eclipse or NetBeans as C/C++ IDE. Read the &quot;Eclipse How-To&quot; or &quot;NetBean How-To&quot;.</p>
+
+
+<h3>How to Install SSH Server</h3>
+
+<p>SSH (Secure Shell) is the secured version of the legacy telnet, which transmits everything including password in clear text.</p>
+
+<h5>Setting up an SSH Server - OpenSSH</h5>
+<p>Install <code>openssh-server</code> package. The SSH server daemon is called <code>sshd</code>. The SSH Server runs on TCP port 22, by default.  The configuration file is kept in <code>/etc/ssh/sshd_config</code>.</p>
+
+<p>The OpenSSH package comprises a suite of tools:</p>
+<ol>
+<li><code>sshd</code> server,</li>
+<li><code>ssh</code> client,</li>
+<li><code>sftp</code> (secure ftp), which replaces <code>ftp</code> (file transfer protocol),</li>
+<li><code>scp</code> (secure copy), which replaces <code>rcp</code> (remote copy).</li>
+</ol>
+
+<p>The <code>ftp</code> (file transfer protocol), like telnet, is unsecured. <code>sftp</code> puts the <code>ftp</code> over the secured <code>ssh</code> connection. The legacy <code>rcp</code> (remote copy) was primarily used to copy a single file between machines. The <code>scp</code> replaces <code>rcp</code> by channeling the data over the secured <code>ssh</code> connection. <code>sftp</code> operates on many files; while <code>scp</code> works on a single file.</p>
+
+
+<h3>Ubuntu's Tips and Tweaks</h3>
+
+<h4>Terminal</h4>
+
+<ol>
+<li><span class="line-heading">Copy/Paste Shortcut Keys</span>:
+  <p>The <em>default</em> shortcut keys for copy/paste in Terminal are Shift-Ctrl-C and Shift-Ctrl-V. You can also use the mouse pointer to select texts, and click the &quot;middle&quot; mouse button (if you have one) to paste the highlighted texts. Ctrl-C, by <em>default</em>, is configured for <em>interrupt</em> signal (or <em>break</em>).</p>
+<p> To use Ctrl-C/Ctrl-V as copy/paste, I reconfigure Ctrl-J (or Ctrl-Shift-C) as the interrupt signal by placing this line in the &quot;<code>~/.profile</code>&quot;:</p>
+<pre class="color-command">
+stty intr ^J</pre>
+Then, we can configure Ctrl-C/Ctrl-V as copy/paste via Terminal's menu &quot;Edit&quot; &rArr; Keyboard Shortcuts.
+</li>
+
+<li><span class="line-heading">Shortcut to launch Terminal</span>: To configure a shortcut key to launch a Terminal, goto System &rArr; Preferences &rArr; Keyboard Shortcuts &rArr; Under Desktop category, choose &quot;Run a Terminal&quot; &rArr; Press the key you want to set as shortcut (e.g., ctrl-t).</li>
+</ol>
+
+<h4>&quot;Nautilus&quot; File Manager</h4>
+
+<ol>
+<li><span class="line-heading">Show directory path in File Manager</span>: Press Ctrl-l to show path, ESC to show icons.</li>
+
+<li><span class="line-heading">How to show files in list view insteand of icon view</span>: Edit &rArr; Preference &rArr; choose &quot;Views&quot; tab &rArr; Default View &rArr; View new folders using &rArr; choose &quot;List view&quot;.  You can also choose the columns to be displayed under &quot;List Columns&quot; tab.</li>
+
+<li><span class="line-heading">View dot (hidden) files</span>: Select &quot;File&quot; menu &rArr; Preferences &rArr; View &rArr; Show hidden files.</li>
+
+<li><span class="line-heading">Bookmark Folders (in the sidebar)</span>: Select the desired folder, click the &quot;options&quot; icon &rArr; Bookmark this location.  The bookmarked folder will be shown in the sidebar.</li>
+
+<li><span class="line-heading">How to remove pre-set bookmarks from the sidebar such as Videos</span>: Edit <code>~/.config/user-dirs.dirs</code>. For example, to remove &quot;Videos&quot;, change the line <code>XDG_VIDEOS_DIR=&quot;&quot;</code> to <code>XDG_VIDEOS_DIR=&quot;$HOME&quot;</code>; and run:
+<pre class="color-command">
+$ <strong>xdg-user-dirs-gtk-update</strong></pre>
+</li>
+</ol>
+
+<h4>gedit</h4>
+
+<ol>
+<li><span class="line-heading">Enable spell check</span>: under &quot;tool&quot; menu &rArr; edit &rArr; preferences.</li>
+
+</ol>
+
+
+<h4>Accessing Remote Server</h4>
+
+<p>You can login to a remote server via command-line SSH, and transfer files via SCP.  You can also use GUI client such as FileZilla.</p>
+
+<h5>SSH (Secured Shell)</h5>
+
+<p>A terminal-based command-line client for logging in to the remote server.</p>
+
+<pre class="color-command">
+$ <strong>ssh &lt;username&gt;@&lt;server-name&gt;</strong>
+<span class="color-comment">// OR</span>
+$ <strong>ssh &lt;server-name&gt; -l &lt;username&gt;</strong></pre>
+
+<h5>SCP (Secure Copy)</h5>
+<p>A terminal-based command-line client for copying files between local machine and remote server.</p>
+
+<pre class="color-command">
+$ <strong>scp &lt;source&gt; &lt;dest&gt;</strong>
+   <span class="color-comment">// &lt;source&gt;/&lt;dest&gt; format: &lt;username&gt;@&lt;server-name&gt;:&lt;path-name&gt;</span></pre>
+
+<h5>Mount Folders of Remote Server on Nautilus File Manager</h5>
+
+<p>Select &quot;Files&quot; menu &rArr; Connect to Server  &rArr; enter &quot;<code>sftp://server-name/path</code>&quot;.</p>
+
+<h5>FileZilla FTP/SFTP GUI Client</h5>
+
+<p>To install:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get install filezilla</strong>
+$ <strong>which filezilla</strong>
+/usr/bin/filezilla</pre>
+
+<p>To launch FileZilla, type <code>FileZilla</code> from Dash. In host, use <code>sftp://<em>server-name</em></code>; in port, use 22 for SSH.</p>
+
+<h5>(For Windows) WinSCP and Putty</h5>
+
+<p>WinSCP is a GUI SCP for Windows. Putty is a GUI SSH client.</p>
+
+<h4>Ububtu Applications</h4>
+
+<h5>Epub Reader - Calibre</h5>
+
+<p>To install:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get install calibre</strong></pre>
+
+<p>You can launch Calibre from the dash.</p>
+
+<h5>Media Player - VLC</h5>
+
+<p>To install:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get install vlc browser-plugin-vlc</strong></pre>
+
+<p>You can launch VLC player from the dash.</p>
+
+<h5>Wallpaper Slide Show - Wallch</h5>
+
+<p>To install:</p>
+
+<pre class="color-command">
+$ <strong>sudo apt-get install wallch</strong></pre>
+
+
+<h4>User and Computer Administration</h4>
+
+<ol>
+
+<li><span class="line-heading">Remove Guest Session</span>: To remove the guest session in the login menu, we need to re-configure LightDM display manager's login screen settings, by editing &quot;<code>/etc/lightdm/lightdm.conf</code>&quot;:
+<pre class="color-command">
+$ <strong>gksu gedit /etc/lightdm/lightdm.conf</strong></pre>
+
+In the <code>[SeatDefaults]</code> section, add this line:
+<pre class="color-command">
+allow-guest=false</pre>
+
+Restart your machine or restart LightDM:
+<pre class="color-command">
+$ <strong>sudo restart lightdm</strong></pre></li>
+
+<li><span class="line-heading">How to hide an user from the login Screen</span>: One way is to set the UID to a number less than 1000 (UID less than 1000 are system users; 1000 and above for regular users).
+<pre class="color-command">
+$ <strong>sudo usermod -u &lt;uid&gt; &lt;username&gt;</strong></pre></li>
+
+<li><span class="line-heading">How to Change the Display Name</span>: The display name is kept in <code>/etc/passwd</code>.  You can avoid editing <code>/etc/passwd</code> directly by using utility <code>chfn</code>:
+<pre class="color-command">
+$ <strong>less /etc/passwd</strong>
+......
+<span class="color-comment">// Change user information</span>
+$ <strong>sudo chfn &lt;username&gt;</strong>
+$ <strong>less /etc/passwd</strong>
+......</pre>
+
+Note: You can check the integrity of <code>/etc/passwd</code> via utility <code>pwck</code>.</li>
+
+<li><span class="line-heading">How to change a username</span>: 
+<pre class="color-command">
+$ <strong>sudo usermod -l &lt;new-username&gt; &lt;old-username&gt;</strong></pre>
+
+This does not affect the file ownerships, as they are based on UID instead of username.<br />
+You also need to move the home folder as follows:
+<pre class="color-command">
+$ <strong>sudo usermod -d /home/&lt;new-user-dir&gt; -m &lt;new-username&gt;</strong></pre></li>
+
+<li><span class="line-heading">How to change the hostname</span>: Your hostname is defined in two files: <code>/etc/hostname</code> and <code>/etc/hosts</code>.
+<pre class="color-command">
+$ <strong>sudo gedit /etc/hostname</strong>
+$ <strong>sudo gedit /etc/hosts</strong></pre></li>
+
+<li><span class="line-heading">How to choose hostnames</span>: Either functional names (which represents, in some encoded form, the purpose of the machine) or mnemonic names (which are drawn from some pre-existing human naming scheme and contained no implicit meaning about the machine's purpose, e.g., fruits, flowers, rivers, elements, stars, drinks, etc.).  Human users seem to prefer mnemonic names over functional names.</li>
+
+<li><span class="line-heading">How to mount a drive automatically at startup</span>: Instead of manually editing <code>/etc/fstab</code>, Dash &quot;Disks&quot; &rArr; Select the drive or partition &rArr; click icon &quot;More Actions&quot; &rArr; Edit Mount Options &rArr; set &quot;Automatic Mount Options&quot; to off &rArr; Set &quot;Mount Options&quot; to &quot;Mount at startup&quot; &rArr; set the &quot;mount point&quot; (e.g., /mnt/&lt;drive-name&gt;).<br />
+Check <code>/etc/fstab</code> for the modifications.</li>
+
+<li><span class="line-heading">Show Disk Usage</span>:
+<ul>
+<li><code>df</code> (Disk File system)command: report file system and disk space usage. Try &quot;<code>df</code>&quot; and &quot;<code>df -h</code>&quot;</li>
+
+<li><code>du</code> (Disk Usage for EACH file) command: estimate file space usage.</li>
+</ul>
+</li>
+
+<li><span class="line-heading">How to read Ubuntu files from Windows</span>: Ubuntu uses Ext2 (or Ext3/Ext4) file system. To read Ubuntu files from Windows, install software such as &quot;<a href="http://www.paragon-software.com/home/extfs-windows/">Paragon ExtFS for Windows</a>&quot; (Free for personal use) or &quot;<a href="http://ext2read.blogspot.sg/">Ext2Read</a>&quot;.</li>
+
+<li><span class="line-heading">sudo cd</span>: &quot;<code>sudo cd <em>dirname</em></code>&quot; does not work, because <code>cd</code> is a shell built-in, not a binary. You could issue &quot;<code>sudo su</code>&quot; to switch to <code>root</code>, followed by &quot;<code>cd <em>dirname</em></code>&quot;.</li>
+
+<li><span class="line-heading">Shutdown from command-line</span>: You can shutdown the machine from Terminal, or one of the 6 command-line console (activated via Ctrl-Alt-F1 to Ctrl-Alt-F6) using:
+<pre class="color-command">
+<span class="color-comment">// Shutdown</span>
+$ <strong>sudo shutdown now</strong>
+ 
+<span class="color-comment">// Restart</span>
+$ <strong>sudo shutdown -r now</strong>
+   <span class="color-comment">// -r to restart</span>
+$ <strong>sudo reboot</strong></pre>
+
+Or, via Webmin &rArr; System &rArr; Bootup and Shutdown &rArr; Button &quot;Reboot System&quot;, or &quot;Shutdown System&quot;.</li>
+
+<li>How to set the Grub dual-boot to wait for enter key
+<pre class="color-command">
+$ <strong>sudo nano /etc/default/grub</strong>
+<span class="color-comment"># Set to -1 to wait for enter key</span>
+GRUB_TIMEOUT=-1</pre></li>
+
+<li>Multiple Display: The display configurations are saved in <code>~/.config/monitor.xml</code>. You can remove it to re-configure.</li>
+
+<li>Show the user login history:
+<pre class="color-command">
+$ <strong>last</strong>
+   <span class="color-comment">// from /var/log/wtmp</span>
+$ <strong>last -f /var/log/wtmp.1</strong>
+   <span class="color-comment">// from older file</span>
+$ <strong>last -num</strong>
+   <span class="color-comment">// number of lines</span></pre>
+Or, via Webmin &rArr; Users and Groups &rArr; Button &quot;Display Logins by&quot;.
+</li>
+
+<li>Show date/time: via command &quot;<code>date</code>&quot;.</li>
+
+</ol>
+
+
+
+
+
+<!-- @@ start change in v1 -->
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+<li>Ubuntu Mother site @ <a href="http://www.ubuntu.com">http://www.ubuntu.com</a>.</li>
+<li>Matthew Helmke, &quot;Ubuntu Unleashed 2012 edition&quot;, 2012, Sams.</li>
+<li>Matthew Helmke &amp; Amber Graner, &quot;The official Ubuntu book&quot;, 7th ed, 2012, Canonical Inc. (For beginners.)</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Ubuntu 14.04<br />
+Last modified: November, 2015</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>&nbsp;</p></div>
+
+</div>  <!-- End the wrap-outer division -->
+<!-- @@ end change in v1 -->
+</body>
+</html>

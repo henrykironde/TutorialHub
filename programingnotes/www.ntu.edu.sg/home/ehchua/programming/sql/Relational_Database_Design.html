@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Relational Database Design</title>
+<link href="../css/programming_notes.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" /></head>
+
+<body>
+
+<!-- Begin the outermost container division -->
+<div id="container">
+
+<!-- print header -->
+<script type="text/javascript" src="../scripts/header.js"></script>
+
+<!-- begin main content division -->
+<div id="content">
+
+<h1>A Quick-Start Tutorial on Relational Database Design</h1>
+<h2></h2>
+
+<h3>Introduction</h3>
+<p><em>Relational database</em> was  proposed by Edgar Codd (of IBM Research) around 1969. It has since become the dominant database model for commercial applications (in comparison with other database models such as hierarchical, network and object models). Today, there are many commercial <em>Relational Database Management System</em> (RDBMS), such as Oracle, IBM DB2 and Microsoft SQL Server. There are also many free and open-source RDBMS, such as MySQL, mSQL (mini-SQL) and the embedded JavaDB (Apache Derby).</p>
+<p>A relational database organizes data in <em>tables</em> (or <em>relations</em>). A table is made up of rows and columns. A row is also called a <em>record</em> (or <em>tuple</em>). A column is also called a <em>field</em> (or <em>attribute</em>). A database table is similar to a spreadsheet. However, the relationships that can be created among the tables enable a relational database to efficiently store huge amount of data, and effectively retrieve selected data.</p>
+<p>A language called SQL (Structured Query Language) was developed to work with  relational databases.</p>
+
+<h3>Database Design Objective</h3>
+<p>A well-designed database shall:</p>
+<ul>
+<li>Eliminate Data Redundancy: the same piece of data shall not be stored in more than one place. This is because duplicate data not only waste storage spaces but also easily lead to inconsistencies.</li>
+<li>Ensure Data Integrity and Accuracy:</li>
+<li>[TODO] more</li>
+</ul>
+
+<h3>Relational Database Design Process</h3>
+
+<p>Database design is more art than science, as you have to make many decisions. Databases are usually customized to suit a particular application. No two customized applications are alike, and hence, no two database are alike. Guidelines (usually in terms of what not to do instead of what to do) are provided in making these design decision, but the choices  ultimately rest on the you - the designer.</p>
+
+<h4>Step 1: Define the Purpose of the Database (Requirement Analysis)</h4>
+<p>Gather the requirements and define the objective of your database, e.g. ...</p>
+<p>Drafting out the sample input forms, queries and reports, often helps.</p>
+
+<h4>Step 2: Gather Data, Organize in tables and Specify the Primary Keys</h4>
+<p>Once you have decided on the purpose of the database, gather the data that are needed to be stored in the database. Divide the data into subject-based tables. </p>
+<p>Choose one column (or a few columns) as the so-called <em>primary key</em>, which uniquely identify the each of the rows.</p>
+
+<h5>Primary Key</h5>
+<p>In the relational model, a table cannot contain duplicate rows, because that would create ambiguities in retrieval. To ensure uniqueness, each table should have a column (or a set of columns), called <em>primary key</em>, that uniquely identifies every records of the table. For example, an unique number <code>customerID</code> can be used as the primary key for the <code>Customers</code> table; <code>productCode</code> for <code>Products</code> table; <code>isbn</code> for <code>Books</code> table.   A primary key is called a <em>simple key</em> if it is a single column; it is called a <em>composite key</em> if it is made up of several columns.</p>
+<p>Most RDBMSs build an index on the primary key to facilitate fast search and retrieval.</p>
+<p>The primary key is also used to reference other tables (to be elaborated later).</p>
+
+<p>You have to decide which column(s) is to be used for primary key. The decision may not be straight forward but the primary key shall have these properties:</p>
+<ul>
+<li>The values of primary key shall be unique (i.e., no duplicate value). For example, <code>customerName</code> may not be appropriate to be used as the primary key for the <code>Customers</code> table, as there could be two customers with the same name.</li>
+<li>The primary key shall always have a value. In other words, it shall not contain NULL.</li>
+</ul>
+
+<p>Consider the followings in choose the primary key:</p>
+<ul>
+<li>The primary key shall be simple and familiar, e.g., <code>employeeID</code> for <code>employees</code> table and <code>isbn</code> for <code>books</code> table.</li>
+<li>The value of the primary key should not change. Primary key is used to reference other tables. If you change its value, you have to change all its references; otherwise, the references will be lost. For example, <code>phoneNumber</code> may not be appropriate to be used as primary key for table <code>Customers</code>, because it might change.</li>
+<li>Primary key often uses integer (or number) type. But it could also be other types, such as texts. However, it is best to use numeric column as primary key for efficiency.</li>
+<li>Primary key could take an arbitrary number. Most RDBMSs support so-called <em>auto-increment</em>  (or <code>AutoNumber</code> type) for integer primary key, where (current maximum value + 1) is assigned to the new record. This arbitrary number is <em>fact-less</em>, as it contains no factual information. Unlike factual information such as phone number, fact-less number is ideal for primary key, as it does not change.</li>
+<li>Primary key is usually a single column (e.g., <code>customerID</code> or <code>productCode</code>). But it could also make up of several columns. You should use as few columns as possible.</li>
+</ul>
+
+<p>Let's illustrate with an example: a table <code>customers</code> contains columns <code>lastName</code>, <code>firstName</code>, <code>phoneNumber</code>, <code>address</code>, <code>city</code>, <code>state</code>, <code>zipCode</code>. The candidates for primary key are <code>name=(lastName, firstName)</code>, <code>phoneNumber</code>, <code>Address1=(address, city, state)</code>, <code>Address1=(address, zipCode)</code>. <code>Name</code> may not be unique. Phone number and address may change. Hence, it is better to create a fact-less auto-increment number, say <code>customerID</code>, as the primary key.</p>
+
+<h4>Step 3: Create Relationships among Tables</h4>
+<p>A database consisting of independent and unrelated tables serves little purpose (you may consider to use a spreadsheet instead). The power of relational database lies in the relationship that can be defined between tables. The most crucial aspect in designing a relational database is to identify the relationships among tables.  The types of relationship include:</p>
+
+<ol>
+  <li>one-to-many</li>
+<li>many-to-many</li>
+<li>one-to-one</li>
+</ol>
+
+<h5>One-to-Many</h5>
+<p>In a &quot;class roster&quot; database, a teacher may teach zero or more classes, while a class is taught by one (and only one) teacher. In a &quot;company&quot; database, a manager manages zero or more employees, while an employee is managed by one (and only one) manager. In a &quot;product sales&quot; database, a customer may place many orders; while an order is placed by one particular customer. This kind of relationship is known as <em>one-to-many</em>.</p>
+<p>One-to-many relationship cannot be represented in a single table. For example, in a &quot;class roster&quot; database, we may begin with a table called <code>Teachers</code>, which stores information about teachers (such as <code>name</code>, <code>office</code>, <code>phone</code> and <code>email</code>). To store the classes taught by each teacher, we could create columns <code>class1</code>, <code>class2</code>, <code>class3</code>, but faces a problem immediately on how many columns to create. On the other hand, if we begin with a table called <code>Classes</code>, which stores information about a class (<code>courseCode</code>, <code>dayOfWeek</code>, <code>timeStart</code> and <code>timeEnd</code>); we could create additional columns to store information about the (one) teacher (such as <code>name</code>, <code>office</code>, <code>phone</code> and <code>email</code>). However, since a teacher may teach many classes, its data would be duplicated in many rows in table <code>Classes</code>.</p>
+<p>To support a one-to-many relationship, we need to design two tables: a table <code>Classes</code> to store information about the classes with <code>classID</code> as the primary key; and a table <code>Teachers</code> to store information about teachers with <code>teacherID</code> as the primary key.  We can then create the one-to-many relationship by storing the primary key of the table <code>Teacher</code> (i.e., <code>teacherID</code>) (the &quot;one&quot;-end or the <em>parent table</em>) in the table <code>classes</code> (the &quot;many&quot;-end or the <em>child table</em>), as illustrated below.</p>
+
+<img class="image-center" src="images/ManyToOne.png" />
+
+<p>The column <code>teacherID</code> in the child table <code>Classes</code> is known as the <em>foreign key</em>. A foreign key of a child table is a primary key of a parent table, used to reference the parent table.</p>
+<p>Take note that for every value in the parent table, there could be zero, one, or more rows in the child table. For every value in the child table, there is one and only one row in the parent table.</p>
+
+<h5>Many-to-Many</h5>
+<p>In a &quot;product sales&quot; database, a customer's order may contain one or more products; and a product can appear in many orders. In a &quot;bookstore&quot; database, a book is written by one or more authors; while an author may write zero or more books. This kind of relationship is known as <em>many-to-many</em>.</p>
+<p>Let's illustrate with a &quot;product sales&quot; database. We begin with two tables: <code>Products</code> and <code>Orders</code>. The table <code>products</code> contains information about the products (such as <code>name</code>, <code>description</code> and <code>quantityInStock</code>) with <code>productID</code> as its primary key. The table <code>orders</code> contains customer's orders (<code>customerID</code>, <code>dateOrdered</code>, <code>dateRequired</code> and <code>status</code>). Again, we cannot store the items ordered inside the <code>Orders</code> table, as we do not know how many columns to reserve for the items. We also cannot store the order information in the <code>Products</code> table.</p>
+<p>To support many-to-many relationship, we need to create a third table (known as a <em>junction table</em>), say <code>OrderDetails</code> (or <code>OrderLines</code>), where each row represents an item  of a particular order. For the <code>OrderDetails</code> table, the primary key consists of two columns: <code>orderID</code> and <code>productID</code>, that uniquely identify each row. The columns <code>orderID</code> and <code>productID</code> in <code>OrderDetails</code> table are used to reference <code>Orders</code> and <code>Products</code> tables, hence, they are also the foreign keys in the <code>OrderDetails</code> table.</p>
+
+<img class="image-center" src="images/ManyToMany.png" />
+
+<p>The many-to-many relationship is, in fact, implemented as two one-to-many relationships, with the introduction of the junction table.</p>
+<ol>
+<li>An order has many items in <code>OrderDetails</code>. An <code>OrderDetails</code> item belongs to one particular order.</li>
+<li>A product may appears in many <code>OrderDetails</code>.  Each <code>OrderDetails</code> item specified one product.</li>
+</ol>
+
+<h5>One-to-One</h5>
+<p>In a &quot;product sales&quot; database,  a product may have optional supplementary information such as <code>image</code>, <code>moreDescription</code> and <code>comment</code>.  Keeping them inside the <code>Products</code> table results in many empty spaces (in those records without these optional data). Furthermore, these large data may degrade the performance of the database.</p>
+<p>Instead, we can create another table (say <code>ProductDetails</code>, <code>ProductLines</code> or <code>ProductExtras</code>) to store the optional data. A record will only be created for those products with optional data. The two tables, <code>Products</code> and <code>ProductDetails</code>, exhibit a <em>one-to-one relationship</em>. That is, for every row in the parent table, there is at most one row (possibly zero) in the child table. The same column <code>productID</code> should be used as the primary key for both tables.</p>
+<p> Some databases limit the number of columns that can be created inside a table. You could use a one-to-one relationship to split the data into two tables. One-to-one relationship is also useful for storing certain sensitive data in a secure table, while the non-sensitive ones in the main table.</p>
+
+<img class="image-center" src="images/OneToOne.png" />
+
+
+<h5>Column Data Types</h5>
+<p>You need to choose an appropriate data type for each column. Commonly data types include: integers, floating-point numbers, string (or text), date/time, binary, collection (such as enumeration and set).</p>
+
+<h4>Step 4: Refine &amp; Normalize the Design</h4>
+<p>For example,</p>
+<ul>
+<li>adding more columns,</li>
+<li>create a new table for optional data using one-to-one relationship,</li>
+<li>split a large table into two smaller tables,</li>
+<li>others.</li>
+</ul>
+
+<h5>Normalization</h5>
+
+<p>Apply the so-called <em>normalization rules</em> to check whether your database is structurally correct and optimal.</p>
+
+<p><strong>First Normal Form (1NF)</strong>: A table is 1NF if every cell contains a single value, not a list of values. This properties is known as <em>atomic</em>. 1NF also prohibits repeating group of columns such as <code>item1</code>, <code>item2</code>,.., <code>itemN</code>. Instead, you should create another table using one-to-many relationship.</p>
+<p><strong>Second Normal Form (2NF)</strong>: A table is 2NF, if it is 1NF and every non-key column is fully dependent on the primary key. Furthermore, if the primary key is made up of several columns, every non-key column shall depend on the entire set and not part of it.</p>
+<p> For example, the primary key of the <code>OrderDetails</code> table comprising <code>orderID</code> and <code>productID</code>. If <code>unitPrice</code> is dependent only on <code>productID</code>, it shall not be kept in the <code>OrderDetails</code> table (but in the <code>Products</code> table). On the other hand, if the <code>unitPrice</code> is dependent on the product as well as the particular order, then it shall be kept in the <code>OrderDetails</code> table.</p>
+<p><strong>Third Normal Form (3NF)</strong>: A table is 3NF, if it is 2NF and the non-key columns are independent of each others. In other words, the non-key columns are dependent on primary key, only on the primary key and nothing else. For example, suppose that we have a <code>Products</code> table with columns <code>productID</code> (primary key), <code>name</code> and <code>unitPrice</code>. The column <code>discountRate</code> shall not belong to <code>Products</code> table if it is also dependent on the <code>unitPrice</code>, which is not part of the primary key.</p>
+
+<p><strong>Higher Normal Form</strong>: 3NF has its inadequacies, which leads to higher Normal form, such as Boyce/Codd Normal form, Fourth Normal Form (4NF) and Fifth Normal Form (5NF), which is beyond the scope of this tutorial.</p>
+<p>At times, you may decide to break some of the normalization rules, for performance reason (e.g., create a column called <code>totalPrice</code> in <code>Orders</code> table which can be derived from the <code>orderDetails</code> records); or because the end-user requested for it. Make sure that you fully aware of it, develop programming logic to handle it, and properly document the decision.</p>
+
+<h5>Integrity Rules</h5>
+
+<p>You should also apply the integrity rules to check the integrity of your design:</p>
+<p><strong>Entity Integrity Rule</strong>: The primary key cannot contain NULL. Otherwise, it cannot uniquely identify the row. For composite key made up of several columns, none of the column can contain NULL. Most of the RDBMS check and enforce this rule.</p>
+<p><strong>Referential Integrity Rule</strong>: Each foreign key value must be matched to a primary key value in the table referenced (or parent table).</p>
+
+<ul>
+<li>You can insert a row with a foreign key in the child table only if the value exists in the parent table.</li>
+<li> If the value of the key changes in the parent table (e.g., the row updated or deleted), all rows with this foreign key in the child table(s) must be handled accordingly. You could either (a) disallow the changes; (b) cascade the change (or delete the records) in the child tables accordingly; (c) set the key value in the child tables to NULL.</li>
+</ul>
+
+<p>Most RDBMS can be setup to perform the check and ensure the referential integrity, in the specified manner.</p>
+
+<p><strong>Business logic Integrity</strong>: Beside the above two general integrity rules, there could be integrity (validation) pertaining to the business logic, e.g., zip code shall be 5-digit within a certain ranges, delivery date and time shall fall in the business hours; quantity ordered shall be equal or less than quantity in stock, etc. These could be carried out in validation rule (for the specific column) or programming logic.</p>
+
+<h5>Column Indexing</h5>
+
+<p>You could create <em>index</em> on selected column(s) to facilitate data searching and retrieval.  An index is a structured file that  speeds up data access for <code>SELECT</code>, but may slow  down <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>. Without an index structure, to process a <code>SELECT</code> query with a matching criterion (e.g., <code>SELECT * FROM Customers WHERE name='Tan Ah Teck'</code>), the database engine needs to compare every records in the table. A specialized index (e.g., in BTREE structure) could reach the record without comparing every records. However, the index needs to be rebuilt whenever a record is changed, which results in overhead associated with using indexes.</p>
+<p>Index can be defined on a single column, a set of columns (called concatenated index), or part of a column (e.g., first 10 characters of a <code>VARCHAR(100)</code>) (called partial index) . You could built more than one index in a table. For example, if you often search for a customer using either <code>customerName</code> or <code>phoneNumber</code>, you could speed up the search by building an index on column <code>customerName</code>, as well as <code>phoneNumber</code>. Most RDBMS builds index on the primary key automatically.</p>
+
+
+<p>&nbsp;</p>
+<h4>REFERENCES &amp; RESOURCES</h4>
+<ul>
+<li>&quot;Database design basics (Microsoft Access 2007)&quot;, available at <a href="http://office.microsoft.com/en-us/access/HA012242471033.aspx">http://office.microsoft.com/en-us/access/HA012242471033.aspx</a>.</li>
+<li>Paul Litwin, &quot;Fundamentals of Relational Database Design&quot;, available at <a href="http://www.deeptraining.com/litwin/dbdesign/FundamentalsOfRelationalDatabaseDesign.aspx">http://www.deeptraining.com/litwin/dbdesign/FundamentalsOfRelationalDatabaseDesign.aspx</a>.</li>
+<li>Codd E. F., &quot;A Relational Model of Data for Large Shared Data Banks&quot;, Communications of the ACM, vol. 13,  issue 6, pp. 377–387, June 1970.</li>
+</ul>
+
+<p class="p-last-modified">Latest version tested: MySQL 5.5.15<br />
+Last modified: September, 2010</p>
+
+</div>  <!-- End the content division -->
+
+<!-- print footer -->
+<script type="text/javascript" src="../scripts/footer.js"></script>
+</div>  <!-- End the container division -->
+</body>
+</html>
